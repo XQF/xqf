@@ -1,6 +1,7 @@
 Oct 27, 2002: Alex <alex_b@users.sourceforge.net>
 - Number of servers in status bar now updated when enabling / disabling a
-  filter
+  filter and when finished searching for a player
+- Created function reset_main_status_bar
 
 Oct 26, 2002: Alex <alex_b@users.sourceforge.net>
 - Set focus to Game Contains when adding new server filter
