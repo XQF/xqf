@@ -2140,8 +2140,8 @@ unsigned filter_time_inc()
   if(!filter_current_time)
   {
     struct server* s;
-    printf("CONGRATULATION! You managed to filter more than %u times\n", UINT_MAX);
     GSList* list = all_servers();
+    printf("CONGRATULATION! You managed to filter more than %u times\n", UINT_MAX);
     for(;list; list = list->next)
     {
       s = (struct server *) list->data;
