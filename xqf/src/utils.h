@@ -81,4 +81,12 @@ int str2bool(const char* str);
  */
 char* find_file_in_path(const char* files);
 
+/** sort list and remove duplicates
+ * @param list list to sort
+ * @compare_func function to use for comparing
+ * @unref_func function to call for each deleted entry
+ * @return sorted list without duplicates
+ */
+GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*unref_func)(void*));
+
 #endif /* __UTILS_H__ */

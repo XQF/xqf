@@ -53,6 +53,16 @@ static int host_hash_func (const struct in_addr *ip) {
   return (ptr[0] + (ptr[1] << 2) + (ptr[2] << 4) + (ptr[3] << 6)) % hosts.num;
 }
 
+static gint host_sorting_helper (const struct host *h1, 
+				      const struct host *h2) {
+  if(h1==h2)
+    return 0;
+  else if(h1<h2)
+    return -1;
+  else
+    return 1;
+}
+
 
 int hosts_total (void) {
   int i;
@@ -139,7 +149,7 @@ void host_unref (struct host *h) {
   }
 }
 
-
+/*
 GSList *merge_host_to_resolve (GSList *hosts, struct host *h) {
 
   if (h) {
@@ -149,7 +159,7 @@ GSList *merge_host_to_resolve (GSList *hosts, struct host *h) {
 
   return hosts;
 }
-
+*/
 
 GSList *merge_hosts_to_resolve (GSList *hosts, GSList *servers) {
   struct host *h;
@@ -158,8 +168,14 @@ GSList *merge_hosts_to_resolve (GSList *hosts, GSList *servers) {
   for (; servers; servers = servers->next) {
     h = ((struct server *) servers->data)->host;
     if (h->refreshed == 0 || h->refreshed >= curtime + HOST_CACHE_MAX_AGE)
-      hosts = host_list_add (hosts, h);
+    {
+//      hosts = host_list_add (hosts, h);
+      hosts = g_slist_prepend (hosts, h);
+      host_ref(h);
+    }
   }
+  
+  hosts = slist_sort_remove_dups(hosts,host_sorting_helper,host_unref);
 
   return hosts;
 }
@@ -177,7 +193,6 @@ static void host_cache_save_list (FILE *f, GSList *hosts) {
     hosts = hosts->next;
   }
 }
-
 
 static GSList *host_cache_read_list (FILE *f) {
   GSList *hosts = NULL;
@@ -204,10 +219,14 @@ static GSList *host_cache_read_list (FILE *f) {
 	h->name = g_strdup (token[2]);
 	h->refreshed = refreshed;
 
-	hosts = host_list_add (hosts, h);
+//	hosts = host_list_add (hosts, h);
+	hosts = g_slist_prepend (hosts, h);
+	host_ref(h);
       }
     }
   }
+
+  hosts = slist_sort_remove_dups(hosts,host_sorting_helper,host_unref);
 
   return hosts;
 }

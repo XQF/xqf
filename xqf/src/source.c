@@ -385,7 +385,7 @@ static struct master *read_list_parse_master (char *str, char *str2) {
   return m;
 }
 
-static int server_sorting_helper (const struct server *s1, 
+static gint server_sorting_helper (const struct server *s1, 
 				      const struct server *s2) {
   if(s1==s2)
     return 0;
@@ -1237,46 +1237,6 @@ static void save_master_list (void) {
   config_pop_prefix ();
 }
 
-// sort server list and remove duplicates
-static GSList* server_list_remove_dups(GSList* list)
-{
-  int i;
-  GSList* serverlist = NULL;
-  GSList* serverlistnext = NULL;
-
-  if(!list)
-    return NULL;
-
-  list = serverlist = g_slist_sort (list, (GCompareFunc) server_sorting_helper);
-
-  i = 0;
-  while(serverlist)
-  {
-    serverlistnext=serverlist->next;
-    if(!serverlistnext)
-    {
-      // last element, quit loop
-      serverlist = serverlistnext;
-    }
-    else if(!server_sorting_helper(serverlist->data,serverlistnext->data))
-    {
-      struct server* s= serverlistnext->data;
-      debug(1,"removing duplicate server %s",s->name);
-      serverlistnext = g_slist_remove_link(serverlistnext, serverlistnext);
-      serverlist->next = serverlistnext;
-      server_unref(s);
-    }
-    else
-    {
-      serverlist= serverlistnext;
-    }
-    i++;
-  }
-  debug(2,"number of servers %d",i);
-
-  return list;
-}
-
 void init_masters (int update) {
   struct master *m;
   struct master *m2;
@@ -1318,7 +1278,7 @@ void init_masters (int update) {
       continue;
     debug (2, "  Working on master: %s",m2->name);
 
-    m2->servers = server_list_remove_dups(m2->servers);
+    m2->servers = slist_sort_remove_dups(m2->servers,(GCompareFunc)server_sorting_helper,server_unref);
     
   }
 
