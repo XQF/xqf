@@ -1,4 +1,6 @@
 April 20, 2001: Alex Burger <alex@fragit.net>
+-Now requires qstat2.4c.  Removed fixes to Tribes 2 code
+ for qstat2.4b as qstat2.4c fixes the problems
 -Added t2_analyze_serverinfo function to decode Game and
  GameType columns for Tribes 2.
 

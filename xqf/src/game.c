@@ -685,13 +685,8 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
   /* debug (6, "quake_parse_server: Parse %s", server->name); */
   poqs = (server->type == Q1_SERVER || server->type == H2_SERVER);
 
-  if (server->type != T2_SERVER) // T2 server only reports 6 tokens
-  				 // in RAW format with qstat 2.4b/c
-  				 // instead of 8 as Q2 etc..
-  {
     if ((poqs && n != 10) || (!poqs && n != 8))
       return;
-  }
 
 #ifdef QSTAT23
   if (*(token[2])) {		/* if name is not empty */
@@ -713,16 +708,8 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
   if (*(token[offs]))            /* if map is not empty */
     server->map  = g_strdup (token[offs]);
 
-  if (server->type != T2_SERVER) // max/cur backwards in qstat 2.4b/c!
-  {
     server->maxplayers = strtoush (token[offs + 1]);
     server->curplayers = strtoush (token[offs + 2]);
-  }
-  else
-  {
-    server->curplayers = strtoush (token[offs + 1]);
-    server->maxplayers = strtoush (token[offs + 2]);
-  }
 
   server->ping = strtosh (token[offs + 3]);
   server->retries = strtosh (token[offs + 4]);
