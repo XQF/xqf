@@ -333,6 +333,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
     g_strchomp (token[n-1]);
 
     if (type != UNKNOWN_SERVER && parse_address (token[n - 1], &addr, &port)) {
+      port += conn->master->options.portadjust;
       h = host_add (addr);
       if (h) {						/* IP address */
 	host_ref (h);
@@ -368,6 +369,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
       else {						/* hostname */
 
 	g_strdown (addr);
+	port += conn->master->options.portadjust;
 	if ((us = userver_add (addr, port, type)) != NULL)
 	{
 //	  conn->uservers = userver_list_add (conn->uservers, us);
@@ -1150,7 +1152,131 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
   if (m->url) {
 
-    if(!strncmp(m->url,master_prefixes[MASTER_FILE],strlen(master_prefixes[MASTER_FILE])))
+    if(m->master_type == MASTER_GSLIST)
+    {
+      startprog = 1;
+      int ret = 0;
+
+      while(current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
+      {
+	struct server_filter_vars* filter =
+	  g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
+	size_t bufsize = 2048;
+	char* pos;
+
+	if(!filter)
+	{
+	  xqf_error("filter is NULL");
+	  return NULL;
+	}
+
+	pos = arg_type = g_new0(char, bufsize);
+	if(filter->game_contains&&*filter->game_contains)
+	{
+	  ret = snprintf(pos, bufsize,"(gametype LIKE '%%%s%%')", filter->game_contains);
+	  if(ret == -1)
+	    break;
+	  pos += ret;
+	  bufsize -= ret;
+	}
+
+	if(filter->map_contains&&*filter->map_contains)
+	{
+	  if(pos != arg_type)
+	  {
+	    ret = snprintf(pos, bufsize," AND ");
+	    if(ret == -1)
+	      break;
+	    pos += ret;
+	    bufsize -= ret;
+	  }
+
+	  ret = snprintf(pos, bufsize,"(mapname LIKE '%%%s%%')", filter->map_contains);
+	  if(ret == -1)
+	    break;
+	  pos += ret;
+	  bufsize -= ret;
+	}
+
+	if(filter->server_name_contains&&*filter->server_name_contains)
+	{
+	  if(pos != arg_type)
+	  {
+	    ret = snprintf(pos, bufsize," AND ");
+	    if(ret == -1)
+	      break;
+	    pos += ret;
+	    bufsize -= ret;
+	  }
+
+	  ret = snprintf(pos, bufsize,"(hostname LIKE '%%%s%%')", filter->server_name_contains);
+	  if(ret == -1)
+	    break;
+	  pos += ret;
+	  bufsize -= ret;
+	}
+
+	if(filter->filter_not_empty)
+	{
+	  if(pos != arg_type)
+	  {
+	    ret = snprintf(pos, bufsize," AND ");
+	    if(ret == -1)
+	      break;
+	    pos += ret;
+	    bufsize -= ret;
+	  }
+
+	  ret = snprintf(pos, bufsize,"(numplayers > 0)");
+	  if(ret == -1)
+	    break;
+	  pos += ret;
+	  bufsize -= ret;
+	}
+
+	if(filter->filter_not_full)
+	{
+	  if(pos != arg_type)
+	  {
+	    ret = snprintf(pos, bufsize," AND ");
+	    if(ret == -1)
+	      break;
+	    pos += ret;
+	    bufsize -= ret;
+	  }
+
+	  ret = snprintf(pos, bufsize,"(numplayers < maxplayers)");
+	  if(ret == -1)
+	    break;
+	  pos += ret;
+	  bufsize -= ret;
+	}
+
+	break;
+      }
+
+      if(ret == -1)
+      {
+	g_free(arg_type);
+	arg_type = NULL;
+      }
+
+
+      argv[argi++] = "gslist";
+      argv[argi++] = "-q";
+      argv[argi++] = "-o";
+      argv[argi++] = "5";
+      if(arg_type)
+      {
+	argv[argi++] = "-f";
+	argv[argi++] = arg_type;
+	debug(3, "%s", arg_type);
+      }
+      argv[argi++] = "-N";
+      argv[argi++] = m->options.gsmtype;
+      argv[argi] = NULL;
+    }
+    else if(!strncmp(m->url,master_prefixes[MASTER_FILE],strlen(master_prefixes[MASTER_FILE])))
     {
       startprog = 0;
       file=strdup_strip(m->url + strlen(master_prefixes[MASTER_FILE]));

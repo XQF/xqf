@@ -192,18 +192,22 @@ Sin, Kingpin, Heretic2 servers&nbsp;<br>
  name="System_Requirements"></a>System
 Requirements</h1>
 <p>The minimum system requirements are:</p>
-<p>A UNIX computer and C compiler (gcc)<br>
-<a href="http://www.qstat.org">QSTAT 2.6</a> (latest version
+<ul>
+  <li>A Computer with Linux or similar operating system running X<br>
+  </li>
+  <li><a href="http://www.qstat.org">QSTAT 2.6</a> (latest version
 recommended to ensure full functionality, RPM available from XQF
-hompage)<br>
-glibc 2.1+<br>
-Xfree86 3.3.3+<br>
-<a href="http://www.gtk.org">GTK</a>+ 1.2.5+<br>
-<a href="http://developer.gnome.org/arch/imaging/gdkpixbuf.html">
-gdk-pixbuf</a><br>
-<a href="ftp://ftp.gnu.org/gnu/wget/">wget</a> to retrieve html
-server listings from the Web<br>
-</p>
+hompage)</li>
+  <li><a href="http://www.gtk.org">GTK</a>+ 1.2.x</li>
+  <li><a href="http://developer.gnome.org/arch/imaging/gdkpixbuf.html">gdk-pixbuf</a></li>
+  <li><a href="ftp://ftp.gnu.org/gnu/wget/">wget</a> to retrieve html
+server listings from the Web</li>
+  <li>optionally <a
+ href="http://aluigi.altervista.org/papers.htm#gslist">gslist</a> if
+you want to access the <a href="http://www.gamespy.com/">Gamespy</a>
+master. See below for <a href="#gslist">instructions</a>.<br>
+  </li>
+</ul>
 <p>XQF has been tested as is known to run on Intel / AMD and PowerPC
 platforms.<br>
 &nbsp;</p>
@@ -738,6 +742,29 @@ file:///home/alex/quake3-servers<br>
 213.40.130.42:27961<br>
     </blockquote>
     <b>Note</b>:&nbsp; Not specifying a prefix will default to master://<br>
+    <p> <b><a name="gslist"></a>gslist://</b> </p>
+    <blockquote>This protocol type is used for querying the Gamespy
+master server using the 'gslist' program. <span
+ style="text-decoration: underline;">You need to run </span><span
+ style="font-style: italic; text-decoration: underline;">gslist -u</span><span
+ style="text-decoration: underline;"> to fetch the list of supported
+games before you can actually use it</span>. The URL accepts options
+separated by semicolon:<br>
+      <ul>
+        <li><span style="font-weight: bold;">gsmtype</span>: the
+gamespy name of the game to query. This parameter is mandatory. See
+~/.gslist/gslist.cfg for a list of valid names.<br>
+        </li>
+        <li><span style="font-weight: bold;">portadjust</span>
+(optional): integer value to add to the port number before adding the
+server to XQF. Useful if the native query protocol has a fixed port
+offset.</li>
+      </ul>
+      <p><b>Example:</b></p>
+      <p>gslist://master.gamespy.com;portadjust=-1;gsmtype=rune <br>
+      </p>
+    </blockquote>
+    <p></p>
   </blockquote>
   <b>Rename Master:</b>
   <blockquote> Allow you to change the name of the master. &nbsp;You

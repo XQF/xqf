@@ -46,6 +46,10 @@
 #include "zipped.h"
 #include "stat.h"
 
+static gboolean master_options_compare(QFMasterOptions* lhs, QFMasterOptions* rhs);
+static QFMasterOptions parse_master_options(const char* str);
+static void master_options_release(QFMasterOptions* o, gboolean doit);
+
 struct master *favorites = NULL;
 GSList *master_groups = NULL;
 
@@ -54,7 +58,8 @@ char* master_prefixes[MASTER_NUM_QUERY_TYPES] = {
 	"gmaster://",
 	"http://",
 	"lan://",
-	"file://"
+	"file://",
+	"gslist://",
 };
 
 char* master_designation[MASTER_NUM_QUERY_TYPES] = {
@@ -62,7 +67,8 @@ char* master_designation[MASTER_NUM_QUERY_TYPES] = {
 	N_("Gamespy"),
 	N_("http"),
 	N_("LAN"),
-	N_("File")
+	N_("File"),
+	"gslist",
 };
 
 static GSList *all_masters = NULL;
@@ -84,42 +90,13 @@ static void save_list (FILE *f, struct master *m) {
     fprintf (f, "[%s]\n", m->name);
   }
   else {
-    /*
-    if (m->url) {
-      fprintf (f, "[%s %s]\n", games[m->type].id, m->url);
-    }
-    else if (m->master_type == MASTER_GAMESPY)
-    {
-      fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, master_prefixes[MASTER_GAMESPY],
-        	(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
-    }
-    else
-    {
-      fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, master_prefixes[MASTER_NATIVE],
-		(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
-    }
-*/
-    
-    switch(m->master_type)
-    {
-      case MASTER_NATIVE:
-      case MASTER_GAMESPY:
-      case MASTER_LAN:
-	fprintf (f, "[%s %s%s:%d]\n",
-		  games[m->type].id,
-		  master_prefixes[m->master_type],
-		  (m->hostname)? m->hostname : inet_ntoa (m->host->ip),
-		  m->port
-		);
-	break;
-      case MASTER_HTTP:
-      case MASTER_FILE:
-	fprintf (f, "[%s %s]\n", games[m->type].id, m->url);
-	break;
-      case MASTER_NUM_QUERY_TYPES:
-      case MASTER_INVALID_TYPE:
-	break;
-    }
+    char* str = master_to_url(m);
+    fputc('[', f);
+    fputs(games[m->type].id, f);
+    fputc(' ', f);
+    fputs(str, f);
+    fputs("]\n", f);
+    g_free(str);
   }
 
   for (srv = m->servers; srv; srv = srv->next) {
@@ -218,9 +195,9 @@ static void save_server_info (const char *filename, GSList *servers) {
 }
 
 
-static struct master *find_master_server (char *addr, unsigned short port, char *str) {
+static struct master *find_master_server (char *addr, unsigned short port, char *str, QFMasterOptions* options) {
   GSList *list;
-  struct master *m;
+  struct master *m = NULL;
   struct in_addr ip;
 
   if (!addr || !port)
@@ -234,25 +211,26 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
       {
 	if (!g_strcasecmp (m->hostname, addr))
 	{
-          if (!str) // pre 0.9.4e list file
-            return m;
-	  if (!g_strcasecmp (games[m->type].id, str)) // list file in new format
-	    return m;
+          if((!str || // pre 0.9.4e list file
+	      !g_strcasecmp (games[m->type].id, str)) // list file in new format
+	      && master_options_compare(&m->options, options))
+	    break;
 	}
       }
       else 
       {
 	if (m->host && inet_aton (addr, &ip) && ip.s_addr == m->host->ip.s_addr) {
-          if (!str) // pre 0.9.4e list file
-            return m;
-	  if (!g_strcasecmp (games[m->type].id, str))
-  	    return m;
+          if((!str || // pre 0.9.4e list file
+	      !g_strcasecmp (games[m->type].id, str))
+	      && master_options_compare(&m->options, options))
+  	    break;
 	}
       }
     }
+    m = NULL;
   }
 
-  return NULL;
+  return m;
 }
 
 
@@ -316,7 +294,7 @@ static char *unify_url (const char *url) {
 }
 
 
-static int compare_urls (const char *url1, const char *url2) {
+static int _compare_urls (const char *url1, const char *url2, gboolean withopts) {
   char *uni1;
   char *uni2;
   int res = 1;
@@ -330,28 +308,52 @@ static int compare_urls (const char *url1, const char *url2) {
    */
 
   if (uni1 != NULL && uni2 != NULL)
+  {
+    if(!withopts)
+    {
+      char* p = NULL;
+      p = strchr(uni1, ';');
+      if(p) *p='\0';
+      p = strchr(uni2, ';');
+      if(p) *p='\0';
+    }
     res = strcmp (uni1, uni2);
+  }
 
   if (uni1) g_free (uni1);
   if (uni2) g_free (uni2);
   return res;
 }
 
+static int compare_urls (const char *url1, const char *url2)
+{
+  return _compare_urls(url1, url2, TRUE);
+}
 
-static struct master *find_master_url (char *url) {
+static int compare_urls_noopts (const char *url1, const char *url2)
+{
+  return _compare_urls(url1, url2, FALSE);
+}
+
+static struct master *find_master_url (char *url, QFMasterOptions* options) {
   GSList *list;
-  struct master *m;
+  struct master *m = NULL;
 
   if (!url)
     return NULL;
 
+  debug(5, "%s %p", url, options);
+
   for (list = all_masters; list; list = list->next) {
     m = (struct master *) list->data;
-    if (m->url && compare_urls (m->url, url) == 0)
-      return m;
+    if (m->url && compare_urls_noopts (m->url, url) == 0
+	&& master_options_compare(&m->options, options))
+      break;
+    else
+      m = NULL;
   }
 
-  return NULL;
+  return m;
 }
 
 
@@ -364,11 +366,22 @@ static struct master *read_list_parse_master (char *str, char *url) {
   unsigned short port;
   struct master *m = NULL;
   enum master_query_type query_type;
+  QFMasterOptions options = { 0, NULL };
+  char* optstr = NULL;
 
   if (favorites && !g_strcasecmp (str, favorites->name))
     return favorites;
 
+  debug(5, "%s %s", str, url);
+
   query_type = get_master_query_type_from_address(str);
+
+  optstr = strchr(str + strlen(master_prefixes[query_type]), ';');
+  if(optstr)
+  {
+    *optstr++ = '\0';
+    options = parse_master_options(optstr);
+  }
 
   switch(query_type)
   {
@@ -377,19 +390,21 @@ static struct master *read_list_parse_master (char *str, char *url) {
     case MASTER_LAN:
       if (parse_address (str + strlen(master_prefixes[query_type]), &addr, &port))
       {
-	m = find_master_server (addr, port, url);
+	m = find_master_server (addr, port, url, &options);
 	g_free (addr);
       }
       break;
     case MASTER_HTTP:
     case MASTER_FILE:
-      m = find_master_url (str);
+    case MASTER_GSLIST:
+      m = find_master_url (str, &options);
       break;
     case MASTER_NUM_QUERY_TYPES:
     case MASTER_INVALID_TYPE:
       break;
   }
 
+  master_options_release(&options, TRUE);
   return m;
 }
 
@@ -651,6 +666,160 @@ void master_set_qstat_option(struct master* m, const char* opt)
   m->_qstat_master_option = opt?g_strdup(opt):NULL;
 }
 
+/** no deep copy! */
+static QFMasterOptions parse_master_options(const char* str)
+{
+  const char* semicolon = NULL;
+  const char* val = NULL;
+  QFMasterOptions options = {0, NULL};
+
+  if(!str)
+    return options;
+
+  while(str && *str)
+  {
+    semicolon = strchr(str, ';');
+    if(!semicolon) semicolon = str+strlen(str);
+
+    // find next = before ;
+    for(val=str; *val && *val != ';' && *val != '='; ++val);
+    if(*val != '=')
+      val = NULL;
+    else
+      ++val;
+
+    if(val && semicolon-val && !strncmp(str, "gsmtype", 7))
+      options.gsmtype = g_strndup(val, semicolon-val);
+    if(val && semicolon-val && !strncmp(str, "portadjust", 7))
+      options.portadjust = atoi(val);
+
+    if(*semicolon)
+      str = semicolon+1;
+    else
+      str = semicolon;
+  }
+
+  return options;
+}
+
+static gboolean master_options_compare(QFMasterOptions* lhs, QFMasterOptions* rhs)
+{
+  if(!lhs || !rhs)
+    return FALSE;
+
+  if(lhs->portadjust != rhs->portadjust )
+    return FALSE;
+
+  if(lhs->gsmtype && rhs->gsmtype && strcmp(lhs->gsmtype, rhs->gsmtype))
+    return FALSE;
+
+  return TRUE;
+}
+
+#if 0
+char* master_to_string(QFMaster* m)
+{
+  char buf[1024] = {0};
+
+  switch(m->master_type)
+  {
+    case MASTER_NATIVE:
+    case MASTER_GAMESPY:
+    case MASTER_LAN:
+      snprintf (buf, sizeof(buf), "[%s %s%s:%d",
+		games[m->type].id,
+		master_prefixes[m->master_type],
+		(m->hostname)? m->hostname : inet_ntoa (m->host->ip),
+		m->port
+	      );
+      break;
+    case MASTER_HTTP:
+    case MASTER_FILE:
+    case MASTER_GSLIST:
+      snprintf (buf, sizeof(buf), "[%s %s", games[m->type].id, m->url);
+      break;
+    case MASTER_NUM_QUERY_TYPES:
+    case MASTER_INVALID_TYPE:
+      break;
+  }
+
+  if(m->options.portadjust)
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ";portadjust=%d", m->options.portadjust);
+  if(m->options.gsmtype)
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ";gsmtype=%s", m->options.gsmtype);
+
+  snprintf(buf, sizeof(buf)-strlen(buf), "]\n");
+
+  if(*buf)
+    return g_strdup(buf);
+  else
+    return NULL;
+}
+#endif
+
+char *master_to_url( QFMaster* m )
+{
+  char *query_type;
+  char *address;
+  char buf[1024] = {0};
+
+  if ( m->master_type >= MASTER_NATIVE
+      && m->master_type < MASTER_NUM_QUERY_TYPES )
+  {
+    query_type = master_prefixes[m->master_type];
+  }
+  else
+    return NULL;
+
+  switch(m->master_type)
+  {
+    case MASTER_NATIVE:
+    case MASTER_GAMESPY:
+    case MASTER_LAN:
+      if(m->hostname)
+      {
+	address = m->hostname;
+      }
+      else if(m->host)
+      {
+	address = inet_ntoa(m->host->ip);
+      }
+      else
+      {
+	xqf_error("master %s has neither hostname nor ip address", m->name);
+	return NULL;
+      }
+      snprintf (buf, sizeof(buf), "%s%s:%d", query_type, address, m->port);
+      break;
+    case MASTER_HTTP:
+    case MASTER_FILE:
+    case MASTER_GSLIST:
+      snprintf (buf, sizeof(buf), "%s", m->url);
+      break;
+    case MASTER_NUM_QUERY_TYPES:
+    case MASTER_INVALID_TYPE:
+      break;
+  }
+
+  if(m->options.portadjust)
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ";portadjust=%d", m->options.portadjust);
+  if(m->options.gsmtype)
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ";gsmtype=%s", m->options.gsmtype);
+
+  if(*buf)
+    return g_strdup(buf);
+  else
+    return NULL;
+}
+
+
+/** only free content, not pointer itself */
+static void master_options_release(QFMasterOptions* o, gboolean doit)
+{
+  if(!doit || !o) return;
+  g_free(o->gsmtype);
+}
+
 struct master *add_master (char *path, char *name, enum server_type type, const char* qstat_query_arg,
                                                   int user, int lookup_only) {
   char *addr = NULL;
@@ -659,6 +828,9 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
   struct host *h = NULL;
   struct master *group = NULL;
   enum master_query_type query_type;
+  char* optstr = NULL;
+  QFMasterOptions options = {0, NULL};
+  gboolean freeoptions = FALSE;
 
   debug(6,"%s,%s,%d,%d,%d",path,name,type,user,lookup_only);
 
@@ -667,6 +839,14 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
   {
     debug(1,"Invalid Master %s",path);
     return NULL;
+  }
+
+  optstr = strchr(path + strlen(master_prefixes[query_type]), ';');
+  if(optstr)
+  {
+    *optstr++ = '\0';
+    options = parse_master_options(optstr);
+    freeoptions = TRUE;
   }
 
   switch(query_type)
@@ -700,6 +880,7 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
 	  }
 	  else
 	  {
+	    master_options_release(&options, freeoptions);
 	    g_free (addr);
 	    // translator: %s == url, eg gmaster://bla.blub.org
 	    dialog_ok (NULL, _("You have to specify a port number for %s."),path);
@@ -707,22 +888,31 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
 	  }
 	}
 
-	m = find_master_server (addr, port, games[type].id);
+	m = find_master_server (addr, port, games[type].id, &options);
 
       }
       break;
 
+    case MASTER_GSLIST:
+      if(!options.gsmtype)
+      {
+	    master_options_release(&options, freeoptions);
+	    dialog_ok (NULL, _("'gsmtype' options missing for master %s."),path, name);
+	    return NULL;
+      }
     case MASTER_HTTP:
     case MASTER_FILE:
-      m = find_master_url (path);
+      m = find_master_url (path, &options);
       break;
     case MASTER_NUM_QUERY_TYPES:
     case MASTER_INVALID_TYPE:
+      master_options_release(&options, freeoptions);
       return NULL;
   }
 
   if (lookup_only)
   {
+    master_options_release(&options, freeoptions);
     g_free (addr);
     return m;
   }
@@ -735,14 +925,21 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
       g_free (m->name);
       m->name = g_strdup (name);
       m->user = TRUE;
+      master_options_release(&m->options, TRUE);
+      m->options = options;
+      freeoptions = FALSE;
     }
     else
     { // Automatically rename masters that are not edited by user
       if (!m->user) {
 	g_free (m->name);
 	m->name = g_strdup (name);
+	master_options_release(&m->options, TRUE);
+	m->options = options;
+	freeoptions = FALSE;
       }
     }
+    master_options_release(&options, freeoptions);
     g_free (addr);
     return m;
   }
@@ -771,15 +968,19 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
       break;
     case MASTER_HTTP:
     case MASTER_FILE:
+    case MASTER_GSLIST:
       m = create_master (name, type, FALSE);
       m->url = g_strdup (path);
       break;
     case MASTER_NUM_QUERY_TYPES:
     case MASTER_INVALID_TYPE:
+      master_options_release(&options, freeoptions);
       return NULL;
   }
   
   m->master_type = query_type;
+  m->options = options;
+  freeoptions = FALSE;
 
   if (m) {
     group = (struct master *) g_slist_nth_data (master_groups, type);
@@ -787,6 +988,7 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
     m->user = user;
   }
   
+  master_options_release(&options, freeoptions);
   return m;
 }
 
@@ -814,6 +1016,7 @@ void free_master (struct master *m) {
   g_free (m->name);
   g_free (m->url);
   g_free (m->_qstat_master_option);
+  g_free (m->options.gsmtype);
 
   server_list_free (m->servers);
   userver_list_free (m->uservers);
@@ -833,22 +1036,25 @@ static char *builtin_masters_update_info[] = {
   "ADD QWS master://192.246.40.37:27004 id Misc",
   "ADD QWS master://192.246.40.37:27006 id Deathmatch",
   "ADD QWS master://qwmaster.ocrana.de:27000 Germany",
-  "ADD QWS master://santa.quakeforge.net:27000 QuakeForge",
+  "DELETE QWS master://santa.quakeforge.net:27000 QuakeForge", // doesn't work (26.09.2004)
 
-  "ADD Q2S master://satan.idsoftware.com:27900 id",
-  "ADD Q2S master://q2master.planetquake.com:27900 PlanetQuake", 
-  "ADD Q2S master://telefragged.com:27900 TeleFragged",
-  "ADD Q2S master://qwmaster.barrysworld.com:27900 BarrysWorld (UK)",
-  "ADD Q2S master://master.quake.inet.fi:27900 iNET (Finland)",
-  "ADD Q2S master://q2master.mondial.net.au:27900 Australia",
-  "ADD Q2S master://q2master.gxp.de:27900 gXp (Germany)",
+  "DELETE Q2S master://satan.idsoftware.com:27900 id", // doesn't work (26.09.2004)
+  "DELETE Q2S master://q2master.planetquake.com:27900 PlanetQuake",  // doesn't work (26.09.2004)
+  "DELETE Q2S master://telefragged.com:27900 TeleFragged", // doesn't work (26.09.2004)
+  "DELETE Q2S master://qwmaster.barrysworld.com:27900 BarrysWorld (UK)", // doesn't work (26.09.2004)
+  "DELETE Q2S master://master.quake.inet.fi:27900 iNET (Finland)", // doesn't work (26.09.2004)
+  "DELETE Q2S master://q2master.mondial.net.au:27900 Australia", // doesn't work (26.09.2004)
+  "DELETE Q2S master://q2master.gxp.de:27900 gXp (Germany)", // doesn't work (26.09.2004)
   "ADD Q2S http://www.gameaholic.com/servers/qspy-quake2 Gameaholic.Com",
   "ADD Q2S http://www.lithium.com/quake2/gamespy.txt Lithium",
+  "ADD Q2S master://masterserver.exhale.de exhale.de",
+  "ADD Q2S master://netdome.biz netdome.biz",
+  "ADD Q2S master://master.planetgloom.com gloom",
 
   "ADD Q3S master://master3.idsoftware.com id",
 //  "ADD Q3S master://q3master.splatterworld.de Germany",
 //  "ADD Q3S master://q3.golsyd.net.au Australia",
-  "ADD Q3S master://q3master.barrysworld.com:27950 BarrysWorld",
+  "DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld", // doesn't work (26.09.2004)
   "ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 Gameaholic.com",
 
 //  "ADD HWS master://santa.quakeforge.net:26900 QuakeForge",
@@ -868,7 +1074,7 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 Gameaholic.Com",
 
   "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
-  "ADD UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld",
+  "DELETE UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld", // doesn't work (26.09.2004)
 
   "DELETE T2S master://211.233.32.77:28002 Tribes2 Master", // does no longer work
 
@@ -946,6 +1152,24 @@ static char *builtin_masters_update_info[] = {
   NULL
 };
 
+static char *builtin_gslist_masters_update_info[] = {
+  "ADD QS gslist://master.gamespy.com;gsmtype=quake1 Gslist",
+  "ADD QWS gslist://master.gamespy.com;gsmtype=quakeworld Gslist",
+  "ADD Q2S gslist://master.gamespy.com;gsmtype=quake2 Gslist",
+  "ADD Q3S gslist://master.gamespy.com;gsmtype=quake3 Gslist",
+  "ADD DM3S gslist://master.gamespy.com;gsmtype=doom3 Gslist",
+  "ADD RUNESRV gslist://master.gamespy.com;portadjust=-1;gsmtype=rune Gslist",
+  "ADD UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004 Gslist",
+  "ADD UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004d Gslist (Demo)",
+  "ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2 Gslist",
+  "ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2d Gslist (Demo)",
+  "ADD AMS gslist://master.gamespy.com;portadjust=-1;gsmtype=armygame Gslist",
+//  "ADD GPS gslist://master.gamespy.com;gsmtype=mohaa Gslist", // no fixed port offset
+//  "ADD SMS gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussam Gslist", // not compatible with linux version
+//  "ADD SMSSE gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussamse Gslist", // not compatible with linux version
+  NULL
+};
+
 /** parse type of the form <TYPE>[,QSTAT_MASTER_OPION]
  * DESTRUCTIVE
  * @return qstat_master_option or NULL
@@ -1013,6 +1237,13 @@ void update_master_list_builtin (void) {
   char **ptr;
 
   for (ptr = builtin_masters_update_info; *ptr; ptr++)
+    update_master_list_action (*ptr);
+}
+
+void update_master_gslist_builtin (void) {
+  char **ptr;
+
+  for (ptr = builtin_gslist_masters_update_info; *ptr; ptr++)
     update_master_list_action (*ptr);
 }
 
@@ -1128,7 +1359,7 @@ static void save_master_list (void) {
   char conf[64];
   char typeid[128] = {0};
   char *confstr;
-  char *addr;
+  char *str;
   int n = 0;
 
   config_clean_section ("/" CONFIG_FILE "/Master List");
@@ -1148,18 +1379,12 @@ static void save_master_list (void) {
 	m->_qstat_master_option?m->_qstat_master_option:"",
 	m->user?",USER":"");
 
-    if (m->url) {
-      confstr = g_strjoin (" ", typeid, m->url, m->name, NULL);
-    }
-    else {
-      addr = g_strdup_printf ("%s%s:%d", master_prefixes[m->master_type],
-        	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
-
-      confstr = g_strjoin (" ", typeid, addr, m->name, NULL);
-      g_free (addr);
-    }
+    str = master_to_url(m);
+    confstr = g_strjoin (" ", typeid, str, m->name, NULL);
 
     config_set_string (conf, confstr);
+
+    g_free (str);
     g_free (confstr);
     n++;
   }
@@ -1185,6 +1410,8 @@ void init_masters (int update) {
 
   if (update) {
     update_master_list_builtin ();
+    if(have_gslist_masters())
+      update_master_gslist_builtin();
     config_sync ();
   }
 
@@ -1393,4 +1620,26 @@ enum master_query_type get_master_query_type_from_address(char* address)
     debug(6,"get_master_query_type_from_address: default native");
     return MASTER_NATIVE;
   }
+}
+
+gboolean have_gslist_masters()
+{
+  GSList *list;
+  struct master *m;
+
+  for (list = all_masters; list; list = list->next)
+  {
+    m = (struct master *) list->data;
+    if (m->master_type == MASTER_GSLIST)
+      return TRUE;
+  }
+
+  return FALSE;
+}
+
+gboolean have_gslist_installed()
+{
+  char* gslist = find_file_in_path("gslist");
+  g_free(gslist);
+  return (gslist != NULL);
 }

@@ -88,6 +88,8 @@
 #include "country-filter.h"
 #endif
 
+static const char gslisthome[] = "http://aluigi.altervista.org/papers.htm#gslist";
+
 static const char required_qstat_version[]="2.6";
 
 time_t xqf_start_time;
@@ -150,6 +152,7 @@ static GtkWidget *edit_add_menu_item = NULL;
 static GtkWidget *edit_favadd_menu_item = NULL;
 static GtkWidget *edit_delete_menu_item = NULL;
 static GtkWidget *edit_update_master_builtin_menu_item = NULL;
+static GtkWidget *edit_update_master_gslist_menu_item = NULL;
 static GtkWidget *edit_add_master_menu_item = NULL;
 static GtkWidget *edit_edit_master_menu_item = NULL;
 static GtkWidget *edit_delete_master_menu_item = NULL;
@@ -210,6 +213,8 @@ static GtkWidget *server_filter_3_widget = NULL;
 static gboolean check_launch (struct condef* con);
 static void refresh_selected_callback (GtkWidget *widget, gpointer data);
 static void launch_close_handler_part2(struct condef *con);
+
+static void copy_text_to_clipboard(const char* text);
 
 /** build server filter menu for menubar
  */
@@ -589,6 +594,7 @@ void set_widgets_sensitivity (void) {
   gtk_widget_set_sensitive (add_menu_item, sens);
   gtk_widget_set_sensitive (edit_add_menu_item, sens);
   gtk_widget_set_sensitive (edit_update_master_builtin_menu_item, sens);
+  gtk_widget_set_sensitive (edit_update_master_gslist_menu_item, sens);
   gtk_widget_set_sensitive (edit_add_master_menu_item, sens);
   gtk_widget_set_sensitive (edit_find_player_menu_item, sens);
   gtk_widget_set_sensitive (edit_find_again_menu_item, sens);
@@ -1817,6 +1823,18 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
   gtk_editable_copy_clipboard(selection_manager);
 }
 
+static void copy_text_to_clipboard(const char* text)
+{
+  int pos = 0;
+  gtk_editable_delete_text (selection_manager, 0, -1);
+  if(text && *text)
+  {
+    gtk_editable_insert_text (selection_manager, text, strlen (text), &pos);
+  }
+  gtk_editable_select_region (selection_manager, 0, pos);
+  gtk_editable_copy_clipboard(selection_manager);
+}
+
 static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
   GList *selection = server_clist->selection;
   struct server *s;
@@ -1860,6 +1878,19 @@ static void update_master_builtin_callback (GtkWidget *widget, gpointer data) {
 
   update_master_list_builtin();
 
+}
+
+static void update_master_gslist_callback (GtkWidget *widget, gpointer data)
+{
+  if(!have_gslist_installed())
+  {
+    // translator: %s == url
+    dialog_ok(NULL, _("For Gslist support you must install the 'gslist' program available from\n%s\n"
+		      "Don't forget that you need to run 'gslist -u' before you can use it."), gslisthome);
+    copy_text_to_clipboard(gslisthome);
+    return;
+  }
+  update_master_gslist_builtin();
 }
 
 static void add_master_callback (GtkWidget *widget, gpointer data) {
@@ -2666,6 +2697,12 @@ static const struct menuitem edit_menu_items[] = {
     MENU_ITEM,          N_("Add Default Masters" ),        0,	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (update_master_builtin_callback), NULL,
     &edit_update_master_builtin_menu_item
+  },
+
+  {
+    MENU_ITEM,          N_("Add Gslist Masters" ),        0,	GDK_CONTROL_MASK,
+    GTK_SIGNAL_FUNC (update_master_gslist_callback), NULL,
+    &edit_update_master_gslist_menu_item
   },
 
   {

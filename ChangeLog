@@ -1,3 +1,9 @@
+Sep 26, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add support for gslist
+- drop broken master servers, add some new ones for quake2
+- update German translation
+- version 1.0.0.2
+
 Sep 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix UT99 master server listing
 - Allow to completely overwrite the qstat master argument via config file

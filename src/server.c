@@ -245,7 +245,7 @@ struct server* server_unref (struct server *server) {
 
   server->ref_count--;
 
-  debug (6, "server_unref() -- Server %lx ref now at %d", 
+  debug (7, "server_unref() -- Server %lx ref now at %d", 
 	 server, server->ref_count);
 
   if (server->ref_count <= 0) {
