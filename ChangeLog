@@ -1,6 +1,7 @@
 Dec 25, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - added button to scan for maps without restarting xqf
 - fixed some minor memleaks
+- map scan function for q1, qw, q2 and hl
 
 Dec 19, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Changed version to 0.9.11.1

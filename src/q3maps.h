@@ -20,6 +20,19 @@
 #ifndef Q3MAPS_H
 #define Q3MAPS_H
 
+#include <glib.h>
+
+/**
+  * name is the full path of a file at found at level l
+  */
+typedef void (*FoundFileFunction)(const char* name, int l, gpointer data);
+
+/**
+ * the current directory which is at level l contains directory name.
+ * return TRUE if this directory should be visited, false otherwise
+ */
+typedef gboolean (*FoundDirFunction)(const char* name, int l, gpointer data);
+
 /** free all keys and destroy maphash */
 void q3_clear_maps(GHashTable* maphash);
 
@@ -32,6 +45,8 @@ gboolean q3_lookup_map(GHashTable* maphash, const char* mapname);
 /**
  * find all maps in .pk3 files one level under startdir
  */
-void findq3maps_dir(GHashTable* maphash, const char* startdir);
+void findq3maps(GHashTable* maphash, const char* startdir);
+
+void findquakemaps(GHashTable* maphash, const char* startdir);
 
 #endif
