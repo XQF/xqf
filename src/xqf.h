@@ -235,7 +235,7 @@ extern	void set_widgets_sensitivity (void);
 extern GtkWidget *server_filter_widget[];
 
 int compare_qstat_version ( const char* have, const char* expected );
-int start_prog_and_return_fd(const char *file, char *const argv[], pid_t *pid);
+int start_prog_and_return_fd(char *const argv[], pid_t *pid);
 int check_qstat_version( const char* version );
 
 int filter_start_index;
