@@ -3,9 +3,10 @@
 # Initially written by Markus Fischer <mfischer@josefine.ben.tuwien.ac.at>
 #
 
-AC_INIT(src/xqf.c)
+AC_INIT([xqf],[0.9.10.2],xqf-developer@lists.sourceforge.net)
+AC_CONFIG_SRCDIR([src/xqf.c])
 
-AM_INIT_AUTOMAKE(xqf, 0.9.10.1)
+AM_INIT_AUTOMAKE
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
@@ -15,12 +16,10 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
 
+AC_PROG_LIBTOOL
+
 dnl Checks for header files.
 AC_HEADER_STDC
-
-AM_SANITY_CHECK
-
-AM_PROG_LIBTOOL
 
 #The Release stuff for the spec file.
 RELEASE="1"
@@ -138,7 +137,7 @@ else
 	AC_MSG_RESULT([no])
 fi
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 intl/Makefile
 po/Makefile.in
@@ -147,6 +146,7 @@ src/zip/Makefile
 docs/Makefile
 xqf.spec
 ])
+AC_OUTPUT
 
 if test "x$qstat_is" = "xnotfound" ; then
 	AC_MSG_RESULT([
