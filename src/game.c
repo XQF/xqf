@@ -1568,7 +1568,7 @@ static void un_analyze_serverinfo (struct server *s) {
 
     //password required?
     // If not password=False or password=0, set SERVER_PASSWORD
-    else if (g_strcasecmp (*info_ptr, "password") == 0 && 
+    else if ((g_strcasecmp (*info_ptr, "password") == 0 || g_strcasecmp (*info_ptr, "gamepassword") == 0 ) && 
 	( g_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0") ) )
     {
       s->flags |= SERVER_PASSWORD;
