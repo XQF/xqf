@@ -152,6 +152,16 @@ xqf-0.9.8-0.suse71.ppc.rpm:
 /usr/share/man/man6/xqf.6.gz
 
 
+*****
+
+Updating a translation:
+
+./updateonepo fr will give you an updated fr.po. Then, with KBabel, or
+emacs po-mode or whatever you can translate them. To translate them
+using a normal editor, you can spot missing messages with msgfmt -C
+fr.po.
+
+*****
 
 
 
