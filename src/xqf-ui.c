@@ -29,6 +29,7 @@
 #include "game.h"
 #include "config.h"
 #include "sort.h"
+#include "gnuconfig.h"
 
 
 static GSList *xqf_windows = NULL;
@@ -42,16 +43,16 @@ GtkWidget *pane3_widget;
    list, you need to also add an entry in sort.h and sort.c 
 */
 static struct clist_column server_columns[10] = {
-  { "Name",    180,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Address", 140,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Ping",     45,  GTK_JUSTIFY_RIGHT,  NULL },
-  { "TO",       35,  GTK_JUSTIFY_RIGHT,  NULL },
-  { "Priv",     20,  GTK_JUSTIFY_RIGHT,  NULL },
-  { "Players",  65,  GTK_JUSTIFY_RIGHT,  NULL },
-  { "Map",      55,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Game",     55,  GTK_JUSTIFY_LEFT,   NULL },
-  { "GameType", 55,  GTK_JUSTIFY_LEFT,   NULL },
-  { "OS",       35,  GTK_JUSTIFY_LEFT,   NULL }
+  { N_("Name"),    180,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Address"), 140,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Ping"),     45,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("TO"),       35,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("Priv"),     20,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("Players"),  65,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("Map"),      55,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Game"),     55,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("GameType"), 55,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("OS"),       35,  GTK_JUSTIFY_LEFT,   NULL }
 };
 
 struct clist_def server_clist_def = {
@@ -65,12 +66,12 @@ struct clist_def server_clist_def = {
 };
 	
 static struct clist_column player_columns[6] = {
-  { "Name",    100,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Frags",    50,  GTK_JUSTIFY_RIGHT,  NULL },
-  { "Colors",   60,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Skin",     50,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Ping",     45,  GTK_JUSTIFY_RIGHT,  NULL },
-  { "Time",     45,  GTK_JUSTIFY_LEFT,   NULL }
+  { N_("Name"),    100,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Frags"),    50,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("Colors"),   60,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Skin"),     50,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Ping"),     45,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("Time"),     45,  GTK_JUSTIFY_LEFT,   NULL }
 };
 
 struct clist_def player_clist_def = {
@@ -84,8 +85,8 @@ struct clist_def player_clist_def = {
 };
 						  
 static struct clist_column srvinf_columns[2] = {
-  { "Rule",     90,  GTK_JUSTIFY_LEFT,   NULL },
-  { "Value",    80,  GTK_JUSTIFY_LEFT,   NULL }
+  { N_("Rule"),     90,  GTK_JUSTIFY_LEFT,   NULL },
+  { N_("Value"),    80,  GTK_JUSTIFY_LEFT,   NULL }
 };
 
 struct clist_def srvinf_clist_def = {
@@ -165,13 +166,13 @@ static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef,
   char buf[128];
 
   if (set_mark) {
-    g_snprintf (buf, 128, "%s %c", cldef->cols[clist->sort_column].name, 
+    g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name), 
                         (clist->sort_type == GTK_SORT_DESCENDING)? '>' : '<');
     gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), buf);
   }
   else {
     gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), 
-                                        cldef->cols[clist->sort_column].name);
+                                        _(cldef->cols[clist->sort_column].name));
   }
 }
 
@@ -221,7 +222,7 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 
     alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
 
-    label = gtk_label_new (cldef->cols[i].name);
+    label = gtk_label_new (_(cldef->cols[i].name));
     gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
     gtk_container_add (GTK_CONTAINER (alignment), label);
     gtk_widget_show (label);
@@ -430,7 +431,7 @@ static void fill_source_ctree (GtkWidget *ctree) {
 
 
 GtkWidget *create_source_ctree (GtkWidget *scrollwin) {
-  char *titles[1] = { "Source" };
+  char *titles[1] = { _("Source") };
   GtkWidget *ctree;
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), 
