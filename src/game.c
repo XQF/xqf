@@ -571,12 +571,12 @@ struct game games[] = {
     NULL		// game_cfg
   },
   {
-    UT2D_SERVER,
+    UT2_SERVER,
     GAME_CONNECT,
-    "Unreal 2003 Demo",
+    "UT 2003",
     7787,
     0,
-    "UT2DS",
+    "UT2S",
     "GPS",
     "-gps",
     "gps",
@@ -742,6 +742,13 @@ enum server_type id2type (const char *id) {
   {
     return WO_SERVER;
   }
+
+  // for those who used the cvs version before, can be removed after some time
+  if (g_strcasecmp (id, "UT2DS" ) == 0)
+  {
+    return UT2_SERVER;
+  }
+
 
 #ifdef QSTAT23
 
@@ -1128,9 +1135,9 @@ static void un_analyze_serverinfo (struct server *s) {
       {
 	s->type = UN_SERVER;
       }
-      else if(!strcmp(info_ptr[1],"ut2d"))
+      else if(!strcmp(info_ptr[1],"ut2") || !strcmp(info_ptr[1],"ut2d"))
       {
-	s->type = UT2D_SERVER;
+	s->type = UT2_SERVER;
       }
     }
 
@@ -2544,7 +2551,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 // exec "./ut-bin" $* -log and not -log $* at the end
 // otherwise XQF you can not connect via the command line!
 
-  if(con->s->type == UT2D_SERVER)
+  if(con->s->type == UT2_SERVER)
   {
     // go through all server rules
     for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
