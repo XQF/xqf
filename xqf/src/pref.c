@@ -92,6 +92,7 @@ int	default_toolbar_style;
 int	default_toolbar_tips;
 int	default_refresh_sorts;
 int	default_refresh_on_update;
+int	default_show_only_configured_games;
 
 int     maxretries;
 int     maxsimultaneous;
@@ -159,6 +160,7 @@ static  GtkWidget *toolbar_style_radio_buttons[3];
 static  GtkWidget *toolbar_tips_check_button;
 static  GtkWidget *refresh_sorts_check_button;
 static  GtkWidget *refresh_on_update_check_button;
+static  GtkWidget *show_only_configured_games_check_button;
 
 static  GtkWidget *pushlatency_mode_radio_buttons[3];
 static  GtkWidget *pushlatency_value_spinner;
@@ -640,6 +642,10 @@ static void get_new_defaults (void) {
   if (i != default_refresh_on_update)
     config_set_bool ("refresh on update", default_refresh_on_update = i);
 
+  i = GTK_TOGGLE_BUTTON (show_only_configured_games_check_button)->active;
+  if (i != default_show_only_configured_games)
+    config_set_bool ("show only configured games", default_show_only_configured_games = i);
+
   config_pop_prefix ();
 
   /* General */
@@ -759,6 +765,10 @@ static void ok_callback (GtkWidget *widget, GtkWidget* window)
   }
   get_new_defaults();
   gtk_widget_destroy(window);
+
+  // Refresh list of sources on screen in case the 'Show only configured games' 
+  // setting has changes, or a game command line has been added or removed.
+  refresh_source_list();
 }
 
 static void update_q1_skin (void) {
@@ -2750,6 +2760,22 @@ static GtkWidget *appearance_options_page (void) {
 
   gtk_widget_show (hbox);
 
+  /* Show only configured games */
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  show_only_configured_games_check_button = 
+                     gtk_check_button_new_with_label (_("Show only configured games"));
+  gtk_toggle_button_set_active (
+			   GTK_TOGGLE_BUTTON (show_only_configured_games_check_button), 
+			   default_show_only_configured_games);
+  gtk_box_pack_start (GTK_BOX (hbox), show_only_configured_games_check_button, 
+                                                             FALSE, FALSE, 0);
+  gtk_widget_show (show_only_configured_games_check_button);
+
+  gtk_widget_show (hbox);
+
   gtk_widget_show (vbox);
   gtk_widget_show (frame);
 
@@ -3629,6 +3655,7 @@ int prefs_load (void) {
   default_toolbar_tips =      config_get_bool ("toolbar tips=true");
   default_refresh_sorts =     config_get_bool ("sort on refresh=true");
   default_refresh_on_update = config_get_bool ("refresh on update=true");
+  default_show_only_configured_games =    config_get_bool ("show only configured games=false");
 
   config_pop_prefix ();
 

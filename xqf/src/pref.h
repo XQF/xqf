@@ -89,6 +89,7 @@ extern	int	default_toolbar_style;
 extern	int	default_toolbar_tips;
 extern	int	default_refresh_sorts;
 extern	int	default_refresh_on_update;
+extern	int	default_show_only_configured_games;
 
 extern	int	maxretries;
 extern	int	maxsimultaneous;

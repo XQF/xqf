@@ -2,7 +2,7 @@ XQF 0.9.10 -- ???? ?, ????
 ~~~~~~~~~
 Changes since 0.9.9:
 
-o 
+o Can now hide games that are not configured
 o Changed default Quake3 protocol to 68
 o Sound support for XQF events 
 o Busy server redial
