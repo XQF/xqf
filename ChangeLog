@@ -3,6 +3,7 @@ Oct 03, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - changed version to 0.9.7c (new master for descent3)
 - added quakeforge workaround
 - updated german translation
+- fixed player filter dialog bug
 
 Oct  1, 2001: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation, again :)

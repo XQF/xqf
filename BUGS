@@ -1,3 +1,3 @@
-- In Player Filter, reported crashes. Up/Down buttons are plain whacky.
+- In Player Filter, reported crashes. Up/Down buttons are plain whacky. (FIXED)
 - If XQF queries a master server and it has no entries, it will wipe out
   the existing list for that master.
