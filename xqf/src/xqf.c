@@ -681,6 +681,8 @@ void set_server_filter_menu_list_text( void ){
   
   print_status (main_filter_status_bar, status_buf); 
 
+  reset_main_status_bar();
+
 }
 
 
@@ -691,9 +693,9 @@ static void server_filter_select_callback (GtkWidget *widget, int number) {
   filters[FILTER_SERVER].changed = FILTER_CHANGED;
   filters[FILTER_SERVER].last_changed = ++filter_current_time;
 
+  server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */ 
   set_server_filter_menu_list_text ();
 
-  server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */ 
   config_push_prefix ( "/" CONFIG_FILE "/Server Filter" );
   config_set_int ("current_server_filter", current_server_filter);
   config_pop_prefix ();

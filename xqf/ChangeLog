@@ -1,5 +1,7 @@
 Oct 28, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix source menu
+- update german translation
+- print number of servers when changing filters too
 
 Oct 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - speed improvements for host and server lists
