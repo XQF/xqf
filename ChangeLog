@@ -1,3 +1,10 @@
+Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
+- Added function find_game_dir which searches for the game dir regardless
+  of case.  Called by qw_exec, q2_exec_generic, q3_exec and hl_exec to set
+  the game, or fs_game argument.  For example, if server has a game of 
+  'OSP', and client has dir of 'osp', Q3 will now be properly be launched
+  with +fs_game osp instead of OSP.
+
 Oct 10, 2002: Alex Burger <alex@fragit_dot_net>
 - Added support of 'Show only configured games' to Add Master window
   Add Server window and Statistics page

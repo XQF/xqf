@@ -57,6 +57,9 @@ extern	int tokenize_bychar (char *str, char *token[], int max, char dlm);
 
 extern	int hostname_is_valid (const char *hostname);
 
+extern char *find_game_dir (char *basegamedir, char *game);
+
+
 /* 
    Find a server setting from the info list in 
    the server struct.  The key passed will be converted to lower case.
