@@ -95,10 +95,9 @@ static int server_clist_refresh_row (struct server *s, int row) {
   struct pixmap *retries_pix = NULL;
   int col;
   char* private_col_text = "";
+  int slots_buffer;
   
-  /*pulp*/
-  int reserved_slots_buffer;
-  char slot_buffer_list[2];
+
   struct server_props *p;
 
   text[0] = NULL;
@@ -176,27 +175,27 @@ static int server_clist_refresh_row (struct server *s, int row) {
   }
 #endif
 
-  /*pulp*/
-   p = properties (s);	
+   /*pulp*/
+   
+   p = properties (s);
    
    if (p) {
-  	  if (p->slots_free) {
+  	  if (p->reserved_slots) {
 
-    	  	strcpy(slot_buffer_list,p->slots_free);
-		reserved_slots_buffer=((int) slot_buffer_list[0])-48;
+
+		slots_buffer=p->reserved_slots;
     	  }
 
     	  else {
-    		reserved_slots_buffer=0;
+    		slots_buffer=0;
     	  }
     }
 
     else {
-    reserved_slots_buffer=0;
+    slots_buffer=0;
     }
 
-  /*pulp*/
-  if (s->curplayers >= (s->maxplayers-reserved_slots_buffer))
+  if (s->curplayers >= (s->maxplayers-slots_buffer))
     gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
                            man_red_pix.pix, man_red_pix.mask );
 
