@@ -1,3 +1,8 @@
+Oct 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- Descent3: use Gamespy protocol instead of PXO protocol, remove no longer
+  working masters, use custom launch function (uses --directip), fix saving of
+  player info
+
 Oct 04, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix segfault at doom3 version detection (reported by Steffen Pankratz)
 

@@ -98,6 +98,7 @@ static int exec_generic (const struct condef *con, int forkit);
 static int ssam_exec (const struct condef *con, int forkit);
 static int savage_exec (const struct condef *con, int forkit);
 static int netpanzer_exec (const struct condef *con, int forkit);
+static int descent3_exec (const struct condef *con, int forkit);
 
 /*
 static GList *q1_custom_cfgs (struct game* this, char *dir, char *game);
@@ -446,6 +447,8 @@ static struct player *descent3_parse_player (char *token[], int n, struct server
 
   player->name = (char *) player + sizeof (struct player);
   strcpy (player->name, token[0]);
+  if(token[0][0] == '-' && token[0][strlen(token[0])-1] == '-')
+    ++s->curbots;
 
   return player;
 }
@@ -2986,6 +2989,59 @@ static int bf1942_exec (const struct condef *con, int forkit) {
   return retval;
 }
 
+static int descent3_exec (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = NULL;
+  int retval;
+  char **info_ptr;
+
+  char* hostport=NULL;
+  char* real_server=NULL;
+  
+  if(!con || !con->s)
+    return 1;
+
+  g = &games[con->s->type];
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  // go through all server rules
+  for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (!strcmp (*info_ptr, "hostport")) {
+      hostport=info_ptr[1];
+    }
+  }
+
+  if (con->server) {
+    argv[argi++] = "--directip";
+    // gamespy port can be different from game port
+    if(hostport)
+    {
+      real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
+      argv[argi++] = real_server;
+    }
+    else
+    {
+      argv[argi++] = con->server;
+    }
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  g_free (real_server);
+  return retval;
+}
+
+
 static char *dir_custom_cfg_filter (const char *dir, const char *str) {
   static const char *cfgext[] = { ".cfg", ".scr", ".rc", NULL };
   const char **ext;
@@ -3241,6 +3297,19 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 0,  // team number not supported yet
 		 "x",  // team name not supported yet
 		 (p->model)? p->model : ""); // player_type
+	break;
+
+      case DESCENT3_SERVER:
+	fprintf (f, 
+		 "%s" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR
+		 "\n",
+		 p->name?p->name:"",
+		 p->frags,
+		 0, // deaths
+		 p->ping);
 	break;
 
       default:
