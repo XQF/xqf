@@ -65,6 +65,8 @@ int 	filter_not_full;
 int 	filter_not_empty;
 int	filter_no_cheats;
 int	filter_no_password;
+char    *mod_contains;
+char    *version_contains;
 
 unsigned filter_current_time = 1;
 
@@ -75,6 +77,8 @@ static  GtkWidget *filter_not_full_check_button;
 static  GtkWidget *filter_not_empty_check_button;
 static  GtkWidget *filter_no_cheats_check_button;
 static  GtkWidget *filter_no_password_check_button;
+static  GtkWidget *mod_contains_entry;
+static  GtkWidget *version_contains_entry;
 
 
 void apply_filters (unsigned mask, struct server *s) {
@@ -124,11 +128,31 @@ GSList *build_filtered_list (unsigned mask, GSList *servers) {
 
 
 static int server_filter (struct server *s) {
+  char **info_ptr;
   if (s->ping == -1)	/* no information */
     return TRUE;
 
+  if( mod_contains && strlen( mod_contains )  && ! s->mod )
+    return FALSE;
+
+  if( version_contains && strlen (version_contains)) {
+    /* Filter for the version */
+    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+      if (strcmp (*info_ptr, "version") == 0) {
+	if( !strstr( info_ptr[1], version_contains )){
+	  return FALSE;
+	}
+      }
+    }
+  }/*end version check */
+
   if (s->retries < filter_retries && 
-      s->ping < filter_ping && 
+      s->ping < filter_ping &&
+
+      ( !mod_contains || !strlen( mod_contains ) || 
+	( s->mod && strstr( s->mod, mod_contains ))) &&
+
+
       (!filter_not_full || s->curplayers != s->maxplayers) && 
       (!filter_not_empty || s->curplayers != 0) &&
       (!filter_no_cheats || (s->flags & SERVER_CHEATS) == 0) &&
@@ -148,13 +172,17 @@ static void server_filter_init (void) {
   filter_not_empty   = config_get_bool ("not empty=false");
   filter_no_cheats   = config_get_bool ("no cheats=false");
   filter_no_password = config_get_bool ("no password=false");
-
+  mod_contains       = config_get_string_with_default ("mod_contains",NULL);
+  version_contains   = config_get_string_with_default ("version_contains",NULL);
   config_pop_prefix ();
 }
 
 
 static void server_filter_new_defaults (void) {
   int i;
+  char *cptr;
+  gchar *gcptr;
+  int text_changed;
 
   config_push_prefix ("/" CONFIG_FILE "/Server Filter");
 
@@ -170,6 +198,72 @@ static void server_filter_new_defaults (void) {
     config_set_int  ("ping", filter_ping = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
+
+
+  /* MOD string values -- baa */
+  gcptr = gtk_editable_get_chars (GTK_EDITABLE (mod_contains_entry), 0, -1 );
+  text_changed = 0;
+  if( strlen( gcptr )){
+    /*
+      First case, the user entered something.  See if the value
+      is different 
+    */
+    if (mod_contains){
+      if( strcmp( gcptr, mod_contains )) text_changed = 1;
+      g_free( mod_contains );
+    } else {
+      text_changed = 1;
+    }
+    mod_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( mod_contains, "%s\0",  gcptr );
+    if (text_changed) {
+      config_set_string ("mod_contains", mod_contains );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+  } else {
+    if (mod_contains){
+      text_changed = 1; /* From something to nothing */
+      g_free( mod_contains );
+      config_set_string ("mod_contains", "" );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+    mod_contains = NULL;
+  } 
+  g_free( gcptr );
+
+
+  /* Version string values -- baa */
+  gcptr = gtk_editable_get_chars (GTK_EDITABLE (version_contains_entry), 0, -1 );
+  text_changed = 0;
+  if( strlen( gcptr )){
+    /*
+      First case, the user entered something.  See if the value
+      is different 
+    */
+    if (version_contains){
+      if( strcmp( gcptr, version_contains )) text_changed = 1;
+      g_free( version_contains );
+    } else {
+      text_changed = 1;
+    }
+    version_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( version_contains, "%s\0",  gcptr );
+    if (text_changed) {
+      config_set_string ("version_contains", version_contains );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+  } else {
+    if (version_contains){
+      text_changed = 1; /* From something to nothing */
+      g_free( version_contains );
+      config_set_string ("version_contains", "" );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+    version_contains = NULL;
+  } 
+  g_free( gcptr );
+
+
 
   i = GTK_TOGGLE_BUTTON (filter_not_full_check_button)->active;
   if (filter_not_full != i) {
@@ -225,7 +319,7 @@ static void server_filter_page (GtkWidget *notebook) {
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_container_add (GTK_CONTAINER (frame), alignment);
 
-  table = gtk_table_new (6, 2, FALSE);
+  table = gtk_table_new (6, 5, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -263,6 +357,43 @@ static void server_filter_page (GtkWidget *notebook) {
   gtk_table_attach_defaults (GTK_TABLE (table), filter_retries_spinner, 
                                                                    1, 2, 1, 2);
   gtk_widget_show (filter_retries_spinner);
+
+
+  /* MOD Filter -- baa */
+  /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
+    
+  label = gtk_label_new ("the mod contains the string");
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, 0, 1, GTK_FILL, GTK_FILL, 
+		    0, 0);
+  gtk_widget_show (label);
+  mod_contains_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (mod_contains_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (mod_contains_entry), TRUE);
+  gtk_entry_set_text (GTK_ENTRY (mod_contains_entry), 
+		      (mod_contains)? mod_contains : "");
+
+  gtk_table_attach_defaults (GTK_TABLE (table), mod_contains_entry, 4, 5, 0, 1);
+  gtk_widget_show (mod_contains_entry);
+
+
+  /* Version Filter -- baa */
+    
+  label = gtk_label_new ("the version contains the string");
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, 1, 2, GTK_FILL, GTK_FILL, 
+		    0, 0);
+  gtk_widget_show (label);
+  version_contains_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (version_contains_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (version_contains_entry), TRUE);
+  gtk_entry_set_text (GTK_ENTRY (version_contains_entry), 
+		      (version_contains)? version_contains : "");
+
+  gtk_table_attach_defaults (GTK_TABLE (table), version_contains_entry, 4, 5, 1, 2);
+  gtk_widget_show (version_contains_entry);
+
+
 
   /* not full */
 

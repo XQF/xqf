@@ -90,7 +90,7 @@ void assemble_server_address (char *buf, int size, struct server *s) {
 static int server_clist_refresh_row (struct server *s, int row) {
   GdkPixmap *server_pixmap;
   GdkBitmap *server_pixmask;
-  char *text[7];
+  char *text[8];
   char buf1[256], buf2[32], buf3[32], buf4[32];
   char *retries;
   struct pixmap *retries_pix = NULL;
@@ -139,8 +139,9 @@ static int server_clist_refresh_row (struct server *s, int row) {
   g_snprintf (buf4, 32, "%d/%d", s->curplayers, s->maxplayers);
   text[4] = (!s->curplayers)? buf4 : NULL;
 
-  text[5] = (s->map)?  s->map : NULL;
+  text[5] = (s->map) ?  s->map : NULL;
   text[6] = (s->game)? s->game : NULL;
+  text[7] = (s->mod) ? s->mod : NULL;
 
   if (row < 0) {
     row = gtk_clist_append (server_clist, text);

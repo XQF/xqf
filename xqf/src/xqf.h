@@ -49,6 +49,7 @@
 #define	SN_DEFAULT_PORT		22450		/* Sin */
 #define	HL_DEFAULT_PORT		27015		/* Half-Life */
 #define	KP_DEFAULT_PORT		31510		/* Kingpin */
+#define	SFS_DEFAULT_PORT	28910		/* Soldier of Fortune */
 #define	HR_DEFAULT_PORT		28910		/* Heretic2 */
 #define	UN_DEFAULT_PORT		7777		/* Unreal */
 
@@ -85,6 +86,7 @@ enum server_type {
   SN_SERVER,
   HL_SERVER,
   KP_SERVER,
+  SFS_SERVER,
   HR_SERVER,
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
   UN_SERVER,
@@ -127,6 +129,7 @@ struct server {
 
   char	*name;
   char	*map;
+  char  *mod;
   unsigned short maxplayers;
   unsigned short curplayers;
   short	ping;
@@ -172,6 +175,8 @@ struct master {
   enum master_state state;
 
   GSList *masters;
+  
+  int master_type;
 };
 
 extern	time_t xqf_start_time;

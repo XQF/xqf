@@ -308,6 +308,27 @@ struct game games[] = {
     quake_save_info
   },
   {
+    SFS_SERVER,
+    GAME_CONNECT | GAME_RCON,
+    "Soldier of Fortune",
+    SFS_DEFAULT_PORT,
+    0,
+    "SFS",
+    "SFS",
+    "-sfs",
+    "-q2s",  // assume a standard Quake2 style master.  May be wrong.
+    &sfs_pix,
+
+    q2_parse_player,
+    quake_parse_server,
+    q2_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    q2_exec_generic,
+    NULL,
+    quake_save_info
+  },
+  {
     HR_SERVER,
     GAME_CONNECT | GAME_RCON,
     "Heretic2",
@@ -339,7 +360,7 @@ struct game games[] = {
     "UNS",
     "UNS",
     "-uns",
-    NULL,
+    "uns",
     &un_pix,
 
     un_parse_player,
@@ -735,12 +756,13 @@ static void q2_analyze_serverinfo (struct server *s) {
 
 #ifdef QSTAT23
 
-static char *q3a_gametypes[5] = {
+static char *q3a_gametypes[6] = {
   "<FFA>",		/* Free for All */
   "<1v1>",	 	/* Tournament */
   NULL,  		/* Single Player */
   "<TDM>",		/* Team Deathmatch */
-  "<CTF>"
+  "<CTF>",
+  " mod ",              /* 5 is usually a client-side mod */
 };
 
 
@@ -753,17 +775,36 @@ static void q3_analyze_serverinfo (struct server *s) {
     s->flags |= SERVER_SPECTATE;
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+  
+    /*
+      fs_game sets the active directory and is how one chooses
+      a mod on the command line.  This should not show up in
+      the server string but some times it does.  We will
+      take either fs_game or gamename as the "mod" string.
+      --baa
+    */
+  
     if (strcmp (*info_ptr, "fs_game") == 0) {
-      s->game = info_ptr[1];
+      if (strcmp (info_ptr[1], "baseq3")) {
+	s->mod  = info_ptr[1];
+      }
     }
+    else if (strcmp (*info_ptr, "gamename") == 0) {
+      if (strcmp (info_ptr[1], "baseq3")) {
+	/* We only set the mod if the name is NOT baseq3. */
+	s->mod  = info_ptr[1];
+      }
+    }
+
     else if (!s->game && strcmp (*info_ptr, "g_gametype") == 0) {
+      /* A value of 5 is usually a mod */
       n = strtol (info_ptr[1], &endptr, 10);
 
       if (endptr == info_ptr[1]) {
 	s->game = info_ptr[1];
       }
       else {
-	if (n < 5)
+	if (n < 6)
 	  s->game = q3a_gametypes[n];
       }
     }

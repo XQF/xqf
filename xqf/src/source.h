@@ -27,6 +27,7 @@
 #define	FILENAME_SRVINFO	"srvinfo"
 
 #define	PREFIX_MASTER		"master://"
+#define	PREFIX_GMASTER		"gmaster://"
 #define	PREFIX_URL_HTTP		"http://"
 
 #define	ACTION_ADD		"ADD"

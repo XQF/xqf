@@ -186,6 +186,11 @@ void server_free_info (struct server *s) {
     s->info = NULL;
     s->game = NULL;
   }
+
+  if (s->mod) { /* Added by baa */
+    s->mod = NULL;
+  }
+
   if (s->players) {
     g_slist_foreach (s->players, (GFunc) g_free, NULL);
     g_slist_free (s->players);

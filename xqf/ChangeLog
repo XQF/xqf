@@ -1,0 +1,20 @@
+Oct 8th 2000: xqf-0.9.4f - Alex Burger <alex@fragit.net>
+-UnrealTournament master support using Gamespy style master via QStat 2.4a
+-Add Epic UT Master server to default master list
+-Remove Gamespy master server entry from default master list
+-Fixed master list bug
+
+Oct 4th 2000: xqf-0.9.4e - Alex Burger <alex@fragit.net>
+-Soldier of Fortune support
+-Gamespy master server support when used with QStat 2.4a
+-Format of 'lists' file changed to record game type in master entry
+-Ability to add the same master to multiple games such as Gamespy's master
+
+xqf-0.9.4d - Bill Adams <webmaster@evil.inetarena.com>
+-When browsing Q3A games the mods (e.g. arena, osp, beryllium, etc.) show
+ up in the "Game" column along with the game type (FFA, etc.). 
+-The mod appears in its own column for Q3A games
+-You can filter by mod
+-You can filter by the version string
+
+
