@@ -40,6 +40,10 @@
 #define BUFFER_MAXSIZE	(128*1024)
 #define BUFFER_TRESHOLD	64
 
+// EVENT_* used to decide what sound to play
+#define EVENT_REFRESH_SELECTED 1
+#define EVENT_REFRESH          2
+#define EVENT_UPDATE           3
 
 struct stat_job;
 

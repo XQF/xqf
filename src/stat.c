@@ -775,6 +775,7 @@ static void stat_close (struct stat_job *job, int killed) {
   dns_set_callback (NULL, NULL);
   dns_cancel_requests ();
   debug (3, "stat_close() -- Job %lx  Killed? %d", job, killed);
+
   while (job->cons)
     stat_free_conn ((struct stat_conn *) job->cons->data);
 
@@ -785,6 +786,19 @@ static void stat_close (struct stat_job *job, int killed) {
     (* (close_func) tmp->data) (job, killed);
 
   stat_job_free (job);
+
+  if(event_type == EVENT_REFRESH_SELECTED) {
+    debug (1, "refresh selected done\n");
+  }
+  if(event_type == EVENT_REFRESH) {
+    debug (1, "refresh done.\n");
+    play_sound(sound_refresh_done);
+  }
+  if(event_type == EVENT_UPDATE) {
+    debug (1, "update done.\n");
+    play_sound(sound_update_done);
+  }
+  event_type=0;
 }
 
 
