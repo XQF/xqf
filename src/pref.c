@@ -92,6 +92,7 @@ int	serverlist_countbots;
 int	default_terminate;
 int	default_iconify;
 int	default_launchinfo;
+int	default_stopxmms;
 int	default_prelaunchexec;
 int	default_save_lists;
 int 	default_save_srvinfo;
@@ -159,6 +160,7 @@ static  GtkWidget *qw_is_quakeforge_button;
 static  GtkWidget *terminate_check_button;
 static  GtkWidget *iconify_check_button;
 static  GtkWidget *launchinfo_check_button;
+static  GtkWidget *stopxmms_check_button;
 static  GtkWidget *prelaunchexec_check_button;
 static  GtkWidget *save_lists_check_button;
 static  GtkWidget *save_srvinfo_check_button;
@@ -850,6 +852,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
   if (i != default_launchinfo)
     config_set_bool ("launchinfo", default_launchinfo = i);
+
+  i = GTK_TOGGLE_BUTTON (stopxmms_check_button)->active;
+  if (i != default_stopxmms)
+    config_set_bool ("stopxmms", default_stopxmms = i);
 
   i = GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
   if (i != default_prelaunchexec)
@@ -3828,7 +3834,7 @@ static GtkWidget *general_options_page (void) {
 
   /* Terminate */
 
-  table = gtk_table_new(2,3,TRUE);
+  table = gtk_table_new(3,2,TRUE);
   
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
 
@@ -3855,7 +3861,7 @@ static GtkWidget *general_options_page (void) {
     gtk_widget_set_sensitive (iconify_check_button, FALSE);
   gtk_widget_show (iconify_check_button);
 
-  gtk_table_attach_defaults(GTK_TABLE(table),iconify_check_button, 2, 3, 0, 1);
+  gtk_table_attach_defaults(GTK_TABLE(table),iconify_check_button, 1, 2, 0, 1);
 
   /* Launchinfo */
 
@@ -3880,10 +3886,26 @@ static GtkWidget *general_options_page (void) {
                                                            default_prelaunchexec);
   gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled",
                           GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
-  gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.qf/PreLaunch (if it exists) before launching the game"), NULL);
+  gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button,
+		  _("Executes ~/.qf/PreLaunch (if it exists) before launching the game"), NULL);
   gtk_widget_show (prelaunchexec_check_button);
 
-  gtk_table_attach_defaults(GTK_TABLE(table),prelaunchexec_check_button, 2, 3, 1, 2);
+  gtk_table_attach_defaults(GTK_TABLE(table),prelaunchexec_check_button, 1, 2, 1, 2);
+
+  
+  /* Stop XMMS */
+
+  stopxmms_check_button = 
+                    gtk_check_button_new_with_label (_("Stop current song in XMMS"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (stopxmms_check_button), 
+                                                             default_stopxmms);
+  gtk_tooltips_set_tip (tooltips, stopxmms_check_button, _("Stopping XMMS will release /dev/dsp. "
+	  "Activate this option if you use XMMS and have a cheap soundcard "
+	  "that allows only one application to open /dev/dsp."), NULL);
+  gtk_widget_show (stopxmms_check_button);
+
+  gtk_table_attach_defaults(GTK_TABLE(table),stopxmms_check_button, 0, 1, 2, 3);
+
 
   gtk_widget_show(table);
 
@@ -4787,6 +4809,7 @@ int prefs_load (void) {
   default_terminate =         config_get_bool ("terminate=false");
   default_iconify =           config_get_bool ("iconify=false");
   default_launchinfo =        config_get_bool ("launchinfo=false");
+  default_stopxmms =          config_get_bool ("stopxmms=false");
   default_prelaunchexec =     config_get_bool ("prelaunchexec=false");
   default_save_lists =        config_get_bool ("save lists=true");
   default_save_srvinfo =      config_get_bool ("save srvinfo=true");

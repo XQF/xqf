@@ -35,6 +35,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>	/* kill, ... */
+#include <sys/wait.h>
+
 
 #ifdef ENABLE_NLS
 #  include <locale.h>
@@ -1053,6 +1055,47 @@ static gboolean check_launch (struct condef* con)
     return FALSE;
 }
 
+// stop XMMS if running
+static void stopxmms()
+{
+  char* xmmssocket = NULL;
+
+  if (!default_stopxmms)
+    return;
+  
+  xmmssocket = g_strdup_printf("/tmp/xmms_%s.0",g_get_user_name());
+
+  if(access(xmmssocket,R_OK))
+  {
+    debug(3,"xmms not running");
+    g_free(xmmssocket);
+    return;
+  }
+
+  pid_t pid = fork();
+  if ( pid == 0) {
+    char *argv[3];
+    argv[0] = "xms";
+    argv[1] = "-s";
+    argv[2] = NULL;
+    execvp(argv[0],argv);
+    _exit(EXIT_FAILURE);
+  }     
+  else if(pid > 0)
+  {
+    int status;
+    waitpid(pid,&status,0);
+
+    if(WIFEXITED(status))
+      debug(3,"xmms exited normally");
+    else
+      debug(3,"xmms exited with status %d",WEXITSTATUS(status));
+    if(WIFSIGNALED(status))
+      debug(3,"xmms was killed by signal %d",WTERMSIG(status));
+  }
+
+  g_free(xmmssocket);
+}
 
 static void launch_close_handler_part2(struct condef *con)
 {
@@ -1066,6 +1109,8 @@ static void launch_close_handler_part2(struct condef *con)
   char *temp_game;
 
   struct server *s;
+
+  stopxmms();
 
   if (redialserver == 1) // was called from a redial
     play_sound(sound_redial_success, 0);
@@ -1134,7 +1179,6 @@ static void launch_close_handler_part2(struct condef *con)
     con->custom_cfg = g_strdup (props->custom_cfg);
 
 
-
   launch = client_launch (con, TRUE);
   condef_free (con);
 
@@ -1189,7 +1233,7 @@ static void launch_close_handler_part2(struct condef *con)
       launchargv[2] = g_strdup_printf("%s:%d", inet_ntoa (s->host->ip), s->port);
       launchargv[3] = NULL;
       execv(launchargv[0],launchargv);
-      debug(0,"PreLaunch failed",launchargv[1]);
+      debug(0,"PreLaunch failed");
       _exit(EXIT_FAILURE);
     }     
   }
