@@ -4,6 +4,7 @@ Oct 29, 2002: Alex Burger <alex_b@users.sourceforge.net>
 Oct 29, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - add some missing gettext calls
 - fix function casting to int*
+- use only first argument of command line for directory guessing
 
 Oct 28, 2002: Alex <alex_b@users.sourceforge.net>
 - Add guess_dir functionality to Suggest button and user_fix_defaults
