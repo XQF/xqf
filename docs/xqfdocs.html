@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<center><b><u><font size=+3>XQF 0.9.7c</font></u></b>
+<center><b><u><font size=+3>XQF 0.9.7</font></u></b>
 <p>December 15th, 2001
 <br>Written by:&nbsp; Alex Burger &lt;<a href="mailto:alex@fragit.net">alex@fragit.net</a>>
 <p>Documentation contributors:
@@ -41,10 +41,10 @@
 
 <p><br><a NAME="Overview"></a><b><u><font size=+2>Overview</font></u></b>
 <p><a href="http://www.linuxgames.com/xqf/">XQF</a> is a 3D action game
-(such as Quake, sequels and derivatives) server browser, similar to Window's
-GameSpy. It uses X and is written using the <a href="http://www.gimp.org/">GIMP
-Tool Kit</a>, and uses <a href="http://www.qstat.org/">QStat</a> in the
-back end to retrieve server info.
+(such as Quake, sequels and derivatives) server browser. It uses X and
+is written using the <a href="http://www.gimp.org/">GIMP Tool Kit</a>.
+<p>XQF is a front-end to <a href="http://www.qstat.org/">QStat</a>, a program
+by Steve Jankowsk which is used to retrieve server info.
 <p>With&nbsp; XQF you can search for the following games:
 <blockquote>Quake
 <br>Quake World
@@ -74,17 +74,36 @@ You can also apply filters while searching for servers, trimming full or
 empty servers, for example.
 <p>The program has been translated to the following languages: English,
 Spanish and German.
+<p>Highlight of features:
+<br>&nbsp; - Supports (unauthenticated) Gamespy style master servers using
+QStat 2.4a
+<br>&nbsp; - Displays server rules and player info
+<br>&nbsp; - Players and servers sorting
+<br>&nbsp; - Favorite servers list
+<br>&nbsp; - Simple filtering for servers
+<br>&nbsp; - Player Filter (Buddy Lists)
+<br>&nbsp; - Player name, color, skin and model selection
+<br>&nbsp; - QuakeWorld skin visualization with coloring
+<br>&nbsp; - Custom configs
+<br>&nbsp; - Decodes and displays extended bit-field server flags (dmfalgs,
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; teamplay, etc...)
+<br>&nbsp; - Remote server administration tool (rcon) for QuakeWorld, HexenWorld,
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quake2, Quake3: Arena, Half-Life, Sin,
+Kingpin, Heretic2 servers
 <br>&nbsp;
 <p><a NAME="System Requirements"></a><b><u><font size=+2>System Requirements</font></u></b>
 <p>The minimum system requirements are:
-<p>A recent Linux distribution running on an AMD/Intel or PowerPC platform
+<p>A UNIX computer and C compiler (gcc)
 <br><a href="http://www.qstat.org">QSTAT 2.4e</a> (latest version recommended
 to ensure full functionality)
 <br>glibc 2.1+
 <br>Xfree86 3.3.3+
-<br>GTK+ 1.2+
+<br><a href="http://www.gtk.org">GTK</a>+ 1.2.5+
 <br><a href="http://www.gnu.org/software/gettext/">gettext</a> 0.10.36+
 (ONLY required when building directly from CVS)
+<br><a href="ftp://ftp.gnu.org/gnu/wget/">wget</a> to retrieve html server
+listings from the Web
+<p>XQF has been tested as is known to run on Intel / AMD and PowerPC platforms.
 <br>&nbsp;
 <p><a NAME="Downloading"></a><b><u><font size=+2>Downloading</font></u></b>
 <br>&nbsp;
@@ -148,7 +167,10 @@ is not in your path, launch xqf with:
 <p><b><i>/usr/local/bin/xqf -d </i>N</b>
 <p>You can also add the directory to your path, or simply make a symbolic
 link in /usr/bin.&nbsp; For example, as root:
-<p><b>ln -s /usr/local/bin/xqf /usr/bin/xqf</b></blockquote>
+<p><b>ln -s /usr/local/bin/xqf /usr/bin/xqf</b>
+<p>XQF can be customized via GTK's rc files.&nbsp; XQF parses files /etc/gtkrc,
+$HOME/.gtkrc and $HOME/.qf/gtkrc.
+<br>&nbsp;</blockquote>
 </blockquote>
 <a NAME="Menu bar"></a><b><u><font size=+1>Menu bar:</font></u></b>
 <p>File, Edit, View, Server, Preferences
@@ -205,8 +227,9 @@ not require the key.
 <blockquote>Parses html pages for server listings. Common in Quake1, Quake2,
 Kingpin and Heretic II.
 <p><b>Example:</b>
-<p>http://www.gameaholic.com/servers/qspy-heretic2</blockquote>
-</blockquote>
+<p>http://www.gameaholic.com/servers/qspy-heretic2
+<br>&nbsp;</blockquote>
+<b>Note</b>:&nbsp; Not specifying a prefix will default to master://</blockquote>
 <b>Delete Master:</b>
 <blockquote>Removes a master from the Source list</blockquote>
 <b>Find Player:</b>
@@ -584,7 +607,19 @@ Record S Filter, P Filter, SF Cfg, PF Cfg
 <blockquote>Left pane:&nbsp; Source
 <br>Top pane:&nbsp; Server list
 <br>Middle bottom pane:&nbsp; Player list
-<br>Bottom right pane:&nbsp; Server info</blockquote>
+<br>Bottom right pane:&nbsp; Server info
+<p>While in the Server pane:
+<ul>
+<li>
+Left double-click launches game on selected server.</li>
+
+<li>
+Right click pops up server option menu.</li>
+
+<li>
+Middle click selects one server and refreshes its information.</li>
+</ul>
+</blockquote>
 <a NAME="Bottom status bar"></a><b><u><font size=+1>Bottom status bar:</font></u></b>
 <br>&nbsp;
 <blockquote>Left bar: Current XQF activity
@@ -628,6 +663,15 @@ run XQF, close XQF, copy the [Master_List] section from the new config
 file to your old config file, restore your old config file and restart
 XQF.
 <p>This will hopefully be fixed / improved in a future version.
+<p><b>Q:&nbsp;</b> I have added master0.gamepy.com to XQF, but I can not
+retreive any servers from that master
+<p><b>A:</b>&nbsp; Gamespy's master servers use an authentication sequence
+that is not supported by QStat.&nbsp; This means that you can not query
+a Gamespy master using QStat and XQF.&nbsp; Other games such as Unreal
+Tournament use the Gamespy style master server but do not require authenticatoin
+which is why they work
+<br>&nbsp;
+<br>&nbsp;
 <br>&nbsp;</blockquote>
 <a NAME="Launching games"></a><b><u><font size=+2>Launching games</font></u></b>
 <br>&nbsp;
@@ -639,7 +683,56 @@ configuration.
 directory'. Nothing special needed.</blockquote>
 <b>Quake3:</b>
 <blockquote>Under Preferences - Games, enter the 'command line' and 'working
-directory'. Nothing special needed.</blockquote>
+directory'. Nothing special is <i>normally</i> needed.
+<p><b><u>QUAKE 3 ARENA SPECIAL INSTRUCTIONS (AKA HACK) for v1.17 and 1.27</u></b>
+<p>This may also apply to newer versions of Quake3 as they are released.
+<p>In Q3A, clients and servers can only talk with each other if they are
+using the same protocol.&nbsp; The protocol in Q3A is defined by a&nbsp;
+number.&nbsp; So, for instance, Q3A 1.17 uses&nbsp; protocol 45 wile 1.27
+uses protocol 48.&nbsp; During the switch-over time after ID releases a
+new point release, it can be&nbsp; frustrating to not be able to connect
+to any server one wants. However, if you have lots of disk space, it is
+possible to get around this problem.
+<p>I (Bill 'EvilBill' Adams) will outline what I did to get it so I can
+play both 1.17 and 1.27 Q3A games without much fuss.
+<br>For reference, my Q3A is installed under /usr/local/games/... and I
+have a symlink from /usr/local/bin/quake3 to ../games/quake3/quake3.
+<p><b>(1)</b> Rename /usr/local/games/quake3 (as I used to have it) to
+/usr/local/games/quake3-1.17.
+<p><b>(2)</b> mkdir /usr/local/games/quake3; cd /usr/local/games/quake3
+<p><b>(3)</b> cp -Rav ../quake3-1.17 .
+<p><b>(4)</b> Install the point release, copy all of the TA pk3 files into
+baseq3.&nbsp; Remove any old mods from 1.17.
+<p><b>(5)</b> cd..; mv quake3 quake3-1.27
+<p><b>(6)</b> Edit both of the quake3 scripts so the directories all match,
+here is the script I use for 1.17: (/usr/local/games/quake3-1.17/quake3)
+<p>==begin==
+<br>#!/bin/sh
+<br># Needed to make symlinks/shortcuts work.
+<br># Run Quake III with some default arguments
+<p>LD_LIBRARY_PATH="/usr/local/games/quake3-1.17"
+<br>export LD_LIBRARY_PATH
+<p>cd "/usr/local/games/quake3-1.17"
+<br>quake="./quake3.x86"
+<br>"$quake" +set in_dgamouse 1 $*
+<br>exit $?
+<br>==cut==
+<p><b>(7)</b> [as root], cd into /usr/local/bin.&nbsp; Make symlinks for
+each of the Q3A directories that correspond to the protocol each uses.
+So:
+<p>&nbsp; ln -s ../games/quake3-1.17 quake3proto45
+<br>&nbsp; ln -s ../games/quake3-1.27 quake3proto48
+<br>&nbsp; ln -s ../games/quake3-1.27 quake3
+<p>Note the last one is there as the default.
+<p><b>(8)</b> Get a very (CVS) recent version of xqf. You will need >=0.9.6e-beta.
+Set up the executable for quake3 such that it is the FULL path to&nbsp;
+quake3, in my case I entered /usr/local/bin/quake3.&nbsp; This is VERY
+important because of the hack I used where I put 'protoNN' on the end of
+whatever you entered for the program and see if xqf can fopen it.&nbsp;
+Without the full path, chances are that xqf will not find it.
+<p>If you have problems, run xqf with "-d 5" on the command line.&nbsp;
+This will give you some hints as to that which it is looking.
+<br>&nbsp;</blockquote>
 <b>Soldier of Fortune (1.06):</b>
 <blockquote>Create a script in your sof directory called 'startsof-xqf'
 that contains: ./sof +set console 1 +won_login username password $*
@@ -665,7 +758,8 @@ directory UnrealTournament is installed in for 'working directory'.</blockquote>
 on the command line after the command specified in Preferences - Games
 'command line': +set cd_nocd (0 or 1) +set game (gamename) +connect ipaddress:port
 <p>Depending on how you launch HalfLife using Wine (<a href="http://www.transgaming.com/">TransGaming</a>,
-<a href="http://lhl.linuxgames.com">Linux Half-Life</a> or <a href="http://eg4l.sourceforge.net/ehl/index.html">Emulated
+<a href="http://lhl.linuxgames.com">Linux
+Half-Life</a> or <a href="http://eg4l.sourceforge.net/ehl/index.html">Emulated
 Half-Life</a> for example), you may only want to pass one of the above
 command line options to the Wine script. A simple way is to create a script
 called 'starthl-xqf' that contains: path-to-ehl/ehl $8 if you wanted to

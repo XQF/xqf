@@ -1,6 +1,5 @@
 
-                               XQF 0.9.6f beta
-                             (Januaray 21, 2001)
+                                      XQF
 
 DESCRIPTION
 -----------
@@ -9,161 +8,18 @@ XQF is Quake/QuakeWorld/Quake2/Quake3 server browser and launcher for X11.
 It uses the GTK+ (http://www.gimp.org/gtk) toolkit.
 XQF is a front-end to QStat, a program by Steve Jankowski.
 
-Development platform: Debian/Linux (glibc2.1), XFree86 3.3.6, GTK+ 1.2.7.
 
-Features:
-  - Supports Quake, QuakeWorld, Quake2, Quake3: Arena, Hexen2, HexenWorld, 
-      Sin, Half-Life, Kingpin, Heretic2, Unreal Tournament,
-      Soldier of Fortune
-  - Uses QStat to communicate with masters/servers
-  - Supports (unauthenticated) Gamespy style master servers using QStat 2.4a
-  - Displays server rules and player info
-  - Players and servers sorting
-  - Favorite servers list
-  - Simple filtering for servers
-  - Player Filter (Buddy Lists)
-  - Player name, color, skin and model selection
-  - QuakeWorld skin visualization with coloring
-  - Custom configs
-  - Decodes and displays extended bit-field server flags (dmfalgs, 
-      teamplay, etc...)
-  - Remote server administration tool (rcon) for QuakeWorld, HexenWorld,
-      Quake2, Quake3: Arena, Half-Life, Sin, Kingpin, Heretic2 servers
+INSTALLING / USAGE
+------------------
 
-
-REQUIREMENTS
-------------
-
- - A UNIX computer and C compiler (gcc)
- - X11 (X Window System)
- - GTK+ 1.2.5+ http://www.gtk.org
- - QStat 2.4a http://www.activesw.com/people/steve/qstat.html
- - [Optionally] wget ftp://ftp.gnu.org/gnu/wget/ to retrieve server 
-   listings from the Web
- - [Optionally] gzip http://www.gnu.org/software/gzip/gzip.html 
-   or bzip2 http://www.muraroa.demon.co.uk/ for data file compression
-
-
-COMPILATION
------------
-
-Untar the xqf-X.X.XX.tar.gz archive, change directory to xqf-X.X.XX,
-
-   ./configure
-   make
-
-To install the binary become root if necessary and run "make install".
-
-
-USAGE
------
-
-QStat 2.4a is required.  It must be in your $PATH.
-
-Note: Gamespy's master servers use an authentication sequence that is not
-supported by QStat 2.4a.  This means that you can not query a Gamespy master
-using QStat and XQF.  The Unreal Tournament master server at Epic also
-uses a Gamespy style master server but does not require authentication.
-This means that you can query Epic's UT master server using:
-
-gmaster://unreal.epicgames.com:28900
-
-Please see the QStat documentation for more information on the types of
-master servers.
-
-QStat home page is http://www.activesw.com/people/steve/qstat.html
-
-Server list navigation:
- - Left double-click launches game on selected server.
- - Right click pops up server option menu.
- - Middle click selects one server and refreshes its information.
-
-XQF can be customized via GTK's rc files.  XQF parses files
-/etc/gtkrc, $HOME/.gtkrc, $HOME/.qf/gtkrc.
-
-When adding a master server, the following prefixes are support:
-
-master://	(regular master server)
-gmaster://	(Gamespy style master server)
-http://		(html page containing list)
-
-Not specifying a prefix will default to master://
-
-Please send bug reports or suggestions to roma@botik.ru
-
-
-
-QUAKE 3 ARENA SPECIAL INSTRUCTIONS (AKA HACK)
---------------------------------------------
-
-In Q3A, clients and servers can only talk with each other
-if they are using the same protocol.  The protocol in Q3A
-is defined by a number.  So, for instance, Q3A 1.17 uses
-protocol 45 wile 1.27 uses protocol 48.  During the switch-
-over time after ID releases a new point release, it can be 
-frustrating to not be able to connect to any server one wants.
-However, if you have lots of disk space, it is possible to
-get around this problem.
-
-I (Bill 'EvilBill' Adams) will outline what I did to get it 
-so I can play both 1.17 and 1.27 Q3A games without much fuss. 
-For reference, my Q3A is installed under /usr/local/games/...
-and I have a symlink from /usr/local/bin/quake3 to ../games/quake3/quake3.
-
-(1) Rename /usr/local/games/quake3 (as I used to have it) to
-/usr/local/games/quake3-1.17.
-
-(2) mkdir /usr/local/games/quake3; cd /usr/local/games/quake3
-
-(3) cp -Rav ../quake3-1.17 .
-
-(4) Install the point release, copy all of the TA pk3 files into 
-baseq3.  Remove any old mods from 1.17.
-
-(5) cd..; mv quake3 quake3-1.27
-
-(6) Edit both of the quake3 scripts so the directories all match, here is
-the script I use for 1.17: (/usr/local/games/quake3-1.17/quake3)
-
-==begin==
-#!/bin/sh
-# Needed to make symlinks/shortcuts work.
-# Run Quake III with some default arguments
- 
-LD_LIBRARY_PATH="/usr/local/games/quake3-1.17"
-export LD_LIBRARY_PATH
- 
-cd "/usr/local/games/quake3-1.17"
-quake="./quake3.x86"
-"$quake" +set in_dgamouse 1 $*
-exit $?                                                                        ==cut==
-
-(7) [as root], cd into /usr/local/bin.  Make symlinks for each of the
-Q3A directories that correspond to the protocol each uses. So:
-  ln -s ../games/quake3-1.17 quake3proto45
-  ln -s ../games/quake3-1.27 quake3proto48
-  ln -s ../games/quake3-1.27 quake3 
-
-Note the last one is there as the default.
-
-(8) Get a very (CVS) recent version of xqf. You will need >=0.9.6e-beta. 
-Set up the executable for quake3 such that it is the FULL path to 
-quake3, in my case I entered /usr/local/bin/quake3.  This is VERY important
-because of the hack I used where I put 'protoNN' on the end of whatever
-you entered for the program and see if xqf can fopen it.  Without the full
-path, chances are that xqf will not find it.
-
-If you have problems, run xqf with "-d 5" on the command line.  This
-will give you some hints as to that which it is looking.
-
-
+Please see the docs/xqfdocs.html file for more information.
 
 
 AVAILABILITY
 ------------
 
   http://www.linuxgames.com/xqf/
-  ftp://ftp.linuxgames.com/pub/xqf/
+  http://sourceforge.net/projects/xqf/
 
 
 COPYRIGHT
@@ -173,7 +29,6 @@ XQF is Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>
 
 Copying is allowed under the terms of GNU General Public License.  
 See the file COPYING for more details.
-
 
 ----------------------------------------------------------------------
 Roman Pozlevich <roma@botik.ru>
