@@ -90,6 +90,10 @@ static const char required_qstat_version[]="2.4e";
 
 time_t xqf_start_time;
 
+char* xqf_PACKAGE_DATA_DIR = PACKAGE_DATA_DIR;
+char* xqf_LOCALEDIR = LOCALEDIR;
+char* qstat_configfile = NULL;
+
 GtkWidget *main_window = NULL;
 GtkWidget *source_ctree = NULL;
 GtkCList  *server_clist = NULL;
@@ -3731,15 +3735,24 @@ static void parse_commandline(int argc, char* argv[])
 
 int main (int argc, char *argv[]) {
   char *gtk_config;
+  char* var = NULL;
   int newversion = FALSE;
 
   xqf_start_time = time (NULL);
 
   redialserver=0;
+
+  var = getenv("xqf_PACKAGE_DATA_DIR");
+  if(var)
+    xqf_PACKAGE_DATA_DIR = var;
+
+  var = getenv("xqf_LOCALEDIR");
+  if(var)
+    xqf_LOCALEDIR = var;
   
 #ifdef ENABLE_NLS
   setlocale(LC_ALL, "");
-  bindtextdomain(PACKAGE, LOCALEDIR);
+  bindtextdomain(PACKAGE, xqf_LOCALEDIR);
 #ifdef USE_GTK2
   bind_textdomain_codeset(PACKAGE, "UTF-8");
 #endif
@@ -3766,7 +3779,13 @@ int main (int argc, char *argv[]) {
 
   parse_commandline(argc,argv);
 
-  add_pixmap_directory (PACKAGE_DATA_DIR "/default");
+  {
+    char* defaultpixmapdir = g_strconcat(xqf_PACKAGE_DATA_DIR, "/default", NULL);
+    add_pixmap_directory (defaultpixmapdir);
+    g_free(defaultpixmapdir);
+  }
+
+  qstat_configfile = g_strconcat(xqf_PACKAGE_DATA_DIR, "/qstat.cfg", NULL);
   
   dns_gtk_init ();
 
