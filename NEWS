@@ -2,7 +2,31 @@ XQF 0.9.13 -- ?????, 2003
 ~~~~~~~~~~
 Changes since 0.9.12:
 
-o 
+o Added support for Call of Duty
+o Support for America's Army
+o Added support for Medal of Honor
+o Added Savage support
+o Update Enemy Territory default protocol number
+o Added Quake III gametypes for TrueCombat 1.0
+o Added gametypes and voteflags for Urban Terror 3
+o Additional gametypes for RTCW and ET mods
+o Added custom arguments for Death Ball UT2003 mod
+o Added custom arguments for FragOps UT2 mod
+o Detection of cheating-death on HalfLife servers
+o Added some server listings from multiplay.co.uk such as MOHAA
+o Added twilight to q1 and qw command suggestion
+o Update QuakeForge's HexenWorld master server port number
+o GeoIP support
+o Server side filtering for Half-Life
+o New splash screen and desktop icons
+o Option to resolve hostnames on update
+o Option to stop current song in XMMS when launching a game
+o Display team of player for Q3 mods that provide the necessary information such as OSP and TrueCombat
+o Fix default ping value when reading server filters
+o Added --launch parameter command line option
+o Now sets environment variable XQF_SERVER_ANTICHEAT before launching a game when the server requires some anti-cheat software
+o GTK2 compilation support
+o New French translation
 
 XQF 0.9.12 -- June 10, 2003
 ~~~~~~~~~~
