@@ -1,3 +1,6 @@
+Jun 06, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- update Danish translation (Morten Brix Pedersen)
+
 Jun 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add support for Americas Army 2.1. Still no master, old version no longer
   supported, requires recent qstat from cvs (gs2 protocol)
