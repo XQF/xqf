@@ -3,6 +3,8 @@ Oct 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix plural form in reset_main_status_bar
 
 Oct 27, 2002: Alex <alex_b@users.sourceforge.net>
+- Changed UT2003 back to -gps for qstat, now uses query port from master
+  server for server list, pulls hostport from server info when connecting
 - Number of servers in status bar now updated when enabling / disabling a
   filter and when finished searching for a player
 - Created function reset_main_status_bar

@@ -145,7 +145,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   {
     int off = strlen(token[0]);
     token[0][off]=':';
-    strcpy(token[0]+off+1,token[1]);
+    strcpy(token[0]+off+1,token[2]);
 
     n=1;
   } 

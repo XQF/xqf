@@ -570,8 +570,8 @@ struct game games[] = {
     UT2_DEFAULT_PORT,
     0,
     "UT2S",
-    "UT2S",
-    "-ut2s",
+    "gps",
+    "-gps",
     "-ut2m",
     &ut2_pix,
 
@@ -2748,6 +2748,7 @@ static int ut_exec (const struct condef *con, int forkit) {
   char* hostport=NULL;
   char* real_server=NULL;
   char** additional_args = NULL;
+  char **info_ptr;
   int i;
 
   cmd = strdup_strip (g->cmd);
@@ -2762,6 +2763,15 @@ static int ut_exec (const struct condef *con, int forkit) {
 // exec "./ut-bin" $* -log and not -log $* at the end
 // otherwise XQF you can not connect via the command line!
 
+  if(con->s->type == UT2_SERVER) {
+    // go through all server rules
+    for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
+      if (!strcmp (*info_ptr, "hostport")) {
+        hostport=info_ptr[1];
+      }
+    }
+  }
+  
   if (con->server)
   {
     // gamespy port can be different from game port
