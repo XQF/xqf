@@ -1,3 +1,9 @@
+Feb 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- introduce GAME_ADMIN which allows to enter an rcon password without actually
+  supporting rcon
+- fix launching savage with password, support rcon password. Thanks Andreas
+  Schneider for reporting.
+
 Feb 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - allow tga as q3 mapshot
 

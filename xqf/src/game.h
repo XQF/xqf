@@ -36,6 +36,7 @@ enum {
   GAME_SPECTATE			= 0x0004,
   GAME_PASSWORD			= 0x0008,
   GAME_RCON			= 0x0010,
+  GAME_ADMIN			= 0x0020,
   GAME_QUAKE1_PLAYER_COLORS	= 0x0100,
   GAME_QUAKE1_SKIN		= 0x0200,
   GAME_QUAKE3_MASTERPROTOCOL	= 0x0400, // master server protocol version is in games_data["masterprotocol"]

@@ -3523,14 +3523,20 @@ static int savage_exec(const struct condef *con, int forkit)
   if (con->server) {
     argv[argi++] = "set";
     argv[argi++] = "autoexec";
+
+    connect_arg = g_strdup_printf("connect %s",con->server);
     
     if(con->password)
     {
-      connect_arg = g_strdup_printf("set cl_password %s; connect %s",con->password, con->server);
+      char* tmp = connect_arg;
+      connect_arg = g_strdup_printf("%s; set cl_password %s", connect_arg, con->password);
+      g_free(tmp);
     }
-    else
+    if(con->rcon_password)
     {
-      connect_arg = g_strdup_printf("connect %s",con->server);
+      char* tmp = connect_arg;
+      connect_arg = g_strdup_printf("%s; set cl_adminpassword %s", connect_arg, con->rcon_password);
+      g_free(tmp);
     }
     
     argv[argi++] = connect_arg;
