@@ -1553,12 +1553,9 @@ static void doom3_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "osmask") == 0) {
       char* p;
       unsigned long n = strtol(info_ptr[1], &p, 0);
-      if(info_ptr[1] != p)
+      if(info_ptr[1] != p && (n & 4) != 4)
       {
-	if(n == 0xFFFFFFFF)
-	  s->flags |= SERVER_CHEATS;
-	else if((n & 4) != 4)
-	  s->flags |= SERVER_INCOMPATIBLE;
+	s->flags |= SERVER_INCOMPATIBLE;
       }
     }
   }
