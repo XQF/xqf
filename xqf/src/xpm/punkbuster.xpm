@@ -1,6 +1,7 @@
 /* XPM */
 static char *punkbuster_xpm[]={
 "17 17 72 2",
+"Qt c None",
 ".0 c #0d1350",
 ".S c #101d5b",
 ".f c #132c6b",
@@ -72,7 +73,6 @@ static char *punkbuster_xpm[]={
 ".o c #c5c6de",
 ".B c #c9d2e8",
 ".v c #f0e4f0",
-"Qt c #ffffff",
 "QtQtQtQtQtQt.#.#.#.#.#QtQtQtQtQtQt",
 "QtQtQtQt.a.aQt.b.c.dQt.a.#QtQtQtQt",
 "QtQtQt.eQtQt.f.g.h.i.jQtQt.#QtQtQt",
