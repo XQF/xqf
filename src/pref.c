@@ -327,13 +327,14 @@ char* ef_masterprotocols[] = {
 };
 
 char* cod_masterprotocols[] = {
-	"1",
+	"5 - v1.4",
+	"1 - retail",
 	NULL
 };
 
 char* jk3_masterprotocols[] = {
-	"25 - v1.0",
 	"26 - v1.01",
+	"25 - v1.0",
 	NULL
 };
 
@@ -5068,7 +5069,7 @@ int prefs_load (void) {
   /* Call of Duty */
   config_push_prefix ("/" CONFIG_FILE "/Game: CODS");
   
-  tmp = config_get_string ("protocol=1");
+  tmp = config_get_string ("protocol=5");
   if ( strlen( tmp ) == 0 )
   {
     g_free(tmp);
