@@ -41,6 +41,7 @@
 #include "xpm/q2.xpm"
 #include "xpm/q3.xpm"
 #include "xpm/wo.xpm"
+#include "xpm/et.xpm"
 #include "xpm/stvef.xpm"
 #include "xpm/hex.xpm"
 #include "xpm/hw.xpm"
@@ -104,6 +105,7 @@ struct pixmap q1_pix;
 struct pixmap q2_pix;
 struct pixmap q3_pix;
 struct pixmap wo_pix;
+struct pixmap et_pix;
 struct pixmap ef_pix;
 struct pixmap hex_pix;
 struct pixmap hw_pix;
@@ -212,6 +214,7 @@ void free_pixmaps (void) {
   free_pixmap (&q2_pix);
   free_pixmap (&q3_pix);
   free_pixmap (&wo_pix);
+  free_pixmap (&et_pix);
   free_pixmap (&ef_pix);
   free_pixmap (&hex_pix);
   free_pixmap (&hw_pix);
@@ -290,6 +293,7 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &q2_pix, q2_xpm);
   create_pixmap (window, &q3_pix, q3_xpm);
   create_pixmap (window, &wo_pix, wo_xpm);
+  create_pixmap (window, &et_pix, et_xpm);
   create_pixmap (window, &ef_pix, ef_xpm);
   create_pixmap (window, &hex_pix, hex_xpm);
   create_pixmap (window, &hw_pix, hw_xpm);

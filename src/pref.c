@@ -242,6 +242,9 @@ static GtkWidget *wo_proto_entry;
 static GtkWidget *wo_setfs_gamebutton;
 static GtkWidget *wo_set_punkbusterbutton;
 
+/* Enemy Territory */
+static GtkWidget *woet_proto_entry;
+
 /* Voyager Elite Force */
 static GtkWidget *ef_proto_entry;
 static GtkWidget *ef_setfs_gamebutton;
@@ -282,6 +285,12 @@ char* wo_masterprotocols[] = {
 	"57 - retail",
 	"56 - test2",
 	"55 - test1",
+	NULL
+};
+
+// change config_get_string below too!
+char* woet_masterprotocols[] = {
+	"71 - 2.32 (test)",
 	NULL
 };
 
@@ -718,23 +727,19 @@ static void get_new_defaults (void) {
   
   config_pop_prefix ();
 
-  /* Voyager Elite Force */
+  /* Enemy Territory */
 
-  config_push_prefix ("/" CONFIG_FILE "/Game: EFS");
+  config_push_prefix ("/" CONFIG_FILE "/Game: WOETS");
 
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry)));
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (woet_proto_entry)->entry)));
   // locate first space and mark it as str's end
   str1 = strchr(str,' ');
   if (str1) *str1='\0';
 
-  game_set_attribute(EF_SERVER,"masterprotocol",strdup_strip(str));
+  game_set_attribute(WOET_SERVER,"masterprotocol",strdup_strip(str));
   config_set_string ("protocol", (str)? str : "");
   g_free(str);
   str=NULL;
-
-  i = GTK_TOGGLE_BUTTON (ef_setfs_gamebutton)->active;
-  config_set_bool ("setfs_game", i);
-  game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(i)));
 
   config_pop_prefix ();
 
@@ -3066,6 +3071,43 @@ static GtkWidget *wolf_options_page (void) {
   return page_vbox;
 }
 
+// additional options for enemy territory
+static GtkWidget *woet_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  woet_proto_entry = gtk_combo_new ();
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (woet_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (woet_proto_entry),
+			  createGListfromchar(woet_masterprotocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (woet_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (woet_proto_entry)->entry),
+		game_get_attribute(WOET_SERVER,"masterprotocol"));
+
+	  gtk_box_pack_start (GTK_BOX (hbox), woet_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (woet_proto_entry);
+
+	gtk_widget_show (hbox);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
+
 // additional options for voyager elite force
 static GtkWidget *ef_options_page (void) {
   GtkWidget *page_vbox;
@@ -3128,6 +3170,11 @@ void add_ut2_options_to_notebook(GtkWidget *notebook)
 void add_wolf_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), wolf_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_woet_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), woet_options_page(), gtk_label_new (_("Options")));
 }
 
 void add_ef_options_to_notebook(GtkWidget *notebook)
@@ -4251,6 +4298,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[UN_SERVER].add_options_to_notebook = add_un_options_to_notebook;
   new_genprefs[UT2_SERVER].add_options_to_notebook = add_ut2_options_to_notebook;
   new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
+  new_genprefs[WOET_SERVER].add_options_to_notebook = add_woet_options_to_notebook;
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
   new_genprefs[EF_SERVER].add_options_to_notebook = add_ef_options_to_notebook;
 
