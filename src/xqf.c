@@ -2389,7 +2389,7 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
   char *intro = _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n");
   char *version = g_strdup_printf(_("Version %s\n\n"),XQF_VERSION);
 
-  /* 8859-1 translators can use the copyright symbol © instead of (C) */
+  /* 8859-1 translators can use the copyright symbol instead of (C) */
   char *author = _("Copyright (C) 1998-2002 Roman Pozlevich <roma@botik.ru>\n\n");
   char *urls = _("http://www.linuxgames.com/xqf\n"
 		"http://sourceforge.net/projects/xqf\n\n");

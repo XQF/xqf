@@ -1,3 +1,8 @@
+Oct 06, 2003: Jordi Mallach <jordi@sindominio.net>
+- remove non-ASCII character from source, which broke gettext 0.12.
+- update QuakeForge's HexenWorld port.
+- update Catalan translation.
+
 Oct 05, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - add twilight to q1 and qw command suggestion
 - add checkbox to be able to also filter countries without icon
