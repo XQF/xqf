@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf\n"
-"POT-Creation-Date: 2002-02-12 01:03+0100\n"
-"PO-Revision-Date: 2002-02-12 01:03GMT\n"
+"POT-Creation-Date: 2002-02-12 21:33+0100\n"
+"PO-Revision-Date: 2002-02-12 21:33GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -44,8 +44,8 @@ msgstr "Master Adresse"
 #. Cancel Button
 #: src/addmaster.c:428 src/addserver.c:166 src/dialogs.c:318 src/filter.c:685
 #: src/game.c:1904 src/game.c:2062 src/launch.c:333 src/pref.c:2753
-#: src/psearch.c:228 src/psearch.c:401 src/srv-prop.c:595 src/xqf.c:631
-#: src/xqf.c:643 src/xqf.c:1272
+#: src/psearch.c:228 src/psearch.c:401 src/srv-prop.c:595 src/xqf.c:836
+#: src/xqf.c:848 src/xqf.c:1477
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -221,7 +221,7 @@ msgid "New"
 msgstr "Neu"
 
 #. FIXME: plural
-#: src/flt-player.c:817 src/xqf.c:1272 src/xqf.c:1782 src/xqf.c:2011
+#: src/flt-player.c:817 src/xqf.c:1477 src/xqf.c:1987 src/xqf.c:2216
 msgid "Delete"
 msgstr "Löschen"
 
@@ -300,8 +300,8 @@ msgstr ""
 "oder lassen Sie es leer (~/.q3a wird Standardmäßig benutzt)"
 
 #. passwords file could not be written
-#: src/game.c:1904 src/game.c:2062 src/launch.c:333 src/xqf.c:631
-#: src/xqf.c:643
+#: src/game.c:1904 src/game.c:2062 src/launch.c:333 src/xqf.c:836
+#: src/xqf.c:848
 msgid "Launch"
 msgstr "Starten"
 
@@ -939,62 +939,62 @@ msgid "Source"
 msgstr "Quelle"
 
 #. server filter
-#: src/xqf.c:346
+#: src/xqf.c:551
 msgid "None <--"
 msgstr "Keiner <--"
 
-#: src/xqf.c:348 src/xqf.c:2370
+#: src/xqf.c:553 src/xqf.c:2575
 msgid "None"
 msgstr "Keiner"
 
-#: src/xqf.c:362
+#: src/xqf.c:567
 #, c-format
 msgid "Filter %d <--"
 msgstr "Filter %d <--"
 
-#: src/xqf.c:364
+#: src/xqf.c:569
 #, c-format
 msgid "Filter %d"
 msgstr "Filter %d"
 
-#: src/xqf.c:382
+#: src/xqf.c:587
 msgid "No Server Filter Active"
 msgstr "Kein Server Filter aktiv"
 
-#: src/xqf.c:384
+#: src/xqf.c:589
 #, c-format
 msgid "Server Filter: %s"
 msgstr "Server Filter: %s"
 
-#: src/xqf.c:386
+#: src/xqf.c:591
 #, c-format
 msgid "Server Filter: %d"
 msgstr "Server Filter: %d"
 
-#: src/xqf.c:500
+#: src/xqf.c:705
 msgid "Updating lists..."
 msgstr "Aktualisiere Listen ..."
 
-#: src/xqf.c:504
+#: src/xqf.c:709
 #, c-format
 msgid "Resolving host names: %d/%d"
 msgstr "Löse Hostnamen auf: %d/%d"
 
-#: src/xqf.c:508
+#: src/xqf.c:713
 #, c-format
 msgid "Refreshing: %d/%d"
 msgstr "Aktualisiere: %d/%d"
 
-#: src/xqf.c:512
+#: src/xqf.c:717
 #, c-format
 msgid "Resolving host addresses: %d/%d"
 msgstr "Löse Hostnamen auf: %d/%d"
 
-#: src/xqf.c:537
+#: src/xqf.c:742
 msgid "Done."
 msgstr "Fertig."
 
-#: src/xqf.c:632
+#: src/xqf.c:837
 #, c-format
 msgid ""
 "Server %s:%d is %s.\n"
@@ -1005,7 +1005,7 @@ msgstr ""
 "\n"
 "Spiel trotzdem starten?"
 
-#: src/xqf.c:644
+#: src/xqf.c:849
 #, c-format
 msgid ""
 "Server %s:%d is full.\n"
@@ -1016,41 +1016,41 @@ msgstr ""
 "\n"
 "Spiel trotzdem starten?"
 
-#: src/xqf.c:663 src/xqf.c:683 src/xqf.c:1396
+#: src/xqf.c:868 src/xqf.c:888 src/xqf.c:1601
 msgid "Save Password"
 msgstr "Passwort Speichern"
 
-#: src/xqf.c:663
+#: src/xqf.c:868
 msgid "Spectator Password:"
 msgstr "Zuschauer Passwort:"
 
-#: src/xqf.c:683 src/xqf.c:1396
+#: src/xqf.c:888 src/xqf.c:1601
 msgid "Server Password:"
 msgstr "Server Passwort:"
 
-#: src/xqf.c:829
+#: src/xqf.c:1034
 msgid "Spectator"
 msgstr "Zuschauer"
 
-#: src/xqf.c:830 src/xqf.c:833
+#: src/xqf.c:1035 src/xqf.c:1038
 msgid "Demo name:"
 msgstr "Demo Name:"
 
-#: src/xqf.c:1033
+#: src/xqf.c:1238
 #, c-format
 msgid "Host %s not found"
 msgstr "Host %s nicht gefunden"
 
-#: src/xqf.c:1057
+#: src/xqf.c:1262
 #, c-format
 msgid "\"%s\" is not valid host[:port] combination."
 msgstr "\"%s\" ist keine zulässige host[:port] Kombination"
 
-#: src/xqf.c:1267
+#: src/xqf.c:1472
 msgid "You have to select the server you want to delete"
 msgstr "Sie müssen den Server auswählen den sie löschen möchten"
 
-#: src/xqf.c:1273
+#: src/xqf.c:1478
 #, c-format
 msgid ""
 "Master%s to delete:\n"
@@ -1061,26 +1061,26 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/xqf.c:1296
+#: src/xqf.c:1501
 #, c-format
 msgid "Find Player: %s"
 msgstr "Spieler suchen: %s"
 
-#: src/xqf.c:1580
+#: src/xqf.c:1785
 #, c-format
 msgid "%d server"
 msgstr "%d Server"
 
-#: src/xqf.c:1580
+#: src/xqf.c:1785
 #, c-format
 msgid "%d servers"
 msgstr "%d Server"
 
-#: src/xqf.c:1724
+#: src/xqf.c:1929
 msgid "X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
 msgstr "X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
 
-#: src/xqf.c:1725
+#: src/xqf.c:1930
 #, c-format
 msgid ""
 "Version %s\n"
@@ -1089,7 +1089,7 @@ msgstr ""
 "Version %s\n"
 "\n"
 
-#: src/xqf.c:1726
+#: src/xqf.c:1931
 msgid ""
 "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n"
 "\n"
@@ -1097,7 +1097,7 @@ msgstr ""
 "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n"
 "\n"
 
-#: src/xqf.c:1727
+#: src/xqf.c:1932
 msgid ""
 "Contributors:\n"
 "\n"
@@ -1123,7 +1123,7 @@ msgstr ""
 "verschiedeneFixes\n"
 "\n"
 
-#: src/xqf.c:1732
+#: src/xqf.c:1937
 msgid ""
 "http://www.linuxgames.com/xqf/\n"
 "http://sourceforge.net/projects/xqf/"
@@ -1131,268 +1131,273 @@ msgstr ""
 "http://www.linuxgames.com/xqf/\n"
 "http://sourceforge.net/projects/xqf/"
 
-#: src/xqf.c:1734
+#: src/xqf.c:1939
 msgid "About XQF"
 msgstr "Über XQF"
 
-#: src/xqf.c:1754 src/xqf.c:2237
+#: src/xqf.c:1959 src/xqf.c:2442
 msgid "Connect"
 msgstr "Verbinden"
 
-#: src/xqf.c:1759 src/xqf.c:2245
+#: src/xqf.c:1964 src/xqf.c:2450
 msgid "Observe"
 msgstr "Beobachten"
 
-#: src/xqf.c:1764 src/xqf.c:2253
+#: src/xqf.c:1969 src/xqf.c:2458
 msgid "Record Demo"
 msgstr "Demo aufnehmen"
 
-#: src/xqf.c:1772
+#: src/xqf.c:1977
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
 
-#: src/xqf.c:1777
+#: src/xqf.c:1982
 msgid "Add..."
 msgstr "Hinzufügen..."
 
-#: src/xqf.c:1787
+#: src/xqf.c:1992
 msgid "Copy"
 msgstr "Kopieren"
 
-#: src/xqf.c:1792
+#: src/xqf.c:1997
 msgid "Copy+"
 msgstr "Kopieren+"
 
-#: src/xqf.c:1800 src/xqf.c:2211
+#: src/xqf.c:2005 src/xqf.c:2416
 msgid "Refresh"
 msgstr "Auffrischen"
 
-#: src/xqf.c:1805
+#: src/xqf.c:2010
 msgid "Refresh Selected"
 msgstr "Ausgewählten auffrischen"
 
-#: src/xqf.c:1813
+#: src/xqf.c:2018
 msgid "DNS Lookup"
 msgstr "DNS auflösen"
 
-#: src/xqf.c:1821
+#: src/xqf.c:2026
 msgid "RCon..."
 msgstr "RCon..."
 
-#: src/xqf.c:1826
+#: src/xqf.c:2031
 msgid "Properties..."
 msgstr "Eigenschaften..."
 
-#: src/xqf.c:1836
+#: src/xqf.c:2041
 msgid "_Statistics..."
 msgstr "_Statistiken..."
 
-#: src/xqf.c:1844
+#: src/xqf.c:2049
 msgid "_Exit"
 msgstr "Be_enden"
 
-#: src/xqf.c:1855 src/xqf.c:1902
+#: src/xqf.c:2060 src/xqf.c:2107
 msgid "Add _Master..."
 msgstr "_Master hinzufügen ..."
 
-#: src/xqf.c:1860 src/xqf.c:1907
+#: src/xqf.c:2065 src/xqf.c:2112
 msgid "_Rename Master..."
 msgstr "Master _umbenennen ..."
 
-#: src/xqf.c:1865 src/xqf.c:1912
+#: src/xqf.c:2070 src/xqf.c:2117
 msgid "D_elete Master"
 msgstr "_Master löschen"
 
-#: src/xqf.c:1873
+#: src/xqf.c:2078
 msgid "_Add Server..."
 msgstr "Server _hinzufügen"
 
-#: src/xqf.c:1878
+#: src/xqf.c:2083
 msgid "_Delete"
 msgstr "_Löschen"
 
-#: src/xqf.c:1883
+#: src/xqf.c:2088
 msgid "_Copy"
 msgstr "_Kopieren"
 
-#: src/xqf.c:1888
+#: src/xqf.c:2093
 msgid "_Copy+"
 msgstr "Kopieren+"
 
-#: src/xqf.c:1896
+#: src/xqf.c:2101
 msgid "Add Default Masters"
 msgstr "Standard Master hinzufügen"
 
-#: src/xqf.c:1920
+#: src/xqf.c:2125
 msgid "_Find Player..."
 msgstr "S_pieler suchen"
 
-#: src/xqf.c:1925
+#: src/xqf.c:2130
 msgid "Find A_gain"
 msgstr "_Nochmal suchen"
 
-#: src/xqf.c:1935
+#: src/xqf.c:2140
 msgid "_Refresh"
 msgstr "_Auffrischen"
 
-#: src/xqf.c:1940
+#: src/xqf.c:2145
 msgid "Refresh _Selected"
 msgstr "A_usgewählte auffrischen"
 
-#: src/xqf.c:1945
+#: src/xqf.c:2150
 msgid "_Update From Master"
 msgstr "Vom Master a_ktualisieren"
 
-#: src/xqf.c:1953
+#: src/xqf.c:2158
 msgid "Show _Host Names"
 msgstr "_Hostnamen anzeigen"
 
-#: src/xqf.c:1958
+#: src/xqf.c:2163
 msgid "Show Default _Port"
 msgstr "Standard_port anzeigen"
 
-#: src/xqf.c:1980
+#: src/xqf.c:2185
 msgid "_Server Filters"
 msgstr "Server_filter"
 
-#: src/xqf.c:1988
+#: src/xqf.c:2193
 msgid "_Connect"
 msgstr "_Verbinden"
 
-#: src/xqf.c:1993
+#: src/xqf.c:2198
 msgid "_Observe"
 msgstr "_Beobachten"
 
-#: src/xqf.c:1998
+#: src/xqf.c:2203
 msgid "Record _Demo"
 msgstr "_Demo aufnehmen"
 
-#: src/xqf.c:2006
+#: src/xqf.c:2211
 msgid "Add to _Favorites"
 msgstr "Zu Favoriten hin_zufügen"
 
-#: src/xqf.c:2017
+#: src/xqf.c:2222
 msgid "DNS _Lookup"
 msgstr "DNS _auflösen"
 
-#: src/xqf.c:2025
+#: src/xqf.c:2230
 msgid "_RCon..."
 msgstr "_RCon..."
 
-#: src/xqf.c:2030
+#: src/xqf.c:2235
 msgid "_Properties..."
 msgstr "_Eigenschaften"
 
 # src/xqf.c
-#: src/xqf.c:2040
+#: src/xqf.c:2245
 msgid "_General..."
 msgstr "_Allgemein..."
 
-#: src/xqf.c:2046
+#: src/xqf.c:2251
 msgid "_Games..."
 msgstr "_Spiele ..."
 
-#: src/xqf.c:2052
+#: src/xqf.c:2257
 msgid "_Appearance..."
 msgstr "Erscheinungs_bild"
 
-#: src/xqf.c:2058
+#: src/xqf.c:2263
 msgid "_QStat Options..."
 msgstr "_QStat Optionen..."
 
-#: src/xqf.c:2067
+#: src/xqf.c:2272
 msgid "_Server Filter..."
 msgstr "_Server Filter..."
 
-#: src/xqf.c:2072
+#: src/xqf.c:2277
 msgid "Player _Filter..."
 msgstr "Spieler _Filter..."
 
-#: src/xqf.c:2082
+#: src/xqf.c:2287
 msgid "_About..."
 msgstr "_Über ..."
 
-#: src/xqf.c:2093
+#: src/xqf.c:2298
 msgid "_File"
 msgstr "_Datei"
 
-#: src/xqf.c:2098
+#: src/xqf.c:2303
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: src/xqf.c:2103
+#: src/xqf.c:2308
 msgid "_View"
 msgstr "_Ansicht"
 
-#: src/xqf.c:2108
+#: src/xqf.c:2313
 msgid "_Server"
 msgstr "_Server"
 
-#: src/xqf.c:2113
+#: src/xqf.c:2318
 msgid "_Preferences"
 msgstr "_Einstellungen"
 
-#: src/xqf.c:2118
+#: src/xqf.c:2323
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: src/xqf.c:2161
+#: src/xqf.c:2366
 msgid "Mark as Red"
 msgstr "Rot Markieren"
 
-#: src/xqf.c:2168
+#: src/xqf.c:2373
 msgid "Mark as Green"
 msgstr "Grün Markieren"
 
-#: src/xqf.c:2175
+#: src/xqf.c:2380
 msgid "Mark as Blue"
 msgstr "Blau Markieren"
 
-#: src/xqf.c:2182
+#: src/xqf.c:2387
 msgid "Add to Player Filter"
 msgstr "Zu Spielerfilter hinzufügen"
 
-#: src/xqf.c:2203
+#: src/xqf.c:2408
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: src/xqf.c:2203
+#: src/xqf.c:2408
 msgid "Update from master"
 msgstr "Vom Master aktualisieren"
 
-#: src/xqf.c:2211
+#: src/xqf.c:2416
 msgid "Refresh current list"
 msgstr "Aktuelle Liste auffrischen"
 
-#: src/xqf.c:2219
+#: src/xqf.c:2424
 msgid "Ref.Sel."
 msgstr "Ausg.Auffr."
 
-#: src/xqf.c:2219
+#: src/xqf.c:2424
 msgid "Refresh selected servers"
 msgstr "Ausgewählte Server auffrischen"
 
-#: src/xqf.c:2227
+#: src/xqf.c:2432
 msgid "Stop"
 msgstr "Stop"
 
-#: src/xqf.c:2253
+#: src/xqf.c:2458
 msgid "Record"
 msgstr "Aufnehmen"
 
 #. Translators: e.g. Server Filter
-#: src/xqf.c:2265
+#: src/xqf.c:2470
 #, c-format
 msgid "%s Filter"
 msgstr "%s Filter"
 
 #. Translators: e.g. Server Filter Configuration
-#: src/xqf.c:2286
+#: src/xqf.c:2491
 #, c-format
 msgid "%s Filter Configuration"
 msgstr "%s Filter Konfiguration"
 
-#: src/xqf.c:2350
+#: src/xqf.c:2555
 msgid "Filters"
 msgstr "Filter"
+
+#: src/xqf.c:2901
+#, c-format
+msgid "You need at least qstat version %s for xqf to function properly"
+msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
 

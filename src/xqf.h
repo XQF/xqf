@@ -232,9 +232,11 @@ extern	GtkWidget *top_window (void);
 
 extern	void set_widgets_sensitivity (void);
 
+extern GtkWidget *server_filter_widget[];
 
-/* This is defined in here so that filter.c can see it */
-GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
+int compare_qstat_version ( const char* have, const char* expected );
+int start_prog_and_return_fd(const char *file, char *const argv[], pid_t *pid);
+int check_qstat_version( const char* version );
 
 int filter_start_index;
 
