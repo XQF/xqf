@@ -369,7 +369,7 @@ char *lowcasestrstr (const char *str, const char *substr) {
 
   while (str < end) {
     for (i = 0; i < sublen; i++) {
-      if (substr[i] != tolower (str[i]))
+      if (tolower (substr[i]) != tolower (str[i]))
 	goto loop;
     }
     return (char *) str;
