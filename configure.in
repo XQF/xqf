@@ -113,4 +113,5 @@ fi
 
 AC_OUTPUT([Makefile intl/Makefile po/Makefile.in \
 src/Makefile src/xpm/Makefile \
+docs/Makefile \
 debian/Makefile])
