@@ -1,0 +1,25 @@
+#!/bin/bash
+# copy kde flags to be usable in xqf
+# example usage if you compiled xqf with prefix /usr:
+#   mkdir -p /usr/share/xqf/flags/default
+#   KDEDIR=/opt/kde3 ./copykdeflags /usr/share/xqf/flags/default
+
+: ${KDEDIR:=/opt/kde3}
+
+if [ -z "$1" -o ! -d "$1" -o ! -w "$1" ]; then
+	echo "KDEDIR is $KDEDIR" 
+	echo "*** specify destination directory (e.g. /usr/share/xqf/flags/default) ***"
+	exit 1
+fi
+
+to="$1"
+shift
+
+echo "$KDEDIR -> $to"
+count=0
+for i in $KDEDIR/share/locale/l10n/??/flag.png; do
+	flag=${i%/*}
+	flag=${flag##*/}.png
+	install -m 644 $i "$to/$flag" && count=$((count+1))
+done
+echo "$count flags copied"

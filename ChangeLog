@@ -1,3 +1,8 @@
+Sep 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- load flag icons from /usr/(local/)share/flags/default
+- scripts docs/copykdeflags and docs/convertmaxmindflags for copying kde or
+  maxmind flags for use with xqf
+
 Sep 12, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - add ET protocol 83 for version 2.56
 
