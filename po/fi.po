@@ -1,0 +1,2089 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XQF 1.0.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-04-03 22:26+0200\n"
+"PO-Revision-Date: 2005-03-17 15:27+0200\n"
+"Last-Translator: Sami Laitinen <azmotus@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: xqf.desktop.in.h:1
+msgid "Locate and connect to game servers"
+msgstr "Etsi ja yhdistä pelipalvelimiin"
+
+#: xqf.desktop.in.h:2
+msgid "XQF"
+msgstr "XQF"
+
+#: xqf.desktop.in.h:3 src/dialogs.c:492
+msgid "XQF Game Server Browser"
+msgstr "XQF Pelipalvelinselain"
+
+#: src/addmaster.c:111
+msgid "You have to specify a name and an address."
+msgstr "Sinun täytyy määritellä nimi ja osoite."
+
+#: src/addmaster.c:118
+#, c-format
+msgid "Master address \"%s\" is not valid."
+msgstr "Pääpalvelimen osoite \"%s\" ei ole kelvollinen."
+
+#: src/addmaster.c:174 src/source.c:69
+msgid "LAN"
+msgstr "LAN"
+
+#: src/addmaster.c:245
+msgid "Rename Master"
+msgstr "Nimeä Pääpalvelin Uudelleen"
+
+#: src/addmaster.c:249
+msgid "Add Master"
+msgstr "Lisää Pääpalvelin"
+
+#. Master Name (Description)
+#: src/addmaster.c:263
+msgid "Master Name"
+msgstr "Pääpalvelimen Nimi"
+
+#. Master Address
+#: src/addmaster.c:319
+msgid "Master Address"
+msgstr "Pääpalvelimen osoite"
+
+#. Cancel Button
+#: src/addmaster.c:409 src/addserver.c:152 src/dialogs.c:421 src/filter.c:1618
+#: src/filter.c:2121 src/game.c:1710 src/launch.c:348 src/pref.c:5027
+#: src/psearch.c:224 src/redial.c:228 src/srv-prop.c:841 src/xqf.c:1139
+#: src/xqf.c:1167 src/xqf.c:1976
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: src/addserver.c:91 src/addserver.c:188
+msgid "Add Server"
+msgstr "Lisää Palvelin"
+
+#. Server Entry
+#: src/addserver.c:102
+msgid "Server:"
+msgstr "Palvelin:"
+
+#: src/dialogs.c:124 src/dialogs.c:199 src/dialogs.c:279
+msgid "XQF: Warning!"
+msgstr "XQF: Varoitus!"
+
+#. OK Button
+#. gtk_button_box_set_child_size(GTK_BUTTON_BOX(hbuttonbox1), 79, 38);
+#. OK Button
+#: src/dialogs.c:149 src/dialogs.c:410 src/dialogs.c:600 src/filter.c:1629
+#: src/filter.c:2109 src/pref.c:5035 src/psearch.c:213 src/srv-prop.c:849
+msgid "OK"
+msgstr "OK"
+
+#: src/dialogs.c:224 src/dialogs.c:304 src/filter.c:1049 src/psearch.c:398
+#: src/xqf.c:1115 src/xqf.c:1127
+msgid "Yes"
+msgstr "Kyllä"
+
+#: src/dialogs.c:236 src/dialogs.c:316 src/filter.c:1050 src/psearch.c:398
+#: src/xqf.c:1115 src/xqf.c:1127
+msgid "No"
+msgstr "Ei"
+
+#: src/dialogs.c:326 src/xqf.c:1167
+msgid "Redial"
+msgstr "Yhdistä uudelleen"
+
+#: src/dialogs.c:493
+#, c-format
+msgid "Version %s"
+msgstr "Versio %s"
+
+#. translators can use the copyright symbol instead of (C)
+#: src/dialogs.c:496
+msgid "Copyright (C) 1998-2002 Roman Pozlevich"
+msgstr "Copyright © 1998-2002 Roman Pozlevich"
+
+#: src/dialogs.c:499
+msgid "Maintainers:"
+msgstr "Ylläpitäjät:"
+
+#: src/dialogs.c:505
+msgid "Contributors:"
+msgstr "Avustajat:"
+
+#: src/dialogs.c:509
+msgid "Bug reports and feature requests:"
+msgstr "Vikailmoitukset ja ominaisuustoiveet:"
+
+#: src/dialogs.c:556
+msgid "About XQF"
+msgstr "Tietoja"
+
+#: src/dialogs.c:583
+msgid "[placeholder, do not translate]"
+msgstr "[placeholder, do not translate]"
+
+#: src/filter.c:97
+msgid "Server"
+msgstr "Palvelin"
+
+#: src/filter.c:98
+msgid "S Filter"
+msgstr "P Suodatin"
+
+#: src/filter.c:99
+msgid "SF Cfg"
+msgstr "SF Cfg"
+
+#: src/filter.c:111
+msgid "Player"
+msgstr "Pelaaja"
+
+#: src/filter.c:112
+msgid "P Filter"
+msgstr "P Suodatin"
+
+#: src/filter.c:113
+msgid "PF Cfg"
+msgstr "PF Cfg"
+
+#: src/filter.c:1010
+msgid "Enter filter name"
+msgstr "Syötä suodattimen nimi"
+
+#: src/filter.c:1048
+msgid "Delete server filter"
+msgstr "Poista palvelinsuodatin"
+
+#: src/filter.c:1051
+#, c-format
+msgid "Really delete server filter \"%s\"?"
+msgstr "Haluatko varmasti poistaa palvelinsuodattimen \"%s\"?"
+
+#: src/filter.c:1256
+msgid "Server Filter"
+msgstr "Palvelinsuodatin"
+
+#: src/filter.c:1270 src/flt-player.c:821 src/pref.c:2769
+msgid "New"
+msgstr "Uusi"
+
+#: src/filter.c:1277
+msgid "Rename"
+msgstr "Nimeä Uudelleen"
+
+#. FIXME: plural
+#: src/filter.c:1284 src/flt-player.c:827 src/pref.c:2777 src/xqf.c:1976
+msgid "Delete"
+msgstr "Poista"
+
+#: src/filter.c:1291
+msgid "Server would pass filter if"
+msgstr "Palvelin läpäisee suodattimen jos"
+
+#. row=0..1
+#. max ping
+#: src/filter.c:1312
+msgid "ping is less than"
+msgstr "vasteaika on vähemmän kuin"
+
+#. GAMECONTAINS Filter -- baa
+#. http://developer.gnome.org/doc/API/gtk/gtktable.html
+#: src/filter.c:1333
+msgid "the game contains the string"
+msgstr "peli sisältää tekstin"
+
+#. row=1..2
+#. max timeouts
+#: src/filter.c:1351
+msgid "the number of retries is fewer than"
+msgstr "uudelleenyrityksien määrä on vähemmän kuin"
+
+#. GAMETYPE Filter -- baa
+#. http://developer.gnome.org/doc/API/gtk/gtktable.html
+#: src/filter.c:1370
+msgid "the game type contains the string"
+msgstr "pelityyppi sisältää tekstin"
+
+#. row=2..3
+#. not full
+#: src/filter.c:1387
+msgid "it is not full"
+msgstr "ei ole täysi"
+
+#. Version Filter -- baa
+#: src/filter.c:1394
+msgid "the version contains the string"
+msgstr "versio sisältää tekstin"
+
+#: src/filter.c:1413
+msgid "it is not empty"
+msgstr "ei ole tyhjä"
+
+#. Map filter
+#: src/filter.c:1422
+msgid "the map contains the string"
+msgstr "kartta sisältää tekstin"
+
+#: src/filter.c:1440
+msgid "cheats are not allowed"
+msgstr "huijaukset eivät ole sallittuja"
+
+#. Server name filter
+#: src/filter.c:1449
+msgid "the server name contains the string"
+msgstr "palvelimen nimi sisältää tekstin"
+
+#: src/filter.c:1467
+msgid "no password required"
+msgstr "ei salasanavaatimusta"
+
+#: src/filter.c:1478 src/filter.c:1957
+msgid "Country filter:"
+msgstr "Maasuodatin:"
+
+#: src/filter.c:1519
+msgid "select..."
+msgstr "valitse..."
+
+#: src/filter.c:1532
+msgid "clear"
+msgstr "tyhjennä"
+
+#: src/filter.c:1590
+msgid "XQF: Filters"
+msgstr "XQF: Suodattimet"
+
+#. window caption for country filter
+#: src/filter.c:1948
+msgid "Configure Country Filter"
+msgstr "Määrittele Maasuodattimet"
+
+#: src/filter.c:2090
+msgid "Show all countries"
+msgstr "Näytä kaikki maat"
+
+#: src/flt-player.c:69 src/flt-player.c:75
+msgid "string"
+msgstr "merkkijono"
+
+#: src/flt-player.c:70
+#, fuzzy
+msgid "substr"
+msgstr "substr"
+
+#: src/flt-player.c:71
+msgid "regexp"
+msgstr "sään. lauseke"
+
+#: src/flt-player.c:76
+msgid "substring"
+msgstr "alimerkkijono"
+
+#: src/flt-player.c:77
+msgid "regular expression"
+msgstr "säännöllinen lauseke"
+
+#: src/flt-player.c:448 src/psearch.c:116
+msgid "XQF: Error"
+msgstr "XQF: Virhe"
+
+#: src/flt-player.c:448 src/psearch.c:117
+#, c-format
+msgid ""
+"Regular Expression Error!\n"
+"\n"
+"%s\n"
+"\n"
+"%s."
+msgstr ""
+"Virhe Säännöllisissä Lausekkeissa!\n"
+"\n"
+"%s\n"
+"\n"
+"%s."
+
+#. Pattern Entry
+#: src/flt-player.c:666 src/flt-player.c:754
+msgid "Pattern"
+msgstr "Kaava"
+
+#. Comment
+#: src/flt-player.c:701
+msgid "Pattern Comment"
+msgstr "Kaavan Kommentti"
+
+#: src/flt-player.c:754
+msgid "Mode"
+msgstr "Moodi"
+
+#: src/flt-player.c:760
+msgid "Player Filter"
+msgstr "Pelaajasuodatin"
+
+#: src/flt-player.c:839
+msgid "Up"
+msgstr "Ylös"
+
+#: src/flt-player.c:845
+msgid "Down"
+msgstr "Alas"
+
+#: src/game.c:196
+msgid ""
+"Note:  Soldier of Fortune will not connect to a server correctly\n"
+"without creating a startup script for the game.  Please see the\n"
+"XQF documentation for more information."
+msgstr ""
+"Huomio: Soldier of Fortune ei pysty yhdistämään palvelimelle oikein\n"
+"ilman luotua käynnistysjonoa. Katso lisätietoja XQF:n dokumentaatiosta."
+
+#: src/game.c:200
+msgid ""
+"Note:  Unreal Tournament will not launch correctly without\n"
+"modifications to the game's startup script.  Please see the\n"
+"XQF documentation for more information."
+msgstr ""
+"Huomio: Unreal Tournament ei käynnisty oikein ilman\n"
+"pelin käynnistysjonon muokkausta. Katso lisätietoja\n"
+"XQF:n dokumentaatiosta."
+
+#: src/game.c:204
+msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
+msgstr "Esimerkkikomentorivi:  wine hl.exe -- hl.exe -console"
+
+#: src/game.c:207
+msgid ""
+"Note:  Savage will not launch correctly without\n"
+"modifications to the game's startup script. Please see the\n"
+"XQF documentation for more information."
+msgstr ""
+"Huomio: Savage ei käynnisty oikein ilman\n"
+"pelin käynnistysjonon muokkausta. Katso lisätietoja\n"
+"XQF:n dokumentaatiosta."
+
+#. %s = game name e.g. QuakeWorld
+#: src/game.c:1582
+#, c-format
+msgid "%s command line is empty."
+msgstr "%s komentorivi on tyhjä."
+
+#. directory name, game name
+#. %s directory, game name
+#: src/game.c:1589 src/game.c:1698
+#, c-format
+msgid ""
+"\"%s\" is not a directory\n"
+"Please specify correct %s working directory."
+msgstr ""
+"\"%s\" ei ole hakemisto\n"
+"Määritä oikea %s työhakemisto."
+
+#. game name
+#: src/game.c:1601
+#, c-format
+msgid "Please specify correct %s working directory."
+msgstr "Määritä oikea %s työhakemisto."
+
+#. directory, subdirectory, game name
+#: src/game.c:1607
+#, c-format
+msgid ""
+"Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
+"Please specify correct %s working directory."
+msgstr ""
+"Hakemisto \"%s\" ei sisällä alihakemistoa \"%s\".\n"
+"Määritä oikea %s työhakemisto."
+
+#. %s Quake3
+#: src/game.c:1664
+#, c-format
+msgid ""
+"~/.q3a directory doesn't exist or doesn't contain\n"
+"\"baseq3\" (\"demoq3\") subdirectory.\n"
+"Please run %s client at least once before running XQF\n"
+"or specify correct %s working directory."
+msgstr ""
+"Hakemistoa ~/.q3a ei ole olemassa tai se ei sisällä\n"
+"alihakemistoa \"baseq3\" (\"demoq3\").\n"
+"Käynnistä %s vähintään kerran ennen XQF:n ajamista\n"
+"tai määritä oikea %s työhakemisto."
+
+#. %s directory, Quake3
+#: src/game.c:1673
+#, c-format
+msgid ""
+"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+"subdirectory.\n"
+"Please specify correct %s working directory\n"
+"or leave it empty (~/.q3a is used by default)"
+msgstr ""
+"Hakemistoa \"%s\" ei ole olemassa tai ei sisällä alihakemistoa \"baseq3"
+"\" (\"demoq3\").\n"
+"Aseta oikea %s työhakemisto\n"
+"tai jätä se tyhjäksi (~/.q3a on oletusarvona)"
+
+#: src/game.c:1710 src/launch.c:348 src/xqf.c:1139 src/xqf.c:1167
+msgid "Launch"
+msgstr "Käynnistä"
+
+#. %s frontend.cfg
+#: src/game.c:1712
+#, c-format
+msgid ""
+"Cannot write to file \"%s\".\n"
+"\n"
+"Launch client anyway?"
+msgstr ""
+"Ei voida kirjoittaa tiedostoon \"%s\".\n"
+"\n"
+"Käynnistä ohjelma kuitenkin?"
+
+#: src/game.c:2340
+msgid ""
+"The server has Punkbuster enabled but it is not going\n"
+"to be set on the command line.\n"
+"You may have problems connecting.\n"
+"You can fix this in the game preferences."
+msgstr ""
+"Palvelimella on käytössä Punkbuster,\n"
+" mutta sitä ei käynnistetä komentoriviltä.\n"
+"Palvelimelle yhdistämisessä voi olla ongelmia.\n"
+"Voit korjata tämän peliasetuksista."
+
+#: src/launch.c:69 src/launch.c:193
+msgid "XQF: ERROR!"
+msgstr "XQF: VIRHE!"
+
+#: src/launch.c:69
+#, c-format
+msgid ""
+"ERROR!\n"
+"\n"
+"%s(%s) failed: %s"
+msgstr ""
+"VIRHE!\n"
+"\n"
+"%s(%s) epäonnistui: %s"
+
+#: src/launch.c:193
+#, c-format
+msgid ""
+"ERROR!\n"
+"\n"
+"%s"
+msgstr ""
+"VIRHE!\n"
+"\n"
+"%s"
+
+#: src/launch.c:349
+#, c-format
+msgid ""
+"There is %s client running.\n"
+"\n"
+"Launch %s client?"
+msgstr ""
+"%s on jo käynnissä.\n"
+"\n"
+"Käynnistä %s?"
+
+#: src/pref.c:555
+msgid "com_soundmegs and com_zonemegs must be lower than com_hunkmegs"
+msgstr "com_soundmegs ja com_zonemegs täytyvät olla vähemmän kuin com_hunkmegs"
+
+#: src/pref.c:1185
+msgid "Invalid source IP address"
+msgstr "Viallinen lähde IP-osoite"
+
+#: src/pref.c:1197
+msgid "Invalid source port range"
+msgstr "Viallinen lähdeporttialue"
+
+#. Top (Shirt) Color
+#: src/pref.c:1540 src/pref.c:1639
+msgid "Top"
+msgstr "Yläosa"
+
+#. Bottom (Pants) Color
+#: src/pref.c:1556 src/pref.c:1655
+msgid "Bottom"
+msgstr "Alaosa"
+
+#. Player Name
+#: src/pref.c:1802 src/pref.c:1913 src/pref.c:1973 src/pref.c:2025
+#: src/xqf-ui.c:51 src/xqf-ui.c:75
+msgid "Name"
+msgstr "Nimi"
+
+#: src/pref.c:1823 src/xqf-ui.c:77
+msgid "Colors"
+msgstr "Värit"
+
+#: src/pref.c:1856
+msgid "Login name"
+msgstr "Kirjautumisnimi"
+
+#: src/pref.c:1898
+msgid "Skin/Colors"
+msgstr "Nahka/Värit"
+
+#: src/pref.c:1934
+msgid "Team"
+msgstr "Tiimi"
+
+#: src/pref.c:1992
+msgid "Model/Skin"
+msgstr "Malli/Nahka"
+
+#: src/pref.c:2079
+msgid "--- Anything ---"
+msgstr "--- Mitä Tahansa ---"
+
+#: src/pref.c:2080
+msgid "Axe"
+msgstr "Axe"
+
+#: src/pref.c:2081
+msgid "Shotgun"
+msgstr "Shotgun"
+
+#: src/pref.c:2082
+msgid "Super Shotgun"
+msgstr "Super Shotgun"
+
+#: src/pref.c:2083
+msgid "Nailgun"
+msgstr "Nailgun"
+
+#: src/pref.c:2084
+msgid "Super Nailgun"
+msgstr "Super Nailgun"
+
+#: src/pref.c:2085
+msgid "Grenade Launcher"
+msgstr "Grenade Launcher"
+
+#: src/pref.c:2086
+msgid "Rocket Launcher"
+msgstr "Rocket Launcher"
+
+#: src/pref.c:2087
+msgid "ThunderBolt"
+msgstr "ThunderBolt"
+
+#: src/pref.c:2135
+msgid "Use skins"
+msgstr "Käytä nahkoja"
+
+#: src/pref.c:2141
+msgid "Don't use skins"
+msgstr "Älä käytä nahkoja"
+
+#: src/pref.c:2147
+msgid "Don't download new skins"
+msgstr "Älä lataa uusia nahkoja"
+
+#: src/pref.c:2189
+msgid "You must configure a command line first"
+msgstr "Sinun täytyy ensin määritellä komentorivi"
+
+#: src/pref.c:2231
+msgid "Game not found"
+msgstr "Peliä ei löytynyt"
+
+#. %s name of a game
+#: src/pref.c:2233
+#, c-format
+msgid "%s not found"
+msgstr "%s ei löytynyt"
+
+#: src/pref.c:2281
+#, c-format
+msgid ""
+"An entry already exists for the game %s.\n"
+"\n"
+"A default entry for this game will not be added.\n"
+"\n"
+"Delete the entry and try again."
+msgstr ""
+"Pelille %s on jo merkintä.\n"
+"\n"
+"Oletusarvoista merkintää ei lisätä tälle pelille.\n"
+"\n"
+"Poista merkintä ja yritä uudelleen."
+
+#: src/pref.c:2323
+msgid "There are no defaults for this game"
+msgstr "Tälle pelille ei ole oletusarvoja"
+
+#: src/pref.c:2384
+msgid ""
+"There is already an entry for this game.\n"
+"\n"
+"To modify it, select it from the list, modify it\n"
+"and then click Add/Update."
+msgstr ""
+"Tälle pelille on jo merkintä.\n"
+"\n"
+"Muokataksesi sitä, valitse se listasta, muokkaa sitä\n"
+"ja paina Lisää/Päivitä."
+
+#: src/pref.c:2388
+msgid "You must enter both a game and at least one argument."
+msgstr "Sinun täytyy syöttää peli ja vähintään yksi argumentti"
+
+#: src/pref.c:2487
+msgid "Invoking"
+msgstr "Käynnistys"
+
+#: src/pref.c:2494
+msgid "*** Not Implemented ***"
+msgstr "*** Ei Toteutettu ***"
+
+#: src/pref.c:2506
+msgid "Custom Args"
+msgstr "Mukaillut Argumentit"
+
+#: src/pref.c:2518
+msgid "Command Line"
+msgstr "Komentorivi"
+
+#. translator: button for command suggestion
+#. translator: button for directory guess
+#: src/pref.c:2545 src/pref.c:2583
+msgid "Suggest"
+msgstr "Ehdota"
+
+#: src/pref.c:2551
+msgid "Searches the path for the game executable"
+msgstr "Etsii polusta pelin käynnistytiedostoa"
+
+#. ///
+#: src/pref.c:2558
+msgid "Working Directory"
+msgstr "Työhakemisto"
+
+#: src/pref.c:2588
+msgid "Tries to guess the working directory based on the command line"
+msgstr "Yrittää arvata työhakemiston komentorivin perusteella"
+
+#: src/pref.c:2606
+msgid "Custom CFG"
+msgstr "Mukailtu CFG"
+
+#: src/pref.c:2711 src/xqf-ui.c:58
+msgid "Game"
+msgstr "Peli"
+
+#: src/pref.c:2719
+msgid "Arguments"
+msgstr "Argumentit"
+
+#: src/pref.c:2727
+msgid "Game and Arguments"
+msgstr "Peli ja Argumentit"
+
+#: src/pref.c:2750
+msgid "Enter the game name from the game column"
+msgstr "Lisää pelin nimi pelisarakkeesta"
+
+#: src/pref.c:2759
+msgid "Enter the arguments separated by spaces"
+msgstr "Syötä argumentit välilyönneillä eroteltuina"
+
+#: src/pref.c:2785
+msgid "Add Defaults"
+msgstr "Lisää Oletusarvot"
+
+#: src/pref.c:2793
+msgid "Add/Update"
+msgstr "Lisää/Päivitä"
+
+#. Common Options
+#: src/pref.c:2948
+msgid "Common Options"
+msgstr "Yleiset Asetukset"
+
+#: src/pref.c:2959
+msgid "Disable CD Audio"
+msgstr "Poista CD Audio Käytöstä"
+
+#. Disable Sound
+#: src/pref.c:2967
+msgid "Disable Sound"
+msgstr "Poista Äänet Käytöstä"
+
+#: src/pref.c:2991
+msgid "Do not set (use game default)"
+msgstr "Älä aseta (käytä pelin oletusasetusta)"
+
+#: src/pref.c:2992
+msgid "Automatically calculate from server ping time"
+msgstr "Laske automaattisesti palvelimen vasteajasta"
+
+#: src/pref.c:2993
+msgid "Fixed value"
+msgstr "Kiinteä arvo"
+
+#: src/pref.c:3037 src/pref.c:3292 src/pref.c:3347 src/pref.c:3389
+#: src/pref.c:3425 src/pref.c:3461 src/pref.c:3497 src/pref.c:3533
+msgid "Masterserver Protocol Version"
+msgstr "Pääpalvelimen protokollaversio"
+
+#: src/pref.c:3062
+msgid "vm_cgame fix"
+msgstr "vm_cgame korjaus"
+
+#: src/pref.c:3069
+msgid "Rocketarena fix"
+msgstr "Rocketarena korjaus"
+
+#: src/pref.c:3075 src/pref.c:3318 src/pref.c:3364 src/pref.c:3552
+msgid "set fs_game on connect"
+msgstr "aseta fs_game yhdistettäessä"
+
+#: src/pref.c:3082 src/pref.c:3324
+msgid "set cl_punkbuster on connect"
+msgstr "aseta cl_punkbuster yhdistettäessä"
+
+#: src/pref.c:3143
+msgid "Pass memory settings on command line"
+msgstr "Välitä muistiasetukset komentorivillä"
+
+#. Mega Byte
+#: src/pref.c:3161 src/pref.c:3184 src/pref.c:3207 src/pref.c:3231
+msgid "MB"
+msgstr "MB"
+
+#: src/pref.c:3165
+msgid "com_hunkmegs"
+msgstr "com_hunkmegs"
+
+#: src/pref.c:3188
+msgid "com_zonemegs"
+msgstr "com_zonemegs"
+
+#: src/pref.c:3211
+msgid "com_soundmegs"
+msgstr "com_soundmegs"
+
+#: src/pref.c:3235
+msgid "cg_precachedmodels"
+msgstr "cg_precachedmodels"
+
+#: src/pref.c:3244
+msgid "Preset values"
+msgstr "Esiasetetut arvot"
+
+#: src/pref.c:3251
+msgid "Default"
+msgstr "Oletusarvo"
+
+#: src/pref.c:3257
+msgid "128MB"
+msgstr "128MB"
+
+#: src/pref.c:3263
+msgid ">256MB"
+msgstr ">256MB"
+
+#: src/pref.c:3565 src/pref.c:3579 src/pref.c:3584 src/pref.c:3589
+#: src/pref.c:3594 src/pref.c:3599 src/pref.c:3604 src/pref.c:3609
+#: src/pref.c:3827 src/pref.c:3833
+msgid "Options"
+msgstr "Asetukset"
+
+#: src/pref.c:3566
+msgid "Memory"
+msgstr "Muisti"
+
+#. QW Specific Features
+#. 'w_switch' & 'b_switch' control
+#: src/pref.c:3630
+msgid "The highest weapon that Quake should switch to..."
+msgstr "Korkein ase mihin Quaken tulisi vaihtaa..."
+
+#: src/pref.c:3643
+msgid "upon a weapon pickup"
+msgstr "asetta otettaessa"
+
+#: src/pref.c:3661
+msgid "upon a backpack pickup"
+msgstr "reppua otettaessa"
+
+#: src/pref.c:3682
+msgid "Disable auto-aiming"
+msgstr "Ota auto-aiming pois käytöstä"
+
+#: src/pref.c:3720
+msgid "Skins"
+msgstr "Nahat"
+
+#: src/pref.c:3742
+msgid "Rate"
+msgstr "Rate"
+
+#. 'pushlatency'
+#: src/pref.c:3766
+msgid "pushlatency"
+msgstr "pushlatency"
+
+#. Troubleshooting
+#: src/pref.c:3781
+msgid "Troubleshooting"
+msgstr "Ongelmanratkonta"
+
+#: src/pref.c:3794
+msgid "Disable delta-compression (cl_nodelta)"
+msgstr "Poista delta-compression (cl_nodelta) käytöstä"
+
+#: src/pref.c:3808
+msgid "Disable player/entity prediction (cl_predict_players)"
+msgstr "Poista player/entity prediction (cl_predict_players) käytöstä"
+
+#: src/pref.c:3826
+msgid "Weapons"
+msgstr "Aseet"
+
+#: src/pref.c:3828 src/pref.c:3834 src/pref.c:3839 src/pref.c:3844
+msgid "Player Profile"
+msgstr "Pelaajan Profiili"
+
+#: src/pref.c:3920
+msgid "Icons"
+msgstr "Ikonit"
+
+#: src/pref.c:3920
+msgid "Text"
+msgstr "Teksti"
+
+#: src/pref.c:3920
+msgid "Both"
+msgstr "Molemmat"
+
+#: src/pref.c:3926
+msgid "Server List"
+msgstr "Palvelinlista"
+
+#: src/pref.c:3939
+msgid "Show host names"
+msgstr "Näytä isäntänimet"
+
+#: src/pref.c:3944
+msgid "Show hostnames instead of IP addresses if possible"
+msgstr "Näytä isäntänimet IP-osoitteiden tilalla jos mahdollista"
+
+#: src/pref.c:3955
+msgid "Show default port"
+msgstr "Näytä oletusarvoinen portti"
+
+#: src/pref.c:3970
+msgid "Do not count bots as players"
+msgstr "Älä laske botteja pelaajiksi"
+
+#: src/pref.c:3986
+msgid "Sort servers real-time during refresh"
+msgstr "Lajittele palvelimet virkistyksen aikana"
+
+#: src/pref.c:4001
+msgid "Refresh on update"
+msgstr "Virkistä päivitettäessä"
+
+#: src/pref.c:4017
+msgid "Resolve hostnames on update"
+msgstr "Selvitä isäntänimet päivityksessä"
+
+#: src/pref.c:4021
+msgid "Enable or disable DNS resolution of IP addresses"
+msgstr "Ota käyttöön tai poista käytöstä IP-osoitteiden DNS selvitys"
+
+#: src/pref.c:4035
+msgid "Show only configured games"
+msgstr "Näytä ainoastaan asetetut pelit"
+
+#: src/pref.c:4049
+msgid "Use custom color settings"
+msgstr "Käytä mukailtuja väriasetuksia"
+
+#: src/pref.c:4051
+msgid ""
+"Use XQF's color settings instead of the system ones. You need to restart XQF "
+"for this setting to take effect. Note that you may need to install the gtk-"
+"engines package."
+msgstr ""
+"Käytä XQF:n väriasetuksia järjestelmän väriasetuksien sijaan. XQF täytyy "
+"käynnistää uudelleen, jotta tämä asetus tulisi voimaan. Huomaa, että sinun "
+"täytyy ehkä asentaa gtk-engines paketti."
+
+#. Toolbar
+#: src/pref.c:4072
+msgid "Toolbar"
+msgstr "Työkalurivi"
+
+#. Toolbar Tips
+#: src/pref.c:4097
+msgid "Tooltips"
+msgstr "Työkaluvihjeet"
+
+#. On Startup
+#: src/pref.c:4140
+msgid "On Startup"
+msgstr "Käynnistyksessä"
+
+#: src/pref.c:4153
+msgid "Refresh Favorites"
+msgstr "Virkistä Suosikit"
+
+#: src/pref.c:4166
+msgid "Show splash screen"
+msgstr "Näytä aloitusruutu"
+
+#: src/pref.c:4180
+msgid "Scan for maps"
+msgstr "Etsi karttoja"
+
+#: src/pref.c:4185
+msgid ""
+"Scan game directories for installed maps. xqf will take longer to start up "
+"when enabled."
+msgstr ""
+"Etsi asennettuja karttoja pelien hakemistoista. xqf käynnistyy hitaammin, "
+"kun tämä on valittuna."
+
+#: src/pref.c:4192
+msgid "scan now"
+msgstr "etsi nyt"
+
+#: src/pref.c:4208
+msgid "Minimize to system tray"
+msgstr "Pienennä ohjelmatarjottimelle"
+
+#: src/pref.c:4212
+msgid "Enable xqf tray icon. You need to restart xqf for this to take effect."
+msgstr ""
+"Ota käyttöön xqf ohjelmatarjotinikoni. XQF täytyy käynnistää uudelleen, "
+"jotta tämä asetus tulisi voimaan."
+
+#. On Exit
+#: src/pref.c:4225
+msgid "On Exit"
+msgstr "Poistuttaessa"
+
+#: src/pref.c:4238
+msgid "Save server lists"
+msgstr "Tallenna palvelinlistat"
+
+#: src/pref.c:4253
+msgid "Save server information"
+msgstr "Tallenna palvelimien tiedot"
+
+#: src/pref.c:4270
+msgid "Save player information"
+msgstr "Tallenna pelaajien tiedot"
+
+#. When launching a Game
+#: src/pref.c:4286
+msgid "When launching a game..."
+msgstr "Käynnistettäessä peliä..."
+
+#: src/pref.c:4300
+msgid "Terminate XQF"
+msgstr "Lopeta XQF"
+
+#: src/pref.c:4315
+msgid "Iconify XQF window"
+msgstr "Pienennä XQF:n kuvakkeeksi"
+
+#: src/pref.c:4330
+msgid "Create LaunchInfo.txt"
+msgstr "Luo Launchinfo.txt"
+
+#: src/pref.c:4336
+msgid ""
+"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"maxplayers"
+msgstr ""
+"Luo tiedoston ~/.qf/LaunchInfo.txt sisältäen: vasteaika ip:portti nimi "
+"kartta pelaajienmäärä maksimipelaajat"
+
+#: src/pref.c:4342
+msgid "Execute prelaunch"
+msgstr "Aja esikäynnistys"
+
+#: src/pref.c:4348
+msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
+msgstr "Aja ~/.qf/PreLaunch (jos on olemassa) ennen pelin käynnistämistä"
+
+#: src/pref.c:4357
+msgid "Stop current song in XMMS"
+msgstr "Pysäytä XMMS"
+
+#: src/pref.c:4360
+msgid ""
+"Stopping XMMS will release /dev/dsp. Activate this option if you use XMMS "
+"and have a cheap soundcard that allows only one application to open /dev/dsp."
+msgstr ""
+"XMMS:n pysäyttäminen vapauttaa /dev/dsp:n. Valitse tämä, jos käytät XMMS:ää "
+"ja sinulla on halpa äänikortti, joka sallii vain yhden ohjelman käyttää "
+"kerralla /dev/dsp:tä."
+
+#. QStat preferences -- maxsimultaneous & maxretries
+#: src/pref.c:4399
+msgid "QStat Options"
+msgstr "QStat Valinnat"
+
+#. maxsimultaneous
+#: src/pref.c:4410
+msgid "Number of simultaneous servers to query"
+msgstr "Yhtäaikaisten palvelimien kyselyiden määrä"
+
+#. maxretries
+#: src/pref.c:4434
+msgid "Number of retries"
+msgstr "Uudelleenyrityksien määrä"
+
+#. srcip
+#: src/pref.c:4453
+msgid "Source IP Address"
+msgstr "Lähde IP-osoite"
+
+#: src/pref.c:4474
+msgid "Source Port Range"
+msgstr "Lähdeporttialue"
+
+#. Translator: sound test button
+#: src/pref.c:4537
+msgid "Test"
+msgstr "Testaa"
+
+#. Sound Enable / Disable frame
+#. Sounds Enable / Disable
+#: src/pref.c:4554
+msgid "Sound Enable / Disable"
+msgstr "Ota Äänet Käyttöön / Poista Käytöstä"
+
+#: src/pref.c:4568
+msgid "Enable Sound"
+msgstr "Ota Äänet Käyttöön"
+
+#. Sound Player
+#: src/pref.c:4579
+msgid "Player program"
+msgstr "Äänisoitin"
+
+#. Sound Files frame
+#. Sounds preferences -- player and various sounds
+#: src/pref.c:4607
+msgid "Sound Files"
+msgstr "Äänitiedostot"
+
+#. Sound XQF Start
+#: src/pref.c:4619
+msgid "XQF Start"
+msgstr "XQF Käynnistys"
+
+#. Sound XQF Quit
+#: src/pref.c:4651
+msgid "XQF Quit"
+msgstr "XQF Lopetus"
+
+#. Sound Update Done
+#: src/pref.c:4683
+msgid "Update Done"
+msgstr "Päivitys Valmis"
+
+#. Sound Refresh Done
+#: src/pref.c:4716
+msgid "Refresh Done"
+msgstr "Virkistys Valmis"
+
+#. Sound Stop
+#: src/pref.c:4749 src/xqf.c:3109 src/trayicon.c:462
+msgid "Stop"
+msgstr "Pysäytä"
+
+#. Sound Server Connect
+#: src/pref.c:4782
+msgid "Server Connect"
+msgstr "Palvelimen Yhdistys"
+
+#. Sound Redial Success Start
+#: src/pref.c:4815
+msgid "Redial Success"
+msgstr "Uudelleenyhdistys Onnistui"
+
+#: src/pref.c:4939
+msgid "XQF: Preferences"
+msgstr "XQF: Ominaisuudet"
+
+#: src/pref.c:4959
+msgid "General"
+msgstr "Yleiset"
+
+#: src/pref.c:4971
+msgid "Games"
+msgstr "Pelit"
+
+#: src/pref.c:4976
+msgid "Appearance"
+msgstr "Ulkoasu"
+
+#: src/pref.c:4981
+msgid "QStat"
+msgstr "QStat"
+
+#: src/pref.c:4986
+msgid "Sounds"
+msgstr "Äänet"
+
+#: src/pref.c:5138
+msgid "Unable to get user name/home/tmpdir"
+msgstr "Ei onnistunut saamaan käyttäjänimeä/kotia/väliaikaishakemistoa"
+
+#. translator: %s = game name, e.g. Quake 3 Arena
+#: src/pref.c:5545
+#, c-format
+msgid "Searching for %s maps"
+msgstr "Etsitään %s karttoja"
+
+#: src/pref.c:5621
+msgid "Game Command Selection"
+msgstr "Pelikomento Valinta"
+
+#: src/pref.c:5630
+msgid "Game Directory Selection"
+msgstr "Pelihakemisto Valinta"
+
+#: src/pref.c:5635
+msgid "Sound Player Selection"
+msgstr "Äänisoittimen Valinta"
+
+#: src/pref.c:5640
+msgid "XQF Start Sound Selection"
+msgstr "XQF Käynnistys Äänivalinta"
+
+#: src/pref.c:5645
+msgid "XQF Quit Sound Selection"
+msgstr "XQF Lopetus Äänivalinta"
+
+#: src/pref.c:5650
+msgid "Update Done Sound Selection"
+msgstr "Päivitys Valmis Äänivalinta"
+
+#: src/pref.c:5655
+msgid "Refresh Done Sound Selection"
+msgstr "Virkistys Valmis Äänivalinta"
+
+#: src/pref.c:5660
+msgid "Stop Sound Selection"
+msgstr "Pysäytys Äänivalinta"
+
+#: src/pref.c:5665
+msgid "Server Connect Sound Selection"
+msgstr "Palvelimen Yhdistys Äänivalinta"
+
+#: src/pref.c:5670
+msgid "Redial Success Sound Selection"
+msgstr "Uudelleenyhdistys Onnistunut Äänivalinta"
+
+#: src/psearch.c:51
+msgid "Exact Match"
+msgstr "Tarkka Vastaavuus"
+
+#: src/psearch.c:52
+msgid "Substring"
+msgstr "Substring"
+
+#: src/psearch.c:53
+msgid "Regular Expression"
+msgstr "Regular Expression"
+
+#: src/psearch.c:174
+msgid "Find Player"
+msgstr "Etsi Pelaaja"
+
+#. Pattern Entry
+#: src/psearch.c:185
+msgid "Find Player:"
+msgstr "Etsi Pelaaja:"
+
+#: src/psearch.c:394
+msgid "Player not found."
+msgstr "Pelaajaa ei löytynyt."
+
+#: src/psearch.c:398
+msgid "XQF: End of server list reached"
+msgstr "XQF: Palvelinlistan loppu saavutettu"
+
+#: src/psearch.c:399
+msgid "Continue search from beginning?"
+msgstr "Jatka hakua alusta?"
+
+#. Message
+#: src/rcon.c:528
+msgid "Cmd:"
+msgstr "Komento:"
+
+#. Send Button
+#: src/rcon.c:555
+msgid "Send"
+msgstr "Lähetä"
+
+#. Status Button
+#: src/rcon.c:564
+msgid "Status"
+msgstr "Tila"
+
+#. Clear Button
+#: src/rcon.c:573
+msgid "Clear"
+msgstr "Tyhjennä"
+
+#: src/rcon.c:595 src/statistics.c:847
+msgid "Close"
+msgstr "Sulje"
+
+#: src/rcon.c:695
+#, c-format
+msgid "Usage: %s [server type] <ip> <port>\n"
+msgstr "Käyttö: %s [palvelimen tyyppi] <ip> <portti>\n"
+
+#: src/rcon.c:696
+#, c-format
+msgid "  server type is either --qws, --hws or --hls.\n"
+msgstr "  palvelimen tyyppi on joko --qws, --hws tai --hls.\n"
+
+#: src/rcon.c:697
+#, c-format
+msgid "  If no server type is specified, Q3 style rcon is assumed.\n"
+msgstr ""
+"  Jos palvelimen tyyppiä ei ole määritelty, Q3 tyylin rcon on oletuksena.\n"
+
+#. translator: readline prompt
+#: src/rcon.c:734
+msgid "Password: "
+msgstr "Salasana:"
+
+#: src/redial.c:123
+#, c-format
+msgid ""
+"Waiting for free slots on\n"
+"%s"
+msgstr ""
+"Odotetaan vapaita paikkoja\n"
+"%s"
+
+#: src/redial.c:125
+#, c-format
+msgid ""
+"Refreshing\n"
+"%s"
+msgstr ""
+"Virkistetään\n"
+"%s"
+
+#. * window code modified from glade
+#: src/redial.c:180 src/redial.c:185
+msgid "XQF: Redialing"
+msgstr "XQF: Yhdistetään Uudelleen"
+
+#: src/redial.c:197
+msgid ""
+"***\n"
+"***"
+msgstr ""
+"***\n"
+"***"
+
+#: src/redial.c:220
+msgid "Launch now"
+msgstr "Käynnistä nyt"
+
+#: src/source.c:66
+msgid "Standard"
+msgstr "Standardi"
+
+#: src/source.c:67
+msgid "Gamespy"
+msgstr "Gamespy"
+
+#: src/source.c:68
+msgid "http"
+msgstr "http"
+
+#: src/source.c:70
+msgid "File"
+msgstr "Tiedosto"
+
+#: src/source.c:122
+msgid "Retry"
+msgstr "Yritä Uudelleen"
+
+#: src/source.c:122
+msgid "Skip"
+msgstr "Ohita"
+
+#: src/source.c:123
+#, c-format
+msgid ""
+"Cannot write to file %s\n"
+"System Error: %s\n"
+msgstr ""
+"Ei voida kirjoittaa tiedostoon %s\n"
+"Järjestelmävirhe: %s\n"
+
+#. translator: %s == url, eg gmaster://bla.blub.org
+#: src/source.c:886
+#, c-format
+msgid "You have to specify a port number for %s."
+msgstr "Sinun täytyy määritellä portti %s:lle."
+
+#: src/source.c:900
+#, c-format
+msgid "'gsmtype' options missing for master %s."
+msgstr "'gsmtype' valinnat puuttuvat pääpalvelimelta %s."
+
+#: src/source.c:1417
+msgid "Favorites"
+msgstr "Suosikit"
+
+#: src/srv-prop.c:423
+msgid "IP Address:"
+msgstr "IP Osoite:"
+
+#: src/srv-prop.c:433
+msgid "Port:"
+msgstr "Portti:"
+
+#: src/srv-prop.c:447
+msgid "Host Name:"
+msgstr "Isäntänimi:"
+
+#: src/srv-prop.c:461
+msgid "Country:"
+msgstr "Maa:"
+
+#: src/srv-prop.c:489
+msgid "Refreshed:"
+msgstr "Virkistetty:"
+
+#. translator: last time and date the server answered the query
+#: src/srv-prop.c:507
+msgid "Last answer:"
+msgstr "Viimeisin vastaus:"
+
+#: src/srv-prop.c:564
+msgid "Reserved Slots:"
+msgstr "Varatut paikat:"
+
+#. Sources
+#: src/srv-prop.c:583
+msgid "Sources"
+msgstr "Lähteet"
+
+#: src/srv-prop.c:635
+msgid "Custom CFG:"
+msgstr "Mukailtu CFG:"
+
+#: src/srv-prop.c:684
+msgid "Server Password"
+msgstr "Palvelimen Salasana"
+
+#: src/srv-prop.c:690
+msgid "Spectator Password"
+msgstr "Tarkkailijan Salasana"
+
+#: src/srv-prop.c:697
+msgid "RCon/Admin Password"
+msgstr "RCon/Admin Salasana"
+
+#: src/srv-prop.c:728
+msgid "This server sucks"
+msgstr "Tämä palvelin imee"
+
+#: src/srv-prop.c:771 src/xqf.c:2656 src/xqf.c:2786
+msgid "Properties"
+msgstr "Ominaisuudet"
+
+#: src/srv-prop.c:816
+msgid "Info"
+msgstr "Tiedot"
+
+#: src/srv-prop.c:821
+msgid "Passwords"
+msgstr "Salasanat"
+
+#: src/srv-prop.c:826
+msgid "Comment"
+msgstr "Kommentti"
+
+#: src/stat.c:728
+msgid "Allies"
+msgstr "Allies"
+
+#: src/stat.c:728
+msgid "Axis"
+msgstr "Axis"
+
+#: src/stat.c:734
+msgid "Red"
+msgstr "Red"
+
+#: src/stat.c:734
+msgid "Blue"
+msgstr "Blue"
+
+#: src/stat.c:1376
+#, c-format
+msgid ""
+"UT2004 CD Key not found, cannot query master '%s'.\n"
+"Make sure the working directory is set correctly."
+msgstr ""
+"UT2004 CD Avainta ei löytynyt, ei voida tiedustella pääpalvelimelta '%s'.\n"
+"Varmista, että työhakemisto on määritelty oikein."
+
+#: src/stat.c:1557
+#, c-format
+msgid "Failed to create a temporary file %s: %s"
+msgstr "Väliaikaistiedoston %s luonti epäonnistui: %s"
+
+#. The space behind up and down is to make the strings different from
+#. those in flt-player.c because their meaning is different in german
+#: src/statistics.c:82 src/statistics.c:93
+msgid "Servers"
+msgstr "Palvelimet"
+
+#: src/statistics.c:82
+msgid "Up "
+msgstr "Toiminnassa "
+
+#: src/statistics.c:82
+msgid "Timeout"
+msgstr "Aikakatkaisu"
+
+#: src/statistics.c:82
+msgid "Down "
+msgstr "Alhaalla "
+
+#: src/statistics.c:82
+msgid "Info n/a"
+msgstr "Ei tietoja"
+
+#: src/statistics.c:82 src/statistics.c:502 src/xqf-ui.c:56
+msgid "Players"
+msgstr "Pelaajat"
+
+#: src/statistics.c:86 src/statistics.c:90
+msgid "unknown"
+msgstr "tuntematon"
+
+#: src/statistics.c:94
+msgid "OS/CPU"
+msgstr "OS/CPU"
+
+#: src/statistics.c:95
+msgid "Country"
+msgstr "Maa"
+
+#: src/statistics.c:448 src/statistics.c:496 src/statistics.c:501
+msgid "Total"
+msgstr "Yhteensä"
+
+#: src/statistics.c:491
+msgid "CPU  \\  OS"
+msgstr "CPU  \\  OS"
+
+#: src/statistics.c:719
+msgid "All Games"
+msgstr "Kaikki Pelit"
+
+#: src/statistics.c:801 src/statistics.c:810
+msgid "Statistics"
+msgstr "Tilastot"
+
+#. error converting time to string representation, shouldn't happen
+#: src/utils.c:899
+msgid "<error>"
+msgstr "<virhe>"
+
+#: src/xqf-ui.c:52
+msgid "Address"
+msgstr "Osoite"
+
+#: src/xqf-ui.c:53 src/xqf-ui.c:79
+msgid "Ping"
+msgstr "Vasteaika"
+
+#: src/xqf-ui.c:54
+msgid "TO"
+msgstr "TO"
+
+#: src/xqf-ui.c:55
+msgid "Priv"
+msgstr "Priv"
+
+#: src/xqf-ui.c:57
+msgid "Map"
+msgstr "Kartta"
+
+#: src/xqf-ui.c:59
+msgid "GameType"
+msgstr "Pelityyppi"
+
+#: src/xqf-ui.c:60
+msgid "OS"
+msgstr "Käyttöjärjestelmä"
+
+#: src/xqf-ui.c:76
+msgid "Frags"
+msgstr "Pisteet"
+
+#: src/xqf-ui.c:78
+msgid "Skin"
+msgstr "Nahka"
+
+#: src/xqf-ui.c:80
+msgid "Time"
+msgstr "Aika"
+
+#: src/xqf-ui.c:94
+msgid "Rule"
+msgstr "Sääntö"
+
+#: src/xqf-ui.c:95
+msgid "Value"
+msgstr "Arvo"
+
+#: src/xqf-ui.c:464
+msgid "Source"
+msgstr "Lähde"
+
+#: src/xqf.c:508
+#, c-format
+msgid "%d server"
+msgstr "%d palvelin"
+
+#: src/xqf.c:508
+#, c-format
+msgid "%d servers"
+msgstr "%d palvelinta"
+
+#. server filter
+#: src/xqf.c:754
+#, c-format
+msgid "None <--"
+msgstr "Ei Mitään <--"
+
+#: src/xqf.c:756 src/xqf.c:3239 src/xqf.c:3296 src/xqf.c:3433
+#, c-format
+msgid "None"
+msgstr "Ei Mitään"
+
+#: src/xqf.c:770
+#, c-format
+msgid "Filter %d <--"
+msgstr "Suodatin %d <--"
+
+#: src/xqf.c:772
+#, c-format
+msgid "Filter %d"
+msgstr "Suodatin %d"
+
+#: src/xqf.c:794
+#, c-format
+msgid "No Server Filter Active"
+msgstr "Ei Palvelinsuodattimia Päällä"
+
+#: src/xqf.c:801
+#, c-format
+msgid "Server Filter: %s"
+msgstr "Palvelinsuodatin: %s"
+
+#: src/xqf.c:805
+#, c-format
+msgid "Server Filter: %d"
+msgstr "Palvelinsuodatin: %d"
+
+#: src/xqf.c:972
+msgid "Updating lists..."
+msgstr "Päivitetään listoja..."
+
+#: src/xqf.c:978
+#, c-format
+msgid "Resolving host names: %d/%d"
+msgstr "Selvitetään isäntänimet: %d/%d"
+
+#: src/xqf.c:982
+#, c-format
+msgid "Refreshing: %d/%d"
+msgstr "Virkistetään: %d/%d"
+
+#: src/xqf.c:988
+#, c-format
+msgid "Resolving host addresses: %d/%d"
+msgstr "Selvitetään isäntäosoitteet: %d/%d"
+
+#: src/xqf.c:1116
+msgid ""
+"You said this servers sucks.\n"
+"Do you want to risk a game this time?"
+msgstr ""
+"Sanoit, että tämä palvelin imee.\n"
+"Haluatko riskeerata pelin tällä kertaa?"
+
+#: src/xqf.c:1128
+#, c-format
+msgid ""
+"This server is not compatible with the version of %s you have installed.\n"
+"Launch client anyway?"
+msgstr ""
+"Tämä palvelin ei ole yhteensopiva %s:n asennetun version kanssa.\n"
+"Käynnistä ohjelma kuitenkin?"
+
+#: src/xqf.c:1140
+#, c-format
+msgid ""
+"Server %s:%d is %s.\n"
+"\n"
+"Launch client anyway?"
+msgstr ""
+"Palvelin %s:%d on %s.\n"
+"\n"
+"Käynnistä ohjelma kuitenkin?"
+
+#: src/xqf.c:1168
+#, c-format
+msgid ""
+"Server %s:%d is full.\n"
+"\n"
+"Launch client anyway?"
+msgstr ""
+"Palvelin %s:%d on täynnä.\n"
+"\n"
+"Käynnistä ohjelma kuitenkin?"
+
+#: src/xqf.c:1281 src/xqf.c:1301 src/xqf.c:2112
+msgid "Save Password"
+msgstr "Tallenna Salasana"
+
+#: src/xqf.c:1281
+msgid "Spectator Password:"
+msgstr "Tarkkailijan Salasana:"
+
+#: src/xqf.c:1301 src/xqf.c:2112
+msgid "Server Password:"
+msgstr "Palvelimen Salasana:"
+
+#: src/xqf.c:1452
+msgid "Spectator"
+msgstr "Tarkkailija"
+
+#: src/xqf.c:1453 src/xqf.c:1456
+msgid "Demo name:"
+msgstr "Demon nimi:"
+
+#: src/xqf.c:1682
+#, c-format
+msgid "Host %s not found"
+msgstr "Isäntää %s ei löydy"
+
+#: src/xqf.c:1702 src/xqf.c:3829
+#, c-format
+msgid "\"%s\" is not valid host[:port] combination."
+msgstr "\"%s\" ei ole pätevä isäntä[:portti] yhdistelmä."
+
+#. translator: %s == url
+#: src/xqf.c:1900
+#, c-format
+msgid ""
+"For Gslist support you must install the 'gslist' program available from\n"
+"%s\n"
+"Don't forget that you need to run 'gslist -u' before you can use it."
+msgstr ""
+"Saadaksesi Gslist-tuen, sinun täytyy asentaa 'gslist' -ohjelma, joka on "
+"saatavilla osoitteesta\n"
+"%s\n"
+"Älä unohda, että sinun täytyy ajaa 'gslist -u' ennen kuin voit käyttää sitä."
+
+#: src/xqf.c:1971
+msgid "You have to select the server you want to delete"
+msgstr "Sinun täytyy valita palvelin jonka haluat poistaa"
+
+#: src/xqf.c:1977
+#, c-format
+msgid ""
+"Master%s to delete:\n"
+"\n"
+"%s"
+msgstr ""
+"Pääpalvelin %s poistetaan:\n"
+"\n"
+"%s"
+
+#: src/xqf.c:2000
+#, c-format
+msgid "Find Player: %s"
+msgstr "Etsi Pelaaja: %s"
+
+#: src/xqf.c:2092
+msgid "Done."
+msgstr "Valmis."
+
+#: src/xqf.c:2578 src/xqf.c:3119
+msgid "Connect"
+msgstr "Yhdistä"
+
+#: src/xqf.c:2583 src/xqf.c:3128
+msgid "Observe"
+msgstr "Seuraa"
+
+#: src/xqf.c:2588 src/xqf.c:3136
+msgid "Record Demo"
+msgstr "Nauhoita Demo"
+
+#: src/xqf.c:2602
+msgid "Add new Server"
+msgstr "Lisää uusi Palvelin"
+
+#: src/xqf.c:2607
+msgid "Add to Favorites"
+msgstr "Lisää Suosikkeihin"
+
+#: src/xqf.c:2612
+msgid "Remove from Favorites"
+msgstr "Poista Suosikeista"
+
+#: src/xqf.c:2617
+msgid "Copy"
+msgstr "Kopioi"
+
+#: src/xqf.c:2622
+msgid "Copy+"
+msgstr "Kopioi+"
+
+#: src/xqf.c:2630 src/xqf.c:3093 src/trayicon.c:452
+msgid "Refresh"
+msgstr "Virkistä"
+
+#: src/xqf.c:2635
+msgid "Refresh Selected"
+msgstr "Virkistä Valitut"
+
+#: src/xqf.c:2643
+msgid "DNS Lookup"
+msgstr "DNS Selvitys"
+
+#: src/xqf.c:2651
+msgid "RCon"
+msgstr "RCon"
+
+#: src/xqf.c:2666
+msgid "_Statistics"
+msgstr "_Tilastot"
+
+#: src/xqf.c:2674
+msgid "_Exit"
+msgstr "_Poistu"
+
+#: src/xqf.c:2685 src/xqf.c:2750
+msgid "Add _Master"
+msgstr "Lisää _Pääpalvelin"
+
+#: src/xqf.c:2690 src/xqf.c:2755
+msgid "_Rename Master"
+msgstr "_Nimeä Pääpalvelin Uudelleen"
+
+#: src/xqf.c:2695 src/xqf.c:2760
+msgid "D_elete Master"
+msgstr "P_oista Pääpalvelin"
+
+#: src/xqf.c:2700 src/xqf.c:2765
+msgid "_Clear Servers"
+msgstr "_Tyhjennä Palvelimet"
+
+#: src/xqf.c:2710 src/xqf.c:2870
+msgid "_Add new Server"
+msgstr "_Lisää Palvelin"
+
+#: src/xqf.c:2715 src/xqf.c:2875
+msgid "Add to _Favorites"
+msgstr "Lisää _Suosikkeihin"
+
+#: src/xqf.c:2720 src/xqf.c:2880
+msgid "_Remove from Favorites"
+msgstr "_Poista Suosikeista"
+
+#: src/xqf.c:2725
+msgid "_Copy"
+msgstr "_Kopioi"
+
+#: src/xqf.c:2730
+msgid "_Copy+"
+msgstr "_Kopioi+"
+
+#: src/xqf.c:2738
+msgid "Add Default Masters"
+msgstr "Lisää Oletusarvoinen Pääpalvelin"
+
+#: src/xqf.c:2744
+msgid "Add Gslist Masters"
+msgstr "Lisää Gslist Pääpalvelin"
+
+#: src/xqf.c:2773
+msgid "_Find Player"
+msgstr "_Etsi Pelaaja"
+
+#: src/xqf.c:2778
+msgid "Find A_gain"
+msgstr "Etsi _Uudestaan"
+
+#: src/xqf.c:2796
+msgid "_Refresh"
+msgstr "_Virkistä"
+
+#: src/xqf.c:2801
+msgid "Refresh _Selected"
+msgstr "Virkistä _Valitut"
+
+#: src/xqf.c:2806
+msgid "_Update From Master"
+msgstr "_Päivitä Pääpalvelimelta"
+
+#: src/xqf.c:2814
+msgid "Show _Host Names"
+msgstr "Näytä _Isäntänimet"
+
+#: src/xqf.c:2819
+msgid "Show Default _Port"
+msgstr "Näytä Oletusarvoinen _Portti"
+
+#: src/xqf.c:2845
+msgid "_Connect"
+msgstr "_Yhdistä"
+
+#: src/xqf.c:2850
+msgid "_Observe"
+msgstr "_Seuraa"
+
+#: src/xqf.c:2855
+msgid "Record _Demo"
+msgstr "Nauhoita _Demo"
+
+#: src/xqf.c:2886
+msgid "DNS _Lookup"
+msgstr "DNS _Selvitys"
+
+#: src/xqf.c:2894
+msgid "_RCon"
+msgstr "_RCon"
+
+#: src/xqf.c:2899
+msgid "_Properties"
+msgstr "_Ominaisuudet"
+
+#: src/xqf.c:2909
+msgid "_General"
+msgstr "_Yleiset"
+
+#: src/xqf.c:2915
+msgid "_Games"
+msgstr "_Pelit"
+
+#: src/xqf.c:2921
+msgid "_Appearance"
+msgstr "_Ulkonäkö"
+
+#: src/xqf.c:2927
+msgid "_QStat Options"
+msgstr "_QStat Valinnat"
+
+#: src/xqf.c:2933
+msgid "_Sound Options"
+msgstr "Ää_nivalinnat"
+
+#: src/xqf.c:2942
+msgid "_Server Filter"
+msgstr "_Palvelinsuodatin"
+
+#: src/xqf.c:2947
+msgid "Player _Filter"
+msgstr "Pelaaja_suodatin"
+
+#: src/xqf.c:2957
+msgid "_About"
+msgstr "_Tietoja"
+
+#: src/xqf.c:2968
+msgid "_File"
+msgstr "_Tiedosto"
+
+#: src/xqf.c:2973
+msgid "_Edit"
+msgstr "_Muokkaa"
+
+#: src/xqf.c:2978
+msgid "_View"
+msgstr "_Näytä"
+
+#: src/xqf.c:2983
+msgid "_Server"
+msgstr "_Palvelin"
+
+#: src/xqf.c:2988
+msgid "_Preferences"
+msgstr "_Ominaisuudet"
+
+#: src/xqf.c:2994
+msgid "_Server Filters"
+msgstr "_Palvelinsuodattimet"
+
+#: src/xqf.c:3000
+msgid "_Help"
+msgstr "_Ohje"
+
+#: src/xqf.c:3043
+msgid "Mark as Red"
+msgstr "Merkitse Punaiseksi"
+
+#: src/xqf.c:3050
+msgid "Mark as Green"
+msgstr "Merkitse Vihreäksi"
+
+#: src/xqf.c:3057
+msgid "Mark as Blue"
+msgstr "Merkitse Siniseksi"
+
+#: src/xqf.c:3064
+msgid "Add to Player Filter"
+msgstr "Lisää Pelaajasuodattimeen"
+
+#: src/xqf.c:3085 src/trayicon.c:457
+msgid "Update"
+msgstr "Päivitä"
+
+#: src/xqf.c:3085
+msgid "Update from master"
+msgstr "Päivitä pääpalvelimelta"
+
+#: src/xqf.c:3093
+msgid "Refresh current list"
+msgstr "Virkistä nykyinen lista"
+
+#: src/xqf.c:3101
+msgid "Ref.Sel."
+msgstr "Päiv.Valit."
+
+#: src/xqf.c:3101
+msgid "Refresh selected servers"
+msgstr "Päivitä valitut palvelimet"
+
+#: src/xqf.c:3136
+msgid "Record"
+msgstr "Nauhoita"
+
+#. Translators: e.g. Server Filter
+#: src/xqf.c:3154
+#, c-format
+msgid "%s Filter Enable / Disable"
+msgstr "%ssuodatin Päälle / Pois"
+
+#. Translators: e.g. Server Filter Configuration
+#: src/xqf.c:3176
+#, c-format
+msgid "%s Filter Configuration"
+msgstr "%s Suodattimen Asetukset"
+
+#: src/xqf.c:3278
+msgid "Configure"
+msgstr "Muokkaa Asetuksia"
+
+#: src/xqf.c:3413
+msgid "Filters"
+msgstr "Suodattimet"
+
+#: src/xqf.c:3572
+msgid "Quick Filter:"
+msgstr "Pikasuodatin:"
+
+#: src/xqf.c:3743
+msgid "no sound player configured"
+msgstr "ei äänisoitinta asetettuna"
+
+#: src/xqf.c:3781
+msgid ""
+"Usage:\n"
+"\txqf [OPTIONS]\n"
+"\n"
+"OPTIONS:\n"
+"\t--launch \"[SERVERTYPE] IP\"\tlaunch game on specified server\n"
+"\t--add    \"[SERVERTYPE] IP\"\tadd specified server to favorites\n"
+"\t--debug <level>\t\t\tset debug level\n"
+"\t--version\t\t\tprint version and exit\n"
+msgstr ""
+"Käyttö:\n"
+"\txqf [VALINNAT]\n"
+"\n"
+"VALINNAT:\n"
+"\t--launch \"[PALVELINTYYPPI] IP\"\tkäynnistä peli valitulle palvelimelle\n"
+"\t--add    \"[PALVELINTYYPPI] IP\"\tlisää määritelty palvelin suosikkeihin\n"
+"\t--debug <level>\t\t\taseta debug-taso\n"
+"\t--version\t\t\ttulosta versio ja poistu\n"
+
+#: src/xqf.c:4009
+msgid "Reading server lists"
+msgstr "Luetaan palvelinlistoja"
+
+#: src/xqf.c:4026
+#, c-format
+msgid "You need at least qstat version %s for xqf to function properly"
+msgstr "Tarvitset vähintään version %s qstat:sta, jotta xqf toimisi oikein"
+
+#: src/xqf.c:4030
+msgid "Loading icons ..."
+msgstr "Ladataan kuvakkeita ..."
+
+#: src/xqf.c:4036
+msgid "Starting ..."
+msgstr "Käynnistetään ..."
+
+#: src/splash.c:61
+msgid "XQF: Loading"
+msgstr "XQF: Ladataan"
+
+#: src/splash.c:90
+msgid "Loading ..."
+msgstr "Ladataan ..."
+
+#. translator: %s = file name
+#: src/country-filter.c:220 src/loadpixmap.c:213 src/loadpixmap.c:226
+#: src/loadpixmap.c:245 src/loadpixmap.c:257
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Virhe ladattaessa kuvaketiedostoa: %s"
+
+#: src/trayicon.c:376 src/trayicon.c:382 src/trayicon.c:390 src/trayicon.c:396
+#: src/trayicon.c:410
+#, c-format
+msgid "Error in file: %s line: %d\n"
+msgstr "Virhe tiedostossa %s rivillä: %d\n"
+
+#. translator: show main window
+#: src/trayicon.c:473
+msgid "Show"
+msgstr "Näytä"
+
+#. translator: hide main window
+#: src/trayicon.c:479
+msgid "Hide"
+msgstr "Piilota"
+
+#: src/trayicon.c:484
+msgid "Exit"
+msgstr "Poistu"
