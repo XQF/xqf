@@ -439,12 +439,12 @@ GSList *server_clist_all_servers (void) {
   struct server *server;
   int row;
 
-  debug (6, "server_clist_all_servers() -- ");
+  debug (6, "start");
   for (row = 0; row < server_clist->rows; row++) {
     server = (struct server *) gtk_clist_get_row_data (server_clist, row);
     list = server_list_prepend (list, server);
   }
-  debug (7, "server_clist_all_servers() -- Return list %lx", list);
+  debug (6, "Return list %lx", list);
   return g_slist_reverse (list);
 }
 
@@ -564,6 +564,9 @@ void server_clist_set_list (GSList *servers) {
 }
 
 
+/**
+  filter server_list through server filter and display result in clist
+  */
 void server_clist_build_filtered (GSList *server_list, int update) {
   /* This gets called whenever a user clicks the filter button */
 
@@ -573,8 +576,7 @@ void server_clist_build_filtered (GSList *server_list, int update) {
   struct server *server;
   int row;
 
-  if(!server_list)
-    return;
+#if 0
 
   debug (6, "server_clist_build_filterd() -- Update? %d", update);
   delete = server_clist_all_servers ();
@@ -645,6 +647,27 @@ void server_clist_build_filtered (GSList *server_list, int update) {
     gtk_clist_clear(server_clist);
 
   gtk_clist_sort (server_clist);
+#else
+
+  {
+
+    struct server* saved_cur_server = cur_server;
+    server_ref(saved_cur_server);
+
+    server_clist_set_list(server_list);
+
+    row = gtk_clist_find_row_from_data (server_clist, saved_cur_server);
+    server_unref(saved_cur_server);
+    saved_cur_server = NULL;
+
+    if (row >= 0)
+      server_clist_select_one (row);
+
+  }
+
+#endif
+
+  
   server_clist_selection_visible ();
 
   gtk_clist_thaw (server_clist);
