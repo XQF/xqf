@@ -2857,7 +2857,7 @@ int prefs_load (void) {
   /* Quake3 */
   config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
 
-  q3_opts.masterprotocol =   config_get_string ("protocol=66");
+  q3_opts.masterprotocol =   config_get_string ("protocol=67");
   if ( strlen( q3_opts.masterprotocol ) == 0 )
 	  q3_opts.masterprotocol = NULL;
   q3_opts.vmfix =            config_get_bool ("vmfix=true");
