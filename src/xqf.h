@@ -183,6 +183,7 @@ struct server {
   unsigned private_client; /* number of private clients */
 
   time_t refreshed;
+  time_t last_answer;
 
   int 	ref_count;
 };

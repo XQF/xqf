@@ -21,6 +21,7 @@
 
 #include <sys/types.h>
 #include <stdio.h>	/* FILE */
+#include <time.h>
 
 #include <glib.h>
 
@@ -89,5 +90,10 @@ char* find_file_in_path(const char* files);
  * @return sorted list without duplicates
  */
 GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*unref_func)(void*));
+
+/**
+ * return locale's string representation of t. must be freed manually
+ */
+char* timet2string(const time_t* t);
 
 #endif /* __UTILS_H__ */

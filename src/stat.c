@@ -439,6 +439,11 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
     }
   }
 
+  if(!saved && server->ping<MAX_PING)
+  {
+    server->last_answer = server->refreshed;
+  }
+
   return server;
 }
 
@@ -530,19 +535,43 @@ void parse_saved_server (GSList *strings) {
   struct server *server;
   char *token[16];
   int n;
-  time_t refreshed;
+  time_t refreshed = 0;
+  time_t last_answer = 0;
   char *endptr;
+  char** refreshdata = NULL;
 
   if (!strings || !strings->next)
     return;
 
-  refreshed = strtoul ((char *) strings->data, &endptr, 10);
+  // first line contains seconds of last refresh and last answer
+  refreshdata = g_strsplit(strings->data," ",2);
 
-  if (endptr == strings->data)	/* It's not a number */
+  if(!refreshdata || !refreshdata[0])
+  {
+    debug(0,"refreshdata empty");
+    return;
+  }
+
+  refreshed = strtoul (refreshdata[0], &endptr, 10);
+
+  if (endptr == refreshdata[0])	/* It's not a number */
     return;
 
+  if(refreshdata[1]) // post 0.9.10 format
+  {
+    last_answer = strtoul (refreshdata[1], &endptr, 10);
+
+    if (endptr == refreshdata[1])	/* It's not a number */
+      return;
+  }
+
+  g_strfreev(refreshdata);
+  refreshdata = NULL;
+
   strings = strings->next;
-  debug (6, "parse_saved_server() -- ");
+
+  if(!strings) return;
+
   n = tokenize_bychar ((char *) strings->data, token, 16, QSTAT_DELIM);
   if (n < 3)
     return;
@@ -557,6 +586,7 @@ void parse_saved_server (GSList *strings) {
   if (server) {
     server_ref (server);
     parse_qstat_record_part2 (strings->next, server);
+    server->last_answer=last_answer;
     server_unref (server);
   }
 }

@@ -326,9 +326,8 @@ static GtkWidget *server_info_page (struct server *s) {
   struct server_props *props;
   char buf[32];
   GList *cfgs;
-  char *time_str;
-  char *tmp;
   int slots_buffer;
+  guint row = 0;
 
   
 
@@ -339,7 +338,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
   /* Address */
 
-  table = gtk_table_new (4, 4, FALSE);
+  table = gtk_table_new (5, 4, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table), 8);
   gtk_box_pack_start (GTK_BOX (page_vbox), table, FALSE, FALSE, 0);
@@ -348,56 +347,95 @@ static GtkWidget *server_info_page (struct server *s) {
 
   label = gtk_label_new (_("IP Address:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
 
   label = gtk_label_new (inet_ntoa (s->host->ip));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, row, row+1);
   gtk_widget_show (label);
 
   label = gtk_label_new (_("Port:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 2, 3, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 2, 3, row, row+1);
   gtk_widget_show (label);
 
   g_snprintf (buf, 32, "%d", s->port);
 
   label = gtk_label_new (buf);
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 3, 4, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 3, 4, row, row+1);
   gtk_widget_show (label);
+
+  row++;
 
   label = gtk_label_new (_("Host Name:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
 
   if (s->host->name) {
     label = gtk_label_new (s->host->name);
     gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-    gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, 1, 2);
+    gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
     gtk_widget_show (label);
   }
+
+  row++;
 
   label = gtk_label_new (_("Refreshed:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
 
   if (s->refreshed) {
-    time_str = ctime (&s->refreshed);
+    char* str = timet2string(&s->refreshed);
 
-    tmp = strchr (time_str, '\n');
-    if (tmp)
-      *tmp = '\0';
-
-    label = gtk_label_new (time_str);
+    label = gtk_label_new (str);
+    g_free(str);
     gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-    gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, 2, 3);
+    gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
     gtk_widget_show (label);
   }
 
+  row++;
+
+  // translator: last time and date the server answered the query
+  label = gtk_label_new (_("Last answer:"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+  gtk_widget_show (label);
+
+  if (s->last_answer) {
+    GtkStyle *style;
+    GdkColor color;
+    guint max_days = 3; // XXX: hardcoded, has to be configurable some time
+    char* str = timet2string(&s->last_answer);
+
+    label = gtk_label_new (str);
+    g_free(str);
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+    gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
+  
+    if(s->last_answer + max_days*24*60*60 < s->refreshed)
+    {
+	// XXX: I don't know if that is the correct way, it's undocumented :-(
+	style = gtk_widget_get_style(label);
+	gdk_color_parse("red",&color);
+
+	style->fg [GTK_STATE_NORMAL]   = color;
+	style->fg [GTK_STATE_ACTIVE]   = color;
+	style->fg [GTK_STATE_PRELIGHT] = color;
+	style->fg [GTK_STATE_SELECTED] = color;
+	style->fg [GTK_STATE_INSENSITIVE] = color;
+
+	gtk_widget_set_style (label, style);
+    }
+
+    gtk_widget_show (label);
+  }
+
+  row++;
   
   /*pulp*/ /*Reserved Slots spin widget*/
 
@@ -422,7 +460,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
   label = gtk_label_new (_("Reserved Slots:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 3, 4);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
 
 
@@ -430,7 +468,7 @@ static GtkWidget *server_info_page (struct server *s) {
   spinner = gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinner), TRUE);
   gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON (spinner), GTK_UPDATE_IF_VALID);
-  gtk_table_attach_defaults (GTK_TABLE (table), spinner, 1, 2, 3, 4);
+  gtk_table_attach_defaults (GTK_TABLE (table), spinner, 1, 2, row, row+1);
   gtk_widget_show (spinner);
 
 
