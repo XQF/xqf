@@ -1,3 +1,6 @@
+Nov 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- move help menu item to the left
+
 Nov 28, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - split up load_pixmap in load_pixmap, load_pixmap_as_pixmap and
   load_pixmap_as_pixbuf

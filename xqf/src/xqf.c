@@ -2942,7 +2942,7 @@ static const struct menuitem menubar_menu_items[] = {
   },
 
   {
-    MENU_LAST_BRANCH,		N_("_Help"),	0,	0,
+    MENU_BRANCH,		N_("_Help"),	0,	0,
     NULL, &help_menu_items,
     NULL
   },
