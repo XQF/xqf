@@ -343,6 +343,11 @@ static GtkWidget *server_stats_page (void) {
     put_label_to_table (table, _(srv_headers[i]), 1.0, i + 1, 0);
 
   for (i = 0; i < GAMES_TOTAL; i++) {
+  
+    // Skip a game if it's not configured and show only configured is enabled
+    if (!games[i].cmd && default_show_only_configured_games)
+      continue;
+              
     game_label = game_pixmap_with_label (i);
     gtk_table_attach_defaults (GTK_TABLE (table), 
 				 game_label, 
@@ -461,6 +466,10 @@ static GtkWidget *archs_stats_page (void) {
 
   for (type = 0; type < GAMES_TOTAL; type++)
   {
+    // Skip a game if it's not configured and show only configured is enabled
+    if (!games[type].cmd && default_show_only_configured_games)
+      continue;
+
     if(games[type].arch_identifier)
     {
       arch_notebook_page (arch_notebook, type, &srv_archs[type]);

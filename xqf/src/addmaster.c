@@ -31,6 +31,7 @@
 #include "source.h"
 #include "addmaster.h"
 #include "srv-prop.h"
+#include "pref.h"
 
 static struct history *master_history_addr;
 static struct history *master_history_name;
@@ -194,6 +195,11 @@ static GtkWidget *create_master_type_menu (void) {
   menu = gtk_menu_new ();
 
   for (i = 0; i < GAMES_TOTAL; i++) {
+
+    // Skip a game if it's not configured and show only configured is enabled
+    if (!games[i].cmd && default_show_only_configured_games)
+      continue;
+
     menu_item = gtk_menu_item_new ();
     gtk_menu_append (GTK_MENU (menu), menu_item);
 

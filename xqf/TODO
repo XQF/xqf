@@ -6,3 +6,4 @@
 - improve performance with huge server lists (halflife), maybe by serverside
   filtering
 - more sophisticated UT launch function, currently not usable with mods like tacops or strikeforce
+- add OS statistic info for UT 2003 and any other missing games
