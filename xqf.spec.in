@@ -1,6 +1,6 @@
 %define name     xqf
 %define version  @VERSION@
-%define release  %{?CUSTOM_RELEASE} %{!?CUSTOM_RELEASE:%RELEASE}
+%define release  %{?CUSTOM_RELEASE} %{!?CUSTOM_RELEASE:@RELEASE@}
 
 Summary:   A network game browser an launcher (Quake/QuakeWorld/Quake2/etc.)
 Name:      %{name}

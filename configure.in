@@ -22,6 +22,15 @@ AM_SANITY_CHECK
 
 AM_PROG_LIBTOOL
 
+#The Release stuff for the spec file.
+RELEASE="1"
+AC_ARG_WITH(rpm_release,[  --with-rpm-release=VAL       RPM Release (e.g. 1mdk)])
+if test "x$with_rpm_release" != "x" ; then
+	RELEASE="$with_rpm_release"
+fi
+AC_SUBST(RELEASE)
+
+
 dnl Pick up the gettext, etc macros
 dnl AM_ACLOCAL_INCLUDE(macros)
 AM_GNU_GETTEXT
