@@ -1,3 +1,11 @@
+May 02, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- update German translation
+- remove custom args for Rocket Arena as 1.6 does not need them anymore
+- display number of private clients in player column (initial idea from Michael
+  Prager) 
+- coresize option in config file because I always remember that I wanted to
+  change the ulimit when xqf had already crashed ;-)
+
 Apr 29, 2003: Jordi Mallach <jordi@sindominio.net>
 - update Catalan and Spanish translations
 
