@@ -25,7 +25,6 @@
 #include <string.h>	/* memset, strdup, strlen, strcmp */
 #include <sys/wait.h>   /* waitpid */
 #include <errno.h>	/* errno */
-#include <fcntl.h>	/* fcntl */
 #include <sys/time.h>	/* select */
 #include <sys/socket.h>	/* struct in_addr, inet_aton, inet_ntoa */
 #include <netinet/in.h>	/* struct in_addr, inet_aton, inet_ntoa */
@@ -119,15 +118,6 @@ static int failed (char *name, char *arg) {
   fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", 
                                                           g_strerror (errno));
   return TRUE;
-}
-
-
-static void set_nonblock (int fd) {
-  int flags;
-
-  flags = fcntl (fd, F_GETFL, 0);
-  if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0)
-    failed ("fcntl", NULL);
 }
 
 
@@ -429,7 +419,8 @@ static int fork_worker (int n, char *str) {
       dns_workers[n].input = malloc (sizeof (struct dns_stream));
 
     dns_workers[n].input->fd = fdset[0];
-    set_nonblock (dns_workers[n].input->fd);
+    if(set_nonblock (dns_workers[n].input->fd) == -1)
+	failed ("fcntl", NULL);
     dns_workers[n].input->pos = 0;
 
     dns_workers[n].input->parse = worker_parse_callback;
@@ -580,7 +571,8 @@ static void dns_master_init (void) {
   dns_master_input = malloc (sizeof (struct dns_stream));
 
   dns_master_input->fd = 0;			/* stdin */
-  set_nonblock (dns_master_input->fd);
+  if(set_nonblock (dns_master_input->fd) == -1)
+    failed ("fcntl", NULL);
 
   dns_master_input->pos = 0;
   dns_master_input->parse = master_parse_callback;
@@ -724,7 +716,8 @@ int dns_spawn_helper (void) {
 
     dns_helper.input = malloc (sizeof (struct dns_stream));
     dns_helper.input->fd  = fdset1[0];
-    set_nonblock (dns_helper.input->fd);
+    if(set_nonblock (dns_helper.input->fd) == -1)
+	failed("fcntl", NULL);
 
     dns_helper.pid = pid;
 

@@ -1,3 +1,9 @@
+Nov 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- Use non-blocking socket for rcon
+- Add small timeout to catch replies with multiple packets in xqf-rcon
+- Make xqf-recon optionally read the rcon passwort from the environment
+  variable XQF_RCON_PASSWORD
+
 Nov 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - update German translation
 - add wolfmp as main mod of rtcw (reportet by Ruediger Meier)
