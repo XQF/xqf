@@ -1735,28 +1735,30 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   /* 
      Apprenenly for q3a version 1.29 Linux users are supposed
-     to go back to vm_* = 0 because they fixed the vm compiler.
+     to go back to vm_* = 2 because they fixed the vm compiler.
+     Hmm, this seems to break osp when set to 0 (for so only). But
+     we actually want to set it a 2 to get vm compilation.
   */
   if( fs_game =  find_server_setting_for_key ("version", con->s->info)){
     if (strstr( fs_game, "1.29")){  
-      argv[argi++] = "+set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
-      debug (5, "Game is version %s, run with all vm_* at zero.\n", fs_game);
+      argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
+      debug (1, "Game is version %s, run with all vm_* at two.\n", fs_game);
     }    
-  }
-  
-
-  /* FIX ME
-    BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
-    to run properly.  This is for at least 1.27g.
-  */
-
-  if (is_so_mod){
+  } else if (is_so_mod) {
+    /* FIX ME
+       BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
+       to run properly.  This is for at least 1.27g.
+    */
     argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
   }
-
+  
   argv[argi] = NULL;
 
 #if 1
+  /*
+    If you have the debug level set (e.g. -d 1) then this
+    will show you the command line being exicted.
+  */
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 #else
   if (get_debug_level()){
@@ -1766,9 +1768,9 @@ static int q3_exec (const struct condef *con, int forkit) {
       fprintf (stderr, "%s ", *argptr++);
     fprintf (stderr, "\n");
   }
-
   retval = 1;
 #endif
+
   g_free (cmd);
   g_free (tmp_cmd);
   return retval;
