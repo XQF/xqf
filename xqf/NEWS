@@ -3,7 +3,8 @@ XQF 1.0 -- August 15, 2004
 Changes since 0.9.14:
 
 o New games: Doom3, Jedi Academy (wine), America's Army 2.1
-o Redial also when only private slots are free and no password is set
+o Redial understands free private slots and won't connect to password protected
+  servers if there is no password defined by the user
 o Support for the Half-Life steam master
 o Support for America's Army 2.1
 o Export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
@@ -11,8 +12,10 @@ o Export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
 o Custom arguments for RedOrchestra, Troopers, AlienSwarm UT2004 mods
 o Animated tray icon for the GTK2 version
 o Quake 3 gametypes for World of Padman
-o Also copy to CLIPBOARD instead of only PRIMARY to allow paste via CTRL-v
-o Quick Filter
+o Copy/Copy+ also copies to the CLIPBOARD instead of only PRIMARY to allow
+  paste via CTRL-v
+o Quick Filter on main screen to search in every server's name, hostname, map,
+  game, gametype and rule value.
 o Requires qstat 2.6
 
 XQF 0.9.14 -- March 21, 2004
