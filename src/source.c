@@ -859,7 +859,8 @@ static char *builtin_masters_update_info[] = {
   "ADD HLS master://half-life.east.won.net WON East",
   "ADD HLS master://half-life.west.won.net WON West",
 
-  "ADD HLS,-stm master://hlmaster1.hlauth.net Steam",
+  "ADD HLS,-stm master://steam1.steampowered.com Steam 1",
+  "ADD HLS,-stm master://steam2.steampowered.com Steam 2",
 
   "ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin Gameaholic.Com",
   "ADD Q2S:KP http://www.ogn.org:6666 OGN",

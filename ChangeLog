@@ -8,6 +8,7 @@ May 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
   XQF_SERVER_GAME when launching a game (suggested by Ruediger Meier)
 - don't inherit some tags from base game, e.g. suggested commands
+- use steam1.steampowered.com and steam2.steampowered.com as steam master
 
 May 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - support for Half-Life steam master. Nasty hack, hopefully doesn't break other stuff.
