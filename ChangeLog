@@ -1,3 +1,6 @@
+Oct 23, 2002: Jordi Mallach <jordi@sindominio.net>
+- Update Catalan and Spanish translations.
+
 Oct 23, 2002: Alex Burger <alex@users.sourceforge dot net>
 - removed rafix option from q3_exec
 - modified vmfix option in q3_exec to make custom args preferred over
