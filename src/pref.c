@@ -261,6 +261,9 @@ static GtkWidget *ef_setfs_gamebutton;
 /* Call of Duty */
 static GtkWidget *cod_proto_entry;
 
+/* Soldier of Fortune 2 */
+static GtkWidget *sof2_proto_entry;
+
 struct generic_prefs {
   char *pref_dir;
   char *real_dir;
@@ -315,6 +318,13 @@ char* ef_masterprotocols[] = {
 
 char* cod_masterprotocols[] = {
 	"1",
+	NULL
+};
+
+char* sof2_masterprotocols[] = {
+	"2004 - SOF2 1.02",
+	"2003 - SOF2 1.01",
+	"2002 - SOF2 1.00",
 	NULL
 };
 
@@ -3207,7 +3217,41 @@ static GtkWidget *cod_options_page (void) {
   return page_vbox;
 }
 
+// additional options for call of duty
+static GtkWidget *sof2_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
 
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  sof2_proto_entry = gtk_combo_new ();
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (sof2_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (sof2_proto_entry),
+			  createGListfromchar(sof2_masterprotocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (sof2_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (sof2_proto_entry)->entry),
+		game_get_attribute(SOF2S_SERVER,"masterprotocol"));
+
+	  gtk_box_pack_start (GTK_BOX (hbox), sof2_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (sof2_proto_entry);
+
+	gtk_widget_show (hbox);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
 
 // additional options for voyager elite force
 static GtkWidget *ef_options_page (void) {
@@ -3281,6 +3325,11 @@ void add_woet_options_to_notebook(GtkWidget *notebook)
 void add_cod_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), cod_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_sof2_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), sof2_options_page(), gtk_label_new (_("Options")));
 }
 
 void add_ef_options_to_notebook(GtkWidget *notebook)
@@ -4456,6 +4505,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
   new_genprefs[WOET_SERVER].add_options_to_notebook = add_woet_options_to_notebook;
   new_genprefs[COD_SERVER].add_options_to_notebook = add_cod_options_to_notebook;
+  new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_sof2_options_to_notebook;
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
   new_genprefs[EF_SERVER].add_options_to_notebook = add_ef_options_to_notebook;
 
@@ -4896,6 +4946,20 @@ int prefs_load (void) {
   }
 
   game_set_attribute(COD_SERVER,"masterprotocol",tmp);
+
+  config_pop_prefix ();
+
+  /* Soldier of Fortune 2 */
+  config_push_prefix ("/" CONFIG_FILE "/Game: SOF2S");
+  
+  tmp = config_get_string ("protocol=2004");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+
+  game_set_attribute(SOF2S_SERVER,"masterprotocol",tmp);
 
   config_pop_prefix ();
 

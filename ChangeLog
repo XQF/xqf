@@ -1,3 +1,14 @@
+Jan 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- move struct games into games.c which is now generated from games.xml by
+  gamesxml2c
+- don't pass tribes2 name if empty
+- add --dontlaunch parameter for internal use
+- add exec function to hexenworld (anyone ever played that game??)
+- make sof2 master protcol configurable
+
+Jan 07, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- check props pointer before dereferencing it ...
+
 Jan 05, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - added comment and "this server sucks" properties for servers
 

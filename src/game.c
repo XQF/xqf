@@ -133,6 +133,7 @@ static struct quake_private wolfet_private = { NULL, "~/.etwolf" };
 static struct quake_private mohaa_private = { NULL, "~/.mohaa" };
 static struct quake_private cod_private = { NULL, NULL }; // no home, wine only
 
+#if 0
 struct game games[] = {
   {
     Q1_SERVER, 
@@ -979,6 +980,9 @@ struct game games[] = {
     NULL,		// pd
   }
 };
+#else
+#include "games.c"
+#endif
 
 struct gsname2type_s
 {
@@ -1036,6 +1040,7 @@ void init_games()
 
   debug(3,"init_games");
 
+#if 0
   game_copy_static_options(WOET_SERVER,WO_SERVER);
   games[WOET_SERVER].name="Enemy Territory";
   games[WOET_SERVER].id="WOETS";
@@ -1078,6 +1083,7 @@ void init_games()
   games[COD_SERVER].pix=&cod_pix;
   games[COD_SERVER].config_is_valid=config_is_valid_generic;
   games[COD_SERVER].arch_identifier=NULL;
+#endif
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
@@ -1147,7 +1153,10 @@ const char* game_set_attribute(enum server_type type, const char* attr, char* va
 enum server_type id2type (const char *id) {
   int i;
 
+  g_return_val_if_fail(id != NULL, UNKNOWN_SERVER);
+
   for (i = 0; i < GAMES_TOTAL; i++) {
+    g_return_val_if_fail(games[i].id != NULL, UNKNOWN_SERVER);
     if (g_strcasecmp (id, games[i].id) == 0)
       return games[i].type;
   }
@@ -3621,7 +3630,7 @@ static int t2_exec (const struct condef *con, int forkit) {
 
   if (con->server) {
 
-    if(default_t2_name) {   
+    if(default_t2_name && *default_t2_name) {   
       argv[argi++] = "-login";
       argv[argi++] = default_t2_name;
     }
