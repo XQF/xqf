@@ -352,11 +352,6 @@ void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFu
     }
 }
 
-static void maphashforeachfunc(char* key, gpointer value, gpointer user_data)
-{
-    printf("%s ",key);
-}
-
 static gboolean maphashforeachremovefunc(gpointer key, gpointer value, gpointer user_data)
 {
     g_free(key);
@@ -520,6 +515,11 @@ void findquakemaps(GHashTable* maphash, const char* startdir)
 #if 0
 
 // gcc -g -Wall -O0 `glib-config --cflags` `glib-config --libs` -lz -o listq3maps q3maps.c zip/*.c debug.c
+
+static void maphashforeachfunc(char* key, gpointer value, gpointer user_data)
+{
+    printf("%s ",key);
+}
 
 static void q3_print_maps(GHashTable* maphash)
 {
