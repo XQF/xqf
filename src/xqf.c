@@ -1047,9 +1047,9 @@ static void launch_close_handler_part2(struct condef *con)
   int pid;
 
   if (redialserver == 1) // was called from a redial
-    play_sound(sound_redial_success);
+    play_sound(sound_redial_success, 0);
   else
-    play_sound(sound_server_connect);
+    play_sound(sound_server_connect, 0);
 
   redialserver = 0; // Cancel any redialing
 
@@ -1378,7 +1378,7 @@ static void stop_callback (GtkWidget *widget, gpointer data) {
     stat_process = NULL;
   }
   redialserver = 0;  // Reset redialserver so prompt comes up next time 
-  play_sound(sound_stop);
+  play_sound(sound_stop, 0);
   event_type = 0; // To prevent sound from stopped action from playing
 }
 
@@ -3162,12 +3162,12 @@ void create_main_window (void) {
                 
 }
 
-void play_sound (const char *sound)
+void play_sound (const char *sound, const int override)
 {
   char *launchargv[3];
   int pid;
 
-  if(!sound_enable) {
+  if(!sound_enable && !override) {
     debug(2,"sound disabled - not playing");
     return;
   }
@@ -3303,7 +3303,7 @@ int main (int argc, char *argv[]) {
   psearch_init ();
   rcon_init ();
 
-  play_sound(sound_xqf_start);
+  play_sound(sound_xqf_start, 0);
 
   create_main_window ();
 
@@ -3326,7 +3326,7 @@ int main (int argc, char *argv[]) {
 
   gtk_main ();
 
-  play_sound(sound_xqf_quit);
+  play_sound(sound_xqf_quit, 0);
 
   unregister_window (main_window);
   main_window = NULL;

@@ -833,11 +833,11 @@ static void stat_close (struct stat_job *job, int killed) {
   }
   if(event_type == EVENT_REFRESH) {
     debug (1, "refresh done.\n");
-    play_sound(sound_refresh_done);
+    play_sound(sound_refresh_done, 0);
   }
   if(event_type == EVENT_UPDATE) {
     debug (1, "update done.\n");
-    play_sound(sound_update_done);
+    play_sound(sound_update_done, 0);
   }
   event_type=0;
 }
