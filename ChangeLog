@@ -3,6 +3,7 @@ Mar 10, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
   not installed
 - #define ZEXPORT if not already defined to fix compilation problems. Thanks
   Pierre Pronchery
+- set private clients from reserve_slots variable for hl
 
 Mar 07, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - game types for westernq3

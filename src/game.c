@@ -1441,6 +1441,11 @@ static void hl_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "sv_password") == 0 && info_ptr[1][0] != '0') {
       s->flags |= SERVER_PASSWORD;
     }
+
+    // reserved slots
+    else if (strcmp (*info_ptr, "reserve_slots") == 0) {
+      s->private_client = strtol (info_ptr[1], NULL, 10);
+    }
   }
 
   // unset Mod if gamedir is valve

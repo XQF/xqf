@@ -143,6 +143,8 @@ static int server_clist_refresh_row (struct server *s, int row) {
   text[3] = text[4] = NULL;
 
   g_snprintf (buf4, 32, "%d/%d", s->curplayers, s->maxplayers);
+  // set text only if no players are on the server. Otherwise an icon is added
+  // later together with this text
   text[5] = (!s->curplayers)? buf4 : NULL;
 
   text[6] = (s->map) ?  s->map : NULL;
