@@ -1397,8 +1397,7 @@ static struct player *un_parse_player (char *token[], int n, struct server *s) {
 
 static struct player *savage_parse_player (char *token[], int n, struct server *s)
 {
-#warning TODO
-    return NULL;
+    return q2_parse_player(token, n, s);
 }
 
 static void quake_parse_server (char *token[], int n, struct server *server) {
