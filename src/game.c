@@ -631,6 +631,9 @@ static void un_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "hostport") == 0) {
       hostport = atoi(info_ptr[1]);
     }
+    else if (strcmp (*info_ptr, "Mutator") == 0 && strstr(info_ptr[1], "AntiTCC")) {
+      s->flags |= SERVER_PUNKBUSTER;
+    }
     else if ((s->type == UT2004_SERVER || s->type == UT2_SERVER)
 	&& strcmp (*info_ptr, "ServerVersion") == 0
 	&& strlen(info_ptr[1]) == 4)
@@ -3263,6 +3266,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 
       case UN_SERVER:
       case UT2_SERVER:
+      case UT2004_SERVER:
       case RUNE_SERVER:
       case POSTAL2_SERVER:
       case AAO_SERVER:

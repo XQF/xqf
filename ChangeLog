@@ -1,3 +1,7 @@
+Oct 10, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- Show UT200[34] mutators as tree like dmflags
+- Add gslist master for RTCW
+
 Oct 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Descent3: use Gamespy protocol instead of PXO protocol, remove no longer
   working masters, use custom launch function (uses --directip), fix saving of

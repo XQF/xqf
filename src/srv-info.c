@@ -486,6 +486,26 @@ static void show_extended_flags (const char *str, char *names[], int size,
   }
 }
 
+static void show_split_value (const char *str, const char* separator, GtkCTreeNode *parent)
+{
+  char** values;
+  char* text[2];
+  unsigned i;
+
+  values = g_strsplit(str, separator, 0);
+
+  for(i=0; values && values[i]; ++i)
+  {
+    text[0] = values[i];
+    text[1] = NULL;
+    gtk_ctree_insert_node (srvinf_ctree, parent, NULL, text, 4,
+	NULL, NULL,
+	NULL, NULL,
+	TRUE, FALSE);
+  }
+
+  g_strfreev(values);
+}
 
 // TODO: get rid of switch, put game specific functions into game struct
 void srvinf_ctree_set_server (struct server *s) {
@@ -628,6 +648,13 @@ void srvinf_ctree_set_server (struct server *s) {
       }
       break;
 
+    case UT2_SERVER:
+    case UT2004_SERVER:
+      if (info[0] && !g_strcasecmp (info[0], "mutator"))
+      {
+	show_split_value(info[1], "|", node);
+      }
+      break;
 
     default:
       break;
