@@ -21,7 +21,7 @@
 
 #include "launch.h"
 
-gboolean redial_dialog (struct server* s);
+gboolean redial_dialog (struct server* s,  int r_slots); /*pulp*/
 
 #endif /* __ADDMASTER_H__ */
 
