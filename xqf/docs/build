@@ -216,7 +216,11 @@ fr.po.
 *****
 
 
-
-
-
-
+-web site: -index.shtml (add news release - if it's getting too long,
+            move old entries to archive file
+            news-archive-19990720.shtml)
+           -download.shtml (move old version to downloads-old.shtml)
+           -about.shtml (add any new games)
+           -docs.shtml (cp xqfdocs.html to docs.shtml, tidy -asxhtml -m,
+            and then modify header/footer)
+           -changelog.shtml (same contents as index.shtml)
