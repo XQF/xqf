@@ -35,6 +35,7 @@
 #include "xutils.h"
 
 static GtkWidget* splashscreen;
+static guint current_progress;
 
 void destroy_splashscreen(void)
 {
@@ -109,9 +110,8 @@ void create_splashscreen (void)
   while (gdk_events_pending())
     gdk_flush();
 
+  current_progress = 0;
 }
-
-static guint current_progress;
 
 /* set percentage on splash screen, thanks to lopster for this code */
 void splash_set_progress(const char* message, guint per)

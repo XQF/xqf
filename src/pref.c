@@ -51,6 +51,8 @@
 static struct generic_prefs* new_generic_prefs (void);
 static GtkWidget *custom_args_options_page (enum server_type type);
 
+static void scan_maps_for(enum server_type type);
+
 char 	*user_rcdir = NULL;
 
 char 	*default_q1_name = NULL;
@@ -3935,14 +3937,15 @@ static GtkWidget *appearance_options_page (void) {
 static void scan_maps_callback (GtkWidget *widget, gpointer data)
 {
     int i;
+
+    create_splashscreen();
+
     for (i = 0; i < GAMES_TOTAL; i++)
     {
-	if(games[i].init_maps)
-	{
-	    debug(0,"Searching for %s maps",games[i].name);
-	    games[i].init_maps(games[i].type);
-	}
+	scan_maps_for(i);
     }
+
+    destroy_splashscreen();
 }
 
 static GtkWidget *general_options_page (void) {
@@ -5268,26 +5271,32 @@ int prefs_load (void) {
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
-    // translator: %s = game name, e.g. Quake 3 Arena
-    char* msg = g_strdup_printf(_("Searching for %s maps"),games[i].name);
-    guint per = 100/GAMES_TOTAL;
-
     g_free (games[i].real_dir);
     games[i].real_dir = expand_tilde (games[i].dir);
 
-    splash_increase_progress(msg,per);
-    if(default_auto_maps && games[i].init_maps)
-    {
-      games[i].init_maps(games[i].type);
-    }
-   
+    if(default_auto_maps)
+      scan_maps_for(i);
+
     if(games[i].cmd_or_dir_changed)
       games[i].cmd_or_dir_changed(&games[i]);
-
-    g_free(msg);
   }
 
   return newversion;
+}
+
+static void scan_maps_for(enum server_type type)
+{
+  // translator: %s = game name, e.g. Quake 3 Arena
+  char* msg = g_strdup_printf(_("Searching for %s maps"),games[type].name);
+  guint per = 100/GAMES_TOTAL;
+
+  splash_increase_progress(msg,per);
+  if(games[type].init_maps)
+  {
+    games[type].init_maps(games[type].type);
+  }
+
+  g_free(msg);
 }
 
 /*

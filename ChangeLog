@@ -1,3 +1,6 @@
+Nov 06, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- open splash screen with progress bar when clicking the "scan now" button
+
 Nov 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add country statistics
 - use an empty flag for countries without flag for proper alignment
