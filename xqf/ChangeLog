@@ -1,3 +1,6 @@
+Nov 18th 2000: Alex Burger <alex@fragit.net>
+-Version changed to XQF 0.9.5
+
 Nov 13th 2000: Alex Burger <alex@fragit.net>
 -Bug fix to prevent filter buttons from not staying 'pressed' after doing a
  refresh.  Thanks to slashdev for the fix.
@@ -14,7 +17,7 @@ Nov 5th 2000: Alex Burger <alex@fragit.net>
 
 Oct 27th 2000: xqf-0.9.4f2 - Alex Burger <alex@fragit.net>
 -Added Copy+ menu option - copies the following server info to the clipboard:
- ping,ip:port,name,map,curplayers,maxplayers
+ ping  ip:port  name  map  curplayers  maxplayers
 -Now creates a LaunchInfo.txt in ~/.qf when launching a game for use with IRC 
  scripts etc.  Toggle on / off using Preferences / Appearance 
 
@@ -26,7 +29,7 @@ Oct 8th 2000: xqf-0.9.4f - Alex Burger <alex@fragit.net>
 
 Oct 4th 2000: xqf-0.9.4e - Alex Burger <alex@fragit.net>
 -Soldier of Fortune support
--Gamespy master server support when used with QStat 2.4a
+-Gamespy style master server support when used with QStat 2.4a
 -Format of 'lists' file changed to record game type in master entry
 -Ability to add the same master to multiple games such as Gamespy's master
 
