@@ -87,11 +87,21 @@ extern	int	maxretries;
 extern	int	maxsimultaneous;
 
 /* Quake 3 settings */
-extern char *default_q3proto;
-extern int default_q3vmfix;
-extern int default_q3rafix;
-extern int default_q3setfs_game;
+struct q3engineopts
+{
+  char *masterprotocol;
+  struct game *game;
+  int vmfix;
+  int rafix;
+  int setfs_game;
+};
 
+// Quake 3 Arena
+extern struct q3engineopts q3_opts;
+// Return to Castle Wolfenstein
+extern struct q3engineopts wo_opts;
+// Any other game with Q3 engine
+extern struct q3engineopts generic_q3_opts;
 
 extern	int set_working_dir (char *dir);
 extern  void preferences_dialog (int page_num);
