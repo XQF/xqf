@@ -48,7 +48,7 @@ if test "x$USE_GTK2" != "xno"; then
         OLD_GTK_SUPPORT="-DGTK_ENABLE_BROKEN=1"
         AC_SUBST(OLD_GTK_SUPPORT)        
 
-        pkg_modules="gtk+-2.0 >= 2.0.0"
+        pkg_modules="gtk+-2.0 >= 2.0.0 gdk-pixbuf-xlib-2.0"
         PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
         AC_SUBST(PACKAGE_CFLAGS)
         AC_SUBST(PACKAGE_LIBS)                
@@ -195,6 +195,7 @@ AC_CONFIG_FILES([
 	docs/Makefile
 	pixmaps/Makefile
 	pixmaps/flags/Makefile
+	pixmaps/trayicon/Makefile
 	xqf.spec
 	po/Makefile.in
 ])

@@ -101,6 +101,7 @@ int 	default_save_plrinfo;
 int	default_auto_favorites;
 int	default_show_splash;
 int	default_auto_maps;
+int	default_show_tray_icon;
 int	default_toolbar_style;
 int	default_toolbar_tips;
 int	default_refresh_sorts;
@@ -170,6 +171,7 @@ static  GtkWidget *save_plrinfo_check_button;
 static  GtkWidget *auto_favorites_check_button;
 static  GtkWidget *show_splash_button;
 static  GtkWidget *auto_maps_check_button;
+static  GtkWidget *tray_icon_check_button;
 static  GtkWidget *show_hostnames_check_button;
 static  GtkWidget *show_defport_check_button;
 static  GtkWidget *toolbar_style_radio_buttons[3];
@@ -940,6 +942,12 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (auto_maps_check_button)->active;
   if (i != default_auto_maps)
     config_set_bool ("search maps", default_auto_maps = i);
+
+#ifdef USE_GTK2
+  i = GTK_TOGGLE_BUTTON (tray_icon_check_button)->active;
+  if (i != default_show_tray_icon)
+    config_set_bool ("showtray", default_show_tray_icon = i);
+#endif
 
   config_pop_prefix ();
 
@@ -3922,6 +3930,23 @@ static GtkWidget *general_options_page (void) {
 
       gtk_widget_show (hbox);
   
+#ifdef USE_GTK2
+  /*Tray icon*/
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  
+  
+  tray_icon_check_button = gtk_check_button_new_with_label (_("Minimize to system tray"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tray_icon_check_button), default_show_tray_icon);
+  
+  gtk_tooltips_set_tip (tooltips, tray_icon_check_button,
+  _("Enable xqf tray icon. You need to restart xqf to take effect !"), NULL);
+
+  gtk_box_pack_start (GTK_BOX (hbox), tray_icon_check_button, FALSE, FALSE, 0);
+  gtk_widget_show (tray_icon_check_button);
+  gtk_widget_show (hbox);
+#endif
+  
     gtk_widget_show (vbox);
 
   gtk_widget_show (frame);
@@ -5030,6 +5055,7 @@ int prefs_load (void) {
   default_auto_favorites =    config_get_bool ("refresh favorites=false");
   default_show_splash =       config_get_bool ("splash screen=true");
   default_auto_maps =         config_get_bool ("search maps=false");
+  default_show_tray_icon =    config_get_bool ("showtray=false");
 
   config_pop_prefix ();
 
@@ -5319,4 +5345,3 @@ static void file_dialog(const char *title, GtkSignalFunc ok_callback, enum serve
     
     gtk_widget_show(file_selector);
 }
-

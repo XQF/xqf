@@ -3,6 +3,7 @@ Jun 19, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
   all servers. Today's qstat cvs version required.
 - add gametypes for World of Padman Q3A mod
 - add support for Jedi Academy (wine game, patch by Steffen Pankratz)
+- add an animated tray icon for the GTK2 version (patch by Jochen Baier)
 
 Jun 06, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - update Danish translation (Morten Brix Pedersen)

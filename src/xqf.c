@@ -81,6 +81,7 @@
 #include "redial.h"
 #include "splash.h"
 #include "loadpixmap.h"
+#include "trayicon.h"
 
 #ifdef USE_GEOIP
 #include "country-filter.h"
@@ -961,6 +962,8 @@ static void stat_lists_state_handler (struct stat_job *job,
 
   case STAT_UPDATE_SOURCE:
     progress_bar_str = _("Updating lists...");
+    if (default_show_tray_icon)
+      tray_icon_start_animation ();
     break;
 
   case STAT_RESOLVE_NAMES:
@@ -969,6 +972,8 @@ static void stat_lists_state_handler (struct stat_job *job,
 
   case STAT_REFRESH_SERVERS:
     progress_bar_str = _("Refreshing: %d/%d");
+    if (default_show_tray_icon)
+      tray_icon_start_animation ();
     break;
 
   case STAT_RESOLVE_HOSTS:
@@ -1001,6 +1006,8 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
     print_status (main_status_bar, _("Waiting to redial server(s)..."));
   else
   */
+
+  tray_icon_stop_animation ();
     print_status (main_status_bar, _("Done."));
 
   progress_bar_reset (main_progress_bar);
@@ -1494,7 +1501,7 @@ static int srvinf_clist_compare_func (GtkCList *clist,
 }
 
 
-static void update_source_callback (GtkWidget *widget, gpointer data) {
+void update_source_callback (GtkWidget *widget, gpointer data) {
   GSList *masters = NULL;
   GSList *servers = NULL;
   GSList *uservers = NULL;
@@ -1554,8 +1561,24 @@ static void refresh_callback (GtkWidget *widget, gpointer data) {
   }
 }
 
+void refresh_n_server (GtkWidget * button, gpointer *data)
+{
+  GSList *list;
+  gint number;
 
-static void stop_callback (GtkWidget *widget, gpointer data) {
+  if (stat_process) 
+    return;
+
+  event_type = EVENT_REFRESH;
+  number=GPOINTER_TO_INT(data);
+  
+  list = server_clist_get_n_servers(number);
+
+  if (list)
+    stat_lists(NULL, NULL, list, NULL);
+}
+
+void stop_callback (GtkWidget *widget, gpointer data) {
 
   event_type = 0; // To prevent sound from stopped action from playing
 
@@ -3584,8 +3607,6 @@ void create_main_window (void) {
 
   window_set_icon(main_window);
 
-  gtk_widget_show (main_window);
-
   gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
   gtk_accel_group_unref (accel_group);
   
@@ -3595,7 +3616,6 @@ void create_main_window (void) {
     gtk_tooltips_enable(tooltips);
   else
     gtk_tooltips_disable(tooltips);
-                
 }
 
 void play_sound (const char *sound, const int override)
@@ -3898,6 +3918,11 @@ int main (int argc, char *argv[]) {
 
   create_main_window ();
 
+  if (default_show_tray_icon) 
+    tray_init(main_window);
+  else
+    gtk_widget_show (main_window);
+
   source_ctree_select_source (favorites);
   filter_menu_activate_current();
 
@@ -3912,10 +3937,15 @@ int main (int argc, char *argv[]) {
 
   debug(1,"startup time %ds", time(NULL)-xqf_start_time);
 
+  tray_icon_set_tooltip(_("nothing yet..."));
+  
   gtk_main ();
 
   play_sound(sound_xqf_quit, 0);
 
+  if (default_show_tray_icon)
+    tray_done();
+  
   unregister_window (main_window);
   main_window = NULL;
 
@@ -3998,7 +4028,7 @@ int main (int argc, char *argv[]) {
 #endif
 
   games_done();
-	
+
   debug( 6, "EXIT: Done.");
 
 

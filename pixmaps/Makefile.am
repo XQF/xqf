@@ -1,4 +1,4 @@
-SUBDIRS = flags
+SUBDIRS = flags trayicon
 
 EXTRA_DIST = $(splash_DATA) $(icon_DATA)
 
