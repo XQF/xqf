@@ -36,6 +36,7 @@ enum {
   PREF_PAGE_GAMES,
   PREF_PAGE_APPEARANCE,
   PREF_PAGE_QSTAT,
+  PREF_PAGE_SOUNDS
 };
 
 extern	char *user_rcdir;
@@ -91,6 +92,15 @@ extern	int	default_refresh_on_update;
 
 extern	int	maxretries;
 extern	int	maxsimultaneous;
+
+extern	char	*sound_player;
+extern	char	*sound_xqf_start;
+extern	char	*sound_xqf_quit;
+extern	char	*sound_update_done;
+extern	char	*sound_refresh_done;
+extern	char	*sound_stop;
+extern	char	*sound_server_connect;
+extern	char	*sound_redial_success;
 
 /* Quake 3 settings */
 struct q3engineopts

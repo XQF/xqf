@@ -1006,6 +1006,11 @@ static void launch_close_handler_part2(struct condef *con)
   char *launchargv[4];
   int pid;
 
+  if (redialserver == 1) // was called from a redial
+    play_sound(sound_redial_success);
+  else
+    play_sound(sound_server_connect);
+
   redialserver = 0; // Cancel any redialing
 
   s = con->s;
@@ -1268,6 +1273,8 @@ static void update_source_callback (GtkWidget *widget, gpointer data) {
   GSList *servers = NULL;
   GSList *uservers = NULL;
 
+  event_type=EVENT_UPDATE;
+
   debug_increase_indent();
   debug (6, "update_source_callback() -- ");
   if (stat_process || !cur_source)
@@ -1278,6 +1285,7 @@ static void update_source_callback (GtkWidget *widget, gpointer data) {
     stat_lists (masters, uservers, servers, NULL);
   }
   debug_decrease_indent();
+
 }
 
 
@@ -1289,6 +1297,8 @@ static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
     debug(1,"nope");
     return;
   }
+
+  event_type=EVENT_REFRESH_SELECTED;
 
   list = server_clist_selected_servers ();
 
@@ -1304,6 +1314,8 @@ static void refresh_callback (GtkWidget *widget, gpointer data) {
   if (stat_process)
     return;
 
+  event_type=EVENT_REFRESH;
+
   debug (7, "refresh_callback() -- Get Server List");
 
   servers = server_clist_all_servers ();
@@ -1318,11 +1330,16 @@ static void refresh_callback (GtkWidget *widget, gpointer data) {
 
 
 static void stop_callback (GtkWidget *widget, gpointer data) {
+
+  event_type = 0; // To prevent sound from stopped action from playing
+
   if (stat_process) {
     stat_stop (stat_process);
     stat_process = NULL;
   }
   redialserver = 0;  // Reset redialserver so prompt comes up next time 
+  play_sound(sound_stop);
+  event_type = 0; // To prevent sound from stopped action from playing
 }
 
 
@@ -2441,6 +2458,12 @@ static const struct menuitem preferences_menu_items[] = {
     (gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
     NULL
   },
+  { 
+    MENU_ITEM,		N_("_Sound Options..."),	0,	0, 
+    GTK_SIGNAL_FUNC (start_preferences_dialog),
+    (gpointer) (PREF_PAGE_SOUNDS + UNKNOWN_SERVER * 256),
+    NULL
+  },
 
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
@@ -3059,6 +3082,54 @@ void create_main_window (void) {
   gtk_accel_group_unref (accel_group);
 }
 
+void play_sound (char *sound)
+{
+  char *launchargv[3];
+  char c[2];
+  int pid;
+
+
+  if(!sound || !sound_player) {
+    debug(1,"sound player or sound file not defined - not playing anything");
+    return;
+  }
+
+
+  pid = fork();
+  if (pid == 0)
+  {
+    launchargv[0] = g_malloc(strlen(sound_player)+1);
+    strcpy(launchargv[0],sound_player);
+
+    strncpy(c,sound,1); // Copy first character of player to c
+    c[1] = 0;
+    
+    if(strcmp(c,"/")){
+      // Does not start with a / so prepend user_rcdir
+      debug(1,"Prepending user_rcdir to sound file");
+      launchargv[1] = g_malloc(strlen(sound)+strlen(user_rcdir)+1); // maybe should be the filename only?
+      strcpy(launchargv[1],user_rcdir);
+      strcat(launchargv[1],"/");
+      strcat(launchargv[1],sound);
+    }
+    else
+    {
+      launchargv[1] = g_malloc(strlen(sound)+1); // maybe should be the filename only?
+      strcpy(launchargv[1],sound);
+    }    
+
+    launchargv[2]=0;
+
+    debug(1,"sound player (program): %s",launchargv[0]);
+    debug(1,"sound to play: %s",launchargv[1]);
+    execv(launchargv[0],launchargv);
+
+    g_free (launchargv[0]);
+    g_free (launchargv[1]);
+    
+    _exit (1);
+  }
+}
 
 int main (int argc, char *argv[]) {
   char *gtk_config;
@@ -3070,6 +3141,7 @@ int main (int argc, char *argv[]) {
   xqf_start_time = time (NULL);
 
   redialserver=0;
+
 
 #ifdef ENABLE_NLS
 #  ifdef HAVE_LC_MESSAGES
@@ -3148,6 +3220,8 @@ int main (int argc, char *argv[]) {
   add_master_init ();
   psearch_init ();
   rcon_init ();
+
+  play_sound(sound_xqf_start);
 
   create_main_window ();
 
@@ -3241,6 +3315,8 @@ int main (int argc, char *argv[]) {
   config_sync ();
   config_drop_all ();
   debug( 6, "EXIT: Done.");
+
+  play_sound(sound_xqf_quit);
 
   return 0;
 }
