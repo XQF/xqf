@@ -1,3 +1,7 @@
+Mar 10, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- store all map names lowercase, otherwise many maps are reported as
+  not installed
+
 Mar 07, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - game types for westernq3
 

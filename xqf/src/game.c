@@ -1190,6 +1190,7 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 
   if (*(token[offs]))            /* if map is not empty */
     server->map  = g_strdup (token[offs]);
+    if(server->map) g_strdown(server->map);
 
     server->maxplayers = strtoush (token[offs + 1]);
     server->curplayers = strtoush (token[offs + 2]);

@@ -117,6 +117,7 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 		{
 		    // s#(.*)suffix#\1#
 		    char* mapname = g_strndup(dire->d_name,strlen(dire->d_name)-strlen(suffix));
+		    g_strdown(mapname);
 		    if(g_hash_table_lookup(maphash,mapname))
 		    {
 			g_free(mapname);
@@ -138,12 +139,6 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 	g_free(mod);
 }
 
-// case insensitive compare for hash
-static gint maphashmapsequal(gconstpointer m1, gconstpointer m2)
-{
-    return (g_strcasecmp(m1,m2)==0);
-}
-
 static gboolean maphashforeachremovefunc(gpointer key, gpointer value, gpointer user_data)
 {
     g_free(key);
@@ -162,7 +157,7 @@ void ut_clear_maps(GHashTable* maphash)
 /** create map hash */
 GHashTable* ut_init_maphash()
 {
-    return g_hash_table_new(g_str_hash,maphashmapsequal);
+    return g_hash_table_new(g_str_hash,g_str_equal);
 }
 
 /** return true if mapname is contained in maphash, false otherwise */
