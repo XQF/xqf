@@ -107,6 +107,8 @@ static  GtkWidget *filter_no_password_check_button;
 static  GtkWidget *game_contains_entry;
 static  GtkWidget *filter_game_type_entry;
 static  GtkWidget *version_contains_entry;
+static  GtkWidget *map_contains_entry;
+static  GtkWidget *server_name_contains_entry;
 
 static struct server_filter_vars* server_filter_vars_new()
 {
@@ -123,7 +125,8 @@ static struct server_filter_vars* server_filter_vars_new()
     f->game_contains = NULL;
     f->version_contains = NULL;
     f->game_type = NULL;
-
+    f->map_contains = NULL;
+    f->server_name_contains=NULL;
     return f;
 }
 
@@ -134,6 +137,8 @@ static void server_filter_vars_free(struct server_filter_vars* v)
   g_free(v->filter_name);
   g_free(v->game_contains);
   g_free(v->version_contains);
+  g_free(v->map_contains);
+  g_free(v->server_name_contains);
   g_free(v->game_type);
 }
 
@@ -147,17 +152,18 @@ static struct server_filter_vars* server_filter_vars_copy(struct server_filter_v
   f = server_filter_vars_new();
   if(!f) return NULL;
 
-  f->filter_retries     = v->filter_retries;
-  f->filter_ping        = v->filter_ping;
-  f->filter_not_full    = v->filter_not_full;
-  f->filter_not_empty   = v->filter_not_empty;
-  f->filter_no_cheats   = v->filter_no_cheats;
-  f->filter_no_password = v->filter_no_password;
-  f->filter_name        = g_strdup(v->filter_name);
-  f->game_contains      = g_strdup(v->game_contains);
-  f->version_contains   = g_strdup(v->version_contains);
-  f->game_type          = g_strdup(v->game_type);
-
+  f->filter_retries     	= v->filter_retries;
+  f->filter_ping        	= v->filter_ping;
+  f->filter_not_full    	= v->filter_not_full;
+  f->filter_not_empty   	= v->filter_not_empty;
+  f->filter_no_cheats   	= v->filter_no_cheats;
+  f->filter_no_password 	= v->filter_no_password;
+  f->filter_name        	= g_strdup(v->filter_name);
+  f->game_contains      	= g_strdup(v->game_contains);
+  f->version_contains   	= g_strdup(v->version_contains);
+  f->game_type          	= g_strdup(v->game_type);
+  f->map_contains       	= g_strdup(v->map_contains);
+  f->server_name_contains       = g_strdup(v->server_name_contains);
   return f;
 }
 
@@ -173,6 +179,8 @@ void server_filter_print(struct server_filter_vars* f)
   printf("  game: %s\n",f->game_contains);
   printf("  version: %s\n",f->version_contains);
   printf("  game type: %s\n",f->game_type);
+  printf("  map: %s\n",f->map_contains);
+  printf("  server name: %s\n",f->server_name_contains);
 }
 
 void apply_filters (unsigned mask, struct server *s) {
@@ -248,7 +256,7 @@ GSList *build_filtered_list (unsigned mask, GSList *server_list) {
 static int server_pass_filter (struct server *s){
   char **info_ptr;
   struct server_filter_vars* filter;
-  
+
   /* Filter Zero is No Filter */
   if( current_server_filter == 0 ){ return TRUE; }
 
@@ -293,6 +301,15 @@ static int server_pass_filter (struct server *s){
       return FALSE;
   }
 
+  if( filter->map_contains && *filter->map_contains )
+  {
+    if( !s->map )
+      return FALSE;
+    else if(!lowcasestrstr(s->map, filter->map_contains))
+      return FALSE;
+  }
+
+
   if( filter->version_contains && *filter->version_contains)
   {
     const char* version = NULL;
@@ -308,6 +325,17 @@ static int server_pass_filter (struct server *s){
       return FALSE;
     }
   }/*end version check */
+  
+
+  if( filter->server_name_contains && *filter->server_name_contains )
+  {
+    if( !s->name )
+      return FALSE;
+    else if(!lowcasestrstr(s->name, filter->server_name_contains))
+      return FALSE;
+  }
+
+
 
   return TRUE;
 }
@@ -338,17 +366,18 @@ static void server_filter_init (void) {
     filter = server_filter_vars_new();
     if(!filter) break;
 
-    filter->filter_name        = filtername;
-    filter->filter_retries     = config_get_int  ("retries=2");
-    filter->filter_ping        = config_get_int  ("ping=1000");
-    filter->filter_not_full    = config_get_bool ("not full=false");
-    filter->filter_not_empty   = config_get_bool ("not empty=false");
-    filter->filter_no_cheats   = config_get_bool ("no cheats=false");
-    filter->filter_no_password = config_get_bool ("no password=false");
-    filter->game_contains      = config_get_string("game_contains");
-    filter->version_contains   = config_get_string("version_contains");
-    filter->game_type          = config_get_string("game_type");
-
+    filter->filter_name        		= filtername;
+    filter->filter_retries    		= config_get_int  ("retries=2");
+    filter->filter_ping       		= config_get_int  ("ping=1000");
+    filter->filter_not_full   		= config_get_bool ("not full=false");
+    filter->filter_not_empty   		= config_get_bool ("not empty=false");
+    filter->filter_no_cheats   		= config_get_bool ("no cheats=false");
+    filter->filter_no_password 		= config_get_bool ("no password=false");
+    filter->game_contains      		= config_get_string("game_contains");
+    filter->version_contains   		= config_get_string("version_contains");
+    filter->game_type          		= config_get_string("game_type");
+    filter->map_contains       		= config_get_string("map_contains");
+    filter->server_name_contains        = config_get_string("server_name_contains");
     g_array_append_val(server_filters,filter);
     
     config_pop_prefix ();
@@ -407,7 +436,8 @@ static struct server_filter_vars* server_filter_new_from_widgets()
   filter->game_type = gtk_editable_get_chars (GTK_EDITABLE (filter_game_type_entry), 0, -1 );
   filter->version_contains = gtk_editable_get_chars (GTK_EDITABLE (version_contains_entry), 0, -1 );
   filter->game_contains = gtk_editable_get_chars (GTK_EDITABLE (game_contains_entry), 0, -1 );
-
+  filter->map_contains = gtk_editable_get_chars (GTK_EDITABLE (map_contains_entry), 0, -1 );
+  filter->server_name_contains = gtk_editable_get_chars (GTK_EDITABLE (server_name_contains_entry), 0, -1 );
   return filter;
 }
 
@@ -587,7 +617,7 @@ static void server_filter_save_settings (int number,
   if( newfilter->game_type && strlen( newfilter->game_type )){
     /*
       First case, the user entered something.  See if the value
-      is different 
+      is different
     */
     if (oldfilter->game_type){
       if( strcmp( newfilter->game_type, oldfilter->game_type )) text_changed = 1;
@@ -608,9 +638,71 @@ static void server_filter_save_settings (int number,
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
     oldfilter->game_type = NULL;
-  } 
+  }
   /* end game_type filter */
   
+  
+  /* map string values */
+  text_changed = 0;
+  if( newfilter->map_contains && strlen( newfilter->map_contains )){
+    /*
+      First case, the user entered something.  See if the value
+      is different
+    */
+    if (oldfilter->map_contains){
+      if( strcmp( newfilter->map_contains, oldfilter->map_contains )) text_changed = 1;
+      g_free( oldfilter->map_contains);
+    } else {
+      text_changed = 1;
+    }
+    oldfilter->map_contains = g_strdup( newfilter->map_contains );
+    if (text_changed) {
+      config_set_string ("map_contains", oldfilter->map_contains );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+  } else {
+    if (oldfilter->map_contains){
+      text_changed = 1; /* From something to nothing */
+      g_free( oldfilter->map_contains );
+      config_set_string ("map_contains", "" );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+    oldfilter->map_contains= NULL;
+  }  /* end of map filter */
+  
+  
+  
+
+  /* servername string values */
+  text_changed = 0;
+  if( newfilter->server_name_contains && strlen( newfilter->server_name_contains )){
+    /*
+      First case, the user entered something.  See if the value
+      is different
+    */
+    if (oldfilter->server_name_contains){
+      if( strcmp( newfilter->server_name_contains, oldfilter->server_name_contains )) text_changed = 1;
+      g_free( oldfilter->server_name_contains);
+    } else {
+      text_changed = 1;
+    }
+    oldfilter->server_name_contains = g_strdup( newfilter->server_name_contains );
+    if (text_changed) {
+      config_set_string ("server_name_contains", oldfilter->server_name_contains );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+  } else {
+    if (oldfilter->server_name_contains){
+      text_changed = 1; /* From something to nothing */
+      g_free( oldfilter->server_name_contains );
+      config_set_string ("server_name_contains", "" );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+    oldfilter->server_name_contains = NULL;
+  }  /* end of server filter */
+
+
+
 
   if (oldfilter->filter_not_full != newfilter->filter_not_full) {
     config_set_bool ("not full", oldfilter->filter_not_full = newfilter->filter_not_full);
@@ -814,6 +906,8 @@ static void server_filter_set_widgets_sensitive(gboolean sensitive)
   gtk_widget_set_sensitive(filter_game_type_entry,sensitive);
   gtk_widget_set_sensitive(version_contains_entry,sensitive);
   gtk_widget_set_sensitive(game_contains_entry,sensitive);
+  gtk_widget_set_sensitive(map_contains_entry,sensitive);
+  gtk_widget_set_sensitive(server_name_contains_entry,sensitive);
   gtk_widget_set_sensitive(filter_ping_spinner,sensitive);
   gtk_widget_set_sensitive(filter_retries_spinner,sensitive);
   gtk_widget_set_sensitive(filter_not_full_check_button,sensitive);
@@ -850,6 +944,8 @@ static void server_filter_fill_widgets(guint num)
   gtk_entry_set_text (GTK_ENTRY (filter_game_type_entry), filter->game_type?filter->game_type:"" );
   gtk_entry_set_text (GTK_ENTRY (version_contains_entry), filter->version_contains?filter->version_contains:"" );
   gtk_entry_set_text (GTK_ENTRY (game_contains_entry), filter->game_contains?filter->game_contains:"" );
+  gtk_entry_set_text (GTK_ENTRY (map_contains_entry), filter->map_contains?filter->map_contains:"" );
+  gtk_entry_set_text (GTK_ENTRY (server_name_contains_entry), filter->server_name_contains?filter->server_name_contains:"" );
 
   gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
 	GTK_SPIN_BUTTON(filter_ping_spinner)),filter->filter_ping);
@@ -1050,10 +1146,10 @@ static void server_filter_page (GtkWidget *notebook) {
 
 
   /* Version Filter -- baa */
-    
+
   label = gtk_label_new (_("the version contains the string"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL,
 		    0, 0);
   gtk_widget_show (label);
   version_contains_entry = gtk_entry_new_with_max_length (32);
@@ -1064,6 +1160,43 @@ static void server_filter_page (GtkWidget *notebook) {
 
   gtk_table_attach_defaults (GTK_TABLE (table), version_contains_entry, 4, 5, row, row+1);
   gtk_widget_show (version_contains_entry);
+  row++;
+
+  
+  /* Map filter*/
+
+  label = gtk_label_new (_("the map contains the string"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL,
+		    0, 0);
+  gtk_widget_show (label);
+  map_contains_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (map_contains_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (map_contains_entry), TRUE);
+  gtk_signal_connect_object (GTK_OBJECT (map_contains_entry), "changed",
+                 GTK_SIGNAL_FUNC (server_filter_set_changed_callback), (gpointer) TRUE);
+
+  gtk_table_attach_defaults (GTK_TABLE (table), map_contains_entry, 4, 5, row, row+1);
+  gtk_widget_show (map_contains_entry);
+  row++;
+  
+
+  /* Server name filter*/
+
+  label = gtk_label_new (_("the server name contains the string"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL,
+		    0, 0);
+  gtk_widget_show (label);
+  server_name_contains_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (server_name_contains_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (server_name_contains_entry), TRUE);
+  gtk_signal_connect_object (GTK_OBJECT (server_name_contains_entry), "changed",
+                 GTK_SIGNAL_FUNC (server_filter_set_changed_callback), (gpointer) TRUE);
+
+  gtk_table_attach_defaults (GTK_TABLE (table),server_name_contains_entry , 4, 5, row, row+1);
+  gtk_widget_show (server_name_contains_entry);
+
 
 
   /* not full */

@@ -35,3 +35,4 @@ src/xqf-ui.c
 src/xqf.c
 #src/xutils.c
 #src/zipped.c
+src/splash.c

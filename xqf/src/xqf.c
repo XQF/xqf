@@ -171,6 +171,10 @@ static GtkWidget *record_button = NULL;
 
 static GtkWidget *filter_buttons[FILTERS_TOTAL];
 
+/*filter widgtet for toolbar*/
+static  GtkWidget *filter_option_menu_toolbar;
+static GtkWidget *filter_toolbar_label;
+
 static GtkWidget *player_skin_popup = NULL;
 static GtkWidget *player_skin_popup_preview = NULL;
 /*
@@ -188,6 +192,7 @@ static void launch_close_handler_part2(struct condef *con);
 /** build server filter menu for menubar
  */
 static GtkWidget* create_filter_menu();
+static GtkWidget* create_filter_menu_toolbar();
 //static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
 static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
 
@@ -561,7 +566,7 @@ static int forced_filters_flag = FALSE;
 static void set_filters (unsigned char mask) {
   unsigned n;
   int i;
-
+ 
   forced_filters_flag = TRUE;
 
   cur_filter = mask;
@@ -576,6 +581,8 @@ static void set_filters (unsigned char mask) {
 
 
 static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
+
+  
   if (!forced_filters_flag) {
     cur_filter ^= mask;
     server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
@@ -590,7 +597,7 @@ static void filter_menu_activate_current()
   unsigned int count = 0;
   GSList* rbgroup = filter_menu_radio_buttons;
   GtkWidget* widget = NULL;
-
+  
   while(rbgroup)
   {
     if(GTK_IS_CHECK_MENU_ITEM(rbgroup->data))
@@ -610,6 +617,16 @@ static void filter_menu_activate_current()
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), TRUE);
   }
 }
+
+
+/*refresh filtermenu on toolbar*/
+
+void set_filter_option_menu_toolbar (void) {
+
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu_toolbar), create_filter_menu_toolbar());
+  gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu_toolbar), current_server_filter);
+}
+
 
 void set_server_filter_menu_list_text( void ){
 
@@ -690,17 +707,46 @@ void set_server_filter_menu_list_text( void ){
 
 static void server_filter_select_callback (GtkWidget *widget, int number) {
 
+  if(!GTK_IS_CHECK_MENU_ITEM(widget))
+  {
+    g_warning("no check menu item");
+    return;
+  }
+
+  if(GTK_CHECK_MENU_ITEM(widget)->active == 0)
+  {
+    // signal was triggered for deactivation
+    return;
+  }
+
   current_server_filter = number;
 
   filters[FILTER_SERVER].changed = FILTER_CHANGED;
   filters[FILTER_SERVER].last_changed = ++filter_current_time;
 
-  server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */ 
+  server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
   set_server_filter_menu_list_text ();
+
+  /* refresh optionmenu on toolbar*/
+
+  set_filter_option_menu_toolbar();
 
   config_push_prefix ( "/" CONFIG_FILE "/Server Filter" );
   config_set_int ("current_server_filter", current_server_filter);
   config_pop_prefix ();
+
+  return;
+}
+
+/*need new one to refresh filter radio buttons in menu*/
+
+static void server_filter_select_callback_toolbar (GtkWidget *widget, int number) {
+
+  current_server_filter = number;
+
+  /*apply changes to radio buttons in menu*/
+
+  filter_menu_activate_current();
 
   return;
 }
@@ -720,6 +766,13 @@ static void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
     rc_save ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu());
     filter_menu_activate_current();
+    
+  /* refresh optionmenu on toolbar*/
+  set_filter_option_menu_toolbar();
+  
+  /* refresh filter status*/
+  set_server_filter_menu_list_text ();
+
 //happes automagically   server_clist_build_filtered (cur_server_list, TRUE);
     player_clist_redraw ();
   }
@@ -2676,7 +2729,7 @@ static void populate_main_toolbar (void) {
   pixmap = gtk_pixmap_new (observe_pix.pix, observe_pix.mask);
   gtk_widget_show (pixmap);
 
-  observe_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
+  observe_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
                   _("Observe"), _("Observe"), NULL,
                   pixmap,
                GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_SPECTATE);
@@ -2728,12 +2781,84 @@ static void populate_main_toolbar (void) {
                    pixmap,
                    GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) i);
   }
+  gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
+  
+  
+  
+  /*filter option menu for toolbar */
+  
+  filter_toolbar_label = gtk_label_new ("Filter: ");
+  gtk_toolbar_append_widget( GTK_TOOLBAR (main_toolbar),
+                             filter_toolbar_label,
+                             "Select a server filter",
+                             "Private" );
+  gtk_widget_show(filter_toolbar_label);
+
+
+  filter_option_menu_toolbar = gtk_option_menu_new ();
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu_toolbar),
+					       create_filter_menu_toolbar());
+
+  gtk_toolbar_append_widget( GTK_TOOLBAR (main_toolbar),
+                             filter_option_menu_toolbar,
+                             "Select a server filter",
+                             "Private" );
+
+  
+  gtk_widget_show (filter_option_menu_toolbar);
 
   set_toolbar_appearance (GTK_TOOLBAR (main_toolbar), 
                                  default_toolbar_style, default_toolbar_tips);
 }
 
 /** build server filter menu for menubar
+ */
+ 
+static GtkWidget* create_filter_menu_toolbar()
+{
+  unsigned int i;
+  GtkWidget *menu;
+  GtkWidget *menu_item;
+
+  struct server_filter_vars* filter = NULL;
+
+
+  menu = gtk_menu_new();
+
+
+  for (i = 0;i<=server_filters->len;i++)
+  {
+    char* name = NULL;
+    if(i == 0)
+    {
+      filter = NULL;
+      name = _("None");
+    }
+    else
+    {
+      filter = g_array_index (server_filters, struct server_filter_vars*, i-1);
+      name = filter->filter_name;
+    }
+
+    menu_item = gtk_menu_item_new_with_label(name);
+    gtk_menu_append (GTK_MENU (menu), menu_item);
+    gtk_widget_show (menu_item);
+
+    gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+	   GTK_SIGNAL_FUNC (server_filter_select_callback_toolbar), (gpointer)i); // array starts from zero but filters from 1
+
+
+
+  }
+
+  gtk_widget_show (menu);
+  return menu;
+}
+
+
+
+
+/** build server filter menu for toolbar
  */
 static GtkWidget* create_filter_menu()
 {
@@ -2774,7 +2899,7 @@ static GtkWidget* create_filter_menu()
 //    rbgroup = gtk_radio_button_group(GTK_RADIO_BUTTON(radiobutton));
 //    gtk_container_add(GTK_CONTAINER(menu_item),radiobutton);
 //    gtk_widget_show(radiobutton);
-    
+
 //    menu_item = gtk_check_menu_item_new_with_label(name);
 //    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), (current_server_filter == i));
     // that doesn't do what the docu says, right?
@@ -2804,8 +2929,6 @@ static GtkWidget* create_filter_menu()
 //  filter_menu = menu;
   return menu;
 }
-
-
 void create_main_window (void) {
   GtkWidget *main_vbox;
   GtkWidget *vbox;
@@ -3097,6 +3220,12 @@ void create_main_window (void) {
 
   /* Make sure the current filter is dispalyed and applied if needed */
   set_server_filter_menu_list_text (); 
+  
+  /*refresh optionmenu on toolbar*/
+
+  set_filter_option_menu_toolbar();
+
+
 
   gtk_widget_show (hbox);
 
