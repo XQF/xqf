@@ -543,6 +543,12 @@ void server_clist_build_filtered (GSList *servers, int update) {
     server_list_free (add);
   }
 
+  // prevent segfault on some systems if server list is empty due to a player
+  // filter that finds no servers that match by clearing the list if rows is 0.
+  // Fix by 'slashdev'
+  if(server_clist->rows==0)
+    gtk_clist_clear(server_clist);
+
   gtk_clist_sort (server_clist);
   server_clist_selection_visible ();
 
