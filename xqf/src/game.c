@@ -1089,6 +1089,8 @@ static void un_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   unsigned short hostport=0;
 
+  enum server_type oldtype = s->type;
+
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
       s->game = info_ptr[1];
@@ -1124,14 +1126,18 @@ static void un_analyze_serverinfo (struct server *s) {
   }
 
   // adjust port for unreal and rune
-  switch(s->type)
+  if(s->type != oldtype)
   {
-    case UN_SERVER:
-    case RUNE_SERVER:
-      server_change_port(s,hostport);
-      break;
-    default:
-      break;
+    switch(s->type)
+    {
+      case UN_SERVER:
+      case UT2_SERVER:
+      case RUNE_SERVER:
+	server_change_port(s,hostport);
+	break;
+      default:
+	break;
+    }
   }
 }
 
