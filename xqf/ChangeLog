@@ -1,3 +1,6 @@
+Sep 16, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- changed some macros to make cvs work with older autoconf/automake
+
 Sep 15, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - new master type "file", reads ip addresses from a file
 
