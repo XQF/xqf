@@ -88,6 +88,8 @@ enum launch_mode {
   LAUNCH_RECORD
 };
 
+
+// note: there is a limit of 256 servers, see get_server_pixmap in srv-list.c
 enum server_type { 
   Q1_SERVER = 0,
   QW_SERVER,

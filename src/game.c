@@ -3330,6 +3330,8 @@ static void quake_save_info (FILE *f, struct server *s) {
 	break;
 
       case UN_SERVER:
+      case UT2_SERVER:
+      case RUNE_SERVER:
 	fprintf (f, 
 		 "%s" QSTAT_DELIM_STR 
 		 "%d" QSTAT_DELIM_STR 

@@ -1,3 +1,6 @@
+Nov 02, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix saving of player info for rune and ut2
+
 Nov 2, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Add gametype decode for instaunlagged, instagibplus, beryllium, excessive,
   q3f, q3f2
