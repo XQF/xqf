@@ -1079,7 +1079,7 @@ static void stopxmms()
   pid_t pid = fork();
   if ( pid == 0) {
     char *argv[3];
-    argv[0] = "xms";
+    argv[0] = "xmms";
     argv[1] = "-s";
     argv[2] = NULL;
     execvp(argv[0],argv);
