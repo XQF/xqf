@@ -180,6 +180,7 @@
 	<qstat_option>-dm3s</qstat_option>
 	<qstat_master_option>-dm3m</qstat_master_option>
 	<icon>doom3_xpm</icon>
+	<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<arch_identifier>si_version</arch_identifier>
 	<command>doom3</command>
