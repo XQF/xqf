@@ -1,4 +1,8 @@
 Dec 16, 2001: Jordi Mallach <jordi@sindominio.net>
+- Makefile.am: remove debian from SUBDIRS. What a pain in the ass!
+  The whole directory should be removed, but this is the bare minimum.
+
+Dec 16, 2001: Jordi Mallach <jordi@sindominio.net>
 - Updated Spanish translation.
 
 Dec 15, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
