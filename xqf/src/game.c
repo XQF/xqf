@@ -47,6 +47,8 @@
 #include "server.h"
 #include "config.h"
 #include "debug.h"
+#include "q3maps.h"
+#include "utmaps.h"
 
 
 static struct player *poqs_parse_player(char *tokens[], int num);
@@ -95,6 +97,22 @@ static void quake_save_info (FILE *f, struct server *s);
 
 char **get_custom_arguments(enum server_type type, const char *gamestring);
 
+static void q3_init_maps();
+static void wolf_init_maps();
+static void un_init_maps();
+static void ut2_init_maps();
+static void rune_init_maps();
+static gboolean q3_has_map(struct server* s);
+static gboolean wolf_has_map(struct server* s);
+static gboolean ut_has_map(struct server* s);
+static gboolean ut2_has_map(struct server* s);
+static gboolean rune_has_map(struct server* s);
+static GHashTable* q3_maphash = NULL;
+static GHashTable* wolf_maphash = NULL;
+static GHashTable* ut_maphash = NULL;
+static GHashTable* ut2_maphash = NULL;
+static GHashTable* rune_maphash = NULL;
+
 struct game games[] = {
   {
     Q1_SERVER, 
@@ -116,6 +134,8 @@ struct game games[] = {
     q1_exec_generic,
     q1_custom_cfgs,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -145,6 +165,8 @@ struct game games[] = {
     qw_exec,
     qw_custom_cfgs,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -173,6 +195,8 @@ struct game games[] = {
     q2_exec,
     q2_custom_cfgs,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -203,6 +227,8 @@ struct game games[] = {
     q3_exec,
     q3_custom_cfgs,
     quake_save_info,
+    q3_init_maps,	// init_maps
+    q3_has_map,		// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -233,6 +259,8 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
+    wolf_init_maps,	// init_maps
+    wolf_has_map,	// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -263,6 +291,8 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -293,6 +323,8 @@ struct game games[] = {
     q1_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -322,6 +354,8 @@ struct game games[] = {
     NULL,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -351,6 +385,8 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -380,6 +416,8 @@ struct game games[] = {
     hl_exec,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     "sv_os",		// arch_identifier
     NULL,		// identify_cpu
@@ -409,6 +447,8 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -438,6 +478,8 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -467,6 +509,8 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -496,6 +540,8 @@ struct game games[] = {
     t2_exec,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     "linux",		// arch_identifier
     NULL,		// identify_cpu
@@ -525,6 +571,8 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -555,6 +603,8 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
+    un_init_maps,	// init_maps
+    ut_has_map,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -584,6 +634,8 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
+    ut2_init_maps,	// init_maps
+    ut2_has_map,	// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -614,6 +666,8 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
+    rune_init_maps,	// init_maps
+    rune_has_map,	// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -644,6 +698,8 @@ struct game games[] = {
     exec_generic,		// exec_client
     NULL,			// custom_cfgs
     quake_save_info,		// save_info
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -705,6 +761,8 @@ struct game games[] = {
     gamespy_exec,		// exec_client
     NULL,			// custom_cfgs
     quake_save_info,		// save_info
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -735,6 +793,8 @@ struct game games[] = {
     NULL,
     NULL,
     NULL,
+    NULL,		// init_maps
+    NULL,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -780,6 +840,7 @@ void init_games()
 			  	    "XQF documentation for more information."))); 
   game_set_attribute(HL_SERVER,"game_notes",strdup(_
   				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));
+
 
   game_set_attribute(SSAM_SERVER,"game_notes",strdup(_
   				   ("Note: You need to create a qstat config file for this game to work")));
@@ -3485,6 +3546,111 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
   debug(1, "get_custom_arguments: Didn't find an entry for %s",gamestring);
   g_free(arg);
   return NULL;
+}
+
+
+/** map functions */
+
+static void q3_init_maps()
+{
+  q3_clear_maps(q3_maphash); // important to avoid memleak when called second time
+  q3_maphash = q3_init_maphash();
+  findq3maps_dir(q3_maphash,games[Q3_SERVER].real_dir);
+
+  {
+    char* q3home = expand_tilde("~/.q3a");
+    findq3maps_dir(q3_maphash,q3home);
+    g_free(q3home);
+  }
+}
+
+static void wolf_init_maps()
+{
+  q3_clear_maps(wolf_maphash); // important to avoid memleak when called second time
+  wolf_maphash = q3_init_maphash();
+  findq3maps_dir(wolf_maphash,games[WO_SERVER].real_dir);
+
+  {
+    char* q3home = expand_tilde("~/.wolf");
+    findq3maps_dir(wolf_maphash,q3home);
+    g_free(q3home);
+  }
+}
+
+static void un_init_maps()
+{
+  ut_clear_maps(ut_maphash);
+  ut_maphash = ut_init_maphash();
+  findutmaps_dir(ut_maphash,games[UN_SERVER].real_dir,".unr");
+}
+
+static void ut2_init_maps()
+{
+  ut_clear_maps(ut2_maphash);
+  ut2_maphash = ut_init_maphash();
+  findutmaps_dir(ut2_maphash,games[UT2_SERVER].real_dir,".ut2");
+}
+
+static void rune_init_maps()
+{
+  ut_clear_maps(rune_maphash);
+  rune_maphash = ut_init_maphash();
+  findutmaps_dir(rune_maphash,games[RUNE_SERVER].real_dir,".run");
+}
+
+static gboolean q3_has_map(struct server* s)
+{
+  if(!q3_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return q3_lookup_map(q3_maphash,s->map);
+}
+
+static gboolean wolf_has_map(struct server* s)
+{
+  if(!q3_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return q3_lookup_map(wolf_maphash,s->map);
+}
+
+static gboolean ut_has_map(struct server* s)
+{
+  if(!ut_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return ut_lookup_map(ut_maphash,s->map);
+}
+
+static gboolean ut2_has_map(struct server* s)
+{
+  if(!ut2_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return ut_lookup_map(ut2_maphash,s->map);
+}
+
+static gboolean rune_has_map(struct server* s)
+{
+  if(!rune_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return ut_lookup_map(rune_maphash,s->map);
 }
 
 // vim: sw=2

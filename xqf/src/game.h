@@ -59,6 +59,13 @@ struct game {
   int (*exec_client) (const struct condef *con, int forkit);
   GList * (*custom_cfgs) (char *dir, char *game);
   void (*save_info) (FILE *f, struct server *s);
+
+  /* map functions */
+  /** determine installed maps, destroys previous data */
+  void (*init_maps)();
+  /** return true if s->map is installed, false otherwise */
+  gboolean (*has_map)(struct server* s);
+
   GSList *custom_args;
 
   char *arch_identifier;

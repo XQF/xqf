@@ -230,6 +230,21 @@ static int server_clist_refresh_row (struct server *s, int row) {
   gtk_clist_set_pixtext (server_clist, row, 0, 
                    (s->name)? s->name : "", 2, server_pixmap, server_pixmask);
 
+  // if map not available
+  if(games[s->type].has_map && games[s->type].has_map(s) == FALSE)
+  {
+    /*
+    GtkStyle *style;
+
+    style = gtk_widget_get_style(GTK_WIDGET(server_clist));
+    if(style)
+    {
+      gtk_clist_set_foreground(server_clist,row,&style->fg[GTK_STATE_INSENSITIVE]);
+    }
+    */
+    gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask );
+  }
+
   gdk_pixmap_unref (server_pixmap);
   gdk_bitmap_unref (server_pixmask);
 

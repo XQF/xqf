@@ -43,6 +43,7 @@
 #include "rc.h"
 #include "debug.h"
 #include "sort.h"
+#include "q3maps.h"
 
 static struct generic_prefs* new_generic_prefs (void);
 
@@ -91,6 +92,7 @@ int	default_save_lists;
 int 	default_save_srvinfo;
 int 	default_save_plrinfo;
 int	default_auto_favorites;
+int	default_auto_maps;
 int	default_toolbar_style;
 int	default_toolbar_tips;
 int	default_refresh_sorts;
@@ -111,9 +113,6 @@ char	*sound_server_connect = NULL;
 char	*sound_redial_success = NULL;
 
 GtkTooltips *tooltips;
-
-/* Quake 3 settings */
-//struct q3engineopts wo_opts={0}, generic_q3_opts={0};
 
 static	int pref_q1_top_color;
 static	int pref_q1_bottom_color;
@@ -159,6 +158,7 @@ static  GtkWidget *save_lists_check_button;
 static  GtkWidget *save_srvinfo_check_button;
 static  GtkWidget *save_plrinfo_check_button;
 static  GtkWidget *auto_favorites_check_button;
+static  GtkWidget *auto_maps_check_button;
 static  GtkWidget *show_hostnames_check_button;
 static  GtkWidget *show_defport_check_button;
 static  GtkWidget *toolbar_style_radio_buttons[3];
@@ -835,6 +835,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (auto_favorites_check_button)->active;
   if (i != default_auto_favorites)
     config_set_bool ("refresh favorites", default_auto_favorites = i);
+
+  i = GTK_TOGGLE_BUTTON (auto_maps_check_button)->active;
+  if (i != default_auto_maps)
+    config_set_bool ("search maps", default_auto_maps = i);
 
   config_pop_prefix ();
 
@@ -3569,13 +3573,6 @@ static GtkWidget *general_options_page (void) {
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-  frame = gtk_frame_new (NULL);
-  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-
-  vbox = gtk_vbox_new (FALSE, 2);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
-
   /* On Startup */
 
   frame = gtk_frame_new (_("On Startup"));
@@ -3583,19 +3580,41 @@ static GtkWidget *general_options_page (void) {
 
   /* Refresh Favorites */
 
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
+    vbox = gtk_vbox_new (FALSE, 2); 
+    gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+    gtk_container_add (GTK_CONTAINER (frame), vbox); 
 
-  auto_favorites_check_button = 
-                     gtk_check_button_new_with_label (_("Refresh Favorites"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_favorites_check_button),
-                                                       default_auto_favorites);
-  gtk_box_pack_start (GTK_BOX (hbox), auto_favorites_check_button, 
-                                                             FALSE, FALSE, 0);
-  gtk_widget_show (auto_favorites_check_button);
+      hbox = gtk_hbox_new (FALSE, 4);
+      gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-  gtk_widget_show (hbox);
+	auto_favorites_check_button = 
+			   gtk_check_button_new_with_label (_("Refresh Favorites"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_favorites_check_button),
+							     default_auto_favorites);
+	gtk_box_pack_start (GTK_BOX (hbox), auto_favorites_check_button, 
+								   FALSE, FALSE, 0);
+	gtk_widget_show (auto_favorites_check_button);
+
+      gtk_widget_show (hbox);
+
+      hbox = gtk_hbox_new (FALSE, 4);
+      gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	auto_maps_check_button = 
+			   gtk_check_button_new_with_label (_("Scan for maps"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_maps_check_button),
+							     default_auto_maps);
+
+	gtk_tooltips_set_tip (tooltips, auto_maps_check_button,
+	    _("Scan game directories for installed maps. xqf will"
+	      " take longer to start up when enabled."), NULL);
+	gtk_box_pack_start (GTK_BOX (hbox), auto_maps_check_button, 
+								   FALSE, FALSE, 0);
+	gtk_widget_show (auto_maps_check_button);
+
+      gtk_widget_show (hbox);
+  
+    gtk_widget_show (vbox);
 
   gtk_widget_show (frame);
 
@@ -3731,8 +3750,8 @@ static GtkWidget *general_options_page (void) {
   gtk_widget_show(table);
 
   gtk_widget_show (hbox);
-
   gtk_widget_show (vbox); 
+
   gtk_widget_show (frame);
 
   gtk_widget_show (hbox);
@@ -4578,6 +4597,7 @@ int prefs_load (void) {
   default_save_srvinfo =      config_get_bool ("save srvinfo=true");
   default_save_plrinfo =      config_get_bool ("save players=false");
   default_auto_favorites =    config_get_bool ("refresh favorites=false");
+  default_auto_maps =         config_get_bool ("search maps=false");
 
   config_pop_prefix ();
 
@@ -4618,6 +4638,12 @@ int prefs_load (void) {
   for (i = 0; i < GAMES_TOTAL; i++) {
     if (games[i].real_dir) g_free (games[i].real_dir);
     games[i].real_dir = expand_tilde (games[i].dir);
+
+    if(default_auto_maps && games[i].init_maps)
+    {
+      debug(0,"Searching for %s maps",games[i].name);
+      games[i].init_maps();
+    }
   }
 
   return newversion;

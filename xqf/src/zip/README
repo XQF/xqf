@@ -1,0 +1,5 @@
+ioapi.c, ioapi.h, unzip.c and unzip.h are taken from
+
+http://www.winimage.com/zLibDll/unzip.htm
+
+see unzip.h for details
