@@ -23,6 +23,8 @@
 #include <stdlib.h>	/* strtol */
 #include <string.h>	/* strcmp, strlen */
 #include <sys/time.h>	/* FD_SETSIZE */
+#include <sys/stat.h>   /* stat */
+#include <unistd.h>     /* readlink */
 
 #include <gtk/gtk.h>
 
@@ -274,6 +276,7 @@ char* ef_masterprotocols[] = {
 };
 
 void game_file_dialog();
+void game_dir_dialog();
 void sound_player_file_dialog();
 void sound_xqf_start_file_dialog();
 void sound_xqf_quit_file_dialog();
@@ -1862,6 +1865,93 @@ static void pref_suggest_command(enum server_type type)
     return;
 }
 
+static void pref_guess_dir(enum server_type type)
+{
+  // Tries to guess the game / working directory using the following rules:
+  // - If cmd_entry is a symlink:
+  //   - If pointed to file contains '..', just stop, otherwise strip filename and
+  //     store as directory
+  //   - If there is no /'s in the pointed to file, use the original cmd_entry instead and
+  //     strip filename and store as directory
+  // 
+  // - If cmd_entry is not a symlink:
+  //   - strip filename and store as directory
+  //
+  // Examples:
+  //
+  // cmd_entry:		/usr/bin/quake2 symlink to /games/quake2/quake2
+  // result dir:	/games/quake2/
+  //
+  // cmd_entry:		/usr/bin/quake symlink to ../../games/quake2/quake2
+  // result dir:	(stops - leaves as-is)
+  //
+  // cmd_entry:		/games/quake2/quake2
+  // result dir:	/games/quake2/
+  //
+  // cmd_entry:		quake2
+  // result dir:	(stops - leaves as-is)
+  //
+  
+  char *temp = NULL;
+  struct stat buf;
+  int length = 0;
+  char buf2[256];
+  char *ptr = NULL;
+  char *dir = NULL;
+  
+  temp = g_strdup(gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry)));
+ 
+  if (temp) {
+    lstat(temp, &buf);
+    if ( S_ISLNK(buf.st_mode) == 1) {
+      // Grab directory from sym link of cmd_entry
+      
+      debug(1, "cmd_entry is a sym link");    
+
+      length = readlink (temp, buf2, 255);
+
+      if (length){
+        buf2[length]='\0';
+
+        if(buf2[length-1] == '/')
+          buf2[length-1] = '\0';
+        
+        ptr = strrchr(buf2, '/');
+        
+        if (ptr) {	    			// contains a / so pull from symlink
+          if (!strstr(buf2,"..")) {		// don't bother if it's got any ..'s in it
+            dir = g_strndup(buf2, ptr-buf2+1);
+            gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
+          }
+        }
+        else {        				// no / so pull from cmd_entry instead
+          ptr = strrchr(temp, '/');
+          if (ptr) {      			// contains a /
+            dir = g_strndup(temp, ptr-temp+1);
+            gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
+          }
+        }        
+      }
+    }
+    else {
+      // Grab directory from cmd_entry
+      
+      debug(1,"cmd_entry is NOT a sym link");
+    
+      ptr = strrchr(temp, '/');
+  
+      if (ptr) {      				// contains a /
+        dir = g_strndup(temp, ptr-temp+1);
+        gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
+      }
+    }  
+  }
+  if (temp)
+    g_free (temp);
+  if (dir)
+    g_free (dir);
+}
+
 static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
  // ptr1 = entire string
  // ptr2 = game
@@ -2126,6 +2216,8 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), games[type].cmd);
     gtk_entry_set_position (GTK_ENTRY (genprefs[type].cmd_entry), 0);
   }
+  gtk_signal_connect_object (GTK_OBJECT (genprefs[type].cmd_entry), "activate",
+                    GTK_SIGNAL_FUNC (pref_guess_dir), (gpointer)type);
   gtk_box_pack_start (GTK_BOX (hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
   gtk_widget_show (genprefs[type].cmd_entry);
 
@@ -2147,11 +2239,17 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 
   /////
+
+
   label = gtk_label_new (_("Working Directory"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
+
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 1, 2);
+  gtk_widget_show (hbox);
 
   genprefs[type].dir_entry = gtk_entry_new ();
   if (genprefs[type].pref_dir) {
@@ -2159,8 +2257,23 @@ static GtkWidget *generic_game_frame (enum server_type type) {
                                                      genprefs[type].pref_dir);
     gtk_entry_set_position (GTK_ENTRY (genprefs[type].dir_entry), 0);
   }
-  gtk_table_attach_defaults (GTK_TABLE (table), genprefs[type].dir_entry,
-                                                                  1, 2, 1, 2);
+  gtk_box_pack_start (GTK_BOX (hbox),genprefs[type].dir_entry , TRUE, TRUE, 0);
+
+  button = gtk_button_new_with_label ("...");
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                    GTK_SIGNAL_FUNC (game_dir_dialog), (gpointer)type);
+  gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 3);
+  gtk_widget_show (button);
+
+  // translator: button for directory guess
+  button = gtk_button_new_with_label (_("Guess"));
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                    GTK_SIGNAL_FUNC (pref_guess_dir), (gpointer)type);
+
+  gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, button, _("Tries to guess the working directory based on the command line"), NULL);
+  gtk_widget_show (button);
+
   if (games[type].custom_cfgs) {
     gtk_object_set_user_data (GTK_OBJECT (genprefs[type].dir_entry),
 			      (gpointer) type);
@@ -4465,35 +4578,38 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
 {
   enum server_type type;
   char *temp = NULL;
-  char *ptr = NULL;
-  char *dir = NULL;
-  char *file = NULL;
 
   type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
   
   temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
   
-  ptr = strrchr(temp, '/');
-  
-  if (!ptr) {    // no path, not likely
+  if (temp) {
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), temp);
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), "");
-  }
-  else {
-    dir = g_strndup(temp, ptr-temp+1);
-    file = g_strdup(ptr+1);
-    if (*file) {  // Have to select a file! 
-      gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), file);
-      gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
-    }
+    if ( !strcmp ( gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry)), ""))
+      pref_guess_dir (type);
   }
   if (temp)
     g_free (temp);
-  if (dir)
-    g_free (dir);
-  if (file)
-    g_free (file);
 }
+
+void game_dir_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+{
+  enum server_type type;
+  char *temp = NULL;
+
+  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  
+  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
+  
+  if (!temp)     // no path, not likely
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), "");
+  else
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), temp);
+
+  if (temp)
+    g_free (temp);
+}
+
 
 void sound_player_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
 {
@@ -4597,7 +4713,11 @@ void file_dialog_destroy_callback (GtkWidget *widget, gpointer data)
 }
 
 void game_file_dialog(enum server_type type) {
-  file_dialog("Game Selection", (int *)game_file_dialog_ok_callback, type);
+  file_dialog("Game Command Selection", (int *)game_file_dialog_ok_callback, type);
+}
+
+void game_dir_dialog(enum server_type type) {
+  file_dialog("Game Directory Selection", (int *)game_dir_dialog_ok_callback, type);
 }
 
 void sound_player_file_dialog() {

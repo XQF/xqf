@@ -575,6 +575,7 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
   
   // Look for exact match
   // Looks for file, not specifically a subdir or symlink - good enough
+  // FIXME: Should never be a symlink - lstat would give a symlink, not stat
   path = file_in_dir (basegamedir, game);
   if (!stat (path, &buf)) {
     if ( (S_ISDIR(buf.st_mode) == 1) || (S_ISLNK(buf.st_mode)) ) {

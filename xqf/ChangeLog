@@ -1,4 +1,6 @@
 Oct 28, 2002: Alex <alex_b@users.sourceforge.net>
+- Add (...) button to game directory
+- Add Guess button to game directory - follows symlinks
 - Changed UT2003 default port to 7777
 - Changed UT2003 back to -ut2s as the next version of qstat (soon!)
   will support another UT2 query method that works off of gameport+1
