@@ -1,3 +1,22 @@
+Need to find a good format for this file.  Would like to record who entered
+the bug, the date it was entered, who fixed it and when.
+
+Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
+- Do the following: 
+    -Set'Show only configured games' on
+    -only configure Quake2, Unreal and UT2003
+    -Add a UT2003 server (www.fragit.net:7777) (enter ip, port and make sure
+     you click on the game list and choose UT2003 even if it's already
+     selected).
+    -Add a Quake2 server (www.fragit.net:27912) but do NOT click the game
+     selection - it should already be defaulted to Quake2.
+
+    The Quake2 server will have the UT2003 icon.
+
+    If you actually select Quake2 in the second step, it works.
+
+
+??/??/????
 - If XQF queries a master server and it has no entries, it will wipe out
   the existing list for that master.
 - rcon for half-life is broken
