@@ -82,6 +82,15 @@ static inline GSList *server_list_prepend (GSList *list, struct server *server) 
   return list;
 }
 
+// This version does not to the duplicate check - you must do it yourself
+static inline GSList *server_list_prepend_ndp (GSList *list, struct server *server) {
+  debug (6, "server_list_prepend_ndp() -- Server %lx", server);
+  list = g_slist_prepend (list, server);
+  server_ref (server);
+
+  return list;
+}
+
 static inline GSList *server_list_append (GSList *list, struct server *server) {
   if (g_slist_find (list, server) == NULL) {
     debug (6, "server_list_append() -- Server %lx", server);
