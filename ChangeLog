@@ -1,3 +1,6 @@
+Oct 04, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- modified that ugly ut2 master hack a little
+
 Oct 03, 2002: Alex Burger <alex@fragit_dot_net>
 - Added sound support actions for: xqf start, xqf quit, update, refresh,
   stop, server connect, redial success.  Added Preferences / Sound Options.

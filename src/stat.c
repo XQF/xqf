@@ -110,9 +110,14 @@ static void stat_master_update_done
 				     enum master_state state);
 
 
+/**
+  parse qstat output line str, in ip:port format. return true if
+  successful, FALSE if server is down or timed out 
+
+  str will be modified!!
+ */
 static int parse_master_output (char *str, struct stat_conn *conn) {
   char *token[8];
-  char *temp;
   int n;
   char *endptr;
   enum server_type type = UNKNOWN_SERVER;
@@ -125,24 +130,23 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   debug (6, "parse_master_output(%s,%p)",str,conn);
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 
+  // UGLY HACK UGLY HACK UGLY HACK UGLY HACK
   // output from UT 2003 http server is formatted as
-  // server ip port admin_port, not the standard
-  // server:port
+  // ip port gamespy_port
+  // not the standard ip:port
   // If the master type is http and there are three columns
-  // then it merges col 1 and 2 into one so it is handled
-  // like other http master servers
-  if(conn->master->master_type == MASTER_HTTP && n == 3)
+  // then it merges ip and port into one so it is handled
+  // like other http master servers.
+  // This is done by modifying token[0] which points somewhere
+  // inside str so malloc/free is not necessary. It is guaranteed
+  // that token[0] has enough space as there is at least a
+  // whitespace character where the colon is placed now.
+  if(conn->master->type == UT2_SERVER && conn->master->master_type == MASTER_HTTP && n == 3)
   {
-    //temp=malloc(50);
-    temp=g_malloc(strlen(token[0])+strlen(token[1])+2);
-    strcpy(temp,token[0]);
-    strcat(temp,":");
-    strcat(temp,token[1]);
+    int off = strlen(token[0]);
+    token[0][off]=':';
+    strcpy(token[0]+off+1,token[1]);
 
-    strcpy(token[0],temp);
-    //g_free(temp);
-    token[1]='\0';
-    
     n=1;
   } 
 
