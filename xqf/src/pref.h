@@ -67,6 +67,8 @@ extern  int 	default_w_switch;
 extern	int 	pushlatency_mode;
 extern	int 	pushlatency_value;
 
+extern  int	default_qw_is_quakeforge;
+
 extern  int 	default_nosound;
 extern  int 	default_nocdaudio;
 

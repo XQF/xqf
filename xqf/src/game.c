@@ -1221,7 +1221,7 @@ static int quake_config_is_valid (struct server *s) {
     break;
 
   case QW_SERVER:
-    cfgdir = "id1";
+    cfgdir = (default_qw_is_quakeforge?"base":"id1");
     break;
 
   case Q2_SERVER:
@@ -1560,7 +1560,10 @@ static int write_quake_variables (const struct condef *con) {
     break;
 
   case QW_SERVER:
-    file = file_in_dir (games[QW_SERVER].real_dir, "id1/" EXEC_CFG);
+    if(default_qw_is_quakeforge)
+      file = file_in_dir (games[QW_SERVER].real_dir, "base/" EXEC_CFG);
+    else
+      file = file_in_dir (games[QW_SERVER].real_dir, "id1/" EXEC_CFG);
     res =  write_qw_vars (file, con);
     break;
 
@@ -1589,8 +1592,9 @@ static int write_quake_variables (const struct condef *con) {
 
   if (file) {
     if (!res) {
-      if (!dialog_yesno (NULL, 1, "Launch", "Cancel", 
-             "Cannot write to file \"%s\".\n\nLaunch client anyway?", file)) {
+      if (!dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
+	    //%s frontend.cfg
+             _("Cannot write to file \"%s\".\n\nLaunch client anyway?"), file)) {
 	g_free (file);
 	return FALSE;
       }
@@ -1680,7 +1684,10 @@ static int qw_exec (const struct condef *con, int forkit) {
   switch (con->s->type) {
 
   case QW_SERVER:
-    q_passwd = "id1/" PASSWORD_CFG;
+    if(default_qw_is_quakeforge)
+      q_passwd = "base/" PASSWORD_CFG;
+    else
+      q_passwd = "id1/" PASSWORD_CFG;
     break;
 
   case Q2_SERVER:
@@ -2284,7 +2291,7 @@ static GList *qw_custom_cfgs (char *dir, char *game) {
 
   qdir = expand_tilde ((dir)? dir : games[QW_SERVER].dir);
 
-  path = file_in_dir (qdir, "id1");
+  path = file_in_dir (qdir, default_qw_is_quakeforge?"base":"id1");
   mod_path = file_in_dir (qdir, (game)? game : "qw");
 
   g_free (qdir);
