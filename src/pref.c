@@ -295,7 +295,8 @@ char* wo_masterprotocols[] = {
 
 // change config_get_string below too!
 char* woet_masterprotocols[] = {
-	"71 - 2.32 (test)",
+	"82 - v2.55 (Release)",
+	"71 - v2.32 (test)",
 	NULL
 };
 

@@ -124,7 +124,7 @@ static struct unreal_private rune_private = { NULL, ".run" };
 static struct quake_private q1_private, qw_private, q2_private, hl_private;
 static struct quake_private q3_private = { NULL, "~/.q3a" };
 static struct quake_private wolf_private = { NULL, "~/.wolf" };
-static struct quake_private wolfet_private = { NULL, "~/.etwolf-test" };
+static struct quake_private wolfet_private = { NULL, "~/.etwolf" };
 
 struct game games[] = {
   {
