@@ -3,6 +3,8 @@ Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
 - identify q3/rtcw servers by their version string
 - use common option struct for all games with q3 engine
 - add configuration options for Wolfenstein to q3 tab
+- pass server and rconpasswords on the command line
+- fix q3 rcon_password -> rconpassword
 
 Sept 24,2001: Alex Burger <alex@fragit_dot_net>
 - Changed version to 0.9.7a
