@@ -1,3 +1,6 @@
+Oct 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- UT2004 master server support, needs qstat from CVS
+
 Oct 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add descent3 server listing from d3.descent.cx. Thanks Esa for providing a
   format suitable for XQF!

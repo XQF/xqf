@@ -1364,6 +1364,58 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 	  filter->filter_not_full?"notfull":"",
 	  NULL);
     }
+    else if( m->type == UT2004_SERVER )
+    {
+      GString* str = NULL;
+      const char* cdkey = game_get_attribute(m->type,"cdkey");
+      if(!cdkey)
+      {
+	xqf_error(_("UT2004 CD Key not found, cannot query master '%s'.\n"
+	      "Make sure the working directory is set correctly."), m->name);
+	goto out;
+      }
+
+      str = g_string_new(NULL);
+      g_string_sprintf(str, "%s,outfile,cdkey=%s", master_qstat_option(m), cdkey);
+
+      if(current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
+      {
+	struct server_filter_vars* filter =
+	  g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
+
+	if(filter)
+	{
+	  GString* status = g_string_new(NULL);
+
+	  if(filter->filter_not_empty)
+	    status = g_string_append(status, "notempty");
+
+	  if(filter->filter_not_full)
+	    status = g_string_append(status, "notfull");
+
+	  if(filter->filter_no_password)
+	    status = g_string_append(status, "nopassword");
+
+	  if(filter->game_contains&&*filter->game_contains)
+	  {
+	    g_string_sprintfa(str, ",gametype=%s", filter->game_contains);
+	  }
+
+	  if(status->str && *status->str)
+	  {
+	    g_string_sprintfa(str, ",status=%s", status->str);
+	  }
+	  g_string_free(status, TRUE);
+	}
+      }
+      else
+      {
+	str = g_string_append(str, ",status=nostandard");
+      }
+
+      arg_type = str->str;
+      g_string_free(str, FALSE);
+    }
     else
     {
       arg_type = g_strdup_printf ("%s,outfile", master_qstat_option(m));
@@ -1401,6 +1453,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     g_free (file);
   }
   
+out:
   g_free (cmd);
   g_free (arg_type);
 
