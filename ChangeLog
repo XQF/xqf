@@ -18,8 +18,10 @@ Dec 22, 2000: Bill Adams <bill@evil.inetarena.com>
  appears next to the map.  The icon is slightly different for color blind
  people so don't tell me about it unless you are color blind and need the
  difference greater.
--You can press "Insert" and "Delete" to add and delete servers, "Enter"
- or "Return" will connect you to the server.
+-You can press "Insert" to add a server to the Favorites list while in
+ anything but the Favorites list.  Pressing "Delete" while in the Favorites
+ list will remove it from Favorites.  "Enter" or "Return" in any list will
+ will connect you to the server.
 -Moved the filter selection to the "Server" menu pulldown.
 -It still dumps core. :(. There seems to be a reference counting bug
  with the server lists.  If you want to watch it happen, set up a
