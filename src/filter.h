@@ -40,7 +40,8 @@ enum filter_status {
   FILTER_DATA_CHANGED	/* data changed, but no need to re-apply filter */
 }; 
 
-
+// need to modify server_filter_vars_new, server_filter_vars_free,
+// server_filter_vars_copy too
 struct server_filter_vars {
   int	  filter_retries;
   int	  filter_ping;
@@ -60,10 +61,12 @@ struct filter {
   char *short_name;
   char *short_cfg_name;
 
-  int (*func) (struct server *s, struct server_filter_vars *vars);
+  int (*func) (struct server *s);
 
   void (*filter_init) (void);
   void (*filter_done) (void);
+  void (*filter_on_ok) (void); // function to call when ok is pressed
+  void (*filter_on_cancel) (void); // function to call when abort is pressed
 
   unsigned last_changed;
   enum filter_status changed;
@@ -72,7 +75,8 @@ struct filter {
 extern  struct filter filters[];
 extern	unsigned char cur_filter;
 
-struct server_filter_vars server_filters[MAX_SERVER_FILTERS+1];
+extern GArray* server_filters;
+
 unsigned int  current_server_filter;
 extern unsigned int current_server_filter;
 
@@ -93,8 +97,6 @@ extern	int	filters_cfg_dialog (int page_num);
 
 extern	void	filters_init (void);
 extern	void	filters_done (void);
-
-
 
 #endif /* __FILTER_H__ */
 

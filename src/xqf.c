@@ -147,6 +147,9 @@ static GtkWidget *server_resolve_menu_item = NULL;
 static GtkWidget *server_properties_menu_item = NULL;
 static GtkWidget *server_rcon_menu_item = NULL;
 
+static GtkWidget *server_serverfilter_menu_item = NULL;
+static GArray* server_filter_menu_items;
+
 static GtkWidget *player_filter_menu_item = NULL;
 
 static GtkWidget *update_button = NULL;
@@ -168,8 +171,14 @@ static GtkWidget *server_filter_2_widget = NULL;
 static GtkWidget *server_filter_3_widget = NULL;
 */
 
-GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
+//XXX GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
 
+/** build server filter menu for menubar
+ */
+static GtkWidget* create_filter_menu();
+//static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
+static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
+  
 // returns 0 if equal, -1 if too old, 1 if have > expected
 int compare_qstat_version ( const char* have, const char* expected )
 {
@@ -537,16 +546,43 @@ static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
   }
 }
 
+// iterate through radio buttons and activate the one for the current server
+// filter
+static void filter_menu_activate_current()
+{
+  unsigned int count = 0;
+  GSList* rbgroup = filter_menu_radio_buttons;
+  GtkWidget* widget = NULL;
+
+  while(rbgroup)
+  {
+    if(GTK_IS_CHECK_MENU_ITEM(rbgroup->data))
+    {
+      if(count == current_server_filter)
+      {
+	widget = GTK_WIDGET(rbgroup->data);
+	break;
+      }
+      count++;
+    }
+    rbgroup=rbgroup->next;
+  }
+
+  if(widget)
+  {
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), TRUE);
+  }
+}
 
 void set_server_filter_menu_list_text( void ){
 
   /* baa -- Set the names of the filters if they have been set in
      the config file. The server_filters is defined in filter.h */
 
-  char buf[64];
   char status_buf[64];
-  int i;
+  char* name;
 
+#if 0
   for (i = 0; i < MAX_SERVER_FILTERS; i++) {
 
     if( i == 0 ){
@@ -584,15 +620,28 @@ void set_server_filter_menu_list_text( void ){
       }
   }
 
+#endif
+
+  
   /* Show the active filter on the status bar 
      -- Add code to indicate if the filter button is checked.
    */
-  if( current_server_filter == 0 ){
+  if( current_server_filter == 0 )
+  {
     snprintf( status_buf, 64, _("No Server Filter Active"));
-  } else if( server_filters[current_server_filter].filter_name ){
-    snprintf( status_buf, 64, _("Server Filter: %s"), server_filters[current_server_filter].filter_name );
-  } else {
-    snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
+  }
+  else
+  {
+    name = g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1)->filter_name;
+    if(name)
+    {
+      snprintf( status_buf, 64, _("Server Filter: %s"), name);
+    }
+    else
+    {
+      snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
+      debug(0,__FILE__ " " __FUNCTION__ ":%d this is a bug",__LINE__);
+    }
   }
   
   print_status (main_filter_status_bar, status_buf); 
@@ -600,9 +649,9 @@ void set_server_filter_menu_list_text( void ){
 }
 
 
-static void server_filter_select_callback (GtkWidget *widget, int mode) {
+static void server_filter_select_callback (GtkWidget *widget, int number) {
 
-  current_server_filter = mode;
+  current_server_filter = number;
 
   filters[FILTER_SERVER].changed = FILTER_CHANGED;
   filters[FILTER_SERVER].last_changed = ++filter_current_time;
@@ -630,7 +679,9 @@ static void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
   if (filters_cfg_dialog (page_num)) {
     config_sync ();
     rc_save ();
-    server_clist_build_filtered (cur_server_list, TRUE);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu());
+    filter_menu_activate_current();
+//happes automagically   server_clist_build_filtered (cur_server_list, TRUE);
     player_clist_redraw ();
   }
 }
@@ -2178,17 +2229,11 @@ static const struct menuitem view_menu_items[] = {
   it no longer a const.
 */
 
-struct menuitem *server_filter_menu_items;
-
-/* Bad Bill!  The const has been removed from the next line. */
-static struct menuitem server_menu_items[] = {
+static const struct menuitem server_menu_items[] = {
   {
-    MENU_BRANCH,		N_("_Server Filters"),	0,	0,
-    NULL, 
-    NULL,                     /* <-- This gets set to the addres
-				 of server_filter_menu_items after
-				 we g_malloc the memory. */
-    NULL
+    MENU_ITEM,		N_("_Server Filters"),	0,	0,
+    NULL, 0,
+    &server_serverfilter_menu_item
   },
   { 
     MENU_ITEM,		N_("_Connect"),		0,	0,
@@ -2504,7 +2549,77 @@ static void populate_main_toolbar (void) {
                                  default_toolbar_style, default_toolbar_tips);
 }
 
+/** build server filter menu for menubar
+ */
+static GtkWidget* create_filter_menu()
+{
+  unsigned int i;
+  GtkWidget *menu;
+  GtkWidget *menu_item;
+//  GtkWidget *radiobutton;
+  struct server_filter_vars* filter = NULL;
+  GSList* rbgroup = NULL;
 
+  filter_menu_radio_buttons = NULL;
+
+  menu = gtk_menu_new();
+//  menu_item = gtk_menu_item_new_with_label(_("None"));
+//  menu_item = gtk_check_menu_item_new_with_label(_("None"));
+//  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), (current_server_filter == 0));
+//  gtk_menu_append (GTK_MENU (menu), menu_item);
+//  gtk_widget_show (menu_item);
+//  gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+//	   GTK_SIGNAL_FUNC (server_filter_select_callback), 0);
+
+  for (i = 0;i<=server_filters->len;i++)
+  {
+    char* name = NULL;
+    if(i == 0)
+    {
+      filter = NULL;
+      name = _("None");
+    }
+    else
+    {
+      filter = g_array_index (server_filters, struct server_filter_vars*, i-1);
+      name = filter->filter_name;
+    }
+//      menu_item = gtk_menu_item_new_with_label(name);
+//    menu_item = gtk_menu_item_new();
+//    radiobutton = gtk_radio_button_new_with_label(rbgroup,name);
+//    rbgroup = gtk_radio_button_group(GTK_RADIO_BUTTON(radiobutton));
+//    gtk_container_add(GTK_CONTAINER(menu_item),radiobutton);
+//    gtk_widget_show(radiobutton);
+    
+//    menu_item = gtk_check_menu_item_new_with_label(name);
+//    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), (current_server_filter == i));
+    // that doesn't do what the docu says, right?
+//    gtk_check_menu_item_set_show_toggle ( GTK_CHECK_MENU_ITEM (menu_item), FALSE);
+
+    menu_item = gtk_radio_menu_item_new_with_label(rbgroup,name);
+    rbgroup = gtk_radio_menu_item_group (GTK_RADIO_MENU_ITEM (menu_item));
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+    filter_menu_radio_buttons = g_slist_append(filter_menu_radio_buttons,menu_item);
+
+    gtk_menu_append (GTK_MENU (menu), menu_item);
+    gtk_widget_show (menu_item);
+
+    gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+	   GTK_SIGNAL_FUNC (server_filter_select_callback), (gpointer)i); // array starts from zero but filters from 1
+
+    // add separator
+    if(i == 0)
+    {
+      menu_item = gtk_menu_item_new ();
+      gtk_widget_set_sensitive (menu_item, FALSE);
+      gtk_menu_append (GTK_MENU (menu), menu_item);
+      gtk_widget_show (menu_item);
+    }
+  }
+
+//  filter_menu = menu;
+  return menu;
+}
 
 
 void create_main_window (void) {
@@ -2518,8 +2633,8 @@ void create_main_window (void) {
   GtkWidget *handlebox;
   GtkWidget *scrollwin;
   GtkAccelGroup *accel_group;
-  int i, j;
-  char *buf;
+  int i;
+//  char *buf;
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
@@ -2549,6 +2664,7 @@ void create_main_window (void) {
      you need to change the server_filter_widget line in xqf.h.
   */
 
+#if 0
   if ((server_filter_menu_items = g_malloc( sizeof( struct menuitem ) *  ( MAX_SERVER_FILTERS + 4 )))) { 
     i = 0;
     j = 0;
@@ -2610,8 +2726,11 @@ void create_main_window (void) {
 #else
   server_menu_items[0].user_data = &server_filter_menu_items[0];
 #endif
+#endif
 
   server_menu = create_menu (srvopt_menu_items, accel_group);
+
+
   source_menu = create_menu (source_ctree_popup_menu, accel_group);
 
   /* We will call set_server_filter_menu_list_text (); below after we 
@@ -2635,6 +2754,12 @@ void create_main_window (void) {
   gtk_box_pack_start (GTK_BOX (main_vbox), handlebox, FALSE, FALSE, 0);
 
   menu_bar = create_menubar (menubar_menu_items, accel_group);
+
+
+  // add server filters to menu
+  server_filter_menu_items = g_array_new(FALSE,FALSE,sizeof(GtkWidget*));
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu());
+  filter_menu_activate_current();
 
   gtk_signal_connect_object (GTK_OBJECT (file_quit_menu_item), "activate",
 	      GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (main_window));

@@ -1,12 +1,12 @@
 SUBDIRS = xpm
 
 localedir = $(datadir)/locale
-INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\" @GTK_CFLAGS@
+INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS)
 CFLAGS = @CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
 
 bin_PROGRAMS = xqf
 
-xqf_LDADD = @INTLLIBS@ @GTK_LIBS@
+xqf_LDADD = @INTLLIBS@ $(GTK_LIBS)
 
 xqf_SOURCES =  \
 addmaster.c \
