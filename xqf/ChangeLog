@@ -1,6 +1,7 @@
 Oct 10, 2002: Alex Burger <alex@fragit_dot_net>
 - Added support of 'Show only configured games' to Add Master window
   Add Server window and Statistics page
+- Cleaned up 'When launching a game' placement in Preferences / General
 
 Oct 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - update NEWS and TODO
