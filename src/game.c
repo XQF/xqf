@@ -760,13 +760,18 @@ static void q2_analyze_serverinfo (struct server *s) {
 
 #ifdef QSTAT23
 
-static char *q3a_gametypes[6] = {
-  "<FFA>",		/* Free for All */
-  "<1v1>",	 	/* Tournament */
-  NULL,  		/* Single Player */
-  "<TDM>",		/* Team Deathmatch */
-  "<CTF>",
-  " mod ",              /* 5 is usually a client-side mod */
+static char *q3a_gametypes[10] = {
+  "FFA",		/* 0 = Free for All */
+  "1v1",	 	/* 1 = Tournament */
+  NULL,  		/* 2 = Single Player */
+  "TDM",		/* 3 = Team Deathmatch */
+  "CTF",		/* 4 = Capture the Flag */
+  "1FCTF",		/* 5 = One Flag Capture the Flag */
+  "OVR",		/* 6 = Overload */
+  "HRV",		/* 7 = Harvester */
+  "TTRN",		/* 4 = Capture the Flag */
+  " mod ",              /* ? is usually a client-side mod */
+//  " mod ",              /* 5 is usually a client-side mod */
 };
 
 
@@ -774,12 +779,24 @@ static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   char *endptr;
   long n;
+  int newtypes;
 
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
+// Get the server version first.
+// If it is 1.27, the new game types are used
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+  if (strcmp (*info_ptr, "version") == 0) {
+      if (!strncmp(info_ptr[1], "Q3 1.27",7))
+	newtypes=1;
+      else
+        newtypes=0;
+    }
+  }
   
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+ 
     /*
       fs_game sets the active directory and is how one chooses
       a mod on the command line.  This should not show up in
@@ -787,7 +804,6 @@ static void q3_analyze_serverinfo (struct server *s) {
       take either fs_game or gamename as the "mod" string.
       --baa
     */
-  
     if (strcmp (*info_ptr, "fs_game") == 0) {
       if (strcmp (info_ptr[1], "baseq3")) {
 	s->mod  = info_ptr[1];
@@ -799,17 +815,29 @@ static void q3_analyze_serverinfo (struct server *s) {
 	s->mod  = info_ptr[1];
       }
     }
-
     else if (!s->game && strcmp (*info_ptr, "g_gametype") == 0) {
-      /* A value of 5 is usually a mod */
+      /* A value of 5 is usually a mod (Q3 1.17 and below) */
+      /* New id missionpack defines 5-8 for other types.. */
+      /* So only show new values if the protocol is 48+ */
+      /* until we found out what the mod community is going to do */
       n = strtol (info_ptr[1], &endptr, 10);
 
       if (endptr == info_ptr[1]) {
 	s->game = info_ptr[1];
       }
       else {
-	if (n < 6)
-	  s->game = q3a_gametypes[n];
+        if (newtypes == 1)
+        {
+  	  if (n < 10)
+	    s->game = q3a_gametypes[n];
+	}
+	else
+	{
+  	  if (n < 5)
+	    s->game = q3a_gametypes[n];
+	  else
+	    s->game = q3a_gametypes[9];
+	}
       }
     }
     else if (strcmp (*info_ptr, "g_needpass") == 0) {
