@@ -738,6 +738,26 @@ static void get_new_defaults (void) {
 
   config_pop_prefix ();
 
+  /* Voyager Elite Force */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: EFS");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
+
+  game_set_attribute(EF_SERVER,"masterprotocol",strdup_strip(str));
+  config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
+
+  i = GTK_TOGGLE_BUTTON (ef_setfs_gamebutton)->active;
+  config_set_bool ("setfs_game", i);
+  game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(i)));
+
+  config_pop_prefix ();
+
   /* Tribes 2 */
 
   config_push_prefix ("/" CONFIG_FILE "/Game: T2S");
@@ -2640,6 +2660,9 @@ static GtkWidget *games_config_page (int defgame) {
       g_free (typestr);
     }
   }
+
+  if(defgame >= GAMES_TOTAL)
+    defgame = QW_SERVER;
 
   gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), defgame);
 
@@ -4611,6 +4634,21 @@ int prefs_load (void) {
   game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
 
   config_pop_prefix ();
+
+  /* Enemy Territory */
+  config_push_prefix ("/" CONFIG_FILE "/Game: WOETS");
+  
+  tmp = config_get_string ("protocol=71");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+
+  game_set_attribute(WOET_SERVER,"masterprotocol",tmp);
+
+  config_pop_prefix ();
+
 
   config_push_prefix ("/" CONFIG_FILE "/Game: T2S");
 

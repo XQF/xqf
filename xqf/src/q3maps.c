@@ -152,7 +152,7 @@ static void findq3maps_zip(const char* path, GHashTable* maphash)
     f=unzOpen(path);
     if(!f)
     {
-	debug(0,"error opening zip file %s",path);
+	xqf_warning("could not open zip file %s",path);
 	return;
     }
 

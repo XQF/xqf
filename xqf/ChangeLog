@@ -1,3 +1,8 @@
+Apr 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- cleanups, fixed some warnings, changed debug macros
+- initial Enemy Territory Support (Testversion)
+- increased version number
+
 Apr 22, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - don't display warnings about NULL if scanning for maps is disabled. Thanks
   Jochen Baier for reporting.

@@ -125,6 +125,7 @@ static struct unreal_private rune_private = { NULL, ".run" };
 static struct quake_private q1_private, qw_private, q2_private, hl_private;
 static struct quake_private q3_private = { NULL, "~/.q3a" };
 static struct quake_private wolf_private = { NULL, "~/.wolf" };
+static struct quake_private wolfet_private = { NULL, "~/.etwolf-test" };
 
 struct game games[] = {
   {
@@ -231,7 +232,7 @@ struct game games[] = {
 
   {
     Q3_SERVER,
-    GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
+    GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
     "Quake3: Arena",
     Q3_DEFAULT_PORT,
     Q3M_DEFAULT_PORT,
@@ -266,7 +267,7 @@ struct game games[] = {
 
   {
     WO_SERVER,
-    GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
+    GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
     "Wolfenstein",
     WO_DEFAULT_PORT,
     WOM_DEFAULT_PORT,
@@ -300,8 +301,12 @@ struct game games[] = {
   },
 
   {
+    WOET_SERVER,
+  },
+
+  {
     EF_SERVER,
-    GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
+    GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
     "Voyager Elite Force",
     EF_DEFAULT_PORT,
     EFM_DEFAULT_PORT,
@@ -919,7 +924,6 @@ struct game games[] = {
 // might be handy in the future instead of copy&paste
 static void game_copy_static_options(enum server_type dest, enum server_type src)
 {
-    games[dest].type			= games[src].type;
     games[dest].flags			= games[src].flags;
     games[dest].name			= games[src].name;
     games[dest].default_port		= games[src].default_port;
@@ -939,6 +943,7 @@ static void game_copy_static_options(enum server_type dest, enum server_type src
     games[dest].save_info		= games[src].save_info;
     games[dest].init_maps		= games[src].init_maps;
     games[dest].has_map			= games[src].has_map;
+    games[dest].get_mapshot		= games[src].get_mapshot;
     games[dest].arch_identifier		= games[src].arch_identifier;
     games[dest].identify_cpu		= games[src].identify_cpu;
     games[dest].identify_os		= games[src].identify_os;
@@ -950,6 +955,12 @@ void init_games()
   int i;
 
   debug(3,"init_games");
+
+  game_copy_static_options(WOET_SERVER,WO_SERVER);
+  games[WOET_SERVER].name="Enemy Territory";
+  games[WOET_SERVER].id="WOETS";
+  games[WOET_SERVER].pd=&wolfet_private;
+
   for (i = 0; i < GAMES_TOTAL; i++)
   {
     g_datalist_init(&games[i].games_data);
@@ -960,6 +971,7 @@ void init_games()
   game_set_attribute(QW_SERVER,"suggest_commands",strdup("qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11"));
   game_set_attribute(Q3_SERVER,"suggest_commands",strdup("q3:quake3"));
   game_set_attribute(WO_SERVER,"suggest_commands",strdup("wolf"));
+  game_set_attribute(WOET_SERVER,"suggest_commands",strdup("et"));
   game_set_attribute(SFS_SERVER,"suggest_commands",strdup("sof"));
   game_set_attribute(DESCENT3_SERVER,"suggest_commands",strdup("descent3"));
   game_set_attribute(T2_SERVER,"suggest_commands",strdup("tribes2"));
@@ -1753,6 +1765,16 @@ static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   NULL			// 8+ ???
 };
 
+#define MAX_WOLFET_TYPES 7
+static char *wolfet_gametypes[MAX_WOLFET_TYPES] = {
+  NULL,			// 0 - Unknown
+  NULL,			// 1 - Unknown
+  "Obj",		// 2 - Single-Map Objective
+  "SW",			// 3 - Stopwatch
+  "Cmpgn",		// 4 - Campaign
+  "LMS",		// 5 - Last Man Standing
+  NULL			// 6+ ???
+};
 
 struct q3a_gametype_s {
   char* mod;
@@ -1893,6 +1915,26 @@ struct q3a_gametype_s ef_gametype_map[] =
   }
 };
 
+struct q3a_gametype_s wolfet_gametype_map[] =
+{
+  {
+    "et",
+    wolfet_gametypes,
+    MAX_WOLFET_TYPES
+  },
+  {
+    "etmain",
+    wolfet_gametypes,
+    MAX_WOLFET_TYPES
+  },
+  {
+    "ettest",
+    wolfet_gametypes,
+    MAX_WOLFET_TYPES
+  }
+
+};
+
 void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
 {
   char *endptr;
@@ -1978,6 +2020,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=WO_SERVER;
       }
+      else if(!strncmp(info_ptr[1],"ET 2",4))
+      {
+	s->type=WOET_SERVER;
+      }
       // voyager elite force
       else if(!strncmp(info_ptr[1],"ST:V HM",7))
       {
@@ -2036,6 +2082,11 @@ static void q3_analyze_serverinfo (struct server *s) {
     {
       q3_decode_gametype( s, ef_gametype_map );
     }
+    else if ( s->type == WOET_SERVER)
+    {
+      q3_decode_gametype( s, wolfet_gametype_map );
+    }
+
   }
 
   // unset game if it's no mod
@@ -2417,19 +2468,6 @@ static int write_quake_variables (const struct condef *con) {
     file = file_in_dir (games[Q2_SERVER].real_dir, "baseq2/" EXEC_CFG);
     res = write_q2_vars (file, con);
     break;
-
-/*
-#ifdef QSTAT23
-  case Q3_SERVER:
-    path = quake3_data_dir (games[Q3_SERVER].dir);
-    if (path) {
-      file = file_in_dir (path, EXEC_CFG);
-      g_free (path);
-      res = write_q3_vars (file, con);
-    }
-    break;
-#endif
-*/
 
   default:
     return FALSE;
@@ -3336,7 +3374,7 @@ static int t2_exec (const struct condef *con, int forkit) {
 static char *dir_custom_cfg_filter (const char *dir, const char *str) {
   static const char *cfgext[] = { ".cfg", ".scr", ".rc", NULL };
   const char **ext;
-  int len;
+  size_t len;
 
   if (!str)
     return NULL;

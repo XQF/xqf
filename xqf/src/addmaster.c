@@ -75,7 +75,7 @@ static void master_check_master_addr_prefix()
     }
 
     // Add lan://255.255.255.255 if user picks LAN and has not already entered an address
-    if(current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (pos - master_addr)))
+    if(current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr)))
     {
       char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type],
 						              "255.255.255.255");
@@ -197,7 +197,7 @@ static GtkWidget *create_master_type_menu (enum server_type type) {
   GtkWidget *menu_item;
   GtkWidget *first_menu_item = NULL;
   int i;
-  int j = 0;
+  unsigned j = 0;
    
   menu = gtk_menu_new ();
 
@@ -289,7 +289,7 @@ struct master *add_master_dialog (struct master *m) {
   struct master *master_to_edit;
   char *windowtitle;
 
-  int j;
+  unsigned j;
   int menu_type = 0;
 
   master_name_result = NULL;

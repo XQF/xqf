@@ -97,6 +97,7 @@ enum server_type {
   Q2_SERVER,
   Q3_SERVER,
   WO_SERVER,
+  WOET_SERVER,
   EF_SERVER,
   H2_SERVER,
   HW_SERVER,

@@ -31,20 +31,28 @@ void debug_int(const char* file, int line, const char* function, int level, cons
   int i;
   char buf[9];
   time_t now;
-  if( level > debug_level ) return;
+
   for (i=0;i<indent_level;i++)
   {
     fprintf(stderr, " ");
   }
   now = time(NULL);
   strftime(buf,9,"%T",localtime(&now));
-  fprintf(stderr, "debug(%d) %s %s:%d %s() - ", level, buf, file, line, function);
+
+  if(level == -3)
+    fprintf(stderr, "ERROR! %s %s:%d %s() - ", buf, file, line, function);
+  else if(level == -2)
+    fprintf(stderr, "WARNING %s %s:%d %s() - ", buf, file, line, function);
+  else if(level == -1)
+    fprintf(stderr, "note %s %s:%d %s() - ", buf, file, line, function);
+  else
+    fprintf(stderr, "debug(%d) %s %s:%d %s() - ", level, buf, file, line, function);
+
   va_start(argp, fmt);
   vfprintf(stderr, fmt, argp);
   va_end(argp);
   fprintf(stderr, "\n");
 }
-
 
 void debug_cmd(int level, char *argv[], char *fmt, ...)
 {
@@ -67,7 +75,7 @@ void set_debug_level (int level)
   debug_level = level;
 }
 
-int get_debug_level (void)
+inline int get_debug_level (void)
 {
   return (debug_level);
 }

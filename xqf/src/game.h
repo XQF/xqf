@@ -28,18 +28,22 @@
 #include "launch.h"
 #include "pixmaps.h"
 
-#define	GAME_CONNECT		0x0001
-#define	GAME_RECORD		0x0002
-#define	GAME_SPECTATE		0x0004
-#define	GAME_PASSWORD		0x0008
-#define	GAME_RCON		0x0010
 
-#define	GAME_QUAKE1_PLAYER_COLORS	0x0100
-#define	GAME_QUAKE1_SKIN		0x0200
+// game->flags
+enum {
+  GAME_CONNECT			= 0x0001,
+  GAME_RECORD			= 0x0002,
+  GAME_SPECTATE			= 0x0004,
+  GAME_PASSWORD			= 0x0008,
+  GAME_RCON			= 0x0010,
+  GAME_QUAKE1_PLAYER_COLORS	= 0x0100,
+  GAME_QUAKE1_SKIN		= 0x0200,
+  GAME_QUAKE3_MASTERPROTOCOL	= 0x0400, // master server protocol version is in games_data["masterprotocol"]
+};
 
 struct game {
   enum server_type type;
-  int flags;
+  unsigned flags;
 
   char *name;
   unsigned short default_port;
