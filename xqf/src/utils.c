@@ -259,6 +259,19 @@ GSList *unique_strings (GSList *strings) {
   return result;
 }
 
+// build GList from array of char*
+GList* createGListfromchar(char* strings[])
+{
+  GList *list = NULL;
+  char** ptr = NULL;
+  for(ptr=strings;ptr&&*ptr;ptr++)
+  {
+    list = g_list_append (list, *ptr);
+  }
+
+  return list;
+}
+
 
 /*
  *  Signals 
