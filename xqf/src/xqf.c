@@ -1623,17 +1623,19 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 
 
 static void about_dialog (GtkWidget *widget, gpointer data) {
+  char *intro = _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n");
+  char *version = g_strdup_printf(_("Version %s\n\n"),XQF_VERSION);
+  char *author = _("Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n\n");
+  char *contrib = _("Contributors:\n\n"
+	"Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
+	"Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolfenstein, GameSpy master support\n"
+	"Jordi Mallach <jordi@sindominio.net>: Internationalization (i18n) & Spanish translation\n"
+	"Ludwig Nussel <l-n@sourceforge.net>: German translation, i18n & Quake3 fixes\n\n");
+  char *urls = _("http://www.linuxgames.com/xqf/\n"
+	     "http://sourceforge.net/projects/xqf/");
   dialog_ok (_("About XQF"), 
-	     _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
-	     "Version %s\n\n"
-	     "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n\n"
-	     "Contributors:\n\n"
-	     "Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
-	     "Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolfenstien, GameSpy master support\n"
-	     "Jordi Mallach <jordi@sindominio.net>: Internationalization (i18n) & Spanish traslation\n"
-	     "Ludwig Nussell <ludwig@nussel@gmx.de>: German translation, i18n & Quake3 fixes\n\n"
-	     "http://www.linuxgames.com/xqf/\n"
-	     "http://sourceforge.net/projects/xqf/"), XQF_VERSION);
+	     "%s%s%s%s%s",intro,version,author,contrib,urls);
+  g_free(version);
 }
 
 
@@ -2149,7 +2151,8 @@ static void populate_main_toolbar (void) {
    */
 
   for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
-    g_snprintf (buf, 128, "%s Filter", filters[i].name);
+    // Translators: e.g. Server Filter
+    g_snprintf (buf, 128, _("%s Filter"), filters[i].name);
 
     pixmap = gtk_pixmap_new (filter_pix[i].pix, filter_pix[i].mask);
     gtk_widget_show (pixmap);
@@ -2169,7 +2172,8 @@ static void populate_main_toolbar (void) {
   gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
 
   for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
-    g_snprintf (buf, 128, "%s Filter Configuration", filters[i].name);
+    // Translators: e.g. Server Filter Configuration
+    g_snprintf (buf, 128, _("%s Filter Configuration"), filters[i].name);
 
     pixmap = gtk_pixmap_new (filter_cfg_pix[i].pix, filter_cfg_pix[i].mask);
     gtk_widget_show (pixmap);
