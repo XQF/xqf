@@ -1,6 +1,7 @@
 Aug 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Use TGA loader from quake2 if gdk-pixbuf fails to load a mapshot. Useful for
   at least Q3, RTCW, ET and Doom3 mapshots.
+- require qstat version 2.6
 
 Aug 13, 2004: Jordi Mallach <jordi@sindominio.net>
 - update Catalan and Spanish translations
