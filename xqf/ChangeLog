@@ -1,4 +1,11 @@
 Oct 13, 2002: Alex Burger <alex@fragit_dot_net>
+- Updated q3_exec to search ~/.q3a and then real game dir for
+  mods.  Tested with osp (~/.q3a/Osp)
+- Created q2_exec function to be used by Quake2 to search ~/.quake2
+  folder and then real game dir for mods.  Tested find_game_dir with
+  Quake2-r0.14.1.  Connects and then restarts using lowercase name. 
+  May work with other versions of Quake2.  Leaving in.
+- g_free in find_game_dir and exec functions
 - find_game_dir fixes:  Allow symlinks, use const
 - Minor fix to ut_exec if there are no custom arguments
 
