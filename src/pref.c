@@ -2105,11 +2105,13 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *delete_button;
   GtkWidget *replace_button;
   GtkWidget *page_vbox;
+  GtkTooltips *tooltips;
   GSList *temp;
   int i;
   struct game *g;
- 
   char *temp2[2];
+
+  tooltips = gtk_tooltips_new ();
   
   g = &games[type];
   
@@ -2195,8 +2197,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (custom_args_entry_game[type]);
   gtk_box_pack_start (GTK_BOX (hbox2), custom_args_entry_game[type], FALSE, TRUE, 0);
-  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), _("Game"));
-  gtk_entry_set_position (GTK_ENTRY (custom_args_entry_game[type]), 0);
+  gtk_tooltips_set_tip (tooltips, custom_args_entry_game[type], _("Enter the game name from the game column"), NULL);
 
   custom_args_entry_args[type] = gtk_entry_new ();
   gtk_widget_ref (custom_args_entry_args[type]);
@@ -2204,8 +2205,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (custom_args_entry_args[type]);
   gtk_box_pack_start (GTK_BOX (hbox2), custom_args_entry_args[type], TRUE, TRUE, 0);
-  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), _("Arguments seperated by Space"));
-  gtk_entry_set_position (GTK_ENTRY (custom_args_entry_args[type]), 0);
+  gtk_tooltips_set_tip (tooltips, custom_args_entry_args[type], _("Enter the arguments separated by spaces"), NULL);
 
   vbuttonbox1 = gtk_vbutton_box_new ();
   gtk_widget_ref (vbuttonbox1);
