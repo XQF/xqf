@@ -13,7 +13,5 @@ Required for XQF 1.0:
   filtering
 - More general server filters so one can filter based on any server var.
 - Redial feature:  User configurable options
-- Update statusbar when activating / deactivating serverfilter.  The number
-  of shown servers does not get updated.
 
 
