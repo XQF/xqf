@@ -1013,6 +1013,9 @@ static char *builtin_masters_update_info[] = {
   "ADD RUNESRV http://www.gameaholic.com/servers/qspy-rune gameaholic.com",
 
   "ADD SOF2S master://master.sof2.ravensoft.com:20110 Raven",
+
+  "ADD UT2S http://ut2003master.epicgames.com/serverlist/full-all.txt Epic",
+  "ADD UT2S http://ut2003master.epicgames.com/serverlist/demo-all.txt Epic Demo",
   
   NULL
 };

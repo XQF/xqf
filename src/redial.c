@@ -140,6 +140,7 @@ static void stat_redial_close_handler (struct stat_job *job, int killed)
     if (!killed)
     {
 	if (con->s->curplayers < con->s->maxplayers)
+	//if (con->s->curplayers == 99) 
 	{
 	    // ok, free slot. launch!
 	    launchnow = TRUE;

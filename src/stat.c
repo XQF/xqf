@@ -112,6 +112,7 @@ static void stat_master_update_done
 
 static int parse_master_output (char *str, struct stat_conn *conn) {
   char *token[8];
+  char *temp;
   int n;
   char *endptr;
   enum server_type type = UNKNOWN_SERVER;
@@ -124,6 +125,27 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   debug (6, "parse_master_output(%s,%p)",str,conn);
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 
+  // output from UT 2003 http server is formatted as
+  // server ip port admin_port, not the standard
+  // server:port
+  // If the master type is http and there are three columns
+  // then it merges col 1 and 2 into one so it is handled
+  // like other http master servers
+  if(conn->master->master_type == MASTER_HTTP && n == 3)
+  {
+    //temp=malloc(50);
+    temp=g_malloc(strlen(token[0])+strlen(token[1])+2);
+    strcpy(temp,token[0]);
+    strcat(temp,":");
+    strcat(temp,token[1]);
+
+    strcpy(token[0],temp);
+    //g_free(temp);
+    token[1]='\0';
+    
+    n=1;
+  } 
+
   // output from broadcast, last line contains
   // <servertype> <bcastaddr> <number>
   // this line is skipped by n>3
@@ -134,6 +156,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
     type = id2type (token[0]);
     n = 2;
   }
+
+
   else if (n >= 3) {
 
     /* Master address/status */
@@ -201,6 +225,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	host_unref (h);
       }
       else {						/* hostname */
+
 	g_strdown (addr);
 	if ((us = userver_add (addr, port, type)) != NULL)
 	  conn->uservers = userver_list_add (conn->uservers, us);
