@@ -31,9 +31,12 @@ src/source.c
 src/srv-prop.c
 src/stat.c
 src/statistics.c
-#src/utils.c
+src/utils.c
 src/xqf-ui.c
 src/xqf.c
 #src/xutils.c
 #src/zipped.c
 src/splash.c
+src/country-filter.c
+src/loadpixmap.c
+src/trayicon.c
