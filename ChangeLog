@@ -1,3 +1,8 @@
+Dec 19, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- properly quoted macros for zlib checks
+- changed configure argument because help text said --enable-externalrcon while
+  it actually was --enable-readline.
+
 Dec 18, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Changed version to 0.9.11.1
 
