@@ -58,6 +58,7 @@ extern	struct pixmap sn_pix;
 extern	struct pixmap hl_pix;
 extern	struct pixmap kp_pix;
 extern	struct pixmap sfs_pix;
+extern	struct pixmap sof2s_pix;
 extern	struct pixmap t2_pix;
 extern	struct pixmap hr_pix;
 extern	struct pixmap un_pix;

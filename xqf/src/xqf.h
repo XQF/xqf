@@ -53,6 +53,7 @@
 #define	HL_DEFAULT_PORT		27015		/* Half-Life */
 #define	KP_DEFAULT_PORT		31510		/* Kingpin */
 #define	SFS_DEFAULT_PORT	28910		/* Soldier of Fortune */
+#define	SOF2S_DEFAULT_PORT	20100		/* Soldier of Fortune 2 */
 #define	T2_DEFAULT_PORT		28000		/* Tribes 2 */
 #define	HR_DEFAULT_PORT		28910		/* Heretic2 */
 #define	UN_DEFAULT_PORT		7777		/* Unreal */
@@ -100,6 +101,7 @@ enum server_type {
   HL_SERVER,
   KP_SERVER,
   SFS_SERVER,
+  SOF2S_SERVER,
   T2_SERVER,
   HR_SERVER,
 #ifdef QSTAT_HAS_UNREAL_SUPPORT

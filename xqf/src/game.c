@@ -457,6 +457,34 @@ struct game games[] = {
     NULL		// game_cfg
   },
   {
+    SOF2S_SERVER,
+    GAME_CONNECT | GAME_RCON,
+    "Soldier of Fortune 2",
+    SOF2S_DEFAULT_PORT,
+    0,
+    "SOF2S",
+    "SOF2S",
+    "-sof2s",
+    "-sof2m",
+    &sof2s_pix,
+
+    q2_parse_player,
+    quake_parse_server,
+    q2_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    q2_exec_generic,
+    NULL,
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
+  },
+  {
     T2_SERVER,
     GAME_CONNECT | GAME_RCON,
     "Tribes 2",
