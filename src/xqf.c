@@ -99,7 +99,6 @@ int event_type = 0;
 
 char* xqf_PACKAGE_DATA_DIR = PACKAGE_DATA_DIR;
 char* xqf_LOCALEDIR = LOCALEDIR;
-char* xqf_PIXMAPSDIR = PIXMAPSDIR;
 
 char* qstat_configfile = NULL;
 
@@ -3358,7 +3357,24 @@ static void quick_filter_entry_changed(GtkWidget* entry, gpointer data)
   filter_toggle_callback(NULL, mask);
 }
 
-void create_main_window (void) {
+static void create_main_window (void)
+{
+  main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
+		      GTK_SIGNAL_FUNC (window_delete_event_callback), NULL);
+  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
+		      GTK_SIGNAL_FUNC (ui_done), NULL);
+  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
+		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+  gtk_window_set_title (GTK_WINDOW (main_window), "XQF");
+
+  register_window (main_window);
+
+  gtk_widget_realize (main_window);
+}
+
+static void populate_main_window (void)
+{
   GtkWidget *main_vbox;
   GtkWidget *vbox;
   GtkWidget *vbox2;
@@ -3374,20 +3390,6 @@ void create_main_window (void) {
   GtkAccelGroup *accel_group;
   int i;
 //  char *buf;
-
-  main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
-		      GTK_SIGNAL_FUNC (window_delete_event_callback), NULL);
-  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-		      GTK_SIGNAL_FUNC (ui_done), NULL);
-  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
-  gtk_window_set_title (GTK_WINDOW (main_window), "XQF");
-
-  register_window (main_window);
-
-  gtk_widget_realize (main_window);
-  init_pixmaps (main_window);
 
   accel_group = gtk_accel_group_new ();
 
@@ -3923,6 +3925,15 @@ static void parse_commandline(int argc, char* argv[])
     }
 }
 
+void add_pixmap_path_for_theme(const char* theme)
+{
+  char dir[PATH_MAX];
+  snprintf(dir, sizeof(dir), "%s/%s", xqf_PACKAGE_DATA_DIR, theme);
+  add_pixmap_directory (dir);
+  snprintf(dir, sizeof(dir), "%s/.local/share/xqf/%s", g_get_home_dir(), theme);
+  add_pixmap_directory (dir);
+}
+
 int main (int argc, char *argv[]) {
   char *gtk_config;
   char* var = NULL;
@@ -3939,10 +3950,6 @@ int main (int argc, char *argv[]) {
   var = getenv("xqf_LOCALEDIR");
   if(var)
     xqf_LOCALEDIR = var;
-  
-  var = getenv("xqf_PIXMAPSDIR");
-  if(var)
-    xqf_PIXMAPSDIR = var;
   
 #ifdef ENABLE_NLS
   setlocale(LC_ALL, "");
@@ -3973,13 +3980,7 @@ int main (int argc, char *argv[]) {
     return 1;
   }
 
-  {
-    char* defaultpixmapdir = g_strconcat(xqf_PACKAGE_DATA_DIR, "/default", NULL);
-    add_pixmap_directory (defaultpixmapdir);
-    g_free(defaultpixmapdir);
-  }
-
-  add_pixmap_directory (xqf_PIXMAPSDIR);
+  add_pixmap_path_for_theme("default");
 
   qstat_configfile = g_strconcat(xqf_PACKAGE_DATA_DIR, "/qstat.cfg", NULL);
   
@@ -3991,6 +3992,9 @@ int main (int argc, char *argv[]) {
 
   config_set_base_dir (user_rcdir);
   newversion = prefs_load () | cmdline_newversion;
+
+  if(default_icontheme)
+    add_pixmap_path_for_theme(default_icontheme);
   
 #ifdef USE_GEOIP
   geoip_init();
@@ -4002,9 +4006,8 @@ int main (int argc, char *argv[]) {
   filters_init ();
 
   host_cache_load ();
-  splash_increase_progress(_("Reading server lists"),0);
+  splash_increase_progress(_("Reading server lists"),10);
   init_masters (newversion);
-  splash_set_progress(_("Starting ..."),100);
 
   client_init ();
   ignore_sigpipe ();
@@ -4024,9 +4027,17 @@ int main (int argc, char *argv[]) {
 	required_qstat_version);
   }
 
-  play_sound(sound_xqf_start, 0);
+  splash_increase_progress(_("Loading icons ..."),10);
 
   create_main_window ();
+
+  init_pixmaps (main_window);
+
+  splash_set_progress(_("Starting ..."),100);
+
+  play_sound(sound_xqf_start, 0);
+
+  populate_main_window();
 
   if (default_show_tray_icon) 
     tray_init(main_window);
