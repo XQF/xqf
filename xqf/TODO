@@ -1,4 +1,3 @@
-- Have 'is not full' server filter take into account reserved slots (?)
 - Configure option for home directory as well as global directory
 - Multiple Favorites
 - More general server filters so one can filter based on any server var.
@@ -6,6 +5,5 @@
 - Detection if map is installed (req. home dir option)
 - improve performance with huge server lists (halflife), maybe by serverside
   filtering
-- more sophisticated UT launch function, currently not usable with mods like tacops or strikeforce
 - add OS statistic info for UT 2003 and any other missing games
 - update game types for Q3 mods - move to external file
