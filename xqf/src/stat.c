@@ -70,9 +70,10 @@ static int failed (char *name, char *arg) {
 static void stat_free_conn (struct stat_conn *conn) {
   struct stat_job *job;
 
-  debug (3, "stat_free_conn() -- Conn %lx", conn);
   if (!conn || !conn->job)
     return;
+
+  debug (3, "stat_free_conn() -- Conn %lx", conn);
 
   job = conn->job;
 
@@ -243,15 +244,15 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
   str will be modified!!
  */
 static int parse_master_output (char *str, struct stat_conn *conn) {
-  char *token[8];
-  int n;
-  char *endptr;
+  char *token[8] = {0};
+  int n = 0;
+  char *endptr = NULL;
   enum server_type type = UNKNOWN_SERVER;
-  char *addr;
+  char *addr = NULL;
   unsigned short port;
-  struct server *s;
-  struct userver *us;
-  struct host *h;
+  struct server *s = NULL;
+  struct userver *us = NULL;
+  struct host *h = NULL;
 
   debug (6, "parse_master_output(%s,%p)",str,conn);
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
@@ -370,9 +371,11 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 	g_strdown (addr);
 	if ((us = userver_add (addr, port, type)) != NULL)
+	{
 //	  conn->uservers = userver_list_add (conn->uservers, us);
 	  conn->uservers = g_slist_prepend (conn->uservers, us);
 	  userver_ref(us);
+	}
       }
       g_free (addr);
     }
@@ -1396,7 +1399,6 @@ static void stat_master_update_done (struct stat_conn *conn,
 
   debug (1, "stat_master_update_done(%s) -- status %d\n", 
                                 (conn)? conn->master->name : "(null)", state);
-  //XXX
 
   if (state == SOURCE_UP && conn) {
     debug (3, "stat_master_update_done -- state == SOURCE_UP && conn");
@@ -1429,15 +1431,17 @@ static void stat_master_update_done (struct stat_conn *conn,
   */
   for (tmp = m->servers; tmp; tmp = tmp->next)
   {
-    job->delayed.queued_servers = g_slist_prepend(job->delayed.queued_servers, tmp->data);
-    job->servers = g_slist_prepend(job->servers,tmp->data);
-    server_ref(tmp->data);
-    server_ref(tmp->data);
+    struct server* s = tmp->data;
+    job->delayed.queued_servers = g_slist_prepend(job->delayed.queued_servers, s);
+    job->servers = g_slist_prepend(job->servers, s);
+    server_ref(s);
+    server_ref(s);
   }
   for (tmp = m->uservers; tmp; tmp = tmp->next)
   {
-    job->names = g_slist_prepend(job->names,tmp->data);
-    server_ref(tmp->data);
+    struct userver *us = tmp->data;
+    job->names = g_slist_prepend(job->names,us);
+    userver_ref(us);
   }
 
   job->delayed.queued_servers = slist_sort_remove_dups(job->delayed.queued_servers,
