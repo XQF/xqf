@@ -77,6 +77,11 @@ extern	enum server_type id2type (const char *id);
 extern	const char *type2id (enum server_type type);
 extern	GtkWidget *game_pixmap_with_label (enum server_type type);
 
+// retreive game specific value that belongs to key, do not free return value!
+const char* game_get_attribute(enum server_type type, const char* key);
+// set game specific key/value pair, value is _not_ copied
+const char* game_set_attribute(enum server_type type, const char* key, char* value);
+
 void init_games();
 
 #endif /* __GAME_H__ */

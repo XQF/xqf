@@ -130,8 +130,6 @@ extern	void free_user_info (void);
 
 extern	int prefs_load (void);
 
-#define g_datalist_set_data_free(a,b,c) g_datalist_set_data_full(a,b,c,g_free)
-
 #endif /* __PREF_H__ */
 
 

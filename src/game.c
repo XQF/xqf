@@ -729,6 +729,20 @@ void init_games()
   }
 }
 
+// retreive game specific value that belongs to key, do not free return value!
+const char* game_get_attribute(enum server_type type, const char* attr)
+{
+  return g_datalist_get_data(&games[type].games_data,attr);
+}
+
+// set game specific key/value pair, value is _not_ copied and must not be
+// freed manually
+const char* game_set_attribute(enum server_type type, const char* attr, char* value)
+{
+  g_datalist_set_data_full(&games[type].games_data,attr,value,g_free);
+  return value;
+}
+
 enum server_type id2type (const char *id) {
   int i;
 
