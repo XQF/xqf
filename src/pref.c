@@ -2823,6 +2823,7 @@ static GtkWidget *general_options_page (void) {
   GtkWidget *frame;
   GtkWidget *hbox;
   GtkWidget *vbox;
+  GtkWidget *table;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -2918,7 +2919,7 @@ static GtkWidget *general_options_page (void) {
   gtk_widget_show (vbox);
   gtk_widget_show (frame);
 
-  /* On Quake Launch */
+  /* When launching a Game */
 
   frame = gtk_frame_new (_("When launching a game..."));
   gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
@@ -2929,8 +2930,9 @@ static GtkWidget *general_options_page (void) {
 
   /* Terminate */
 
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  table = gtk_table_new(2,3,TRUE);
+  
+  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
 
   terminate_check_button = gtk_check_button_new_with_label (
                            _("Terminate XQF"));
@@ -2938,7 +2940,9 @@ static GtkWidget *general_options_page (void) {
                                                            default_terminate);
   gtk_signal_connect (GTK_OBJECT (terminate_check_button), "toggled",
                           GTK_SIGNAL_FUNC (terminate_toggled_callback), NULL);
-  gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
+
+  gtk_table_attach_defaults(GTK_TABLE(table),terminate_check_button, 0, 1, 0, 1);
+  
   gtk_widget_show (terminate_check_button);
 
   gtk_widget_show (hbox); 
@@ -2953,7 +2957,7 @@ static GtkWidget *general_options_page (void) {
     gtk_widget_set_sensitive (iconify_check_button, FALSE);
   gtk_widget_show (iconify_check_button);
 
-  gtk_box_pack_end (GTK_BOX (hbox), iconify_check_button, FALSE, FALSE, 0);
+  gtk_table_attach_defaults(GTK_TABLE(table),iconify_check_button, 2, 3, 0, 1);
 
   /* Launchinfo */
 
@@ -2966,10 +2970,9 @@ static GtkWidget *general_options_page (void) {
                                                            default_launchinfo);
   gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled",
                           GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
-  gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
-  gtk_widget_show (launchinfo_check_button);
+  gtk_table_attach_defaults(GTK_TABLE(table),launchinfo_check_button, 0, 1, 1, 2);
 
-//  gtk_widget_show (hbox);
+  gtk_widget_show (launchinfo_check_button);
 
   /* Prelaunchinfo */
 
@@ -2980,7 +2983,10 @@ static GtkWidget *general_options_page (void) {
   gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled",
                           GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
   gtk_widget_show (prelaunchexec_check_button);
-  gtk_box_pack_end (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
+
+  gtk_table_attach_defaults(GTK_TABLE(table),prelaunchexec_check_button, 2, 3, 1, 2);
+
+  gtk_widget_show(table);
 
   gtk_widget_show (hbox);
 
