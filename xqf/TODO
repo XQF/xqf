@@ -1,5 +1,4 @@
-- Have 'is not full' server filter take into account reserved slots
-- Add master server protocol verion and set fs_game support for Sof2 to options page
+- Have 'is not full' server filter take into account reserved slots (?)
 - Configure option for home directory as well as global directory
 - Multiple Favorites
 - More general server filters so one can filter based on any server var.
