@@ -1,3 +1,7 @@
+Oct 31, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- remove workaround for unreal to use gps for lan broadcasting, this is no
+  longer necessary with qstat 2.5c
+
 Oct 30, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Modify game command entry field to expand command line into full path if
   command is in the path.  Also executes guess_dir
