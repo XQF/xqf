@@ -158,7 +158,7 @@ static char* is_q3_map(const char* name)
     if (!g_strncasecmp(name,"maps/",5)
 	    && !g_strcasecmp(name+strlen(name)-4,".bsp"))
     {
-	char* basename = g_basename(name);
+	const char* basename = g_basename(name);
 	return g_strndup(basename,strlen(basename)-4);
     }
     return NULL;
@@ -184,7 +184,7 @@ static char* is_doom3_map(const char* name)
     if (!g_strncasecmp(name,"maps/game/",10)
 	    && !g_strcasecmp(name+strlen(name)-4,".map"))
     {
-	char* basename = g_basename(name);
+	const char* basename = g_basename(name);
 	return g_strndup(basename,strlen(basename)-4);
     }
     return NULL;
@@ -276,7 +276,7 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash)
 	&& !g_strcasecmp(name+strlen(name)-4,".bsp")
 	&& level == 2)
     {
-	char* basename = g_basename(name);
+	const char* basename = g_basename(name);
 	char* mapname=g_strndup(basename,strlen(basename)-4);
 	g_strdown(mapname);
 	if(g_hash_table_lookup(maphash,mapname))
@@ -304,7 +304,7 @@ void q3_contains_file(const char* name, int level, GHashTable* maphash)
 	&& !g_strcasecmp(name+strlen(name)-4,".bsp")
 	&& strlen(name) > 4)
     {
-	char* basename = g_basename(name);
+	const char* basename = g_basename(name);
 	char* mapname=g_strndup(basename,strlen(basename)-4);
 	g_strdown(mapname);
 	if(g_hash_table_lookup(maphash,mapname))
@@ -331,7 +331,7 @@ void doom3_contains_file(const char* name, int level, GHashTable* maphash)
 	&& strlen(name) > 4
 	&& !g_strcasecmp(name+strlen(name)-4,".map"))
     {
-	char* basename = g_basename(name);
+	const char* basename = g_basename(name);
 	char* mapname=g_strndup(basename,strlen(basename)-4);
 	g_strdown(mapname);
 	if(g_hash_table_lookup(maphash,mapname))
@@ -582,11 +582,12 @@ static void process_levelshots(GHashTable* maphash)
 	struct q3mapinfo* mi = ptr->data;
 	struct q3mapinfo* mih = NULL;
 	char* mapname = NULL;
+	const char* mapbase = NULL;
 	char* origkey = NULL;
 	gboolean found = FALSE;
 	if(!mi->levelshot || strlen(mi->levelshot) <= 4 ) { g_free(mi); continue; }
-	mapname = g_basename(mi->levelshot);
-	mapname=g_strndup(mapname,strlen(mapname)-4);
+	mapbase = g_basename(mi->levelshot);
+	mapname = g_strndup(mapbase,strlen(mapbase)-4);
 	g_strdown(mapname);
 	found = g_hash_table_lookup_extended(maphash,mapname,(gpointer)&origkey,(gpointer)&mih);
 	if(found != TRUE || mih != GINT_TO_POINTER(-1)) // not in hash or mapinfo alread defined

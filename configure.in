@@ -192,6 +192,7 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/xpm/Makefile
 	src/zip/Makefile
+	src/tga/Makefile
 	docs/Makefile
 	pixmaps/Makefile
 	pixmaps/flags/Makefile
