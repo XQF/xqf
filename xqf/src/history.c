@@ -80,6 +80,8 @@ void history_free (struct history *h) {
   char key[128];
   int i;
 
+  if(!h) return;
+
   g_snprintf (fmt, 128, "/" CONFIG_FILE "/History: %s/%%i", h->id);
 
   for (i = 0, list = h->items; list; i++, list = list->next) {
@@ -87,7 +89,7 @@ void history_free (struct history *h) {
     config_set_string (key, (char *) list->data);
   }
 
-  if (!h) {
+  if (h) {
     if (h->items) {
       g_list_foreach (h->items, (GFunc) g_free, NULL);
       g_list_free (h->items);

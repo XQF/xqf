@@ -30,6 +30,7 @@
 #include <glib.h>
 
 #include "utils.h"
+#include "debug.h"
 #include "config.h"
 
 
@@ -64,6 +65,12 @@ static void dump_base (void) {
 #endif
 
 
+/**
+ * lookup keyname in secname in filename (secname and keyname can be NULL).
+ * When create is set, appropriate entries will be created if they don't
+ * already exist. When file1, section1 and key1 are not NULL (all three are
+ * independent), pointers to the found/created structs are stored there.
+**/
 static void find_key (const char *filename,
 		      const char *secname,
 		      const char *keyname,
@@ -81,12 +88,14 @@ static void find_key (const char *filename,
   if (section1) *section1 = NULL;
   if (key1) *key1 = NULL;
 
+  // look if file is already known
   for (list = files; list; list = list->next) {
     file = (struct config_file *) list->data;
     if (strcmp (filename, file->filename) == 0)
       break;
   }
 
+  // otherwise create one
   if (!list) {
 
     if (!create)
@@ -101,12 +110,14 @@ static void find_key (const char *filename,
     *file1 = file;
 
   if (secname) {
+    // see if section is alreay known in file
     for (list = file->sections; list; list = list->next) {
       section = (struct config_section *) list->data;
       if (g_strcasecmp (secname, section->name) == 0)
 	break;
     }
 
+    // otherwise create one
     if (!list) {
 
       if (!create)
@@ -122,12 +133,14 @@ static void find_key (const char *filename,
   }
 
   if (secname && keyname) {
+    // see if key is already in section
     for (list = section->keys; list; list = list->next) {
       key = (struct config_key *) list->data;
       if (g_strcasecmp (keyname, key->name) == 0)
 	break;
     }
 
+    // otherwise create one
     if (!list) {
 
       if (!create)
@@ -143,7 +156,10 @@ static void find_key (const char *filename,
   }
 }
 
-
+/**
+ * lookup keyname in section, if not found create a new config_key.
+ * returns pointer to found or created key
+ */
 static struct config_key *key_in_section (struct config_section *section, 
       					                      char *keyname) {
   struct config_key *key;
@@ -179,7 +195,7 @@ static void load_file (const char *filename) {
 
   fn = file_in_dir (basedir, filename);
 #ifdef DEBUG
-  fprintf (stderr, "config.c: load_file (%s)\n", fn);
+  debug (0, "%s", fn);
 #endif
   f = fopen (fn, "r");
   g_free (fn);
@@ -608,16 +624,22 @@ static void drop_file (struct config_file *file) {
       key = (struct config_key *) kptr->data;
       g_free (key->name);
       g_free (key->value);
+      g_free(key);
+      key=NULL;
     }
 
     g_list_free (section->keys);
     g_free (section->name);
+    g_free(section);
+    section=NULL;
   }
  
   g_list_free (file->sections);
   g_free (file->filename);
 
   files = g_list_remove (files, file);
+
+  g_free(file);
 }
 
 
