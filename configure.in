@@ -103,14 +103,14 @@ AC_DEFINE_UNQUOTED(XQF_VERSION, "$VERSION", XQF Version number)
 AC_DEFINE_UNQUOTED(QSTAT_EXEC, "$QSTATEXEC", QSTAT executable path)
 
 # workaround for intl/ which requires config.h
-AC_MSG_NOTICE([creating link config.h -> src/gnuconfig.h])
+echo "configure: creating link config.h -> src/gnuconfig.h"
 test -e config.h -a ! -L config.h && rm config.h
 test ! -e config.h && ln -s src/gnuconfig.h config.h
 
 rm -f intl/libintl.h
 # damn gettext should do that itself!
 if test "$USE_INCLUDED_LIBINTL" = "yes"; then
-	AC_MSG_NOTICE([creating link intl/libintl.h -> libgnuintl.h])
+	echo "configure: creating link intl/libintl.h -> libgnuintl.h"
 	ln -s libgnuintl.h intl/libintl.h
 fi
 
