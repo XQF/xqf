@@ -162,14 +162,14 @@ enum master_query_type {
  */
 struct player {
   char	*name;
+  char	*skin;
+  char	*model;
   int	time;
   short frags;
   short ping;
   unsigned char shirt;
   unsigned char pants;
   unsigned char flags;
-  char	*skin;
-  char	*model;
 };
 
 struct host {
@@ -184,47 +184,50 @@ struct host {
  * changes to this structure
  */
 struct server {
-  enum server_type type;
   struct host *host;
-  unsigned short port;
 
   char	*name;
   char	*map;
-  unsigned short maxplayers;
-  unsigned short curplayers;
-  unsigned short curbots;
-  unsigned short private_client; /** number of private clients */
-  short	ping;
-  short retries;
   char 	**info;
   char 	*game;	  /** pointer into info, do not free */
   char  *gametype; /** pointer into info, do not free */
   GSList *players;	/** GSList<struct player *>  */
 
-  char sv_os;         /** L = Linux, W = windows, M = Mac */
-	
 #ifdef USE_GEOIP
   int country_id;
 #endif
 
   unsigned flags;
 
-  unsigned char filters;
-  unsigned char flt_mask;
   unsigned flt_last;	/** time of the last filtering */
 
   time_t refreshed;
   time_t last_answer; /** time of last reply from server */
 
   int 	ref_count;
+
+  enum server_type type;
+  unsigned short port;
+
+  unsigned short maxplayers;
+  unsigned short curplayers;
+  unsigned short curbots;
+  unsigned short private_client; /** number of private clients */
+  short	ping;
+  short retries;
+
+  char sv_os;         /** L = Linux, W = windows, M = Mac */
+
+  unsigned char filters;
+  unsigned char flt_mask;
 };
 
 struct userver {
   char *hostname;
-  unsigned short port;
-  unsigned char type;	/* enum server_type type; */
   struct server *s;
   int 	ref_count;
+  unsigned short port;
+  unsigned char type;	/* enum server_type type; */
 };
 
 typedef struct {
