@@ -816,30 +816,25 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S http://www.gameaholic.com/servers/qspy-quake2 Gameaholic.Com",
   "ADD Q2S http://www.lithium.com/quake2/gamespy.txt Lithium",
 
-#ifdef QSTAT23
   "ADD Q3S master://master3.idsoftware.com id",
-  "ADD Q3S master://q3master.splatterworld.de Germany",
-  "ADD Q3S master://q3.golsyd.net.au Australia",
+//  "ADD Q3S master://q3master.splatterworld.de Germany",
+//  "ADD Q3S master://q3.golsyd.net.au Australia",
   "ADD Q3S master://q3master.barrysworld.com:27950 BarrysWorld",
-#endif
+  "ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 Gameaholic.com",
 
   "ADD SNS http://www.gameaholic.com/servers/qspy-sin Gameaholic.Com",
   "ADD SNS http://asp.planetquake.com/sinserverlist/servers.txt PlanetQuake",
 
-#ifdef QSTAT23
   "ADD HLS master://half-life.east.won.net WON East",
   "ADD HLS master://half-life.west.won.net WON West",
-#endif
 
   "ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin Gameaholic.Com",
   "ADD Q2S:KP http://www.ogn.org:6666 OGN",
 
   "ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 Gameaholic.Com",
 
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
   "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
   "ADD UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld",
-#endif
 
   "ADD T2S master://198.74.33.29:28002 NA West1",
   "ADD T2S master://64.94.105.141:27999 NA West2",
@@ -848,6 +843,8 @@ static char *builtin_masters_update_info[] = {
   "ADD T2S master://209.67.28..145:27999 NA East2",
 
   "ADD WOS master://wolf.idsoftware.com:27950 id",
+
+  "ADD STVEFS http://www.gameaholic.com/servers/qspy-startrekeliteforce Gameaholic.com",
 
   "ADD D3P master://gt.pxo.net:3445 PXO",
   "ADD D3P http://www.gameaholic.com/servers/qspy-descent3 gameaholic.com",

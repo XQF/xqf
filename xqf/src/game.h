@@ -60,6 +60,10 @@ struct game {
   GList * (*custom_cfgs) (char *dir, char *game);
   void (*save_info) (FILE *f, struct server *s);
 
+  char *arch_identifier;
+  enum CPU (*identify_cpu) (struct server *s, const char *versionstr);
+  enum OS (*identify_os) (struct server *s, char *versionstr);
+
   char *cmd;
   char *dir;
   char *real_dir;

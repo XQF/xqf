@@ -68,7 +68,7 @@ struct arch_stats {
 static const char *srv_headers[6] = {
   //The space behind up and down is to make the strings different from
   //those in flt-player.c because their meaning is different in german
-  N_("Servers"), N_("Up "), N_("T/O"), N_("Down "), N_("Info n/a"), N_("Players")
+  N_("Servers"), N_("Up "), N_("Timeout"), N_("Down "), N_("Info n/a"), N_("Players")
 };
 
 static const char *os_names[OS_NUM] = {
@@ -96,7 +96,7 @@ static GtkWidget *arch_notebook;
 static void server_stats_create (void) {
 
   srv_stats = g_malloc0 (sizeof (struct server_stats) * GAMES_TOTAL);
-  srv_archs  = g_malloc0 (sizeof (struct arch_stats) * 5);
+  srv_archs  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
 
   servers_count = 0;
   players_count = 0;
@@ -115,7 +115,7 @@ static void server_stats_destroy (void) {
 }
 
 
-static enum CPU identify_cpu (struct server *s, const char *versionstr) {
+enum CPU identify_cpu (struct server *s, const char *versionstr) {
   enum CPU cpu = CPU_UNKNOWN;
   char *str;
   
@@ -132,7 +132,7 @@ static enum CPU identify_cpu (struct server *s, const char *versionstr) {
   else if (strstr (str, "ppc"))
     cpu = CPU_PPC;
   else {
-    debug (3, "identify_cpu() -- [%s:%d] Unknown CPU: %s\n", 
+    debug (3, "identify_cpu() -- [%s %s:%d] Unknown CPU: %s\n", type2id(s->type), 
                                 inet_ntoa (s->host->ip), s->port, versionstr);
   }
   g_free(str);
@@ -140,7 +140,7 @@ static enum CPU identify_cpu (struct server *s, const char *versionstr) {
 }
 
 
-static enum OS identify_os (struct server *s, char *versionstr) {
+enum OS identify_os (struct server *s, char *versionstr) {
   enum OS os = OS_UNKNOWN;
   char *str;
   
@@ -157,13 +157,20 @@ static enum OS identify_os (struct server *s, char *versionstr) {
   else if (strstr (str, "macos"))
     os = OS_MACOS;
   else {
-    debug (3, "identify_os() -- [%s:%d] Unknown OS: %s\n", 
+    debug (3, "identify_os() -- [%s %s:%d] Unknown OS: %s\n", type2id(s->type),
                                 inet_ntoa (s->host->ip), s->port, versionstr);
   }
   g_free(str);
   return os;
 }
 
+enum OS t2_identify_os (struct server *s, char *versionstr)
+{
+  if (!strcmp(versionstr,"1"))
+    return OS_LINUX;
+
+  return OS_WINDOWS;
+}
 
 static void collect_statistics (void) {
   GSList *servers;
@@ -172,6 +179,7 @@ static void collect_statistics (void) {
   char **info;
   enum OS os;
   enum CPU cpu;
+  int countthisserver;
 
   servers = all_servers (); /* Free at end of this function */
 
@@ -179,6 +187,9 @@ static void collect_statistics (void) {
     for (tmp = servers; tmp; tmp = tmp->next) {
       s = (struct server *) tmp->data;
       info = s->info;
+      cpu = CPU_UNKNOWN;
+      os = OS_UNKNOWN;
+      countthisserver=0;
 
       servers_count++;
 
@@ -189,7 +200,10 @@ static void collect_statistics (void) {
 
       if (s->ping < MAX_PING) {
 	if (s->ping >= 0)
+	{
 	  srv_stats[s->type].ok++;
+	  countthisserver=1;
+	}
 	else
 	  srv_stats[s->type].na++;
       }
@@ -200,62 +214,33 @@ static void collect_statistics (void) {
 	  srv_stats[s->type].down++;
       }
 
-#ifdef QSTAT23
-      if (info && (s->type == Q2_SERVER || s->type == Q3_SERVER || s->type == WO_SERVER || s->type == KP_SERVER)) {
-#else
-      if (info && (s->type == Q2_SERVER)) {
-#endif 
+      if (info && games[s->type].arch_identifier)
+      {
 	while (info[0]) {
-	  if (g_strcasecmp (info[0], "version") == 0) {
+	  if (g_strcasecmp (info[0], games[s->type].arch_identifier) == 0)
+	  {
 	    if (!info[1])
 	      break;
 
-	    cpu = identify_cpu (s, info[1]); 
-	    os = identify_os (s, info[1]); 
+	    if (games[s->type].identify_cpu)
+	      cpu = games[s->type].identify_cpu(s, info[1]); 
+	    else
+	      cpu = CPU_UNKNOWN;
 
-	    switch (s->type) {
-
-	    case Q2_SERVER:
-	      srv_archs[0].oscpu[os][cpu]++;
-	      srv_archs[0].count++;
-	      break;
-
-
-#ifdef QSTAT23
-	    case Q3_SERVER:
-	      srv_archs[1].oscpu[os][cpu]++;
-	      srv_archs[1].count++;
-	      break;
-
-	    case WO_SERVER:
-	      srv_archs[2].oscpu[os][cpu]++;
-	      srv_archs[2].count++;
-	      break;
-#endif 
-	    case KP_SERVER:
-	      srv_archs[3].oscpu[os][cpu]++;
-	      srv_archs[3].count++;
-	      break;
-
-	    default:
-	      break;
-	    }
+	    if (games[s->type].identify_os)
+	      os = games[s->type].identify_os(s, info[1]); 
+	    else
+	      os = OS_UNKNOWN;
 
 	    break;
 	  }
 	  info += 2;
 	}
-      } else if (info && (s->type == HL_SERVER)) {
-        while (info[0]) {
-	  if (g_strcasecmp (info[0], "sv_os") == 0) {
-	    if (!info[1])
-	      break;
-	    cpu = CPU_UNKNOWN;
-	    os = identify_os (s, info[1]);
-	    srv_archs[4].oscpu[os][cpu]++;
-	    srv_archs[4].count++;
-	  }
-	  info += 2;
+
+	if(countthisserver)
+	{
+	  srv_archs[s->type].oscpu[os][cpu]++;
+	  srv_archs[s->type].count++;
 	}
       }
     }
@@ -445,7 +430,7 @@ static void arch_notebook_page (GtkWidget *notebook,
 static GtkWidget *archs_stats_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *alignment;
-  char *typestr;
+  int pagenum;
   enum server_type type = Q2_SERVER;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
@@ -459,23 +444,16 @@ static GtkWidget *archs_stats_page (void) {
   gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (arch_notebook), 4);
   gtk_container_add (GTK_CONTAINER (alignment), arch_notebook);
 
-  arch_notebook_page (arch_notebook, Q2_SERVER, &srv_archs[0]);
-#ifdef QSTAT23
-  arch_notebook_page (arch_notebook, Q3_SERVER, &srv_archs[1]);
-  arch_notebook_page (arch_notebook, WO_SERVER, &srv_archs[2]);
-#endif 
-  arch_notebook_page (arch_notebook, KP_SERVER, &srv_archs[3]);
-  arch_notebook_page (arch_notebook, HL_SERVER, &srv_archs[4]);
-#ifdef QSTAT23
-  typestr = config_get_string ("/" CONFIG_FILE "/Statistics/game");
-  if (typestr) {
-    type = id2type (typestr);
-    g_free (typestr);
+  for (type = 0; type < GAMES_TOTAL; type++)
+  {
+    if(games[type].arch_identifier)
+    {
+      arch_notebook_page (arch_notebook, type, &srv_archs[type]);
+    }
   }
+  pagenum = config_get_int_with_default ("/" CONFIG_FILE "/Statistics/game", 0);
 
-  gtk_notebook_set_page (GTK_NOTEBOOK (arch_notebook), 
-                                                  (type == Q2_SERVER)? 0 : 1);
-#endif 
+  gtk_notebook_set_page (GTK_NOTEBOOK (arch_notebook), pagenum );
 
   gtk_widget_show (arch_notebook);
   gtk_widget_show (alignment);
@@ -486,16 +464,11 @@ static GtkWidget *archs_stats_page (void) {
 
 
 static void grab_defaults (GtkWidget *w, gpointer data) {
-  enum server_type type;
+  int pagenum;
 
-#ifdef QSTAT23
-  type = (gtk_notebook_get_current_page (GTK_NOTEBOOK (arch_notebook)) == 0) ?
-                                                        Q2_SERVER : Q3_SERVER;
-#else
-  type = Q2_SERVER;
-#endif
+  pagenum = gtk_notebook_get_current_page (GTK_NOTEBOOK (arch_notebook));
 
-  config_set_string ("/" CONFIG_FILE "/Statistics/game", type2id (type));
+  config_set_int ("/" CONFIG_FILE "/Statistics/game", pagenum);
 
   config_set_string ("/" CONFIG_FILE "/Statistics/page", 
         (gtk_notebook_get_current_page (GTK_NOTEBOOK (stat_notebook)) == 0) ?

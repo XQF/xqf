@@ -28,7 +28,7 @@
 
 
 #ifndef HTTP_HELPER
-# define HTTP_HELPER		"wget -q -e robots=off -O -"
+# define HTTP_HELPER		"wget -t 1 -T 20 -q -e robots=off -O -"
 #endif
 
 
