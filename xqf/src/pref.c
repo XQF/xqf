@@ -67,6 +67,7 @@ int	show_default_port;
 
 int	default_terminate;
 int	default_iconify;
+int	default_launchinfo;
 int	default_save_lists;
 int 	default_save_srvinfo;
 int 	default_save_plrinfo;
@@ -113,6 +114,7 @@ static  GtkWidget *qw_bottom_color_button;
 
 static  GtkWidget *terminate_check_button;
 static  GtkWidget *iconify_check_button;
+static  GtkWidget *launchinfo_check_button;
 static  GtkWidget *save_lists_check_button;
 static  GtkWidget *save_srvinfo_check_button;
 static  GtkWidget *save_plrinfo_check_button;
@@ -356,6 +358,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (iconify_check_button)->active;
   if (i != default_iconify)
     config_set_bool ("iconify", default_iconify = i);
+
+  i = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
+  if (i != default_launchinfo)
+    config_set_bool ("launchinfo", default_launchinfo = i);
 
   i = GTK_TOGGLE_BUTTON (save_lists_check_button)->active;
   if (i != default_save_lists)
@@ -1713,6 +1719,12 @@ static void terminate_toggled_callback (GtkWidget *widget, gpointer data) {
   gtk_widget_set_sensitive (iconify_check_button, TRUE - val);
 }
 
+static void launchinfo_toggled_callback (GtkWidget *widget, gpointer data) {
+  int val;
+
+  val = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
+}
+
 
 static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
   int val;
@@ -1894,11 +1906,14 @@ static GtkWidget *appearance_options_page (void) {
   frame = gtk_frame_new ("When launching a game...");
   gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
+  vbox = gtk_vbox_new (FALSE, 2); 
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_container_add (GTK_CONTAINER (frame), vbox); 
+
   /* Terminate */
 
   hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
   terminate_check_button = gtk_check_button_new_with_label ("Terminate XQF");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (terminate_check_button),
@@ -1908,18 +1923,37 @@ static GtkWidget *appearance_options_page (void) {
   gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
   gtk_widget_show (terminate_check_button);
 
+  gtk_widget_show (hbox); 
+   
   /* Iconify */
 
   iconify_check_button = 
                        gtk_check_button_new_with_label ("Iconify XQF window");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (iconify_check_button), 
                                                              default_iconify);
-  gtk_box_pack_end (GTK_BOX (hbox), iconify_check_button, FALSE, FALSE, 0);
   if (default_terminate)
     gtk_widget_set_sensitive (iconify_check_button, FALSE);
   gtk_widget_show (iconify_check_button);
 
+  gtk_box_pack_end (GTK_BOX (hbox), iconify_check_button, FALSE, FALSE, 0);
+
+  /* Launchinfo */
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  launchinfo_check_button = gtk_check_button_new_with_label 
+      ("Create LaunchInfo.txt");
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button),
+                                                           default_launchinfo);
+  gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled",
+                          GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
+  gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
+  gtk_widget_show (launchinfo_check_button);
+
   gtk_widget_show (hbox);
+
+  gtk_widget_show (vbox); 
   gtk_widget_show (frame);
 
   /* Toolbar */
@@ -2272,6 +2306,7 @@ int prefs_load (void) {
   show_default_port =         config_get_bool ("show default port=true");
   default_terminate =         config_get_bool ("terminate=false");
   default_iconify =           config_get_bool ("iconify=false");
+  default_launchinfo =        config_get_bool ("launchinfo=false");
   default_save_lists =        config_get_bool ("save lists=true");
   default_save_srvinfo =      config_get_bool ("save srvinfo=true");
   default_save_plrinfo =      config_get_bool ("save players=false");
