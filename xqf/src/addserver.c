@@ -69,8 +69,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
   g_return_val_if_fail(type != NULL, NULL);
 
   enter_server_result = NULL;
-  server_type = type;
- 
+
   if(*type == UNKNOWN_SERVER)
   {
     char *typestr;
@@ -86,6 +85,8 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
       *type = 0; // Set to first game
     }
   }
+
+  server_type = type;
 
   window = dialog_create_modal_transient_window (_("Add Server"), 
                                                            TRUE, FALSE, NULL);
