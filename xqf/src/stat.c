@@ -49,6 +49,8 @@
 #include "dns.h"
 #include "debug.h"
 
+static char* qstatcfg = PACKAGE_DATA_DIR "/qstat.cfg";
+
 static void stat_next (struct stat_job *job);
 static void parse_qstat_record (struct stat_conn *conn);
 
@@ -968,6 +970,12 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     argv[argi++] = QSTAT_EXEC;
 
+    if( access(qstatcfg, R_OK) == 0 )
+    {
+	argv[argi++] = "-cfg";
+	argv[argi++] = qstatcfg;
+    }
+
     argv[argi++] = "-raw";
     argv[argi++] = buf_rawarg;
 
@@ -1013,6 +1021,9 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
   }	/*  if (m->url)  */
 
+  if(argi >= sizeof(argv))
+    xqf_error("FIXME: argi too big, stack corrupt");
+
   if(startprog)
   {
     if (get_debug_level() > 3){
@@ -1022,7 +1033,6 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 	fprintf (stderr, "%s ", *argptr++);
       fprintf (stderr, "\n");
     }
-
 
     conn = start_qstat (job, argv, 
 			      (GdkInputFunction) stat_master_input_callback, m);
@@ -1066,6 +1076,13 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   debug (6, "stat_open_conn_qstat() -- server list now %lx", job->servers );
 
   argv[argi++] = QSTAT_EXEC;
+  
+  if( access(qstatcfg, R_OK) == 0 )
+  {
+    argv[argi++] = "-cfg";
+    argv[argi++] = qstatcfg;
+  }
+
 
   argv[argi++] = "-maxsimultaneous";
   argv[argi++] = &buf[bufi];
@@ -1118,6 +1135,9 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   }
 
   argv[argi] = NULL;
+
+  if(argi >= sizeof(argv))
+    xqf_error("FIXME: argi too big, stack corrupt");
 
   conn = start_qstat (job, argv, 
                         (GdkInputFunction) stat_servers_input_callback, NULL);
