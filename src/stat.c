@@ -216,11 +216,20 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	host_ref (h);
 	if ((s = server_add (h, port, type)) != NULL) {
 
+// doesn't make any sense, doesn't it? -- ln
+#if 0
 	  if (conn->master && conn->master->type != UNKNOWN_SERVER && 
 	                                      s->type != conn->master->type) {
 	    s->type = conn->master->type;
 	    server_free_info (s);
 	  }
+#else
+	  if(s->type != type )
+	  {
+	    server_free_info(s);
+	    s->type = type;
+	  }
+#endif
 	  
 
 	  /* 

@@ -1,1 +1,1 @@
-EXTRA_DIST = xqfdocs.html
+EXTRA_DIST = xqfdocs.html PreLaunch.example

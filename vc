@@ -60,7 +60,12 @@ set +e
 echo $DATE $mailaddr >> $TMPFILE
 echo "- " >> $TMPFILE
 echo >> $TMPFILE
-cat ChangeLog >> $TMPFILE
+
+if [ "`head -n1 ChangeLog`" = "`head -n1 $TMPFILE`" ]; then
+	cat ChangeLog > $TMPFILE
+else
+	cat ChangeLog >> $TMPFILE
+fi
 cat $TMPFILE >> $TMPFILE2
 $EDITOR $TMPFILE
 
