@@ -744,7 +744,8 @@ enum server_type id2type (const char *id) {
   }
 
   // for those who used the cvs version before, can be removed after some time
-  if (g_strcasecmp (id, "UT2S" ) == 0)
+  // yes, ut2ds is is right, used to autoconvert to ut2s
+  if (g_strcasecmp (id, "UT2DS" ) == 0)
   {
     return UT2_SERVER;
   }
