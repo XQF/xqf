@@ -2030,11 +2030,11 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
       add_custom_args_defaults2("SFTeamDM","-ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER, data);
       break;
 
-/* rocketarena 1.6 comes as qvm, so this is no longer needed
-    case Q3_SERVER:
-      add_custom_args_defaults2("arena","+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0",Q3_SERVER, data);
+    case UT2_SERVER:
+      add_custom_args_defaults2("DB_DeathBall",
+	      "-USERLOGO=dbsplash.bmp -INI=DeathBall.ini -USERINI=DBUser.ini",UT2_SERVER, data);
       break;
-*/
+
     default:
       dialog_ok (NULL, _("There are no defaults for this game"));
       break;
