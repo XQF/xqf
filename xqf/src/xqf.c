@@ -1629,10 +1629,11 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	     "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n\n"
 	     "Contributors:\n\n"
 	     "Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
-	     "Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolf, GameSpy master support\n"
+	     "Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolfenstien, GameSpy master support\n"
 	     "Jordi Mallach <jordi@sindominio.net>: Internationalization (i18n) & Spanish traslation\n"
-	     "Ludwig Nussell <ludwig@nussel@gmx.de>: German translation & Quake3 fixes\n\n"
-	     "http://www.linuxgames.com/xqf/"), XQF_VERSION);
+	     "Ludwig Nussell <ludwig@nussel@gmx.de>: German translation, i18n & Quake3 fixes\n\n"
+	     "http://www.linuxgames.com/xqf/\n"
+	     "http://sourceforge.net/projects/xqf/"), XQF_VERSION);
 }
 
 
