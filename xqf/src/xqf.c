@@ -2511,36 +2511,6 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void about_dialog (GtkWidget *widget, gpointer data) {
-  char *intro = _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n");
-  char *version = g_strdup_printf(_("Version %s\n\n"),XQF_VERSION);
-
-  /* translators can use the copyright symbol instead of (C) */
-  char *author = _("Copyright (C) 1998-2002 Roman Pozlevich <roma@botik.ru>\n\n");
-  char *urls = "http://www.linuxgames.com/xqf\n"
-		"http://sourceforge.net/projects/xqf\n\n";
-  char *contrib1 = _("Significant Contributors:");
-  char *contrib2 = "\n\n"
-	"Bill Adams <webmaster@evil.inetarena.com>\n"
-	"Alex Burger <alex_b@users.sourceforge.net>\n"
-	"Jordi Mallach <jordi@sindominio.net>\n"
-	"Ludwig Nussel <l-n@users.sourceforge.net>\n\n";
-  char *contrib3 = _("Other Contributors:");
-  char *contrib4 = "\n\n"
-	"Jochen Baier <email@jochen-baier.de>\n"
-	"Luca Camillo <kamy@tutorials.it>\n\n";
-  char *bugs1 = _("Bug reports and feature requests:");
-  char *bugs2 = "\n\nhttp://sourceforge.net/projects/xqf\n"
-		"xqf-developer@lists.sourceforge.net\n";
-
-  char *abouttext = g_strconcat(intro,version,author,urls,
-	     contrib1,contrib2,contrib3,contrib4,
-	     bugs1,bugs2,NULL);
-  dialog_ok (_("About XQF"), "%s", abouttext);
-  g_free(version);
-  g_free(abouttext);
-}
-
 
 struct __menuitem {
   char *label;

@@ -34,4 +34,6 @@ extern	char *enter_string_dialog (int visible, char *fmt, ...);
 extern	char *enter_string_with_option_dialog (
                       int visible, char *optstr, int *optval, char *fmt, ...);
 
+void about_dialog (GtkWidget *widget, gpointer data);
+
 #endif /* __DIALOGS_H__ */
