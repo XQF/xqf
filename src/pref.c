@@ -4346,16 +4346,19 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
   
   ptr = strrchr(temp, '/');
   
-  if (!ptr) {    // no path
+  printf("path:%s\n",temp);
+  
+  if (!ptr) {    // no path, not likely
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), temp);
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), "");
   }
   else {
     dir = g_strndup(temp, ptr-temp+1);
     file = g_strdup(ptr+1);
-    
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), file);
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
+    if (*file) {  // Have to select a file! 
+      gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), file);
+      gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
+    }
   }
 
   if (temp)
