@@ -5,7 +5,7 @@
 
 AC_INIT(src/xqf.c)
 
-AM_INIT_AUTOMAKE(xqf, 0.9.10)
+AM_INIT_AUTOMAKE(xqf, 0.9.10.1)
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
