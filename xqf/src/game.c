@@ -567,7 +567,7 @@ struct game games[] = {
     UT2_SERVER,
     GAME_CONNECT,
     "UT 2003",
-    7787,
+    UT2_DEFAULT_PORT,
     0,
     "UT2S",
     "UT2S",
