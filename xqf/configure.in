@@ -77,8 +77,8 @@ dnl ripped from physfs package
 dnl AC_ARG_ENABLE(readline,
 dnl    AC_HELP_STRING([--enable-externalrcon],[compile external rcon program (default=yes)])
 dnl    , ,enable_rcon=yes)
-AC_ARG_ENABLE(externalrcon,[  --enable-externalrcon   compile external rcon program (default=yes)],,enable_rcon=yes)
-if test x$enable_rcon = xyes; then
+AC_ARG_ENABLE(externalrcon,[  --enable-externalrcon   compile external rcon program (default=no)])
+if test x$enable_externalrcon = xyes; then
   AC_CHECK_HEADER(readline/readline.h, have_readline_hdr=yes)
   AC_CHECK_LIB(readline, readline, have_readline_lib=yes, , -lncurses )
   AC_CHECK_HEADER(readline/history.h, have_history_hdr=yes)
