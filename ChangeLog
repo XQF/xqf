@@ -1,3 +1,8 @@
+Apr 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix keyboard focus in server list
+- don't allow double click on map column if game supports map preview,
+  otherwise mouse would be grabbed and not available in other windows
+
 Apr 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Display team of player for wolf and et
 
