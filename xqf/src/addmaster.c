@@ -29,13 +29,6 @@
 #include "source.h"
 #include "addmaster.h"
 
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
 static struct history *master_history_addr = NULL;
 static struct history *master_history_name = NULL;
 

@@ -72,7 +72,9 @@ struct arch_stats {
 
 
 static const char *srv_headers[6] = {
-  N_("Servers"), N_("Up"), N_("T/O"), N_("Down"), N_("Info n/a"), N_("Players")
+  //The space behind up and down is to make the strings different from
+  //those in flt-player.c because their meaning is different in german
+  N_("Servers"), N_("Up "), N_("T/O"), N_("Down "), N_("Info n/a"), N_("Players")
 };
 
 static const char *os_names[OS_NUM] = {

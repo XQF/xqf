@@ -22,7 +22,6 @@
 
 #include <glib.h>
 
-
 struct config_file {
   char *filename;
   GList *sections;

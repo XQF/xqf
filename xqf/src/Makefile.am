@@ -1,5 +1,7 @@
+SUBDIRS = xpm
+
 localedir = $(datadir)/locale
-INCLUDES = -Iintl -DLOCALEDIR=\"$(localedir)\" -I@includedir@ @GTK_CFLAGS@
+INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\" -I@includedir@ @GTK_CFLAGS@
 CFLAGS = @CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
 
 bin_PROGRAMS = xqf
@@ -40,3 +42,38 @@ xqf.c \
 xqf-ui.c \
 xutils.c \
 zipped.c \
+addmaster.h \
+addserver.h \
+config.h \
+debug.h \
+dialogs.h \
+dns.h \
+filter.h \
+flt-player.h \
+game.h \
+history.h \
+host.h \
+launch.h \
+menus.h \
+pixmaps.h \
+pref.h \
+psearch.h \
+quake2_pal.h \
+quake_pal.h \
+rc.h \
+rcon.h \
+server.h \
+skin.h \
+skin_pcx.h \
+sort.h \
+source.h \
+srv-info.h \
+srv-list.h \
+srv-prop.h \
+stat.h \
+statistics.h \
+utils.h \
+xqf-ui.h \
+xqf.h \
+xutils.h \
+zipped.h

@@ -331,25 +331,26 @@ void set_server_filter_menu_list_text( void ){
 
     if( i == 0 ){
       if( current_server_filter == i )
-	sprintf( buf, "None <--", i );
+	//server filter
+	snprintf( buf, 64, _("None <--"), i );
       else 
-	sprintf( buf, "None", i );
+	snprintf( buf, 64, _("None"), i );
       
     } else {
       if( server_filters[i].filter_name                 &&
 	  strlen( server_filters[i].filter_name ) ){
 	
 	if( current_server_filter == i )
-	  sprintf( buf, "%s <--", server_filters[i].filter_name );
+	  snprintf( buf, 64, "%s <--", server_filters[i].filter_name );
 	else 
-	  sprintf( buf, "%s", server_filters[i].filter_name );
+	  snprintf( buf, 64, "%s", server_filters[i].filter_name );
 	
       } else {
 	
 	if( current_server_filter == i )
-	  sprintf( buf, "Filter %d <--", i );
+	  snprintf( buf, 64, _("Filter %d <--"), i );
 	else 
-	  sprintf( buf, "Filter %d", i );
+	  snprintf( buf, 64, _("Filter %d"), i );
 	
       }
     }
@@ -367,11 +368,11 @@ void set_server_filter_menu_list_text( void ){
      -- Add code to indicate if the filter button is checked.
    */
   if( current_server_filter == 0 ){
-    sprintf( status_buf, "No Server Filter Active" );
+    snprintf( status_buf, 64, _("No Server Filter Active"));
   } else if( server_filters[current_server_filter].filter_name ){
-    sprintf( status_buf, "Server Filter: %s", server_filters[current_server_filter].filter_name );
+    snprintf( status_buf, 64, _("Server Filter: %s"), server_filters[current_server_filter].filter_name );
   } else {
-    sprintf( status_buf, "Server Filter: %d", current_server_filter );
+    snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
   }
   
   print_status (main_filter_status_bar, status_buf); 

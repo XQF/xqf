@@ -23,7 +23,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "menus.h"
-
+#include "gnuconfig.h"
 
 static void create_menu_recursive (GtkWidget *menu, 
 				   const struct menuitem *items, 
@@ -95,7 +95,7 @@ static void create_menu_recursive (GtkWidget *menu,
 			      "GtkMisc::xalign", 0.0,
 			      NULL);
 
-      ac_key = gtk_label_parse_uline (GTK_LABEL (label), items->label);
+      ac_key = gtk_label_parse_uline (GTK_LABEL (label), _(items->label));
       
       if (accel_group && ac_key != GDK_VoidSymbol) {
 	if (GTK_IS_MENU_BAR (menu)) {
