@@ -1169,7 +1169,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   }
   else {
     
-    if (m->master_type!=MASTER_LAN && !games[m->type].qstat_master_option)
+    if (m->master_type!=MASTER_LAN && !master_qstat_option(m))
       return NULL;
 
     argv[argi++] = QSTAT_EXEC;
@@ -1203,11 +1203,11 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       char* masterprotocol = g_datalist_get_data(&games[m->type].games_data,"masterprotocol");
 
       if(masterprotocol)
-	arg_type = g_strdup_printf("%s,%s,outfile", games[m->type].qstat_master_option,masterprotocol);
+	arg_type = g_strdup_printf("%s,%s,outfile", master_qstat_option(m),masterprotocol);
       else
       {
 	xqf_warning("GAME_QUAKE3_MASTERPROTOCOL flag set, but no protocol specified");
-	arg_type = g_strdup_printf("%s,outfile", games[m->type].qstat_master_option);
+	arg_type = g_strdup_printf("%s,outfile", master_qstat_option(m));
       }
     }
     else if( m->type == HL_SERVER && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
@@ -1222,7 +1222,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       }
 
       arg_type = g_strconcat(
-	  games[m->type].qstat_master_option,
+	  master_qstat_option(m),
 	  ",outfile",
 	  (filter->game_contains&&*filter->game_contains)?",game=":"",
 	  (filter->game_contains&&*filter->game_contains)?filter->game_contains:"",
@@ -1236,7 +1236,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     }
     else
     {
-      arg_type = g_strdup_printf ("%s,outfile", games[m->type].qstat_master_option);
+      arg_type = g_strdup_printf ("%s,outfile", master_qstat_option(m));
     }
 
     

@@ -237,7 +237,13 @@ struct master {
   GSList *masters;
   
   enum master_query_type master_type;
+
+  /** private */
+  char* _qstat_master_option; // optional override from games[type].qstat_master_option
 };
+
+char* master_qstat_option(struct master* m);
+void master_set_qstat_option(struct master* m, const char* opt);
 
 extern	time_t xqf_start_time;
 extern char* xqf_PACKAGE_DATA_DIR;

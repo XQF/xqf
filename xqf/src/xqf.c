@@ -3663,6 +3663,7 @@ static void cmdlinehelp()
 
 static char* cmdline_add_server = NULL;
 static gboolean cmdline_launch = FALSE;
+static gboolean cmdline_newversion = FALSE;
 
 // must always return FALSE to stop g_timeout
 gboolean check_cmdline_launch(gpointer nothing)
@@ -3735,6 +3736,7 @@ static struct option long_options[] =
     {"dontlaunch", 0, 0, 128},
     {"version", 0, 0, 'v'},
     {"help", 0, 0, 'h'},
+    {"newversion", 0, 0, 129},
     {0, 0, 0, 0}
 };
 
@@ -3772,6 +3774,9 @@ static void parse_commandline(int argc, char* argv[])
 		break;
 	    case 128:
 		dontlaunch = TRUE;
+		break;
+	    case 129:
+		cmdline_newversion = TRUE;
 		break;
 	    case '?':
 	    case ':':
@@ -3851,7 +3856,7 @@ int main (int argc, char *argv[]) {
   init_games();
 
   config_set_base_dir (user_rcdir);
-  newversion = prefs_load ();
+  newversion = prefs_load () | cmdline_newversion;
   
 #ifdef USE_GEOIP
   geoip_init();

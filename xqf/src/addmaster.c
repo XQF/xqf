@@ -112,7 +112,7 @@ static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window)
     return;
   }
 
-  master_to_add = add_master (master_addr_result, master_name_result, master_type, TRUE, FALSE);
+  master_to_add = add_master (master_addr_result, master_name_result, master_type, NULL, TRUE, FALSE);
   if(!master_to_add)
   {
     dialog_ok (NULL, _("Master address \"%s\" is not valid."),
