@@ -130,6 +130,14 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   struct userver *us;
   struct host *h;
 
+#warning TODO parse function for savage
+  if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP)
+  {
+    xqf_error("savage not yet implemented");
+    conn->master->state = SOURCE_ERROR;
+    return FALSE;
+  }
+
   debug (6, "parse_master_output(%s,%p)",str,conn);
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 

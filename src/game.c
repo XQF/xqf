@@ -57,9 +57,8 @@ static struct player *q3_parse_player(char *tokens[], int num, struct server *s)
 static struct player *t2_parse_player(char *tokens[], int num, struct server *s);
 static struct player *hl_parse_player(char *tokens[], int num, struct server *s);
 static struct player *un_parse_player(char *tokens[], int num, struct server *s);
-static void un_analyze_serverinfo (struct server *s);
 static struct player *descent3_parse_player(char *tokens[], int num, struct server *s);
-static void descent3_analyze_serverinfo (struct server *s);
+static struct player *savage_parse_player (char *token[], int n, struct server *s);
 
 static void quake_parse_server (char *tokens[], int num, struct server *s);
 
@@ -68,6 +67,9 @@ static void q2_analyze_serverinfo (struct server *s);
 static void hl_analyze_serverinfo (struct server *s);
 static void t2_analyze_serverinfo (struct server *s);
 static void q3_analyze_serverinfo (struct server *s);
+static void un_analyze_serverinfo (struct server *s);
+static void descent3_analyze_serverinfo (struct server *s);
+static void savage_analyze_serverinfo (struct server *s);
 
 static int quake_config_is_valid (struct server *s);
 static int quake3_config_is_valid (struct server *s);
@@ -86,6 +88,7 @@ static int t2_exec (const struct condef *con, int forkit);
 static int gamespy_exec (const struct condef *con, int forkit);
 static int exec_generic (const struct condef *con, int forkit);
 static int ssam_exec (const struct condef *con, int forkit);
+static int savage_exec (const struct condef *con, int forkit);
 
 static GList *q1_custom_cfgs (char *dir, char *game);
 static GList *qw_custom_cfgs (char *dir, char *game);
@@ -859,6 +862,42 @@ struct game games[] = {
     MOHAA_SERVER,
   },
 
+  {
+    SAS_SERVER,			// server_type
+    GAME_CONNECT,		// flags
+    "Savage",	// name
+    11235,		// default_port
+    0,				// default_master_port
+    "SAS",			// id
+    "SAS",			// qstat_str
+    "-sas",			// qstat_option
+    NULL,			// qstat_master_option
+    &savage_pix,		// pixmap
+
+    savage_parse_player,		// parse_player
+    quake_parse_server,		// parse_server
+    savage_analyze_serverinfo,	// analyze_serverinfo
+    config_is_valid_generic,	// config_is_valid
+    NULL,			// write_config
+    savage_exec,		// exec_client
+    NULL,			// custom_cfgs
+    quake_save_info,		// save_info
+    NULL,		// init_maps
+    NULL,		// has_map
+    NULL,		// get_mapshot
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
+  },
+
+
   // any game using the gamespy protocol
   {
     GPS_SERVER,			// server_type
@@ -1028,6 +1067,7 @@ void init_games()
   game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
   game_set_attribute(SSAMSE_SERVER,"suggest_commands",strdup("ssamtse"));
   game_set_attribute(MOHAA_SERVER,"suggest_commands",strdup("mohaa"));
+  game_set_attribute(SAS_SERVER,"suggest_commands",strdup("savage"));
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
    				   ("Note:  Soldier of Fortune will not connect to a server correctly\n"\
@@ -1355,6 +1395,12 @@ static struct player *un_parse_player (char *token[], int n, struct server *s) {
   return player;
 }
 
+static struct player *savage_parse_player (char *token[], int n, struct server *s)
+{
+#warning TODO
+    return NULL;
+}
+
 static void quake_parse_server (char *token[], int n, struct server *server) {
   /*
     This does both Quake (?) and Unreal servers
@@ -1487,6 +1533,11 @@ static void un_analyze_serverinfo (struct server *s) {
 	break;
     }
   }
+}
+
+static void savage_analyze_serverinfo (struct server *s)
+{
+#warning TODO
 }
 
 static void descent3_analyze_serverinfo (struct server *s) {
@@ -3324,6 +3375,11 @@ static int ut_exec (const struct condef *con, int forkit) {
   return retval;
 }
 
+static int savage_exec(const struct condef *con, int forkit)
+{
+#warning TODO
+  return 0;
+}
 
 
 // this one just passes the ip address as first parameter
