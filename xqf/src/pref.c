@@ -3802,6 +3802,14 @@ void play_sound_pref (GtkWidget *sound_entry) {
     g_free(temp);
 }
 
+// create a button with label "Test", set padding to make it look nice
+inline GtkWidget* sound_test_button_new()
+{
+  // Translator: sound test button
+  GtkWidget* button = gtk_button_new_with_label (_("Test"));
+  gtk_misc_set_padding(GTK_MISC(GTK_BIN(button)->child),4,0);
+  return button;
+}
 
 static GtkWidget *sound_options_page (void) {
   GtkWidget *page_vbox;
@@ -3904,7 +3912,7 @@ static GtkWidget *sound_options_page (void) {
   gtk_widget_show (sound_xqf_start_file_dialog_button);
 
   // Test button
-  sound_xqf_start_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_xqf_start_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_xqf_start_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_xqf_start_entry);
   gtk_table_attach (GTK_TABLE (table), sound_xqf_start_file_test_button, 3, 4, 0, 1, 0, 0, 0, 0);
@@ -3936,7 +3944,7 @@ static GtkWidget *sound_options_page (void) {
   gtk_widget_show (sound_xqf_quit_file_dialog_button);
 
   // Test button
-  sound_xqf_quit_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_xqf_quit_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_xqf_quit_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_xqf_quit_entry);
   gtk_table_attach (GTK_TABLE (table), sound_xqf_quit_file_test_button, 3, 4, 1, 2, 0, 0, 0, 0);
@@ -3969,7 +3977,7 @@ static GtkWidget *sound_options_page (void) {
 
 
   // Test button
-  sound_update_done_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_update_done_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_update_done_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_update_done_entry);
   gtk_table_attach (GTK_TABLE (table), sound_update_done_file_test_button, 3, 4, 2, 3, 0, 0, 0, 0);
@@ -4002,7 +4010,7 @@ static GtkWidget *sound_options_page (void) {
 
 
   // Test button
-  sound_refresh_done_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_refresh_done_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_refresh_done_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_refresh_done_entry);
   gtk_table_attach (GTK_TABLE (table), sound_refresh_done_file_test_button, 3, 4, 3, 4, 0, 0, 0, 0);
@@ -4035,7 +4043,7 @@ static GtkWidget *sound_options_page (void) {
 
 
   // Test button
-  sound_stop_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_stop_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_stop_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_stop_entry);
   gtk_table_attach (GTK_TABLE (table), sound_stop_file_test_button, 3, 4, 4, 5, 0, 0, 0, 0);
@@ -4068,7 +4076,7 @@ static GtkWidget *sound_options_page (void) {
 
 
   // Test button
-  sound_server_connect_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_server_connect_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_server_connect_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_server_connect_entry);
   gtk_table_attach (GTK_TABLE (table), sound_server_connect_file_test_button, 3, 4, 5, 6, 0, 0, 0, 0);
@@ -4101,7 +4109,7 @@ static GtkWidget *sound_options_page (void) {
 
 
   // Test button
-  sound_redial_success_file_test_button = gtk_button_new_with_label (_(" Test "));
+  sound_redial_success_file_test_button = sound_test_button_new();
   gtk_signal_connect_object (GTK_OBJECT (sound_redial_success_file_test_button), "clicked",
                     GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_redial_success_entry);
   gtk_table_attach (GTK_TABLE (table), sound_redial_success_file_test_button, 3, 4, 6, 7, 0, 0, 0, 0);
