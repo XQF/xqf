@@ -119,7 +119,6 @@ static gboolean quake_has_map(struct server* s);
 static void q3_init_maps(enum server_type);
 static size_t q3_get_mapshot(struct server* s, guchar** buf);
 
-static void doom3_cmd_or_dir_changed(struct game* g);
 static void doom3_init_maps(enum server_type);
 static size_t doom3_get_mapshot(struct server* s, guchar** buf);
 static gboolean doom3_has_map(struct server* s);
@@ -153,8 +152,6 @@ static struct quake_private mohaa_private;
 static struct quake_private cod_private;
 static struct quake_private jk3_private;
 static struct quake_private doom3_private;
-
-static void ut2004_cmd_or_dir_changed(struct game* g);
 
 #include "games.c"
 
@@ -3551,76 +3548,6 @@ static gboolean unreal_has_map(struct server* s)
     return FALSE;
 
   return ut_lookup_map(hash,s->map);
-}
-
-static void doom3_cmd_or_dir_changed(struct game* g)
-{
-  FILE* f;
-  char* verinfo;
-  const char* attrproto;
-  char line[64];
-
-  debug(3, "cmd: %s, dir: %s", g->cmd, g->real_dir);
-
-  attrproto = game_get_attribute(g->type,"masterprotocol");
-
-  verinfo = file_in_dir (g->real_dir, "version.info");
-  f = fopen(verinfo, "r");
-  if(!f)
-    goto out;
-
-  if(!fgets(line, sizeof(line), f))
-    goto out;
-
-  if(!fgets(line, sizeof(line), f))
-    goto out;
-
-  debug(3, "detected doom3 protocol version %s", line);
-
-  game_set_attribute(g->type, "_masterprotocol", g_strdup(line));
-
-out:
-  if(f) fclose(f);
-  g_free(verinfo);
-}
-
-static void ut2004_cmd_or_dir_changed(struct game* g)
-{
-  FILE* f;
-  char* keyfile = NULL;
-
-  debug(2, "cmd: %s, dir: %s, home: %s", g->cmd, g->real_dir, g->real_home);
-
-  keyfile = file_in_dir (g->real_home, "System/cdkey");
-  if(keyfile)
-  {
-    f = fopen(keyfile, "r");
-    if(!f)
-    {
-      g_free(keyfile);
-      keyfile = NULL;
-    }
-  }
-
-  if(!keyfile)
-  {
-    if(f) fclose(f);
-    keyfile = file_in_dir (g->real_dir, "System/cdkey");
-    if(keyfile)
-    {
-      f = fopen(keyfile, "r");
-      if(!f)
-      {
-	g_free(keyfile);
-	keyfile = NULL;
-      }
-    }
-  }
-
-  if(keyfile || (!keyfile && game_get_attribute(g->type,"cdkey")))
-    game_set_attribute(g->type, "cdkey", keyfile);
-
-  if(f) fclose(f);
 }
 
 // vim: sw=2

@@ -1,3 +1,7 @@
+Jan 12, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- split get_new_defaults into game specific functions
+- fix doom3 protocol detection (#1092165)
+
 Jan 11, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix crashes due to wrong return type of callbacks (#1098910, patch by Jochen
   Baier)
