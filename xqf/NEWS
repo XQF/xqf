@@ -12,8 +12,8 @@ o Serious Sam support (requires SMS gametype via ~/.qstatrc).  Does not
   currently support any masters.
 o Fixed -game parameter for Half-Life
 o RTCW voteflags decoded in properties pane
-o Visual marker in Map column to show if you have the listed map installed
-  on your comptuer.  (Q3, RTCW, UT, Rune, UT2) 
+o Visual marker in the map column to show if you have the listed map installed
+  on your computer.  (Q3, RTCW, UT, Rune, UT2) 
 
 XQF 0.9.10 -- November 16, 2002
 ~~~~~~~~~~
