@@ -1,3 +1,7 @@
+May 07, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- Pass RCON password on command line when launching Half-Life. Thanks Andreas
+  Schneider for the idea. Needs to be implemented for other games too.
+
 May 02, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - update German translation
 - remove custom args for Rocket Arena as 1.6 does not need them anymore
