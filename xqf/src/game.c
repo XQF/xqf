@@ -67,6 +67,7 @@ static void q2_analyze_serverinfo (struct server *s);
 static void hl_analyze_serverinfo (struct server *s);
 static void t2_analyze_serverinfo (struct server *s);
 static void q3_analyze_serverinfo (struct server *s);
+static void doom3_analyze_serverinfo (struct server *s);
 static void un_analyze_serverinfo (struct server *s);
 static void bf1942_analyze_serverinfo (struct server *s);
 static void descent3_analyze_serverinfo (struct server *s);
@@ -1435,8 +1436,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 	strcmp (*info_ptr, "g_gametypestring") == 0) {
 	s->gametype = info_ptr[1];
     }
-    else if (strcmp (*info_ptr, "g_needpass") == 0
-	|| strcmp (*info_ptr, "si_usepass") == 0) {
+    else if (strcmp (*info_ptr, "g_needpass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
       if ((n & 1) != 0)
 	s->flags |= SERVER_PASSWORD;
@@ -1490,27 +1490,54 @@ static void q3_analyze_serverinfo (struct server *s) {
     }
 
   }
-
-#if 0 // not possible to filter for baseq3 otherwise
-  // unset game if it's no mod
-  if ( s->game )
-  {
-    if ( s->type == Q3_SERVER && !strcasecmp (s->game, "baseq3"))
-    {
-      s->game=NULL;
-    }
-    else if ( s->type == WO_SERVER && !strcasecmp (s->game, "main"))
-    {
-      s->game=NULL;
-    }
-    else if ( s->type == EF_SERVER && !strcasecmp (s->game, "baseEF"))
-    {
-      s->game=NULL;
-    }
-  }
-#endif
 }
 
+static void doom3_analyze_serverinfo (struct server *s) {
+  char **info_ptr;
+  char *fs_game=NULL;
+
+  /* Clear out the flags */
+  s->flags = 0;
+
+  if ((games[s->type].flags & GAME_SPECTATE) != 0)
+    s->flags |= SERVER_SPECTATE;
+
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+  {
+ 
+    if (strcmp (*info_ptr, "fs_game") == 0) {
+	fs_game  = info_ptr[1];
+    }
+
+    else if (strcmp (*info_ptr, "si_version" ) == 0) {
+      if (strstr (info_ptr[1], "linux")) {
+	s->sv_os = 'L';
+      } else if (strstr (info_ptr[1], "win" )) {
+	s->sv_os = 'W';
+      } else if (strstr (info_ptr[1], "Mac" )) {
+	s->sv_os = 'M';
+      } else {
+	s->sv_os = '?';
+      }
+    }
+    
+    else if (!s->gametype && strcmp (*info_ptr, "si_gameType") == 0) {
+	s->gametype = info_ptr[1];
+    }
+    else if (strcmp (*info_ptr, "si_usepass") == 0) {
+      int n = atoi (info_ptr[1]);
+      if ((n & 1) != 0)
+	s->flags |= SERVER_PASSWORD;
+      if ((n & 2) != 0)
+	s->flags |= SERVER_SP_PASSWORD;
+    }
+  }
+
+  if(fs_game)
+  {
+    s->game=fs_game;
+  }
+}
 
 static int quake_config_is_valid (struct server *s) {
   struct stat stat_buf;

@@ -210,7 +210,7 @@ struct game games[] = {
     icon                : "doom3_xpm",
     parse_player        : q3_parse_player,
     parse_server        : quake_parse_server,
-    analyze_serverinfo  : q3_analyze_serverinfo,
+    analyze_serverinfo  : doom3_analyze_serverinfo,
     config_is_valid     : config_is_valid_generic,
     exec_client         : q3_exec,
     custom_cfgs         : quake_custom_cfgs,
