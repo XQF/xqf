@@ -1,4 +1,9 @@
 Oct 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- added gametype strings for TribalCTF and Threewave.
+  Unfortunately TribalCTF servers modify their gamename variable,
+  so this is not really useful yet.
+
+Oct 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added gameaholic.com rune server list
 - game and gametype are now displayed in LaunchInfo.txt
 
