@@ -94,10 +94,12 @@ void findq3maps_dir(GHashTable* maphash, const char* startdir)
 	int level;
     } DirStackEntry;
 
+    DirStackEntry* dse;
+    
     if(!startdir || !maphash)
 	return;
 
-    DirStackEntry* dse = g_new0(DirStackEntry,1);
+    dse = g_new0(DirStackEntry,1);
     dse->name=g_strdup(startdir);
 
     dirstack = g_slist_prepend(dirstack,dse);
