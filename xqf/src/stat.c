@@ -289,9 +289,10 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
 
     res = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
     if (res < 0) {
-      if (errno == EAGAIN || errno == EWOULDBLOCK)
+      if (errno == EAGAIN || errno == EWOULDBLOCK) {
 	debug_decrease_indent();
 	return;
+      }
       failed ("read", NULL);
       stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
       stat_update_masters (job);

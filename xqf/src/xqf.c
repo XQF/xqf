@@ -86,6 +86,8 @@
 #include "country-filter.h"
 #endif
 
+static const char required_qstat_version[]="2.4e";
+
 time_t xqf_start_time;
 
 GtkWidget *main_window = NULL;
@@ -181,7 +183,7 @@ static GtkWidget *connect_button = NULL;
 static GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
 
 /*filter widgtet for toolbar*/
-static  GtkWidget *filter_option_menu_toolbar;
+//static  GtkWidget *filter_option_menu_toolbar;
 
 static GtkWidget *player_skin_popup = NULL;
 static GtkWidget *player_skin_popup_preview = NULL;
@@ -200,7 +202,7 @@ static void launch_close_handler_part2(struct condef *con);
 /** build server filter menu for menubar
  */
 static GtkWidget* create_filter_menu();
-static GtkWidget* create_filter_menu_toolbar();
+//static GtkWidget* create_filter_menu_toolbar();
 //static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
 static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
 
@@ -276,6 +278,8 @@ int compare_qstat_version ( const char* have, const char* expected )
   return 1;
 }
 
+// TODO: code is generic enough to move into separate file
+
 int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 {
   int pipefds[2];
@@ -284,13 +288,13 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 
   if (pipe (pipefds) < 0)
   {
-    xqf_error("start_prog_and_return_fd -- error creating pipe: %s",strerror(errno));
+    xqf_error("error creating pipe: %s",strerror(errno));
     return -1;
   }
   *pid = fork();
   if (*pid < (pid_t) 0)
   {
-    xqf_error("start_prog_and_return_fd -- fork failed: %s",strerror(errno));
+    xqf_error("fork failed: %s",strerror(errno));
     return -1;
   }
   
@@ -303,11 +307,11 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 //    dup2 (pipefds[1], 2);
     close (pipefds[1]);
     
-    debug(3,"start_prog_and_return_fd -- child about to exec %s", argv[0]);
+    debug(3,"child about to exec %s", argv[0]);
 
     execvp (argv[0], argv);
 
-    xqf_error("start_prog_and_return_fd -- failed to exec %s: %s",argv[0],strerror(errno));
+    xqf_error("failed to exec %s: %s",argv[0],strerror(errno));
 
     _exit (1);
   }
@@ -317,95 +321,169 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
   return pipefds[0];
 }
 
-int check_qstat_version( const char* version )
+struct qstat_conn
 {
+    pid_t pid;
+    int fd;
+    gint tag; // for gdkinput
+    char* buf;
+    size_t bufsize;
+    size_t pos;
+    unsigned linenr;
 
-  // qstat output has to fit in here
-  enum { QSTAT_BUFFER_SIZE = 4096 };
-  char buffer[QSTAT_BUFFER_SIZE] = {0};
-  int read_ret;
-  int fd;
-  pid_t pid;
+    // contains the \0 terminated line without \n when linefunc is called
+    const char* current_line;
+
+    // function to be called when a complete line was received
+    void (*linefunc)(struct qstat_conn* conn);
+
+    // call gtk_main_quit
+    gboolean do_quit;
+
+    int result;
+};
+
+void qstat_version_string(struct qstat_conn* conn)
+{
+    static const char search_for[] = "qstat version";
+    const char *ptr, *version_end;
+    char* found_version = NULL;
+
+    if(!conn) return;
+
+    // we already found a valid version string
+    if(conn->result) return;
+    if(!conn->current_line) return;
+
+    if(!strncmp(conn->current_line,search_for,strlen(search_for)))
+    {
+	ptr = conn->current_line + strlen(search_for);
+	// skip whitespace
+	for(;isspace(*ptr);++ptr);
+	if(!*ptr)
+	{
+	    conn->result = FALSE;
+	    return;
+	}
+	// skip until end of version string
+	for(version_end=ptr;
+	    version_end &&
+	    *version_end != '\0' && !isspace(*version_end);
+	    ++version_end);
+	found_version=g_strndup(ptr,version_end-ptr);
+//	debug(0,"found version <%s>",found_version);
+
+	if(compare_qstat_version(found_version,required_qstat_version)>=0)
+	  conn->result=TRUE;
+
+	g_free(found_version);
+    }
+}
+
+void qstat_close_input(struct qstat_conn* conn)
+{
+    if(!conn) return;
+    gdk_input_remove(conn->tag);
+    close(conn->fd);
+    if(conn->pid > 0) kill(conn->pid,SIGTERM);
+    if(conn->do_quit) gtk_main_quit();
+}
+
+void qstat_input_callback(struct qstat_conn* conn, int fd, GdkInputCondition condition)
+{
+    int bytes;
+    char* sol; // start of line pointer
+    char* eol; // end of line pointer
+
+    if(!conn) return;
+    
+    if(conn->pos >= conn->bufsize )
+    {
+	xqf_error("line %d too long",conn->linenr+1);
+	qstat_close_input(conn);
+	return;
+    }
+
+    bytes = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
+
+    if (bytes < 0)
+    {
+	if (errno == EAGAIN || errno == EWOULDBLOCK)
+	{
+	    return;
+	}
+
+	xqf_error("Error reading from child: %s",g_strerror(errno));
+	qstat_close_input(conn);
+	return;
+    }
+    if (bytes == 0) {	/* EOF */
+      qstat_close_input(conn);
+      return;
+    }
+
+
+    sol = conn->buf;
+    eol = conn->buf + conn->pos;
+    conn->pos += bytes;
+    bytes = conn->pos;
+    
+    // buffer can contain multiple lines
+    for(;(eol = memchr(eol,'\n',bytes-(eol-sol))) != NULL;bytes-=eol-sol+1,sol= ++eol)
+    {
+	*eol = '\0';
+//	debug(0,"%4d, line(%4d,%4d-%4d)>%s<",bytes, eol-sol,sol-conn->buf,eol-conn->buf,sol);
+	++conn->linenr;
+	conn->current_line = sol;
+	if(conn->linefunc) (conn->linefunc)(conn);
+    }
+    // sol now points to begin of next line, if any
+
+    if(sol-conn->buf)
+    {
+	if(bytes)
+	{
+	    memmove(conn->buf,sol,bytes);
+	}
+	conn->pos = bytes;
+    }
+}
+
+int check_qstat_version()
+{
+  struct qstat_conn conn = {0};
 
   char* cmd[] = {QSTAT_EXEC,NULL};
 
-  int ret = FALSE;
-
-  fd_set rfds;
-  struct timeval tv;
-  int retval;
-
   int flags;
 
-  fd = start_prog_and_return_fd(cmd,&pid);
+  conn.fd = start_prog_and_return_fd(cmd,&conn.pid);
 
-  if (fd<0||pid<=0)
+  if (conn.fd<0||conn.pid<=0)
     return FALSE;
 
-  flags = fcntl (fd, F_GETFL, 0);
-  if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0)
+  flags = fcntl (conn.fd, F_GETFL, 0);
+  if (flags < 0 || fcntl (conn.fd, F_SETFL, flags | O_NONBLOCK) < 0)
   {
     xqf_error("fcntl failed: %s", strerror(errno));
     return -1;
   }
 
-  FD_ZERO(&rfds);
-  FD_SET(fd, &rfds);
-  
-  // wait up to two seconds
-  tv.tv_sec = 2;
-  tv.tv_usec = 0;
+  conn.bufsize = 256;
+  conn.buf = g_new0(char,conn.bufsize);
+  conn.result = FALSE;
+  conn.do_quit = TRUE;
+  conn.linenr = 0;
+  conn.linefunc = qstat_version_string;
 
-  retval = select(fd+1, &rfds, NULL, NULL, &tv);
+  conn.tag = gdk_input_add (conn.fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
+                                (GdkInputFunction) qstat_input_callback, &conn);
 
-  if (!retval)
-  {
-    xqf_error("check_qstat_version -- No data within two seconds.");
-    return FALSE;
-  }
+  gtk_main();
 
-  // -1 because of \0!
-  read_ret = read(fd,buffer,QSTAT_BUFFER_SIZE-1);
-  // read error
-  if (read_ret < 0)
-  {
-    xqf_error("check_qstat_version -- read failed: %s", strerror(errno));
-    return FALSE;
-  }
-  // read hasn't read anything
-  else if(read_ret == 0)
-  {
-    xqf_error("check_qstat_version -- didn't read anything");
-    return FALSE;
-  }
+  g_free(conn.buf);
 
-  {
-    char *search_for = "qstat version";
-    char *found_version, *version_end;
-    
-    found_version = strstr(buffer,search_for);
-    
-    if(!found_version) return FALSE;
-    
-    found_version = found_version+strlen(search_for);
-    // skip whitespace
-    for(;isspace(*found_version);found_version++);
-    if(!*found_version) return FALSE;
-    // skip until end of version string
-    for(version_end=found_version;
-	version_end &&
-	*version_end != '\0' && !isspace(*version_end);
-	version_end++);
-    found_version=g_strndup(found_version,version_end-found_version);
-    debug(3,"check_qstat_version -- found version <%s>",found_version);
-
-    if(compare_qstat_version(found_version,version)>=0)
-      ret=TRUE;
-
-    g_free(found_version);
-  }
-
-  return ret;
+  return conn.result;
 }
 
 void reset_main_status_bar() {
@@ -749,7 +827,7 @@ static void server_filter_select_callback (GtkWidget *widget, int number) {
 }
 
 /*need new one to refresh filter radio buttons in menu*/
-
+#if 0
 static void server_filter_select_callback_toolbar (GtkWidget *widget, int number) {
 
   current_server_filter = number;
@@ -760,7 +838,7 @@ static void server_filter_select_callback_toolbar (GtkWidget *widget, int number
 
   return;
 }
-
+#endif
 
 
 static void start_preferences_dialog (GtkWidget *widget, int page_num) {
@@ -1902,6 +1980,7 @@ static void properties_callback (GtkWidget *widget, gpointer data) {
   }
 }
 
+#if 0
 static void cancelredial_callback (GtkWidget *widget, gpointer data) {
 
   if (stat_process)
@@ -1912,8 +1991,7 @@ static void cancelredial_callback (GtkWidget *widget, gpointer data) {
   progress_bar_reset (main_progress_bar);
 
 }
-
-
+#endif
 
 static void rcon_callback (GtkWidget *widget, gpointer data) {
   struct server_props *sp;
@@ -3044,7 +3122,7 @@ static void populate_main_toolbar (void) {
 
 /** build server filter menu for menubar
  */
- 
+#if 0 
 static GtkWidget* create_filter_menu_toolbar()
 {
   unsigned int i;
@@ -3085,8 +3163,7 @@ static GtkWidget* create_filter_menu_toolbar()
   gtk_widget_show (menu);
   return menu;
 }
-
-
+#endif
 
 
 /** build server filter menu for toolbar
@@ -3617,7 +3694,6 @@ static void parse_commandline(int argc, char* argv[])
 int main (int argc, char *argv[]) {
   char *gtk_config;
   int newversion = FALSE;
-  char required_qstat_version[]="2.4e";
 
   xqf_start_time = time (NULL);
 
@@ -3685,6 +3761,13 @@ int main (int argc, char *argv[]) {
   psearch_init ();
   rcon_init ();
 
+  if(check_qstat_version() == FALSE)
+  {
+    dialog_ok(NULL,
+	_("You need at least qstat version %s for xqf to function properly"),
+	required_qstat_version);
+  }
+
   play_sound(sound_xqf_start, 0);
 
   create_main_window ();
@@ -3697,18 +3780,11 @@ int main (int argc, char *argv[]) {
   if (default_auto_favorites && !cmdline_launch)
     refresh_callback (NULL, NULL);
 
-  if(check_qstat_version(required_qstat_version) == FALSE)
-  {
-    dialog_ok(NULL,
-	_("You need at least qstat version %s for xqf to function properly"),
-	required_qstat_version);
-  }
-
-  debug(1,"startup time %ds", time(NULL)-xqf_start_time);
-
   destroy_splashscreen();
 
   g_timeout_add(0, check_cmdline_launch, NULL);
+
+  debug(1,"startup time %ds", time(NULL)-xqf_start_time);
 
   gtk_main ();
 

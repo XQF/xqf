@@ -258,6 +258,7 @@ static void load_file (const char *filename) {
       }
     }
   }
+  g_free(secname);
   fclose (f);
 }
 
