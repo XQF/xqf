@@ -2424,7 +2424,7 @@ static void user_fix_defaults (void) {
   config_set_string ("/" CONFIG_FILE "/Game: QWS/cmd", "qwcl.x11");
   config_set_string ("/" CONFIG_FILE "/Game: Q2S/cmd", "quake2");
 #ifdef QSTAT23
-  config_set_string ("/" CONFIG_FILE "/Game: Q3S/cmd", "linuxquake3");
+  config_set_string ("/" CONFIG_FILE "/Game: Q3S/cmd", "quake3");
 #endif
   config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
                                                           g_get_user_name ());

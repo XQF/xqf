@@ -5,6 +5,10 @@ Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
 - add configuration options for Wolfenstein to q3 tab
 - pass server and rconpasswords on the command line
 - fix q3 rcon_password -> rconpassword
+- changed default q3 command: linuxquake3 -> quake3
+- made string for tooltip for server&playerfilter translatable
+- split about dialog string into smaller chunks for easier translation
+- update for german translation
 
 Sept 24,2001: Alex Burger <alex@fragit_dot_net>
 - Changed version to 0.9.7a
