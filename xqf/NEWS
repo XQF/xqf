@@ -1,4 +1,4 @@
-XQF 0.9.7
+XQF 0.9.7 -- [UNRELEASED]
 ~~~~~~~~~
 Changes since 0.9.6g:
 
@@ -13,7 +13,7 @@ o Server statistics for Wolfenstein, Kingpin and Half-Life
 o Works on PowerPC again
 
 
-XQF 0.9.6g
+XQF 0.9.6g -- September 25, 2001
 ~~~~~~~~~~
 Changes since 0.9.6f:
 
@@ -31,7 +31,7 @@ o New documentation in html format (docs/xqfdocs.html)
 o XQF now requires qstat 2.4c
 
 
-XQF 0.9.6f
+XQF 0.9.6f -- March 23, 2001
 ~~~~~~~~~~
 Changes since 0.9.5:
 
