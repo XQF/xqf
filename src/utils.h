@@ -77,11 +77,19 @@ const char* bool2str(int i);
 int str2bool(const char* str);
 
 
-/** find executable file in $PATH. file is a colon seperated list of
- * executables to search for. return name of first found file, must be freed
- * manually
+/** \brief find executable file in $PATH.
+ *
+ * @param files colon seperated list of executables to search for
+ * @returns absolute path to first found file, must be freed manually
  */
 char* find_file_in_path(const char* files);
+
+/** \brief find executable file in $PATH.
+ *
+ * @param files colon seperated list of executables to search for
+ * @returns first found file, must be freed manually
+ */
+char* find_file_in_path_relative(const char* files);
 
 /** sort list and remove duplicates
  * @param list list to sort

@@ -1940,9 +1940,8 @@ static GtkWidget *create_noskins_menu (int qworq2) {
 
 // fill working directory with result of the directory guess function for first
 // token of command line if working directory is empty
-static void pref_guess_dir(enum server_type type)
+static void pref_guess_dir(enum server_type type, const char* cmdline, gboolean interactive)
 {
-  const char *cmdline = NULL;
   const char* dir_entry = NULL;
   
   dir_entry = gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry));
@@ -1950,7 +1949,6 @@ static void pref_guess_dir(enum server_type type)
   if(dir_entry && *dir_entry)
     return;
 
-  cmdline = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
   if (cmdline && *cmdline) // if not empty
   {
     char *guessed_dir = NULL;
@@ -1972,7 +1970,8 @@ static void pref_guess_dir(enum server_type type)
     g_strfreev(cmds);
   }
 
-  dialog_ok (NULL, _("You must configure a command line first"));
+  if(interactive)
+    dialog_ok (NULL, _("You must configure a command line first"));
 }
 
 
@@ -1998,7 +1997,7 @@ static void pref_suggest_command(enum server_type type)
 	return;
     }
 
-    suggested_file = find_file_in_path(files);
+    suggested_file = find_file_in_path_relative(files);
     if(!suggested_file)
     {
 	dialog_ok(_("Game not found"),
@@ -2010,9 +2009,10 @@ static void pref_suggest_command(enum server_type type)
 
     // gtk entry does the freeing? -- no
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
-    g_free(suggested_file);
 
-    pref_guess_dir (type);
+    pref_guess_dir (type, suggested_file, TRUE);
+    
+    g_free(suggested_file);
     
     return;
 }
@@ -2335,10 +2335,9 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   gtk_widget_show (button);
 
   // translator: button for directory guess
-  button = gtk_button_new_with_label (_("Guess"));
+  button = gtk_button_new_with_label (_("Suggest"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
                     GTK_SIGNAL_FUNC (game_file_activate_callback), (gpointer)type);
-      //                    GTK_SIGNAL_FUNC (pref_guess_dir), (gpointer)type);
 
   gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, button, _("Tries to guess the working directory based on the command line"), NULL);
@@ -4539,6 +4538,8 @@ static void generic_prefs_free(struct generic_prefs* prefs)
   
   for (i = 0; i < GAMES_TOTAL; i++)
   {
+    g_free(prefs[i].pref_dir);
+    g_free(prefs[i].real_dir);
     g_datalist_clear(&prefs[i].games_data);
   }
   g_free(prefs);
@@ -4725,7 +4726,7 @@ static void user_fix_defaults (void)
   {
     files = games[i].suggest_commands;
     if(!files) continue;
-    suggested_file = find_file_in_path(files);
+    suggested_file = find_file_in_path_relative(files);
     if(!suggested_file) continue;
 
     j++;
@@ -5007,7 +5008,7 @@ int prefs_load (void) {
 
   default_terminate =         config_get_bool ("terminate=false");
   default_iconify =           config_get_bool ("iconify=false");
-  default_launchinfo =        config_get_bool ("launchinfo=false");
+  default_launchinfo =        config_get_bool ("launchinfo=true");
   default_stopxmms =          config_get_bool ("stopxmms=false");
   default_prelaunchexec =     config_get_bool ("prelaunchexec=false");
   default_save_lists =        config_get_bool ("save lists=true");
@@ -5089,18 +5090,19 @@ void prefs_save (void) {
 void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
 {
   enum server_type type;
-  char *temp = NULL;
+  char *filename = NULL;
 
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = (enum server_type) gtk_object_get_user_data (GTK_OBJECT (widget));
+
+  if(type >= UNKNOWN_SERVER)
+    return;
   
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
+  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs));
   
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), temp);
-    pref_guess_dir (type);
+  if (filename) {
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), filename);
+    pref_guess_dir (type, filename, TRUE);
   }
-  if (temp)
-    g_free (temp);
 }
 
 void game_file_activate_callback (enum server_type type)
@@ -5108,19 +5110,11 @@ void game_file_activate_callback (enum server_type type)
   char *temp = NULL;
   char *file = NULL;
 
-  temp = g_strdup(gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry)));
+  temp = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
 
-  if (temp) {
-    file = find_file_in_path(temp);
-    if (file)
-      gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), file);
-  }
+  pref_guess_dir (type, temp, TRUE);
 
-  pref_guess_dir (type);
-  if (temp)
-    g_free (temp);
-  if (file)
-    g_free (file);
+  g_free (file);
 }
 
 void game_dir_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
