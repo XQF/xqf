@@ -391,6 +391,7 @@ static void get_new_defaults_for_game (enum server_type type) {
     
     j++;
     g_snprintf (conf, 64, "custom_arg%d", j);
+    g_free(str2);
     str2 = config_get_string_with_default (conf,&isdefault);
   }
 
@@ -3563,6 +3564,19 @@ static GtkWidget *appearance_options_page (void) {
   return page_vbox;
 }
 
+static void scan_maps_callback (GtkWidget *widget, gpointer data)
+{
+    int i;
+    for (i = 0; i < GAMES_TOTAL; i++)
+    {
+	if(games[i].init_maps)
+	{
+	    debug(0,"Searching for %s maps",games[i].name);
+	    games[i].init_maps();
+	}
+    }
+}
+
 static GtkWidget *general_options_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *frame;
@@ -3611,6 +3625,15 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (hbox), auto_maps_check_button, 
 								   FALSE, FALSE, 0);
 	gtk_widget_show (auto_maps_check_button);
+
+	{
+	    GtkWidget* button = gtk_button_new_with_label(_("scan now"));
+	    gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	    gtk_misc_set_padding(GTK_MISC(GTK_BIN(button)->child),4,0);
+	    gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		    GTK_SIGNAL_FUNC (scan_maps_callback), NULL);
+	    gtk_widget_show (button);
+	}
 
       gtk_widget_show (hbox);
   
@@ -4203,6 +4226,9 @@ static void generic_prefs_free(struct generic_prefs* prefs)
 {
   int i;
   if(!prefs) return;
+
+  g_free(pref_qw_skin);
+  g_free(pref_q2_skin);
   
   for (i = 0; i < GAMES_TOTAL; i++)
   {
@@ -4357,6 +4383,12 @@ void preferences_dialog (int page_num) {
 
   qw_skin_preview = NULL;
   q2_skin_preview = NULL;
+
+  if(q1_skin_data)
+  {
+      g_free(q1_skin_data);
+      q1_skin_data=NULL;
+  }
 
   if (qw_skin_data) { 
     g_free (qw_skin_data);
