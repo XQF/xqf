@@ -260,8 +260,14 @@ void set_widgets_sensitivity (void) {
   gtk_widget_set_state (stop_button, GTK_STATE_NORMAL);
   gtk_widget_set_sensitive (stop_button, sens);
 
-  for (i = 0; i < FILTERS_TOTAL; i++)
-    gtk_widget_set_sensitive (filter_buttons[i], (stat_process == NULL));
+  sens = (stat_process == NULL);
+
+  for (i = 0; i < FILTERS_TOTAL; i++) {
+    gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_NORMAL);
+    gtk_widget_set_sensitive (filter_buttons[i], sens);
+    if(GTK_TOGGLE_BUTTON(filter_buttons[ i ])->active)
+      gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_ACTIVE);
+  }
 }
 
 
