@@ -2048,6 +2048,26 @@ struct q3a_gametype_s wolf_gametype_map[] =
     wolf_gametypes,
     MAX_WOLF_TYPES
   },
+  {
+    "bani",
+    wolf_gametypes, // exports additional gametypes via g_gametype2
+    MAX_WOLF_TYPES
+  },
+  {
+    "headshot",
+    wolf_gametypes,
+    MAX_WOLF_TYPES
+  },
+  {
+    "osp",
+    wolf_gametypes,
+    MAX_WOLF_TYPES
+  },
+  {
+    "shrubmod",
+    wolf_gametypes,
+    MAX_WOLF_TYPES
+  }
 };
 
 // didn't find docu about this, so use q3a types
@@ -2076,8 +2096,17 @@ struct q3a_gametype_s wolfet_gametype_map[] =
     "ettest",
     wolfet_gametypes,
     MAX_WOLFET_TYPES
+  },
+  {
+    "etpro",
+    wolfet_gametypes,
+    MAX_WOLFET_TYPES
+  },
+  {
+    "shrubet",
+    wolfet_gametypes,
+    MAX_WOLFET_TYPES
   }
-
 };
 
 void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])

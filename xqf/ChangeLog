@@ -1,3 +1,7 @@
+Oct 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- additional gametypes for RTCW and ET mods. Thanks Ben Winslow for
+  the patch
+
 Oct 28, 2003: Jordi Mallach <jordi@sindominio.net>
 - move list of supported languages to po/LINGUAS.
 
@@ -7,8 +11,8 @@ Oct 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - new directory layout
 
 Oct 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove gettext stuff from repository. Instead autogen.sh will run gettextize
-  to create the necessary files
+- remove gettext stuff from repository. Instead autogen.sh will run
+  gettextize to create the necessary files
 - fix alpha threshold when rendering flag icons
 - add GTK2 patch from Jochen Baier
 
