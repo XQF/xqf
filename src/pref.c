@@ -194,6 +194,7 @@ char* q3_masterprocols[] = {
 };
 
 char* wo_masterprocols[] = {
+	"58 - v1.3",
 	"57 - retail",
 	"56 - test2",
 	"55 - test1",

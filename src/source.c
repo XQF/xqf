@@ -179,8 +179,8 @@ static void save_server_info (const char *filename, GSList *servers) {
   if (z.f) {
     while (servers) {
       s = (struct server *) servers->data;
-
-      if (games[s->type].save_info)
+	
+      if (s->ref_count > 0 && games[s->type].save_info)
 	(*games[s->type].save_info) (z.f, s);
 
       servers = servers->next;
@@ -467,6 +467,8 @@ static void read_server_info (const char *filename) {
   char *buf;
   char *pos;
   GSList *strings;
+
+  debug(3,"read_server_info(%s)",filename);
 
   realname = file_in_dir (user_rcdir, filename);
   zstream_open_r (&z, realname);

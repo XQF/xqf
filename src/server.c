@@ -228,7 +228,8 @@ void server_free_info (struct server *s) {
 }
 
 
-void server_unref (struct server *server) {
+// return NULL if refcount dropped to zero, server otherwise
+struct server* server_unref (struct server *server) {
   int node;
 
   if (!server)
@@ -250,7 +251,9 @@ void server_unref (struct server *server) {
     host_unref (server->host);
     server_free_info (server);
     g_free (server);
+    return NULL;
   }
+  return server;
 }
 
 

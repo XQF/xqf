@@ -1296,6 +1296,15 @@ static char *q3a_tribalctf_gametypes[MAX_Q3A_TRIBALCTF_TYPES] = {
   NULL			// 9+ ???
 };
 
+#define MAX_Q3A_SEALS_TYPES 5
+static char *q3a_seals_gametypes[MAX_Q3A_SEALS_TYPES] = {
+  NULL,			/* 0 = devmode */
+  NULL,			/* 1 = invalid */
+  NULL,			/* 2 = invalid */
+  "Operations",		/* 3 = Team Deathmatch */
+  NULL			/* 4+ invalid */
+};
+
 #define MAX_WOLF_TYPES 9
 static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   NULL,			// 0 - Unknown
@@ -1336,6 +1345,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     "threewave",
     q3a_threewave_gametypes,
     MAX_Q3A_THREEWAVE_TYPES
+  },
+  {
+    "seals",
+    q3a_seals_gametypes,
+    MAX_Q3A_SEALS_TYPES
   },
   {
     "TribalCTF",

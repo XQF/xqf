@@ -512,6 +512,11 @@ void parse_saved_server (GSList *strings) {
     return;
 
   server = parse_server (token, n, refreshed, TRUE);
+  // unref newly created server since it is already referenced once
+  // if it was in lists.gz. If it was not already referenced it will
+  // be freed and does not stay stay around in memory. This way old
+  // servers will not pile up in srvinfo.gz
+  server = server_unref(server);
 
   if (server) {
     server_ref (server);
