@@ -1,3 +1,7 @@
+Mar 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- popup window with levelshot when clicking on map column, currently supports
+  jpg shots inside pk3 files for q3 and wolf.
+
 Mar 15, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added Serious Sam: The Second Encounter
 

@@ -97,33 +97,34 @@ static void quake_save_info (FILE *f, struct server *s);
 
 char **get_custom_arguments(enum server_type type, const char *gamestring);
 
-static void q1_init_maps();
-static void qw_init_maps();
-static void q2_init_maps();
-static void hl_init_maps();
-static void q3_init_maps();
-static void wolf_init_maps();
-static void un_init_maps();
-static void ut2_init_maps();
-static void rune_init_maps();
-static gboolean q1_has_map(struct server* s);
-static gboolean qw_has_map(struct server* s);
-static gboolean q2_has_map(struct server* s);
-static gboolean hl_has_map(struct server* s);
-static gboolean q3_has_map(struct server* s);
-static gboolean wolf_has_map(struct server* s);
-static gboolean ut_has_map(struct server* s);
-static gboolean ut2_has_map(struct server* s);
-static gboolean rune_has_map(struct server* s);
-static GHashTable* q1_maphash = NULL;
-static GHashTable* qw_maphash = NULL;
-static GHashTable* q2_maphash = NULL;
-static GHashTable* hl_maphash = NULL;
-static GHashTable* q3_maphash = NULL;
-static GHashTable* wolf_maphash = NULL;
-static GHashTable* ut_maphash = NULL;
-static GHashTable* ut2_maphash = NULL;
-static GHashTable* rune_maphash = NULL;
+static void quake_init_maps(enum server_type);
+static gboolean quake_has_map(struct server* s);
+
+static void q3_init_maps(enum server_type);
+static size_t q3_get_mapshot(struct server* s, guchar** buf);
+
+static void unreal_init_maps(enum server_type);
+static gboolean unreal_has_map(struct server* s);
+
+struct quake_private
+{
+  GHashTable* maphash;
+  const char* home; // until we have something useful
+};
+
+struct unreal_private
+{
+  GHashTable* maphash;
+  const char* suffix;
+};
+
+static struct unreal_private ut_private = { NULL, ".unr" };
+static struct unreal_private ut2_private = { NULL, ".ut2" };
+static struct unreal_private rune_private = { NULL, ".run" };
+
+static struct quake_private q1_private, qw_private, q2_private, hl_private;
+static struct quake_private q3_private = { NULL, "~/.q3a" };
+static struct quake_private wolf_private = { NULL, "~/.wolf" };
 
 struct game games[] = {
   {
@@ -146,16 +147,19 @@ struct game games[] = {
     q1_exec_generic,
     q1_custom_cfgs,
     quake_save_info,
-    q1_init_maps,	// init_maps
-    q1_has_map,		// has_map
-    NULL,		// Custom arguments
+    quake_init_maps,	// init_maps
+    quake_has_map,		// has_map
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&q1_private,	// pd
   },
   {
     QW_SERVER,
@@ -177,16 +181,19 @@ struct game games[] = {
     qw_exec,
     qw_custom_cfgs,
     quake_save_info,
-    qw_init_maps,	// init_maps
-    qw_has_map,		// has_map
-    NULL,		// Custom arguments
+    quake_init_maps,	// init_maps
+    quake_has_map,		// has_map
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&qw_private,	// pd
   },
   {
     Q2_SERVER,
@@ -207,16 +214,19 @@ struct game games[] = {
     q2_exec,
     q2_custom_cfgs,
     quake_save_info,
-    q2_init_maps,	// init_maps
-    q2_has_map,		// has_map
-    NULL,		// Custom arguments
+    quake_init_maps,	// init_maps
+    quake_has_map,		// has_map
+    NULL,		// get_mapshot
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&q2_private,	// pd
   },
 
   {
@@ -240,15 +250,18 @@ struct game games[] = {
     q3_custom_cfgs,
     quake_save_info,
     q3_init_maps,	// init_maps
-    q3_has_map,		// has_map
-    NULL,		// Custom arguments
+    quake_has_map,	// has_map
+    q3_get_mapshot,	// get_mapshot
     "version",		// arch_identifier
-    identify_cpu,		// identify_cpu
-    identify_os,		// identify_os
+    identify_cpu,	// identify_cpu
+    identify_os,	// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&q3_private,	// pd
   },
 
   {
@@ -271,16 +284,19 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
-    wolf_init_maps,	// init_maps
-    wolf_has_map,	// has_map
-    NULL,		// Custom arguments
+    q3_init_maps,	// init_maps
+    quake_has_map,	// has_map
+    q3_get_mapshot,	// get_mapshot
     "version",		// arch_identifier
-    identify_cpu,		// identify_cpu
-    identify_os,		// identify_os
+    identify_cpu,	// identify_cpu
+    identify_os,	// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&wolf_private,	// pd
   },
 
   {
@@ -305,14 +321,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
 
   {
@@ -337,14 +356,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     HW_SERVER,
@@ -368,14 +390,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     SN_SERVER,
@@ -399,14 +424,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     HL_SERVER,
@@ -428,16 +456,19 @@ struct game games[] = {
     hl_exec,
     NULL,
     quake_save_info,
-    hl_init_maps,	// init_maps
-    hl_has_map,		// has_map
-    NULL,		// Custom arguments
+    quake_init_maps,	// init_maps
+    quake_has_map,		// has_map
+    NULL,		// get_mapshot
     "sv_os",		// arch_identifier
     NULL,		// identify_cpu
     identify_os,	// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&hl_private,	// pd
   },
   {
     KP_SERVER,
@@ -461,14 +492,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     SFS_SERVER,
@@ -492,14 +526,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     SOF2S_SERVER,
@@ -523,14 +560,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     T2_SERVER,
@@ -554,14 +594,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     "linux",		// arch_identifier
     NULL,		// identify_cpu
     t2_identify_os,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
   {
     HR_SERVER,
@@ -585,14 +628,17 @@ struct game games[] = {
     quake_save_info,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
 
   {
@@ -615,16 +661,19 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
-    un_init_maps,	// init_maps
-    ut_has_map,		// has_map
-    NULL,		// Custom arguments
+    unreal_init_maps,	// init_maps
+    unreal_has_map,		// has_map
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&ut_private,	// pd
   },
   {
     UT2_SERVER,
@@ -646,16 +695,19 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
-    ut2_init_maps,	// init_maps
-    ut2_has_map,	// has_map
-    NULL,		// Custom arguments
+    unreal_init_maps,	// init_maps
+    unreal_has_map,	// has_map
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&ut2_private,	// pd
   },
 
   {
@@ -678,16 +730,19 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
-    rune_init_maps,	// init_maps
-    rune_has_map,	// has_map
-    NULL,		// Custom arguments
+    unreal_init_maps,	// init_maps
+    unreal_has_map,	// has_map
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    (gpointer)&rune_private,	// pd
   },
   // Descent 3
   {
@@ -712,14 +767,17 @@ struct game games[] = {
     quake_save_info,		// save_info
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
 
   {
@@ -742,14 +800,16 @@ struct game games[] = {
     ssam_exec,
     NULL,
     quake_save_info,
-    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
 
   {
@@ -772,14 +832,16 @@ struct game games[] = {
     ssam_exec,
     NULL,
     quake_save_info,
-    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
 
   // any game using the gamespy protocol
@@ -805,14 +867,17 @@ struct game games[] = {
     quake_save_info,		// save_info
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   },
 
   {
@@ -837,16 +902,47 @@ struct game games[] = {
     NULL,
     NULL,		// init_maps
     NULL,		// has_map
-    NULL,		// Custom arguments
+    NULL,		// get_mapshot
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
     NULL,		// cmd
     NULL,		// dir
     NULL,		// real_dir
-    NULL		// game_cfg
+    NULL,		// game_cfg
+    NULL,		// games_data
+    NULL,		// Custom arguments
+    NULL,		// pd
   }
 };
+
+// might be handy in the future instead of copy&paste
+static void game_copy_static_options(enum server_type dest, enum server_type src)
+{
+    games[dest].type			= games[src].type;
+    games[dest].flags			= games[src].flags;
+    games[dest].name			= games[src].name;
+    games[dest].default_port		= games[src].default_port;
+    games[dest].default_master_port	= games[src].default_master_port;
+    games[dest].id			= games[src].id;
+    games[dest].qstat_str		= games[src].qstat_str;
+    games[dest].qstat_option		= games[src].qstat_option;
+    games[dest].qstat_master_option	= games[src].qstat_master_option;
+    games[dest].pix			= games[src].pix;
+    games[dest].parse_player		= games[src].parse_player;
+    games[dest].parse_server		= games[src].parse_server;
+    games[dest].analyze_serverinfo	= games[src].analyze_serverinfo;
+    games[dest].config_is_valid		= games[src].config_is_valid;
+    games[dest].write_config		= games[src].write_config;
+    games[dest].exec_client		= games[src].exec_client;
+    games[dest].custom_cfgs		= games[src].custom_cfgs;
+    games[dest].save_info		= games[src].save_info;
+    games[dest].init_maps		= games[src].init_maps;
+    games[dest].has_map			= games[src].has_map;
+    games[dest].arch_identifier		= games[src].arch_identifier;
+    games[dest].identify_cpu		= games[src].identify_cpu;
+    games[dest].identify_os		= games[src].identify_os;
+}
 
 
 void init_games()
@@ -3630,178 +3726,106 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
 
 /** map functions */
 
-static void q1_init_maps()
+static void quake_init_maps(enum server_type type)
 {
-  q3_clear_maps(q1_maphash); // important to avoid memleak when called second time
-  q1_maphash = q3_init_maphash();
-  findquakemaps(q1_maphash,games[Q1_SERVER].real_dir);
+  struct quake_private* pd = NULL;
+
+  pd = (struct quake_private*)games[type].pd;
+  g_return_if_fail(pd!=NULL);
+  
+  q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+  pd->maphash = q3_init_maphash();
+
+  findquakemaps(pd->maphash,games[type].real_dir);
 }
 
-static void qw_init_maps()
+static void q3_init_maps(enum server_type type)
 {
-  q3_clear_maps(qw_maphash); // important to avoid memleak when called second time
-  qw_maphash = q3_init_maphash();
-  findquakemaps(qw_maphash,games[QW_SERVER].real_dir);
-}
+  struct quake_private* pd = NULL;
 
-static void q2_init_maps()
-{
-  q3_clear_maps(q2_maphash); // important to avoid memleak when called second time
-  q2_maphash = q3_init_maphash();
-  findquakemaps(q2_maphash,games[Q2_SERVER].real_dir);
-}
+  pd = (struct quake_private*)games[type].pd;
+  g_return_if_fail(pd!=NULL);
+  
+  q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+  pd->maphash = q3_init_maphash();
+  findq3maps(pd->maphash,games[type].real_dir);
 
-static void hl_init_maps()
-{
-  q3_clear_maps(hl_maphash); // important to avoid memleak when called second time
-  hl_maphash = q3_init_maphash();
-  findquakemaps(hl_maphash,games[HL_SERVER].real_dir);
-}
-
-static void q3_init_maps()
-{
-  q3_clear_maps(q3_maphash); // important to avoid memleak when called second time
-  q3_maphash = q3_init_maphash();
-  findq3maps(q3_maphash,games[Q3_SERVER].real_dir);
-
+  if(pd->home)
   {
-    char* q3home = expand_tilde("~/.q3a");
-    findq3maps(q3_maphash,q3home);
-    g_free(q3home);
+    char* home = expand_tilde(pd->home);
+    findq3maps(pd->maphash,home);
+    g_free(home);
   }
 }
 
-static void wolf_init_maps()
-{
-  q3_clear_maps(wolf_maphash); // important to avoid memleak when called second time
-  wolf_maphash = q3_init_maphash();
-  findq3maps(wolf_maphash,games[WO_SERVER].real_dir);
 
-  {
-    char* q3home = expand_tilde("~/.wolf");
-    findq3maps(wolf_maphash,q3home);
-    g_free(q3home);
-  }
+static void unreal_init_maps(enum server_type type)
+{
+  struct unreal_private* pd = NULL;
+
+  pd = (struct unreal_private*)games[type].pd;
+  g_return_if_fail(pd!=NULL);
+  
+  ut_clear_maps(pd->maphash);
+  pd->maphash = ut_init_maphash();
+  findutmaps_dir(pd->maphash,games[type].real_dir,pd->suffix);
 }
 
-static void un_init_maps()
+static gboolean quake_has_map(struct server* s)
 {
-  ut_clear_maps(ut_maphash);
-  ut_maphash = ut_init_maphash();
-  findutmaps_dir(ut_maphash,games[UN_SERVER].real_dir,".unr");
-}
+  struct quake_private* pd = NULL;
+  GHashTable* hash = NULL;
 
-static void ut2_init_maps()
-{
-  ut_clear_maps(ut2_maphash);
-  ut2_maphash = ut_init_maphash();
-  findutmaps_dir(ut2_maphash,games[UT2_SERVER].real_dir,".ut2");
-}
-
-static void rune_init_maps()
-{
-  ut_clear_maps(rune_maphash);
-  rune_maphash = ut_init_maphash();
-  findutmaps_dir(rune_maphash,games[RUNE_SERVER].real_dir,".run");
-}
-
-static gboolean q1_has_map(struct server* s)
-{
-  if(!q1_maphash)
-    return TRUE;
+  g_return_val_if_fail(s!=NULL,TRUE);
+  
+  pd = (struct quake_private*)games[s->type].pd;
+  g_return_val_if_fail(pd!=NULL,TRUE);
+  
+  hash = (GHashTable*)pd->maphash;
+  g_return_val_if_fail(hash!=NULL,TRUE);
 
   if(!s->map)
     return FALSE;
 
-  return q3_lookup_map(q1_maphash,s->map);
+  return q3_lookup_map(hash,s->map);
 }
 
-static gboolean qw_has_map(struct server* s)
+static size_t q3_get_mapshot(struct server* s, guchar** buf)
 {
-  if(!qw_maphash)
-    return TRUE;
+  struct quake_private* pd = NULL;
+  GHashTable* hash = NULL;
+
+  g_return_val_if_fail(s!=NULL,TRUE);
+  
+  pd = (struct quake_private*)games[s->type].pd;
+  g_return_val_if_fail(pd!=NULL,TRUE);
+  
+  hash = (GHashTable*)pd->maphash;
+  g_return_val_if_fail(hash!=NULL,TRUE);
 
   if(!s->map)
     return FALSE;
 
-  return q3_lookup_map(qw_maphash,s->map);
+  return q3_lookup_mapshot(hash,s->map, buf);
 }
 
-static gboolean q2_has_map(struct server* s)
+static gboolean unreal_has_map(struct server* s)
 {
-  if(!q2_maphash)
-    return TRUE;
+  struct unreal_private* pd = NULL;
+  GHashTable* hash = NULL;
+
+  g_return_val_if_fail(s!=NULL,TRUE);
+  
+  pd = (struct unreal_private*)games[s->type].pd;
+  g_return_val_if_fail(pd!=NULL,TRUE);
+  
+  hash = (GHashTable*)pd->maphash;
+  g_return_val_if_fail(hash!=NULL,TRUE);
 
   if(!s->map)
     return FALSE;
 
-  return q3_lookup_map(q2_maphash,s->map);
-}
-
-static gboolean hl_has_map(struct server* s)
-{
-  if(!hl_maphash)
-    return TRUE;
-
-  if(!s->map)
-    return FALSE;
-
-  return q3_lookup_map(hl_maphash,s->map);
-}
-
-static gboolean q3_has_map(struct server* s)
-{
-  if(!q3_maphash)
-    return TRUE;
-
-  if(!s->map)
-    return FALSE;
-
-  return q3_lookup_map(q3_maphash,s->map);
-}
-
-static gboolean wolf_has_map(struct server* s)
-{
-  if(!q3_maphash)
-    return TRUE;
-
-  if(!s->map)
-    return FALSE;
-
-  return q3_lookup_map(wolf_maphash,s->map);
-}
-
-static gboolean ut_has_map(struct server* s)
-{
-  if(!ut_maphash)
-    return TRUE;
-
-  if(!s->map)
-    return FALSE;
-
-  return ut_lookup_map(ut_maphash,s->map);
-}
-
-static gboolean ut2_has_map(struct server* s)
-{
-  if(!ut2_maphash)
-    return TRUE;
-
-  if(!s->map)
-    return FALSE;
-
-  return ut_lookup_map(ut2_maphash,s->map);
-}
-
-static gboolean rune_has_map(struct server* s)
-{
-  if(!rune_maphash)
-    return TRUE;
-
-  if(!s->map)
-    return FALSE;
-
-  return ut_lookup_map(rune_maphash,s->map);
+  return ut_lookup_map(hash,s->map);
 }
 
 // vim: sw=2

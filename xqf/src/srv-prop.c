@@ -244,8 +244,7 @@ void props_load (void) {
       }
       else if (strcmp (buf, "reserved_slots") == 0) {
 
-	buffer=strdup_strip (ptr);
-	p->reserved_slots= *buffer - 48;
+	p->reserved_slots= atoi(ptr);
       }
     }
   }

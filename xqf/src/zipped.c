@@ -79,6 +79,7 @@ void zstream_open_r (struct zstream *z, const char *name) {
 	z->f = fopen (name, "r");
 	z->is_pipe = FALSE;
       }
+      g_free (fn);
       return;
     }
 

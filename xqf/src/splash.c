@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 
 #include "splash.h"
+#include "xqf-ui.h"
 #include "loadpixmap.h"
 #include "i18n.h"
 #include "pref.h"
