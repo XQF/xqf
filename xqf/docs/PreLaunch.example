@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# example PreLaunch script. Make it executable and copy it to
+# ~/.qf/PreLauch if you are running a webserver on your box.
+#
+# You can create your own "master server" that reports only the
+# server you were last playing on. Your buddy just needs to add a
+# master e.g. with the URL http://your.host/~username/xqfserver.txt
+#
+echo "$@" > ~/public_html/xqfserver.txt

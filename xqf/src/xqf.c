@@ -1067,9 +1067,6 @@ static void launch_close_handler_part2(struct condef *con)
 
   struct server *s;
 
-  char *launchargv[4];
-  int pid;
-
   if (redialserver == 1) // was called from a redial
     play_sound(sound_redial_success, 0);
   else
@@ -1151,17 +1148,17 @@ static void launch_close_handler_part2(struct condef *con)
     f = fopen (fn, "w");
     if (f) {
 
-       temp_name = cur_server->name;
-       temp_game = cur_server->game;
-       temp_mod = cur_server->gametype;
+       temp_name = s->name;
+       temp_game = s->game;
+       temp_mod = s->gametype;
        
        if (!temp_name)
           temp_name = "";
 
-       fprintf (f, "GameType %s\n", games[cur_server->type].name);
+       fprintf (f, "GameType %s\n", games[s->type].name);
        fprintf (f, "ServerName %s\n", temp_name);
-       fprintf (f, "ServerAddr %s:%d\n", inet_ntoa (cur_server->host->ip), 
-           cur_server->port);
+       fprintf (f, "ServerAddr %s:%d\n", inet_ntoa (s->host->ip), 
+           s->port);
 
        fprintf (f, "ServerMod ");  
        if(temp_game)
@@ -1185,19 +1182,16 @@ static void launch_close_handler_part2(struct condef *con)
 
   // Launch pre-launch script
   if (default_prelaunchexec) {
-
-        pid = fork();
-        if (pid == 0) {
-
-          launchargv[0] = "sh";
-          launchargv[1] = "-c";
-          strcpy(launchargv[2],user_rcdir);
-          strcat(launchargv[2],"/PreLaunch");
-          launchargv[3]= 0;
-          debug(0,"launchargv[2] is %s\n",launchargv[2]);
-          execv("/bin/sh",launchargv);
-	  _exit(EXIT_FAILURE);
-        }     
+    if (fork() == 0) {
+      char *launchargv[4];
+      launchargv[0] = g_strdup_printf("%s/PreLaunch",user_rcdir);
+      launchargv[1] = games[s->type].qstat_str;
+      launchargv[2] = g_strdup_printf("%s:%d", inet_ntoa (s->host->ip), s->port);
+      launchargv[3] = NULL;
+      execv(launchargv[0],launchargv);
+      debug(0,"PreLaunch failed",launchargv[1]);
+      _exit(EXIT_FAILURE);
+    }     
   }
 
   if (main_window && default_iconify && !default_terminate)

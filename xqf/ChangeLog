@@ -1,5 +1,11 @@
 May 31, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added ET voteflags
+- fix PreLaunch, pass qstat type and address as parameter
+- don't overwrite server type with master server type on update
+- update docu
+- added docs/PreLaunch.example
+- fix vc to not add a new ChangeLog header if the last entry has the
+  same header as the new one would get
 
 May 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added master protocol version for full version of Enemy Territory
