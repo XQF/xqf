@@ -101,13 +101,18 @@ GSList *all_hosts (void) {
 
 struct host *host_add (const char *address) {
   struct in_addr addr;
+
+  if (!address || !*address || !inet_aton (address, &addr))
+    return NULL;
+
+  return host_add_in(addr);
+}
+
+struct host *host_add_in (struct in_addr addr) {
   struct host *h;
   GSList *ptr;
   int node;
   int i;
-
-  if (!address || !*address || !inet_aton (address, &addr))
-    return NULL;
 
   node = host_hash_func (&addr);
 

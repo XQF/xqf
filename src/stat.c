@@ -51,9 +51,13 @@
 
 static char* qstatcfg = PACKAGE_DATA_DIR "/qstat.cfg";
 
+static const char savage_master_header[5] = { 0x7E, 0x41, 0x03, 0x00, 0x00 };
+
 static void stat_next (struct stat_job *job);
 static void parse_qstat_record (struct stat_conn *conn);
 
+typedef void (*server_unref_void)(void*);
+typedef void (*userver_unref_void)(void*);
 
 static int failed (char *name, char *arg) {
   fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", 
@@ -113,6 +117,127 @@ static void stat_master_update_done
 				     enum master_state state);
 
 
+// check if master output is in savage format, if yes parse it and return true.
+// otherwise return false so the normal parse function can do the work
+static gboolean parse_savage_master_output (struct stat_conn *conn)
+{
+  int res;
+  struct stat_job *job = conn->job;
+
+  conn->bufsize = 17;
+  debug(3,"conn->first %d",conn->first);
+  // check the signature of the first five bytes
+  if(conn->first)
+  {
+    res = read (conn->fd, conn->buf + conn->pos, 5 - conn->pos);
+    if (res < 0) {
+      if (errno == EAGAIN || errno == EWOULDBLOCK) {
+	return TRUE;
+      }
+      failed ("read", NULL);
+      stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
+      stat_update_masters (job);
+      return TRUE;
+    }
+    if (res == 0) {	/* EOF */
+      stat_master_update_done (conn, job, conn->master, SOURCE_UP);
+      stat_update_masters (job);
+      return TRUE;
+    }
+
+    conn->pos += res;
+
+    if(conn->pos < 5) // we need five bytes
+      return TRUE;
+
+    conn->first = 0;
+    
+    // we know we have five bytes, reset buffer for further processing
+    conn->pos = 0;
+
+    if(!memcmp(conn->buf,savage_master_header,5))
+    {
+      debug(3,"detected savage format");
+      conn->is_savage = TRUE;
+    }
+    else
+      return FALSE;
+  }
+  else if(!conn->is_savage)
+    return FALSE;
+
+  while(1)
+  {
+    size_t off = 0;
+    res = read (conn->fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
+    if (res < 0) {
+      if (errno == EAGAIN || errno == EWOULDBLOCK) {
+	return TRUE;
+      }
+      failed ("read", NULL);
+      stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
+      stat_update_masters (job);
+      return TRUE;
+    }
+    if (res == 0) {	/* EOF */
+      stat_master_update_done (conn, job, conn->master, SOURCE_UP);
+      stat_update_masters (job);
+      return TRUE;
+    }
+
+    conn->pos += res;
+
+    // we always need six bytes
+    for(off=0; off + 6 <= conn->pos; off+=6 )
+    {
+      struct server *s;
+      struct host *h;
+      enum server_type type = UNKNOWN_SERVER;
+      unsigned char* ip = conn->buf+off;
+      unsigned port = 0;
+      struct in_addr in;
+      port = (ip[5]<<8)+ip[4];
+      if(!port) continue;
+      if(!ip[0]) continue;
+      debug(5,"%hhu.%hhu.%hhu.%hhu:%u",ip[0],ip[1],ip[2],ip[3],port);
+
+      in.s_addr = 0;
+      memcpy(&in.s_addr,ip,4);
+
+      if(conn->master)
+      {
+	type = conn->master->type;
+      }
+
+      h = host_add_in (in);
+      if (h) {						/* IP address */
+	host_ref (h);
+	if ((s = server_add (h, port, type)) != NULL) {
+
+	  if(s->type != type )
+	  {
+	    server_free_info(s);
+	    s->type = type;
+	  }
+
+	  conn->servers = g_slist_prepend (conn->servers, s);
+	  server_ref(s);
+	}
+	host_unref (h);
+      }
+    }
+    if(off >= conn->pos)
+    {
+      conn->pos=0;
+    }
+    else
+    {
+      memmove (conn->buf, conn->buf + conn->pos - conn->pos%6, conn->pos%6);
+      conn->pos = conn->pos%6;
+    }
+  }
+}
+
 /**
   parse qstat output line str, in ip:port format. return true if
   successful, FALSE if server is down or timed out 
@@ -129,14 +254,6 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   struct server *s;
   struct userver *us;
   struct host *h;
-
-#warning TODO parse function for savage
-  if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP)
-  {
-    xqf_error("savage not yet implemented");
-    conn->master->state = SOURCE_ERROR;
-    return FALSE;
-  }
 
   debug (6, "parse_master_output(%s,%p)",str,conn);
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
@@ -272,6 +389,13 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
   int first_used = 0;
   char *tmp;
   int res;
+
+#warning ugly hack for savage, make master handling more generic!
+  if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP
+	&& parse_savage_master_output(conn))
+  {
+    return;
+  }
 
   debug_increase_indent();
   debug(3,"stat_master_input_callback(%p,%d,...)",conn,fd);
@@ -858,6 +982,8 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
     conn->fd = fd; 
     conn->pos = 0;
     conn->lastnl = 0;
+    conn->first = TRUE;
+    conn->is_savage = FALSE;
 
     conn->strings = NULL;
     conn->servers = NULL;
@@ -920,6 +1046,8 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
     conn->fd = pipefds[0];
     conn->pos = 0;
     conn->lastnl = 0;
+    conn->first = TRUE;
+    conn->is_savage = FALSE;
 
     conn->strings = NULL;
     conn->servers = NULL;
@@ -1261,12 +1389,12 @@ static void stat_master_update_done (struct stat_conn *conn,
     debug (3, "stat_master_update_done -- state == SOURCE_UP && conn");
     server_list_free (m->servers);
 //    m->servers = g_slist_reverse (conn->servers);
-    m->servers = slist_sort_remove_dups(conn->servers,compare_ptr,server_unref);
+    m->servers = slist_sort_remove_dups(conn->servers,compare_ptr,(server_unref_void)server_unref);
     conn->servers = NULL;
 
     userver_list_free (m->uservers);
 //    m->uservers = g_slist_reverse (conn->uservers);
-    m->uservers = slist_sort_remove_dups(conn->uservers,compare_ptr,userver_unref);
+    m->uservers = slist_sort_remove_dups(conn->uservers,compare_ptr,(userver_unref_void)userver_unref);
     conn->uservers = NULL;
 
     if (default_refresh_on_update)
@@ -1299,11 +1427,12 @@ static void stat_master_update_done (struct stat_conn *conn,
     server_ref(tmp->data);
   }
 
-  job->delayed.queued_servers = slist_sort_remove_dups(job->delayed.queued_servers,compare_ptr,server_unref);
+  job->delayed.queued_servers = slist_sort_remove_dups(job->delayed.queued_servers,
+      compare_ptr,(server_unref_void)server_unref);
   
-  job->servers = slist_sort_remove_dups(job->servers,compare_ptr,server_unref);
+  job->servers = slist_sort_remove_dups(job->servers,compare_ptr,(server_unref_void)server_unref);
   
-  job->names = slist_sort_remove_dups(job->names,compare_ptr,userver_unref);
+  job->names = slist_sort_remove_dups(job->names,compare_ptr,(userver_unref_void)userver_unref);
 
   debug (3, "stat_master_update_done -- job->master_handlers = %p",job->master_handlers);
   for (tmp = job->master_handlers; tmp; tmp = tmp->next)

@@ -68,6 +68,10 @@ struct stat_conn {
   struct stat_job *job;
 
   char *tmpfile;
+
+  // UGLY HACKS
+  gboolean first; // marker for savage check header
+  gboolean is_savage; // true if file is in savage format
 };
 
 struct delayed_refresh {
