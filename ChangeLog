@@ -1,3 +1,6 @@
+Jul 26, 2002: Jordi Mallach <jordi@sindominio.net>
+- updated Catalan and Spanish translations
+
 Jul 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - variable number of server filters
 - fix segfault when deleting last player filter entry
