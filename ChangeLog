@@ -1,3 +1,6 @@
+Feb 19, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- use GTK2 colors and Raleigh theme by default in GTK1 version
+
 Feb 18, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix use of wrong server type when adding servers (#1143801, thanks roerich
   and kracho for helping to debug this)

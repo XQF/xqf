@@ -298,6 +298,8 @@ struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixma
 
   gdk_gc_set_clip_origin (white_gc, 0, 0);
   gdk_gc_set_clip_mask (white_gc, NULL);
+
+  return dest;
 }
 
 
