@@ -73,6 +73,7 @@
 #include "menus.h"
 #include "config.h"
 #include "debug.h"
+#include "redial.h"
 
 time_t xqf_start_time;
 
@@ -928,6 +929,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
       }
       else if (launch==2) 
       {
+	      /*
         redialserver = 1;
  
         gtk_timeout_add (5000, (GtkFunction)launch_redial, (gpointer) con);
@@ -936,8 +938,15 @@ static void launch_close_handler (struct stat_job *job, int killed) {
 
         print_status (main_status_bar, _("Waiting to redial server(s)..."));
         progress_bar_reset (main_progress_bar);
+	*/
 
-        return;
+	gboolean launch = redial_dialog(con->s);
+
+	if(launch == FALSE)
+	{
+	    condef_free (con);
+	    return;
+	}
       }
       else
         redialserver = 0;
