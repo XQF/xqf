@@ -831,7 +831,7 @@ void init_games()
   game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
-   				   ("Note:  Soldier of Fortune not will connect to a server correctly\n"\
+   				   ("Note:  Soldier of Fortune will not connect to a server correctly\n"\
     				    "without creating a startup script for the game.  Please see the\n"\
 			  	    "XQF documentation for more information."))); 
   game_set_attribute(UN_SERVER,"game_notes",strdup(_
@@ -843,7 +843,9 @@ void init_games()
 
 
   game_set_attribute(SSAM_SERVER,"game_notes",strdup(_
-  				   ("Note: You need to create a qstat config file for this game to work")));
+  				   ("Note: You need to create a qstat config file for this game to work.\n"\
+    				    "Please see the XQF documentation for more information."))); 
+
 }
 
 // retreive game specific value that belongs to key, do not free return value!
