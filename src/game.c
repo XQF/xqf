@@ -1039,6 +1039,12 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=WO_SERVER;
       }
+      // voyager elite force, not supported
+      else if(!strncmp(info_ptr[1],"ST:V HM",7))
+      {
+	s->type=Q3_SERVER;
+      }
+
     }
     
     else if (strcmp (*info_ptr, "gamename") == 0) {
@@ -1285,7 +1291,7 @@ static int write_passwords (const char *filename, const struct condef *con) {
     fprintf (f, "spectator \"%s\"\n", con->spectator_password);
 
   if (con->rcon_password)
-    fprintf (f, "rcon_password \"%s\"\n", con->rcon_password);
+    fprintf (f, "rconpassword \"%s\"\n", con->rcon_password);
 
   fclose (f);
   return TRUE;
@@ -1750,6 +1756,7 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "0";
   }
 
+#if 0	// who cares if the password is visible in the process list?
   if (con->password || con->rcon_password) {
     game_dir = quake3_data_dir (g->real_dir);
 
@@ -1770,6 +1777,19 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "+exec";
     argv[argi++] = PASSWORD_CFG;
   }
+#else
+  if (con->rcon_password)
+  {
+    argv[argi++] = "+rconpassword";
+    argv[argi++] = con->rcon_password;
+  }
+
+  if (con->password)
+  {
+    argv[argi++] = "+password";
+    argv[argi++] = con->password;
+  }
+#endif
 
   if (con->server) {
     argv[argi++] = "+connect";
