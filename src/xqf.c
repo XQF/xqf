@@ -597,6 +597,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   char *fn;
   char *temp_name;
   char *temp_mod;
+  char *temp_game;
 
   char *launchargv[4];
   int pid;
@@ -706,18 +707,31 @@ static void launch_close_handler (struct stat_job *job, int killed) {
     if (f) {
 
        temp_name = cur_server->name;
+       temp_game = cur_server->game;
        temp_mod = cur_server->gametype;
        
        if (!temp_name)
           temp_name = "";
-       if (!temp_mod)
-          temp_mod = "";
 
        fprintf (f, "GameType %s\n", games[cur_server->type].name);
        fprintf (f, "ServerName %s\n", temp_name);
        fprintf (f, "ServerAddr %s:%d\n", inet_ntoa (cur_server->host->ip), 
            cur_server->port);
-       fprintf (f, "ServerMod %s\n", temp_mod);  
+
+       fprintf (f, "ServerMod ");  
+       if(temp_game)
+       {
+	 fprintf (f, "%s", temp_game);
+       }
+       if(temp_game&&temp_mod)
+       {
+	 fprintf (f, ", ");  
+       }
+       if(temp_mod)
+       {
+	 fprintf (f, "%s", temp_mod);
+       }
+       fprintf (f, "\n");  
 
        fclose (f);
     }
