@@ -760,7 +760,7 @@ static void q2_analyze_serverinfo (struct server *s) {
 
 #ifdef QSTAT23
 
-static char *q3a_gametypes[10] = {
+static char *q3a_gametypes[9] = {
   "FFA",		/* 0 = Free for All */
   "1v1",	 	/* 1 = Tournament */
   NULL,  		/* 2 = Single Player */
@@ -769,9 +769,7 @@ static char *q3a_gametypes[10] = {
   "1FCTF",		/* 5 = One Flag Capture the Flag */
   "OVR",		/* 6 = Overload */
   "HRV",		/* 7 = Harvester */
-  "TTRN",		/* 4 = Capture the Flag */
-  " mod ",              /* ? is usually a client-side mod */
-//  " mod ",              /* 5 is usually a client-side mod */
+  " mod ",              /* 8+ is usually a client-side mod */
 };
 
 
@@ -837,7 +835,7 @@ static void q3_analyze_serverinfo (struct server *s) {
   	  if (n < 5)
 	    s->game = q3a_gametypes[n];
 	  else
-	    s->game = q3a_gametypes[9];
+	    s->game = q3a_gametypes[8];
 	}
       }
     }

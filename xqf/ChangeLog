@@ -1,3 +1,7 @@
+Jan 2, 2001: Alex Burger <alex@fragit.net>
+-Change g_gametype of 8 to ' mod ' instead of TeamTournament which 
+ TeamArena uses in the in-game browser.
+
 Jan 1, 2001: Alex Burger <alex@fragit.net>
 -Now executes the file PreLaunch from the ~/.qf directory when launching a 
  game for use with ICQ scripts etc.  Toggle on / off using Preferences / 
