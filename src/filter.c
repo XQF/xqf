@@ -424,7 +424,7 @@ static void server_filter_on_ok ()
   oldfilter = &g_array_index (server_filters, struct server_filter_vars*, server_filter_dialog_current_filter-1);
   if(!oldfilter || !*oldfilter)
   {
-    debug(0,"Bug in " __FUNCTION__ ": filter is NULL");
+    debug(0,"Bug: filter is NULL");
     return;
   }
 */
@@ -435,7 +435,6 @@ static void server_filter_on_ok ()
   if(!newfilter)
     return;
 
-  debug(0,__FUNCTION__);
   filters[FILTER_SERVER].changed = FILTER_CHANGED;
 
   newfilter = server_filter_new_from_widgets();
@@ -506,8 +505,6 @@ static void server_filter_save_settings (int number,
   int text_changed;
   enum { buflen = 64 };
   char config_section[buflen];
-
-  debug(3,__FUNCTION__);
 
   if( number == 0 ){ return; }
 
@@ -710,7 +707,7 @@ static GtkWidget *create_filter_menu()
     filter = g_array_index (server_filters, struct server_filter_vars*, i);
     if(!filter)
     {
-      debug(0,"Bug in " __FUNCTION__ ": filter is NULL");
+      debug(0,"Bug: filter is NULL");
       continue;
     }
     menu_item = gtk_menu_item_new_with_label(filter->filter_name?filter->filter_name:"(null)");
@@ -733,7 +730,7 @@ static void filter_new_rename_callback (int number)
   char *str = NULL;
   struct server_filter_vars* filter = NULL;
 
-  debug(3,__FUNCTION__ " %s %d",str, number);
+  debug(3,"%s %d",str, number);
 
   // renaming the none filter is not possible
   if(number && server_filter_dialog_current_filter < 1) return;
@@ -837,7 +834,7 @@ static void server_filter_fill_widgets(guint num)
     filter = g_array_index (server_filters, struct server_filter_vars*, num-1);
     if(!filter)
     {
-      debug(0,"Bug in " __FUNCTION__ ": filter is NULL");
+      debug(0,"Bug: filter is NULL");
       filter = server_filter_vars_new();
       dofree = TRUE;
     }
@@ -899,12 +896,12 @@ static void server_filter_page (GtkWidget *notebook) {
   if( current_server_filter < 0 )
   {
     current_server_filter = 0;
-    debug(0,__FUNCTION__ ": invalid filter nr %d", server_filter_dialog_current_filter );
+    debug(0,"invalid filter nr %d", server_filter_dialog_current_filter );
   }
   else if ( current_server_filter > server_filters->len )
   {
     current_server_filter = 1;
-    debug(0,__FUNCTION__ ": invalid filter nr %d", server_filter_dialog_current_filter );
+    debug(0,"invalid filter nr %d", server_filter_dialog_current_filter );
   }
   
   server_filter_deleted = FALSE;
