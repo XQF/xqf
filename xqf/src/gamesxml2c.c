@@ -371,7 +371,7 @@ int main (int argc, char* argv[])
 	{
 	    struct MultiTag* m = rg->multi[tag - TAG_start_multi];
 	    
-	    if(!m && rg->base)
+	    if(!m && rg->base && tagInherit(tag))
 		m = rg->base->multi[tag - TAG_start_multi];
 	    
 	    if(!m)

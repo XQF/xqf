@@ -1050,6 +1050,19 @@ static char *q3a_wq3_gametypes[MAX_Q3A_WQ3_TYPES] = {
   "Bank Robbery"
 };
 
+#define MAX_Q3A_WOP_TYPES 9
+static char *q3a_wop_gametypes[MAX_Q3A_WOP_TYPES] = {
+  NULL,
+  NULL,
+  NULL,
+  "Spray your Color FFA (SyC)", // 3
+  "LastPadStanding (LPS)", // 4
+  NULL,
+  NULL,
+  "Spray your Color Teamgame (SyC)", // 7
+  "BigBalloon (BB)" // 8
+};
+
 #define MAX_WOLF_TYPES 9
 static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   NULL,			// 0 - Unknown
@@ -1191,6 +1204,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     "westernq3",
     q3a_wq3_gametypes,
     MAX_Q3A_WQ3_TYPES
+  },
+  {
+    "wop",
+    q3a_wop_gametypes,
+    MAX_Q3A_WOP_TYPES
   },
   {
     NULL,
