@@ -25,6 +25,7 @@
 #include <string.h>	/* strlen */
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "xqf.h"
 #include "xqf-ui.h"
@@ -1320,11 +1321,27 @@ static void server_clist_unselect_callback (GtkWidget *widget, int row,
 }
 
 
+/* Deal with key-presses in the server pane */
+static void server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event)
+
+{
+  
+  /* printf( "CLIST Key %x\n", event->keyval ); */
+  if (event->keyval == GDK_Delete) {
+    del_server_callback( widget, event );
+  } else if (event->keyval == GDK_Insert ) {
+    add_to_favorites_callback( widget, event );
+  } else if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ) {
+    launch_callback( widget, LAUNCH_NORMAL );
+  }
+}
+
+
 static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
   GdkEventButton *bevent = (GdkEventButton *) event;
   GList *selection;
   int row;
-
+  
   if (event->type == GDK_BUTTON_PRESS &&
                    bevent->window == server_clist->clist_window) {
 
@@ -1546,26 +1563,9 @@ struct __menuitem {
 };
 
 
-/*
-  baa -- Oh, this is kind of bad.  In order to allow
-  the number of menus to be changed at compile (and in
-  the future, run) time, I have to allocate and set
-  up each of the filter menu items.  But that makes
-  it no longer a const.
-*/
 
-struct menuitem *server_filter_menu_items;
 
-/* Bad Bill!  The const has been removed from the next line. */
-static struct menuitem srvopt_menu_items[] = {
-  {
-    MENU_BRANCH,		"_Server Filters",	0,	0,
-    NULL, 
-    NULL,                     /* <-- This gets set to the addres
-				 of server_filter_menu_items after
-				 we g_malloc the memory. */
-    NULL
-  },
+static const struct menuitem srvopt_menu_items[] = {
   { 
     MENU_ITEM,		"Connect",		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL,
@@ -1749,7 +1749,27 @@ static const struct menuitem view_menu_items[] = {
   { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
 };
 
-static const struct menuitem server_menu_items[] = {
+
+/*
+  baa -- Oh, this is kind of bad.  In order to allow
+  the number of menus to be changed at compile (and in
+  the future, run) time, I have to allocate and set
+  up each of the filter menu items.  But that makes
+  it no longer a const.
+*/
+
+struct menuitem *server_filter_menu_items;
+
+/* Bad Bill!  The const has been removed from the next line. */
+static struct menuitem server_menu_items[] = {
+  {
+    MENU_BRANCH,		"_Server Filters",	0,	0,
+    NULL, 
+    NULL,                     /* <-- This gets set to the addres
+				 of server_filter_menu_items after
+				 we g_malloc the memory. */
+    NULL
+  },
   { 
     MENU_ITEM,		"_Connect",		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL,
@@ -1769,10 +1789,16 @@ static const struct menuitem server_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"Add to _Favorites",	0,	0,
+    MENU_ITEM,		"Add to _Favorites",	0, 0,
     GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
     &server_favadd_menu_item
   },
+  { 
+    MENU_ITEM,		"Delete",		0,   	0,
+    GTK_SIGNAL_FUNC (del_server_callback), NULL,
+    &delete_menu_item
+  },
+
   { 
     MENU_ITEM,		"DNS _Lookup",		'L',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (resolve_callback), NULL,
@@ -2063,6 +2089,8 @@ static void populate_main_toolbar (void) {
 }
 
 
+
+
 void create_main_window (void) {
   GtkWidget *main_vbox;
   GtkWidget *vbox;
@@ -2159,7 +2187,13 @@ void create_main_window (void) {
     server_filter_menu_items[i].user_data  = NULL;
     server_filter_menu_items[i].widget     = NULL;
   }
+
+  /* Depeding on where you want the filters to appear... */
+#if 0
   srvopt_menu_items[0].user_data = &server_filter_menu_items[0];
+#else
+  server_menu_items[0].user_data = &server_filter_menu_items[0];
+#endif
 
   server_menu = create_menu (srvopt_menu_items, accel_group);
 
@@ -2250,6 +2284,10 @@ void create_main_window (void) {
                         GTK_SIGNAL_FUNC (server_clist_select_callback), NULL);
   gtk_signal_connect (GTK_OBJECT (server_clist), "unselect_row",
                       GTK_SIGNAL_FUNC (server_clist_unselect_callback), NULL);
+
+  gtk_signal_connect (GTK_OBJECT (server_clist), "key_press_event",
+		      GTK_SIGNAL_FUNC (server_clist_keypress_callback), NULL);
+
 
   gtk_clist_set_compare_func (server_clist,
 			     (GtkCListCompareFunc) server_clist_compare_func);

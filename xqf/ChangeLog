@@ -1,3 +1,19 @@
+Dec 22, 2000: Bill Adams <bill@evil.inetarena.com>
+-New column in the server list to show if you need a password or not. If
+ you do a lock icon appears.
+-If a Q3A server has all non private-client slots filled, a yellow man
+ appears next to the map.  The icon is slightly different for color blind
+ people so don't tell me about it unless you are color blind and need the
+ difference greater.
+-You can press "Insert" and "Delete" to add and delete servers, "Enter"
+ or "Return" will connect you to the server.
+-Moved the filter selection to the "Server" menu pulldown.
+-It still dumps core. :(. There seems to be a reference counting bug
+ with the server lists.  If you want to watch it happen, set up a
+ "mod contains wfa" filter, update the Q3A ID list, apply the filter, and
+ press refresh repeatedly.
+
+
 Dec 20th 2000: Bill Adams <bill@evil.inetarena.com>
 --The filter name now appears in the status bar.
 --Version changed to 0.9.6b-beta

@@ -64,6 +64,7 @@ extern	struct pixmap rminus_pix;
 
 extern	struct pixmap man_black_pix;
 extern	struct pixmap man_red_pix;
+extern	struct pixmap man_yellow_pix;
 
 extern	struct pixmap group_pix[];
 extern	struct pixmap buddy_pix[];
@@ -71,6 +72,8 @@ extern	struct pixmap buddy_pix[];
 extern	struct pixmap error_pix;
 
 extern	struct pixmap server_status[];
+
+extern	struct pixmap locked_pix;
 
 extern	int pixmap_height (GdkPixmap *pixmap);
 extern	int pixmap_width (GdkPixmap *pixmap);

@@ -147,6 +147,7 @@ struct server {
   unsigned char filters;
   unsigned char flt_mask;
   unsigned flt_last;	/* time of the last filtering */
+  unsigned private_client; /* number of private clients */
 
   time_t refreshed;
 

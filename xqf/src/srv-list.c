@@ -90,7 +90,7 @@ void assemble_server_address (char *buf, int size, struct server *s) {
 static int server_clist_refresh_row (struct server *s, int row) {
   GdkPixmap *server_pixmap;
   GdkBitmap *server_pixmask;
-  char *text[8];
+  char *text[9];
   char buf1[256], buf2[32], buf3[32], buf4[32];
   char *retries;
   struct pixmap *retries_pix = NULL;
@@ -134,31 +134,53 @@ static int server_clist_refresh_row (struct server *s, int row) {
   if (xqf_start_time > s->refreshed)
     retries_pix = &server_status[0];
 
-  text[3] = NULL;
+  text[3] = text[4] = NULL;
 
   g_snprintf (buf4, 32, "%d/%d", s->curplayers, s->maxplayers);
-  text[4] = (!s->curplayers)? buf4 : NULL;
+  text[5] = (!s->curplayers)? buf4 : NULL;
 
-  text[5] = (s->map) ?  s->map : NULL;
-  text[6] = (s->game)? s->game : NULL;
-  text[7] = (s->mod) ? s->mod : NULL;
+  text[6] = (s->map) ?  s->map : NULL;
+  text[7] = (s->game)? s->game : NULL;
+  text[8] = (s->mod) ? s->mod : NULL;
 
   if (row < 0) {
     row = gtk_clist_append (server_clist, text);
   }
   else {
-    for (col = 1; col < 7; col++) {
+    for (col = 1; col < 8; col++) {
       gtk_clist_set_text (server_clist, row, col, text[col]);
     }
   }
 
   gtk_clist_set_pixtext (server_clist, row, 3, retries, 2,
                                          retries_pix->pix, retries_pix->mask);
-
+#if 0
   if (s->curplayers) {
     gtk_clist_set_pixtext (server_clist, row, 4, buf4, 2,
      (s->curplayers >= s->maxplayers)? man_red_pix.pix : man_black_pix.pix,
      (s->curplayers >= s->maxplayers)? man_red_pix.mask : man_black_pix.mask);
+  }
+#endif
+  if (s->curplayers >= s->maxplayers)
+    gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
+                           man_red_pix.pix, man_red_pix.mask );
+
+  else if ( (s->curplayers + s->private_client ) >= s->maxplayers)
+    gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
+                           man_yellow_pix.pix, man_yellow_pix.mask );
+  
+  else if (s->curplayers)
+    gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
+                           man_black_pix.pix, man_black_pix.mask );
+  
+    
+
+  /* Show if the server is private or not */
+  if (s->flags & SERVER_PASSWORD ) {
+    gtk_clist_set_pixtext (server_clist, row, 4, "", 0,
+                           locked_pix.pix, locked_pix.mask );
+  } else {
+    gtk_clist_set_text (server_clist, row, 4, "" );
   }
 
   get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap, 
