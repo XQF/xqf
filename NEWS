@@ -2,9 +2,12 @@ XQF 0.9.9 -- ?? ??, 2002
 ~~~~~~~~~
 Changes since 0.9.8:
 
-o 
-o 
-o 
+o Added Voyager Elite Force support.
+o Changed default Quake3 protocol to 67.
+o You can now select Quake3 and Wolfenstein's protocol.
+o Added 20sec timeout for wget (nice if Gameaholic is down).
+o Added Tribes2 server statistics.
+o Fixed Tribes2 and Quake3 masters.
 
 XQF 0.9.8 -- December 17, 2001
 ~~~~~~~~~

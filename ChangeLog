@@ -1,3 +1,6 @@
+Jan 17, 2002: Jordi Mallach <jordi@sindominio.net>
+- updated NEWS for 0.9.9.
+
 Jan 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - removed not working Tribes2 masterservers and added a new one
 - wrote new function for parsing Tribes2 player info
