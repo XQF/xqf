@@ -1826,8 +1826,9 @@ static void pref_suggest_command(enum server_type type)
 	return;
     }
 
-    // gtk entry does the freeing?
+    // gtk entry does the freeing? -- no
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
+    g_free(suggested_file);
 
     return;
 }
@@ -1881,7 +1882,7 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
   
     case UN_SERVER:
       add_custom_args_defaults2("s_SWATGame","-ini=TacticalOps.ini",UN_SERVER, data);
-      add_custom_args_defaults2("sfteamdm","-ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER, data);
+      add_custom_args_defaults2("SFTeamDM","-ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER, data);
       break;
 
     case Q3_SERVER:
@@ -1978,25 +1979,28 @@ static void replace_custom_args_callback (GtkWidget *widget, gpointer data) {
 
 static void custom_args_clist_select_row_callback (GtkWidget *widget, 
                                  int row, int column, GdkEventButton *event, GtkCList *clist) {
-  char **temp;
   enum server_type type;
-  struct game *g;
-  
+  GSList* item;
+  char* argstr;
+  char* game_args[2] = {0} ;
+
   type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
-  g = &games[type];
 
   current_row = row;
   
-  if (gtk_clist_get_text(clist, row, 0, temp))
-    gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), temp[0]);
-  else
-    gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), "");
-
-  if (gtk_clist_get_text(clist, row, 1, temp))
-    gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), temp[0]);
-  else
-    gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), "");
+  if(row<0) return;
   
+  item = g_slist_nth(custom_args_entry_list[type], row);
+
+  if(!item) return; 
+
+  argstr = g_strdup(item->data);
+  tokenize (argstr, game_args, 2, ",");
+  
+  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), game_args[0]);
+  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), game_args[1]);
+
+  g_free(argstr);
 }
 
 static GtkWidget *generic_game_frame (enum server_type type) {

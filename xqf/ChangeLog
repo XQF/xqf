@@ -1,3 +1,7 @@
+Oct 24, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- code cleanup
+- do not append first argument directly to ip in ut to be consistent with q3
+
 Oct 23, 2002: Jordi Mallach <jordi@sindominio.net>
 - Update Catalan and Spanish translations.
 

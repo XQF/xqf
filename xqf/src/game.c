@@ -2669,6 +2669,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   g_free (tmp_cmd);
   if (to_free)
     g_free (to_free);
+  g_strfreev(additional_args);
   return retval;
 }
 
@@ -2760,11 +2761,13 @@ static int ut_exec (const struct condef *con, int forkit) {
 
     additional_args = get_custom_arguments(con->s->type, con->s->game);
 
-    if (!(additional_args && additional_args[i]))
+//    if (!(additional_args && additional_args[i]))
       argv[argi++] = real_server;
     
     while(additional_args && additional_args[i] )
     {
+      argv[argi++] = additional_args[i];
+      /*
       // append first argument to server address
       if(i == 0)
       {
@@ -2776,8 +2779,8 @@ static int ut_exec (const struct condef *con, int forkit) {
       else
       {
 	argv[argi++] = additional_args[i];
-
       }
+      */
       i++;
     }
   }
