@@ -252,7 +252,11 @@ static int server_clist_refresh_row (struct server *s, int row) {
   // if map not available
   if(games[s->type].has_map && games[s->type].has_map(s) == FALSE)
   {
-    /*
+    gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask );
+  }
+
+  if(s->flags & SERVER_INCOMPATIBLE)
+  {
     GtkStyle *style;
 
     style = gtk_widget_get_style(GTK_WIDGET(server_clist));
@@ -260,8 +264,6 @@ static int server_clist_refresh_row (struct server *s, int row) {
     {
       gtk_clist_set_foreground(server_clist,row,&style->fg[GTK_STATE_INSENSITIVE]);
     }
-    */
-    gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask );
   }
 
   gdk_pixmap_unref (server_pixmap);
