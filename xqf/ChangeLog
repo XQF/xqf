@@ -1,3 +1,6 @@
+Mar 20, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- load GeoIP.dat from location specified in environment variable xqf_GEOIPDAT
+
 Mar 16, 2004: Jordi Mallach <jordi@sindominio.net>
 - update Catalan and Spanish translations.
 
