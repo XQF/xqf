@@ -1245,7 +1245,7 @@ static void stat_next (struct stat_job *job) {
 
     for (list = job->hosts; list; list = list->next) {
       h = (struct host *) list->data;
-      dns_lookup (inet_ntoa (h->ip));
+      if (h) dns_lookup (inet_ntoa (h->ip));
     }
     return;
   }
