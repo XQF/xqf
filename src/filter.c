@@ -1159,7 +1159,7 @@ static void server_filter_fill_widgets(guint num)
 	// gtk_clist_insert third parameter is not const!
 	strncpy(buf,geoip_name_by_id(f_number),sizeof(buf));
 	gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
-        countrypix = get_pixmap_for_country(f_number);
+        countrypix = get_pixmap_for_country_with_fallback(f_number);
 	if(countrypix)
 	{
 	  gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), rw, 0,geoip_name_by_id(f_number), 4,
@@ -1882,9 +1882,12 @@ static void populate_country_clist(GtkWidget* clist, gboolean all)
 
     for (i = 0; i <= MaxCountries; ++i)
     {
-	countrypix = get_pixmap_for_country(i);
+	if(all)
+	    countrypix = get_pixmap_for_country_with_fallback(i);
+	else
+	    countrypix = get_pixmap_for_country(i);
 
-	if ( !all && !countrypix )
+	if (!all && !countrypix )
 	    continue;
 
 	++row_number;
@@ -2059,7 +2062,7 @@ static void country_create_popup_window(void)
   
     flag_nr=GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_filter_list), i));
    
-    countrypix = get_pixmap_for_country(flag_nr);
+    countrypix = get_pixmap_for_country_with_fallback(flag_nr);
   
     // gtk_clist_insert third parameter is not const!
     strncpy(buf,geoip_name_by_id(flag_nr),sizeof(buf));

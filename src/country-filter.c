@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "pixmaps.h"
 #include "loadpixmap.h"
+#include "xpm/noflag.xpm"
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <ctype.h>
@@ -221,6 +222,33 @@ struct pixmap* get_pixmap_for_country(int id)
   g_free (filename);
 
   return pix;
+}
+
+struct pixmap* get_pixmap_for_country_with_fallback(int id)
+{
+  struct pixmap* pix = get_pixmap_for_country(id);
+  if(pix)
+    return pix;
+
+  if(!flags || flags[0].pix == GINT_TO_POINTER(-1))
+    return NULL;
+
+  if(!flags[0].pix)
+  {
+    flags[0].pix = gdk_pixmap_colormap_create_from_xpm_d(NULL,
+	gdk_colormap_get_system(),
+	&flags[0].mask,
+	NULL,
+	noflag_xpm);
+    if(!flags[0].pix)
+      flags[0].pix = GINT_TO_POINTER(-1);
+  }
+  return &flags[0];
+}
+
+unsigned geoip_num_countries()
+{
+  return MaxCountries+1;
 }
 
 #endif
