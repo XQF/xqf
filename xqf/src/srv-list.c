@@ -256,7 +256,7 @@ static int player_clist_refresh_row (struct server *s, struct player *p,
   g_snprintf (buf1, 32, "%d", p->frags);
   text[1] = buf1;
 
-  if (p->model && p->skin) {
+  if (p->model && p->skin && strlen(p->model) && strlen(p->skin)) {
     g_snprintf (skin_buf, 128, "%s/%s", p->model, p->skin);
     text[3] = skin_buf;
   }
