@@ -525,7 +525,7 @@ struct game games[] = {
   },
   {
     type                : SAS_SERVER,
-    flags               : GAME_CONNECT,
+    flags               : GAME_CONNECT | GAME_PASSWORD,
     name                : "Savage",
     default_port        : 11235,
     id                  : "SAS",

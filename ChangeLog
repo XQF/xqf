@@ -5,6 +5,7 @@ Jan 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add --dontlaunch parameter for internal use
 - add exec function to hexenworld (anyone ever played that game??)
 - make sof2 master protcol configurable
+- support password on savage servers. Thanks Andreas Schneider for reporting.
 
 Jan 07, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - check props pointer before dereferencing it ...
