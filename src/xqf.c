@@ -3757,6 +3757,10 @@ gboolean check_cmdline_launch(gpointer nothing)
 	{
 	  addrstring = add_server_dialog (&type, token[0]);
 	}
+	else
+	{
+	  addrstring = g_strdup(cmdline_add_server);
+	}
     }
 
     prepare_new_server_to_favorites(type, addrstring, cmdline_launch);
