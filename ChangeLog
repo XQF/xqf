@@ -1,3 +1,7 @@
+Oct 13, 2002: Jordi Mallach <jordi@sindominio.net>
+- add redial.c to POTFILES.
+- updated Catalan and Spanish translations.
+
 Oct 13, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - use server_clist_set_list in server_clist_build_filtered. It's actually
   faster to rebuild the displayed server list from scratch than to determine

@@ -19,6 +19,7 @@ src/pref.c
 src/psearch.c
 #src/rc.c
 src/rcon.c
+src/redial.c
 #src/server.c
 #src/skin.c
 #src/skin_pcx.c
