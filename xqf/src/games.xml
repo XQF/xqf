@@ -285,10 +285,10 @@
 	<flags>GAME_CONNECT | GAME_PASSWORD</flags>
 	<default_port>27015</default_port>
 	<default_master_port>27011</default_master_port>
-	<id>HL2S</id>
-	<qstat_str>HL2S</qstat_str>
-	<qstat_option>-hl2s</qstat_option>
-	<qstat_master_option>-stmhl2</qstat_master_option>
+	<id>A2S</id>
+	<qstat_str>A2S</qstat_str>
+	<qstat_option>-a2s</qstat_option>
+	<qstat_master_option>-stma2s</qstat_master_option>
 	<icon>hl2.xpm</icon>
 	<parse_player>hl_parse_player</parse_player>
 	<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
