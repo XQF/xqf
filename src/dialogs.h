@@ -28,6 +28,8 @@ extern	GtkWidget *dialog_create_modal_transient_window (char *title,
 extern	void dialog_ok (char *title, char *fmt, ...);
 extern	int dialog_yesno (char *title, int defbutton, char *yes, char *no, 
                                                               char *fmt, ...);
+extern	int dialog_yesnoredial (char *title, int defbutton, char *yes, char *no, char *redial,
+                                                              char *fmt, ...);
 extern	char *enter_string_dialog (int visible, char *fmt, ...);
 extern	char *enter_string_with_option_dialog (
                       int visible, char *optstr, int *optval, char *fmt, ...);
