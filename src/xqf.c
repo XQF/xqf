@@ -27,6 +27,7 @@
 #include <time.h>	/* time */
 #include <string.h>	/* strlen */
 #include <ctype.h>	/* isspace */
+#include <getopt.h>
 
 // select, fork, pipe ...
 #include <sys/time.h>
@@ -283,13 +284,13 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 
   if (pipe (pipefds) < 0)
   {
-    debug(0,"start_prog_and_return_fd -- error creating pipe: %s",strerror(errno));
+    xqf_error("start_prog_and_return_fd -- error creating pipe: %s",strerror(errno));
     return -1;
   }
   *pid = fork();
   if (*pid < (pid_t) 0)
   {
-    debug(0,"start_prog_and_return_fd -- fork failed: %s",strerror(errno));
+    xqf_error("start_prog_and_return_fd -- fork failed: %s",strerror(errno));
     return -1;
   }
   
@@ -306,7 +307,7 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 
     execvp (argv[0], argv);
 
-    debug(0,"start_prog_and_return_fd -- failed to exec %s: %s",argv[0],strerror(errno));
+    xqf_error("start_prog_and_return_fd -- failed to exec %s: %s",argv[0],strerror(errno));
 
     _exit (1);
   }
@@ -344,7 +345,7 @@ int check_qstat_version( const char* version )
   flags = fcntl (fd, F_GETFL, 0);
   if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0)
   {
-    debug(0,"fcntl failed: %s", strerror(errno));
+    xqf_error("fcntl failed: %s", strerror(errno));
     return -1;
   }
 
@@ -359,7 +360,7 @@ int check_qstat_version( const char* version )
 
   if (!retval)
   {
-    debug(0,"check_qstat_version -- No data within two seconds.");
+    xqf_error("check_qstat_version -- No data within two seconds.");
     return FALSE;
   }
 
@@ -368,13 +369,13 @@ int check_qstat_version( const char* version )
   // read error
   if (read_ret < 0)
   {
-    debug(0,"check_qstat_version -- read failed: %s", strerror(errno));
+    xqf_error("check_qstat_version -- read failed: %s", strerror(errno));
     return FALSE;
   }
   // read hasn't read anything
   else if(read_ret == 0)
   {
-    debug(0,"check_qstat_version -- didn't read anything");
+    xqf_error("check_qstat_version -- didn't read anything");
     return FALSE;
   }
 
@@ -703,7 +704,7 @@ void set_server_filter_menu_list_text( void ){
     else
     {
       snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
-      debug(0,"this is a bug");
+      xqf_error("this is a bug");
     }
   }
   
@@ -998,7 +999,6 @@ static gboolean check_launch (struct condef* con)
   struct server *s;
   int reserved_slots;
 
-
   if (!con)
     return FALSE;
 
@@ -1243,7 +1243,7 @@ static void launch_close_handler_part2(struct condef *con)
       launchargv[2] = g_strdup_printf("%s:%d", inet_ntoa (s->host->ip), s->port);
       launchargv[3] = NULL;
       execv(launchargv[0],launchargv);
-      debug(0,"PreLaunch failed");
+      xqf_error("PreLaunch failed");
       _exit(EXIT_FAILURE);
     }     
   }
@@ -1263,6 +1263,13 @@ static void launch_server_handler (struct stat_job *job, struct server *s) {
   if (s == cur_server) {
     player_clist_set_server (s);
     srvinf_ctree_set_server (s);
+  }
+
+  // no connection defined, maybe because of a hostname instead of ip specified
+  // on command line. just take first server to launch
+  if(!job->data)
+  {
+    job->data = condef_new (s);
   }
 
   /* Don't spend time on host name lookups */
@@ -1491,11 +1498,11 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
   }
 }
 
-
-static void add_server_real (struct stat_job *job, struct server *s) {
+// add a server to favorites
+static void new_server_to_favorites (struct stat_job *job, struct server *s) {
   int row;
 
-  debug (6, "add_server_real() -- Server %lx", s);
+  debug (6, "Server %lx, job %p", s, job);
   favorites->servers = server_list_append (favorites->servers, s);
   save_favorites ();
 
@@ -1518,7 +1525,7 @@ static void add_server_real (struct stat_job *job, struct server *s) {
 static void add_server_name_handler (struct stat_job *job, struct userver *us,
                                                      enum dns_status status) {
   if (us->s) {
-    add_server_real (job, us->s);
+    new_server_to_favorites (job, us->s);
   }
   else {
     progress_bar_reset (main_progress_bar);
@@ -1526,28 +1533,18 @@ static void add_server_name_handler (struct stat_job *job, struct userver *us,
   }
 }
 
-
-static void add_server_callback (GtkWidget *widget, gpointer data) {
-  char *str;
+/** check specified address is valid, resolve hostname if needed, stat server,
+ * finally call new_server_to_favorites
+ * calls free(str)!!!
+ */
+static void prepare_new_server_to_favorites(enum server_type type, char* str, gboolean dolaunch)
+{
   char *addr;
   unsigned short port;
   struct host *h;
   struct server *s = NULL;
   struct userver *us = NULL;
-  enum server_type type;
 
-  debug (6, "add_server_callback() -- ");
-  
-  if (stat_process)
-    return;
-
-  // FIXME:
-  // Set type to 0 - what was is supposed to pass?  The last server type selected in the server list???
-  // Alex - 10/14/2002
-  type = 0;
-
-  str = add_server_dialog (&type);
-  // str = add_server_dialog (0);
   if (!str || !*str)
     return;
 
@@ -1564,7 +1561,7 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
     host_ref (h);
     s = server_add (h, port, type);
     if (s)
-      add_server_real (NULL, s);
+      new_server_to_favorites (NULL, s);
     host_unref (h);
   }
   else {						/* hostname */
@@ -1584,17 +1581,45 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
     stat_process->close_handlers = g_slist_prepend (
                       stat_process->close_handlers, stat_lists_close_handler);
 
-    stat_process->server_handlers = g_slist_append (
-                    stat_process->server_handlers, stat_lists_server_handler);
+//    stat_process->server_handlers = g_slist_append (
+//                    stat_process->server_handlers, stat_lists_server_handler);
 
     stat_process->name_handlers = g_slist_prepend (
                         stat_process->name_handlers, add_server_name_handler);
+
+    if(dolaunch)
+    {
+	if(s)
+	{
+	    struct condef* con = condef_new (s);
+	    stat_process->data = con;
+	}
+
+	stat_process->server_handlers = g_slist_append (
+                        stat_process->server_handlers, launch_server_handler);
+
+	stat_process->close_handlers = g_slist_append (
+			stat_process->close_handlers, launch_close_handler);
+    }
 
     stat_start (stat_process);
     set_widgets_sensitivity ();
   }
 }
 
+static void add_server_callback (GtkWidget *widget, gpointer data) {
+  char *str = NULL;
+  enum server_type type  = 0;
+  
+  if (stat_process)
+    return;
+  
+  str = add_server_dialog (&type);
+
+  prepare_new_server_to_favorites(type, str, FALSE);
+
+  return;
+}
 
 static void del_server_callback (GtkWidget *widget, gpointer data) {
   GSList *list;
@@ -3502,12 +3527,97 @@ void play_sound (const char *sound, const int override)
   }
 }
 
+static void cmdlinehelp()
+{
+    puts("XQF Version " PACKAGE_VERSION);
+    puts(_(
+"Usage:\n"
+"\txqf [OPTIONS]\n"
+"\n"
+"OPTIONS:\n"
+"\t--launch \"SERVERTYPE IP\"\tlaunch game on specified server\n"
+"\t--debug <level>\t\t\tset debug level\n"
+"\t--version\t\t\tprint version and exit\n"));
+    exit(0);
+}
+
+static char* cmdline_launch = NULL;
+gboolean check_cmdline_launch(gpointer nothing)
+{
+    char* token[2] = {0};
+    enum server_type type;
+    if(!cmdline_launch) return FALSE;
+    if(tokenize_bychar(cmdline_launch, token, 2, ' ') != 2)
+    {
+	dialog_ok(NULL,"Invalid server specification: %s",cmdline_launch);
+	g_free(cmdline_launch);
+	return FALSE;
+    }
+
+    type = id2type(token[0]);
+    if(type == UNKNOWN_SERVER)
+    {
+	dialog_ok(NULL,"Invalid server specification: %s",token[0]);
+	g_free(cmdline_launch);
+	return FALSE;
+    }
+
+    prepare_new_server_to_favorites(type,g_strdup(token[1]), TRUE);
+
+    g_free(cmdline_launch);
+    return FALSE;
+}
+
+static struct option long_options[] =
+{
+    {"launch", 1, 0, 'l'},
+    {"debug", 1, 0, 'd'},
+    {"version", 0, 0, 'v'},
+    {"help", 0, 0, 'h'},
+    {0, 0, 0, 0}
+};
+
+static void parse_commandline(int argc, char* argv[])
+{
+    while (1)
+    {
+	char c;
+	int option_index = 0;
+
+	c = getopt_long (argc, argv, "d:l:h", long_options, &option_index);
+	if (c == -1)
+	    break;
+
+	switch(c)
+	{
+	    case 'd':
+		set_debug_level(atoi(optarg));
+		break;
+	    case 'l':
+		cmdline_launch = strdup(optarg);
+		break;
+	    case 'h':
+		cmdlinehelp();
+		break;
+	    case 'v':
+		puts("XQF Version " PACKAGE_VERSION);
+		exit(0);
+		break;
+	    case '?':
+	    case ':':
+		exit(1);
+		break;
+	    default:
+		xqf_warning("getopt error, starting anyway ...");
+		return;
+	}
+    }
+}
+
 int main (int argc, char *argv[]) {
   char *gtk_config;
   int newversion = FALSE;
   char required_qstat_version[]="2.4e";
-
-  int i,j; /* For parsing the command line. */
 
   xqf_start_time = time (NULL);
 
@@ -3527,7 +3637,7 @@ int main (int argc, char *argv[]) {
   }
 
   if (dns_spawn_helper () < 0) {
-    fprintf (stderr, "Unable to start DNS helper\n");
+    xqf_error ("Unable to start DNS helper");
     return 1;
   }
 
@@ -3537,25 +3647,7 @@ int main (int argc, char *argv[]) {
 
   gtk_init (&argc, &argv);
 
-  /* Parse the command line.  Really should use getops lib
-     but we only have one option right now.  Start
-     at pos. 1 since location 0 has the program name. */
-  for (i = 1; i < argc; i++ ) {
-    if (strcmp (argv[i], "-d") == 0){
-      if ((i+1) < argc ) {
-	j = atoi (argv[i+1]);
-	if (j) i++;
-	else  j = 1; /* In case it was not a number. */
-
-      } else {
-	j = 1;
-      }
-      set_debug_level (j);
-      debug( 1, "main() -- Debug level set to %d", get_debug_level());
-    } else {
-      fprintf (stderr, "main() -- Unknown Option '%s' (only -d N is valid, N>5 == Lots of output)\n", argv[i]);
-    }
-  }
+  parse_commandline(argc,argv);
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   
@@ -3602,7 +3694,7 @@ int main (int argc, char *argv[]) {
 
   print_status (main_status_bar, NULL);
 
-  if (default_auto_favorites)
+  if (default_auto_favorites && !cmdline_launch)
     refresh_callback (NULL, NULL);
 
   if(check_qstat_version(required_qstat_version) == FALSE)
@@ -3615,6 +3707,8 @@ int main (int argc, char *argv[]) {
   debug(1,"startup time %ds", time(NULL)-xqf_start_time);
 
   destroy_splashscreen();
+
+  g_timeout_add(0, check_cmdline_launch, NULL);
 
   gtk_main ();
 

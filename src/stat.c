@@ -59,7 +59,7 @@ static int failed (char *name, char *arg) {
   fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", 
                                                           g_strerror (errno));
 
-  debug (0, "%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
+  xqf_error("%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
   
   return TRUE;
 }
@@ -1506,7 +1506,6 @@ static void move_q2masters_to_top (GSList **list) {
   *list = g_slist_concat (q2masters, *list);
 }
 
-
 static void stat_next (struct stat_job *job) {
   GSList *list;
   GSList *tmp;
@@ -1607,7 +1606,7 @@ static void stat_next (struct stat_job *job) {
     if (!stat_open_conn_qstat (job)) {
 
       /* It's very bad, stop everything. */
-      debug (0, "Error! Could not stat_open_conn_qstat()");
+      xqf_error ("Error! Could not stat_open_conn_qstat()");
       stat_close (job, TRUE);
     }
     debug_decrease_indent();

@@ -366,6 +366,9 @@ struct condef *condef_new (struct server *s) {
 
 
 void condef_free (struct condef *con) {
+
+  g_return_if_fail(con!=NULL);
+
   if (con->s)
     server_unref (con->s);
 
