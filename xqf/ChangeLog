@@ -1,3 +1,13 @@
+May 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix LAN Browsing for games that need a port change (Rune)
+- replaced static struct for q3 options with a more flexible g_datalist
+- added preferences tab for q3 memory settings
+- renamed STVEFS to EFS to match qstat beta, old servers need to be renamed by
+  hand else they will get lost
+- added master server preferences tab for voyager elite force (req upcoming
+  qstat)
+- updated german translation
+
 Apr 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - acconfig.h seems to be deprecated, moved it to i18n.h
 - removed explicit -I/usr/include as gcc3 doesn't like that

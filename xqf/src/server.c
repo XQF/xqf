@@ -160,7 +160,6 @@ struct server *server_add (struct host *h, unsigned short port,
   return server;
 }
 
-
 struct userver *userver_add (const char *hostname, unsigned short port,
                                                       enum server_type type) {
   GSList *ptr;
@@ -277,6 +276,22 @@ void userver_unref (struct userver *s) {
   }
 }
 
+// change the server port to newport. this function is required as the server
+// needs to get a new position in the servers hash
+struct server* server_change_port (struct server* s, int newport)
+{
+    int node;
+
+    if(!newport || !s)
+	    return s;
+    
+    node = server_hash_func (s->host, s->port);
+    servers.nodes[node] = g_slist_remove (servers.nodes[node], s);
+    s->port = newport;
+    node = server_hash_func (s->host, s->port);
+    servers.nodes[node] = g_slist_prepend (servers.nodes[node], s);
+    return s;
+}
 
 GSList *server_list_copy (GSList *list) {
   debug (3, "server_list_copy() -- list %ld copying all servers", list);

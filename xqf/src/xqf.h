@@ -48,7 +48,7 @@
 #define	Q2_DEFAULT_PORT		27910		/* Quake2 */
 #define	Q3_DEFAULT_PORT		27960		/* Quake3: Arena */
 #define	WO_DEFAULT_PORT		27960		/* Wolfenstein */
-#define	STVEF_DEFAULT_PORT	27960		/* Voyager Elite Force */
+#define	EF_DEFAULT_PORT		27960		/* Voyager Elite Force */
 #define	H2_DEFAULT_PORT		26900		/* Hexen2 */
 #define	HW_DEFAULT_PORT		26950		/* HexenWorld */
 #define	SN_DEFAULT_PORT		22450		/* Sin */
@@ -92,7 +92,7 @@ enum server_type {
   Q3_SERVER,
 #endif
   WO_SERVER,
-  STVEF_SERVER,
+  EF_SERVER,
   H2_SERVER,
   HW_SERVER,
   SN_SERVER,

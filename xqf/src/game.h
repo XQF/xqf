@@ -68,6 +68,7 @@ struct game {
   char *dir;
   char *real_dir;
   char *game_cfg;
+  GData *games_data;
 };
 
 extern struct game games[];
@@ -75,5 +76,7 @@ extern struct game games[];
 extern	enum server_type id2type (const char *id);
 extern	const char *type2id (enum server_type type);
 extern	GtkWidget *game_pixmap_with_label (enum server_type type);
+
+void init_games();
 
 #endif /* __GAME_H__ */

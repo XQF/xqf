@@ -51,7 +51,7 @@ extern	struct pixmap q1_pix;
 extern	struct pixmap q2_pix;
 extern	struct pixmap q3_pix;
 extern	struct pixmap wo_pix;
-extern	struct pixmap stvef_pix;
+extern	struct pixmap ef_pix;
 extern	struct pixmap hex_pix;
 extern	struct pixmap hw_pix;
 extern	struct pixmap sn_pix;

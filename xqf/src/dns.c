@@ -44,6 +44,7 @@ extern int h_errno;	/* h_errno */
 #include "dns.h"
 #include "host.h"
 #include "utils.h"
+#include "debug.h"
 
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN		64

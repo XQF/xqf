@@ -2875,6 +2875,8 @@ int main (int argc, char *argv[]) {
 
   rc_check_dir ();
 
+  init_games();
+
   config_set_base_dir (user_rcdir);
   newversion = prefs_load ();
 

@@ -775,6 +775,8 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
   }
   else {
+    
+    char* masterprotocol;
 
     if (!games[m->type].qstat_master_option)
       return NULL;
@@ -790,6 +792,9 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     argv[argi++] = buf2;
 
+    // TODO: master protocol should be server specific
+    masterprotocol = g_datalist_get_data(&games[m->type].games_data,"masterprotocol");
+
     if(m->master_type==MASTER_LAN)
     {
       debug (3, "stat_update_master_qstat() -- MASTER_LAN");
@@ -800,13 +805,9 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
     }
     // add master arguments
-    else if(m->type==Q3_SERVER && q3_opts.masterprotocol)
+    else if((m->type==Q3_SERVER || m->type==WO_SERVER || m->type==EF_SERVER) && masterprotocol)
     {
-      g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,q3_opts.masterprotocol);
-    }
-    else if(m->type==WO_SERVER && wo_opts.masterprotocol)
-    {
-      g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,wo_opts.masterprotocol);
+      g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,masterprotocol);
     }
     else
     {

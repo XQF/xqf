@@ -34,6 +34,8 @@ extern	void server_free_info (struct server *s);
 extern	struct server* server_unref (struct server *s);
 extern	void userver_unref (struct userver *s);
 
+struct server* server_change_port (struct server* s, int newport);
+
 extern	GSList *server_list_copy (GSList *list);
 extern	GSList *userver_list_copy (GSList *list);
 
