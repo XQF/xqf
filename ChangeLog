@@ -1,3 +1,6 @@
+Oct 19, 2003: Jordi Mallach <jordi@sindominio.net>
+- disable the QuakeForge HexenWorld master server while it gets fixed
+
 Oct 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - update german translation
 - run msgfmt -c in po/updateonepo
