@@ -1,3 +1,17 @@
+XQF 1.0.3 -- March ??, 2005
+~~~~~~~~~
+Changes since 1.0.2:
+
+o New games: Half-Life 2 (wine)
+o make all icons themeable
+o use GTK2 colors and Raleigh theme by default in GTK1 version
+o add --nomapscan command line parameter
+o fix ut2k4 and doom3 master query not working after starting xqf
+o fix saving of quake2 passwords
+o fix doom3 protocol detection
+o fix q1/qw/q2 skin list update
+o fix crashes in GTK2 version
+
 XQF 1.0.2 -- December 22, 2004
 ~~~~~~~~~
 Changes since 1.0:
