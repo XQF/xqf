@@ -138,28 +138,69 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash)
     return;
 }
 
-static inline gboolean is_q3_mapshot(const char* buf)
+static inline gboolean is_q3_mapshot(const char* name)
 {
-    if(g_strncasecmp(buf,"levelshots/",11))
+    if(g_strncasecmp(name,"levelshots/",11))
 	return FALSE;
 
-    if (!g_strcasecmp(buf+strlen(buf)-4,".jpg"))
+    if (!g_strcasecmp(name+strlen(name)-4,".jpg")
+	|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+    {
 	return TRUE;
-    if(!g_strcasecmp(buf+strlen(buf)-4,".tga"))
-	return TRUE;
+    }
 
     return FALSE;
 }
 
+// must free
+static char* is_q3_map(const char* name)
+{
+    if (!g_strncasecmp(name,"maps/",5)
+	    && !g_strcasecmp(name+strlen(name)-4,".bsp"))
+    {
+	char* basename = g_basename(name);
+	return g_strndup(basename,strlen(basename)-4);
+    }
+    return NULL;
+}
+
+// must free
+static inline gboolean is_doom3_mapshot(const char* name)
+{
+    if(g_strncasecmp(name,"guis/assets/splash/",19))
+	return FALSE;
+
+    if (!g_strcasecmp(name+strlen(name)-4,".jpg")
+	|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+    {
+	return TRUE;
+    }
+
+    return FALSE;
+}
+
+static char* is_doom3_map(const char* name)
+{
+    if (!g_strncasecmp(name,"maps/game/",10)
+	    && !g_strcasecmp(name+strlen(name)-4,".map"))
+    {
+	char* basename = g_basename(name);
+	return g_strndup(basename,strlen(basename)-4);
+    }
+    return NULL;
+}
+
 /** open zip file and insert all contained .bsp into maphash */
-static void findq3maps_zip(const char* path, GHashTable* maphash)
+static void findq3maps_zip(const char* path, GHashTable* maphash,
+	char* (*is_map_func)(const char* name),
+	gboolean (*is_mapshot_func)(const char* name))
 {
     unzFile f;
     int ret;
     enum { bufsize = 256 };
     char buf[bufsize] = {0};
 
-    if(!path || !maphash)
+    if(!path || !maphash || !is_map_func || !is_mapshot_func)
 	return;
 
     f=unzOpen(path);
@@ -173,22 +214,21 @@ static void findq3maps_zip(const char* path, GHashTable* maphash)
     {
 	if(unzGetCurrentFileInfo(f,NULL,buf,bufsize,NULL,0,NULL,0) == UNZ_OK)
 	{
-	    if(!g_strncasecmp(buf,"maps/",5)
-		&& !g_strcasecmp(buf+strlen(buf)-4,".bsp"))
+	    char* name = 0;
+	    if((name = is_map_func(buf)))
 	    {
 		// s#maps/(.*)\.bsp#\1#
-		char* mapname=g_strndup(buf+5,strlen(buf)-4-5);
-		g_strdown(mapname);
-		if(g_hash_table_lookup(maphash,mapname))
+		g_strdown(name);
+		if(g_hash_table_lookup(maphash,name))
 		{
-		    g_free(mapname);
+		    g_free(name);
 		}
 		else
 		{
-		    g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(-1));
+		    g_hash_table_insert(maphash,name,GUINT_TO_POINTER(-1));
 		}
 	    }
-	    else if(is_q3_mapshot(buf))
+	    else if(is_mapshot_func(buf))
 	    {
 		struct q3mapinfo* mi = NULL;
 		size_t psize, nsize;
@@ -254,15 +294,42 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash)
 void q3_contains_file(const char* name, int level, GHashTable* maphash)
 {
 //    printf("%s at level %d\n",name,level);
-    if(strlen(name)>4
+    if( level == 1
 	&& !g_strcasecmp(name+strlen(name)-4,".pk3")
-	&& level == 1)
+	&& strlen(name) > 4)
     {
-	findq3maps_zip(name,maphash);
+	findq3maps_zip(name, maphash, is_q3_map, is_q3_mapshot);
     }
-    if(strlen(name)>4
+    else if( level == 2
 	&& !g_strcasecmp(name+strlen(name)-4,".bsp")
-	&& level == 2)
+	&& strlen(name) > 4)
+    {
+	char* basename = g_basename(name);
+	char* mapname=g_strndup(basename,strlen(basename)-4);
+	g_strdown(mapname);
+	if(g_hash_table_lookup(maphash,mapname))
+	{
+	    g_free(mapname);
+	}
+	else
+	{
+	    g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(-1));
+	}
+    }
+}
+
+void doom3_contains_file(const char* name, int level, GHashTable* maphash)
+{
+//    printf("%s at level %d\n",name,level);
+    if( level == 1
+	&& !g_strcasecmp(name+strlen(name)-4,".pk4")
+	&& strlen(name) > 4)
+    {
+	findq3maps_zip(name, maphash, is_doom3_map, is_doom3_mapshot);
+    }
+    else if( level == 4
+	&& strlen(name) > 4
+	&& !g_strcasecmp(name+strlen(name)-4,".map"))
     {
 	char* basename = g_basename(name);
 	char* mapname=g_strndup(basename,strlen(basename)-4);
@@ -331,7 +398,7 @@ void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFu
 		continue;
 
 	    name = g_strconcat(curdir,"/",name,NULL);
-	    if(stat(name,&statbuf))
+	    if(lstat(name,&statbuf))
 	    {
 		perror(name);
 		g_free(name);
@@ -391,6 +458,14 @@ GHashTable* q3_init_maphash()
 gboolean q3_lookup_map(GHashTable* maphash, const char* mapname)
 {
     if(g_hash_table_lookup(maphash,mapname))
+	return TRUE;
+    return FALSE;
+}
+
+/** return true if mapname is contained in maphash, false otherwise */
+gboolean doom3_lookup_map(GHashTable* maphash, const char* mapname)
+{
+    if(g_hash_table_lookup(maphash,g_basename(mapname)))
 	return TRUE;
     return FALSE;
 }
@@ -485,10 +560,23 @@ size_t q3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf)
     return 0;
 }
 
-void findq3maps(GHashTable* maphash, const char* startdir)
+/** return true if mapname is contained in maphash, false otherwise
+  same as q3_lookup_mapshot except that the basename of the map is used
+ */
+size_t doom3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf)
+{
+    struct q3mapinfo* mi = g_hash_table_lookup(maphash,g_basename(mapname));
+    if(mi && mi != GINT_TO_POINTER(-1) && mi->zipfile)
+    {
+	return readimagefromzip(buf,mi->zipfile,mi->levelshot);
+    }
+    return 0;
+}
+
+
+static void process_levelshots(GHashTable* maphash)
 {
     GSList* ptr;
-    traverse_dir(startdir, (FoundFileFunction)q3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
     for(ptr=shotslist;ptr;ptr=g_slist_next(ptr))
     {
 	struct q3mapinfo* mi = ptr->data;
@@ -496,9 +584,9 @@ void findq3maps(GHashTable* maphash, const char* startdir)
 	char* mapname = NULL;
 	char* origkey = NULL;
 	gboolean found = FALSE;
-	// 11 = levelshots/, 4 = .jpg
-	if(!mi->levelshot || strlen(mi->levelshot) < 11+4 ) { g_free(mi); continue; }
-	mapname=g_strndup(mi->levelshot+11,strlen(mi->levelshot)-4-11);
+	if(!mi->levelshot || strlen(mi->levelshot) <= 4 ) { g_free(mi); continue; }
+	mapname = g_basename(mi->levelshot);
+	mapname=g_strndup(mapname,strlen(mapname)-4);
 	g_strdown(mapname);
 	found = g_hash_table_lookup_extended(maphash,mapname,(gpointer)&origkey,(gpointer)&mih);
 	if(found != TRUE || mih != GINT_TO_POINTER(-1)) // not in hash or mapinfo alread defined
@@ -517,11 +605,22 @@ void findq3maps(GHashTable* maphash, const char* startdir)
     shotslist=NULL;
 }
 
+void findq3maps(GHashTable* maphash, const char* startdir)
+{
+    traverse_dir(startdir, (FoundFileFunction)q3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+    process_levelshots(maphash);
+}
+
 void findquakemaps(GHashTable* maphash, const char* startdir)
 {
     traverse_dir(startdir, (FoundFileFunction)quake_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
 }
 
+void finddoom3maps(GHashTable* maphash, const char* startdir)
+{
+    traverse_dir(startdir, (FoundFileFunction)doom3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+    process_levelshots(maphash);
+}
 
 
 #if 0

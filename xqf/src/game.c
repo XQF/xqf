@@ -112,6 +112,10 @@ static gboolean quake_has_map(struct server* s);
 static void q3_init_maps(enum server_type);
 static size_t q3_get_mapshot(struct server* s, guchar** buf);
 
+static void doom3_init_maps(enum server_type);
+static size_t doom3_get_mapshot(struct server* s, guchar** buf);
+static gboolean doom3_has_map(struct server* s);
+
 static void unreal_init_maps(enum server_type);
 static gboolean unreal_has_map(struct server* s);
 
@@ -3295,6 +3299,24 @@ static void q3_init_maps(enum server_type type)
   }
 }
 
+static void doom3_init_maps(enum server_type type)
+{
+  struct quake_private* pd = NULL;
+
+  pd = (struct quake_private*)games[type].pd;
+  g_return_if_fail(pd!=NULL);
+  
+  q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+  pd->maphash = q3_init_maphash();
+  finddoom3maps(pd->maphash,games[type].real_dir);
+
+  if(games[type].real_home)
+  {
+    char* home = expand_tilde(games[type].real_home);
+    finddoom3maps(pd->maphash,home);
+    g_free(home);
+  }
+}
 
 static void unreal_init_maps(enum server_type type)
 {
@@ -3327,6 +3349,26 @@ static gboolean quake_has_map(struct server* s)
   return q3_lookup_map(hash,s->map);
 }
 
+static gboolean doom3_has_map(struct server* s)
+{
+  struct quake_private* pd = NULL;
+  GHashTable* hash = NULL;
+
+  g_return_val_if_fail(s!=NULL,TRUE);
+  
+  pd = (struct quake_private*)games[s->type].pd;
+  g_return_val_if_fail(pd!=NULL,TRUE);
+  
+  hash = (GHashTable*)pd->maphash;
+  if(!hash) return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return doom3_lookup_map(hash,s->map);
+}
+
+
 static size_t q3_get_mapshot(struct server* s, guchar** buf)
 {
   struct quake_private* pd = NULL;
@@ -3344,6 +3386,25 @@ static size_t q3_get_mapshot(struct server* s, guchar** buf)
     return FALSE;
 
   return q3_lookup_mapshot(hash,s->map, buf);
+}
+
+static size_t doom3_get_mapshot(struct server* s, guchar** buf)
+{
+  struct quake_private* pd = NULL;
+  GHashTable* hash = NULL;
+
+  g_return_val_if_fail(s!=NULL,TRUE);
+  
+  pd = (struct quake_private*)games[s->type].pd;
+  g_return_val_if_fail(pd!=NULL,TRUE);
+  
+  hash = (GHashTable*)pd->maphash;
+  if(!hash) return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return doom3_lookup_mapshot(hash,s->map, buf);
 }
 
 static gboolean unreal_has_map(struct server* s)
