@@ -1068,6 +1068,10 @@ static char *builtin_masters_update_info[] = {
   "ADD HLS,-stm master://steam1.steampowered.com Steam 1",
   "ADD HLS,-stm master://steam2.steampowered.com Steam 2",
 
+  "ADD HL2S,-stmhl2 master://steam1.steampowered.com:27011 Steam 1",
+  "ADD HL2S,-stmhl2 master://steam2.steampowered.com:27011 Steam 2",
+  "ADD HL2S,-stmhl2 master://69.28.151.178:27011 Valve 1",
+
   "ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin Gameaholic.Com",
   "ADD Q2S:KP http://www.ogn.org:6666 OGN",
 

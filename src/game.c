@@ -2570,6 +2570,11 @@ static int hl_exec (const struct condef *con, int forkit) {
   while ((argv[argi] = strtok (NULL, delim)) != NULL)
     argi++;
 
+  if(con->s->type == HL2_SERVER) // XXX
+  {
+    argv[argi++] = "-steam";
+  }
+
   if (con->gamedir) {
     argv[argi++] = "-game";
     argv[argi++] = con->gamedir;
