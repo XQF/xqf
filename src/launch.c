@@ -26,6 +26,7 @@
 #include <sys/wait.h>	/* waitpid */
 #include <errno.h>	/* errno */
 #include <signal.h>     /* kill, signal... */
+#include <stdlib.h>     /* setenv */
 
 #include <gtk/gtk.h>
 

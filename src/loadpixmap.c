@@ -106,11 +106,6 @@ load_pixmap                          (GtkWidget       *widget,
   GdkBitmap *mask;
   GtkWidget *pixmap;
 
-#ifdef USE_GTK2
-  GError *err = NULL;
-#endif
-
-
   if (!filename || !filename[0])
     return create_dummy_pixmap (widget);
 
@@ -141,7 +136,7 @@ load_pixmap                          (GtkWidget       *widget,
 
 /*FIXME_GTK2: need GError*/
 #ifdef USE_GTK2
-    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename, &err);
+    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
 #else
     GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename);
 #endif

@@ -1,4 +1,4 @@
-EXTRA_DIST=$(wildcard *.xpm) $(pixmaps_DATA)
+EXTRA_DIST=$(wildcard *.xpm) $(flag_DATA)
 
-pixmapsdir = $(pkgdatadir)/pixmaps
-pixmaps_DATA = $(wildcard *.png)
+flagdir = $(pkgdatadir)/default/flags
+flag_DATA = lan.png

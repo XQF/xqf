@@ -24,6 +24,8 @@ src/gnuconfig.h \
 src/gnuconfig.h.in \
 src/xpm/Makefile.in \
 src/xpm/Makefile \
+pixmaps/Makefile.in \
+pixmaps/flags/Makefile.in \
 po/Makefile.in \
 po/POTFILES \
 po/*.gmo
@@ -46,3 +48,6 @@ po/remove-potcdate.sin \
 intl/*.* \
 intl/ChangeLog \
 intl/VERSION
+
+rm -rf \
+pixmaps/flags/*.png

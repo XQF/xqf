@@ -3760,7 +3760,7 @@ int main (int argc, char *argv[]) {
 
   parse_commandline(argc,argv);
 
-  add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
+  add_pixmap_directory (PACKAGE_DATA_DIR "/default");
   
   dns_gtk_init ();
 
