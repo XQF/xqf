@@ -271,6 +271,7 @@ char* q3_masterprotocols[] = {
 };
 
 char* wo_masterprotocols[] = {
+	"60 - v1.4",
 	"59 - v1.32",
 	"58 - v1.3",
 	"57 - retail",
