@@ -2,15 +2,15 @@ XQF 0.9.7
 ~~~~~~~~~
 Changes since 0.9.6g:
 
-o i18n fixes
-o Support for games using the GameSpy protocol (please note Descent
+o Support for games using the GameSpy protocol
+o Support for Descent3 with qstat 2.4e (please note Descent
   can't be launched from within XQF at the moment)
 o Support for Rune
-o Reorganization and fixes of settings dialogs
-o Quake3 and Wolf support improvements (Wolf uses protocol 57 now)
-o Quake fixes for QuakeForge
-o PowerPC segfault fixed
-o German and Spanish updates
+o Reorganization of settings dialogs
+o New gametypes for Quake3 mods Threewave and TribalCTF
+o Support for Wolfenstein retail (protocol 57)
+o Server statistics for Wolfenstein, Kingpin and Half-Life
+o Works on PowerPC again
 
 
 XQF 0.9.6g
