@@ -1,3 +1,10 @@
+May 20, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- increased servers hash
+- added some debug output for hash utilization
+- use macro QSTAT_EXEC for determining the qstat version as qstat is called
+  quakestat on debian (reported by Despair)
+- added Ravensoft Elite Force master
+
 May 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - Added punkbuster label for rtcw. Yes it's ugly but ...
 

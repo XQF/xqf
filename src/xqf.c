@@ -283,7 +283,7 @@ int check_qstat_version( const char* version )
   int fd;
   pid_t pid;
 
-  char* cmd[] = {"qstat",NULL};
+  char* cmd[] = {QSTAT_EXEC,NULL};
 
   int ret = FALSE;
 
@@ -331,7 +331,7 @@ int check_qstat_version( const char* version )
   // read hasn't read anything
   else if(read_ret == 0)
   {
-    debug(0,"check_qstat_version -- din't read anything");
+    debug(0,"check_qstat_version -- didn't read anything");
     return FALSE;
   }
 
@@ -2819,6 +2819,8 @@ int main (int argc, char *argv[]) {
 
   int i,j; /* For parsing the command line. */
 
+  xqf_start_time = time (NULL);
+
 #ifdef ENABLE_NLS
 #  ifdef HAVE_LC_MESSAGES
   setlocale(LC_CTYPE, "");
@@ -2841,8 +2843,6 @@ int main (int argc, char *argv[]) {
     fprintf (stderr, "Unable to start DNS helper\n");
     return 1;
   }
-
-  xqf_start_time = time (NULL);
 
   gtk_config = file_in_dir (user_rcdir, "gtkrc");
   gtk_rc_add_default_file (gtk_config);
@@ -2912,6 +2912,8 @@ int main (int argc, char *argv[]) {
 	required_qstat_version);
   }
 
+  debug(1,"startup time %ds", time(NULL)-xqf_start_time);
+
   gtk_main ();
 
   unregister_window (main_window);
@@ -2919,6 +2921,19 @@ int main (int argc, char *argv[]) {
 
   if (stat_process)
     stop_callback (NULL, NULL);
+
+  debug (1, "total servers: %d", servers_total ());
+  debug (1, "total uservers: %d", uservers_total ());
+  debug (1, "total hosts: %d", hosts_total ());
+#if 0
+  if (servers_total () > 0) {
+    GSList *list = all_servers (); /* Debug code, free done in two lines */
+    
+    server_list_fprintf (stderr, list);
+    server_list_free (list);
+  }
+#endif
+
 
   if (server_menu) {
     debug( 6, "EXIT: destroy server_menu");
@@ -2967,18 +2982,6 @@ int main (int argc, char *argv[]) {
   add_master_done ();
   client_detach_all ();
   free_user_info ();
-
-#ifdef DEBUG
-  fprintf (stderr, "total servers: %d\n", servers_total ());
-  fprintf (stderr, "total uservers: %d\n", uservers_total ());
-  fprintf (stderr, "total hosts: %d\n", hosts_total ());
-  if (servers_total () > 0) {
-    GSList *list = all_servers (); /* Debug code, free done in two lines */
-    
-    server_list_fprintf (stderr, list);
-    server_list_free (list);
-  }
-#endif
 
   dns_helper_shutdown ();
 
