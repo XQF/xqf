@@ -1,3 +1,6 @@
+May 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- Added punkbuster label for rtcw. Yes it's ugly but ...
+
 May 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix LAN Browsing for games that need a port change (Rune)
 - replaced static struct for q3 options with a more flexible g_datalist

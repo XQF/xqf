@@ -77,6 +77,7 @@
 #define SERVER_PASSWORD		0x10
 #define SERVER_SP_PASSWORD	0x20
 #define SERVER_SPECTATE		0x40
+#define SERVER_PUNKBUSTER	0x80
 
 enum launch_mode { 
   LAUNCH_NORMAL,
