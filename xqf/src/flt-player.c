@@ -75,7 +75,10 @@ static const char *mode_names[3] = {
 };
 
 
-int player_filter (struct server *s) {
+int player_filter (struct server *s, struct server_filter_vars *vars) {
+  /* The 'vars' is ignored in this function, however, since we need it
+     for applying the server filter, we will put it in the arguments. */
+
   GSList *list;
   GSList *plist;
   struct player_pattern *pp;

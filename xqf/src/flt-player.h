@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 
 #include "xqf.h"
-
+#include "filter.h" /*For server_filter_vars */
 
 enum pattern_mode { 
   PATTERN_MODE_STRING = 0,
@@ -45,7 +45,7 @@ struct player_pattern {
   int dirty;
 };
 
-extern	int player_filter (struct server *s);
+extern  int player_filter (struct server *s, struct server_filter_vars *vars);
 
 extern	void player_filter_page (GtkWidget *notebook);
 

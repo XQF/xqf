@@ -652,6 +652,9 @@ static struct player *un_parse_player (char *token[], int n) {
 
 
 static void quake_parse_server (char *token[], int n, struct server *s) {
+  /*
+    This does both Quake (?) and Unreal servers
+  */
   int poqs;
   int offs;
 
