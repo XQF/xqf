@@ -1,5 +1,4 @@
 - Multiple Favorites
-- Detection if map is installed (req. home dir option)
 - update game types for Q3 mods - move to external file
 - Ability to delete servers from non-Favorites
 - Game specific filters.  No use seeing a Lithium filter choice when looking
@@ -15,6 +14,10 @@
 
 Required for XQF 0.9.11
 - Half-Life launch fix
+- Serious SAM support
+- Detection if map is installed (req. home dir option) for Q3 / UT based
+  games
+
 
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
