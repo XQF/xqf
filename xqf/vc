@@ -25,6 +25,7 @@
 #
 
 export LANG=C
+export TZ=UTC
 
 if [ -r mail ]; then
 	mailaddr=`cat mail`
