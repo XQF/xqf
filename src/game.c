@@ -123,6 +123,7 @@ struct unreal_private
 static struct unreal_private ut_private = { NULL, ".unr" };
 static struct unreal_private ut2_private = { NULL, ".ut2" };
 static struct unreal_private rune_private = { NULL, ".run" };
+static struct unreal_private postal2_private = { NULL, ".fuk" };
 static struct unreal_private aao_private = { NULL, ".aao" };
 
 static struct quake_private q1_private, qw_private, q2_private, hl_private;
@@ -756,6 +757,10 @@ struct game games[] = {
   },
 
   {
+    POSTAL2_SERVER,
+  },
+
+  {
     AAO_SERVER,
   },
 
@@ -990,6 +995,8 @@ static struct gsname2type_s gsname2type[] =
 	{ "rune", RUNE_SERVER },
 	{ "serioussam", SSAM_SERVER },
 	{ "serioussamse", SSAMSE_SERVER },
+	{ "postal2", POSTAL2_SERVER },
+	{ "postal2d", POSTAL2_SERVER },
 	{ "aao", AAO_SERVER },
 	{ NULL, UNKNOWN_SERVER }
 };
@@ -1034,6 +1041,12 @@ void init_games()
   games[WOET_SERVER].id="WOETS";
   games[WOET_SERVER].pd=&wolfet_private;
   games[WOET_SERVER].pix=&et_pix;
+
+  game_copy_static_options(POSTAL2_SERVER,UN_SERVER);
+  games[POSTAL2_SERVER].name="Postal 2";
+  games[POSTAL2_SERVER].id="POSTAL2"; // http://qstat.uglypunk.com/
+  games[POSTAL2_SERVER].pd=&postal2_private;
+  games[POSTAL2_SERVER].pix=&postal2_pix;
 
   game_copy_static_options(AAO_SERVER,UN_SERVER);
   games[AAO_SERVER].name="America's Army";
@@ -1082,6 +1095,7 @@ void init_games()
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
   game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
   game_set_attribute(AAO_SERVER,"suggest_commands",strdup("armyops"));
+  game_set_attribute(POSTAL2_SERVER,"suggest_commands",strdup("postal2mp:postal2mpdemo"));
   game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
   game_set_attribute(SSAMSE_SERVER,"suggest_commands",strdup("ssamtse"));
   game_set_attribute(MOHAA_SERVER,"suggest_commands",strdup("mohaa"));
@@ -1548,6 +1562,7 @@ static void un_analyze_serverinfo (struct server *s) {
       case UN_SERVER:
       case UT2_SERVER:
       case RUNE_SERVER:
+      case POSTAL2_SERVER:
       case AAO_SERVER:
 	server_change_port(s,hostport);
 	break;
@@ -3921,6 +3936,8 @@ static void quake_save_info (FILE *f, struct server *s) {
       case UN_SERVER:
       case UT2_SERVER:
       case RUNE_SERVER:
+      case POSTAL2_SERVER:
+      case AAO_SERVER:
 	fprintf (f, 
 		 "%s" QSTAT_DELIM_STR 
 		 "%d" QSTAT_DELIM_STR 

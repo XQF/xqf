@@ -55,6 +55,7 @@
 #include "xpm/t2.xpm"
 #include "xpm/hr2.xpm"
 #include "xpm/un.xpm"
+#include "xpm/postal2.xpm"
 #include "xpm/aao.xpm"
 #include "xpm/rune.xpm"
 #include "xpm/descent3.xpm"
@@ -121,6 +122,7 @@ struct pixmap sof2s_pix;
 struct pixmap t2_pix;
 struct pixmap hr_pix;
 struct pixmap un_pix;
+struct pixmap postal2_pix;
 struct pixmap aao_pix;
 struct pixmap ut2_pix;
 struct pixmap rune_pix;
@@ -234,6 +236,7 @@ void free_pixmaps (void) {
   free_pixmap (&t2_pix);
   free_pixmap (&hr_pix);
   free_pixmap (&un_pix);
+  free_pixmap (&postal2_pix);
   free_pixmap (&aao_pix);
   free_pixmap (&ut2_pix);
   free_pixmap (&rune_pix);
@@ -317,6 +320,7 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &t2_pix, t2_xpm);
   create_pixmap (window, &hr_pix, hr2_xpm);
   create_pixmap (window, &un_pix, un_xpm);
+  create_pixmap (window, &postal2_pix, postal2_xpm);
   create_pixmap (window, &aao_pix, aao_xpm);
   create_pixmap (window, &ut2_pix, ut2_xpm);
   create_pixmap (window, &rune_pix, rune_xpm);
