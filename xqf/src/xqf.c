@@ -92,6 +92,8 @@ time_t xqf_start_time;
 
 char* xqf_PACKAGE_DATA_DIR = PACKAGE_DATA_DIR;
 char* xqf_LOCALEDIR = LOCALEDIR;
+char* xqf_PIXMAPSDIR = PIXMAPSDIR;
+
 char* qstat_configfile = NULL;
 
 GtkWidget *main_window = NULL;
@@ -3580,6 +3582,8 @@ void create_main_window (void) {
 
   restore_main_window_geometry ();
 
+  window_set_icon(main_window);
+
   gtk_widget_show (main_window);
 
   gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
@@ -3750,6 +3754,10 @@ int main (int argc, char *argv[]) {
   if(var)
     xqf_LOCALEDIR = var;
   
+  var = getenv("xqf_PIXMAPSDIR");
+  if(var)
+    xqf_PIXMAPSDIR = var;
+  
 #ifdef ENABLE_NLS
   setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, xqf_LOCALEDIR);
@@ -3784,6 +3792,8 @@ int main (int argc, char *argv[]) {
     add_pixmap_directory (defaultpixmapdir);
     g_free(defaultpixmapdir);
   }
+
+  add_pixmap_directory (xqf_PIXMAPSDIR);
 
   qstat_configfile = g_strconcat(xqf_PACKAGE_DATA_DIR, "/qstat.cfg", NULL);
   

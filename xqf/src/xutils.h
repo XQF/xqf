@@ -24,5 +24,7 @@
 
 extern	void iconify_window (GdkWindow *window);
 
+void window_set_icon (GtkWidget *window);
+
 
 #endif /* __XUTILS_H__ */

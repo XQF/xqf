@@ -1,3 +1,10 @@
+Nov 28, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- split up load_pixmap in load_pixmap, load_pixmap_as_pixmap and
+  load_pixmap_as_pixbuf
+- set minimize icon as suggested by Jordi (someone know how to make this
+  work properly with windowmaker?)
+- work around gcc complaining about %c in strftime
+
 Nov 27, 2003: Alex <alex_b@users.sourceforge.net>
 - Changed version to 0.9.13.1
 

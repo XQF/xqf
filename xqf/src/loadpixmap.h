@@ -29,10 +29,14 @@ void add_pixmap_directory (const gchar* directory);
  */
 gchar* find_pixmap_directory(const gchar* filename);
 
-/*
- * Private Functions.
- */
-
-/* This is used to create the pixmaps in the interface. */
+/** This is used to create the pixmaps in the interface. */
 GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename);
+
+/** fill in passed pixmap struct, return pointer to this struct on success,
+ * NULL otherwise
+ */
+struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix);
+
+/** load a pixmap in search path as GdkPixbuf, void* just to avoid a special header */
+void* load_pixmap_as_pixbuf (GtkWidget* widget, const gchar* filename);
 #endif

@@ -32,6 +32,7 @@
 #include "loadpixmap.h"
 #include "i18n.h"
 #include "pref.h"
+#include "xutils.h"
 
 static GtkWidget* splashscreen;
 
