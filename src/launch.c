@@ -124,7 +124,7 @@ static void client_sigchild_handler (int signum) {
   GSList *list;
   struct running_client *cl;
 
-  debug(3,"client_sigchild_handler(%d)",signum);
+  debug(3,"client_sigchild_handler(%d[%s])",signum,strsignal(signum));
 
   while ((pid = waitpid (WAIT_ANY, &status, WNOHANG)) > 0) {
     debug(4,"client_sigchild_handler() -- pid %d, status %d",pid,WEXITSTATUS(status));
