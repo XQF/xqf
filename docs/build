@@ -20,7 +20,7 @@ tar.gz:
 -make dist
 
 Other things to do:
--web site: news.shtml, download.html, contents.html, docs.html
+-web site: index.shtml, downloads.html, download-archive.html, docs.html, changelog.html
 -upload binaries to web site
 -upload binaries to sourceforge
 -create new release on sourceforge
