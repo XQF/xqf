@@ -6,7 +6,7 @@
   <title>XQF Documentation</title>
 </head>
 <body>
-<center> <b><u><font size="+3">XQF 0.9.12.1</font></u></b>
+<center> <b><u><font size="+3">XQF 0.9.13</font></u></b>
 <p>Octobter 7th, 2003<br>
 Documentatiom written by:<br>
 Alex Burger &lt;<a href="mailto:alex_b@users.sourceforge.net">alex_b@users.sourceforge.net</a>&gt;</p>
@@ -49,6 +49,8 @@ Jordi Mallach &lt;<a href="mailto:jordi@debian.org">jordi@debian.org</a>&gt;<br>
     <a href="#HL">Half Life</a><br>
     <a href="#Descent3">Descent 3<br>
     </a> <a href="#SeriousSam">Serious Sam</a><br>
+    <a href="#MOHAA">Medal of Honor</a><br>
+    <a href="#savage">Savage</a><br>
   </blockquote>
   <p><a href="#Troubleshooting">Troubleshooting / FAQ</a></p>
   <p><a href="#XQF-Rcon">XQF-RCon</a><br>
@@ -127,16 +129,16 @@ Requirements</font></u></b></p>
 <p>The minimum system requirements are:</p>
 <p>A UNIX computer and C compiler (gcc)<br>
 <a href="http://www.qstat.org">QSTAT 2.5c</a> (latest version
-recommended to ensure full functionality)<br>
+recommended to ensure full functionality, RPM available from XQF
+hompage)<br>
 glibc 2.1+<br>
 Xfree86 3.3.3+<br>
 <a href="http://www.gtk.org">GTK</a>+ 1.2.5+<br>
 <a href="http://developer.gnome.org/arch/imaging/gdkpixbuf.html">
 gdk-pixbuf</a><br>
-<a href="http://www.gnu.org/software/gettext/">gettext</a> 0.10.36+
-(ONLY required when building directly from CVS)<br>
 <a href="ftp://ftp.gnu.org/gnu/wget/">wget</a> to retrieve html
-server listings from the Web</p>
+server listings from the Web<br>
+</p>
 <p>XQF has been tested as is known to run on Intel / AMD and PowerPC
 platforms.<br>
 &nbsp;</p>
@@ -314,23 +316,20 @@ stable now</li>
 &nbsp;</p>
 <blockquote> <a name="RPM_Binary_package"></a><b><u><font size="+1">RPM
 Binary package:</font></u></b>
-  <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
-or higher is already installed
-    <p>As root, execute the command:</p>
+  <blockquote>As root, execute the command:
     <p><b><i>rpm -Uvh xqf-xxx-i386.rpm</i></b></p>
   </blockquote>
   <a name="DEB_Binary_package"></a><b><u><font size="+1">DEB Binary
 package:</font></u></b>
-  <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
-or higher is already installed (RPM available on XQF homepage)
-    <p>As root, execute the command:</p>
+  <blockquote>As root, execute the command:
     <p><b><i>dpkg -i xqf_xxx-v_arch.deb</i></b></p>
   </blockquote>
   <a name="TAR.GZ_source_code"></a><b><u><font size="+1">TAR.GZ source
 code</font></u></b>
-  <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
-or higher is already installed
-    <p>Extract the source code:</p>
+  <blockquote>Make sure you have the development packages of GTK,
+gdk-pixbuf, GLIB and X installed.<br>
+    <br>
+Extract the source code:
     <p><b><i>tar xvfz xqf-xxx.tar.gz</i></b></p>
     <p>cd into the directory:</p>
     <p><b><i>cd xqf-*</i></b></p>
@@ -341,13 +340,22 @@ or higher is already installed
     <p>Install compiled binary and man page (this step must be done as
 root):</p>
     <p><b><i>make install</i></b><br>
-&nbsp;</p>
+    </p>
+    <p>The default location for XQF is /usr/local/bin.<br>
+    </p>
+    <p>You can optionally compile XQF with support for GeoIP (<a
+ href="http://www.maxmind.com/download/geoip/api/c/">http://www.maxmind.com/download/geoip/api/c/</a>).<br>
+    </p>
   </blockquote>
   <a name="CVS_source_code"></a><b><u><font size="+1">CVS source
-code</font></u></b>
-  <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
-or higher is already installed
-    <p>Create the 'configure' script (automake 1.6 required):</p>
+code<br>
+  </font></u></b>
+  <blockquote>Compiling CVS snapshots requires that you have recent
+versions of automake (at least 1.6), autoconf, libtool and&nbsp;<a
+ href="http://www.gnu.org/software/gettext/"></a>gettext installed. You
+also need to have both GTK1 and GTK2 development packages installed.<br>
+    <p>Create the 'configure' script:<br>
+    </p>
     <p><b><i>./autogen.sh</i></b></p>
     <p>Run configure script:</p>
     <p><b><i>./configure</i></b></p>
@@ -356,7 +364,7 @@ or higher is already installed
     <p>Install compiled binary and man page (this step must be done as
 root):</p>
     <p><b><i>make install</i></b></p>
-    <p>The default location for XQF /usr/local/bin.</p>
+    <p>The default location for XQF is /usr/local/bin.</p>
   </blockquote>
 </blockquote>
 <p><br>
@@ -1550,27 +1558,31 @@ servers from the command line.<br>
   </blockquote>
   <b><a name="SeriousSam"></a>Serious Sam:</b>
   <blockquote> For Serious Sam to query properly, a QStat configuration
-file is required.<br>
-    <br>
-Add the following to the bottom of your ~/.qstatrc file:<br>
-    <br>
-    <blockquote> # Config for Serious Sam SMS<br>
-gametype SMS new extend GPS<br>
-&nbsp;&nbsp; name = Serious Sam<br>
-&nbsp;&nbsp; default port = 25600<br>
-&nbsp;&nbsp; status port offset = 1<br>
-&nbsp;&nbsp; template var = SERIOUSSAM<br>
-&nbsp;&nbsp; game rule = gametype<br>
-end<br>
-    </blockquote>
-The above configuration was created using the 'QSTAT Config Maker'
-located at <a href="http://qstat.uglypunk.com">qstat.uglypunk.com</a>.<br>
+file is required. XQF since version 0.9.12 installs a working one for
+you.<br>
     <br>
 Note: &nbsp;At the time of this release, there are no known
-Serious Sam master servers that work with QStat / XQF.<br>
-Note: &nbsp;This is not needed if xqf-0.9.12 is properly installed as
-we install a default qstat config file<br>
+public Serious Sam master servers that work with QStat / XQF.<br>
     <br>
+  </blockquote>
+  <b><a name="MOHAA"></a>Medal of Honor:</b>
+  <blockquote> For Medal of Honor to query properly, a QStat
+configuration
+file is required. XQF since version 0.9.13 installs a working one for
+you.<br>
+    <br>
+  </blockquote>
+  <b><a name="savage"></a>Savage:</b>
+  <blockquote>The shell script shipped with Savage is broken. You need
+to adjust it to pass command line parameters to the game itself. Change
+the line that looks like<br>
+    <pre>LD_LIBRARY_PATH=libs:$LD_LIBRARY_PATH <span
+ style="color: rgb(204, 0, 0);">./savage.bin</span> /usr/local/games/Savage_Demo<br></pre>
+to<br>
+    <pre>LD_LIBRARY_PATH=libs:$LD_LIBRARY_PATH <span
+ style="color: rgb(204, 0, 0);">./silverback.bin "$@"</span> /usr/local/games/Savage_Demo<br></pre>
+You also need a special qstat version with Savage support. You can
+download it from <a href="ftp://ftp.multiplay.co.uk/pub/apps/qstat/">ftp://ftp.multiplay.co.uk/pub/apps/qstat/</a><br>
   </blockquote>
 </blockquote>
 &nbsp;<a name="Troubleshooting"></a><b><u><font size="+2">Troubleshooting
@@ -1701,7 +1713,7 @@ port XQF to Windows, however there are many Windows game browser
 applications available.&nbsp; We recommend <a
  href="http://www.agsm.net">aGSM</a> (alternative Game Server Monitor)
 which supports both LAN and Internet gaming for many popular online
-games and is freeware.<br>
+games and is freeware (but no free software unfortunately).<br>
   </p>
   <br>
   <a name="XQF-Rcon"></a><b><u><font size="+2">XQF-Rcon</font></u></b><br>
