@@ -3666,13 +3666,15 @@ static void cmdlinehelp()
 "\txqf [OPTIONS]\n"
 "\n"
 "OPTIONS:\n"
-"\t--launch \"SERVERTYPE IP\"\tlaunch game on specified server\n"
+"\t--launch \"[SERVERTYPE] IP\"\tlaunch game on specified server\n"
+"\t--add    \"[SERVERTYPE] IP\"\tadd specified server to favorites\n"
 "\t--debug <level>\t\t\tset debug level\n"
 "\t--version\t\t\tprint version and exit\n"));
     exit(0);
 }
 
-static char* cmdline_launch = NULL;
+static char* cmdline_add_server = NULL;
+static gboolean cmdline_launch = FALSE;
 
 // must always return FALSE to stop g_timeout
 gboolean check_cmdline_launch(gpointer nothing)
@@ -3682,9 +3684,9 @@ gboolean check_cmdline_launch(gpointer nothing)
     unsigned n = 0;
     char* addrstring = NULL; // must point to a copy
     
-    if(!cmdline_launch) return FALSE;
+    if(!cmdline_add_server) return FALSE;
 
-    n = tokenize_bychar(cmdline_launch, token, 2, ' ');
+    n = tokenize_bychar(cmdline_add_server, token, 2, ' ');
 
     if (n == 2) // type and address given
     {
@@ -3708,7 +3710,7 @@ gboolean check_cmdline_launch(gpointer nothing)
 	if (!parse_address (token[0], &addr, &port))
 	{
 	    dialog_ok (NULL, _("\"%s\" is not valid host[:port] combination."), token[0]);
-	    g_free(cmdline_launch);
+	    g_free(cmdline_add_server);
 	    return FALSE;
 	}
 
@@ -3731,15 +3733,16 @@ gboolean check_cmdline_launch(gpointer nothing)
 	}
     }
 
-    prepare_new_server_to_favorites(type, addrstring, TRUE);
+    prepare_new_server_to_favorites(type, addrstring, cmdline_launch);
 
-    g_free(cmdline_launch);
+    g_free(cmdline_add_server);
     return FALSE;
 }
 
 static struct option long_options[] =
 {
     {"launch", 1, 0, 'l'},
+    {"add", 1, 0, 'a'},
     {"debug", 1, 0, 'd'},
     {"version", 0, 0, 'v'},
     {"help", 0, 0, 'h'},
@@ -3763,7 +3766,13 @@ static void parse_commandline(int argc, char* argv[])
 		set_debug_level(atoi(optarg));
 		break;
 	    case 'l':
-		cmdline_launch = strdup(optarg);
+		g_free(cmdline_add_server);
+		cmdline_add_server = g_strdup(optarg);
+		cmdline_launch = TRUE;
+		break;
+	    case 'a':
+		g_free(cmdline_add_server);
+		cmdline_add_server = g_strdup(optarg);
 		break;
 	    case 'h':
 		cmdlinehelp();
@@ -3893,7 +3902,7 @@ int main (int argc, char *argv[]) {
 
   print_status (main_status_bar, NULL);
 
-  if (default_auto_favorites && !cmdline_launch)
+  if (default_auto_favorites && !cmdline_add_server)
     refresh_callback (NULL, NULL);
 
   destroy_splashscreen();
