@@ -32,6 +32,9 @@ struct server_props {
   char *spectator_password;
   char *rcon_password;
   int  reserved_slots; /*pulp*/
+
+  int sucks;
+  char *comment;
 };
 
 extern	struct server_props *properties (struct server *s);

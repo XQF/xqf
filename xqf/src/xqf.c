@@ -1089,6 +1089,18 @@ static gboolean check_launch (struct condef* con)
   s = con->s;
   props = properties (s);
 
+  if (props->sucks)
+  {
+    launch = dialog_yesno (NULL, 1, _("Yes"), _("No"),
+	_("You said this servers sucks.\nDo you want to risk a game this time?"));
+
+    if (!launch)
+    {
+      condef_free (con);
+      return FALSE;
+    }
+  }
+
     if (s->ping >= MAX_PING) {
       launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
                        _("Server %s:%d is %s.\n\nLaunch client anyway?"),
