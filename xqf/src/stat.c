@@ -704,9 +704,6 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
 
   s->info = parse_serverinfo (token, n);
 
-  if (games[s->type].analyze_serverinfo)
-    (*games[s->type].analyze_serverinfo) (s);
-
   strings = strings->next;
 
   if (strings && games[s->type].parse_player) {
@@ -722,6 +719,9 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
     }
     s->players = g_slist_reverse (plist);
   }
+
+  if (games[s->type].analyze_serverinfo)
+    (*games[s->type].analyze_serverinfo) (s);
 
   if(s->type == WO_SERVER || s->type == WOET_SERVER)
   {
