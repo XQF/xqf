@@ -1,3 +1,6 @@
+Dec 02, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- convert server names from iso-8859-1 to UTF-8 if needed
+
 Nov 30, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - new function create_server_type_menu creates a GtkOptionMenu with all games
 - modify statistics dialog to make it smaller, scollbars
