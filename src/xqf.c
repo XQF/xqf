@@ -802,15 +802,26 @@ static void update_server_lists_from_selected_source (void) {
   collate_server_lists (cur_masters, &cur_server_list, &cur_userver_list);
 }
 
-
+/**
+  update ui with aquired data during refresh and when refresh is done
+  */
 static int stat_lists_refresh (struct stat_job *job) {
   int items;
   int freeze;
  
-  debug (6, "stat_lists_refresh() -- Job %lx", job);
   items = g_slist_length (job->delayed.queued_servers) + 
                                    g_slist_length (job->delayed.queued_hosts);
-  if (items) {
+
+  debug (6, "stat_lists_refresh() -- Job %lx, items %d", job,items);
+
+  if(items>100)
+  {
+    update_server_lists_from_selected_source ();
+    server_clist_build_filtered (cur_server_list, TRUE);
+    job->delayed.queued_servers = NULL;
+    job->delayed.queued_hosts = NULL;
+  }
+  else if (items) {
     freeze = (items > 1) || default_refresh_sorts;
 
     if (freeze)
