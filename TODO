@@ -4,6 +4,7 @@
 - Ability to delete servers from non-Favorites
 - Game specific filters.  No use seeing a Lithium filter choice when looking
   at UT2003 servers
+- Search for server like control f does for player
 
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
@@ -12,5 +13,7 @@ Required for XQF 1.0:
   filtering
 - More general server filters so one can filter based on any server var.
 - Redial feature:  User configurable options
+- Update statusbar when activating / deactivating serverfilter.  The number
+  of shown servers does not get updated.
 
 
