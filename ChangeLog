@@ -1,3 +1,12 @@
+Dec 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- added 20sec timeout for wget
+- support for Voyager Elite Force
+- changed some internals for statistics
+- removed 2 not working q3 masters
+- added gameaholic lists for voyager and q3a
+- renamed T/O -> Timeout
+- added tribes2 statistics, only 25% servers are running linux :-(
+
 Dec 23, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - default masterprotocol for q3 is now 67 (pr 1.31)
 

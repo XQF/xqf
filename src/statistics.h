@@ -22,5 +22,9 @@
 
 extern 	void statistics_dialog (void);
 
+extern enum CPU identify_cpu (struct server *s, const char *versionstr);
+extern enum OS identify_os (struct server *s, char *versionstr);
+extern enum OS t2_identify_os (struct server *s, char *versionstr);
+
 
 #endif /* __STATISTICS_H__ */

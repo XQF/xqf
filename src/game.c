@@ -36,6 +36,7 @@
 #include "pixmaps.h"
 #include "game.h"
 #include "stat.h"
+#include "statistics.h"
 #include "debug.h"
 
 
@@ -101,11 +102,7 @@ struct game games[] = {
     0,
     "QS",
     "QS",
-#ifdef QSTAT23
     "-qs",
-#else
-    NULL,
-#endif
     NULL,
     &q1_pix,
 
@@ -116,7 +113,14 @@ struct game games[] = {
     write_quake_variables,
     q1_exec_generic,
     q1_custom_cfgs,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     QW_SERVER,
@@ -151,7 +155,14 @@ struct game games[] = {
     write_quake_variables,
     qw_exec,
     qw_custom_cfgs,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     Q2_SERVER,
@@ -179,10 +190,16 @@ struct game games[] = {
     write_quake_variables,
     qw_exec,
     q2_custom_cfgs,
-    quake_save_info
+    quake_save_info,
+    "version",		// arch_identifier
+    identify_cpu,		// identify_cpu
+    identify_os,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
 
-#ifdef QSTAT23
   {
     Q3_SERVER,
     GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
@@ -202,9 +219,15 @@ struct game games[] = {
     NULL,
     q3_exec,
     q3_custom_cfgs,
-    quake_save_info
+    quake_save_info,
+    "version",		// arch_identifier
+    identify_cpu,		// identify_cpu
+    identify_os,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
-#endif
 
   {
     WO_SERVER,
@@ -225,9 +248,44 @@ struct game games[] = {
     NULL,
     q3_exec,
     NULL,
-    quake_save_info
+    quake_save_info,
+    "version",		// arch_identifier
+    identify_cpu,		// identify_cpu
+    identify_os,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
 
+  {
+    STVEF_SERVER,
+    GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
+    "Voyager Elite Force",
+    STVEF_DEFAULT_PORT,
+    Q3M_DEFAULT_PORT,
+    "STVEFS",
+    "Q3S",
+    "-q3s",
+    "-q3m",
+    &stvef_pix,
+
+    q3_parse_player,
+    quake_parse_server,
+    q3_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    q3_exec,
+    NULL,
+    quake_save_info,
+    "version",		// arch_identifier
+    identify_cpu,		// identify_cpu
+    identify_os,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
+  },
 
   {
     H2_SERVER,
@@ -248,7 +306,14 @@ struct game games[] = {
     NULL,
     q1_exec_generic,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     HW_SERVER,
@@ -269,7 +334,14 @@ struct game games[] = {
     NULL,
     NULL,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     SN_SERVER,
@@ -290,7 +362,14 @@ struct game games[] = {
     NULL,
     q2_exec_generic,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     HL_SERVER,
@@ -317,7 +396,14 @@ struct game games[] = {
     NULL,
     q2_exec_generic,
     NULL,
-    quake_save_info
+    quake_save_info,
+    "sv_os",		// arch_identifier
+    NULL,		// identify_cpu
+    identify_os,	// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     KP_SERVER,
@@ -338,7 +424,14 @@ struct game games[] = {
     NULL,
     q2_exec_generic,
     NULL,
-    quake_save_info
+    quake_save_info,
+    "version",		// arch_identifier
+    identify_cpu,		// identify_cpu
+    identify_os,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     SFS_SERVER,
@@ -359,7 +452,14 @@ struct game games[] = {
     NULL,
     q2_exec_generic,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     T2_SERVER,
@@ -380,7 +480,14 @@ struct game games[] = {
     NULL,
     t2_exec,
     NULL,
-    quake_save_info
+    quake_save_info,
+    "linux",		// arch_identifier
+    NULL,		// identify_cpu
+    t2_identify_os,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     HR_SERVER,
@@ -401,7 +508,14 @@ struct game games[] = {
     NULL,
     q2_exec_generic,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
 
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
@@ -424,7 +538,14 @@ struct game games[] = {
     NULL,
     ut_exec,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   {
     RUNE_SERVER,
@@ -445,7 +566,14 @@ struct game games[] = {
     NULL,
     ut_exec,
     NULL,
-    quake_save_info
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
 #endif
   // Descent 3
@@ -468,7 +596,14 @@ struct game games[] = {
     NULL,			// write_config
     exec_generic,		// exec_client
     NULL,			// custom_cfgs
-    quake_save_info		// save_info
+    quake_save_info,		// save_info
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
   // any game using the gamespy protocol
   {
@@ -490,7 +625,14 @@ struct game games[] = {
     NULL,			// write_config
     gamespy_exec,		// exec_client
     NULL,			// custom_cfgs
-    quake_save_info		// save_info
+    quake_save_info,		// save_info
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   },
 
   {
@@ -512,7 +654,14 @@ struct game games[] = {
     NULL,
     NULL,
     NULL,
-    NULL
+    NULL,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
   }
 };
 
@@ -1157,10 +1306,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=WO_SERVER;
       }
-      // voyager elite force, not supported
+      // voyager elite force
       else if(!strncmp(info_ptr[1],"ST:V HM",7))
       {
-	s->type=Q3_SERVER;
+	s->type=STVEF_SERVER;
       }
     }
     
@@ -1254,7 +1403,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 	}
       }
     }
-    if ( s->type == WO_SERVER && endptr != s->gametype)
+    else if ( s->type == WO_SERVER && endptr != s->gametype)
     {
       if(s->game)
       {
@@ -1264,6 +1413,20 @@ static void q3_analyze_serverinfo (struct server *s) {
 	    n = MAX_WOLF_TYPES - 1;
 
 	  s->gametype = wolf_gametypes[n];
+	}
+      }
+    }
+    else if ( s->type == STVEF_SERVER && endptr != s->gametype)
+    {
+      if(s->game)
+      {
+	if (!strcasecmp (s->game, "baseEF"))
+	{
+	  // didn't find docu about this, so use q3a type
+	  if( n >= MAX_Q3A_TYPES )
+	    n = MAX_Q3A_TYPES - 1;
+
+	  s->gametype = q3a_gametypes[n];
 	}
       }
     }
@@ -1277,6 +1440,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       s->game=NULL;
     }
     else if ( s->type == WO_SERVER && !strcasecmp (s->game, "main"))
+    {
+      s->game=NULL;
+    }
+    else if ( s->type == STVEF_SERVER && !strcasecmp (s->game, "baseEF"))
     {
       s->game=NULL;
     }
