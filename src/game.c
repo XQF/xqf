@@ -1005,6 +1005,7 @@ void init_games()
   games[MOHAA_SERVER].qstat_option="-mhs";
   games[MOHAA_SERVER].pd=&mohaa_private;
   games[MOHAA_SERVER].pix=&mohaa_pix;
+  games[MOHAA_SERVER].config_is_valid=config_is_valid_generic;
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {

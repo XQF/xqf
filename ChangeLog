@@ -1,3 +1,6 @@
+Aug 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix medal of honor to not check for q3a files (#795017)
+
 Aug 21, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - replace strings by ints in country filter (Jochen Baier)
 - add support for Medal of Honor
