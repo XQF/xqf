@@ -32,6 +32,7 @@
 #include <netinet/in.h>	/* inet_ntoa */
 #include <arpa/inet.h>	/* inet_ntoa */
 
+
 #include <gtk/gtk.h>
 
 #include "i18n.h"
@@ -447,7 +448,6 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
   return server;
 }
 
-
 static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
   int n;
   char *token[256];
@@ -483,6 +483,53 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
       strings = strings->next;
     }
     s->players = g_slist_reverse (plist);
+  }
+
+  // TODO make separate function
+  if(s->type == WO_SERVER || s->type == WOET_SERVER)
+  {
+    enum { Allies, Axis, Numteams } team = Numteams;
+    static char* teamnames[Numteams] = { N_("Allies"), N_("Axis") };
+    // bitmask of players for each team
+    long teams[Numteams] = {0};
+    char **info_ptr;
+    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+    {
+      if (strcmp (*info_ptr, "Players_Allies") == 0)
+	team = Allies;
+      if (strcmp (*info_ptr, "Players_Axis") == 0)
+	team = Axis;
+
+      if(team != Numteams )
+      {
+	char* e = NULL;
+	char* p = info_ptr[1];
+	for(;; p = e, e = NULL)
+	{
+	  long pnr = strtol(p,&e,10);
+	  if(p == e || (e && !*e))
+	    break;
+	  if(pnr != LONG_MIN && pnr != LONG_MAX
+	      && pnr <= (long)(sizeof(teams[team])*8)
+	      && pnr > 0)
+	  {
+	    teams[team] |= 2<<(pnr-1);
+	  }
+	}
+	team = Numteams;
+      }
+    }
+    for(plist = s->players, n = 0 ; plist ; plist=plist->next, ++n)
+    {
+      for(team=Allies;team != Numteams; ++team)
+      {
+      if(teams[team]&(2<<n))
+	{
+	  p = plist->data;
+	  p->model = teamnames[team];
+	}
+      }
+    }
   }
 }
 
