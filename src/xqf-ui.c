@@ -33,6 +33,7 @@
 #include "config.h"
 #include "sort.h"
 #include "pref.h"
+#include "debug.h"
 
 static GSList *xqf_windows = NULL;
 static GtkWidget *target_window = NULL;
@@ -775,3 +776,70 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name)
     g_warning ("Widget not found: %s", widget_name);
   return found_widget;
 }
+
+// Skip a game if it's not configured and show only configured is enabled
+gboolean create_server_type_menu_filter_configured(enum server_type type)
+{
+    if (!games[type].cmd && default_show_only_configured_games)
+	return FALSE;
+    else
+	return TRUE;
+}
+
+GtkWidget *create_server_type_menu (enum server_type active_type,
+	gboolean (*filterfunc)(enum server_type),
+	GtkSignalFunc callback)
+{
+  GtkWidget *option_menu = NULL;
+  GtkWidget *menu = NULL;
+  GtkWidget *menu_item = NULL;
+  GtkWidget *first_menu_item = NULL;
+  int i;
+  int j = 0;
+  int menu_type = 0;
+
+  option_menu = gtk_option_menu_new ();
+
+  menu = gtk_menu_new ();
+
+  for (i = 0; i < GAMES_TOTAL; ++i)
+  {
+
+    if(filterfunc && !filterfunc(i))
+      continue;
+
+    menu_item = gtk_menu_item_new ();
+
+    if (i == active_type)
+    {
+      first_menu_item = menu_item;
+      menu_type = j;
+    }
+    else if (i == 0)
+      first_menu_item = menu_item;
+    
+    gtk_menu_append (GTK_MENU (menu), menu_item);
+
+    gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
+
+    if(callback)
+      gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+                 GTK_SIGNAL_FUNC (callback), (gpointer) i);
+
+    gtk_widget_show (menu_item);
+
+    ++j; // must be here in case the continue was used
+  }
+
+  // initiates callback to set servertype to first configured game
+  if(first_menu_item)
+      gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
+
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
+
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
+
+  return option_menu;
+}
+
+

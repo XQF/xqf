@@ -132,6 +132,9 @@ static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window)
 
 static void select_master_type_callback (GtkWidget *widget, enum server_type type)
 {
+  if(!master_query_type_radios[MASTER_NATIVE])
+    return;
+
   master_type = type;
   gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
   if(!games[type].default_master_port)
@@ -192,47 +195,6 @@ static void master_address_from_history_selected_callback (GtkWidget *widget,
   master_activate_radio_for_type(type);
 }
 
-static GtkWidget *create_master_type_menu (enum server_type type) {
-  GtkWidget *menu;
-  GtkWidget *menu_item;
-  GtkWidget *first_menu_item = NULL;
-  int i;
-  unsigned j = 0;
-   
-  menu = gtk_menu_new ();
-
-  for (i = 0; i < GAMES_TOTAL; i++) {
-
-    // Skip a game if it's not configured and show only configured is enabled
-    if (!games[i].cmd && default_show_only_configured_games)
-      continue;
-
-    if (j == type) {
-      // Store first valid game menu item for gtk_menu_item_activate below
-      menu_item = first_menu_item = gtk_menu_item_new ();
-    }
-    else
-      menu_item = gtk_menu_item_new ();
-    
-    j++;
-
-    menu_item = gtk_menu_item_new ();
-    gtk_menu_append (GTK_MENU (menu), menu_item);
-
-    gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
-
-    gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                     GTK_SIGNAL_FUNC (select_master_type_callback), (gpointer) i);
-
-    gtk_widget_show (menu_item);
-  }
-
-  // initiates callback to set servertype to first configured game
-  gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
-
-  return menu;
-}
-
 char *master2url( struct master *m )
 {
   char *query_type;
@@ -289,9 +251,6 @@ struct master *add_master_dialog (struct master *m) {
   struct master *master_to_edit;
   char *windowtitle;
 
-  unsigned j;
-  int menu_type = 0;
-
   master_name_result = NULL;
   master_addr_result = NULL;
   current_master_query_type = MASTER_NATIVE;
@@ -322,30 +281,6 @@ struct master *add_master_dialog (struct master *m) {
     }
   }
 
-  if (default_show_only_configured_games) {
-    // Find last configured game in list and set menu_type for menu position
-    for (j = 0; j < GAMES_TOTAL; j++) {
-      if (games[j].cmd) {
-        if (j == master_type)
-          break;
-        menu_type++;
-      }
-    }
-    if (j == GAMES_TOTAL) {
-      // Game not found propbably because last added game is no longer configured.
-      // Look for first configured game and use that.
-      for (j = 0; j < GAMES_TOTAL; j++) {
-        if (games[j].cmd) {
-          master_type = j;
-          menu_type = 0;
-          break;
-        }
-      }
-    }
-  }
-  else
-    menu_type = master_type;
-  
   if (master_to_edit)
   {
     windowtitle=_("Rename Master");
@@ -404,12 +339,12 @@ struct master *add_master_dialog (struct master *m) {
 
   /* Master Type Option Menu */
 
-  option_menu = gtk_option_menu_new ();
+  option_menu = create_server_type_menu (master_type,
+		      create_server_type_menu_filter_configured,
+		      GTK_SIGNAL_FUNC(select_master_type_callback));
+
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
-                                                  create_master_type_menu (menu_type));
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
-  
+
   if(master_to_edit)
   {
     gtk_widget_set_state (option_menu, GTK_STATE_NORMAL);
