@@ -2031,6 +2031,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *notebook;
   GtkWidget *hbox;
   GtkWidget *button;
+  GtkWidget *hbox2 = NULL;
   struct generic_prefs *prefs = &genprefs[type];
   struct game *g;
  
@@ -2156,6 +2157,27 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_combo_set_case_sensitive (GTK_COMBO (prefs->cfg_combo), TRUE);
     gtk_table_attach_defaults (GTK_TABLE (table), prefs->cfg_combo, 1, 2, 2, 3);
     gtk_widget_show (prefs->cfg_combo);
+  }
+
+  // Game specific notes - move contents to games_data to make it generic?
+  switch(type) {
+  
+    case UN_SERVER:
+    
+    hbox2 = gtk_hbox_new (FALSE, 0);
+    gtk_box_pack_end (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+    gtk_widget_show (hbox2);
+        
+    label = gtk_label_new (_("Note:  Unreal Tournament will not launch correctly without\n"\
+    				    "modifications to the game's startup script.  Please see the\n"\
+			  	    "documentation for more information.")); 
+    gtk_label_set_justify (label, GTK_JUSTIFY_LEFT);
+    gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+    gtk_widget_show (label);
+    break;
+    
+    default:
+    break;
   }
 
   gtk_widget_show (table);
