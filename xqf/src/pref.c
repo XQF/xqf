@@ -226,9 +226,6 @@ struct generic_prefs {
   // function for adding game specific tabs to notebook
   void (*add_options_to_notebook) (GtkWidget *notebook);
 
-  GtkWidget *custom_args_entry[10];
-  GSList *custom_args;
-   
   // game specific data
   GData* games_data;
 
@@ -1841,6 +1838,7 @@ static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
  else
    return (1);
 }
+
 
 static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   char *temp[2];
@@ -3973,6 +3971,40 @@ void preferences_dialog (int page_num) {
   }
 }
 
+// Used by user_fix_defaults to add a custom arg
+static void add_custom_args_defaults (char *str, enum server_type type) {
+  int isdefault = FALSE;
+  char *str2;
+  char str3[256];
+  char conf[64];
+  int j;
+
+  g_snprintf (str3, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
+  config_push_prefix (str3);
+
+  // Look for existing custom arguments
+  j = 0;
+  g_snprintf (conf, 64, "custom_arg%d", j);
+  str2 = config_get_string_with_default (conf,&isdefault);
+  while (!isdefault)
+  {
+    j++;
+    g_snprintf (conf, 64, "custom_arg%d", j);
+    str2 = config_get_string_with_default (conf,&isdefault);
+  }
+
+  // j = next one in line
+  
+  g_snprintf (conf, 15, "custom_arg%d", j);
+  config_set_string (conf, str);
+
+  config_pop_prefix ();
+
+  printf("adding: %s=%s for server type: %d\n",conf,str, type);
+
+}
+
+
 
 // set some defaults when xqf is called the first time
 static void user_fix_defaults (void)
@@ -3998,7 +4030,12 @@ static void user_fix_defaults (void)
 
 	g_free(suggested_file);
 	suggested_file=NULL;
+	
     }
+    
+    // Add default custom arguments
+    add_custom_args_defaults("s_SWATGame, -ini=TacticalOps.ini",UN_SERVER);
+    add_custom_args_defaults("sfteamdm, -ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER);
 
     if (j) {
       config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
