@@ -50,6 +50,7 @@
 #include "xpm/t2.xpm"
 #include "xpm/hr2.xpm"
 #include "xpm/un.xpm"
+#include "xpm/rune.xpm"
 
 #include "xpm/gamespy3d.xpm"
 
@@ -103,6 +104,7 @@ struct pixmap sfs_pix;
 struct pixmap t2_pix;
 struct pixmap hr_pix;
 struct pixmap un_pix;
+struct pixmap rune_pix;
 struct pixmap gamespy3d_pix;
 
 struct pixmap gplus_pix;
@@ -203,6 +205,7 @@ void free_pixmaps (void) {
   free_pixmap (&t2_pix);
   free_pixmap (&hr_pix);
   free_pixmap (&un_pix);
+  free_pixmap (&rune_pix);
   free_pixmap (&gamespy3d_pix);
 
   free_pixmap (&gplus_pix);
@@ -272,6 +275,7 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &t2_pix, t2_xpm);
   create_pixmap (window, &hr_pix, hr2_xpm);
   create_pixmap (window, &un_pix, un_xpm);
+  create_pixmap (window, &rune_pix, rune_xpm);
   create_pixmap (window, &gamespy3d_pix, gamespy3d_xpm);
 
   create_pixmap (window, &gplus_pix, green_plus_xpm);

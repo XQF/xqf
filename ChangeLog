@@ -1,4 +1,8 @@
 Sep 28, 2001: Ludwig Nussel <l-n@sourceforge.net>
+- added Rune support
+- changed layout of game configuration screen
+
+Sep 28, 2001: Ludwig Nussel <l-n@sourceforge.net>
 - added support for games using the gamespy protocol
 - added q3,ut,sof,nolf,rally masters,turok2 and shogo masters
 - made game names translatable
