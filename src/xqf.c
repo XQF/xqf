@@ -1440,7 +1440,7 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	     "Version " XQF_VERSION "\n\n"
 	     "Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>\n\n"
 	     "Mod & server version filter: Bill Adams <webmaster@evil.inetarena.com>\n"
-	     "SoF & GameSpy support: Alex Burger <alex@fragit.net>\n\n"
+	     "SoF & GameSpy master support: Alex Burger <alex@fragit.net>\n\n"
 
 	     "http://www.linuxgames.com/xqf/");
 }
