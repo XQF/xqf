@@ -1,10 +1,11 @@
-Oct 14, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 14, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Updated help about and AUTHORS page with contributors
 - Updated reserved slots support to use integers (Jochen Baier)
 - Added reserved slots support for redial from Jochen Baier
   (email@jochen-baier.de).  Server properties page allows setting 
   for reserved admin slots for the server.
   
-Oct 13, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 13, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Updated q3_exec to search ~/.q3a and then real game dir for
   mods.  Tested with osp (~/.q3a/Osp)
 - Created q2_exec function to be used by Quake2 to search ~/.quake2
@@ -37,11 +38,11 @@ Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - suggest function for game commands
 - show only configured games by default
 
-Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 11, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Modified q3_exec to call find_game_dir using quake3_data_dir
 - Added NULL checks to find_game_dir
 
-Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 11, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added function get_custom_arguments.  Used by ut_exec to pass user
   defined command line arguments to UT when launching.  Currently does 
   not have a GUI front end. To use, add something like the following
@@ -65,7 +66,7 @@ Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
   'OSP', and client has dir of 'osp', Q3 will now be properly be launched
   with +fs_game osp instead of OSP.
 
-Oct 10, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 10, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added support of 'Show only configured games' to Add Master window
   Add Server window and Statistics page
 - Cleaned up 'When launching a game' placement in Preferences / General
@@ -76,7 +77,7 @@ Oct 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove instructions for Half-Life hack from docu
 - access functions for game specific attributes
 
-Oct 09, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 09, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added password support to Unreal based games (games that use
   un_exec - Unreal, UT 2003, Rune)
 - Changed UT 2003 icon to have a #2 at the bottom right hand corner.
@@ -85,7 +86,7 @@ Oct 09, 2002: Alex Burger <alex@fragit_dot_net>
 - Changed Unreal / UT icon to UT 2003 icon (without a number)
 - Changed Unreal name to 'Unreal / UT'
 
-Oct 04, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 04, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added Preferences Appearance option of 'Show only configured games'.
   Masters added will still be stored, but only displayed on the screen
   if the command line for the game is configured.  Defaults to false.
@@ -106,14 +107,14 @@ Oct 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 Oct 04, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - modified that ugly ut2 master hack a little
 
-Oct 04, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 04, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added support for UT 2003 http masters (not the same as the other
   http formats) and added full and demo Epic masters
 - Fixed UT 2003 password column (servers use password=0/1 instead of
   password=False/True)
 - Added sound enable/disable button
 
-Oct 03, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 03, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added sound support actions for: xqf start, xqf quit, update, refresh,
   stop, server connect, redial success.  Added Preferences / Sound Options.
   If file does not start with a / (except for Player), prepends user's
@@ -125,7 +126,7 @@ Oct 03, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 Oct 03, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - rename Unreal 2003 Demo -> UT 2003
 
-Oct 01, 2002: Alex Burger <alex@fragit_dot_net>
+Oct 01, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Update status bar for redial
 
 Oct 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -134,10 +135,10 @@ Oct 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - reinsert signal handlers for changing debug level
 - set sensitivity of cancel redial button
 
-Sep 30, 2002: Alex Burger <alex@fragit_dot_net>
+Sep 30, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added busy server redial.  Server - Cancel Redial to stop
 
-Sep 29, 2002: Alex Burger <alex@fragit_dot_net>
+Sep 29, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Added Soldier of Fortune 2 support and master
 
 Sep 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -191,17 +192,17 @@ Jul 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - update german translation
 - better back up your config before trying this new versoin
 
-July 7, 2002: Alex Burger <alex@fragit_dot_net>
+July 7, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Changed version to 0.9.9.1
 
 Jul 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fixed segfault when adding servers with no name to favorites
 - added RTCW protocol 59
 
-July 4, 2002: Alex Burger <alex@fragit_dot_net>
+July 4, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Changed version to 0.9.9c
 
-July 3, 2002: Alex Burger <alex@fragit_dot_net>
+July 3, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Changed version to 0.9.9
 
 Jun 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -301,7 +302,7 @@ Dec 23, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 Dec 23, 2001: Jordi Mallach <jordi@sindominio.net>
 - Spanish translation fixes
 
-Dec 22,2001: Alex Burger <alex@fragit_dot_net>
+Dec 22,2001: Alex Burger <alex@users.sourceforge dot net>
 - Changed version to 0.9.9a
 
 Dec 21, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -325,7 +326,7 @@ Dec 15, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - updated TODO
 - updated german translation
 
-Dec 15, 2001: Alex Burger <alex@fragit_dot_net>
+Dec 15, 2001: Alex Burger <alex@users.sourceforge dot net>
 - Added Edit / Add Default Masters command.  Adds in all the default
   master servers in case you accidentally deleted one (or all)
 
@@ -458,28 +459,28 @@ Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - split about dialog string into smaller chunks for easier translation
 - update for german translation
 
-Sept 24,2001: Alex Burger <alex@fragit_dot_net>
+Sept 24,2001: Alex Burger <alex@users.sourceforge dot net>
 - Changed version to 0.9.7a
 
-Sept 24,2001: Alex Burger <alex@fragit_dot_net>
+Sept 24,2001: Alex Burger <alex@users.sourceforge dot net>
 - Added wo_exec function to properly launch Wolf.  Tested with
   Wolfmptest 0.7.16-1
 
-Sept 19, 2001: Alex Burger <alex@fragit_dot_net>
+Sept 19, 2001: Alex Burger <alex@users.sourceforge dot net>
 - Added Wolfenstein support.  Currently uses q3_exec to launch
   the game, but will change when Wolf client for Linux is released.
   Uses qstat as if it is a Quake3 server
 
-Sept 14, 2001: Alex Burger <alex@fragit_dot_net>
+Sept 14, 2001: Alex Burger <alex@users.sourceforge dot net>
 - Added docs/xqfdocs.html
 - Added new NEWS file from Jordi 
 
-Sept 10, 2001: Alex Burger <alex@fragit_dot_net>
+Sept 10, 2001: Alex Burger <alex@users.sourceforge dot net>
 - Added Jordi Mallach's man page - xqf.6 and modified Makefile.am
 - Added 'General' Preferences page and moved most of 'Appearance'
   to 'General' page.
 
-Sept 5, 2001: Alex Burger <alex@fragit_dot_net>
+Sept 5, 2001: Alex Burger <alex@users.sourceforge dot net>
 - Patch by  Ludwig Nussel ludwig.nussel@gmx.de to add German
   translation and some code fixes.
 
@@ -491,7 +492,7 @@ Aug 19, 2001: Bill Adams <bill@evilbill.org>
   q3a game types, options for setting fs_game on the command line and
   r3a hack for the vm_* settings.
   
-Aug 9, 2001: Alex Burger <alex@fragit_dot_net>
+Aug 9, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Changed Quake3 protocol version to 66 to support
  latest Quake3 patch.  Change located in game.c
 
@@ -513,20 +514,20 @@ June 8, 2001, Jordi Mallach <jordi@sindominio.net>
 - Initial, incomplete Spanish translation (po/es.po).
 - changed configure.in so it barfs about qstat << 2.4c.
 
-June 5, 2001: Alex Burger <alex@fragit_dot_net>
+June 5, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Tribes 2 games can now be launched.  Created a t2_exec
  function. If a name is specified in Player Profile, it 
  is used on the command line to log in.  This would only
  work if you have saved your password in the game.
  Otherwise it launches and prompts for login.
 
-April 20, 2001: Alex Burger <alex@fragit_dot_net>
+April 20, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Now requires qstat2.4c.  Removed fixes to Tribes 2 code
  for qstat2.4b as qstat2.4c fixes the problems
 -Added t2_analyze_serverinfo function to decode Game and
  GameType columns for Tribes 2.
 
-April 19, 2001: Alex Burger <alex@fragit_dot_net>
+April 19, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Changed version to 0.9.6g
 -Added Tribes 2 support.  Tribes 2 support requires at
  least QSTAT 2.4b.  As I do not even have Tribes 2 I
@@ -610,7 +611,7 @@ Jan 21, 2001: Bill Adams <bill@evil.inetarena.com>
 -Fixed config.in to have the correct version.
 	
 	
-Jan 7, 2001: Alex Burger <alex@fragit_dot_net>
+Jan 7, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Renamed MOD column to GameType
 -Swapped Quake3 'Game' and 'Mod/GameType' columns
 -Swapped UT 'Game' and 'Mod/GameType' columns
@@ -629,16 +630,16 @@ Jan 7, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 -Modified q2_analyze_serverinfo function to display gamename
  in columns for Quake2 servers.  For example: Lithium II V1.23
 
-Jan 2, 2001: Alex Burger <alex@fragit_dot_net>
+Jan 2, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Change g_gametype of 8 to ' mod ' instead of TeamTournament which 
  TeamArena uses in the in-game browser.
 
-Jan 1, 2001: Alex Burger <alex@fragit_dot_net>
+Jan 1, 2001: Alex Burger <alex@users.sourceforge dot net>
 -Now executes the file PreLaunch from the ~/.qf directory when launching a 
  game for use with ICQ scripts etc.  Toggle on / off using Preferences / 
  Appearance 
 
-Dec 28, 2000: Alex Burger <alex@fragit_dot_net>
+Dec 28, 2000: Alex Burger <alex@users.sourceforge dot net>
 -Modified game.c to query for protocol 48 Quake3 servers instead of the
  qstat default by using "-q3m,48"
 
@@ -648,7 +649,7 @@ Dec 27, 2000: Bill Adams <bill@evil.inetarena.com>
  server.c::server_add( )). This will require verification on the reference
  count but it seemed to fix it for me.
 
-Dec 23, 2000: Alex Burger <alex@fragit_dot_net>
+Dec 23, 2000: Alex Burger <alex@users.sourceforge dot net>
 -Added new Quake3 game types to support Team Arena.  Note: g_gametype values
  of 5 to 8 are now defined by id for Team Arena.  Mod authors usually use 5.
  XQF will only show the new values if the game version is 1.27 until we find
@@ -690,40 +691,40 @@ Nov 26th 2000: Bill Adams <bill@evil.inetarena.com>
 -Changed a few filter related files to make it easier to
  put in multiple server filters.
 
-Nov 24th 2000: Alex Burger <alex@fragit_dot_net>
+Nov 24th 2000: Alex Burger <alex@users.sourceforge dot net>
 -Version changed to XQF 0.9.5a-beta
 -Fixed UT launching.  Now passes proper parameters to UT
 
-Nov 18th 2000: Alex Burger <alex@fragit_dot_net>
+Nov 18th 2000: Alex Burger <alex@users.sourceforge dot net>
 -Version changed to XQF 0.9.5
 
-Nov 13th 2000: Alex Burger <alex@fragit_dot_net>
+Nov 13th 2000: Alex Burger <alex@users.sourceforge dot net>
 -Bug fix to prevent filter buttons from not staying 'pressed' after doing a
  refresh.  Thanks to slashdev for the fix.
 -Now requires QStat 2.4a
 
-Nov 12th 2000: Alex Burger <alex@fragit_dot_net>
+Nov 12th 2000: Alex Burger <alex@users.sourceforge dot net>
 -Changed Copy+ menu to use double spaces instead of commas to separate
  fields.  Added 'of' for current players / max players. Eg: 5 of 10
 
-Nov 5th 2000: Alex Burger <alex@fragit_dot_net>
+Nov 5th 2000: Alex Burger <alex@users.sourceforge dot net>
 -Add call to clear list to end of function server_clist_build_filtered
  to prevent segfault on some computers due to server list that is emptied
  after a player filter is applied
 
-Oct 27th 2000: xqf-0.9.4f2 - Alex Burger <alex@fragit_dot_net>
+Oct 27th 2000: xqf-0.9.4f2 - Alex Burger <alex@users.sourceforge dot net>
 -Added Copy+ menu option - copies the following server info to the clipboard:
  ping  ip:port  name  map  curplayers  maxplayers
 -Now creates a LaunchInfo.txt in ~/.qf when launching a game for use with IRC 
  scripts etc.  Toggle on / off using Preferences / Appearance 
 
-Oct 8th 2000: xqf-0.9.4f - Alex Burger <alex@fragit_dot_net>
+Oct 8th 2000: xqf-0.9.4f - Alex Burger <alex@users.sourceforge dot net>
 -UnrealTournament master support using Gamespy style master via QStat 2.4a
 -Add Epic UT Master server to default master list
 -Remove Gamespy master server entry from default master list
 -Fixed master list bug
 
-Oct 4th 2000: xqf-0.9.4e - Alex Burger <alex@fragit_dot_net>
+Oct 4th 2000: xqf-0.9.4e - Alex Burger <alex@users.sourceforge dot net>
 -Soldier of Fortune support
 -Gamespy style master server support when used with QStat 2.4a
 -Format of 'lists' file changed to record game type in master entry

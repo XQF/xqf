@@ -2145,15 +2145,18 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
   char *version = g_strdup_printf(_("Version %s\n\n"),XQF_VERSION);
   /* 8859-1 translators can use the copyright symbol © instead of (C) */
   char *author = _("Copyright (C) 1998-2002 Roman Pozlevich <roma@botik.ru>\n\n");
-  char *contrib = _("Contributors:\n\n"
-	"Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
-	"Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolfenstein, GameSpy master support\n"
-	"Jordi Mallach <jordi@sindominio.net>: Internationalization (i18n) & Spanish translation\n"
-	"Ludwig Nussel <l-n@users.sourceforge.net>: German translation, i18n & various fixes\n\n");
-  char *urls = _("http://www.linuxgames.com/xqf/\n"
-	     "http://sourceforge.net/projects/xqf/");
+  char *contrib = _("Significant Contributors:\n\n"
+	"Bill Adams <webmaster@evil.inetarena.com>\n"
+	"Alex Burger <alex_b@users.sourceforge.net>\n"
+	"Jordi Mallach <jordi@sindominio.net>\n"
+	"Ludwig Nussel <l-n@users.sourceforge.net>\n\n");
+  char *contrib2 = _("Other Contributors:\n\n"
+	"Jochen Baier <email@jochen-baier.de>\n\n");
+  char *urls = _("Web sites:\n\n"
+		"http://www.linuxgames.com/xqf\n"
+		"http://sourceforge.net/projects/xqf");
   dialog_ok (_("About XQF"), 
-	     "%s%s%s%s%s",intro,version,author,contrib,urls);
+	     "%s%s%s%s%s%s",intro,version,author,contrib,contrib2, urls);
   g_free(version);
 }
 
