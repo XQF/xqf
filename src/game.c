@@ -3491,7 +3491,7 @@ static void doom3_cmd_or_dir_changed(struct game* g)
   game_set_attribute(g->type, "_masterprotocol", g_strdup(line));
 
 out:
-  fclose(f);
+  if(f) fclose(f);
   g_free(verinfo);
 }
 
