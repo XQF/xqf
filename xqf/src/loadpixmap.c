@@ -79,6 +79,22 @@ add_pixmap_directory                   (const gchar     *directory)
                                         g_strdup (directory));
 }
 
+gchar* find_pixmap_directory(const gchar* filename)
+{
+  const gchar* found_filename = NULL;
+  GList *elem;
+
+  elem = pixmaps_directories;
+  while (elem)
+  {
+    found_filename = check_file_exists ((gchar*)elem->data, filename);
+    if (found_filename)
+      break;
+    elem = elem->next;
+  }
+  return found_filename;
+}
+
 /* This is an internally used function to create pixmaps. */
 GtkWidget*
 load_pixmap                          (GtkWidget       *widget,
@@ -89,26 +105,19 @@ load_pixmap                          (GtkWidget       *widget,
   GdkPixmap *gdkpixmap;
   GdkBitmap *mask;
   GtkWidget *pixmap;
-  GList *elem;
 
   if (!filename || !filename[0])
     return create_dummy_pixmap (widget);
 
-  /* We first try any pixmaps directories set by the application. */
-  elem = pixmaps_directories;
-  while (elem)
-  {
-    found_filename = check_file_exists ((gchar*)elem->data, filename);
-    if (found_filename)
-      break;
-    elem = elem->next;
-  }
+  found_filename = find_pixmap_directory(filename);
 
+#if 0 //crap...
   /* If we haven't found the pixmap, try the source directory. */
   if (!found_filename)
   {
     found_filename = check_file_exists ("src/xpm", filename);
   }
+#endif
 
   if (!found_filename)
   {

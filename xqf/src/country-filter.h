@@ -37,8 +37,15 @@ const char* geoip_name_by_id(int id);
 
 /** return id for an ip address */
 int geoip_id_by_ip(struct in_addr in);
+	
+/** return id by country code **/
+int geoip_id_by_code(const char *country);
+
+/** return TRUE if geoip init was successful */
+gboolean geoip_is_working (void);
 
 struct pixmap* get_pixmap_for_country(int id);
+
 
 #endif
 
