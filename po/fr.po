@@ -1717,7 +1717,7 @@ msgstr "Copier+"
 
 #: src/xqf.c:2581 src/xqf.c:3028
 msgid "Refresh"
-msgstr "_Actualiser"
+msgstr "Actualiser"
 
 #: src/xqf.c:2586
 msgid "Refresh Selected"
