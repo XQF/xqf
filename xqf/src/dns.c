@@ -125,7 +125,7 @@ static void master_sigchld_handler (int signum) {
   int pid;
   int status;
 
-  debug(3,"master_sigchld_handler(%d)",signum);
+  debug(3,"signal: ",signum);
 
   while ((pid = waitpid (WAIT_ANY, &status, WNOHANG)) > 0);
 }
@@ -133,7 +133,7 @@ static void master_sigchld_handler (int signum) {
 
 static void master_sigterm_handler (int sig) {
   if (sig != SIGTERM && sig != SIGINT) {
-    fprintf (stderr, "DNS Helper: %s(%d) signal\n", g_strsignal (sig), sig);
+    debug (3, "DNS Helper: %s(%d) signal", g_strsignal (sig), sig);
   }
   dns_master_reset ();
   _exit (1);
@@ -323,9 +323,7 @@ static void worker_sigalrm_handler (int signum) {
     print_resolved (worker_arg,
 		    (str_is_ip_address (worker_arg))? worker_arg : NULL,
 		    DNS_MSG_PREFIX DNS_MSG_TIMEOUT);
-#ifdef DEBUG
-    fprintf (stderr, "<DNS> timeout: %s\n", worker_arg);
-#endif
+    debug (3, "<DNS> timeout: %s", worker_arg);
     worker_arg = NULL;
   }
 
@@ -334,13 +332,18 @@ static void worker_sigalrm_handler (int signum) {
 
 
 static void worker_sigterm_handler (int signum) {
-#ifdef DEBUG
   if (worker_arg)
-    fprintf (stderr, "<DNS> terminated: %s\n", worker_arg);
-#endif
+    debug(3, "<DNS> terminated: %s", worker_arg);
   _exit (0);
 }
 
+static void sighandler_debug(int signum)
+{
+    if( signum == SIGUSR1)
+	set_debug_level(get_debug_level()+1);
+    else if( signum == SIGUSR2)
+	set_debug_level(get_debug_level()-1);
+}
 
 static char *herrno2msg (int err) {
 
@@ -429,9 +432,7 @@ static int fork_worker (int n, char *str) {
 
     dns_workers_num++;
 
-#ifdef DEBUG
-    fprintf (stderr, "DNS Master> worker %d (str:%s) is forked\n", n, str);
-#endif
+    debug (7, "DNS Master> worker %d (str:%s) is forked", n, str);
   }
   else {	/* child */
     on_sig (SIGHUP,  _exit);
@@ -444,14 +445,15 @@ static int fork_worker (int n, char *str) {
     on_sig (SIGTERM, worker_sigterm_handler);
     on_sig (SIGALRM, worker_sigalrm_handler);
 
+    on_sig(SIGUSR1, sighandler_debug);
+    on_sig(SIGUSR2, sighandler_debug);
+
     dup2 (fdset[1], 1);		/* stdout */
 
     close (fdset[0]);
     close (fdset[1]);
 
-#ifdef DEBUG
-    fprintf (stderr, "DNS Worker [%s]> started\n", str);
-#endif
+    debug (7, "DNS Worker [%s]> started", str);
 
     alarm (60 * 10);	/* suicide after 10 min */
 
@@ -470,10 +472,8 @@ static int dns_dispatch_to_worker (char *str) {
   if (dns_workers_num < DNS_MAX_CHILDREN) {
     for (i = 0; i < DNS_MAX_CHILDREN; i++) {
       if (dns_workers[i].pid < 0) {
-#ifdef DEBUG
-	fprintf (stderr, "DNS Master> \"%s\" is dispatched to worker %d\n", 
+	debug (7, "DNS Master> \"%s\" is dispatched to worker %d", 
                                                                       str, i);
-#endif
 	fork_worker (i, str);
 	return TRUE;
       }
@@ -499,10 +499,8 @@ static void dns_resolve (char *str) {
   dns_move_queue ();
 
   if (dns_workers_num >= DNS_MAX_CHILDREN || !dns_dispatch_to_worker (str)) {
-#ifdef DEBUG
-    fprintf (stderr, "DNS Master> \"%s\" is put to the waiting queue\n",
+    debug (7, "DNS Master> \"%s\" is put to the waiting queue",
                      str);
-#endif
     dns_queue_add (strdup (str));
   }
 }
@@ -533,13 +531,9 @@ static void dns_master_reset (void) {
 
 
 static void master_parse_callback (char *str, void *data) {
-#ifdef DEBUG
-  fprintf (stderr, "DNS Master> got \"%s\"\n", str);
-#endif
+  debug (7, "DNS Master> got \"%s\"", str);
   if (strcmp (str, DNS_CMD_RESET) == 0) {
-#ifdef DEBUG
-    fprintf (stderr, "DNS Master> RESET\n");
-#endif
+    debug (7, "DNS Master> RESET");
     dns_master_reset ();
   }
   else {
@@ -549,10 +543,8 @@ static void master_parse_callback (char *str, void *data) {
 
 
 static void master_close_callback (int error, void *data) {
-#ifdef DEBUG
-  fprintf (stderr, "DNS Master> pipe closed, errors: %s\n", 
+  debug (3, "DNS Master> pipe closed, errors: %s", 
                                                        (error)? "yes" : "no");
-#endif
   dns_master_reset ();
   _exit (0);
 }
@@ -588,6 +580,9 @@ static void dns_master_init (void) {
   on_sig (SIGSEGV, master_sigterm_handler);
   on_sig (SIGALRM, master_sigterm_handler);
   on_sig (SIGTERM, master_sigterm_handler);
+
+  on_sig(SIGUSR1, sighandler_debug);
+  on_sig(SIGUSR2, sighandler_debug);
 }
 
 
@@ -647,11 +642,9 @@ static void dns_master_mainloop (void) {
 	dns_move_queue ();
     }
 
-#ifdef DEBUG
-    fprintf (stderr, "DNS Master> %d workers, queue is %s\n", 
+    debug (7, "DNS Master> %d workers, queue is %s", 
                             dns_workers_num,
 			    (q_head)? "not empty" : "empty");
-#endif
 
     FD_ZERO (&readfds);
     FD_SET (0, &readfds);
@@ -779,7 +772,7 @@ void dns_lookup (const char *str) {
   char host[MAXHOSTNAMELEN + 1];
   int len;
 
-  debug(8,"dns_lookup(%s)",str);
+  debug(8,"%s",str);
 
   len = strlen (str);
   if (len <= MAXHOSTNAMELEN) {
