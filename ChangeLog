@@ -1,4 +1,7 @@
-Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
+Oct 20, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Fix edit menu sensitivity problem for add / remove fav
+
+Oct 19, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Updated documentation
 - Added server properties password page support to Unreal, UT2003
   and Rune
