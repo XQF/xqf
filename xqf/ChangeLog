@@ -1,5 +1,5 @@
 Nov 02, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix saving of player info for rune and ut2
+- fix saving of player info for rune, ut2 and tribes2
 - do not display a single slash when model and skin are empty
 
 Nov 2, 2002: Alex Burger <alex_b@users.sourceforge.net>

@@ -3350,6 +3350,21 @@ static void quake_save_info (FILE *f, struct server *s) {
 
 	/* Q2, etc... */
 
+      case T2_SERVER:
+	fprintf (f, 
+		 "%s" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%s" QSTAT_DELIM_STR 
+		 "%s" QSTAT_DELIM_STR 
+		 "\n", //tribe tag not supported yet
+		 (p->name)? p->name : "",
+		 p->frags,
+		 0,  // team number not supported yet
+		 "x",  // team name not supported yet
+		 (p->model)? p->model : ""); // player_type
+	break;
+
       default:
 	fprintf (f, 
 		 "%s" QSTAT_DELIM_STR 
