@@ -27,6 +27,7 @@
 #include <unistd.h>	/* close */
 #include <string.h>	/* memset, strcmp */
 #include <errno.h>      /* errno */
+#include <ctype.h>      /* isprint */
 
 #include <sys/time.h>   // select
 
@@ -143,7 +144,9 @@ static int open_connection (struct in_addr *ip, unsigned short port) {
 
 static int rcon_send(const char* cmd)
 {
-  char* buf;
+  char* buf = NULL;
+  size_t bufsize = 0;
+  int ret = -1;
   
   if(rcon_servertype == HL_SERVER && rcon_challenge == NULL)
   {
@@ -153,7 +156,8 @@ static int rcon_send(const char* cmd)
     char* mustresponse = "\377\377\377\377challenge rcon ";
     int size;
     buf = "\377\377\377\377challenge rcon";
-    send (rcon_fd, buf, strlen(buf)+1, 0);
+    bufsize = strlen(buf)+1;
+    send (rcon_fd, buf, bufsize, 0);
 
     {
 	fd_set rfds;
@@ -203,13 +207,28 @@ static int rcon_send(const char* cmd)
     }
 
     buf = g_strdup_printf("\377\377\377\377rcon %s %s %s",rcon_challenge, rcon_password, cmd);
+    bufsize = strlen(buf)+1;
+  }
+  else if (rcon_servertype == DOOM3_SERVER)
+  {
+    const char prefix[] = "\377\377rcon";
+    bufsize = sizeof(prefix) +strlen(rcon_password) +1 +strlen(cmd) +1;
+    buf = g_new0(char, bufsize);
+    strcpy(buf, prefix);
+    strcpy(buf+sizeof(prefix), rcon_password);
+    strcpy(buf+sizeof(prefix)+strlen(rcon_password)+1, cmd);
   }
   else
+  {
     buf = g_strdup_printf("\377\377\377\377rcon %s %s",rcon_password, cmd);
+    bufsize = strlen(buf)+1;
+  }
 
   rcon_print ("RCON> %s\n", cmd);
 
-  return send (rcon_fd, buf, strlen(buf)+1, 0);
+  ret = send (rcon_fd, buf, bufsize, 0);
+  g_free(buf);
+  return ret;
 }
 
 #ifndef RCON_STANDALONE
@@ -314,6 +333,24 @@ static char* rcon_receive()
       // "\377\377\377\377<some character>"
       msg = packet + 4 + 1;
       size = size - 4 - 1;
+      break;
+
+    case DOOM3_SERVER:
+      // "\377\377print\0????\0"
+      if(size > 2+6+4+1)
+      {
+	char* ptr = msg = packet+2+6+4;
+	while(ptr && ptr < packet + size - 1)
+	{
+	  if(*ptr == '\n' || isprint(*ptr))
+	    ++ptr;
+	  else
+	  {
+	    *ptr = '.';
+	    ++ptr;
+	  }
+	}
+      }
       break;
 
       /* Q2, Q3 */
@@ -578,8 +615,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
     packet = NULL;
   }
   
-  if(rcon_challenge)
-    g_free(rcon_challenge);
+  g_free(rcon_challenge);
   rcon_challenge = NULL;
 
   unregister_window (window);
@@ -640,6 +676,11 @@ int main(int argc, char* argv[])
     else if(!strcmp(argv[argpos],"--hws"))
     {
       rcon_servertype = HW_SERVER;
+      argpos++;
+    }
+    else if(!strcmp(argv[argpos],"--dm3s"))
+    {
+      rcon_servertype = DOOM3_SERVER;
       argpos++;
     }
   }
@@ -707,7 +748,9 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-	  printf("%s",rcon_receive());
+	  char* msg = rcon_receive();
+	  printf("%s", msg);
+	  g_free(msg);
 	}
       }
     }
