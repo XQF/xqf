@@ -1362,6 +1362,13 @@ static char *q3a_seals_gametypes[MAX_Q3A_SEALS_TYPES] = {
   NULL			/* 4+ invalid */
 };
 
+#define MAX_Q3A_AFTERWARDS_TYPES 3
+static char *q3a_afterwards_gametypes[MAX_Q3A_AFTERWARDS_TYPES] = {
+  "Tactical",		// 0 = Tactical
+  "FFA",		// 1 = Deatchmatch
+  NULL,			// 2+ ??
+};
+
 #define MAX_WOLF_TYPES 9
 static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   NULL,			// 0 - Unknown
@@ -1432,6 +1439,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     "freeze",
     q3a_gametypes,
     MAX_Q3A_TYPES
+  },
+  {
+    "afterwards",
+    q3a_afterwards_gametypes,
+    MAX_Q3A_AFTERWARDS_TYPES
   },
   {
     NULL,
