@@ -41,6 +41,7 @@
 #include "stat.h"
 #include "utils.h"
 #include "server.h"
+#include "source.h"
 #include "filter.h"
 #include "dialogs.h"
 #include "host.h"
@@ -650,6 +651,49 @@ static void set_nonblock (int fd) {
 }
 
 
+/**
+  return connection to local file
+ */
+static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
+                          GdkInputFunction input_callback, struct master *m)
+{
+    struct stat_conn *conn;
+    int fd = -1;
+
+    fd = open(file,O_RDONLY);
+    if(fd == -1)
+    {
+	perror(__FUNCTION__);
+	return NULL;
+    }
+
+    conn = g_malloc (sizeof (struct stat_conn));
+    if(!conn)
+	return NULL;
+
+    conn->buf = g_malloc (BUFFER_MINSIZE);
+    conn->bufsize = BUFFER_MINSIZE;
+    conn->tmpfile = NULL;
+    conn->pid = 0;
+    conn->fd = fd; 
+    conn->pos = 0;
+    conn->lastnl = 0;
+
+    conn->strings = NULL;
+    conn->servers = NULL;
+    conn->uservers = NULL;
+
+    conn->master = m;
+
+    conn->job = job;
+    job->cons = g_slist_prepend (job->cons, conn);
+
+    conn->tag = gdk_input_add (conn->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
+				     (GdkInputFunction) input_callback, conn);
+    conn->input_callback = (GdkInputFunction) input_callback;
+
+    return conn;
+}
 
 /*
   start_qstat -- Fork and run qstat with the given command line
@@ -757,6 +801,9 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   char buf_rawarg[] = { QSTAT_DELIM, '\0' };
   struct stat_conn *conn;
   char *cmd = NULL;
+  char *file = NULL;
+
+  short startprog = 1;
 
   debug (3, "stat_update_master_qstat(%p,%p)", job, m);
   if (!m)
@@ -764,15 +811,22 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
   if (m->url) {
 
-    cmd = strdup_strip (HTTP_HELPER);
+    if(!strncmp(m->url,master_prefixes[MASTER_FILE],strlen(master_prefixes[MASTER_FILE])))
+    {
+      startprog = 0;
+      file=strdup_strip(m->url + strlen(master_prefixes[MASTER_FILE]));
+    }
+    else
+    {
+      cmd = strdup_strip (HTTP_HELPER);
 
-    argv[argi++] = strtok (cmd, delim);
-    while ((argv[argi] = strtok (NULL, delim)) != NULL)
-      argi++;
+      argv[argi++] = strtok (cmd, delim);
+      while ((argv[argi] = strtok (NULL, delim)) != NULL)
+	argi++;
 
-    argv[argi++] = m->url;
-    argv[argi] = NULL;
-
+      argv[argi++] = m->url;
+      argv[argi] = NULL;
+    }
   }
   else {
     
@@ -821,17 +875,26 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
   }	/*  if (m->url)  */
 
-  if (get_debug_level() > 3){
-    char **argptr = argv;
-    fprintf (stderr, "stat_update_master_qstat: EXEC> ");
-    while (*argptr)
-      fprintf (stderr, "%s ", *argptr++);
-    fprintf (stderr, "\n");
+  if(startprog)
+  {
+    if (get_debug_level() > 3){
+      char **argptr = argv;
+      fprintf (stderr, "stat_update_master_qstat: EXEC> ");
+      while (*argptr)
+	fprintf (stderr, "%s ", *argptr++);
+      fprintf (stderr, "\n");
+    }
+
+
+    conn = start_qstat (job, argv, 
+			      (GdkInputFunction) stat_master_input_callback, m);
   }
-
-
-  conn = start_qstat (job, argv, 
-                            (GdkInputFunction) stat_master_input_callback, m);
+  else if(file)
+  {
+    conn = new_file_conn (job, file, (GdkInputFunction) stat_master_input_callback, m);
+    g_free (file);
+  }
+  
   if (cmd)
     g_free (cmd);
 

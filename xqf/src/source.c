@@ -53,14 +53,16 @@ char* master_prefixes[MASTER_NUM_QUERY_TYPES] = {
 	"master://",
 	"gmaster://",
 	"http://",
-	"lan://"
+	"lan://",
+	"file://"
 };
 
 char* master_designation[MASTER_NUM_QUERY_TYPES] = {
 	N_("Standard"),
 	N_("Gamespy"),
 	N_("http"),
-	N_("LAN")
+	N_("LAN"),
+	N_("File")
 };
 
 static GSList *all_masters = NULL;
@@ -82,6 +84,7 @@ static void save_list (FILE *f, struct master *m) {
     fprintf (f, "[%s]\n", m->name);
   }
   else {
+    /*
     if (m->url) {
       fprintf (f, "[%s %s]\n", games[m->type].id, m->url);
     }
@@ -94,6 +97,24 @@ static void save_list (FILE *f, struct master *m) {
     {
       fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, master_prefixes[MASTER_NATIVE],
 		(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+    }
+*/
+    
+    switch(m->master_type)
+    {
+      case MASTER_NATIVE:
+      case MASTER_GAMESPY:
+      case MASTER_LAN:
+	fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, master_prefixes[m->master_type],
+        	(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+	break;
+      case MASTER_HTTP:
+      case MASTER_FILE:
+	fprintf (f, "[%s %s]\n", games[m->type].id, m->url);
+	break;
+      case MASTER_NUM_QUERY_TYPES:
+      case MASTER_INVALID_TYPE:
+	break;
     }
   }
 
@@ -333,33 +354,34 @@ static struct master *find_master_url (char *url) {
 static struct master *read_list_parse_master (char *str, char *str2) {
   char *addr;
   unsigned short port;
-  struct master *m;
+  struct master *m = NULL;
+  enum master_query_type query_type;
 
   if (favorites && !g_strcasecmp (str, favorites->name))
     return favorites;
 
-  if (g_strncasecmp (str, master_prefixes[MASTER_NATIVE], strlen(master_prefixes[MASTER_NATIVE])) == 0) {
-    if (parse_address (str + strlen(master_prefixes[MASTER_NATIVE]), &addr, &port)) {
-      m = find_master_server (addr, port, str2);
-      g_free (addr);
-      return m;
-    }
+  query_type = get_master_query_type_from_address(str);
+
+  switch(query_type)
+  {
+    case MASTER_NATIVE:
+    case MASTER_GAMESPY:
+    case MASTER_LAN:
+      if (parse_address (str + strlen(master_prefixes[query_type]), &addr, &port))
+      {
+	m = find_master_server (addr, port, str2);
+	g_free (addr);
+      }
+      break;
+    case MASTER_HTTP:
+    case MASTER_FILE:
+      m = find_master_url (str);
+      break;
+    case MASTER_NUM_QUERY_TYPES:
+    case MASTER_INVALID_TYPE:
   }
 
-  if (g_strncasecmp (str, master_prefixes[MASTER_GAMESPY], strlen (master_prefixes[MASTER_GAMESPY])) == 0) {
-    if (parse_address (str + strlen(master_prefixes[MASTER_GAMESPY]), &addr, &port)) {
-      m = find_master_server (addr, port, str2);
-      g_free (addr);
-      return m;
-    }
-  }
-
-  if (g_strncasecmp (str, master_prefixes[MASTER_HTTP], strlen(master_prefixes[MASTER_HTTP])) == 0) {
-    m = find_master_url (str);
-    return m;
-  }
-
-  return NULL;
+  return m;
 }
 
 
@@ -613,46 +635,54 @@ struct master *add_master (char *path, char *name, enum server_type type,
     return NULL;
   }
 
-  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY  || query_type == MASTER_LAN)
+  switch(query_type)
   {
-    // check for valid hostname/ip
-    if (parse_address (path + strlen(master_prefixes[query_type]), &addr, &port))
-    {
-      // if no port was specified, add default master port if available or fail
-      if (!port)
+    case MASTER_NATIVE:
+    case MASTER_GAMESPY:
+    case MASTER_LAN:
+      // check for valid hostname/ip
+      if (parse_address (path + strlen(master_prefixes[query_type]), &addr, &port))
       {
-	// use default_port instead of default_master_port for lan broadcasts
-	if( query_type == MASTER_LAN )
+	// if no port was specified, add default master port if available or fail
+	if (!port)
 	{
-	  port = games[type].default_port;
-	  // unreal needs one port higher
-	  if(!strcmp(games[type].qstat_option,"-uns"))
+	  // use default_port instead of default_master_port for lan broadcasts
+	  if( query_type == MASTER_LAN )
 	  {
-	    port++;
-	    type=GPS_SERVER;
+	    port = games[type].default_port;
+	    // unreal needs one port higher
+	    if(!strcmp(games[type].qstat_option,"-uns"))
+	    {
+	      port++;
+	      type=GPS_SERVER;
+	    }
+	  }
+	  // do not use default for gamespy
+	  else if (query_type != MASTER_GAMESPY && games[type].default_master_port)
+	  {
+	    port = games[type].default_master_port;
+	  }
+	  else
+	  {
+	    g_free (addr);
+	    // translator: %s == url, eg gmaster://bla.blub.org
+	    dialog_ok (NULL, _("You have to specify a port number for %s."),path);
+	    return NULL;
 	  }
 	}
-	// do not use default for gamespy
-	else if (query_type != MASTER_GAMESPY && games[type].default_master_port)
-	{
-	  port = games[type].default_master_port;
-	}
-	else
-	{
-	  g_free (addr);
-	  // translator: %s == url, eg gmaster://bla.blub.org
-	  dialog_ok (NULL, _("You have to specify a port number for %s."),path);
-	  return NULL;
-	}
+
+	m = find_master_server (addr, port, games[type].id);
+
       }
+      break;
 
-      m = find_master_server (addr, port, games[type].id);
-
-    }
-  }
-  else if( query_type == MASTER_HTTP )
-  {
+    case MASTER_HTTP:
+    case MASTER_FILE:
       m = find_master_url (path);
+      break;
+    case MASTER_NUM_QUERY_TYPES:
+    case MASTER_INVALID_TYPE:
+      return NULL;
   }
 
   if (lookup_only)
@@ -681,28 +711,34 @@ struct master *add_master (char *path, char *name, enum server_type type,
   }
   
   // master was not known already, create new
-  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY || query_type == MASTER_LAN)
+  switch(query_type)
   {
-    m = create_master (name, type, FALSE);
+    case MASTER_NATIVE:
+    case MASTER_GAMESPY:
+    case MASTER_LAN:
+      m = create_master (name, type, FALSE);
 
-    h = host_add (addr);
-    if (h) {
-      m->host = h;
-      host_ref (h);
-      g_free (addr);
-      addr = NULL;
-    }
-    else {
-      m->hostname = addr;
-    }
-    m->port = port;
+      h = host_add (addr);
+      if (h) {
+	m->host = h;
+	host_ref (h);
+	g_free (addr);
+	addr = NULL;
+      }
+      else {
+	m->hostname = addr;
+      }
+      m->port = port;
+      break;
+    case MASTER_HTTP:
+    case MASTER_FILE:
+      m = create_master (name, type, FALSE);
+      m->url = g_strdup (path);
+      break;
+    case MASTER_NUM_QUERY_TYPES:
+    case MASTER_INVALID_TYPE:
+      return NULL;
   }
-  else if( query_type == MASTER_HTTP )
-  {
-    m = create_master (name, type, FALSE);
-    m->url = g_strdup (path);
-  }
-  else return NULL;
   
   m->master_type = query_type;
 

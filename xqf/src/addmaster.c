@@ -212,7 +212,7 @@ char *master2url( struct master *m )
 {
   char *query_type;
   char *address;
-  char *result;
+  char *result = NULL;
 
   if ( m->master_type >= MASTER_NATIVE
       && m->master_type < MASTER_NUM_QUERY_TYPES )
@@ -222,21 +222,28 @@ char *master2url( struct master *m )
   else
     return NULL;
 
-  if( m->master_type == MASTER_HTTP )
+  switch(m->master_type)
   {
-    result = strdup(m->url);
-  }
-  else
-  {
-    if(m->host)
-    {
-      address = inet_ntoa(m->host->ip);
-    }
-    else
-    {
-      address = m->hostname;
-    }
-    result = g_strdup_printf("%s%s:%d",query_type,address,m->port);
+    case MASTER_NATIVE:
+    case MASTER_GAMESPY:
+    case MASTER_LAN:
+      if(m->host)
+      {
+	address = inet_ntoa(m->host->ip);
+      }
+      else
+      {
+	address = m->hostname;
+      }
+      result = g_strdup_printf("%s%s:%d",query_type,address,m->port);
+      break;
+    case MASTER_HTTP:
+    case MASTER_FILE:
+      result = strdup(m->url);
+      break;
+    case MASTER_NUM_QUERY_TYPES:
+    case MASTER_INVALID_TYPE:
+      break;
   }
 
   return result;
