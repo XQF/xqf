@@ -187,7 +187,7 @@ struct game games[] = {
     "Q3S",
     "Q3S",
     "-q3s",
-    "-q3m,48",
+    "-q3m,66",
     &q3_pix,
 
     q3_parse_player,
