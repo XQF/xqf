@@ -75,6 +75,7 @@ static int q3_exec (const struct condef *con, int forkit);
 #endif
 static int q2_exec_generic (const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
+static int t2_exec (const struct condef *con, int forkit);
 
 static GList *q1_custom_cfgs (char *dir, char *game);
 static GList *qw_custom_cfgs (char *dir, char *game);
@@ -349,7 +350,7 @@ struct game games[] = {
     t2_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
-    q2_exec_generic,
+    t2_exec,
     NULL,
     quake_save_info
   },
@@ -1822,6 +1823,39 @@ static int ut_exec (const struct condef *con, int forkit) {
 
   if (default_nosound) {
     argv[argi++] = "-nosound";
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  return retval;
+}
+
+static int t2_exec (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->server) {
+
+    if(default_name) {   
+      argv[argi++] = "-login";
+      argv[argi++] = default_name;
+    }
+
+    argv[argi++] = "-online";
+    argv[argi++] = "-connect";
+    argv[argi++] = con->server;
   }
 
   argv[argi] = NULL;
