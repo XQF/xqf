@@ -818,6 +818,7 @@ static char *builtin_masters_update_info[] = {
   "ADD Q3S master://master3.idsoftware.com id",
   "ADD Q3S master://q3master.splatterworld.de Germany",
   "ADD Q3S master://q3.golsyd.net.au Australia",
+  "ADD Q3S master://q3master.barrysworld.com:27950 BarrysWorld",
 #endif
 
   "ADD SNS http://www.gameaholic.com/servers/qspy-sin Gameaholic.Com",
@@ -835,6 +836,7 @@ static char *builtin_masters_update_info[] = {
 
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
   "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
+  "ADD UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld",
 #endif
 
   "ADD T2S master://198.74.33.29:28002 NA West1",
@@ -844,6 +846,12 @@ static char *builtin_masters_update_info[] = {
   "ADD T2S master://209.67.28..145:27999 NA East2",
 
   "ADD WOS master://wolf.idsoftware.com:27950 id",
+
+  "ADD SFS http://www.gameaholic.com/servers/qspy-soldieroffortune gameaholic.com",
+  "ADD GPS http://www.gameaholic.com/servers/qspy-noonelivesforever Noone Lives Forevere - gameaholic.com",
+  "ADD GPS http://www.gameaholic.com/servers/qspy-rallymasters Rally Masters - gameaholic.com",
+  "ADD GPS http://www.gameaholic.com/servers/qspy-turok2 Turok 2 - gameaholic.com",
+  "ADD GPS http://www.gameaholic.com/servers/qspy-shogo Shogo - gameaholic.com",
 
   NULL
 };

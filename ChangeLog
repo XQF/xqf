@@ -1,3 +1,10 @@
+Sep 28, 2001: Ludwig Nussel <l-n@sourceforge.net>
+- added support for games using the gamespy protocol
+- added q3,ut,sof,nolf,rally masters,turok2 and shogo masters
+- made game names translatable
+- updated german translation
+- changed version to 0.9.7b
+
 Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
 - more translatable strings marked
 - updated german translation

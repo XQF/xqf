@@ -280,7 +280,7 @@ void source_ctree_show_node_status (GtkWidget *ctree, struct master *m) {
   gtk_ctree_get_node_info (GTK_CTREE (ctree), node, NULL, NULL,
                                  NULL, NULL, NULL, NULL, &is_leaf, &expanded);
 
-  gtk_ctree_set_node_info (GTK_CTREE (ctree), node, m->name, 4,
+  gtk_ctree_set_node_info (GTK_CTREE (ctree), node, _(m->name), 4,
 			      (pix)? pix->pix : NULL, (pix)? pix->mask : NULL,
 			      (pix)? pix->pix : NULL, (pix)? pix->mask : NULL,
                               is_leaf, expanded);

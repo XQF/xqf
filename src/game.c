@@ -77,6 +77,7 @@ static int wo_exec (const struct condef *con, int forkit);
 static int q2_exec_generic (const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
+static int gamespy_exec (const struct condef *con, int forkit);
 
 static GList *q1_custom_cfgs (char *dir, char *game);
 static GList *qw_custom_cfgs (char *dir, char *game);
@@ -423,6 +424,28 @@ struct game games[] = {
     quake_save_info
   },
 #endif
+  // any game using the gamespy protocol
+  {
+    GPS_SERVER,			// server_type
+    GAME_CONNECT,		// flags
+    N_("Generic Gamespy"),	// name
+    GPS_DEFAULT_PORT,		// default_port
+    0,				// default_master_port
+    "GPS",			// id
+    "GPS",			// qstat_str
+    "-gps",			// qstat_option
+    "gps",			// qstat_master_option
+    &gamespy3d_pix,		// pixmap
+
+    un_parse_player,		// parse_player
+    quake_parse_server,		// parse_server
+    un_analyze_serverinfo,	// analyze_serverinfo
+    config_is_valid_generic,	// config_is_valid
+    NULL,			// write_config
+    gamespy_exec,		// exec_client
+    NULL,			// custom_cfgs
+    quake_save_info		// save_info
+  },
 
   {
     UNKNOWN_SERVER,
@@ -514,7 +537,7 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
     gtk_widget_show (pixmap);
   }
 
-  label = gtk_label_new (games[type].name);
+  label = gtk_label_new (_(games[type].name));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
@@ -1044,7 +1067,6 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=Q3_SERVER;
       }
-
     }
     
     else if (strcmp (*info_ptr, "gamename") == 0) {
@@ -1944,6 +1966,66 @@ static int ut_exec (const struct condef *con, int forkit) {
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
   g_free (cmd);
+  return retval;
+}
+
+// launch any game that uses the gamespy protocol
+// the first argument is the content of gamename field (may be empty),
+// the second one the ip of the server
+static int gamespy_exec (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = NULL;
+  int retval;
+  char **info_ptr;
+  char* gamename="";
+
+  char* hostport=NULL;
+  char* real_server=NULL;
+  
+  if(!con || !con->s)
+    return 1;
+
+  g = &games[con->s->type];
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  // go through all server rules
+  for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (!strcmp (*info_ptr, "gamename")) {
+      gamename=info_ptr[1];
+    }
+    else if (!strcmp (*info_ptr, "hostport")) {
+      hostport=info_ptr[1];
+    }
+  }
+
+  argv[argi++] = strdup_strip (gamename);
+  
+  if (con->server) {
+    // gamespy port can be different from game port
+    if(hostport)
+    {
+      real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
+      argv[argi++] = real_server;
+    }
+    else
+    {
+      argv[argi++] = con->server;
+    }
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  g_free (real_server);
   return retval;
 }
 
