@@ -25,6 +25,8 @@
 #include <sys/time.h>	/* FD_SETSIZE */
 #include <sys/stat.h>   /* stat */
 #include <unistd.h>     /* readlink */
+#include <sys/resource.h> /* setrlimit */
+#include <errno.h>
 
 #include <gtk/gtk.h>
 
@@ -2007,10 +2009,11 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
       add_custom_args_defaults2("SFTeamDM","-ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER, data);
       break;
 
+/* rocketarena 1.6 comes as qvm, so this is no longer needed
     case Q3_SERVER:
       add_custom_args_defaults2("arena","+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0",Q3_SERVER, data);
       break;
-      
+*/
     default:
       dialog_ok (NULL, _("There are no defaults for this game"));
       break;
@@ -4583,6 +4586,37 @@ int prefs_load (void) {
     if (old_rc_loaded == -1)
       user_fix_defaults ();
   }
+
+  do
+  {
+    int def = 0;
+    struct rlimit rlim;
+    char* coresize = NULL;
+    
+    if(getrlimit(RLIMIT_CORE, &rlim)) break;
+    
+    coresize = config_get_string_with_default ("/" CONFIG_FILE "/Program/coresize=0",&def);
+    if(def || !coresize) break;
+
+    if(!strcmp(coresize,"unlimited"))
+    {
+      rlim.rlim_cur = RLIM_INFINITY;
+    }
+    else
+    {
+      char* endptr = NULL;
+      long int size = strtol(coresize,&endptr,10);
+      if(endptr==coresize || size < 0) break;
+      rlim.rlim_cur = size;
+    }
+    
+    if(rlim.rlim_cur > rlim.rlim_max)
+      rlim.rlim_max = rlim.rlim_cur;
+
+    if(setrlimit(RLIMIT_CORE,&rlim))
+      xqf_warning("could not set core size %lu: %s",rlim.rlim_cur,strerror(errno));
+
+  } while(0);
 
   config_push_prefix ("/" CONFIG_FILE "/Game: QS");
 

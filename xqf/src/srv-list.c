@@ -16,12 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <sys/socket.h>	/* inet_ntoa */
 #include <netinet/in.h>	/* inet_ntoa */
 #include <arpa/inet.h>	/* inet_ntoa */
 #include <string.h>	/* strncpy */
 
+#include "i18n.h"
 #include "xqf-ui.h"
 #include "game.h"
 #include "sort.h"
@@ -142,7 +145,10 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
   text[3] = text[4] = NULL;
 
-  g_snprintf (buf4, 32, "%d/%d", s->curplayers, s->maxplayers);
+  if(s->private_client)
+    g_snprintf (buf4, 32, "%d/%d(-%d)", s->curplayers, s->maxplayers,s->private_client);
+  else
+    g_snprintf (buf4, 32, "%d/%d", s->curplayers, s->maxplayers);
   // set text only if no players are on the server. Otherwise an icon is added
   // later together with this text
   text[5] = (!s->curplayers)? buf4 : NULL;
