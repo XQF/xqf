@@ -909,7 +909,7 @@ void tribes2_update_prefs (struct game* g)
 
 static void ut2004_detect_cdkey(struct game* g)
 {
-  FILE* f;
+  FILE* f = NULL;
   char* keyfile = NULL;
 
   debug(2, "cmd: %s, dir: %s, home: %s", g->cmd, g->real_dir, g->real_home);
