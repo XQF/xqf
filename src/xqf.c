@@ -116,7 +116,7 @@ static GtkWidget *refrsel_menu_item = NULL;
 static GtkWidget *resolve_menu_item = NULL;
 static GtkWidget *properties_menu_item = NULL;
 static GtkWidget *rcon_menu_item = NULL;
-static GtkWidget *cancel_redial_menu_item = NULL;
+//static GtkWidget *cancel_redial_menu_item = NULL;
 
 static GtkWidget *file_quit_menu_item = NULL;
 static GtkWidget *file_statistics_menu_item = NULL;
@@ -149,7 +149,7 @@ static GtkWidget *server_favadd_menu_item = NULL;
 static GtkWidget *server_resolve_menu_item = NULL;
 static GtkWidget *server_properties_menu_item = NULL;
 static GtkWidget *server_rcon_menu_item = NULL;
-static GtkWidget *server_cancel_redial_menu_item = NULL;
+//static GtkWidget *server_cancel_redial_menu_item = NULL;
 
 static GtkWidget *server_serverfilter_menu_item = NULL;
 static GArray* server_filter_menu_items;
@@ -534,11 +534,12 @@ void set_widgets_sensitivity (void) {
     if(GTK_TOGGLE_BUTTON(filter_buttons[ i ])->active)
       gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_ACTIVE);
   }
-
+#if 0
   // grey out button if not redialing
   sens = (redialserver == 1);
   gtk_widget_set_sensitive (cancel_redial_menu_item, sens);
   gtk_widget_set_sensitive (server_cancel_redial_menu_item, sens);
+#endif
 }
 
 
@@ -816,10 +817,11 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
     update_server_lists_from_selected_source ();
     server_clist_build_filtered (cur_server_list, TRUE);
   }
-
+  /*
   if(redialserver == 1)
     print_status (main_status_bar, _("Waiting to redial server(s)..."));
   else
+  */
     print_status (main_status_bar, _("Done."));
 
   progress_bar_reset (main_progress_bar);
@@ -929,9 +931,9 @@ static void launch_close_handler (struct stat_job *job, int killed) {
       }
       else if (launch==2) 
       {
-	      /*
         redialserver = 1;
  
+	/*
         gtk_timeout_add (5000, (GtkFunction)launch_redial, (gpointer) con);
 
         server_clist_refresh_server (s);
@@ -952,7 +954,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
         redialserver = 0;
     }
 
-  if(redialserver == 0) // we don't need to redial, so continue
+//  if(redialserver == 0) // we don't need to redial, so continue
     launch_close_handler_part2(con);
 }
 
@@ -961,7 +963,7 @@ static gboolean launch_redial(struct condef *con)
   struct server *s;
   s = con->s;
 
-  if(!s || redialserver == 0 ) // !s may not happen
+  if(!s /*|| redialserver == 0*/ ) // !s may not happen
   {
     print_status (main_status_bar, _("Done."));
     progress_bar_reset (main_progress_bar);
@@ -2158,27 +2160,27 @@ static const struct menuitem srvopt_menu_items[] = {
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_RECORD,
     &record_menu_item
   },
-
+/*
   { 
     MENU_ITEM,		N_("Cancel Redial"),   	0,	0,
     GTK_SIGNAL_FUNC (cancelredial_callback), NULL,
     &cancel_redial_menu_item
   },
-  
+  */
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
-  { 
-    MENU_ITEM,		N_("Add to Favorites"),	0,	0,
-    GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
-    &favadd_menu_item
-  },
   { 
     MENU_ITEM,		N_("Add..."),		0,   	0,
     GTK_SIGNAL_FUNC (add_server_callback), NULL,
     &add_menu_item
   },
   { 
-    MENU_ITEM,		N_("Delete"),		0,   	0,
+    MENU_ITEM,		N_("Add to Favorites"),	0,	0,
+    GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
+    &favadd_menu_item
+  },
+  { 
+    MENU_ITEM,		N_("Remove from Favorites"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &delete_menu_item
   },
@@ -2274,7 +2276,7 @@ static const struct menuitem edit_menu_items[] = {
     &edit_add_menu_item
   },
   { 
-    MENU_ITEM,		N_("_Delete"),		'D',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Remove from Favorites"),		'D',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &edit_delete_menu_item
   },
@@ -2393,12 +2395,13 @@ static const struct menuitem server_menu_items[] = {
     &server_record_menu_item
   },
 
+/*
   { 
     MENU_ITEM,		N_("Cancel Redial"),  	0,	0,
     GTK_SIGNAL_FUNC (cancelredial_callback), NULL,
     &server_cancel_redial_menu_item
   },
-   
+*/ 
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
@@ -2407,7 +2410,7 @@ static const struct menuitem server_menu_items[] = {
     &server_favadd_menu_item
   },
   { 
-    MENU_ITEM,		N_("_Delete"),		0,   	0,
+    MENU_ITEM,		N_("_Remove from Favorites"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &edit_delete_menu_item
   },
