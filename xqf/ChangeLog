@@ -1,3 +1,8 @@
+Oct 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix segfault because of format error and some cast warnings
+- use q3 parse and launch functions for SOF2
+- reinsert signal handlers for changing debug level
+
 Sep 30, 2002: Alex Burger <alex@fragit_dot_net>
 - Added busy server redial.  Server - Cancel Redial to stop
 

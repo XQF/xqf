@@ -34,6 +34,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>	/* kill, ... */
 
 #ifdef ENABLE_NLS
 #  include <locale.h>
@@ -182,6 +183,16 @@ static void launch_close_handler_part2(struct condef *con);
 static GtkWidget* create_filter_menu();
 //static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
 static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
+
+void sighandler_debug(int signum)
+{
+    if( signum == SIGUSR1)
+	set_debug_level(get_debug_level()+1);
+    else if( signum == SIGUSR2)
+	set_debug_level(get_debug_level()-1);
+
+    debug(0,"debug level now at %d", get_debug_level());
+}
   
 // returns 0 if equal, -1 if too old, 1 if have > expected
 int compare_qstat_version ( const char* have, const char* expected )
@@ -644,7 +655,7 @@ void set_server_filter_menu_list_text( void ){
     else
     {
       snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
-      debug(0,__FILE__ " " __FUNCTION__ ":%d this is a bug",__LINE__);
+      debug(0,"this is a bug");
     }
   }
   
@@ -909,7 +920,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
       {
         redialserver = 1;
  
-        gtk_timeout_add (5000, launch_redial, (gpointer) con);
+        gtk_timeout_add (5000, (GtkFunction)launch_redial, (gpointer) con);
 
         server_clist_refresh_server (s);
 
@@ -928,13 +939,15 @@ static gboolean launch_redial(struct condef *con)
   struct server *s;
   s = con->s;
 
+  if(!s) return FALSE; // may not happen
+
   if (redialserver == 0)
     return FALSE; // stop redialing, we're done
    
   refresh_selected_callback(NULL, NULL);
 
-  debug (1, "launch redial server name: s->name:%s\n",s->name);
-  debug (1, "launch redial server ping: s->ping:%s\n",s->ping);  
+  debug (1, "launch redial server name: s->name:%s",s->name);
+  debug (1, "launch redial server ping: s->ping:%d",s->ping);  
   
   if (s->curplayers < s->maxplayers)
   //if (s->curplayers == 99)
@@ -3097,6 +3110,9 @@ int main (int argc, char *argv[]) {
 
   client_init ();
   ignore_sigpipe ();
+
+  on_sig(SIGUSR1, sighandler_debug);
+  on_sig(SIGUSR2, sighandler_debug);
 
   add_server_init ();
   add_master_init ();
