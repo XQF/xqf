@@ -2417,6 +2417,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   char *cmd;
 
   char *protocol;
+  char *punkbuster;
   char *tmp_cmd;
   FILE* tmp_fp;
 
@@ -2432,6 +2433,9 @@ static int q3_exec (const struct condef *con, int forkit) {
   int rafix = str2bool(g_datalist_get_data(&games[g->type].games_data,"rafix"));
   int vmfix = str2bool(g_datalist_get_data(&games[g->type].games_data,"vmfix"));
   int setfs_game = str2bool(g_datalist_get_data(&games[g->type].games_data,"setfs_game"));
+
+  int set_punkbuster = str2bool(g_datalist_get_data(&games[g->type].games_data,"set_punkbuster"));
+
   int pass_memory_options = str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"pass_memory_options"));
   
   char* memsettings = NULL;
@@ -2531,6 +2535,17 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = con->custom_cfg;
   }
 
+  /* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
+  punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
+  if( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 ){
+    if( set_punkbuster ){
+      argv[argi++] = "+set cl_punkbuster 1";
+    } else {
+      debug( 1, "Got %s for punkbuster\n", punkbuster );
+      dialog_ok (NULL, _("Warning: The Server Has Punkbuster Enabled But it is NOT going to be set on the command line.\nYou may have problems connecting.\nYou Can fix this in the Game Config."));
+    }
+  }
+  
   /*
     If the s->game is set, we want to put fs_game on the command
     line so that the mod is loaded when we connect.

@@ -193,6 +193,7 @@ static	GtkWidget *color_menu = NULL;
 static GtkWidget *vmfixbutton;
 static GtkWidget *rafixbutton;
 static GtkWidget *setfs_gamebutton;
+static GtkWidget *set_punkbusterbutton;
 static GtkWidget *q3proto_entry;
 static GtkWidget *pass_memory_options_button;
 static GtkWidget *com_hunkmegs_spinner;
@@ -522,6 +523,11 @@ static void get_new_defaults (void) {
 //  if (i != q3_opts.setfs_game)
     config_set_bool ("setfs_game", i);
     game_set_attribute(Q3_SERVER,"setfs_game",g_strdup(bool2str(i)));
+
+  i = GTK_TOGGLE_BUTTON (set_punkbusterbutton)->active;
+//  if (i != q3_opts.setfs_game)
+    config_set_bool ("set_punkbuster", i);
+    game_set_attribute(Q3_SERVER,"set_punkbuster",g_strdup(bool2str(i)));
   
   
   i = GTK_TOGGLE_BUTTON (pass_memory_options_button)->active;
@@ -2135,6 +2141,13 @@ static GtkWidget *q3_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (setfs_gamebutton);
 
+
+	set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (set_punkbusterbutton),
+		str2bool(game_get_attribute(Q3_SERVER,"set_punkbuster")));
+	gtk_box_pack_start (GTK_BOX (page_vbox), set_punkbusterbutton, FALSE, FALSE, 0);
+	gtk_widget_show (set_punkbusterbutton);
+
   gtk_widget_show (page_vbox);
 
   return page_vbox;
@@ -3665,6 +3678,7 @@ int prefs_load (void) {
   game_set_attribute(Q3_SERVER,"vmfix",config_get_string ("vmfix=true"));
   game_set_attribute(Q3_SERVER,"rafix",config_get_string ("rafix=true"));
   game_set_attribute(Q3_SERVER,"setfs_game",config_get_string ("setfs_game=true"));
+  game_set_attribute(Q3_SERVER,"set_punkbuster",config_get_string ("set_punkbuster=true"));
   
   game_set_attribute(Q3_SERVER,"pass_memory_options",config_get_string("pass_memory_options=false"));
   game_set_attribute(Q3_SERVER,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
@@ -3686,6 +3700,7 @@ int prefs_load (void) {
 
   game_set_attribute(WO_SERVER,"masterprotocol",tmp);
   game_set_attribute(WO_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
+  game_set_attribute(WO_SERVER,"set_punkbuster",g_strdup(bool2str(config_get_bool ("set_punkbuster=true"))));
 
   config_pop_prefix ();
 
@@ -3726,6 +3741,7 @@ int prefs_load (void) {
 
   game_set_attribute(EF_SERVER,"masterprotocol",tmp);
   game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
+  game_set_attribute(EF_SERVER,"set_punkbuster",g_strdup(bool2str(config_get_bool ("set_punkbuster=true"))));
 
   config_pop_prefix ();
 
