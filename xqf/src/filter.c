@@ -216,7 +216,7 @@ static void server_filter_init (void) {
 
   // 0 is no filter
   for (i = 1; i <= MAX_SERVER_FILTERS; i++) {
-    sprintf( config_section, "/" CONFIG_FILE "/Server Filter/%d", i );
+    snprintf( config_section, 64, "/" CONFIG_FILE "/Server Filter/%d", i );
     config_push_prefix (config_section );
     /* server_filters[i] = g_malloc( sizeof( struct server_filter_vars )); */
     server_filters[i].filter_retries     = config_get_int  ("retries=2");

@@ -30,19 +30,56 @@
 #include "addmaster.h"
 #include "srv-prop.h"
 
-static struct history *master_history_addr = NULL;
-static struct history *master_history_name = NULL;
+static struct history *master_history_addr;
+static struct history *master_history_name;
 
 static char *master_addr_result;
 static char *master_name_result;
-static enum server_type *master_type;
+static enum server_type master_type;
+
+static struct master *master_to_add;
+
+// currently active radio button
+static enum master_query_type current_master_query_type = MASTER_NATIVE;
 
 static GtkWidget *master_addr_combo;
 static GtkWidget *master_name_combo;
+static GtkWidget *master_query_type_radios[MASTER_NUM_QUERY_TYPES];
 
+// get text from master address entry, check if prefix matches radio buttons,
+// modify and write back if needed
+static void master_check_master_addr_prefix()
+{
+  char *pos;
+  char *master_addr;
 
-static void master_combo_activate_callback (GtkWidget *widget, gpointer data) {
-  char *str;
+  master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO
+	(master_addr_combo)->entry));
+
+  if(!master_addr|| !strlen(master_addr)) return;
+  
+  if (g_strncasecmp(master_addr, master_prefixes[current_master_query_type],
+      strlen(master_prefixes[current_master_query_type])))
+  {
+    pos = lowcasestrstr(master_addr,"://");
+    if(!pos)
+    {
+      pos = master_addr;
+    }
+    else
+    {
+      // +"://"
+      pos+=3;
+    }
+    master_addr =
+      g_strconcat(master_prefixes[current_master_query_type],pos,NULL);
+    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry),master_addr);
+  }
+}
+
+static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window)
+{
+  master_check_master_addr_prefix();
 
   master_addr_result = strdup_strip (gtk_entry_get_text (
                                GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry)));
@@ -50,42 +87,78 @@ static void master_combo_activate_callback (GtkWidget *widget, gpointer data) {
                                GTK_ENTRY (GTK_COMBO (master_name_combo)->entry)));
 
   config_set_string ("/" CONFIG_FILE "/Add Master/game", 
-                                                      type2id (*master_type));
-
-  if (master_addr_result)
-    history_add (master_history_addr, master_addr_result);
-  if (master_name_result)
-    history_add (master_history_name, master_name_result);
-
-  if (master_name_result == NULL || master_addr_result == NULL) {
-    if (master_name_result) {
-      g_free (master_name_result);
-      master_name_result = NULL;
-    }
-    if (master_addr_result) {
-      g_free (master_addr_result);
-      master_addr_result = NULL;
-    }
+                                                      type2id (master_type));
+  
+  if(!master_addr_result || !master_name_result)
+  {
+    dialog_ok (NULL, _("You have to specify a name and an address."));
     return;
   }
 
-  /* No prefix? Add "master://" */
+  master_to_add = add_master (master_addr_result, master_name_result, master_type, TRUE, FALSE);
+  if(!master_to_add)
+  {
+    dialog_ok (NULL, _("Master address \"%s\" is not valid."),
+	master_addr_result);
+  }
+  else
+  {
 
-  if (strstr (master_addr_result, "://") == NULL) {
-    str = g_malloc (strlen (master_addr_result) + sizeof (PREFIX_MASTER));
-    strcpy (str, PREFIX_MASTER);
-    strcpy (str + sizeof (PREFIX_MASTER) - 1, master_addr_result);
-    g_free (master_addr_result);
-    master_addr_result = str;
+    if (master_addr_result)
+      history_add (master_history_addr, master_addr_result);
+    if (master_name_result)
+      history_add (master_history_name, master_name_result);
+
+    gtk_widget_destroy(window);
   }
 }
 
-
-static void select_master_type_callback (GtkWidget *widget, 
-					                  enum server_type type) {
-  *master_type = type;
+static void select_master_type_callback (GtkWidget *widget, enum server_type type)
+{
+  master_type = type;
+  gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
+  if(!games[type].default_master_port)
+  {
+    gtk_widget_set_sensitive
+      (GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
+   if(current_master_query_type==MASTER_NATIVE)
+   {
+     gtk_toggle_button_set_active
+       (GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+   }
+  }
+  else
+  {
+    gtk_widget_set_sensitive
+      (GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),TRUE);
+  }
 }
 
+static void master_type_radio_callback (GtkWidget *widget, enum master_query_type type)
+{
+  current_master_query_type = type;
+  master_check_master_addr_prefix();
+}
+
+static void master_activate_radio_for_type( enum master_query_type type )
+{
+  if( type < MASTER_NATIVE || type >= MASTER_NUM_QUERY_TYPES )
+    type=MASTER_NATIVE;
+
+  if(master_query_type_radios[type])
+  {
+    gtk_toggle_button_set_active
+      (GTK_TOGGLE_BUTTON(master_query_type_radios[type]),TRUE);
+  }
+}
+
+static void master_address_from_history_selected_callback (GtkWidget *widget,
+    gpointer data)
+{
+  char* str = gtk_entry_get_text( GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
+  enum master_query_type type = get_master_query_type_from_address(str);
+  master_activate_radio_for_type(type);
+}
 
 static GtkWidget *create_master_type_menu (void) {
   GtkWidget *menu;
@@ -109,8 +182,42 @@ static GtkWidget *create_master_type_menu (void) {
   return menu;
 }
 
+char *master2url( struct master *m )
+{
+  char *query_type;
+  char *address;
+  char *result;
 
-char *add_master_dialog (enum server_type *type, char **desc) {
+  if ( m->master_type >= MASTER_NATIVE
+      && m->master_type < MASTER_NUM_QUERY_TYPES )
+  {
+    query_type = master_prefixes[m->master_type];
+  }
+  else
+    return NULL;
+
+  if( m->master_type == MASTER_HTTP )
+  {
+    result = strdup(m->url);
+  }
+  else
+  {
+    if(m->host)
+    {
+      address = inet_ntoa(m->host->ip);
+    }
+    else
+    {
+      address = m->hostname;
+    }
+    result = g_strdup_printf("%s%s:%d",query_type,address,m->port);
+  }
+
+  return result;
+}
+
+
+struct master *add_master_dialog (struct master *m) {
   GtkWidget *window;
   GtkWidget *main_vbox;
   GtkWidget *table;
@@ -120,22 +227,48 @@ char *add_master_dialog (enum server_type *type, char **desc) {
   GtkWidget *button;
   GtkWidget *hseparator;
   char *typestr;
+  enum master_query_type i;
+  struct master *master_to_edit;
+  char *windowtitle;
 
   master_name_result = NULL;
   master_addr_result = NULL;
-  master_type = type;
+  current_master_query_type = MASTER_NATIVE;
 
-  typestr = config_get_string ("/" CONFIG_FILE "/Add Master/game");
-  if (typestr) {
-    *type = id2type (typestr);
-    g_free (typestr);
-  }
-  else {
-    *type = QW_SERVER;
-  }
+  master_to_edit = NULL;
+  master_to_add = NULL;
+  
+  for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++)
+    master_query_type_radios[i]=NULL;
 
-  window = dialog_create_modal_transient_window (_("Add Master"), 
-                                                           TRUE, FALSE, NULL);
+  master_to_edit = m;
+
+  if(master_to_edit)
+  {
+    current_master_query_type = master_to_edit->master_type;
+    master_type = master_to_edit->type;
+  }
+  else
+  {
+    typestr = config_get_string ("/" CONFIG_FILE "/Add Master/game");
+    if (typestr) {
+      master_type = id2type (typestr);
+      g_free (typestr);
+    }
+    else {
+      master_type = QW_SERVER;
+    }
+  }
+  
+  if (master_to_edit)
+  {
+    windowtitle=_("Rename Master");
+  }
+  else
+  {
+    windowtitle=_("Add Master");
+  }
+  window = dialog_create_modal_transient_window(windowtitle, TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), main_vbox);
   
@@ -163,12 +296,9 @@ char *add_master_dialog (enum server_type *type, char **desc) {
   gtk_combo_set_case_sensitive (GTK_COMBO (master_name_combo), TRUE);
   gtk_combo_set_use_arrows_always (GTK_COMBO (master_name_combo), TRUE);
   gtk_combo_disable_activate (GTK_COMBO (master_name_combo));
-  gtk_signal_connect (
+  gtk_signal_connect(
                    GTK_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
-                   GTK_SIGNAL_FUNC (master_combo_activate_callback), NULL);
-  gtk_signal_connect_object (
-                   GTK_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
-                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+                   GTK_SIGNAL_FUNC (master_okbutton_callback), GTK_OBJECT (window));
 
   GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_name_combo)->entry, GTK_CAN_FOCUS);
   GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (master_name_combo)->button, GTK_CAN_FOCUS);
@@ -179,13 +309,27 @@ char *add_master_dialog (enum server_type *type, char **desc) {
   if (master_history_name->items)
     combo_set_vals (master_name_combo, master_history_name->items, "");
 
+  if(master_to_edit)
+  {
+    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO
+	  (master_name_combo)->entry),strdup(master_to_edit->name));
+  }
+
+
   /* Master Type Option Menu */
 
   option_menu = gtk_option_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
                                                   create_master_type_menu ());
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), *type);
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), master_type);
+  
+  if(master_to_edit)
+  {
+    gtk_widget_set_state (option_menu, GTK_STATE_NORMAL);
+    gtk_widget_set_sensitive (GTK_WIDGET(option_menu),FALSE);
+  }
+  
   gtk_widget_show (option_menu);
 
   gtk_widget_show (hbox);
@@ -206,20 +350,66 @@ char *add_master_dialog (enum server_type *type, char **desc) {
   gtk_combo_disable_activate (GTK_COMBO (master_addr_combo));
   gtk_signal_connect (
                    GTK_OBJECT (GTK_COMBO (master_addr_combo)->entry), "activate",
-                   GTK_SIGNAL_FUNC (master_combo_activate_callback), NULL);
-  gtk_signal_connect_object (
-                   GTK_OBJECT (GTK_COMBO (master_addr_combo)->entry), "activate",
-                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+                   GTK_SIGNAL_FUNC (master_okbutton_callback), GTK_OBJECT (window));
+  gtk_signal_connect (
+                   GTK_OBJECT (GTK_COMBO (master_addr_combo)->list),
+		   "selection-changed",
+                   GTK_SIGNAL_FUNC
+		   (master_address_from_history_selected_callback),NULL);
 
   GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_addr_combo)->entry, GTK_CAN_FOCUS);
   GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (master_addr_combo)->button, GTK_CAN_FOCUS);
-  gtk_widget_grab_focus (GTK_COMBO (master_addr_combo)->entry);
+//  gtk_widget_grab_focus (GTK_COMBO (master_addr_combo)->entry);
+  
   gtk_widget_show (master_addr_combo);
 
   if (master_history_addr->items)
     combo_set_vals (master_addr_combo, master_history_addr->items, "");
+
+  if(master_to_edit)
+  {
+    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO
+	  (master_addr_combo)->entry),master2url(master_to_edit));
+    gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
+    gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);
+  }
   
   gtk_widget_show (table);
+
+  /* query type */
+  hbox = gtk_hbox_new (TRUE, 8);
+  for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++)
+  {
+    master_query_type_radios[i] =
+		    gtk_radio_button_new_with_label_from_widget(
+			i==MASTER_NATIVE?NULL:GTK_RADIO_BUTTON(master_query_type_radios[MASTER_NATIVE]),
+			_(master_designation[i]));
+    if(master_to_edit)
+    {
+      gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);
+    }
+    gtk_signal_connect(GTK_OBJECT (master_query_type_radios[i]), "toggled",
+                   GTK_SIGNAL_FUNC (master_type_radio_callback), (gpointer)i);
+
+    gtk_widget_show (master_query_type_radios[i]);
+    gtk_box_pack_start (GTK_BOX (hbox),master_query_type_radios[i], FALSE, FALSE, 0);
+  }
+  if(master_to_edit)
+  {
+    master_activate_radio_for_type(current_master_query_type);
+  }
+  else if(!games[master_type].default_master_port &&
+		    current_master_query_type == MASTER_NATIVE)
+  {
+    gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
+    gtk_widget_set_sensitive
+      (GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
+    gtk_toggle_button_set_active
+      (GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+  }
+
+  gtk_widget_show (hbox);
+  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
   
   /* Separator */
   
@@ -248,11 +438,8 @@ char *add_master_dialog (enum server_type *type, char **desc) {
   button = gtk_button_new_with_label ("OK");
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_widget_set_usize (button, 80, -1);
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-		             GTK_SIGNAL_FUNC (master_combo_activate_callback),
-			     GTK_OBJECT (GTK_COMBO (master_name_combo)->entry));
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+      GTK_SIGNAL_FUNC(master_okbutton_callback), window);
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (button);
   gtk_widget_show (button);
@@ -266,8 +453,7 @@ char *add_master_dialog (enum server_type *type, char **desc) {
 
   unregister_window (window);
 
-  *desc = master_name_result;
-  return master_addr_result;
+  return master_to_add;
 }
 
 

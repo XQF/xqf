@@ -26,13 +26,15 @@
 #define	FILENAME_LISTS		"lists"
 #define	FILENAME_SRVINFO	"srvinfo"
 
-#define	PREFIX_MASTER		"master://"
-#define	PREFIX_GMASTER		"gmaster://"
-#define	PREFIX_URL_HTTP		"http://"
+//#define	PREFIX_MASTER		"master://"
+//#define	PREFIX_GMASTER		"gmaster://"
+//#define	PREFIX_URL_HTTP		"http://"
 
 #define	ACTION_ADD		"ADD"
 #define	ACTION_DELETE		"DELETE"
 
+extern char* master_prefixes[MASTER_NUM_QUERY_TYPES];
+extern char* master_designation[MASTER_NUM_QUERY_TYPES];
 
 extern	struct master *favorites;
 extern	GSList *master_groups;
@@ -59,6 +61,9 @@ extern	void master_selection_to_lists (GSList *list, GSList **masters,
 extern	int source_has_masters_to_update (GSList *source);
 extern	int source_has_masters_to_delete (GSList *source);
 extern	GSList *references_to_server (struct server *s);
+
+
+extern enum master_query_type get_master_query_type_from_address(char* address);
 
 
 #endif /* __SOURCE_H__ */

@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>	/* strtol */
@@ -26,10 +28,6 @@
 #include <netinet/in.h>	/* inet_aton, inet_ntoa */
 #include <arpa/inet.h>	/* inet_aton, inet_ntoa */
 #include <errno.h>	/* errno */
-
-#ifndef errno
-extern	int errno;
-#endif
 
 #include <gtk/gtk.h>
 
@@ -47,16 +45,20 @@ extern	int errno;
 #include "zipped.h"
 #include "stat.h"
 
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
-
 struct master *favorites = NULL;
 GSList *master_groups = NULL;
+
+char* master_prefixes[MASTER_NUM_QUERY_TYPES] = {
+	"master://",
+	"gmaster://",
+	"http://"
+};
+
+char* master_designation[MASTER_NUM_QUERY_TYPES] = {
+	N_("Standard"),
+	N_("Gamespy"),
+	N_("http")
+};
 
 static GSList *all_masters = NULL;
 
@@ -80,17 +82,15 @@ static void save_list (FILE *f, struct master *m) {
     if (m->url) {
       fprintf (f, "[%s %s]\n", games[m->type].id, m->url);
     }
-    else {
-      if (m->master_type == 1)
-	{
-	fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, PREFIX_GMASTER,
+    else if (m->master_type == MASTER_GAMESPY)
+    {
+      fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, master_prefixes[MASTER_GAMESPY],
         	(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
-        }
-      else
-        {
-      	fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, PREFIX_MASTER,
+    }
+    else
+    {
+      fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, master_prefixes[MASTER_NATIVE],
 		(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
-	}
     }
   }
 
@@ -335,23 +335,23 @@ static struct master *read_list_parse_master (char *str, char *str2) {
   if (favorites && !g_strcasecmp (str, favorites->name))
     return favorites;
 
-  if (g_strncasecmp (str, PREFIX_MASTER, sizeof (PREFIX_MASTER) - 1) == 0) {
-    if (parse_address (str + sizeof (PREFIX_MASTER) - 1, &addr, &port)) {
+  if (g_strncasecmp (str, master_prefixes[MASTER_NATIVE], strlen(master_prefixes[MASTER_NATIVE])) == 0) {
+    if (parse_address (str + strlen(master_prefixes[MASTER_NATIVE]), &addr, &port)) {
       m = find_master_server (addr, port, str2);
       g_free (addr);
       return m;
     }
   }
 
-  if (g_strncasecmp (str, PREFIX_GMASTER, sizeof (PREFIX_GMASTER) - 1) == 0) {
-    if (parse_address (str + sizeof (PREFIX_GMASTER) - 1, &addr, &port)) {
+  if (g_strncasecmp (str, master_prefixes[MASTER_GAMESPY], strlen (master_prefixes[MASTER_GAMESPY])) == 0) {
+    if (parse_address (str + strlen(master_prefixes[MASTER_GAMESPY]), &addr, &port)) {
       m = find_master_server (addr, port, str2);
       g_free (addr);
       return m;
     }
   }
 
-  if (g_strncasecmp (str, PREFIX_URL_HTTP, sizeof (PREFIX_URL_HTTP) - 1) == 0) {
+  if (g_strncasecmp (str, master_prefixes[MASTER_HTTP], strlen(master_prefixes[MASTER_HTTP])) == 0) {
     m = find_master_url (str);
     return m;
   }
@@ -592,14 +592,118 @@ static struct master *create_master (char *name, enum server_type type,
 
 struct master *add_master (char *path, char *name, enum server_type type, 
                                                   int user, int lookup_only) {
-  char *addr;
-  unsigned short port;
+  char *addr = NULL;
+  unsigned short port = 0;
   struct master *m = NULL;
-  struct host *h;
-  struct master *group;
+  struct host *h = NULL;
+  struct master *group = NULL;
+  enum master_query_type query_type;
 
-  if (g_strncasecmp (path, PREFIX_MASTER, sizeof (PREFIX_MASTER) - 1) == 0) {
-    if (parse_address (path + sizeof (PREFIX_MASTER) - 1, &addr, &port)) {
+  debug(6,"add_master(%s,%s,%d,%d,%d)",path,name,type,user,lookup_only);
+
+  query_type = get_master_query_type_from_address(path);
+  if( query_type == MASTER_INVALID_TYPE )
+  {
+    debug(1,"Invalid Master %s",path);
+    return NULL;
+  }
+
+  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY )
+  {
+    // check for valid hostname/ip
+    if (parse_address (path + strlen(master_prefixes[query_type]), &addr, &port))
+    {
+      // if no port was specified, add default master port if available or fail
+      if (!port)
+      {
+	// do not use default for gamespy
+	if (query_type != MASTER_GAMESPY && games[type].default_master_port)
+	{
+	  port = games[type].default_master_port;
+	}
+	else
+	{
+	  g_free (addr);
+	  // translator: %s == url, eg gmaster://bla.blub.org
+	  dialog_ok (NULL, _("You have to specify a port number for %s."),path);
+	  return NULL;
+	}
+      }
+
+      m = find_master_server (addr, port, games[type].id);
+
+    }
+  }
+  else if( query_type == MASTER_HTTP )
+  {
+      m = find_master_url (path);
+  }
+
+  if (lookup_only)
+  {
+    g_free (addr);
+    return m;
+  }
+
+  if (m)
+  {
+    if (user)
+    { // Master renaming is forced by user
+      g_free (m->name);
+      m->name = g_strdup (name);
+      m->user = TRUE;
+    }
+    else
+    { // Automatically rename masters that are not edited by user
+      if (!m->user) {
+	g_free (m->name);
+	m->name = g_strdup (name);
+      }
+    }
+    g_free (addr);
+    return m;
+  }
+  
+  // master was not known already, create new
+  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY )
+  {
+    m = create_master (name, type, FALSE);
+
+    h = host_add (addr);
+    if (h) {
+      m->host = h;
+      host_ref (h);
+      g_free (addr);
+      addr = NULL;
+    }
+    else {
+      m->hostname = addr;
+    }
+    m->port = port;
+  }
+  else if( query_type == MASTER_HTTP )
+  {
+    m = create_master (name, type, FALSE);
+    m->url = g_strdup (path);
+  }
+  
+  m->master_type = query_type;
+
+  if (m) {
+    group = (struct master *) g_slist_nth_data (master_groups, type);
+    group->masters = g_slist_append (group->masters, m);
+    m->user = user;
+  }
+  
+  return m;
+}
+
+
+
+#if 0
+  if (g_strncasecmp (path, master_prefixes[MASTER_NATIVE],
+			  strlen(master_prefixes[MASTER_NATIVE])) == 0) {
+    if (parse_address (path + strlen(master_prefixes[MASTER_NATIVE]), &addr, &port)) {
 
       if (!port) {
 	if (games[type].default_master_port) {
@@ -639,7 +743,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
        {
 	m = create_master (name, type, FALSE);
 
-        m->master_type = 0; // Regular master
+        m->master_type = MASTER_NATIVE; // Regular master
 
 	h = host_add (addr);
 	if (h) {
@@ -656,8 +760,9 @@ struct master *add_master (char *path, char *name, enum server_type type,
     }
   }
 
-  else if (g_strncasecmp (path, PREFIX_GMASTER, sizeof (PREFIX_GMASTER) - 1) == 0) {
-    if (parse_address (path + sizeof (PREFIX_GMASTER) - 1, &addr, &port)) {
+  else if (g_strncasecmp (path, master_prefixes[MASTER_GAMESPY],
+			  strlen(master_prefixes[MASTER_GAMESPY])) == 0) {
+    if (parse_address (path + strlen(master_prefixes[MASTER_GAMESPY]), &addr, &port)) {
 
       if (!port) {
 	if (games[type].default_master_port) {
@@ -697,7 +802,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
       {
 	m = create_master (name, type, FALSE);
 
-        m->master_type = 1; // Gamespy master
+        m->master_type = MASTER_GAMESPY; // Gamespy master
 
 	h = host_add (addr);
 	if (h) {
@@ -715,8 +820,8 @@ struct master *add_master (char *path, char *name, enum server_type type,
   }
 
   else {
-    if (g_strncasecmp (path, PREFIX_URL_HTTP, sizeof (PREFIX_URL_HTTP) - 1) 
-                                                                       == 0) {
+    if (g_strncasecmp (path, master_prefixes[MASTER_HTTP],
+			    strlen(master_prefixes[MASTER_HTTP])) == 0) {
       m = find_master_url (path);
 
       if (lookup_only) {
@@ -745,7 +850,6 @@ struct master *add_master (char *path, char *name, enum server_type type,
       }
     }
   }
-
   if (m) {
     group = (struct master *) g_slist_nth_data (master_groups, type);
     group->masters = g_slist_append (group->masters, m);
@@ -754,6 +858,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
 
   return m;
 }
+#endif
 
 
 void free_master (struct master *m) {
@@ -1002,11 +1107,11 @@ static void save_master_list (void) {
     }
     else {
 
-      if (m->master_type == 1)
-	      addr = g_strdup_printf (PREFIX_GMASTER "%s:%d", 
+      if (m->master_type == MASTER_GAMESPY)
+	      addr = g_strdup_printf ("%s%s:%d", master_prefixes[MASTER_GAMESPY],
         	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
       else
-      	      addr = g_strdup_printf (PREFIX_MASTER "%s:%d", 
+      	      addr = g_strdup_printf ("%s%s:%d", master_prefixes[MASTER_NATIVE],
         	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
 
       confstr = g_strjoin (" ", typeid, addr, m->name, NULL);
@@ -1026,7 +1131,7 @@ void init_masters (int update) {
   struct master *m;
   int i;
 
-  favorites = create_master ("Favorites", UNKNOWN_SERVER, FALSE);
+  favorites = create_master (N_("Favorites"), UNKNOWN_SERVER, FALSE);
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     m = create_master (games[i].name, i, TRUE);
@@ -1200,3 +1305,29 @@ GSList *references_to_server (struct server *s) {
   return res;
 }
 
+enum master_query_type get_master_query_type_from_address(char* address)
+{
+  enum master_query_type type;
+  // check for known master prefix
+  debug(6,"get_master_query_type_from_address(%s)",address);
+  for (type=MASTER_NATIVE;type<MASTER_NUM_QUERY_TYPES;type++)
+  {
+    if(!g_strncasecmp( address, master_prefixes[type],
+	strlen(master_prefixes[type])))
+    {
+      debug(6,"get_master_query_type_from_address: found %s",master_prefixes[type]);
+      return type;
+    }
+  }
+  // only accept if there is no :// part at all
+  if(lowcasestrstr(address,"://"))
+  {
+    debug(6,"get_master_query_type_from_address: invalid");
+    return MASTER_INVALID_TYPE;
+  }
+  else
+  {
+    debug(6,"get_master_query_type_from_address: default native");
+    return MASTER_NATIVE;
+  }
+}

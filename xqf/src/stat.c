@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>	/* kill */
 #include <stdio.h>	/* FILE, fopen, fclose, fprintf, ... */
 #include <string.h>	/* strchr, strcmp, strlen, strcpy, memchr, strtok */
@@ -43,14 +45,6 @@
 #include "host.h"
 #include "dns.h"
 #include "debug.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
 
 static void stat_next (struct stat_job *job);
 
@@ -764,7 +758,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     argv[argi++] = buf2;
 
-    if (m->master_type == 1)
+    if (m->master_type == MASTER_GAMESPY)
     	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
     else
     {
