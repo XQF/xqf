@@ -427,7 +427,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
   g_snprintf (buf, 256, "Remote Console [%s]", srv);
 
   window = dialog_create_modal_transient_window (buf, TRUE, TRUE, 
-       						         &rcon_save_geometry);
+       						         rcon_save_geometry);
   gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
   rcon_restore_geometry (window);
 
