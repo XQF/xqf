@@ -40,6 +40,7 @@
 #include "config.h"
 #include "rc.h"
 #include "debug.h"
+#include "sort.h"
 
 static struct generic_prefs* new_generic_prefs (void);
 
@@ -260,6 +261,26 @@ char* ef_masterprotocols[] = {
 	NULL
 };
 
+static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2) {
+  int res;
+
+  if (str1) {
+    if (str2) {
+      res = g_strcasecmp (str1, str2);
+      if (!res)
+	res = strcmp (str1, str2);
+    }
+    else {
+      res = 1;
+    }
+  }
+  else {
+    res = (str2)? -1 : 0;
+  }
+  return res;
+}
+
+
 static void get_new_defaults_for_game (enum server_type type) {
   struct game *g = &games[type];
   struct generic_prefs *prefs = &genprefs[type];
@@ -338,6 +359,8 @@ static void get_new_defaults_for_game (enum server_type type) {
     g_slist_free (g->custom_args);
   
   g->custom_args = g_slist_copy (custom_args_entry_list[type]);
+  
+  g->custom_args = g_slist_sort (g->custom_args, compare_slist_strings);
   
   temp = g_slist_nth(custom_args_entry_list[type], 0);
 
@@ -1860,6 +1883,44 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
   gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
 }
 
+static void replace_custom_args_callback (GtkWidget *widget, gpointer data) {
+  GSList *link;
+  int row;
+  char *temp[2];
+  enum server_type type;
+  struct game *g;
+  
+  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  g = &games[type];
+  
+  if (current_row < 0)
+    return;
+    
+  row = current_row;
+  
+  link = g_slist_nth (custom_args_entry_list[type], current_row);
+  
+  custom_args_entry_list[type] = g_slist_remove_link (custom_args_entry_list[type], link);
+  
+  current_row = -1;
+  
+  gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
+  
+  temp[0] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_game[type])));
+  temp[1] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_args[type])));
+
+  if (temp[0] && temp[1]) {
+    if (g_slist_find_custom (custom_args_entry_list[type], temp[0], custom_args_compare_func) == NULL ) {
+      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], g_strconcat(temp[0], ",",temp[1], NULL));
+
+      gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp);
+    }
+  }
+  g_free (temp[0]);
+  g_free (temp[1]);
+}
+
+
 static void custom_args_clist_select_row_callback (GtkWidget *widget, 
                                  int row, int column, GdkEventButton *event, GtkCList *clist) {
   char **temp;
@@ -1944,7 +2005,6 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
 
-  
   label = gtk_label_new (_("Command Line"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 
@@ -2040,6 +2100,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *vbuttonbox1;
   GtkWidget *add_button;
   GtkWidget *delete_button;
+  GtkWidget *replace_button;
   GtkWidget *page_vbox;
   GSList *temp;
   int i;
@@ -2167,6 +2228,14 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_container_add (GTK_CONTAINER (vbuttonbox1), delete_button);
   GTK_WIDGET_SET_FLAGS (delete_button, GTK_CAN_DEFAULT);
 
+  replace_button = gtk_button_new_with_label (_("Replace"));
+  gtk_widget_ref (replace_button);
+  gtk_object_set_data_full (GTK_OBJECT (page_vbox), "replace_button", replace_button,
+                 	           (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (replace_button);
+  gtk_container_add (GTK_CONTAINER (vbuttonbox1), replace_button);
+  GTK_WIDGET_SET_FLAGS (replace_button, GTK_CAN_DEFAULT);
+
   gtk_object_set_user_data (GTK_OBJECT (add_button), (gpointer) type);
   gtk_signal_connect (GTK_OBJECT (add_button), "clicked",
                       GTK_SIGNAL_FUNC (add_custom_args_callback),
@@ -2177,7 +2246,10 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                       GTK_SIGNAL_FUNC (delete_custom_args_callback),
                       (gpointer) arguments_clist);
 
-  /* Custom Argments frame */
+  gtk_object_set_user_data (GTK_OBJECT (replace_button), (gpointer) type);
+  gtk_signal_connect (GTK_OBJECT (replace_button), "clicked",
+                      GTK_SIGNAL_FUNC (replace_custom_args_callback),
+                      (gpointer) arguments_clist);
 
   // Populate clist with custom_args from g_slist
   temp = g_slist_nth(custom_args_entry_list[type], 0);  
