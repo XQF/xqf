@@ -1134,7 +1134,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD JK3S master://masterjk3.ravensoft.com:29060 Ravensoft",
 
-  "ADD UT2004S master://ut2004master1.epicgames.com:28902 Epic",
+  "ADD UT2004S master://ut2004master1.epicgames.com:28902 Epic 1",
+  "ADD UT2004S master://ut2004master2.epicgames.com:28902 Epic 2",
   
   "ADD NETP master://netpanzer.dyndns.org netpanzer.dyndns.org",
 

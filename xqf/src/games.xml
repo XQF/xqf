@@ -410,8 +410,8 @@
 	<flags>GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT | GAME_MASTER_CDKEY</flags>
 	<default_master_port>28902</default_master_port>
 	<id>UT2004S</id>
-	<qstat_str>UT2S</qstat_str>
-	<qstat_option>-ut2s</qstat_option>
+	<qstat_str>UT2004S</qstat_str>
+	<qstat_option>-ut2004s</qstat_option>
 	<qstat_master_option>-ut2004m</qstat_master_option>
 	<icon>ut2004.xpm</icon>
 	<command>ut2004demo</command>

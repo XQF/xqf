@@ -1,3 +1,7 @@
+Mar 24, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- use separate server type for ut2004
+- add epic's second ut2004 master
+
 Mar 22, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - change default ET protocol to 84, fix qstat.cfg
 
