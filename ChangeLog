@@ -1,3 +1,8 @@
+Mar 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- redesign about dialog to include logo
+- unify summary in .desktop and .spec file
+- change version to 0.9.13.2
+
 Feb 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add LAN master for ut2004
 - detect whether a server is ut2003 or ut2004

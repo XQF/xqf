@@ -2,19 +2,18 @@
 %define version  @VERSION@
 %define release  %{?CUSTOM_RELEASE} %{!?CUSTOM_RELEASE:@RELEASE@}
 
-Summary:   A network game browser an launcher (Quake/QuakeWorld/Quake2/etc.)
+Summary:   A network game browser and launcher
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Copyright: GPL
+License:   GPL
 Group:     Games/Utilities
 Source0:   %{name}-%{version}.tar.gz
 URL:       http://www.linuxgames.com/xqf/ 
 Buildroot: %{_tmppath}/%{name}-buildroot
-Packager: The XQF Team
-#Docdir: %{prefix}/doc
+Packager:  The XQF Team
 
-#Since there is not a .spec file with qstst, we will not
+#Since there is not a .spec file with qstat, we will not
 #  require it for now.  You may want to uncomment it  
 #  for your dist.
 #Requires:  qstat >= 2.4e
@@ -22,11 +21,10 @@ Requires:  gzip
 Requires:  wget
 
 %description
-XQF is a network game browser (e.g. Quake, Sin, etc.).
-It helps you locate and connect
-to game servers.  It has configurable server and player filters so
-you can find a server running your favorite game type or that
-has a buddy.
+XQF is a network game browser (e.g. Quake, Unreal, etc.). It helps
+you locate and connect to game servers. It has configurable server
+and player filters so you can find a server running your favorite
+game type or that has a buddy.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
@@ -56,5 +54,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man?/xqf.*
 %{_datadir}/locale/*/LC_MESSAGES/xqf.mo
 %{_datadir}/xqf/*
-
-

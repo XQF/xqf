@@ -141,6 +141,7 @@ int window_delete_event_callback (GtkWidget *widget, gpointer data) {
 
 void register_window (GtkWidget *window) {
   xqf_windows = g_slist_prepend (xqf_windows, window);
+  debug(6, "%p", window);
 }
 
 
@@ -155,6 +156,8 @@ void unregister_window (GtkWidget *window) {
     gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
   else
     target_window = NULL;
+
+  debug(6, "%p", window);
 }
 
 
