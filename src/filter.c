@@ -69,7 +69,7 @@ static  GtkWidget *filter_not_empty_check_button;
 static  GtkWidget *filter_no_cheats_check_button;
 static  GtkWidget *filter_no_password_check_button;
 static  GtkWidget *server_filter_name_entry;
-static  GtkWidget *mod_contains_entry;
+static  GtkWidget *game_contains_entry;
 static  GtkWidget *version_contains_entry;
 
 
@@ -151,8 +151,8 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
   /* Filter Zero is No Filter */
   if( current_server_filter == 0 ){ return TRUE; }
 
-  if( server_filters[current_server_filter].mod_contains && 
-      strlen( server_filters[current_server_filter].mod_contains )  && ! s->mod )
+  if( server_filters[current_server_filter].game_contains && 
+      strlen( server_filters[current_server_filter].game_contains )  && ! s->game )
     return FALSE;
 
   if( server_filters[current_server_filter].version_contains && 
@@ -170,9 +170,9 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
   if (s->retries < server_filters[current_server_filter].filter_retries && 
       s->ping < server_filters[current_server_filter].filter_ping &&
 
-      ( !server_filters[current_server_filter].mod_contains || 
-	!strlen( server_filters[current_server_filter].mod_contains ) || 
-	( s->mod && strstr( s->mod, server_filters[current_server_filter].mod_contains ))) &&
+      ( !server_filters[current_server_filter].game_contains || 
+	!strlen( server_filters[current_server_filter].game_contains ) || 
+	( s->game && strstr( s->game, server_filters[current_server_filter].game_contains ))) &&
 
       
       (!server_filters[current_server_filter].filter_not_full    || s->curplayers != s->maxplayers) && 
@@ -202,7 +202,7 @@ static void server_filter_init (void) {
     server_filters[i].filter_no_cheats   = config_get_bool ("no cheats=false");
     server_filters[i].filter_no_password = config_get_bool ("no password=false");
     server_filters[i].filter_name        = config_get_string_with_default ("filter_name",NULL);
-    server_filters[i].mod_contains       = config_get_string_with_default ("mod_contains",NULL);
+    server_filters[i].game_contains       = config_get_string_with_default ("game_contains",NULL);
     server_filters[i].version_contains   = config_get_string_with_default ("version_contains",NULL);
     
     /* This is called before the window has been created so
@@ -278,34 +278,34 @@ static void server_filter_new_defaults (void) {
   g_free( gcptr );
 
 
-  /* MOD string values -- baa */
-  gcptr = gtk_editable_get_chars (GTK_EDITABLE (mod_contains_entry), 0, -1 );
+  /* GAMETYPE string values -- baa */
+  gcptr = gtk_editable_get_chars (GTK_EDITABLE (game_contains_entry), 0, -1 );
   text_changed = 0;
   if( strlen( gcptr )){
     /*
       First case, the user entered something.  See if the value
       is different 
     */
-    if (server_filters[current_server_filter].mod_contains){
-      if( strcmp( gcptr, server_filters[current_server_filter].mod_contains )) text_changed = 1;
-      g_free( server_filters[current_server_filter].mod_contains );
+    if (server_filters[current_server_filter].game_contains){
+      if( strcmp( gcptr, server_filters[current_server_filter].game_contains )) text_changed = 1;
+      g_free( server_filters[current_server_filter].game_contains );
     } else {
       text_changed = 1;
     }
-    server_filters[current_server_filter].mod_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( server_filters[current_server_filter].mod_contains, "%s\0",  gcptr );
+    server_filters[current_server_filter].game_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( server_filters[current_server_filter].game_contains, "%s\0",  gcptr );
     if (text_changed) {
-      config_set_string ("mod_contains", server_filters[current_server_filter].mod_contains );
+      config_set_string ("game_contains", server_filters[current_server_filter].game_contains );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
   } else {
-    if (server_filters[current_server_filter].mod_contains){
+    if (server_filters[current_server_filter].game_contains){
       text_changed = 1; /* From something to nothing */
-      g_free( server_filters[current_server_filter].mod_contains );
-      config_set_string ("mod_contains", "" );
+      g_free( server_filters[current_server_filter].game_contains );
+      config_set_string ("game_contains", "" );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
-    server_filters[current_server_filter].mod_contains = NULL;
+    server_filters[current_server_filter].game_contains = NULL;
   } 
   g_free( gcptr );
 
@@ -484,23 +484,23 @@ static void server_filter_page (GtkWidget *notebook) {
   gtk_widget_show (server_filter_name_entry);
   row++;
 
-  /* MOD Filter -- baa */
+  /* GAMETYPE Filter -- baa */
   /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
     
-  label = gtk_label_new ("the mod contains the string");
+  label = gtk_label_new ("the game contains the string");
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
 		    0, 0);
   gtk_widget_show (label);
-  mod_contains_entry = gtk_entry_new_with_max_length (32);
-  gtk_widget_set_usize (mod_contains_entry, 64, -1);
-  gtk_entry_set_editable (GTK_ENTRY (mod_contains_entry), TRUE);
-  gtk_entry_set_text (GTK_ENTRY (mod_contains_entry), 
-		      (server_filters[current_server_filter].mod_contains) ?
-		      server_filters[current_server_filter].mod_contains : "");
+  game_contains_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (game_contains_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (game_contains_entry), TRUE);
+  gtk_entry_set_text (GTK_ENTRY (game_contains_entry), 
+		      (server_filters[current_server_filter].game_contains) ?
+		      server_filters[current_server_filter].game_contains : "");
 
-  gtk_table_attach_defaults (GTK_TABLE (table), mod_contains_entry, 4, 5, row, row+1);
-  gtk_widget_show (mod_contains_entry);
+  gtk_table_attach_defaults (GTK_TABLE (table), game_contains_entry, 4, 5, row, row+1);
+  gtk_widget_show (game_contains_entry);
   row++;
 
   /* Version Filter -- baa */

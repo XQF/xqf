@@ -141,7 +141,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
   text[6] = (s->map) ?  s->map : NULL;
   text[7] = (s->game)? s->game : NULL;
-  text[8] = (s->mod) ? s->mod : NULL;
+  text[8] = (s->gametype) ? s->gametype : NULL;
 
   if (row < 0) {
     row = gtk_clist_append (server_clist, text);

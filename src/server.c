@@ -188,8 +188,8 @@ void server_free_info (struct server *s) {
     s->game = NULL;
   }
 
-  if (s->mod) { /* Added by baa */
-    s->mod = NULL;
+  if (s->gametype) { /* Added by baa */
+    s->gametype = NULL;
   }
 
   if (s->players) {

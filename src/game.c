@@ -47,12 +47,14 @@ static struct player *q3_parse_player(char *tokens[], int num);
 static struct player *hl_parse_player(char *tokens[], int num);
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
 static struct player *un_parse_player(char *tokens[], int num);
+static void un_analyze_serverinfo (struct server *s);
 #endif
 
 static void quake_parse_server (char *tokens[], int num, struct server *s);
 
 static void qw_analyze_serverinfo (struct server *s);
 static void q2_analyze_serverinfo (struct server *s);
+static void hl_analyze_serverinfo (struct server *s);
 #ifdef QSTAT23
 static void q3_analyze_serverinfo (struct server *s);
 #endif
@@ -280,7 +282,7 @@ struct game games[] = {
 
     hl_parse_player,
     quake_parse_server,
-    q2_analyze_serverinfo,
+    hl_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
     q2_exec_generic,
@@ -366,7 +368,7 @@ struct game games[] = {
 
     un_parse_player,
     quake_parse_server,
-    NULL,
+    un_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
     ut_exec,
@@ -721,6 +723,28 @@ static void qw_analyze_serverinfo (struct server *s) {
 
 }
 
+#ifdef QSTAT_HAS_UNREAL_SUPPORT
+static void un_analyze_serverinfo (struct server *s) {
+  char **info_ptr;
+  long n;
+
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "gametype") == 0) {
+      s->game = info_ptr[1];
+    }
+    else if (strcmp (*info_ptr, "gamestyle") == 0) {
+      s->gametype = info_ptr[1];
+    }
+
+    //password required?
+    else if (strcmp (*info_ptr, "password") == 0 && strcmp(info_ptr[1],"False")) {
+      s->flags |= SERVER_PASSWORD;
+    }
+  }
+
+}
+#endif //QSTAT_HAS_UNREAL_SUPPORT
+
 
 static void q2_analyze_serverinfo (struct server *s) {
   char **info_ptr;
@@ -733,6 +757,21 @@ static void q2_analyze_serverinfo (struct server *s) {
     if (strcmp (*info_ptr, "gamedir") == 0) {
       s->game = info_ptr[1];
     }
+    //determine mod
+    else if (strcmp (*info_ptr, "gamename") == 0) {
+	    switch (s->type)
+	    {
+		    case Q2_SERVER:
+			/* We only set the mod if name is not baseq2 */
+		    	if (strcmp(info_ptr[1],"baseq2"))
+				s->gametype = info_ptr[1];
+			break;
+		    default:
+				s->gametype = info_ptr[1];
+			break;
+	    }
+    }
+
     else if (strcmp (*info_ptr, "cheats") == 0 && info_ptr[1][0] != '0') {
       s->flags |= SERVER_CHEATS;
     }
@@ -754,6 +793,45 @@ static void q2_analyze_serverinfo (struct server *s) {
 	s->flags |= SERVER_SP_PASSWORD;
     }
 
+  }
+  /* We only set the mod if gamedir is set */
+  if (!s->game)
+  {
+	  s->gametype=NULL;
+  }
+}
+
+static void hl_analyze_serverinfo (struct server *s) {
+  char **info_ptr;
+  long n;
+
+  if ((games[s->type].flags & GAME_SPECTATE) != 0)
+    s->flags |= SERVER_SPECTATE;
+
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "gamedir") == 0) {
+      s->game = info_ptr[1];
+    }
+    //determine mod
+    else if (strcmp (*info_ptr, "gamename") == 0) {
+        s->gametype = info_ptr[1];
+    }
+    
+    //cheats enabled?
+    else if (strcmp (*info_ptr, "sv_cheats") == 0 && info_ptr[1][0] != '0') {
+      s->flags |= SERVER_CHEATS;
+    }
+
+    //password required?
+    else if (strcmp (*info_ptr, "sv_password") == 0 && info_ptr[1][0] != '0') {
+      s->flags |= SERVER_PASSWORD;
+    }
+  }
+
+  // unset Mod if gamedir is valve
+  if (s->game && !strcmp(s->game,"valve"))
+  {
+	  s->gametype=NULL;
   }
 }
 
@@ -800,42 +878,41 @@ static void q3_analyze_serverinfo (struct server *s) {
       fs_game sets the active directory and is how one chooses
       a mod on the command line.  This should not show up in
       the server string but some times it does.  We will
-      take either fs_game or gamename as the "mod" string.
+      take either fs_game or gamename as the "game" string.
       --baa
     */
     if (strcmp (*info_ptr, "fs_game") == 0) {
       if (strcmp (info_ptr[1], "baseq3")) {
-	s->mod  = info_ptr[1];
+	s->game  = info_ptr[1];
       }
     }
     else if (strcmp (*info_ptr, "gamename") == 0) {
       if (strcmp (info_ptr[1], "baseq3")) {
 	/* We only set the mod if the name is NOT baseq3. */
-	s->mod  = info_ptr[1];
+	s->game  = info_ptr[1];
       }
     }
-    else if (!s->game && strcmp (*info_ptr, "g_gametype") == 0) {
+    else if (!s->gametype && strcmp (*info_ptr, "g_gametype") == 0) {
       /* A value of 5 is usually a mod (Q3 1.17 and below) */
-      /* New id missionpack defines 5-8 for other types.. */
+      /* New id missionpack defines 5-7 for other types.. */
       /* So only show new values if the protocol is 48+ */
-      /* until we found out what the mod community is going to do */
       n = strtol (info_ptr[1], &endptr, 10);
 
       if (endptr == info_ptr[1]) {
-	s->game = info_ptr[1];
+	s->gametype = info_ptr[1];
       }
       else {
         if (newtypes == 1)
         {
   	  if (n < 10)
-	    s->game = q3a_gametypes[n];
+	    s->gametype = q3a_gametypes[n];
 	}
 	else
 	{
   	  if (n < 5)
-	    s->game = q3a_gametypes[n];
+	    s->gametype = q3a_gametypes[n];
 	  else
-	    s->game = q3a_gametypes[8];
+	    s->gametype = q3a_gametypes[8];
 	}
       }
     }
