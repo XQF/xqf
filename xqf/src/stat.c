@@ -1288,7 +1288,6 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   int argi = 0;
   char buf[64 + MAX_SERVERS_IN_CMDLINE*64];
   int bufi = 0;
-  FILE *f = NULL;
   char *fn = NULL;
   GSList *tmp;
   struct stat_conn *conn;
@@ -1342,16 +1341,22 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
                                             inet_ntoa (s->host->ip), s->port);
     }
   }
-  else {
+  else
+  {
+    int fd = -1;
+    FILE* f = NULL;
+
     argv[argi++] = "-f";
     fn = &buf[bufi];
-    bufi += 1 + g_snprintf (fn, sizeof (buf) - bufi, "%s/xqf-qstat.%d", 
-                                                 g_get_tmp_dir (), getpid ());
-    argv[argi++] = fn;
+    bufi += 1 + g_snprintf(fn, sizeof (buf) - bufi,
+		  "%s/xqf-qstat.XXXXXX", g_get_tmp_dir ());
 
-    f = fopen (fn, "w");
-    if (!f) {
-      dialog_ok (NULL, _("Failed to create a temporary file %s"), fn);
+    argv[argi++] = fn;
+    
+    fd = mkstemp(fn);
+
+    if (fd < 0 || !(f = fdopen(fd, "w"))) {
+      dialog_ok (NULL, _("Failed to create a temporary file %s: %s"), fn, strerror(errno));
       return NULL;
     }
 

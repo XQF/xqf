@@ -1,5 +1,6 @@
 Dec 15, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix crash caused by wrong reference counting of uservers
+- use mkstemp instead of pid based temporary file to avoid symlink attacks
 
 Dec 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - --launch now guesses the type from the port if only one argument is given. If
