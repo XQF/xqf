@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-07-13 20:23+0200\n"
-"PO-Revision-Date: 2004-07-13 20:22GMT\n"
+"PO-Revision-Date: 2004-07-13 20:28GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -642,8 +642,7 @@ msgstr ""
 
 #: src/pref.c:2188
 msgid "You must enter both a game and at least one argument."
-msgstr ""
-"Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
+msgstr "Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
 
 #: src/pref.c:2287
 msgid "Invoking"
@@ -963,7 +962,6 @@ msgid "Minimize to system tray"
 msgstr "In die Systemablage minimieren"
 
 #: src/pref.c:3957
-#, fuzzy
 msgid "Enable xqf tray icon. You need to restart xqf for this to take effect."
 msgstr ""
 "Icon in der Systemablage aktivieren. XQF muß neu gestartet werden damit dies "
@@ -1017,8 +1015,7 @@ msgstr "'prelaunch' ausführen"
 
 #: src/pref.c:4093
 msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr ""
-"Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
+msgstr "Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
 
 #: src/pref.c:4102
 msgid "Stop current song in XMMS"
@@ -1977,8 +1974,7 @@ msgstr "Starten ..."
 #: src/xqf.c:3920
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr ""
-"Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
+msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
 
 #: src/splash.c:60
 msgid "XQF: Loading"
@@ -2075,3 +2071,4 @@ msgstr "Lade ..."
 
 #~ msgid "_Add Server"
 #~ msgstr "Server _hinzufügen"
+
