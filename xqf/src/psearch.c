@@ -26,6 +26,7 @@
 
 #include "i18n.h"
 #include "xqf.h"
+#include "xqf-ui.h"
 #include "srv-list.h"
 #include "dialogs.h"
 #include "sort.h"

@@ -23,15 +23,22 @@
 #include <stdarg.h>	/* va_start, va_end */
 #include <sys/socket.h>	/* socket, send, bind, connect */
 #include <netinet/in.h>	/* sockaddr_in */
+#include <arpa/inet.h>
 #include <unistd.h>	/* close */
 #include <string.h>	/* memset, strcmp */
 #include <errno.h>      /* errno */
 
+#include <sys/time.h>   // select
 
-#include <gtk/gtk.h>
+#ifdef RCON_STANDALONE
+#include <stdlib.h>
+#include <readline/readline.h>
+#endif
 
 #include "i18n.h"
 #include "xqf.h"
+#ifndef RCON_STANDALONE
+#include "xqf-ui.h"
 #include "srv-prop.h"
 #include "srv-list.h"
 #include "game.h"
@@ -39,28 +46,36 @@
 #include "utils.h"
 #include "history.h"
 #include "config.h"
+#endif
 #include "rcon.h"
 
-#define PACKET_MAXSIZE	(64 * 1024)
-
+enum { PACKET_MAXSIZE = (64 * 1024) };
 
 static int rcon_fd = -1;
-static int rcon_tag;
 static char *packet = NULL;
+static const char* rcon_password = NULL;
+static char* rcon_challenge = NULL;  // halflife challenge
+static enum server_type rcon_servertype;
 
+#ifndef RCON_STANDALONE
 static struct history *rcon_history = NULL;
 
 static GtkWidget *rcon_combo = NULL;
 static GtkWidget *rcon_text = NULL;
+#endif
 
+static char* msg_terminate (char *msg, int size);
+static void rcon_print (char *fmt, ...);
 
 static int failed (char *name) {
   fprintf (stderr, "%s() failed: %s\n", name, g_strerror (errno));
+  rcon_print ("%s() failed: %s\n", name, g_strerror (errno));
   return TRUE;
 }
 
 
 static void rcon_print (char *fmt, ...) {
+#ifndef RCON_STANDALONE
   char buf[2048];
   va_list ap;
 
@@ -76,15 +91,16 @@ static void rcon_print (char *fmt, ...) {
                               GTK_TEXT (rcon_text)->vadj->upper - 
 			      GTK_TEXT (rcon_text)->vadj->page_size);
   }
+#endif
 }
 
 
-static int open_connection (struct server *s) {
+static int open_connection (struct in_addr *ip, unsigned short port) {
   struct sockaddr_in addr;
   int fd;
   int res;
 
-  if (!s)
+  if (!ip || !port)
     return -1;
 
   fd = socket (PF_INET, SOCK_DGRAM, 0);
@@ -106,8 +122,8 @@ static int open_connection (struct server *s) {
   }
 
   addr.sin_family = AF_INET;
-  addr.sin_port = htons (s->port);
-  addr.sin_addr.s_addr = s->host->ip.s_addr;
+  addr.sin_port = htons(port);
+  addr.sin_addr.s_addr = ip->s_addr;
   memset (&addr.sin_zero, 0, sizeof (addr.sin_zero));
 
   res = connect (fd, (struct sockaddr *) &addr, sizeof (addr));
@@ -121,31 +137,91 @@ static int open_connection (struct server *s) {
 }
 
 
-#define RCON_MAX_SIZE	256
+static int rcon_send(const char* cmd)
+{
+  char* buf;
+  
+  if(rcon_servertype == HL_SERVER && rcon_challenge == NULL)
+  {
+    enum { cbufsize = 1024 };
+    char cbuf[cbufsize];
+    char* msg = NULL;
+    char* mustresponse = "\377\377\377\377challenge rcon ";
+    int size;
+    buf = "\377\377\377\377challenge rcon";
+    send (rcon_fd, buf, strlen(buf)+1, 0);
 
+    {
+	fd_set rfds;
+	struct timeval tv;
+	int retval;
+
+	FD_ZERO(&rfds);
+	FD_SET(rcon_fd, &rfds);
+	/* Wait up to five seconds. */
+	tv.tv_sec = 5;
+	tv.tv_usec = 0;
+
+	retval = select(rcon_fd+1, &rfds, NULL, NULL, &tv);
+
+	if (!retval)
+	{
+	  rcon_print ("*** timeout waiting for challenge\n");
+	  errno = ETIMEDOUT;
+	  return -1;
+	}
+    }
+
+    size = recv (rcon_fd, cbuf, cbufsize, 0);
+    if(size < 0)
+    {
+      rcon_print ("*** error in challenge response\n");
+      return -1;
+    }
+    
+    msg = msg_terminate(cbuf, size);
+
+    if(strlen(msg) < strlen(mustresponse) || strncmp(msg,mustresponse,strlen(mustresponse)))
+    {
+      rcon_print ("*** error in challenge response\n");
+      return -1;
+    }
+
+    rcon_challenge = g_strstrip(msg+strlen(mustresponse));
+  }
+
+  if(rcon_servertype == HL_SERVER)
+  {
+    if(!rcon_challenge || !*rcon_challenge)
+    {
+      rcon_print ("*** invalid challenge\n");
+      return -1;
+    }
+
+    buf = g_strdup_printf("\377\377\377\377rcon %s %s %s",rcon_challenge, rcon_password, cmd);
+  }
+  else
+    buf = g_strdup_printf("\377\377\377\377rcon %s %s",rcon_password, cmd);
+
+  rcon_print ("RCON> %s\n", cmd);
+
+  return send (rcon_fd, buf, strlen(buf)+1, 0);
+}
+
+#ifndef RCON_STANDALONE
 static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
-  char buf[RCON_MAX_SIZE];
   char *cmd;
-  char *passwd = (char *) data;
-  int size;
   int res;
 
   cmd = strdup_strip (
 	      gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry)));
 
-  if (cmd) {
-    size = g_snprintf (buf, RCON_MAX_SIZE, "\377\377\377\377rcon %s %s", 
-                                                                 passwd, cmd);
-    if (size == -1)
-      size = RCON_MAX_SIZE;
-    else
-      size++;
+  if (cmd)
+  {
+    res = rcon_send(cmd);
 
-    rcon_print ("RCON> %s\n", cmd);
-
-    res = send (rcon_fd, buf, size, 0);
     if (res < 0) {
-      rcon_print ("***ERROR*** send() failed: %s\n", g_strerror (errno));
+      failed("send");
     }
 
     history_add (rcon_history, cmd);
@@ -156,39 +232,66 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry), "");
   }
 }
+#endif
 
+/**
+  ensure msg is terminated by \n\0. return string that fullfilles this
+  criteria. returned string must be freed afterwards
+ */
+static char* msg_terminate (char *msg, int size)
+{
 
-static void msg_terminate (char *msg, int *size) {
+  char *newmsg = NULL;
+  int newsize = size;
+  enum { nothing = 0, append_0 = 1, append_nl = 2 } what = nothing;
 
-/* FIXME: what is intended here ??? */
+  if (!msg || size <= 0)
+    return g_strdup("\n");
 
-  if (!size || !msg || *size < 0)
-    return;
+  if(size == 1)
+  {
+   if(msg[0] != '\0')
+     what |= append_0;
+   if(msg[0] != '\n')
+     what |= append_nl;
+  }
+  else if(msg[size-1] != '\0')
+  {
+    // not null terminated, check for newline
+    if(msg[size-1] != '\n')
+      what |= append_nl;
 
-  if (*size == 0) {
-    msg[0] = '\n';
-    msg[1] = '\0';
-    return;
+    what |= append_0;
+  }
+  else if(msg[size-2] != '\n')
+  {
+    // null terminated but no newline
+    what |= append_nl;
   }
 
-  if (msg[*size - 1] != '\0') {
-    if (msg[*size - 1] != '\n')
-      msg[(*size)++] = '\n';
-    msg[*size] = '\0';
+  if( what & append_0 )
+    newsize++;
+  if( what & append_nl )
+    newsize++;
+
+  newmsg = (char*)g_malloc(newsize);
+  newmsg = strncpy(newmsg,msg,size);
+
+  if((what & append_0) || (what & append_nl) )
+  {
+    newmsg[newsize-1] = '\0';
   }
-  else {
-    if (*size >= 2 && msg[*size - 2] != '\n') {
-      msg[*size - 1] = '\n';
-      msg[*size] = '\0';
-    }
+  if( what & append_nl )
+  {
+    newmsg[newsize-2] = '\n';
   }
+
+  return newmsg;
 }
 
-
-static void rcon_input_callback (gpointer data, int fd, 
-                                                GdkInputCondition condition) {
-  struct server *s = (struct server *) data;
-  char *msg;
+static char* rcon_receive()
+{
+  char *msg = "\n";
   int size;
 
   if (!packet)
@@ -196,13 +299,15 @@ static void rcon_input_callback (gpointer data, int fd,
 
   size = recv (rcon_fd, packet, PACKET_MAXSIZE, 0);
   if (size < 0) {
-    rcon_print ("***ERROR*** recv() failed: %s\n", g_strerror (errno));
+    failed("recv");
   }
   else {
-    switch (s->type) {
+    switch (rcon_servertype) {
 
     case QW_SERVER:
     case HW_SERVER:
+    case HL_SERVER:
+      // "\377\377\377\377<some character>"
       msg = packet + 4 + 1;
       size = size - 4 - 1;
       break;
@@ -210,12 +315,23 @@ static void rcon_input_callback (gpointer data, int fd,
       /* Q2, Q3 */
 
     default:	
+      // "\377\377\377\377print\n"
       msg = packet + 4 + 6;
       size = size - 4 - 6;
       break;
     }
-    
-    msg_terminate (msg, &size);
+
+    msg = msg_terminate (msg, size);
+  }
+
+  return msg;
+}
+
+
+#ifndef RCON_STANDALONE
+static void rcon_input_callback (gpointer data, int fd, 
+                                                GdkInputCondition condition) {
+    char* msg = rcon_receive();
 
     gtk_text_freeze (GTK_TEXT (rcon_text));
     gtk_text_insert (GTK_TEXT (rcon_text), NULL, NULL, NULL, msg, -1);
@@ -223,16 +339,20 @@ static void rcon_input_callback (gpointer data, int fd,
     gtk_adjustment_set_value (GTK_TEXT (rcon_text)->vadj,
                               GTK_TEXT (rcon_text)->vadj->upper - 
 			      GTK_TEXT (rcon_text)->vadj->page_size);
-  }
+    g_free(msg);
 }
+#endif
 
 
+#ifndef RCON_STANDALONE
 static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry), "status");
   rcon_combo_activate_callback (rcon_combo, data);
 }
+#endif
 
 
+#ifndef RCON_STANDALONE
 static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
   gtk_text_freeze (GTK_TEXT (rcon_text));
   gtk_text_set_point (GTK_TEXT (rcon_text), 0);
@@ -240,16 +360,20 @@ static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
 			    gtk_text_get_length (GTK_TEXT (rcon_text)));
   gtk_text_thaw (GTK_TEXT (rcon_text));
 }
+#endif
 
 
+#ifndef RCON_STANDALONE
 static void rcon_save_geometry (GtkWidget *window, gpointer data) {
   config_push_prefix ("/" CONFIG_FILE "/RCON Window Geometry/");
   config_set_int ("height", window->allocation.height);
   config_set_int ("width", window->allocation.width);
   config_pop_prefix ();
 }
+#endif
 
 
+#ifndef RCON_STANDALONE
 static void rcon_restore_geometry (GtkWidget *window) {
   char buf[256];
   int height, width;
@@ -264,9 +388,11 @@ static void rcon_restore_geometry (GtkWidget *window) {
 
   config_pop_prefix ();
 }
+#endif
 
 
-void rcon_dialog (struct server *s, char *passwd) {
+#ifndef RCON_STANDALONE
+void rcon_dialog (const struct server *s, const char *passwd) {
   GtkWidget *window;
   GtkWidget *main_vbox;
   GtkWidget *vbox;
@@ -279,11 +405,17 @@ void rcon_dialog (struct server *s, char *passwd) {
   GtkWidget *hseparator;
   char srv[256];
   char buf[256];
+  int rcon_tag;
 
   if (!s || !passwd)
     return;
 
-  rcon_fd = open_connection (s);
+  if(rcon_challenge)
+    g_free(rcon_challenge);
+  rcon_challenge = NULL;
+  rcon_password = passwd;
+  rcon_servertype = s->type;
+  rcon_fd = open_connection (&s->host->ip, s->port);
   if (rcon_fd < 0)
     return;
 
@@ -359,7 +491,7 @@ void rcon_dialog (struct server *s, char *passwd) {
   gtk_combo_set_use_arrows_always (GTK_COMBO (rcon_combo), TRUE);
   gtk_combo_disable_activate (GTK_COMBO (rcon_combo));
   gtk_signal_connect (GTK_OBJECT (GTK_COMBO (rcon_combo)->entry), "activate",
-                      GTK_SIGNAL_FUNC (rcon_combo_activate_callback), passwd);
+                      GTK_SIGNAL_FUNC (rcon_combo_activate_callback), NULL);
   GTK_WIDGET_SET_FLAGS (GTK_COMBO (rcon_combo)->entry, GTK_CAN_FOCUS);
   GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (rcon_combo)->button, GTK_CAN_FOCUS);
   gtk_box_pack_start (GTK_BOX (hbox), rcon_combo, TRUE, TRUE, 0);
@@ -376,7 +508,7 @@ void rcon_dialog (struct server *s, char *passwd) {
 
   button = gtk_button_new_with_label (_("Send"));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (rcon_combo_activate_callback), passwd);
+                      GTK_SIGNAL_FUNC (rcon_combo_activate_callback), NULL);
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
   gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
@@ -385,7 +517,7 @@ void rcon_dialog (struct server *s, char *passwd) {
 
   button = gtk_button_new_with_label (_("Status"));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-               GTK_SIGNAL_FUNC (rcon_status_button_clicked_callback), passwd);
+               GTK_SIGNAL_FUNC (rcon_status_button_clicked_callback), NULL);
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
   gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
@@ -429,7 +561,7 @@ void rcon_dialog (struct server *s, char *passwd) {
   gtk_widget_show (window);
 
   rcon_tag = gdk_input_add (rcon_fd, GDK_INPUT_READ, 
-                                   (GdkInputFunction) rcon_input_callback, s);
+                                   (GdkInputFunction) rcon_input_callback, NULL);
 
   gtk_main ();
 
@@ -441,20 +573,139 @@ void rcon_dialog (struct server *s, char *passwd) {
     g_free (packet);
     packet = NULL;
   }
+  
+  if(rcon_challenge)
+    g_free(rcon_challenge);
+  rcon_challenge = NULL;
 
   unregister_window (window);
 }
+#endif
 
 
 void rcon_init (void) {
+#ifndef RCON_STANDALONE
   rcon_history = history_new ("RCON");
+#endif
 }
 
 
 void rcon_done (void) {
+#ifndef RCON_STANDALONE
   if (rcon_history) {
     history_free (rcon_history);
     rcon_history = NULL;
   }
+#endif
 }
 
+#ifdef RCON_STANDALONE
+int main(int argc, char* argv[])
+{
+  struct in_addr ip;
+  int argpos = 1;
+  unsigned short port = 0;
+  char* arg_ip = NULL;
+  char* arg_port = NULL;
+
+  char prompt[] = "RCON> ";
+
+  char* buf = NULL;
+  int res;
+
+  rcon_servertype = Q3_SERVER;
+
+  if(argc>1)
+  {
+    if(!strcmp(argv[argpos],"--qws"))
+    {
+      rcon_servertype = QW_SERVER;
+      argpos++;
+    }
+    else if(!strcmp(argv[argpos],"--hls"))
+    {
+      rcon_servertype = HL_SERVER;
+      argpos++;
+    }
+    else if(!strcmp(argv[argpos],"--hws"))
+    {
+      rcon_servertype = HW_SERVER;
+      argpos++;
+    }
+  }
+
+  if( argc-argpos<2 || !strcmp(argv[argpos],"--help"))
+  {
+      printf(_("Usage: %s [server type] <ip> <port>\n"),argv[0]);
+      printf(_("  server type is either --qws, --hws or --hls.\n"));
+      printf(_("  If no server type is specified, Q3 style rcon is assumed.\n"));
+      return 1;
+  }
+
+  arg_ip = argv[argpos++];
+  arg_port = argv[argpos++];
+
+  if(!inet_aton(arg_ip,&ip))
+  {
+    printf("invalid ip: %s\n",arg_ip);
+    return 1;
+  }
+
+  if((port = atoi(arg_port)) == 0)
+  {
+    printf("invalid port: %s\n",arg_port);
+    return 1;
+  }
+
+  rcon_fd = open_connection(&ip,port);
+  if(rcon_fd < 0)
+  {
+    return 1;
+  }
+  while(!buf || !*buf)
+  {
+    // translator: readline prompt
+    buf = readline(_("Password: "));
+  }
+  rcon_password = g_strdup(buf);
+  
+  buf = readline(prompt);
+  while(buf)
+  {
+    res = rcon_send(buf);
+    if (res < 0) {
+      failed("send");
+    }
+    else
+    {
+      {
+	fd_set rfds;
+	struct timeval tv;
+	int retval;
+
+	FD_ZERO(&rfds);
+	FD_SET(rcon_fd, &rfds);
+	/* Wait up to five seconds. */
+	tv.tv_sec = 5;
+	tv.tv_usec = 0;
+
+	retval = select(rcon_fd+1, &rfds, NULL, NULL, &tv);
+
+	if (!retval)
+	{
+	  printf ("*** timeout waiting for reply\n");
+	}
+	else
+	{
+	  printf("%s",rcon_receive());
+	}
+      }
+    }
+    if(*buf)
+      add_history(buf);
+    free(buf);
+    buf = readline(prompt);
+  }
+  return 0;
+}
+#endif

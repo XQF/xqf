@@ -22,7 +22,7 @@
 #include "xqf.h"
 
 
-extern	void rcon_dialog (struct server *s, char *passwd);
+extern	void rcon_dialog (const struct server *s, const char *passwd);
 
 extern	void rcon_init (void);
 extern	void rcon_done (void);

@@ -21,6 +21,8 @@
 
 #include <gtk/gtk.h>
 
+#include <xqf.h>
+
 
 struct clist_column {
   const char *name;
@@ -59,6 +61,25 @@ extern	struct clist_def srvinf_clist_def;
 extern	GtkWidget *pane1_widget;
 extern  GtkWidget *pane2_widget;
 extern  GtkWidget *pane3_widget;
+
+
+extern 	GtkWidget *main_window;
+extern	GtkWidget *source_ctree;
+extern  GtkCList  *server_clist;
+extern  GtkCList  *player_clist;
+extern  GtkCTree  *srvinf_ctree;
+
+extern	GtkWidget *view_hostnames_menu_item;
+extern	GtkWidget *view_defport_menu_item;
+
+extern	int window_delete_event_callback (GtkWidget *widget, gpointer data);
+extern	void register_window (GtkWidget *window);
+extern	void unregister_window (GtkWidget *window);
+extern	GtkWidget *top_window (void);
+
+extern	void set_widgets_sensitivity (void);
+
+extern GtkWidget *server_filter_widget[];
 
 extern	void print_status (GtkWidget *sbar, char *fmt, ...);
 

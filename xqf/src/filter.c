@@ -27,6 +27,7 @@
 
 #include "i18n.h"
 #include "xqf.h"
+#include "xqf-ui.h"
 #include "dialogs.h"
 #include "server.h"
 #include "config.h"

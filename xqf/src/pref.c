@@ -28,6 +28,7 @@
 
 #include "i18n.h"
 #include "xqf.h"
+#include "xqf-ui.h"
 #include "game.h"
 #include "pref.h"
 #include "dialogs.h"

@@ -27,7 +27,7 @@
 extern	GSList *qw_colors_pixmap_cache;
 extern	GSList *server_pixmap_cache;
 
-extern	void assemble_server_address (char *buf, int size, struct server *s);
+extern	void assemble_server_address (char *buf, int size, const struct server *s);
 
 extern	void player_clist_set_server (struct server *s);
 extern	void player_clist_redraw (void);

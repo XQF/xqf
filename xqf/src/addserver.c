@@ -18,10 +18,9 @@
 
 #include "gnuconfig.h"
 
-#include <gtk/gtk.h>
-
 #include "i18n.h"
 #include "game.h"
+#include "xqf-ui.h"
 #include "history.h"
 #include "dialogs.h"
 #include "utils.h"

@@ -19,14 +19,14 @@
 #ifndef __XQF_H__
 #define __XQF_H__
 
+#include "gnuconfig.h"	/* GNU autoconf */
+
 #include <sys/types.h>
 #include <netinet/in.h> /* struct in_addr */
 #include <arpa/inet.h>	/* struct in_addr */
 #include <time.h>	/* time_t */
 
-#include <gtk/gtk.h>
-
-#include "gnuconfig.h"	/* GNU autoconf */
+#include <glib.h>
 
 #define RC_DIR		".qf"
 #define RC_FILE		"qfrc"
@@ -210,12 +210,6 @@ struct master {
 
 extern	time_t xqf_start_time;
 
-extern 	GtkWidget *main_window;
-extern	GtkWidget *source_ctree;
-extern  GtkCList  *server_clist;
-extern  GtkCList  *player_clist;
-extern  GtkCTree  *srvinf_ctree;
-
 extern	GSList *cur_source;		/*  GSList <struct master *>  */
 extern	GSList *cur_server_list;	/*  GSList <struct server *>  */
 extern	GSList *cur_userver_list;	/*  GSList <struct server *>  */
@@ -224,17 +218,6 @@ extern	struct server *cur_server;
 
 extern	struct stat_job *stat_process;
 
-extern	GtkWidget *view_hostnames_menu_item;
-extern	GtkWidget *view_defport_menu_item;
-
-extern	int window_delete_event_callback (GtkWidget *widget, gpointer data);
-extern	void register_window (GtkWidget *window);
-extern	void unregister_window (GtkWidget *window);
-extern	GtkWidget *top_window (void);
-
-extern	void set_widgets_sensitivity (void);
-
-extern GtkWidget *server_filter_widget[];
 
 int compare_qstat_version ( const char* have, const char* expected );
 int start_prog_and_return_fd(char *const argv[], pid_t *pid);

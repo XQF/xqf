@@ -1,3 +1,7 @@
+Sep 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix Half-Life rcon
+- primitive external rcon program that is not linked against X (xqf-rcon)
+
 Aug 15, 2002: Jordi Mallach <jordi@sindominio.net>
 - fixed a typo in the filter dialog
 - updated Catalan & Spanish translations

@@ -22,9 +22,7 @@
 #include <arpa/inet.h>	/* inet_ntoa */
 #include <string.h>	/* strncpy */
 
-#include <gtk/gtk.h>
-
-#include "xqf.h"
+#include "xqf-ui.h"
 #include "game.h"
 #include "sort.h"
 #include "skin.h"
@@ -74,7 +72,7 @@ static void get_server_pixmap (GtkWidget *window, struct server *s,
 }
 
 
-void assemble_server_address (char *buf, int size, struct server *s) {
+void assemble_server_address (char *buf, int size, const struct server *s) {
   if (show_default_port || games[s->type].default_port != s->port) {
     g_snprintf (buf, size, "%s:%d", (show_hostnames && s->host->name)? 
                                     s->host->name : inet_ntoa (s->host->ip), 

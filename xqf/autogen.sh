@@ -1,4 +1,4 @@
-libtoolize
+libtoolize --force
 aclocal
 autoheader
 automake -a

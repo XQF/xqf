@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include "xqf.h"
+#include "xqf-ui.h"
 #include "pref.h"
 #include "utils.h"
 #include "pixmaps.h"

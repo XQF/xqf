@@ -1,12 +1,17 @@
 SUBDIRS = xpm
 
 localedir = $(datadir)/locale
-INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS)
-CFLAGS = @CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
+AM_CPPFLAGS = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" @QSTAT23@ @DEBUG@ @COMPRESSION@
 
-bin_PROGRAMS = xqf
+bin_PROGRAMS = xqf @XQFRCON@
+EXTRA_PROGRAMS = xqf-rcon
 
 xqf_LDADD = @INTLLIBS@ $(GTK_LIBS)
+xqf_CFLAGS = $(GTK_CFLAGS)
+
+xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS)
+xqf_rcon_SOURCES = rcon.c debug.c
+xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS)
 
 xqf_SOURCES =  \
 addmaster.c \
