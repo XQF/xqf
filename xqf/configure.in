@@ -5,7 +5,7 @@
 
 AC_INIT( src/xqf.c)
 
-AM_INIT_AUTOMAKE( xqf, 0.9.4)
+AM_INIT_AUTOMAKE( xqf, 0.9.6e-beta)
 
 AC_PROG_CC
 AC_ISC_POSIX
@@ -60,7 +60,7 @@ case "$qstat_version" in
 	QSTAT23="-DQSTAT23"
 	;;
 
-	2.3*)
+	2.3*|2.4*)
 	QSTAT23="-DQSTAT23 -DQSTAT_HAS_UNREAL_SUPPORT"
 	;;
 esac
