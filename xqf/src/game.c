@@ -27,6 +27,9 @@
 #include <sys/socket.h>	/* inet_ntoa */
 #include <netinet/in.h>	/* inet_ntoa */
 #include <arpa/inet.h>	/* inet_ntoa */
+#include <sys/stat.h>
+#include <dirent.h>
+#include <ctype.h>
 
 #include <gtk/gtk.h>
 
@@ -2157,7 +2160,10 @@ static int qw_exec (const struct condef *con, int forkit) {
     if (con->gamedir) {
       argv[argi++] = "+set";
       argv[argi++] = "game";
-      argv[argi++] = con->gamedir;
+      //argv[argi++] = con->gamedir;
+
+      // Get game dir regardless of case
+      argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
     }
 
     break;
@@ -2227,8 +2233,6 @@ static int q3_exec (const struct condef *con, int forkit) {
   char *argv[64];
   int argi = 0;
   char *cmd;
-//  char *game_dir;
-//  char *file;
 
   char *protocol;
   char *tmp_cmd;
@@ -2245,7 +2249,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   int pass_memory_options = str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"pass_memory_options"));
   
   char* memsettings = NULL;
-  
+
   cmd = strdup_strip (g->cmd);
   /*
     Figure out what protocal the server
@@ -2348,7 +2352,10 @@ static int q3_exec (const struct condef *con, int forkit) {
   if((setfs_game || rafix) && con->s->game) {
     if (setfs_game) {
       argv[argi++] = "+set fs_game";
-      argv[argi++] = con->s->game;
+      //argv[argi++] = con->s->game;
+      
+      // Get game dir regardless of case
+      argv[argi++] = find_game_dir(g->real_dir, con->s->game);
     }
     if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
   }
@@ -2422,7 +2429,10 @@ static int hl_exec (const struct condef *con, int forkit) {
 
   if (con->gamedir) {
     argv[argi++] = "-game";
-    argv[argi++] = con->gamedir;
+    // argv[argi++] = con->gamedir;
+
+    // Get game dir regardless of case
+    argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
   }
 
   if (con->server) {
@@ -2469,7 +2479,11 @@ static int q2_exec_generic (const struct condef *con, int forkit) {
   if (con->gamedir) {
     argv[argi++] = "+set";
     argv[argi++] = "game";
-    argv[argi++] = con->gamedir;
+    //argv[argi++] = con->gamedir;
+    
+    // Get game dir regardless of case
+    argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
+
   }
 
   if (con->server) {
@@ -2499,8 +2513,6 @@ static int ut_exec (const struct condef *con, int forkit) {
   char **info_ptr;
   char* hostport=NULL;
   char* real_server=NULL;
-  char* temp1=NULL;
-  char* temp2=NULL;
 
   cmd = strdup_strip (g->cmd);
 
