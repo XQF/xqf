@@ -501,6 +501,11 @@ msgstr "Pistas"
 msgid "QStat Options"
 msgstr "Opciones de QStat"
 
+#. Appearance preferences - Server List
+#: src/pref.c:
+msgid "Server List"
+msgstr "La Lista del camarero"
+
 #. maxsimultaneous
 #: src/pref.c:2153
 msgid "Number of simultaneous servers to query"
@@ -526,6 +531,10 @@ msgstr "Juegos"
 #: src/pref.c:2241
 msgid "Appearance"
 msgstr "Apariencia"
+
+#: src/pref.c:
+msgid "General"
+msgstr "General"
 
 #: src/pref.c:2246
 msgid "QStat"
@@ -1099,6 +1108,10 @@ msgstr "_Juegos"
 #: src/xqf.c:1919
 msgid "_Appearance..."
 msgstr "_Apariencia..."
+
+#: src/xqf.c:
+msgid "_General..."
+msgstr "_General..."
 
 #: src/xqf.c:1925
 msgid "_QStat Options..."
