@@ -1649,8 +1649,8 @@ static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
   NULL,			/* 8+ ?? */
 };
 
-#define MAX_Q3A_TRUECOMBAT_TYPES 11
-static char *q3a_truecombat_gametypes[MAX_Q3A_TRUECOMBAT_TYPES] = {
+#define MAX_Q3A_Q3TC045_TYPES 11
+static char *q3a_q3tc045_gametypes[MAX_Q3A_Q3TC045_TYPES] = {
   "FFA",		// 0 = Free for All
   NULL,			// 1 = ?
   NULL,			// 2 = ?
@@ -1662,6 +1662,18 @@ static char *q3a_truecombat_gametypes[MAX_Q3A_TRUECOMBAT_TYPES] = {
   "Capture & Hold",     // 8 = Capture & Hold
   "King Of The Hill",	// 9 = King of the hill
   NULL,			// 10+ ??
+};
+
+#define MAX_Q3A_TRUECOMBAT_TYPES 9
+static char *q3a_truecombat_gametypes[MAX_Q3A_TRUECOMBAT_TYPES] = {
+  "FFA",		// 0 = Free for All
+  "Survivor",		// 1 = Survivor/Last Man Standing
+  NULL,			// 2 = ?
+  "TDM",		// 3 = Team Deathmatch
+  "Reverse CTF",	// 4 = Reverse CTF
+  "CTF",		// 5 = Capture the Flag
+  "Team Survivor",	// 6 = Team Survivor
+  "Mission",		// 7 = Mission
 };
 
 #define MAX_Q3A_THREEWAVE_TYPES 12
@@ -1828,9 +1840,14 @@ struct q3a_gametype_s q3a_gametype_map[] =
     MAX_Q3A_TYPES
   },
   {
-    "q3tc045",
+    "truecombat",
     q3a_truecombat_gametypes,
     MAX_Q3A_TRUECOMBAT_TYPES
+  },
+  {
+    "q3tc045",
+    q3a_q3tc045_gametypes,
+    MAX_Q3A_Q3TC045_TYPES
   },
   {
     "freeze",
@@ -2051,7 +2068,7 @@ static void q3_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "cheats") == 0) {
       s->flags |= SERVER_CHEATS;
     }
-    else if (strcmp (*info_ptr, "sv_privateClients") == 0) {
+    else if (g_strcasecmp (*info_ptr, "sv_privateClients") == 0) {
       s->private_client = strtol (info_ptr[1], NULL, 10);
     }
     else if (!strcmp(*info_ptr, "sv_punkbuster") && info_ptr[1] && info_ptr[1][0] == '1') {

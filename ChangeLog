@@ -1,7 +1,11 @@
-June 10, 2002: Alex Burger <alex_b@users.sourceforge.net>
+Jun 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- add gametypes for Truecombat 1.0
+- compare private_clients case insensitive in q3
+
+Jun 11, 2003: Alex Burger <alex_b@users.sourceforge.net>
 - Changed version to 0.9.12.1
 
-June 10, 2002: Alex Burger <alex_b@users.sourceforge.net>
+Jun 10, 2003: Alex Burger <alex_b@users.sourceforge.net>
 - Changed version to 0.9.12
 
 June 09, 2003: Alex Burger <alex_b@users.sourceforge.net>
