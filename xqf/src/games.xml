@@ -400,7 +400,7 @@
     <game>
 	<type>SAS_SERVER</type>
 	<name>Savage</name>
-	<flags>GAME_CONNECT</flags>
+	<flags>GAME_CONNECT | GAME_PASSWORD</flags>
 	<default_port>11235</default_port>
 	<id>SAS</id>
 	<qstat_str>SAS</qstat_str>

@@ -3476,7 +3476,7 @@ static int savage_exec(const struct condef *con, int forkit)
   char *cmd;
   struct game *g = &games[con->s->type];
   int retval;
-  char connect_arg[] = "connect 123.123.123.123:12345";
+  char* connect_arg = NULL;
 
   cmd = strdup_strip (g->cmd);
 
@@ -3487,7 +3487,16 @@ static int savage_exec(const struct condef *con, int forkit)
   if (con->server) {
     argv[argi++] = "set";
     argv[argi++] = "autoexec";
-    snprintf(connect_arg,sizeof(connect_arg),"connect %s",con->server);
+    
+    if(con->password)
+    {
+      connect_arg = g_strdup_printf("set cl_password %s; connect %s",con->password, con->server);
+    }
+    else
+    {
+      connect_arg = g_strdup_printf("connect %s",con->server);
+    }
+    
     argv[argi++] = connect_arg;
   }
 
@@ -3496,6 +3505,7 @@ static int savage_exec(const struct condef *con, int forkit)
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
   g_free (cmd);
+  g_free (connect_arg);
   return retval;
 
   return 0;
