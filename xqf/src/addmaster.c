@@ -284,15 +284,15 @@ struct master *add_master_dialog (struct master *m) {
   struct master *master_to_edit;
   char *windowtitle;
 
+  int j;
+  int menu_type = 0;
+
   master_name_result = NULL;
   master_addr_result = NULL;
   current_master_query_type = MASTER_NATIVE;
 
   master_to_edit = NULL;
   master_to_add = NULL;
-
-  int j;
-  int menu_type = 0;
   
   for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++)
     master_query_type_radios[i]=NULL;

@@ -1246,7 +1246,9 @@ void init_masters (int update) {
   compat_convert_favorites ();
 
   read_lists (FILENAME_FAVORITES);
+  debug (1, "starting to read server list");
   read_lists (FILENAME_LISTS);
+  debug (1, "finished reading server list");
 
   read_server_info (FILENAME_SRVINFO);
 }

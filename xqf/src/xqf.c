@@ -889,12 +889,11 @@ static void stat_one_server (struct server *server) {
 
 static void launch_close_handler (struct stat_job *job, int killed) {
   struct server_props *props;
-  int launch = FALSE;
+  gboolean launch = FALSE;
 
   struct server *s;
   struct condef *con;
   int slots_buffer;
- 
 
   con = (struct condef *) job->data;
   job->data = NULL;
@@ -968,7 +967,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
         progress_bar_reset (main_progress_bar);
 	*/
 
-	gboolean launch = redial_dialog(con->s,slots_buffer);/*pulp*/
+	launch = redial_dialog(con->s,slots_buffer);/*pulp*/
 
 	if(launch == FALSE)
 	{
