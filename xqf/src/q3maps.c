@@ -138,6 +138,19 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash)
     return;
 }
 
+static inline gboolean is_q3_mapshot(const char* buf)
+{
+    if(g_strncasecmp(buf,"levelshots/",11))
+	return FALSE;
+
+    if (!g_strcasecmp(buf+strlen(buf)-4,".jpg"))
+	return TRUE;
+    if(!g_strcasecmp(buf+strlen(buf)-4,".tga"))
+	return TRUE;
+
+    return FALSE;
+}
+
 /** open zip file and insert all contained .bsp into maphash */
 static void findq3maps_zip(const char* path, GHashTable* maphash)
 {
@@ -175,8 +188,7 @@ static void findq3maps_zip(const char* path, GHashTable* maphash)
 		    g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(-1));
 		}
 	    }
-	    else if(!g_strncasecmp(buf,"levelshots/",11) &&
-		(!g_strcasecmp(buf+strlen(buf)-4,".jpg")))
+	    else if(is_q3_mapshot(buf))
 	    {
 		struct q3mapinfo* mi = NULL;
 		size_t psize, nsize;
@@ -484,7 +496,7 @@ void findq3maps(GHashTable* maphash, const char* startdir)
 	char* mapname = NULL;
 	char* origkey = NULL;
 	gboolean found = FALSE;
-	// 11 = levelshots, 4 = .jpg
+	// 11 = levelshots/, 4 = .jpg
 	if(!mi->levelshot || strlen(mi->levelshot) < 11+4 ) { g_free(mi); continue; }
 	mapname=g_strndup(mi->levelshot+11,strlen(mi->levelshot)-4-11);
 	g_strdown(mapname);
