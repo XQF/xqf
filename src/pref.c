@@ -68,6 +68,7 @@ int	show_default_port;
 int	default_terminate;
 int	default_iconify;
 int	default_launchinfo;
+int	default_prelaunchexec;
 int	default_save_lists;
 int 	default_save_srvinfo;
 int 	default_save_plrinfo;
@@ -115,6 +116,7 @@ static  GtkWidget *qw_bottom_color_button;
 static  GtkWidget *terminate_check_button;
 static  GtkWidget *iconify_check_button;
 static  GtkWidget *launchinfo_check_button;
+static  GtkWidget *prelaunchexec_check_button;
 static  GtkWidget *save_lists_check_button;
 static  GtkWidget *save_srvinfo_check_button;
 static  GtkWidget *save_plrinfo_check_button;
@@ -362,6 +364,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
   if (i != default_launchinfo)
     config_set_bool ("launchinfo", default_launchinfo = i);
+
+  i = GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
+  if (i != default_prelaunchexec)
+    config_set_bool ("prelaunchexec", default_prelaunchexec = i);
 
   i = GTK_TOGGLE_BUTTON (save_lists_check_button)->active;
   if (i != default_save_lists)
@@ -1725,6 +1731,12 @@ static void launchinfo_toggled_callback (GtkWidget *widget, gpointer data) {
   val = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
 }
 
+static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
+  int val;
+
+  val = GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
+}
+
 
 static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
   int val;
@@ -1950,6 +1962,20 @@ static GtkWidget *appearance_options_page (void) {
                           GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
   gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
   gtk_widget_show (launchinfo_check_button);
+
+//  gtk_widget_show (hbox);
+
+
+  /* Prelaunchinfo */
+
+  prelaunchexec_check_button = gtk_check_button_new_with_label 
+      ("Execute prelaunch");
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button),
+                                                           default_prelaunchexec);
+  gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled",
+                          GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
+  gtk_widget_show (prelaunchexec_check_button);
+  gtk_box_pack_end (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
 
   gtk_widget_show (hbox);
 
@@ -2307,6 +2333,7 @@ int prefs_load (void) {
   default_terminate =         config_get_bool ("terminate=false");
   default_iconify =           config_get_bool ("iconify=false");
   default_launchinfo =        config_get_bool ("launchinfo=false");
+  default_prelaunchexec =     config_get_bool ("prelaunchexec=false");
   default_save_lists =        config_get_bool ("save lists=true");
   default_save_srvinfo =      config_get_bool ("save srvinfo=true");
   default_save_plrinfo =      config_get_bool ("save players=false");
