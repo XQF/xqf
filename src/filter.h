@@ -55,7 +55,6 @@ struct server_filter_vars {
   char    *game_type;
   char 	  *map_contains;
   char	  *server_name_contains;
-  char    *rule;
 #ifdef USE_GEOIP
   GArray *countries;
 #endif
