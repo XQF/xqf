@@ -1,3 +1,12 @@
+Dec 04th 2000: Bill Adams <bill@evil.inetarena.com>
+-Added the ability to have multiple filters.  Right now the
+ number is set at compile time to 10 (see xqf.h:MAX_SERVER_FILTERS
+ if you want to change it).  You can name the filters to 
+ whatever you want.  The first filter "None" cannot be changed.
+ It is there for a reason (future feature). The last filter selected
+ is remembered each time you exit (if you use the menu File->exit).
+-Version changed to 0.9.6a-beta
+
 Nov 26th 2000: Bill Adams <bill@evil.inetarena.com>
 -Changed a few filter related files to make it easier to
  put in multiple server filters.

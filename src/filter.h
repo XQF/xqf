@@ -48,6 +48,7 @@ struct server_filter_vars {
   int 	  filter_not_empty;
   int	  filter_no_cheats;
   int	  filter_no_password;
+  char    *filter_name;
   char    *mod_contains;
   char    *version_contains;
 };
@@ -70,7 +71,9 @@ struct filter {
 extern  struct filter filters[];
 extern	unsigned char cur_filter;
 
-
+struct server_filter_vars server_filters[MAX_SERVER_FILTERS];
+unsigned int  current_server_filter;
+extern unsigned int current_server_filter;
 
 
 extern	void apply_filters (unsigned mask, struct server *s);
@@ -89,6 +92,7 @@ extern	int	filters_cfg_dialog (int page_num);
 
 extern	void	filters_init (void);
 extern	void	filters_done (void);
+
 
 
 #endif /* __FILTER_H__ */

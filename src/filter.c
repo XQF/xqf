@@ -57,8 +57,6 @@ struct filter filters[FILTERS_TOTAL] = {
 };
 
 
-struct server_filter_vars *vars;
-
 unsigned char cur_filter = 0;
 
 unsigned filter_current_time = 1;
@@ -70,11 +68,16 @@ static  GtkWidget *filter_not_full_check_button;
 static  GtkWidget *filter_not_empty_check_button;
 static  GtkWidget *filter_no_cheats_check_button;
 static  GtkWidget *filter_no_password_check_button;
+static  GtkWidget *server_filter_name_entry;
 static  GtkWidget *mod_contains_entry;
 static  GtkWidget *version_contains_entry;
 
 
+
+
 void apply_filters (unsigned mask, struct server *s) {
+  /* This function gets called once per server */
+
   unsigned flt_time;
   unsigned i;
   int n;
@@ -82,9 +85,19 @@ void apply_filters (unsigned mask, struct server *s) {
   flt_time = s->flt_last;
 
   for (n = 0, i = 1; n < FILTERS_TOTAL; n++, i <<= 1) {
-    if ((mask & i) == i && (filters[n].last_changed > s->flt_last ||
-                                                    (s->flt_mask & i) != i)) {
-      if ((*filters[n].func) (s, vars))
+    if ((mask & i) == i && (
+			    (filters[n].last_changed > s->flt_last) ||
+			    ((s->flt_mask & i)  != i)                
+			    )
+	) {
+      
+      /* baa --
+	 The 'vars' (second param to the func) only matters
+	 with the server filter call.  It gets passed to the 
+	 player filter call but not used. 
+      */
+      /* if ((*filters[n].func) (s, vars)) */
+      if ((*filters[n].func) (s, &server_filters[current_server_filter]))
 	s->filters |= i;
       else 
 	s->filters &= ~i;
@@ -93,6 +106,7 @@ void apply_filters (unsigned mask, struct server *s) {
 	flt_time = filters[n].last_changed;
     }
   }
+
 
   s->flt_mask |= mask;
   s->flt_last = flt_time;
@@ -103,9 +117,12 @@ GSList *build_filtered_list (unsigned mask, GSList *servers) {
   struct server *s;
   GSList *list = NULL;
 
+  unsigned i;
+  int n;
+
   while (servers) {
     s = (struct server *) servers->data;
-    apply_filters (mask | FILTER_PLAYER_MASK, s);
+    apply_filters (mask | FILTER_PLAYER_MASK, s); /* in filter.c */
 
     if ((s->filters & mask) == mask) {
       list = g_slist_prepend (list, s);
@@ -131,31 +148,37 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
   if (s->ping == -1)	/* no information */
     return TRUE;
 
-  if( vars->mod_contains && strlen( vars->mod_contains )  && ! s->mod )
+  /* Filter Zero is No Filter */
+  if( current_server_filter == 0 ){ return TRUE; }
+
+  if( server_filters[current_server_filter].mod_contains && 
+      strlen( server_filters[current_server_filter].mod_contains )  && ! s->mod )
     return FALSE;
 
-  if( vars->version_contains && strlen (vars->version_contains)) {
+  if( server_filters[current_server_filter].version_contains && 
+      strlen (server_filters[current_server_filter].version_contains)) {
     /* Filter for the version */
     for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
       if (strcmp (*info_ptr, "version") == 0) {
-	if( !strstr( info_ptr[1], vars->version_contains )){
+	if( !strstr( info_ptr[1], server_filters[current_server_filter].version_contains )){
 	  return FALSE;
 	}
       }
     }
   }/*end version check */
 
-  if (s->retries < vars->filter_retries && 
-      s->ping < vars->filter_ping &&
+  if (s->retries < server_filters[current_server_filter].filter_retries && 
+      s->ping < server_filters[current_server_filter].filter_ping &&
 
-      ( !vars->mod_contains || !strlen( vars->mod_contains ) || 
-	( s->mod && strstr( s->mod, vars->mod_contains ))) &&
+      ( !server_filters[current_server_filter].mod_contains || 
+	!strlen( server_filters[current_server_filter].mod_contains ) || 
+	( s->mod && strstr( s->mod, server_filters[current_server_filter].mod_contains ))) &&
 
-
-      (!vars->filter_not_full    || s->curplayers != s->maxplayers) && 
-      (!vars->filter_not_empty   || s->curplayers != 0) &&
-      (!vars->filter_no_cheats   || (s->flags & SERVER_CHEATS) == 0) &&
-      (!vars->filter_no_password || (s->flags & SERVER_PASSWORD) == 0))
+      
+      (!server_filters[current_server_filter].filter_not_full    || s->curplayers != s->maxplayers) && 
+      (!server_filters[current_server_filter].filter_not_empty   || s->curplayers != 0) &&
+      (!server_filters[current_server_filter].filter_no_cheats   || (s->flags & SERVER_CHEATS) == 0) &&
+      (!server_filters[current_server_filter].filter_no_password || (s->flags & SERVER_PASSWORD) == 0))
     return TRUE;
 
   return FALSE;
@@ -163,18 +186,36 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
 
 
 static void server_filter_init (void) {
-  config_push_prefix ("/" CONFIG_FILE "/Server Filter");
-  vars = g_malloc( sizeof( struct server_filter_vars ));
-  
-  vars->filter_retries     = config_get_int  ("retries=2");
-  vars->filter_ping        = config_get_int  ("ping=1000");
-  vars->filter_not_full    = config_get_bool ("not full=false");
-  vars->filter_not_empty   = config_get_bool ("not empty=false");
-  vars->filter_no_cheats   = config_get_bool ("no cheats=false");
-  vars->filter_no_password = config_get_bool ("no password=false");
-  vars->mod_contains       = config_get_string_with_default ("mod_contains",NULL);
-  vars->version_contains   = config_get_string_with_default ("version_contains",NULL);
+  GtkWidget *new_label;
+
+  int i;
+  char config_section[64];
+
+  for (i = 1; i <= MAX_SERVER_FILTERS; i++) {
+    sprintf( config_section, "/" CONFIG_FILE "/Server Filter/%d", i );
+    config_push_prefix (config_section );
+    /* server_filters[i] = g_malloc( sizeof( struct server_filter_vars )); */
+    server_filters[i].filter_retries     = config_get_int  ("retries=2");
+    server_filters[i].filter_ping        = config_get_int  ("ping=1000");
+    server_filters[i].filter_not_full    = config_get_bool ("not full=false");
+    server_filters[i].filter_not_empty   = config_get_bool ("not empty=false");
+    server_filters[i].filter_no_cheats   = config_get_bool ("no cheats=false");
+    server_filters[i].filter_no_password = config_get_bool ("no password=false");
+    server_filters[i].filter_name        = config_get_string_with_default ("filter_name",NULL);
+    server_filters[i].mod_contains       = config_get_string_with_default ("mod_contains",NULL);
+    server_filters[i].version_contains   = config_get_string_with_default ("version_contains",NULL);
+    
+    /* This is called before the window has been created so
+       we cannot set the filter names in the pulldown yet. */
+    
+    config_pop_prefix ();
+  }
+
+  sprintf( config_section, "/" CONFIG_FILE "/Server Filter" );
+  config_push_prefix (config_section );
+  current_server_filter = config_get_int  ("current_server_filter=0");
   config_pop_prefix ();
+
 }
 
 
@@ -183,21 +224,58 @@ static void server_filter_new_defaults (void) {
   char *cptr;
   gchar *gcptr;
   int text_changed;
+  char config_section[64];
 
-  config_push_prefix ("/" CONFIG_FILE "/Server Filter");
+  if( current_server_filter == 0 ){ return; }
+
+  sprintf( config_section, "/" CONFIG_FILE "/Server Filter/%d", current_server_filter );
+  config_push_prefix (config_section );
 
   i = gtk_spin_button_get_value_as_int (
                                     GTK_SPIN_BUTTON (filter_retries_spinner));
-  if (vars->filter_retries != i) {
-    config_set_int  ("retries", vars->filter_retries = i);
+  if (server_filters[current_server_filter].filter_retries != i) {
+    config_set_int  ("retries", server_filters[current_server_filter].filter_retries = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
 
   i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_ping_spinner));
-  if (vars->filter_ping != i) {
-    config_set_int  ("ping", vars->filter_ping = i);
+  if (server_filters[current_server_filter].filter_ping != i) {
+    config_set_int  ("ping", server_filters[current_server_filter].filter_ping = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
+
+  /* Note: The getting of text could be put in some kind of loop. */
+
+  /* Filter Name values -- baa */
+  gcptr = gtk_editable_get_chars (GTK_EDITABLE (server_filter_name_entry), 0, -1 );
+  text_changed = 0;
+  if( strlen( gcptr )){
+    /*
+      First case, the user entered something.  See if the value
+      is different 
+    */
+    if (server_filters[current_server_filter].filter_name){
+      if( strcmp( gcptr, server_filters[current_server_filter].filter_name )) text_changed = 1;
+      g_free( server_filters[current_server_filter].filter_name );
+    } else {
+      text_changed = 1;
+    }
+    server_filters[current_server_filter].filter_name = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( server_filters[current_server_filter].filter_name, "%s\0",  gcptr );
+    if (text_changed) {
+      config_set_string ("filter_name", server_filters[current_server_filter].filter_name );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+  } else {
+    if (server_filters[current_server_filter].filter_name){
+      text_changed = 1; /* From something to nothing */
+      g_free( server_filters[current_server_filter].filter_name );
+      config_set_string ("filter_name", "" );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+    server_filters[current_server_filter].filter_name = NULL;
+  } 
+  g_free( gcptr );
 
 
   /* MOD string values -- baa */
@@ -208,26 +286,26 @@ static void server_filter_new_defaults (void) {
       First case, the user entered something.  See if the value
       is different 
     */
-    if (vars->mod_contains){
-      if( strcmp( gcptr, vars->mod_contains )) text_changed = 1;
-      g_free( vars->mod_contains );
+    if (server_filters[current_server_filter].mod_contains){
+      if( strcmp( gcptr, server_filters[current_server_filter].mod_contains )) text_changed = 1;
+      g_free( server_filters[current_server_filter].mod_contains );
     } else {
       text_changed = 1;
     }
-    vars->mod_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( vars->mod_contains, "%s\0",  gcptr );
+    server_filters[current_server_filter].mod_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( server_filters[current_server_filter].mod_contains, "%s\0",  gcptr );
     if (text_changed) {
-      config_set_string ("mod_contains", vars->mod_contains );
+      config_set_string ("mod_contains", server_filters[current_server_filter].mod_contains );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
   } else {
-    if (vars->mod_contains){
+    if (server_filters[current_server_filter].mod_contains){
       text_changed = 1; /* From something to nothing */
-      g_free( vars->mod_contains );
+      g_free( server_filters[current_server_filter].mod_contains );
       config_set_string ("mod_contains", "" );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
-    vars->mod_contains = NULL;
+    server_filters[current_server_filter].mod_contains = NULL;
   } 
   g_free( gcptr );
 
@@ -240,55 +318,76 @@ static void server_filter_new_defaults (void) {
       First case, the user entered something.  See if the value
       is different 
     */
-    if (vars->version_contains){
-      if( strcmp( gcptr, vars->version_contains )) text_changed = 1;
-      g_free( vars->version_contains );
+    if (server_filters[current_server_filter].version_contains){
+      if( strcmp( gcptr, server_filters[current_server_filter].version_contains )) text_changed = 1;
+      g_free( server_filters[current_server_filter].version_contains );
     } else {
       text_changed = 1;
     }
-    vars->version_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( vars->version_contains, "%s\0",  gcptr );
+    server_filters[current_server_filter].version_contains =
+      g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( server_filters[current_server_filter].version_contains, "%s\0",  gcptr );
     if (text_changed) {
-      config_set_string ("version_contains", vars->version_contains );
+      config_set_string ("version_contains", server_filters[current_server_filter].version_contains );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
   } else {
-    if (vars->version_contains){
+    if (server_filters[current_server_filter].version_contains){
       text_changed = 1; /* From something to nothing */
-      g_free( vars->version_contains );
+      g_free( server_filters[current_server_filter].version_contains );
       config_set_string ("version_contains", "" );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
-    vars->version_contains = NULL;
+    server_filters[current_server_filter].version_contains = NULL;
   } 
   g_free( gcptr );
 
 
 
   i = GTK_TOGGLE_BUTTON (filter_not_full_check_button)->active;
-  if (vars->filter_not_full != i) {
-    config_set_bool ("not full", vars->filter_not_full = i);
+  if (server_filters[current_server_filter].filter_not_full != i) {
+    config_set_bool ("not full", server_filters[current_server_filter].filter_not_full = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
 
   i = GTK_TOGGLE_BUTTON (filter_not_empty_check_button)->active;
-  if (vars->filter_not_empty != i) {
-    config_set_bool ("not empty", vars->filter_not_empty = i);
+  if (server_filters[current_server_filter].filter_not_empty != i) {
+    config_set_bool ("not empty", server_filters[current_server_filter].filter_not_empty = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
 
   i = GTK_TOGGLE_BUTTON (filter_no_cheats_check_button)->active;
-  if (vars->filter_no_cheats != i) {
-    config_set_bool ("no cheats", vars->filter_no_cheats = i);
+  if (server_filters[current_server_filter].filter_no_cheats != i) {
+    config_set_bool ("no cheats", server_filters[current_server_filter].filter_no_cheats = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
 
   i = GTK_TOGGLE_BUTTON (filter_no_password_check_button)->active;
-  if (vars->filter_no_password != i) {
-    config_set_bool ("no password", vars->filter_no_password = i);
+  if (server_filters[current_server_filter].filter_no_password != i) {
+    config_set_bool ("no password", server_filters[current_server_filter].filter_no_password = i);
     filters[FILTER_SERVER].changed = FILTER_CHANGED;
   }
 
+  /* This from the Gtk FAQ, mostly. */
+  if( server_filter_widget[current_server_filter + filter_start_index] && 
+      GTK_BIN (server_filter_widget[current_server_filter + filter_start_index])->child)
+    {
+      GtkWidget *child = GTK_BIN (server_filter_widget[current_server_filter + filter_start_index])->child;
+      
+      /* do stuff with child */
+      if (GTK_IS_LABEL (child))
+	{
+	  if( server_filters[current_server_filter].filter_name != NULL &&
+	      strlen( server_filters[current_server_filter].filter_name )){
+	    gtk_label_set (GTK_LABEL (child), server_filters[current_server_filter].filter_name );
+	  } else {
+	    /* Reuse the config_secion var */
+	    sprintf( config_section, "Filter %d", current_server_filter );
+	    gtk_label_set (GTK_LABEL (child), config_section );
+	  }
+	}
+    }
+  
   config_pop_prefix ();
 
   if (filters[FILTER_SERVER].changed == FILTER_CHANGED)
@@ -303,6 +402,12 @@ static void server_filter_page (GtkWidget *notebook) {
   GtkWidget *table;
   GtkWidget *label;
   GtkObject *adj;
+
+  char label_buf[64];
+  int row; /* for auto inserting entry boxes */
+
+  /* One cannot edit the "None" filter */
+  if( current_server_filter == 0 ){ current_server_filter = 1; }
 
   page_hbox = gtk_hbox_new (TRUE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
@@ -333,7 +438,7 @@ static void server_filter_page (GtkWidget *notebook) {
                                                                          0, 0);
   gtk_widget_show (label);
 
-  adj = gtk_adjustment_new (vars->filter_ping, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
+  adj = gtk_adjustment_new (server_filters[current_server_filter].filter_ping, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
 
   filter_ping_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
   gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (filter_ping_spinner), 
@@ -350,7 +455,8 @@ static void server_filter_page (GtkWidget *notebook) {
                                                                          0, 0);
   gtk_widget_show (label);
 
-  adj = gtk_adjustment_new (vars->filter_retries, 0.0, MAX_RETRIES, 1.0, 1.0, 0.0);
+  adj = gtk_adjustment_new (server_filters[current_server_filter].filter_retries,
+			    0.0, MAX_RETRIES, 1.0, 1.0, 0.0);
 
   filter_retries_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
   gtk_widget_set_usize (filter_retries_spinner, 64, -1);
@@ -359,40 +465,60 @@ static void server_filter_page (GtkWidget *notebook) {
   gtk_widget_show (filter_retries_spinner);
 
 
+  /* Filter Name -- baa */
+  row = 0;
+  sprintf( label_buf, "Filter %d", current_server_filter + 1 );
+  
+  label = gtk_label_new ("Filter Name (For Menu):");
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show (label);
+  server_filter_name_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (server_filter_name_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (server_filter_name_entry), TRUE);
+  gtk_entry_set_text (GTK_ENTRY (server_filter_name_entry), 
+		      (server_filters[current_server_filter].filter_name) ?
+		      server_filters[current_server_filter].filter_name : label_buf );
+
+  gtk_table_attach_defaults (GTK_TABLE (table), server_filter_name_entry, 4, 5, row, row+1);
+  gtk_widget_show (server_filter_name_entry);
+  row++;
+
   /* MOD Filter -- baa */
   /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
     
   label = gtk_label_new ("the mod contains the string");
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 3, 4, 0, 1, GTK_FILL, GTK_FILL, 
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
 		    0, 0);
   gtk_widget_show (label);
   mod_contains_entry = gtk_entry_new_with_max_length (32);
   gtk_widget_set_usize (mod_contains_entry, 64, -1);
   gtk_entry_set_editable (GTK_ENTRY (mod_contains_entry), TRUE);
   gtk_entry_set_text (GTK_ENTRY (mod_contains_entry), 
-		      (vars->mod_contains) ? vars->mod_contains : "");
+		      (server_filters[current_server_filter].mod_contains) ?
+		      server_filters[current_server_filter].mod_contains : "");
 
-  gtk_table_attach_defaults (GTK_TABLE (table), mod_contains_entry, 4, 5, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), mod_contains_entry, 4, 5, row, row+1);
   gtk_widget_show (mod_contains_entry);
-
+  row++;
 
   /* Version Filter -- baa */
     
   label = gtk_label_new ("the version contains the string");
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 3, 4, 1, 2, GTK_FILL, GTK_FILL, 
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
 		    0, 0);
   gtk_widget_show (label);
   version_contains_entry = gtk_entry_new_with_max_length (32);
   gtk_widget_set_usize (version_contains_entry, 64, -1);
   gtk_entry_set_editable (GTK_ENTRY (version_contains_entry), TRUE);
   gtk_entry_set_text (GTK_ENTRY (version_contains_entry), 
-		      (vars->version_contains) ? vars->version_contains : "");
+		      (server_filters[current_server_filter].version_contains) ? 
+		      server_filters[current_server_filter].version_contains : "");
 
-  gtk_table_attach_defaults (GTK_TABLE (table), version_contains_entry, 4, 5, 1, 2);
+  gtk_table_attach_defaults (GTK_TABLE (table), version_contains_entry, 4, 5, row, row+1);
   gtk_widget_show (version_contains_entry);
-
 
 
   /* not full */
@@ -400,7 +526,7 @@ static void server_filter_page (GtkWidget *notebook) {
   filter_not_full_check_button = 
                             gtk_check_button_new_with_label ("it is not full");
   gtk_toggle_button_set_active (
-            GTK_TOGGLE_BUTTON (filter_not_full_check_button), vars->filter_not_full);
+            GTK_TOGGLE_BUTTON (filter_not_full_check_button), server_filters[current_server_filter].filter_not_full);
   gtk_table_attach_defaults (GTK_TABLE (table), filter_not_full_check_button, 
                                                                    0, 2, 2, 3);
   gtk_widget_show (filter_not_full_check_button);
@@ -410,7 +536,7 @@ static void server_filter_page (GtkWidget *notebook) {
   filter_not_empty_check_button = 
                            gtk_check_button_new_with_label ("it is not empty");
   gtk_toggle_button_set_active (
-          GTK_TOGGLE_BUTTON (filter_not_empty_check_button), vars->filter_not_empty);
+          GTK_TOGGLE_BUTTON (filter_not_empty_check_button), server_filters[current_server_filter].filter_not_empty);
   gtk_table_attach_defaults (GTK_TABLE (table), filter_not_empty_check_button, 
                                                                    0, 2, 3, 4);
   gtk_widget_show (filter_not_empty_check_button);
@@ -420,7 +546,8 @@ static void server_filter_page (GtkWidget *notebook) {
   filter_no_cheats_check_button = 
                     gtk_check_button_new_with_label ("cheats are not allowed");
   gtk_toggle_button_set_active (
-          GTK_TOGGLE_BUTTON (filter_no_cheats_check_button), vars->filter_no_cheats);
+          GTK_TOGGLE_BUTTON (filter_no_cheats_check_button), 
+	  server_filters[current_server_filter].filter_no_cheats);
   gtk_table_attach_defaults (GTK_TABLE (table), filter_no_cheats_check_button, 
                                                                    0, 2, 4, 5);
   gtk_widget_show (filter_no_cheats_check_button);
@@ -430,7 +557,8 @@ static void server_filter_page (GtkWidget *notebook) {
   filter_no_password_check_button = 
                       gtk_check_button_new_with_label ("no password required");
   gtk_toggle_button_set_active (
-      GTK_TOGGLE_BUTTON (filter_no_password_check_button), vars->filter_no_password);
+      GTK_TOGGLE_BUTTON (filter_no_password_check_button), 
+      server_filters[current_server_filter].filter_no_password);
   gtk_table_attach_defaults (GTK_TABLE (table), filter_no_password_check_button, 
                                                                    0, 2, 5, 6);
   gtk_widget_show (filter_no_password_check_button);

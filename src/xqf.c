@@ -79,6 +79,8 @@ static GtkWidget *main_progress_bar = NULL;
 
 static char *progress_bar_str = NULL;
 
+static GtkWidget *server_filter_menu = NULL; /* baa */
+
 static GtkWidget *server_menu = NULL;
 static GtkWidget *player_menu = NULL;
 
@@ -134,6 +136,11 @@ static GtkWidget *filter_buttons[FILTERS_TOTAL];
 
 static GtkWidget *player_skin_popup = NULL;
 static GtkWidget *player_skin_popup_preview = NULL;
+
+static GtkWidget *server_filter_1_widget = NULL;
+static GtkWidget *server_filter_2_widget = NULL;
+static GtkWidget *server_filter_3_widget = NULL;
+
 
 
 void set_widgets_sensitivity (void) {
@@ -294,9 +301,75 @@ static void set_filters (unsigned char mask) {
 static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
   if (!forced_filters_flag) {
     cur_filter ^= mask;
-    server_clist_build_filtered (cur_server_list, FALSE);
+    server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
   }
 }
+
+
+void set_server_filter_menu_list_text( void ){
+
+  /* baa -- Set the names of the filters if they have been set in
+     the config file. The server_filters is defined in filter.h */
+
+  char buf[64];
+  int i;
+
+  for (i = 0; i <= MAX_SERVER_FILTERS; i++) {
+
+    if( i == 0 ){
+      if( current_server_filter == i )
+	sprintf( buf, "None <--", i );
+      else 
+	sprintf( buf, "None", i );
+      
+    } else {
+      if( server_filters[i].filter_name                 &&
+	  strlen( server_filters[i].filter_name ) ){
+	
+	if( current_server_filter == i )
+	  sprintf( buf, "%s <--", server_filters[i].filter_name );
+	else 
+	  sprintf( buf, "%s", server_filters[i].filter_name );
+	
+      } else {
+	
+	if( current_server_filter == i )
+	  sprintf( buf, "Filter %d <--", i );
+	else 
+	  sprintf( buf, "Filter %d", i );
+	
+      }
+    }
+
+    if( server_filter_widget[i + filter_start_index ] && 
+	GTK_BIN (server_filter_widget[i + filter_start_index])->child )
+      {
+	GtkWidget *child = GTK_BIN (server_filter_widget[i + filter_start_index ])->child;
+	if (GTK_IS_LABEL (child))
+	  gtk_label_set (GTK_LABEL (child), buf );
+      }
+  }
+
+}
+
+
+static void server_filter_select_callback (GtkWidget *widget, int mode) {
+
+  current_server_filter = mode;
+
+  filters[FILTER_SERVER].changed == FILTER_CHANGED;
+  filters[FILTER_SERVER].last_changed = ++filter_current_time;
+
+  set_server_filter_menu_list_text ();
+
+  server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */ 
+  config_push_prefix ( "/" CONFIG_FILE "/Server Filter" );
+  config_set_int ("current_server_filter", current_server_filter);
+  config_pop_prefix ();
+
+  return;
+}
+
 
 
 static void start_preferences_dialog (GtkWidget *widget, int page_num) {
@@ -637,6 +710,7 @@ static void launch_server_handler (struct stat_job *job, struct server *s) {
     job->hosts = NULL;
   }
 }
+
 
 
 static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
@@ -1456,7 +1530,27 @@ struct __menuitem {
   gpointer user_data;
 };
 
-static const struct menuitem srvopt_menu_items[] = {
+
+/*
+  baa -- Oh, this is kind of bad.  In order to allow
+  the number of menus to be changed at compile (and in
+  the future, run) time, I have to allocate and set
+  up each of the filter menu items.  But that makes
+  it no longer a const.
+*/
+
+struct menuitem *server_filter_menu_items;
+
+/* Bad Bill!  The const has been removed from the next line. */
+static struct menuitem srvopt_menu_items[] = {
+  {
+    MENU_BRANCH,		"_Server Filters",	0,	0,
+    NULL, 
+    NULL,                     /* <-- This gets set to the addres
+				 of server_filter_menu_items after
+				 we g_malloc the memory. */
+    NULL
+  },
   { 
     MENU_ITEM,		"Connect",		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL,
@@ -1933,6 +2027,7 @@ static void populate_main_toolbar (void) {
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_buttons[i]), 
                                     ((cur_filter & mask) != 0)? TRUE : FALSE);
   }
+  
 
   gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
 
@@ -1964,7 +2059,8 @@ void create_main_window (void) {
   GtkWidget *handlebox;
   GtkWidget *scrollwin;
   GtkAccelGroup *accel_group;
-  int i;
+  int i, j;
+  char *buf;
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
@@ -1982,7 +2078,77 @@ void create_main_window (void) {
 
   accel_group = gtk_accel_group_new ();
 
+  /* 
+     Before we create the right-click server menu, we
+     need to set up all of the needed filter entries.  This
+     is a terrible thing to do because in menus.c, the function
+     that builds the menu expects a const.  However, we are not going
+     go g_free or otherwise reuse the memory we g_malloc so we should be
+     okay.
+
+     If you change the number of menu items before the various filters, 
+     you need to change the server_filter_widget line in xqf.h.
+  */
+
+  if (server_filter_menu_items = g_malloc( sizeof( struct menuitem ) *  ( MAX_SERVER_FILTERS + 4 ))) { 
+    i = 0;
+    j = 0;
+    server_filter_menu_items[i].type       = MENU_ITEM;
+    server_filter_menu_items[i].label      = "Filters";
+    server_filter_menu_items[i].accel_key  = 0;
+    server_filter_menu_items[i].accel_mods = 0;
+    server_filter_menu_items[i].callback   = NULL;
+    server_filter_menu_items[i].user_data  = NULL;
+    server_filter_menu_items[i].widget     = &server_filter_widget[i];
+    i++;
+
+    server_filter_menu_items[i].type       = MENU_SEPARATOR;
+    server_filter_menu_items[i].label      = NULL;
+    server_filter_menu_items[i].accel_key  = 0;
+    server_filter_menu_items[i].accel_mods = 0;
+    server_filter_menu_items[i].callback   = NULL;
+    server_filter_menu_items[i].user_data  = NULL;
+    server_filter_menu_items[i].widget     = &server_filter_widget[i];
+    i++;
+
+    /* Start of the filters */
+    filter_start_index = i;
+    server_filter_menu_items[i].type       = MENU_ITEM;
+    server_filter_menu_items[i].label      = "None";
+    server_filter_menu_items[i].accel_key  = 0;
+    server_filter_menu_items[i].accel_mods = 0;
+    server_filter_menu_items[i].callback   = GTK_SIGNAL_FUNC (server_filter_select_callback);
+    server_filter_menu_items[i].user_data  = (gpointer) j;
+    server_filter_menu_items[i].widget     = &server_filter_widget[i];
+
+    i++; 
+    j++;
+
+    for( ; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++ ){
+      buf = g_malloc( sizeof( char ) * ( 16 )); 
+      sprintf( buf, "Filter %d", j );
+      server_filter_menu_items[i].type       = MENU_ITEM;
+      server_filter_menu_items[i].label      = buf;
+      server_filter_menu_items[i].accel_key  = 0;
+      server_filter_menu_items[i].accel_mods = 0;
+      server_filter_menu_items[i].callback   = GTK_SIGNAL_FUNC (server_filter_select_callback);
+      server_filter_menu_items[i].user_data  = (gpointer) j;
+      server_filter_menu_items[i].widget     = &server_filter_widget[i];
+    }
+
+    server_filter_menu_items[i].type       = MENU_END;
+    server_filter_menu_items[i].label      = NULL;
+    server_filter_menu_items[i].accel_key  = 0;
+    server_filter_menu_items[i].accel_mods = 0;
+    server_filter_menu_items[i].callback   = NULL;
+    server_filter_menu_items[i].user_data  = NULL;
+    server_filter_menu_items[i].widget     = NULL;
+  }
+  srvopt_menu_items[0].user_data = &server_filter_menu_items[0];
+
   server_menu = create_menu (srvopt_menu_items, accel_group);
+
+  set_server_filter_menu_list_text ();
 
   player_menu = create_player_menu (accel_group);
 
