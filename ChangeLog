@@ -1,3 +1,7 @@
+Sept 14, 2001: Alex Burger <alex@fragit_dot_net>
+- Added docs/xqfdocs.html
+- Added new NEWS file from Jordi 
+
 Sept 10, 2001: Alex Burger <alex@fragit_dot_net>
 - Added Jordi Mallach's man page - xqf.6 and modified Makefile.am
 - Added 'General' Preferences page and moved most of 'Appearance'

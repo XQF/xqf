@@ -1,0 +1,35 @@
+XQF 0.9.6g
+~~~~~~~~~~
+Changes since 0.9.6f:
+
+o Tribes2 support! XQF now requires qstat 2.4c.
+o Support for Q3A protocol v66.
+o Internationalization (gettext) support, Spanish and German translations.
+o Added "game type" filter.
+o Added "General" preferences page, which hosts many of the options
+  which were in "Appearance" previously.
+
+
+XQF 0.9.6f
+~~~~~~~~~~
+Changes since 0.9.5:
+
+o Multiple server filters; Filter name configurable and appears in the
+  status bar.
+o Lock Icon to show if server is private or not; icon next to number 
+  of players turns yellow if all of the public client spaces are full.
+o Pressing "Insert" brings up the add server dialog; pressing SHIFT+Insert 
+  adds the currently selected server to ones favorites.
+o Added support for new Team Arena Game types.
+o Protocol 48 (1.27) Q3A servers get queried with protocol 48 in qstat.
+o Execute "PreLaunch" script when launching game (for use with ICQ scripts, 
+  etc.).
+o Improved support for Half-Life servers.
+o Improved support for Unreal Tournament.
+o Improved support for Quake2.
+o Hack for supporting multiple Q3A protocols i.e. xqf can run different
+  Q3A's depending on if it is a 1.17 or 1.27 server: see the README file.
+o Q3A hack for connecting to arena servers so that all of the vm_* settings
+  are correct on the command line.
+o Resolved one major source of core dumps. It should be much more stable
+  now.
