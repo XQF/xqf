@@ -2499,7 +2499,8 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	"Jordi Mallach <jordi@sindominio.net>\n"
 	"Ludwig Nussel <l-n@users.sourceforge.net>\n\n");
   char *contrib2 = _("Other Contributors:\n\n"
-	"Jochen Baier <email@jochen-baier.de>\n\n");
+	"Jochen Baier <email@jochen-baier.de>\n"
+	"Luca Camillo <kamy@tutorials.it>\n\n");
   char *bugs = _("Bug reports:\n\n"
 		"http://sourceforge.net/projects/xqf\n\n");
   char *features = _("Feature requests:\n\n"

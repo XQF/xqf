@@ -1,3 +1,7 @@
+Nov 16, 2003: Alex <alex_b@users.sourceforge.net>
+- Added Luca Camillo <kamy at tutorials.it> to the help about screen
+  for submitted logos
+
 Nov 09, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - add support for Call of Duty (wine, no official master)
 - update docu
@@ -25,7 +29,7 @@ Oct 28, 2003: Jordi Mallach <jordi@sindominio.net>
 
 Oct 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added kde flag icons
-- new splash screen and desktop icons
+- new splash screen and desktop icons from Luca Camillo <kamy at tutorials.it>
 - new directory layout
 
 Oct 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
