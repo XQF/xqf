@@ -752,6 +752,36 @@ struct game games[] = {
     NULL		// game_cfg
   },
 
+  {
+    SSAMSE_SERVER,
+    GAME_CONNECT,
+    "Serious Sam TSE",
+    25600,
+    0,
+    "SMSSE",
+    "SMS",
+    "-sms",
+    NULL,
+    &ssam_pix,
+
+    un_parse_player,
+    quake_parse_server,
+    un_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    ssam_exec,
+    NULL,
+    quake_save_info,
+    NULL,		// Custom arguments
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
+  },
+
   // any game using the gamespy protocol
   {
     GPS_SERVER,			// server_type
@@ -841,6 +871,7 @@ void init_games()
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
   game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
   game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
+  game_set_attribute(SSAMSE_SERVER,"suggest_commands",strdup("ssamtse"));
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
    				   ("Note:  Soldier of Fortune will not connect to a server correctly\n"\
@@ -855,6 +886,10 @@ void init_games()
 
 
   game_set_attribute(SSAM_SERVER,"game_notes",strdup(_
+  				   ("Note: You need to create a qstat config file for this game to work.\n"\
+    				    "Please see the XQF documentation for more information."))); 
+
+  game_set_attribute(SSAMSE_SERVER,"game_notes",strdup(_
   				   ("Note: You need to create a qstat config file for this game to work.\n"\
     				    "Please see the XQF documentation for more information."))); 
 
@@ -1265,6 +1300,14 @@ static void un_analyze_serverinfo (struct server *s) {
       else if(!strcmp(info_ptr[1],"ut2") || !strcmp(info_ptr[1],"ut2d"))
       {
 	s->type = UT2_SERVER;
+      }
+      else if(!strcmp(info_ptr[1],"serioussam"))
+      {
+	s->type = SSAM_SERVER;
+      }
+      else if(!strcmp(info_ptr[1],"serioussamse"))
+      {
+	s->type = SSAMSE_SERVER;
       }
     }
 

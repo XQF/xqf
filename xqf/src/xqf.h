@@ -76,6 +76,7 @@
 #define PLAYER_GROUP_GREEN	0x02
 #define PLAYER_GROUP_BLUE	0x04
 
+/* max 0x80, server->flags is char */
 #define SERVER_CHEATS		0x08
 #define SERVER_PASSWORD		0x10
 #define SERVER_SP_PASSWORD	0x20
@@ -94,9 +95,7 @@ enum server_type {
   Q1_SERVER = 0,
   QW_SERVER,
   Q2_SERVER,
-#ifdef QSTAT23
   Q3_SERVER,
-#endif
   WO_SERVER,
   EF_SERVER,
   H2_SERVER,
@@ -108,13 +107,12 @@ enum server_type {
   SOF2S_SERVER,
   T2_SERVER,
   HR_SERVER,
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
   UN_SERVER,
   UT2_SERVER,
   RUNE_SERVER,
-#endif
   DESCENT3_SERVER,
   SSAM_SERVER,
+  SSAMSE_SERVER,
   GPS_SERVER,
   UNKNOWN_SERVER
 };
@@ -158,33 +156,37 @@ struct host {
   int ref_count;
 };
 
+
+/** server_new, server_free_info, server_move_info must be adapted for
+ * changes to this structure
+ */
 struct server {
+  enum server_type type;
   struct host *host;
   unsigned short port;
 
   char	*name;
   char	*map;
-  char  *gametype;
   unsigned short maxplayers;
   unsigned short curplayers;
+  unsigned short private_client; /** number of private clients */
   short	ping;
   short retries;
   char 	**info;
-  char 	*game;		/* a reference to `info' */
-  GSList *players;	/* GSList<struct player *>  */
+  char 	*game;	  /** pointer into info, do not free */
+  char  *gametype; /** pointer into info, do not free */
+  GSList *players;	/** GSList<struct player *>  */
 
-  char sv_os;         /* L = Linux, W = windows, M = Mac */
+  char sv_os;         /** L = Linux, W = windows, M = Mac */
 
-  enum server_type type;	/* enum server_type type; */
   unsigned char flags;
 
   unsigned char filters;
   unsigned char flt_mask;
-  unsigned flt_last;	/* time of the last filtering */
-  unsigned private_client; /* number of private clients */
+  unsigned flt_last;	/** time of the last filtering */
 
   time_t refreshed;
-  time_t last_answer;
+  time_t last_answer; /** time of last reply from server */
 
   int 	ref_count;
 };
