@@ -1,10 +1,16 @@
-XQF 1.0.1 -- ?, 2004
+XQF 1.0.1 -- November 26, 2004
 ~~~~~~~~~
 Changes since 1.0:
 
 o New games: Netpanzer
-o Support for Gslist
+o Support for Gslist (http://aluigi.altervista.org/papers.htm#gslist)
 o Automatic detection of the Doom3 network protocol version
+o Check osmask of Doom3 servers and warn if the server has no Linux support
+o Configurable qstat source ip and port range for people with broken NAT
+o Contry statistics for game servers
+o Additional Descent3 server listing
+o UT2004 Master support (requires qstat 2.7)
+o xqf-rcon uses $XQF_RCON_PASSWORD for the rcon password if set
 o Various bugfixes as usual
 
 XQF 1.0 -- August 15, 2004
