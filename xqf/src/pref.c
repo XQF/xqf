@@ -110,6 +110,7 @@ int	default_refresh_sorts;
 int	default_refresh_on_update;
 int	default_resolve_on_update;
 int	default_show_only_configured_games;
+char*   default_icontheme;
 
 int     maxretries;
 int     maxsimultaneous;
@@ -5370,6 +5371,7 @@ int prefs_load (void) {
   default_refresh_on_update = config_get_bool ("refresh on update=true");
   default_resolve_on_update = config_get_bool ("resolve on update=false");
   default_show_only_configured_games =    config_get_bool ("show only configured games=false");
+  default_icontheme =         config_get_string ("icontheme");
 
   config_pop_prefix ();
 

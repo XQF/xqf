@@ -76,6 +76,30 @@ static void get_server_pixmap (GtkWidget *window, struct server *s,
     pixmap_cache_add (cache, *pix, *mask, key);
 }
 
+enum pixmap2flags
+{
+  PIX_PASSWORD = 0x001,
+  PIX_PUNKBUSTER = 0x002,
+};
+
+struct pixmap* pix2array[] = {
+  NULL,
+  &locked_pix,
+  &punkbuster_pix,
+  &locked_punkbuster_pix
+};
+
+static struct pixmap* get_server_pixmap2(struct server* s)
+{
+  unsigned flags = 0;
+  
+  if (s->flags & SERVER_PASSWORD )
+    flags |= PIX_PASSWORD;
+  if (s->flags & SERVER_PUNKBUSTER)
+    flags |= PIX_PUNKBUSTER;
+
+  return pix2array[flags];
+}
 
 void assemble_server_address (char *buf, int size, const struct server *s) {
   if (show_default_port || games[s->type].default_port != s->port) {
@@ -221,22 +245,12 @@ static int server_clist_refresh_row (struct server *s, int row) {
   
     
 
-  /* Show if the server is punkbuster and private or not */
-  if ( (s->flags & SERVER_PUNKBUSTER) && (s->flags & SERVER_PASSWORD) )
   {
-    gtk_clist_set_pixmap (server_clist, row, 4, 
-                           locked_punkbuster_pix.pix, locked_punkbuster_pix.mask );
+    struct pixmap* pix = get_server_pixmap2(s);
+    if(pix && pix->pix)
+      gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask );
   }
   
-  else if (s->flags & SERVER_PASSWORD ) {
-    gtk_clist_set_pixmap (server_clist, row, 4, 
-                           locked_pix.pix, locked_pix.mask );
-  } 
-  else if (s->flags & SERVER_PUNKBUSTER) {
-    gtk_clist_set_pixmap (server_clist, row, 4, 
-                           punkbuster_pix.pix, punkbuster_pix.mask );
-  }
-
   get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap, 
                                                              &server_pixmask);
   gtk_clist_set_pixtext (server_clist, row, 0, 

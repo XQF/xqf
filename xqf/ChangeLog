@@ -1,3 +1,7 @@
+Feb 05, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- make all icons themeable
+- make yellow man actually yellow instead of green
+
 Feb 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - add --nomapscan option
 - add ET Gslist master

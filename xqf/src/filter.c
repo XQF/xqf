@@ -104,8 +104,8 @@ struct filter filters[FILTERS_TOTAL] = {
     server_filter_on_cancel,
     1,
     FILTER_NOT_CHANGED,
-    &filter_pix[0],
-    &filter_cfg_pix[0],
+    &sfilter_pix,
+    &sfilter_cfg_pix,
   },
   { 
     N_("Player"),
@@ -118,8 +118,8 @@ struct filter filters[FILTERS_TOTAL] = {
     NULL,
     1,
     FILTER_NOT_CHANGED,
-    &filter_pix[0],
-    &filter_cfg_pix[0],
+    &pfilter_pix,
+    &pfilter_cfg_pix,
   },
   { 
     "not visible",

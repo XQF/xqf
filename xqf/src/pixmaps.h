@@ -43,8 +43,10 @@ extern	struct pixmap connect_pix;
 extern	struct pixmap observe_pix;
 extern	struct pixmap record_pix;
 
-extern	struct pixmap filter_pix[];
-extern  struct pixmap filter_cfg_pix[];
+extern	struct pixmap sfilter_pix;
+extern  struct pixmap sfilter_cfg_pix;
+extern	struct pixmap pfilter_pix;
+extern  struct pixmap pfilter_cfg_pix;
 
 extern	struct pixmap gplus_pix;
 extern	struct pixmap rminus_pix;
@@ -86,6 +88,16 @@ extern	void pixmap_cache_add (GSList **cache, GdkPixmap *pix,
                                                GdkBitmap *mask, unsigned key);
 extern	void pixmap_cache_clear (GSList **cache, int maxitems);
 
+/** \brief concatenate two pixmaps
+ *
+ * horizontal concatenation
+ * @param window
+ * @param dest destination pixmap
+ * @param s1 first pixmap
+ * @param s2 second pixmap
+ * @returns dest for convenience
+ */
+struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixmap* s1, struct pixmap* s2);
 
 #endif /* __PIXMAPS_H__ */
 

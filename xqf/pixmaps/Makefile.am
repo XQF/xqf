@@ -1,9 +1,9 @@
 SUBDIRS = flags trayicon
 
-EXTRA_DIST = $(splash_DATA) $(icon_DATA)
+EXTRA_DIST = $(pixmap_DATA) $(desktopicon_DATA)
 
-splashdir = $(pkgdatadir)/default
-splash_DATA = splash.png
+pixmapdir = $(pkgdatadir)/default
+pixmap_DATA = splash.png xqf_48x48.png
 
-icondir = $(datadir)/pixmaps
-icon_DATA = $(wildcard xqf_*.png)
+desktopicondir = $(datadir)/pixmaps
+desktopicon_DATA = $(wildcard xqf_*.png)

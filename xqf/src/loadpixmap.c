@@ -26,6 +26,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <dlfcn.h>
+
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
@@ -35,8 +37,8 @@
 #include "debug.h"
 
 /* This is an internally used function to check if a pixmap file exists. */
-gchar* check_file_exists        (const gchar     *directory,
-                                        const gchar     *filename);
+static char* check_file_exists        (const char     *directory,
+                                        const char     *filename);
 
 /* This is an internally used function to create pixmaps. */
 static GtkWidget* create_dummy_pixmap  (GtkWidget       *widget);
@@ -133,6 +135,11 @@ static char* find_pixmap_file(const char* filename)
   return found_filename;
 }
 
+static int is_suffix(const char* filename, const char* suffix)
+{
+  return(strlen(filename)>strlen(suffix) && !strcmp(filename+strlen(filename)-strlen(suffix),suffix));
+}
+
 struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix)
 {
   gchar *found_filename = NULL;
@@ -142,14 +149,50 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
   g_return_val_if_fail(pix!=NULL,NULL);
 
   found_filename = find_pixmap_file(filename);
+  if(is_suffix(filename, ".xpm")) // try png instead
+  {
+    char* tmp = g_strdup(filename);
+    strcpy(tmp+strlen(tmp)-3, "png");
+    found_filename = find_pixmap_file(tmp);
+    g_free(tmp);
+  }
 
   if(!found_filename)
   {
-    xqf_warning (_("Error loading pixmap file: %s"), filename);
-    return NULL;
-  }
+    // not file on disk maybe xpm compiled into binary
+    if(is_suffix(filename, ".xpm"))
+    {
+      void* xpm;
+      char* p;
+      p = found_filename = g_strdup(filename);
 
-  if(strlen(found_filename)>4 && !strcmp(found_filename+strlen(found_filename)-4,".xpm"))
+      if(  (*p >= 'a' && *p <= 'z')
+	|| (*p >= 'A' && *p <= 'Z'))
+	++p;
+      else
+	*p++ = '_';
+
+      while(*p)
+      {
+	if(  (*p >= 'a' && *p <= 'z')
+	  || (*p >= 'A' && *p <= 'Z')
+	  || (*p >= '0' && *p <= '9'))
+	{
+	  ++p;
+	}
+	else
+	  *p++ = '_';
+      }
+
+      xpm = dlsym(NULL, found_filename);
+      if(xpm)
+      {
+	colormap = gtk_widget_get_colormap (widget);
+	pix->pix = gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, &pix->mask, NULL, xpm);
+      }
+    }
+  }
+  else if(is_suffix(found_filename, ".xpm"))
   {
     colormap = gtk_widget_get_colormap (widget);
     pix->pix = gdk_pixmap_colormap_create_from_xpm (NULL, colormap, &pix->mask,
@@ -180,7 +223,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
   if (pix->pix == NULL)
   {
     // translator: %s = file name
-    xqf_warning (_("Error loading pixmap file: %s"), found_filename);
+    xqf_warning (_("Error loading pixmap file: %s"), found_filename?found_filename:filename);
     g_free (found_filename);
     return NULL;
   }
@@ -219,19 +262,16 @@ void* load_pixmap_as_pixbuf (const gchar* filename)
 }
 
 /** directory may be null */
-gchar* check_file_exists (const gchar* directory, const gchar* filename)
+static char* check_file_exists (const char* directory, const char* filename)
 {
-  gchar *full_filename;
-  struct stat s;
-  gint status;
+  char *full_filename;
 
   if(directory)
     full_filename = g_strconcat(directory, G_DIR_SEPARATOR_S, filename, NULL);
   else
     full_filename = g_strdup(filename);
 
-  status = stat (full_filename, &s);
-  if (status == 0 && S_ISREG (s.st_mode))
+  if (access(full_filename, R_OK) == 0)
     return full_filename;
   g_free (full_filename);
   return NULL;

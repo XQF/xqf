@@ -97,6 +97,7 @@ extern	int	default_refresh_sorts;
 extern	int	default_refresh_on_update;
 extern	int	default_resolve_on_update;
 extern	int	default_show_only_configured_games;
+extern  char*   default_icontheme;
 
 extern	int	maxretries;
 extern	int	maxsimultaneous;

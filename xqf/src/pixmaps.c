@@ -19,13 +19,15 @@
 #include "gnuconfig.h"
 
 #include <gtk/gtk.h>
-#include <dlfcn.h>
 
 #include "utils.h"
 #include "pixmaps.h"
 #include "game.h"
+#include "loadpixmap.h"
 
 
+// hack to make dlsym work
+#define static
 #include "xpm/update.xpm"
 #include "xpm/refresh.xpm"
 #include "xpm/refrsel.xpm"
@@ -40,8 +42,6 @@
 #include "xpm/pfilter.xpm"
 #include "xpm/pfilter-cfg.xpm"
 
-// hack to make dlsym work
-#define static
 #include "xpm/q.xpm"
 #include "xpm/q1.xpm"
 #include "xpm/q2.xpm"
@@ -76,14 +76,13 @@
 #include "xpm/bf1942.xpm"
 #include "xpm/jk3.xpm"
 #include "xpm/doom3.xpm"
-#undef static
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"
 
 #include "xpm/man-black.xpm"
 #include "xpm/man-red.xpm"
-#include "xpm/man-yellow.xpm" // He's actually green
+#include "xpm/man-yellow.xpm"
 
 #include "xpm/group-red.xpm"
 #include "xpm/group-green.xpm"
@@ -103,6 +102,7 @@
 #include "xpm/locked.xpm"
 #include "xpm/punkbuster.xpm"
 #include "xpm/locked_punkbuster.xpm"
+#undef static
 
 struct pixmap update_pix;
 struct pixmap refresh_pix;
@@ -113,45 +113,17 @@ struct pixmap connect_pix;
 struct pixmap observe_pix;
 struct pixmap record_pix;
 
-struct pixmap filter_pix[2];
-struct pixmap filter_cfg_pix[2];
-
-#if 0
-struct pixmap q_pix;
-struct pixmap q1_pix;
-struct pixmap q2_pix;
-struct pixmap q3_pix;
-struct pixmap wo_pix;
-struct pixmap et_pix;
-struct pixmap ef_pix;
-struct pixmap hex_pix;
-struct pixmap hw_pix;
-struct pixmap sn_pix;
-struct pixmap hl_pix;
-struct pixmap kp_pix;
-struct pixmap sfs_pix;
-struct pixmap sof2s_pix;
-struct pixmap t2_pix;
-struct pixmap hr_pix;
-struct pixmap un_pix;
-struct pixmap postal2_pix;
-struct pixmap aao_pix;
-struct pixmap ut2_pix;
-struct pixmap rune_pix;
-struct pixmap descent3_pix;
-struct pixmap gamespy3d_pix;
-struct pixmap ssam_pix;
-struct pixmap mohaa_pix;
-struct pixmap savage_pix;
-struct pixmap cod_pix;
-#endif
+struct pixmap sfilter_pix;
+struct pixmap sfilter_cfg_pix;
+struct pixmap pfilter_pix;
+struct pixmap pfilter_cfg_pix;
 
 struct pixmap gplus_pix;
 struct pixmap rminus_pix;
 
 struct pixmap man_black_pix;
 struct pixmap man_red_pix;
-struct pixmap man_yellow_pix; // He's actually green
+struct pixmap man_yellow_pix;
 
 struct pixmap group_pix[3];
 struct pixmap buddy_pix[9];
@@ -205,15 +177,18 @@ void free_pixmap (struct pixmap *pixmap) {
 }
 
 
-static void create_pixmap (GtkWidget *window, struct pixmap *pix, 
-                                                                char **data) {
-  if (!window || !pix || !data)
-    return;
+static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *pix)
+{
+  load_pixmap_as_pixmap(widget, file, pix);
 
-  pix->pix = gdk_pixmap_create_from_xpm_d (window->window, &pix->mask, 
-                                                 &window->style->white, data);
+  if(!pix->pix)
+  {
+    pix->pix = error_pix.pix;
+    pix->mask = error_pix.mask;
+    gdk_pixmap_ref(pix->pix);
+    gdk_bitmap_ref(pix->mask);
+  }
 }
-
 
 void free_pixmaps (void)
 {
@@ -228,10 +203,10 @@ void free_pixmaps (void)
   free_pixmap (&observe_pix);
   free_pixmap (&record_pix);
 
-  for (i = 0; i < 2; i++) {
-    free_pixmap (&filter_pix[i]);
-    free_pixmap (&filter_cfg_pix[i]);
-  }
+  free_pixmap (&sfilter_pix);
+  free_pixmap (&sfilter_cfg_pix);
+  free_pixmap (&pfilter_pix);
+  free_pixmap (&pfilter_cfg_pix);
 
   free_pixmap (&gplus_pix);
   free_pixmap (&rminus_pix);
@@ -274,6 +249,57 @@ void free_pixmaps (void)
   }
 }
 
+/** \brief concatenate two pixmaps
+ *
+ * horizontal concatenation
+ * @param window
+ * @param dest destination pixmap
+ * @param s1 first pixmap
+ * @param s2 second pixmap
+ * @returns dest for convenience
+ */
+struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixmap* s1, struct pixmap* s2)
+{
+  GdkGC *white_gc;
+  int h1, w1, h2, w2;
+
+  if (!GTK_WIDGET_REALIZED (window))
+    gtk_widget_realize (window);
+
+  gdk_window_get_size (s1->pix, &w1, &h1);
+  gdk_window_get_size (s2->pix, &w2, &h2);
+
+  dest->pix  = gdk_pixmap_new (window->window, w1 + w2, MAX (h1, h2), -1);
+  dest->mask = gdk_pixmap_new (window->window, w1 + w2, MAX (h1, h2), 1);
+
+  white_gc = window->style->base_gc[GTK_STATE_NORMAL];
+
+  if (!masks_gc) {
+    masks_gc = gdk_gc_new (dest->mask);
+    gdk_gc_set_exposures (masks_gc, FALSE);
+  }
+
+  mask_pattern.pixel = 0;
+  gdk_gc_set_foreground (masks_gc, &mask_pattern);
+  gdk_draw_rectangle (dest->mask, masks_gc, TRUE, 0, 0, -1, -1);
+
+  mask_pattern.pixel = 1;
+  gdk_gc_set_foreground (masks_gc, &mask_pattern);
+
+  gdk_gc_set_clip_origin (white_gc, 0, 0);
+  gdk_gc_set_clip_mask (white_gc, s1->mask);
+  gdk_draw_pixmap (dest->pix, white_gc, s1->pix, 0, 0, 0, 0, w1, h1);
+  gdk_draw_pixmap (dest->mask, masks_gc, s1->mask, 0, 0, 0, 0, w1, h1);
+
+  gdk_gc_set_clip_origin (white_gc, w1, 0);
+  gdk_gc_set_clip_mask (white_gc, s2->mask);
+  gdk_draw_pixmap (dest->pix, white_gc, s2->pix, 0, 0, w1, 0, w2, h2);
+  gdk_draw_pixmap (dest->mask, masks_gc, s2->mask, 0, 0, w1, 0, w2, h2);
+
+  gdk_gc_set_clip_origin (white_gc, 0, 0);
+  gdk_gc_set_clip_mask (white_gc, NULL);
+}
+
 
 void init_pixmaps (GtkWidget *window)
 {
@@ -284,66 +310,56 @@ void init_pixmaps (GtkWidget *window)
   if (!GTK_WIDGET_REALIZED (window))
     gtk_widget_realize (window);
 
-  create_pixmap (window, &update_pix, update_xpm);
-  create_pixmap (window, &refresh_pix, refresh_xpm);
-  create_pixmap (window, &refrsel_pix, refrsel_xpm);
-  create_pixmap (window, &stop_pix, stop_xpm);
+  create_pixmap (window, "update.xpm", &update_pix);
+  create_pixmap (window, "refresh.xpm", &refresh_pix);
+  create_pixmap (window, "refrsel.xpm", &refrsel_pix);
+  create_pixmap (window, "stop.xpm", &stop_pix);
 
-  create_pixmap (window, &connect_pix, connect_xpm);
-  create_pixmap (window, &observe_pix, observe_xpm);
-  create_pixmap (window, &record_pix,  record_xpm);
+  create_pixmap (window, "connect.xpm", &connect_pix);
+  create_pixmap (window, "observe.xpm", &observe_pix);
+  create_pixmap (window, "record.xpm", &record_pix);
 
-  create_pixmap (window, &filter_pix[0],     sfilter_xpm);
-  create_pixmap (window, &filter_cfg_pix[0], sfilter_cfg_xpm);
+  create_pixmap (window, "sfilter.xpm", &sfilter_pix);
+  create_pixmap (window, "sfilter_cfg.xpm", &sfilter_cfg_pix);
 
-  create_pixmap (window, &filter_pix[1],     pfilter_xpm);
-  create_pixmap (window, &filter_cfg_pix[1], pfilter_cfg_xpm);
+  create_pixmap (window, "pfilter.xpm", &pfilter_pix);
+  create_pixmap (window, "pfilter_cfg.xpm", &pfilter_cfg_pix);
 
-  create_pixmap (window, &gplus_pix, green_plus_xpm);
-  create_pixmap (window, &rminus_pix, red_minus_xpm);
+  create_pixmap (window, "green_plus.xpm", &gplus_pix);
+  create_pixmap (window, "red_minus.xpm", &rminus_pix);
 
-  create_pixmap (window, &man_black_pix, man_black_xpm);
-  create_pixmap (window, &man_red_pix, man_red_xpm);
-  create_pixmap (window, &man_yellow_pix, man_yellow_xpm); // He's actually green
+  create_pixmap (window, "man_black.xpm", &man_black_pix);
+  create_pixmap (window, "man_red.xpm", &man_red_pix);
+  create_pixmap (window, "man_yellow.xpm", &man_yellow_pix);
 
-  create_pixmap (window, &group_pix[0], group_red_xpm);
-  create_pixmap (window, &group_pix[1], group_green_xpm);
-  create_pixmap (window, &group_pix[2], group_blue_xpm);
+  create_pixmap (window, "group_red.xpm", &group_pix[0]);
+  create_pixmap (window, "group_green.xpm", &group_pix[1]);
+  create_pixmap (window, "group_blue.xpm", &group_pix[2]);
 
-  create_pixmap (window, &buddy_pix[1], buddy_red_xpm);
-  create_pixmap (window, &buddy_pix[2], buddy_green_xpm);
-  create_pixmap (window, &buddy_pix[4], buddy_blue_xpm);
+  create_pixmap (window, "buddy_red.xpm", &buddy_pix[1]);
+  create_pixmap (window, "buddy_green.xpm", &buddy_pix[2]);
+  create_pixmap (window, "buddy_blue.xpm", &buddy_pix[4]);
 
-  create_pixmap (window, &server_status[0], server_na_xpm);
-  create_pixmap (window, &server_status[1], server_up_xpm);
-  create_pixmap (window, &server_status[2], server_down_xpm);
-  create_pixmap (window, &server_status[3], server_to_xpm);
-  create_pixmap (window, &server_status[4], server_error_xpm);
+  create_pixmap (window, "server_na.xpm", &server_status[0]);
+  create_pixmap (window, "server_up.xpm", &server_status[1]);
+  create_pixmap (window, "server_down.xpm", &server_status[2]);
+  create_pixmap (window, "server_to.xpm", &server_status[3]);
+  create_pixmap (window, "server_error.xpm", &server_status[4]);
 
-  create_pixmap (window, &error_pix, error_xpm);
-  create_pixmap (window, &locked_pix, locked_xpm);
-  create_pixmap (window, &punkbuster_pix, punkbuster_xpm);
-  create_pixmap (window, &locked_punkbuster_pix, locked_punkbuster_xpm);
+  create_pixmap (window, "error.xpm", &error_pix);
+  create_pixmap (window, "locked.xpm", &locked_pix);
+  create_pixmap (window, "punkbuster.xpm", &punkbuster_pix);
+  cat_pixmaps(window, &locked_punkbuster_pix, &punkbuster_pix, &locked_pix);
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
     struct pixmap* pix = NULL;
 
-    pix = g_malloc(sizeof(struct pixmap));
+    pix = g_malloc0(sizeof(struct pixmap));
 
     if(games[i].icon)
     {
-      char** xpm = dlsym(NULL, games[i].icon);
-      if(xpm)
-	create_pixmap (window, pix, xpm);
-    }
-
-    if(!pix)
-    {
-      pix->pix = error_pix.pix;
-      pix->mask = error_pix.mask;
-      gdk_pixmap_ref(pix->pix);
-      gdk_bitmap_ref(pix->mask);
+      create_pixmap(window, games[i].icon, pix);
     }
 
     games[i].pix = pix;
