@@ -1,0 +1,85 @@
+#
+# Autoconf support for XQF
+# Initially written by Markus Fischer <mfischer@josefine.ben.tuwien.ac.at>
+#
+
+AC_INIT( src/xqf.c)
+
+AM_INIT_AUTOMAKE( xqf, 0.9.4)
+
+AC_PROG_CC
+AC_ISC_POSIX
+AC_HEADER_STDC
+
+AM_SANITY_CHECK
+
+
+dnl check for qstat
+
+AC_ARG_WITH(qstat,[  --with-qstat=CMD        use CMD to run qstat])
+
+AC_MSG_CHECKING(qstat version)
+
+if test "x$with_qstat" != "x" ; then
+	QSTATEXEC="$with_qstat"
+	qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
+else
+	QSTATEXEC="qstat"
+	qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
+	if test "x$qstat_version" = "x" ; then
+		QSTATEXEC="quakestat"
+		qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
+	fi
+fi
+
+if test "x$qstat_version" = "x" ; then
+	AC_MSG_RESULT(qstat not found)
+	echo
+	echo "*** QStat is *required* to run XQF"
+	echo "*** Get it from http://www.activesw.com/people/steve/qstat.html"
+	echo "*** and put it in your path"
+	echo
+	exit 1
+else
+	AC_MSG_RESULT($qstat_version)
+fi
+
+AC_SUBST(QSTATEXEC)
+
+case "$qstat_version" in
+	2.0*|2.1y|2.1z|2.3a|2.3b)
+	echo
+	echo "*** You have obsolete QStat beta version installed"
+	echo "*** QStat 2.3f is *required* to run XQF"
+	echo "*** Get it from http://www.activesw.com/people/steve/qstat.html"
+	echo
+	exit 1
+	;;
+
+	2.3c|2.3d|2.3e|2.3f)
+	QSTAT23="-DQSTAT23"
+	;;
+
+	2.3*)
+	QSTAT23="-DQSTAT23 -DQSTAT_HAS_UNREAL_SUPPORT"
+	;;
+esac
+
+AC_SUBST(QSTAT23)
+
+
+dnl check if user wants bzip2 compression instead of gzip
+COMPRESSION="-DCOMPRESSOR_GZIP"
+AC_ARG_ENABLE(bzip2,[  --enable-bzip2          use bzip2 for data compression],COMPRESSION="-DCOMPRESSOR_BZIP2")
+AC_SUBST(COMPRESSION)
+
+dnl check if user wants debug
+AC_ARG_ENABLE(debug,[  --enable-debug          turn on debugging ],DEBUG="-g -DDEBUG", DEBUG="")
+AC_SUBST(DEBUG)
+
+AM_PATH_GTK(1.2.0,,exit 1)
+
+AC_SUBST( VERSION)
+AC_SUBST( QSTATEXEC)
+
+AC_OUTPUT( Makefile src/gnuconfig.h src/Makefile)
