@@ -5,7 +5,7 @@
 
 AC_INIT( src/xqf.c)
 
-AM_INIT_AUTOMAKE( xqf, 0.9.6f)
+AM_INIT_AUTOMAKE( xqf, 0.9.6g)
 
 AC_PROG_CC
 AC_ISC_POSIX
