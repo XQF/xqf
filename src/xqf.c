@@ -2313,7 +2313,9 @@ static const struct menuitem source_ctree_popup_menu[] = {
     MENU_ITEM,          N_("D_elete Master"),        0,	0,
     GTK_SIGNAL_FUNC (del_master_callback), NULL,
     &source_delete_master_menu_item
-  }
+  },
+
+  { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
 };
 
 static const struct menuitem edit_menu_items[] = {
