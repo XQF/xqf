@@ -190,6 +190,7 @@ static  int q2_skin_is_valid = TRUE;
 
 static	GtkWidget *color_menu = NULL;
 
+static GtkWidget *custom_args_add_button[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_game[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_args[GAMES_TOTAL];
 static GSList *custom_args_entry_list[GAMES_TOTAL];
@@ -1895,24 +1896,66 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
   }
 } 
 
+static void new_custom_args_callback (GtkWidget *widget, gpointer data) {
+
+  enum server_type type;
+    
+  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+
+  current_row = -1;
+
+  gtk_widget_set_sensitive (custom_args_entry_game[type], TRUE); 
+  gtk_widget_set_sensitive (custom_args_entry_args[type], TRUE); 
+  gtk_widget_set_sensitive (custom_args_add_button[type], TRUE);
+
+  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), "");
+  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), "");
+}
+
 static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
+  GSList *link;
+  int row;
   char *temp[2];
   enum server_type type;
   struct game *g;
-  
+   
   type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
   g = &games[type];
-  
+
   temp[0] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_game[type])));
   temp[1] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_args[type])));
+
+  if (current_row > -1) {
+    row = current_row;
+ 
+    link = g_slist_nth (custom_args_entry_list[type], current_row);
+
+    custom_args_entry_list[type] = g_slist_remove_link (custom_args_entry_list[type], link);
+    
+    current_row = -1;
+    gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
+  }
 
   if (temp[0] && temp[1]) {
     if (g_slist_find_custom (custom_args_entry_list[type], temp[0], custom_args_compare_func) == NULL ) {
       custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], g_strconcat(temp[0], ",",temp[1], NULL));
 
       gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp);
+
+      gtk_widget_set_sensitive (custom_args_entry_game[type], FALSE); 
+      gtk_widget_set_sensitive (custom_args_entry_args[type], FALSE); 
+      gtk_widget_set_sensitive (custom_args_add_button[type], FALSE);
+      
+      gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), "");
+      gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), "");
     }
+    else
+      dialog_ok (NULL, _("There is already an entry for this game.\n\nTo modify it, select it from the list, "\
+      				"modify it\nand then click Add/Update."));
   }
+  else
+    dialog_ok (NULL, _("You must enter both a game and at least one argument."));
+    
   g_free (temp[0]);
   g_free (temp[1]);
 }
@@ -1929,6 +1972,7 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
   if (current_row < 0)
     return;
 
+
   row = current_row;
 
   link = g_slist_nth (custom_args_entry_list[type], current_row);
@@ -1937,45 +1981,16 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
     
   current_row = -1;
   gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
-}
 
-static void replace_custom_args_callback (GtkWidget *widget, gpointer data) {
-  GSList *link;
-  int row;
-  char *temp[2];
-  enum server_type type;
-  struct game *g;
-  
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
-  g = &games[type];
-  
-  if (current_row < 0)
-    return;
-    
-  row = current_row;
-  
-  link = g_slist_nth (custom_args_entry_list[type], current_row);
-  
-  custom_args_entry_list[type] = g_slist_remove_link (custom_args_entry_list[type], link);
-  
   current_row = -1;
-  
-  gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
-  
-  temp[0] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_game[type])));
-  temp[1] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_args[type])));
 
-  if (temp[0] && temp[1]) {
-    if (g_slist_find_custom (custom_args_entry_list[type], temp[0], custom_args_compare_func) == NULL ) {
-      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], g_strconcat(temp[0], ",",temp[1], NULL));
+  gtk_widget_set_sensitive (custom_args_entry_game[type], FALSE); 
+  gtk_widget_set_sensitive (custom_args_entry_args[type], FALSE); 
+  gtk_widget_set_sensitive (custom_args_add_button[type], FALSE);
 
-      gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp);
-    }
-  }
-  g_free (temp[0]);
-  g_free (temp[1]);
+  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), "");
+  gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), "");
 }
-
 
 static void custom_args_clist_select_row_callback (GtkWidget *widget, 
                                  int row, int column, GdkEventButton *event, GtkCList *clist) {
@@ -2000,6 +2015,10 @@ static void custom_args_clist_select_row_callback (GtkWidget *widget,
   gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), game_args[0]);
   gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), game_args[1]);
 
+  gtk_widget_set_sensitive (custom_args_entry_game[type], TRUE); 
+  gtk_widget_set_sensitive (custom_args_entry_args[type], TRUE); 
+  gtk_widget_set_sensitive (custom_args_add_button[type], TRUE);
+
   g_free(argstr);
 }
 
@@ -2017,9 +2036,6 @@ static GtkWidget *generic_game_frame (enum server_type type) {
  
   g = &games[type];
 
-//  frame = gtk_frame_new (games[type].name);
-//  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-  
   page_vbox = gtk_vbox_new (FALSE, 4);
 
   frame = gtk_frame_new (NULL);
@@ -2167,9 +2183,8 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *frame1;
   GtkWidget *hbox2;
   GtkWidget *vbuttonbox1;
-  GtkWidget *add_button;
+  GtkWidget *new_button;
   GtkWidget *delete_button;
-  GtkWidget *replace_button;
   GtkWidget *defaults_button;
   GtkWidget *page_vbox;
   GtkTooltips *tooltips;
@@ -2218,8 +2233,6 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (arguments_clist);
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), arguments_clist);
-//  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, 80);
-//  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1, 1024);
   gtk_clist_column_titles_show (GTK_CLIST (arguments_clist));
   gtk_signal_connect (GTK_OBJECT (arguments_clist), "select_row",
                   GTK_SIGNAL_FUNC (custom_args_clist_select_row_callback), arguments_clist);
@@ -2265,6 +2278,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_widget_show (custom_args_entry_game[type]);
   gtk_box_pack_start (GTK_BOX (hbox2), custom_args_entry_game[type], FALSE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, custom_args_entry_game[type], _("Enter the game name from the game column"), NULL);
+  gtk_widget_set_sensitive (custom_args_entry_game[type], FALSE);
 
   custom_args_entry_args[type] = gtk_entry_new ();
   gtk_widget_ref (custom_args_entry_args[type]);
@@ -2273,50 +2287,51 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_widget_show (custom_args_entry_args[type]);
   gtk_box_pack_start (GTK_BOX (hbox2), custom_args_entry_args[type], TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, custom_args_entry_args[type], _("Enter the arguments separated by spaces"), NULL);
-
-  vbuttonbox1 = gtk_vbutton_box_new ();
+  gtk_widget_set_sensitive (custom_args_entry_args[type], FALSE);
+  
+  vbuttonbox1 = gtk_vbox_new (FALSE, 0);
   gtk_widget_ref (vbuttonbox1);
   gtk_object_set_data_full (GTK_OBJECT (page_vbox), "vbuttonbox1", vbuttonbox1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (vbuttonbox1);
   gtk_box_pack_start (GTK_BOX (hbox1), vbuttonbox1, FALSE, TRUE, 0);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
 
-  add_button = gtk_button_new_with_label (_("Add"));
-  gtk_widget_ref (add_button);
-  gtk_object_set_data_full (GTK_OBJECT (page_vbox), "add_button", add_button,
+  new_button = gtk_button_new_with_label (_("New"));
+  gtk_widget_ref (new_button);
+  gtk_object_set_data_full (GTK_OBJECT (page_vbox), "new_button", new_button,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (add_button);
-  gtk_container_add (GTK_CONTAINER (vbuttonbox1), add_button);
-  GTK_WIDGET_SET_FLAGS (add_button, GTK_CAN_DEFAULT);
+  gtk_widget_show (new_button);
+  gtk_box_pack_start (GTK_BOX (vbuttonbox1), new_button, FALSE, FALSE, 5);
+  GTK_WIDGET_SET_FLAGS (new_button, GTK_CAN_DEFAULT);
 
   delete_button = gtk_button_new_with_label (_("Delete"));
   gtk_widget_ref (delete_button);
   gtk_object_set_data_full (GTK_OBJECT (page_vbox), "delete_button", delete_button,
                  	           (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (delete_button);
-  gtk_container_add (GTK_CONTAINER (vbuttonbox1), delete_button);
+  gtk_box_pack_start (GTK_BOX (vbuttonbox1), delete_button, FALSE, FALSE, 5);
   GTK_WIDGET_SET_FLAGS (delete_button, GTK_CAN_DEFAULT);
-
-  replace_button = gtk_button_new_with_label (_("Replace"));
-  gtk_widget_ref (replace_button);
-  gtk_object_set_data_full (GTK_OBJECT (page_vbox), "replace_button", replace_button,
-                 	           (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (replace_button);
-  gtk_container_add (GTK_CONTAINER (vbuttonbox1), replace_button);
-  GTK_WIDGET_SET_FLAGS (replace_button, GTK_CAN_DEFAULT);
 
   defaults_button = gtk_button_new_with_label (_("Add Defaults"));
   gtk_widget_ref (defaults_button);
   gtk_object_set_data_full (GTK_OBJECT (page_vbox), "defaults_button", defaults_button,
                  	           (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (defaults_button);
-  gtk_container_add (GTK_CONTAINER (vbuttonbox1), defaults_button);
+  gtk_box_pack_start (GTK_BOX (vbuttonbox1), defaults_button, FALSE, FALSE, 5);
   GTK_WIDGET_SET_FLAGS (defaults_button, GTK_CAN_DEFAULT);
 
-  gtk_object_set_user_data (GTK_OBJECT (add_button), (gpointer) type);
-  gtk_signal_connect (GTK_OBJECT (add_button), "clicked",
-                      GTK_SIGNAL_FUNC (add_custom_args_callback),
+  custom_args_add_button[type] = gtk_button_new_with_label (_("Add/Update"));
+  gtk_widget_ref (custom_args_add_button[type]);
+  gtk_object_set_data_full (GTK_OBJECT (page_vbox), "add_button", custom_args_add_button[type],
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (custom_args_add_button[type]);
+  gtk_box_pack_end (GTK_BOX (vbuttonbox1), custom_args_add_button[type], FALSE, FALSE, 7);
+  gtk_widget_set_sensitive (custom_args_add_button[type], FALSE);
+  GTK_WIDGET_SET_FLAGS (custom_args_add_button[type], GTK_CAN_DEFAULT);
+
+  gtk_object_set_user_data (GTK_OBJECT (new_button), (gpointer) type);
+  gtk_signal_connect (GTK_OBJECT (new_button), "clicked",
+                      GTK_SIGNAL_FUNC (new_custom_args_callback),
                       (gpointer) arguments_clist);
 
   gtk_object_set_user_data (GTK_OBJECT (delete_button), (gpointer) type);
@@ -2324,14 +2339,14 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                       GTK_SIGNAL_FUNC (delete_custom_args_callback),
                       (gpointer) arguments_clist);
 
-  gtk_object_set_user_data (GTK_OBJECT (replace_button), (gpointer) type);
-  gtk_signal_connect (GTK_OBJECT (replace_button), "clicked",
-                      GTK_SIGNAL_FUNC (replace_custom_args_callback),
-                      (gpointer) arguments_clist);
-
   gtk_object_set_user_data (GTK_OBJECT (defaults_button), (gpointer) type);
   gtk_signal_connect (GTK_OBJECT (defaults_button), "clicked",
                       GTK_SIGNAL_FUNC (add_custom_args_defaults),
+                      (gpointer) arguments_clist);
+
+  gtk_object_set_user_data (GTK_OBJECT (custom_args_add_button[type]), (gpointer) type);
+  gtk_signal_connect (GTK_OBJECT (custom_args_add_button[type]), "clicked",
+                      GTK_SIGNAL_FUNC (add_custom_args_callback),
                       (gpointer) arguments_clist);
 
   // Populate clist with custom_args from g_slist
