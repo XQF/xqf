@@ -104,6 +104,7 @@ int	default_toolbar_style;
 int	default_toolbar_tips;
 int	default_refresh_sorts;
 int	default_refresh_on_update;
+int	default_resolve_on_update;
 int	default_show_only_configured_games;
 
 int     maxretries;
@@ -175,6 +176,7 @@ static  GtkWidget *toolbar_tips_check_button;
 static  GtkWidget *countbots_check_button;
 static  GtkWidget *refresh_sorts_check_button;
 static  GtkWidget *refresh_on_update_check_button;
+static  GtkWidget *resolve_on_update_check_button;
 static  GtkWidget *show_only_configured_games_check_button;
 
 static  GtkWidget *pushlatency_mode_radio_buttons[3];
@@ -830,6 +832,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (refresh_on_update_check_button)->active;
   if (i != default_refresh_on_update)
     config_set_bool ("refresh on update", default_refresh_on_update = i);
+
+  i = GTK_TOGGLE_BUTTON (resolve_on_update_check_button)->active;
+  if (i != default_resolve_on_update)
+    config_set_bool ("resolve on update", default_resolve_on_update = i);
 
   i = GTK_TOGGLE_BUTTON (show_only_configured_games_check_button)->active;
   if (i != default_show_only_configured_games)
@@ -3543,7 +3549,7 @@ static GtkWidget *appearance_options_page (void) {
                                                               show_hostnames);
   gtk_box_pack_start (GTK_BOX (hbox), show_hostnames_check_button, 
                                                              FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, show_hostnames_check_button, _("Enable or disable DNS resolution of IP addresses"), NULL);
+  gtk_tooltips_set_tip (tooltips, show_hostnames_check_button, _("Show hostnames instead of IP addresses if possible"), NULL);
   gtk_widget_show (show_hostnames_check_button);
 
   gtk_widget_show (hbox);
@@ -3609,6 +3615,24 @@ static GtkWidget *appearance_options_page (void) {
   gtk_widget_show (refresh_on_update_check_button);
 
   gtk_widget_show (hbox);
+
+  /* Resolve on update */
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  resolve_on_update_check_button = 
+                     gtk_check_button_new_with_label (_("Resolve hostnames on update"));
+  gtk_toggle_button_set_active (
+			   GTK_TOGGLE_BUTTON (resolve_on_update_check_button), 
+			   default_resolve_on_update);
+  gtk_tooltips_set_tip (tooltips, resolve_on_update_check_button, _("Enable or disable DNS resolution of IP addresses"), NULL);
+  gtk_box_pack_start (GTK_BOX (hbox), resolve_on_update_check_button, 
+                                                             FALSE, FALSE, 0);
+  gtk_widget_show (resolve_on_update_check_button);
+
+  gtk_widget_show (hbox);
+
 
   /* Show only configured games */
 
@@ -4793,13 +4817,14 @@ int prefs_load (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Appearance");
 
-  show_hostnames =            config_get_bool ("show hostnames=false");
+  show_hostnames =            config_get_bool ("show hostnames=true");
   show_default_port =         config_get_bool ("show default port=true");
   serverlist_countbots =      config_get_bool ("count bots=true");
   default_toolbar_style =     config_get_int  ("toolbar style=2");
   default_toolbar_tips =      config_get_bool ("toolbar tips=true");
   default_refresh_sorts =     config_get_bool ("sort on refresh=true");
   default_refresh_on_update = config_get_bool ("refresh on update=true");
+  default_resolve_on_update = config_get_bool ("resolve on update=false");
   default_show_only_configured_games =    config_get_bool ("show only configured games=false");
 
   config_pop_prefix ();

@@ -1,11 +1,6 @@
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
 - Fix the server core dumps! (are there any left? -- yes)
-- If you disable 'Show hostnames' and you select a server and do a DNS
-  Lookup, it shouldn't automatically enable Show hostnames.  Should make
-  'Show hostnames' simply enable / disable displaying of a host name if it
-  exists in the server record.  Add a 'Resolve hostnames on Update / Refresh'
-  option to set whether or not to do the resolving on update / refresh
 
 If there is nothing interesting on TV:
 - update game types for Q3 mods - move to external file
