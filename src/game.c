@@ -187,7 +187,7 @@ struct game games[] = {
     "Q3S",
     "Q3S",
     "-q3s",
-    "-q3m,66",
+    "-q3m",
     &q3_pix,
 
     q3_parse_player,
@@ -927,6 +927,18 @@ static char *q3a_osp_gametypes[MAX_Q3A_OSP_TYPES] = {
   "Custom OSP",         /* 6+ is usually a custom OSP setting */
 };
 
+#define MAX_Q3A_UT2_TYPES 9
+static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
+  "FFA",		/* 0 = Free for All */
+  "FFA",		/* 1 = Free for All */
+  "FFA",		/* 2 = Free for All */
+  "TDM",		/* 3 = Team Deathmatch */
+  "Team Survivor",	/* 4 = Team Survivor */
+  "Follow the Leader",	/* 5 = Follow the Leader */
+  "Capture & Hold",     /* 6 = Capture & Hold */
+  "CTF",		/* 7 = Capture the Flag */
+  NULL,			/* 8+ ?? */
+};
 
 static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
@@ -934,7 +946,7 @@ static void q3_analyze_serverinfo (struct server *s) {
   long n;
   int newtypes;
 
-  int is_osp;
+  int is_default=0;
 
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
@@ -955,6 +967,7 @@ static void q3_analyze_serverinfo (struct server *s) {
     Next figure out if it is an OSP server, if it is
     then the g_gametype has a different meaning
   */
+  /*
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gamename") == 0) {
       if (strcmp (info_ptr[1], "osp") == 0) {
@@ -964,7 +977,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       }
     }
   }
-
+*/
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
  
@@ -979,6 +992,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       if (strcmp (info_ptr[1], "baseq3")) {
 	s->game  = info_ptr[1];
       }
+      else is_default=1;
     }
 
     else if (strcmp (*info_ptr, "version" ) == 0) {
@@ -998,38 +1012,10 @@ static void q3_analyze_serverinfo (struct server *s) {
 	/* We only set the mod if the name is NOT baseq3. */
 	s->game  = info_ptr[1];
       }
+      else is_default=1;
     }
     else if (!s->gametype && strcmp (*info_ptr, "g_gametype") == 0) {
-      /* A value of 5 is usually a mod (Q3 1.17 and below) */
-      /* New id missionpack defines 5-7 for other types.. */
-      /* So only show new values if the protocol is 48+ */
-      n = strtol (info_ptr[1], &endptr, 10);
-
-      if (endptr == info_ptr[1]) {
 	s->gametype = info_ptr[1];
-      }
-      else {
-	if (is_osp == 1)
-	{
-	  if( n >= MAX_Q3A_OSP_TYPES )
-	    n = MAX_Q3A_OSP_TYPES - 1;
-
-	  s->gametype = q3a_osp_gametypes[n];
-	  
-	} 
-	else if (newtypes == 1)
-        {
-  	  if (n < 10)
-	    s->gametype = q3a_gametypes[n];
-	}
-	else
-	{
-  	  if (n < 5)
-	    s->gametype = q3a_gametypes[n];
-	  else
-	    s->gametype = q3a_gametypes[8];
-	}
-      }
     }
     else if (strcmp (*info_ptr, "g_needpass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
@@ -1044,8 +1030,37 @@ static void q3_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "sv_privateClients") == 0) {
       s->private_client = strtol (info_ptr[1], NULL, 10);
     }
- 
+  }
 
+
+  if(s->gametype) {
+    n = strtol (s->gametype, &endptr, 10);
+
+    if (endptr != s->gametype) {
+      if(s->game) {
+	if (!strcmp(s->game,"osp"))
+	{
+	  if( n >= MAX_Q3A_OSP_TYPES )
+	    n = MAX_Q3A_OSP_TYPES - 1;
+
+	  s->gametype = q3a_osp_gametypes[n];
+	  
+	} 
+	if (!strcasecmp(s->game,"q3ut2"))
+	{
+	  if( n >= MAX_Q3A_UT2_TYPES )
+	    n = MAX_Q3A_UT2_TYPES - 1;
+
+	  s->gametype = q3a_ut2_gametypes[n];
+	  
+	} 
+      }
+      else if (is_default == 1)
+      {
+	if (n < 10)
+	  s->gametype = q3a_gametypes[n];
+      }
+    }
   }
 }
 
@@ -1722,15 +1737,19 @@ static int q3_exec (const struct condef *con, int forkit) {
      we connect. */
   if( fs_game =  find_server_setting_for_key ("fs_game", con->s->info)){
     /* This will rarely (never?) be called. */
-    argv[argi++] = "+set fs_game";
-    argv[argi++] = fs_game;
+    if (default_q3setfs_game) {
+      argv[argi++] = "+set fs_game";
+      argv[argi++] = fs_game;
+    }
     if (strcmp( fs_game, "arena") == 0)  is_so_mod = 1;
 
     
   } else if( fs_game =  find_server_setting_for_key ("gamename", con->s->info)){
     if (strcmp( fs_game, "arena") == 0 )  is_so_mod = 1;
-    argv[argi++] = "+set fs_game";
-    argv[argi++] = fs_game;
+    if (default_q3setfs_game) {
+      argv[argi++] = "+set fs_game";
+      argv[argi++] = fs_game;
+    }
   }
 
   /* 
@@ -1739,19 +1758,19 @@ static int q3_exec (const struct condef *con, int forkit) {
      Hmm, this seems to break osp when set to 0 (for so only). But
      we actually want to set it a 2 to get vm compilation.
   */
-  if( fs_game =  find_server_setting_for_key ("version", con->s->info)){
-    if (strstr( fs_game, "1.29")){  
-      argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
-      debug (1, "Game is version %s, run with all vm_* at two.\n", fs_game);
-    }    
-  } else if (is_so_mod) {
+ if ( default_q3rafix && is_so_mod) {
     /* FIX ME
        BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
        to run properly.  This is for at least 1.27g.
     */
     argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
+  } else if( default_q3vmfix && ( fs_game =  find_server_setting_for_key ("version", con->s->info))){
+    if (strstr( fs_game, "1.29")){  
+      argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
+      debug (1, "Game is version %s, run with all vm_* at two.\n", fs_game);
+    }    
   }
-  
+   
   argv[argi] = NULL;
 
 #if 1
@@ -2235,3 +2254,4 @@ static void quake_save_info (FILE *f, struct server *s) {
   fputc ('\n', f);
 }
 
+// vim: sw=2

@@ -1927,9 +1927,15 @@ static const struct menuitem preferences_menu_items[] = {
     NULL
   },
   { 
-    MENU_ITEM,		N_("_QW/Q2 Options..."),		0,	0,
+    MENU_ITEM,		N_("Q_W/Q2 Options..."),		0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_QWQ2 + UNKNOWN_SERVER * 256),
+    NULL
+  },
+  { 
+    MENU_ITEM,		N_("Q_3 Options..."),		0,	0,
+    GTK_SIGNAL_FUNC (start_preferences_dialog),
+    (gpointer) (PREF_PAGE_Q3 + UNKNOWN_SERVER * 256),
     NULL
   },
 
