@@ -751,7 +751,7 @@ void player_filter_page (GtkWidget *notebook) {
   GtkWidget *pixmap;
   GtkWidget *button;
   GtkWidget *peditor;
-  char *titles[5] = { "", "", "", N_("Mode"), N_("Pattern") };
+  char *titles[5] = { "", "", "", _("Mode"), _("Pattern") };
   int i;
 
   page_hbox = gtk_hbox_new (FALSE, 8);
