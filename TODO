@@ -1,8 +1,5 @@
-Required for XQF 1.0:
-- Configure option for home directory as well as global directory
-- Fix the server core dumps! (are there any left? -- yes)
-
 If there is nothing interesting on TV:
+- Configure option for home directory as well as global directory
 - update game types for Q3 mods - move to external file
 - Ability to delete servers from non-Favorites (really? -- ln)
 - Game specific filters.  No use seeing a Lithium filter choice when looking
@@ -14,8 +11,7 @@ If there is nothing interesting on TV:
 - get rid of the switch for saving player info, make seperate functions for
   each game
 - Redial feature:  User configurable options
-- improve performance with huge server lists (halflife), maybe by serverside
-  filtering
+- make rcon window non-modal
 
 Jobs you can do if your holidays are boring:
 - dynamic dialogs using libglade
