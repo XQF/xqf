@@ -166,14 +166,13 @@ static GtkWidget *refrsel_button = NULL;
 static GtkWidget *stop_button = NULL;
 
 static GtkWidget *connect_button = NULL;
-static GtkWidget *observe_button = NULL;
-static GtkWidget *record_button = NULL;
+//static GtkWidget *observe_button = NULL;
+//static GtkWidget *record_button = NULL;
 
-static GtkWidget *filter_buttons[FILTERS_TOTAL];
+static GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
 
 /*filter widgtet for toolbar*/
 static  GtkWidget *filter_option_menu_toolbar;
-static GtkWidget *filter_toolbar_label;
 
 static GtkWidget *player_skin_popup = NULL;
 static GtkWidget *player_skin_popup_preview = NULL;
@@ -454,8 +453,8 @@ void set_widgets_sensitivity (void) {
   gtk_widget_set_sensitive (observe_menu_item, sens);
   gtk_widget_set_sensitive (server_observe_menu_item, sens);
 
-  gtk_widget_set_state (observe_button, GTK_STATE_NORMAL);
-  gtk_widget_set_sensitive (observe_button, sens);
+//  gtk_widget_set_state (observe_button, GTK_STATE_NORMAL);
+//  gtk_widget_set_sensitive (observe_button, sens);
 
   sens = (!stat_process && cur_server && 
                           (games[cur_server->type].flags & GAME_RECORD) != 0);
@@ -463,8 +462,8 @@ void set_widgets_sensitivity (void) {
   gtk_widget_set_sensitive (record_menu_item, sens);
   gtk_widget_set_sensitive (server_record_menu_item, sens);
 
-  gtk_widget_set_state (record_button, GTK_STATE_NORMAL);
-  gtk_widget_set_sensitive (record_button, sens);
+//  gtk_widget_set_state (record_button, GTK_STATE_NORMAL);
+//  gtk_widget_set_sensitive (record_button, sens);
 
   sens = (!stat_process && cur_server && 
                             (games[cur_server->type].flags & GAME_RCON) != 0);
@@ -548,7 +547,7 @@ void set_widgets_sensitivity (void) {
   for (i = 0; i < FILTERS_TOTAL; i++) {
     gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_NORMAL);
     gtk_widget_set_sensitive (filter_buttons[i], sens);
-    if(GTK_TOGGLE_BUTTON(filter_buttons[ i ])->active)
+    if(GTK_IS_TOGGLE_BUTTON(filter_buttons[i]) && GTK_TOGGLE_BUTTON(filter_buttons[i])->active)
       gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_ACTIVE);
   }
 #if 0
@@ -623,8 +622,10 @@ static void filter_menu_activate_current()
 
 void set_filter_option_menu_toolbar (void) {
 
+  /*
   gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu_toolbar), create_filter_menu_toolbar());
   gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu_toolbar), current_server_filter);
+  */
 }
 
 
@@ -2449,11 +2450,13 @@ static const struct menuitem view_menu_items[] = {
 */
 
 static const struct menuitem server_menu_items[] = {
+  /*
   {
     MENU_ITEM,		N_("_Server Filters"),	0,	0,
     NULL, 0,
     &server_serverfilter_menu_item
   },
+  */
   { 
     MENU_ITEM,		N_("_Connect"),		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL,
@@ -2602,6 +2605,13 @@ static const struct menuitem menubar_menu_items[] = {
     NULL, &preferences_menu_items,
     NULL
   },
+
+  {
+    MENU_ITEM,		N_("_Server Filters"),	0,	0,
+    NULL, 0,
+    &server_serverfilter_menu_item
+  },
+
   {
     MENU_LAST_BRANCH,		N_("_Help"),	0,	0,
     NULL, &help_menu_items,
@@ -2726,6 +2736,7 @@ static void populate_main_toolbar (void) {
                    pixmap,
                  GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL);
 
+#if 0
   pixmap = gtk_pixmap_new (observe_pix.pix, observe_pix.mask);
   gtk_widget_show (pixmap);
 
@@ -2741,9 +2752,9 @@ static void populate_main_toolbar (void) {
                   _("Record"), _("Record Demo"), NULL,
                   pixmap,
                  GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_RECORD);
+#endif
 
   gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
-
   /*
    *  Filter buttons
    */
@@ -2767,6 +2778,7 @@ static void populate_main_toolbar (void) {
   }
   
 
+#if 0
   gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
 
   for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
@@ -2781,6 +2793,7 @@ static void populate_main_toolbar (void) {
                    pixmap,
                    GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) i);
   }
+
   gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
   
   
@@ -2806,6 +2819,7 @@ static void populate_main_toolbar (void) {
 
   
   gtk_widget_show (filter_option_menu_toolbar);
+#endif
 
   set_toolbar_appearance (GTK_TOOLBAR (main_toolbar), 
                                  default_toolbar_style, default_toolbar_tips);
@@ -2865,20 +2879,24 @@ static GtkWidget* create_filter_menu()
   unsigned int i;
   GtkWidget *menu;
   GtkWidget *menu_item;
-//  GtkWidget *radiobutton;
   struct server_filter_vars* filter = NULL;
   GSList* rbgroup = NULL;
 
   filter_menu_radio_buttons = NULL;
 
   menu = gtk_menu_new();
-//  menu_item = gtk_menu_item_new_with_label(_("None"));
-//  menu_item = gtk_check_menu_item_new_with_label(_("None"));
-//  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), (current_server_filter == 0));
-//  gtk_menu_append (GTK_MENU (menu), menu_item);
-//  gtk_widget_show (menu_item);
-//  gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-//	   GTK_SIGNAL_FUNC (server_filter_select_callback), 0);
+
+  menu_item = gtk_menu_item_new_with_label (_("Configure"));
+  gtk_menu_append (GTK_MENU (menu), menu_item);
+  gtk_widget_show (menu_item);
+
+  gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+    GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) FILTER_SERVER);
+
+  menu_item = gtk_menu_item_new ();
+  gtk_widget_set_sensitive (menu_item, FALSE);
+  gtk_menu_append (GTK_MENU (menu), menu_item);
+  gtk_widget_show (menu_item);
 
   for (i = 0;i<=server_filters->len;i++)
   {
@@ -2893,17 +2911,6 @@ static GtkWidget* create_filter_menu()
       filter = g_array_index (server_filters, struct server_filter_vars*, i-1);
       name = filter->filter_name;
     }
-//      menu_item = gtk_menu_item_new_with_label(name);
-//    menu_item = gtk_menu_item_new();
-//    radiobutton = gtk_radio_button_new_with_label(rbgroup,name);
-//    rbgroup = gtk_radio_button_group(GTK_RADIO_BUTTON(radiobutton));
-//    gtk_container_add(GTK_CONTAINER(menu_item),radiobutton);
-//    gtk_widget_show(radiobutton);
-
-//    menu_item = gtk_check_menu_item_new_with_label(name);
-//    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), (current_server_filter == i));
-    // that doesn't do what the docu says, right?
-//    gtk_check_menu_item_set_show_toggle ( GTK_CHECK_MENU_ITEM (menu_item), FALSE);
 
     menu_item = gtk_radio_menu_item_new_with_label(rbgroup,name);
     rbgroup = gtk_radio_menu_item_group (GTK_RADIO_MENU_ITEM (menu_item));
@@ -2916,6 +2923,7 @@ static GtkWidget* create_filter_menu()
     gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 	   GTK_SIGNAL_FUNC (server_filter_select_callback), (gpointer)i); // array starts from zero but filters from 1
 
+    /*
     // add separator
     if(i == 0)
     {
@@ -2924,6 +2932,7 @@ static GtkWidget* create_filter_menu()
       gtk_menu_append (GTK_MENU (menu), menu_item);
       gtk_widget_show (menu_item);
     }
+    */
   }
 
 //  filter_menu = menu;
@@ -3212,7 +3221,7 @@ void create_main_window (void) {
   gtk_widget_set_usize (main_filter_status_bar, 100, -1);
   gtk_box_pack_start (GTK_BOX (hbox), main_filter_status_bar, TRUE, TRUE, 0);
   gtk_widget_show (main_filter_status_bar);
-
+  
   main_progress_bar = create_progress_bar ();
   gtk_widget_set_usize (main_progress_bar, 200, -1);
   gtk_box_pack_end (GTK_BOX (hbox), main_progress_bar, FALSE, FALSE, 0);
