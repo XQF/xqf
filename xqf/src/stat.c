@@ -1144,8 +1144,8 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     if(m->master_type == MASTER_GSLIST)
     {
-      startprog = 1;
       int ret = 0;
+      startprog = 1;
 
       while(current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
       {
