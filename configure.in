@@ -16,7 +16,7 @@ GETTEXT_PACKAGE=xqf
 AC_SUBST(GETTEXT_PACKAGE)
 
 AC_PROG_INTLTOOL([0.25])
-ALL_LINGUAS="ca da de es fr"
+ALL_LINGUAS="ca da de es fr ru"
 AM_GLIB_GNU_GETTEXT
 
 dnl Checks for programs.

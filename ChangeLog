@@ -1,3 +1,6 @@
+Mar 30, 2004: Jordi Mallach <jordi@sindominio.net>
+- add Russian translation by Dan Korostelev <dan@ats.energo.ru>.
+
 Mar 22, 2004: Jordi Mallach <jordi@sindominio.net>
 - fix clean rule in toplevel Makefile.am.
 
