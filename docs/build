@@ -1,3 +1,6 @@
+run "gpg -a -s -b FILE" to sign files
+use rpm3 to sign rpm3 rpms.
+
 June 19, 2003
 
 xqf-0.9.12.tar.gz created using:
