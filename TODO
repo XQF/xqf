@@ -4,3 +4,5 @@
 - Redial feature to connect to your favorite busy server.
 - Fix the server core dumps!
 - Detection if map is installed (req. home dir option)
+- improve performance with huge server lists (halflife), maybe by serverside
+  filtering

@@ -197,6 +197,9 @@ static void load_file (const char *filename) {
   while (fgets (buf, BUF_SIZE, f)) {
     len = strlen (buf);
 
+    if (len <= 1)
+    	continue;
+    	
     if (buf[len - 1] == '\n') {
       buf[len - 1] = '\0';
       len--;

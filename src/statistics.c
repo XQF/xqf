@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>	/* memset, strcmp */
@@ -36,15 +38,7 @@
 #include "utils.h"
 #include "config.h"
 #include "statistics.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#define N_(string) (string)
-#else
-#define _(string) (string)
-#endif
-
+#include "debug.h"
 
 #define PERCENTS(A,B)	((B)? (A)/((B)/100.0) : 0)
 
@@ -102,7 +96,7 @@ static GtkWidget *arch_notebook;
 static void server_stats_create (void) {
 
   srv_stats = g_malloc0 (sizeof (struct server_stats) * GAMES_TOTAL);
-  srv_archs  = g_malloc0 (sizeof (struct arch_stats) * 2);
+  srv_archs  = g_malloc0 (sizeof (struct arch_stats) * 5);
 
   servers_count = 0;
   players_count = 0;
@@ -121,46 +115,52 @@ static void server_stats_destroy (void) {
 }
 
 
-static enum CPU identify_cpu (struct server *s, const char *id, 
-                                                     const char *versionstr) {
+static enum CPU identify_cpu (struct server *s, const char *versionstr) {
   enum CPU cpu = CPU_UNKNOWN;
-
-  if (!g_strncasecmp (id, "x86", 3) || !g_strncasecmp (id, "i386", 4))
+  char *str;
+  
+  if (!(str = g_strdup(versionstr)))
+  	return CPU_UNKNOWN;
+  g_strdown(str);
+  
+  if (strstr (str, "x86") || strstr (str, "i386"))
     cpu = CPU_X86;
-  else if (!g_strncasecmp (id, "sparc", 5))
+  else if (strstr (str, "sparc"))
     cpu = CPU_SPARC;
-  else if (!g_strncasecmp (id, "axp", 3))
+  else if (strstr (str, "axp"))
     cpu = CPU_AXP;
-  else if (!g_strncasecmp (id, "ppc", 3))
+  else if (strstr (str, "ppc"))
     cpu = CPU_PPC;
-#ifdef DEBUG
   else {
-    fprintf (stderr, "[%s:%d] Unknown CPU: %s\n", 
+    debug (3, "identify_cpu() -- [%s:%d] Unknown CPU: %s\n", 
                                 inet_ntoa (s->host->ip), s->port, versionstr);
   }
-#endif
+  g_free(str);
   return cpu;
 }
 
 
-static enum OS identify_os (struct server *s, const char *id, 
-                                                     const char *versionstr) {
+static enum OS identify_os (struct server *s, char *versionstr) {
   enum OS os = OS_UNKNOWN;
+  char *str;
+  
+  if (!(str = g_strdup(versionstr)))
+  	return CPU_UNKNOWN;
+  g_strdown(str);
 
-  if (!g_strncasecmp (id, "win", 3))
+  if (strstr (str, "win"))
     os = OS_WINDOWS;
-  else if (!g_strncasecmp (id, "linux", 5))
+  else if (strstr (str, "linux"))
     os = OS_LINUX;
-  else if (!g_strncasecmp (id, "solaris", 7))
+  else if (strstr (str, "solaris"))
     os = OS_SOLARIS;
-  else if (!g_strncasecmp (id, "macos", 5))
+  else if (strstr (str, "macos"))
     os = OS_MACOS;
-#ifdef DEBUG
   else {
-    fprintf (stderr, "[%s:%d] Unknown OS: %s\n", 
+    debug (3, "identify_os() -- [%s:%d] Unknown OS: %s\n", 
                                 inet_ntoa (s->host->ip), s->port, versionstr);
   }
-#endif
+  g_free(str);
   return os;
 }
 
@@ -170,8 +170,6 @@ static void collect_statistics (void) {
   GSList *tmp;
   struct server *s;
   char **info;
-  char *token[32];
-  int n;
   enum OS os;
   enum CPU cpu;
 
@@ -203,7 +201,7 @@ static void collect_statistics (void) {
       }
 
 #ifdef QSTAT23
-      if (info && (s->type == Q2_SERVER || s->type == Q3_SERVER)) {
+      if (info && (s->type == Q2_SERVER || s->type == Q3_SERVER || s->type == WO_SERVER || s->type == KP_SERVER)) {
 #else
       if (info && (s->type == Q2_SERVER)) {
 #endif 
@@ -212,42 +210,50 @@ static void collect_statistics (void) {
 	    if (!info[1])
 	      break;
 
-	    os  = OS_UNKNOWN;
-	    cpu = CPU_UNKNOWN;
+	    cpu = identify_cpu (s, info[1]); 
+	    os = identify_os (s, info[1]); 
 
 	    switch (s->type) {
 
 	    case Q2_SERVER:
-	      n = safe_tokenize (info[1], token, 32, " \t\n\r");
-	      if (n >= 2)
-		cpu = identify_cpu (s, token[1], info[1]); 
-	      if (n >= 6)
-		os = identify_os (s, token[5], info[1]); 
-
 	      srv_archs[0].oscpu[os][cpu]++;
 	      srv_archs[0].count++;
-
 	      break;
+
 
 #ifdef QSTAT23
 	    case Q3_SERVER:
-	      n = safe_tokenize (info[1], token, 32, "- \t\n\r");
-	      if (n >= 3)
-		os = identify_os (s, token[2], info[1]); 
-	      if (n >= 4)
-		cpu = identify_cpu (s, token[3], info[1]); 
-
 	      srv_archs[1].oscpu[os][cpu]++;
 	      srv_archs[1].count++;
+	      break;
 
+	    case WO_SERVER:
+	      srv_archs[2].oscpu[os][cpu]++;
+	      srv_archs[2].count++;
 	      break;
 #endif 
+	    case KP_SERVER:
+	      srv_archs[3].oscpu[os][cpu]++;
+	      srv_archs[3].count++;
+	      break;
 
 	    default:
 	      break;
 	    }
 
 	    break;
+	  }
+	  info += 2;
+	}
+      } else if (info && (s->type == HL_SERVER)) {
+        while (info[0]) {
+	  if (g_strcasecmp (info[0], "sv_os") == 0) {
+	    if (!info[1])
+	      break;
+	    cpu = CPU_UNKNOWN;
+	    os = identify_os (s, info[1]);
+	    srv_archs[4].oscpu[os][cpu]++;
+	    srv_archs[4].count++;
 	  }
 	  info += 2;
 	}
@@ -456,8 +462,10 @@ static GtkWidget *archs_stats_page (void) {
   arch_notebook_page (arch_notebook, Q2_SERVER, &srv_archs[0]);
 #ifdef QSTAT23
   arch_notebook_page (arch_notebook, Q3_SERVER, &srv_archs[1]);
+  arch_notebook_page (arch_notebook, WO_SERVER, &srv_archs[2]);
 #endif 
-
+  arch_notebook_page (arch_notebook, KP_SERVER, &srv_archs[3]);
+  arch_notebook_page (arch_notebook, HL_SERVER, &srv_archs[4]);
 #ifdef QSTAT23
   typestr = config_get_string ("/" CONFIG_FILE "/Statistics/game");
   if (typestr) {
