@@ -69,6 +69,7 @@ extern	struct pixmap rune_pix;
 extern	struct pixmap descent3_pix;
 extern	struct pixmap gamespy3d_pix;
 extern	struct pixmap ssam_pix;
+extern	struct pixmap mohaa_pix;
 
 extern	struct pixmap gplus_pix;
 extern	struct pixmap rminus_pix;
