@@ -1976,7 +1976,7 @@ static void pref_guess_dir(enum server_type type)
   */
 static gboolean pref_can_suggest(enum server_type type)
 {
-    return (game_get_attribute(type,"suggest_commands")!=0);
+    return (games[type].suggest_commands != NULL);
 }
 
 /**
@@ -1987,7 +1987,7 @@ static void pref_suggest_command(enum server_type type)
     const char* files = NULL;
     char* suggested_file = NULL;
 
-    files = game_get_attribute(type,"suggest_commands");
+    files = games[type].suggest_commands;
     if(!files)
     {
 	return;
@@ -4712,7 +4712,7 @@ static void user_fix_defaults (void)
     
   for (i = 0; i < GAMES_TOTAL; i++)
   {
-    files = game_get_attribute(games[i].type,"suggest_commands");
+    files = games[i].suggest_commands;
     if(!files) continue;
     suggested_file = find_file_in_path(files);
     if(!suggested_file) continue;

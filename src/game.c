@@ -124,6 +124,7 @@ struct unreal_private
 
 static struct unreal_private ut_private = { NULL, ".unr" };
 static struct unreal_private ut2_private = { NULL, ".ut2" };
+static struct unreal_private ut2004_private = { NULL, ".ut2" };
 static struct unreal_private rune_private = { NULL, ".run" };
 static struct unreal_private postal2_private = { NULL, ".fuk" };
 static struct unreal_private aao_private = { NULL, ".aao" };
@@ -1093,6 +1094,7 @@ void init_games()
     g_datalist_init(&games[i].games_data);
   }
 
+#if 0
   game_set_attribute(Q1_SERVER,"suggest_commands",strdup("twilight-nq:nq-sgl:nq-glx:nq-sdl:nq-x11"));
   game_set_attribute(Q2_SERVER,"suggest_commands",strdup("quake2"));
   game_set_attribute(QW_SERVER,"suggest_commands",strdup("twilight-qw:qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11"));
@@ -1104,6 +1106,7 @@ void init_games()
   game_set_attribute(T2_SERVER,"suggest_commands",strdup("tribes2"));
   game_set_attribute(UN_SERVER,"suggest_commands",strdup("ut"));
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
+  game_set_attribute(UT2004_SERVER,"suggest_commands",strdup("ut2004:ut2004demo"));
   game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
   game_set_attribute(AAO_SERVER,"suggest_commands",strdup("armyops"));
   game_set_attribute(POSTAL2_SERVER,"suggest_commands",strdup("postal2mp:postal2mpdemo"));
@@ -1112,6 +1115,7 @@ void init_games()
   game_set_attribute(MOHAA_SERVER,"suggest_commands",strdup("mohaa"));
   game_set_attribute(SAS_SERVER,"suggest_commands",strdup("savage"));
   game_set_attribute(COD_SERVER,"suggest_commands",strdup("codmp"));
+#endif
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
    				   ("Note:  Soldier of Fortune will not connect to a server correctly\n"\

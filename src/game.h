@@ -80,6 +80,8 @@ struct game {
   enum CPU (*identify_cpu) (struct server *s, const char *versionstr);
   enum OS (*identify_os) (struct server *s, char *versionstr);
 
+  char* suggest_commands;
+
   char *cmd;
   char *dir;
   char *real_dir;
