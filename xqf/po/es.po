@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.9a\n"
-"POT-Creation-Date: 2001-12-15 22:26+0100\n"
+"POT-Creation-Date: 2001-12-27 18:45+0100\n"
 "PO-Revision-Date: 2001-12-23 18:00+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -28,8 +28,8 @@ msgid "Master Address"
 msgstr "Dirección del Maestro"
 
 #. Cancel Button
-#: src/addmaster.c:238 src/addserver.c:166 src/dialogs.c:318 src/filter.c:684
-#: src/game.c:1668 src/game.c:1826 src/launch.c:333 src/pref.c:2702
+#: src/addmaster.c:238 src/addserver.c:166 src/dialogs.c:318 src/filter.c:685
+#: src/game.c:1842 src/game.c:2000 src/launch.c:333 src/pref.c:2702
 #: src/psearch.c:228 src/psearch.c:401 src/srv-prop.c:595 src/xqf.c:619
 #: src/xqf.c:631 src/xqf.c:1255
 msgid "Cancel"
@@ -49,7 +49,7 @@ msgid "XQF: Warning!"
 msgstr "XQF: Atención!"
 
 #. OK Button
-#: src/dialogs.c:142 src/dialogs.c:307 src/filter.c:692 src/pref.c:2710
+#: src/dialogs.c:142 src/dialogs.c:307 src/filter.c:693 src/pref.c:2710
 #: src/psearch.c:217 src/psearch.c:401 src/srv-prop.c:603
 msgid "OK"
 msgstr "Aceptar"
@@ -86,62 +86,62 @@ msgstr "Filtro P"
 msgid "PF Cfg"
 msgstr "Cfg FP"
 
-#: src/filter.c:465
+#: src/filter.c:466
 msgid "Server Filter"
 msgstr "Filtro de Servidor"
 
-#: src/filter.c:470
+#: src/filter.c:471
 msgid "Server would pass filter if"
 msgstr "El servidor pasaría el filtro si"
 
 #. max ping
-#: src/filter.c:485
+#: src/filter.c:486
 msgid "ping is less than"
 msgstr "el ping es menor que"
 
 #. max timeouts
-#: src/filter.c:502
+#: src/filter.c:503
 msgid "the number of retires is fewer than"
 msgstr "el número de retiros es menor que"
 
-#: src/filter.c:522
+#: src/filter.c:523
 msgid "Filter Name (For Menu):"
 msgstr "Nombre del filtro (para el menú):"
 
 #. GAMECONTAINS Filter -- baa
 #. http://developer.gnome.org/doc/API/gtk/gtktable.html
-#: src/filter.c:540
+#: src/filter.c:541
 msgid "the game contains the string"
 msgstr "el juego contiene la cadena"
 
 #. GAMETYPE Filter -- baa
 #. http://developer.gnome.org/doc/API/gtk/gtktable.html
-#: src/filter.c:559
+#: src/filter.c:560
 msgid "The Game Type Contains the String:"
 msgstr "el tipo de juego contiene la cadena"
 
 #. Version Filter -- baa
-#: src/filter.c:578
+#: src/filter.c:579
 msgid "the version contains the string"
 msgstr "la versión contiene la cadena"
 
-#: src/filter.c:597
+#: src/filter.c:598
 msgid "it is not full"
 msgstr "no está lleno"
 
-#: src/filter.c:607
+#: src/filter.c:608
 msgid "it is not empty"
 msgstr "no está vacío"
 
-#: src/filter.c:617
+#: src/filter.c:618
 msgid "cheats are not allowed"
 msgstr "no se admiten trampas"
 
-#: src/filter.c:628
+#: src/filter.c:629
 msgid "no password required"
 msgstr "no se requiere contraseña"
 
-#: src/filter.c:656
+#: src/filter.c:657
 msgid "XQF: Filters"
 msgstr "XQF: Filtros"
 
@@ -220,18 +220,18 @@ msgstr "Abajo"
 
 #. server_type
 #. flags
-#: src/game.c:477
+#: src/game.c:612
 msgid "Generic Gamespy"
 msgstr "Gamespy Genérico"
 
 #. %s = game name e.g. QuakeWorld
-#: src/game.c:1309
+#: src/game.c:1483
 #, c-format
 msgid "%s command line is empty."
 msgstr "La línea de comando de %s está vacía."
 
 #. directory name, game name
-#: src/game.c:1316 src/game.c:1427
+#: src/game.c:1490 src/game.c:1601
 #, c-format
 msgid ""
 "\"%s\" is not a directory\n"
@@ -241,13 +241,13 @@ msgstr ""
 "Por favor, especifica un directorio de trabajo para %s correcto."
 
 #. game name
-#: src/game.c:1328
+#: src/game.c:1502
 #, c-format
 msgid "Please specify correct %s working directory."
 msgstr "Por favor especifica un directorio de trabajo para %s correcto."
 
 #. directory, subdirectory, game name
-#: src/game.c:1334
+#: src/game.c:1508
 #, c-format
 msgid ""
 "Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
@@ -257,7 +257,7 @@ msgstr ""
 "Por favor especifica un directorio de trabajo para %s correcto."
 
 #. %s Quake3
-#: src/game.c:1390
+#: src/game.c:1564
 #, c-format
 msgid ""
 "~/.q3a directory doesn't exist or doesn't contain\n"
@@ -271,7 +271,7 @@ msgstr ""
 "usar XQF o especifica un directorio de trabajo para %s correcto."
 
 #. %s directory, Quake3
-#: src/game.c:1399
+#: src/game.c:1573
 #, c-format
 msgid ""
 "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
@@ -285,13 +285,13 @@ msgstr ""
 "o déjalo vacío (se usa ~/.q3a por defecto)"
 
 #. passwords file could not be written
-#: src/game.c:1668 src/game.c:1826 src/launch.c:333 src/xqf.c:619
+#: src/game.c:1842 src/game.c:2000 src/launch.c:333 src/xqf.c:619
 #: src/xqf.c:631
 msgid "Launch"
 msgstr "Lanzar"
 
 #. %s frontend.cfg
-#: src/game.c:1670 src/game.c:1827
+#: src/game.c:1844 src/game.c:2001
 #, c-format
 msgid ""
 "Cannot write to file \"%s\".\n"
@@ -725,7 +725,7 @@ msgstr "Estado"
 msgid "Clear"
 msgstr "Limpiar"
 
-#: src/rcon.c:421 src/statistics.c:559
+#: src/rcon.c:421 src/statistics.c:542
 msgid "Close"
 msgstr "Cerrar"
 
@@ -802,47 +802,47 @@ msgstr "No se ha podido crear un fichero temporal %s"
 
 #. The space behind up and down is to make the strings different from
 #. those in flt-player.c because their meaning is different in german
-#: src/statistics.c:71 src/statistics.c:82
+#: src/statistics.c:81 src/statistics.c:92
 msgid "Servers"
 msgstr "Servidores"
 
-#: src/statistics.c:71
+#: src/statistics.c:81
 msgid "Up "
 msgstr "Arriba "
 
-#: src/statistics.c:71
-msgid "T/O"
-msgstr "T/O"
+#: src/statistics.c:81
+msgid "Timeout"
+msgstr "Tiempo de espera"
 
-#: src/statistics.c:71
+#: src/statistics.c:81
 msgid "Down "
 msgstr "Abajo "
 
-#: src/statistics.c:71
+#: src/statistics.c:81
 msgid "Info n/a"
 msgstr "Info n/d"
 
-#: src/statistics.c:71 src/xqf-ui.c:51
+#: src/statistics.c:81 src/xqf-ui.c:51
 msgid "Players"
 msgstr "Jugadores"
 
-#: src/statistics.c:75 src/statistics.c:79
+#: src/statistics.c:85 src/statistics.c:89
 msgid "unknown"
 msgstr "desconocido"
 
-#: src/statistics.c:83
+#: src/statistics.c:93
 msgid "OS/CPU"
 msgstr "SO/CPU"
 
-#: src/statistics.c:368 src/statistics.c:416 src/statistics.c:421
+#: src/statistics.c:363 src/statistics.c:411 src/statistics.c:416
 msgid "Total"
 msgstr "Total"
 
-#: src/statistics.c:411
+#: src/statistics.c:406
 msgid "CPU  \\  OS"
 msgstr "CPU \\ SO"
 
-#: src/statistics.c:519 src/statistics.c:525
+#: src/statistics.c:502 src/statistics.c:508
 msgid "Statistics"
 msgstr "Estadísticas"
 
@@ -1357,6 +1357,9 @@ msgstr "Configuración de filtro %s"
 #: src/xqf.c:2247
 msgid "Filters"
 msgstr "Filtros"
+
+#~ msgid "T/O"
+#~ msgstr "T/O"
 
 #~ msgid "QW/Q2"
 #~ msgstr "QW/Q2"
