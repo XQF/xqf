@@ -1073,7 +1073,7 @@ static char *builtin_masters_update_info[] = {
 
   "ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 Gameaholic.Com",
 
-  "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
+  "DELETE UNS gmaster://unreal.epicgames.com:28900 Epic", // doesn't work (26.11.2004)
   "DELETE UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld", // doesn't work (26.09.2004)
 
   "DELETE T2S master://211.233.32.77:28002 Tribes2 Master", // does no longer work
@@ -1163,6 +1163,7 @@ static char *builtin_gslist_masters_update_info[] = {
   "ADD WOS gslist://master.gamespy.com;gsmtype=rtcw Gslist",
   "ADD DM3S gslist://master.gamespy.com;gsmtype=doom3 Gslist",
   "ADD RUNESRV gslist://master.gamespy.com;portadjust=-1;gsmtype=rune Gslist",
+  "ADD UNS gslist://master.gamespy.com;portadjust=-1;gsmtype=ut Gslist",
   "ADD UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004 Gslist",
   "ADD UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004d Gslist (Demo)",
   "ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2 Gslist",
