@@ -3399,6 +3399,11 @@ static void quake_init_maps(enum server_type type)
   pd->maphash = q3_init_maphash();
 
   findquakemaps(pd->maphash,games[type].real_dir);
+
+  if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
+  {
+    findquakemaps(pd->maphash,games[type].real_home);
+  }
 }
 
 static void q3_init_maps(enum server_type type)
@@ -3412,11 +3417,9 @@ static void q3_init_maps(enum server_type type)
   pd->maphash = q3_init_maphash();
   findq3maps(pd->maphash,games[type].real_dir);
 
-  if(games[type].real_home)
+  if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
   {
-    char* home = expand_tilde(games[type].real_home);
-    findq3maps(pd->maphash,home);
-    g_free(home);
+    findq3maps(pd->maphash,games[type].real_home);
   }
 }
 
@@ -3431,11 +3434,9 @@ static void doom3_init_maps(enum server_type type)
   pd->maphash = q3_init_maphash();
   finddoom3maps(pd->maphash,games[type].real_dir);
 
-  if(games[type].real_home)
+  if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
   {
-    char* home = expand_tilde(games[type].real_home);
-    finddoom3maps(pd->maphash,home);
-    g_free(home);
+    finddoom3maps(pd->maphash, games[type].real_home);
   }
 }
 
@@ -3449,6 +3450,11 @@ static void unreal_init_maps(enum server_type type)
   ut_clear_maps(pd->maphash);
   pd->maphash = ut_init_maphash();
   findutmaps_dir(pd->maphash,games[type].real_dir,pd->suffix);
+
+  if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
+  {
+    findutmaps_dir(pd->maphash,games[type].real_home,pd->suffix);
+  }
 }
 
 static gboolean quake_has_map(struct server* s)
