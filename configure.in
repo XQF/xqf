@@ -20,35 +20,30 @@ AC_HEADER_STDC
 
 AM_SANITY_CHECK
 
+AM_PROG_LIBTOOL
+
 dnl Pick up the gettext, etc macros
 dnl AM_ACLOCAL_INCLUDE(macros)
-dnl AM_GNU_GETTEXT
+AM_GNU_GETTEXT
+
+AM_PATH_GTK(1.2.0,,exit 1)
 
 dnl check for qstat
 AC_ARG_WITH(qstat,[  --with-qstat=CMD        use CMD to run qstat])
 
 AC_MSG_CHECKING(qstat version)
 
+QSTATEXEC="qstat"
+
 if test "x$with_qstat" != "x" ; then
 	QSTATEXEC="$with_qstat"
-	qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
-else
-	QSTATEXEC="qstat"
-	qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
-	if test "x$qstat_version" = "x" ; then
-		QSTATEXEC="quakestat"
-		qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
-	fi
 fi
+
+qstat_version=`$QSTATEXEC 2>/dev/null | grep version | cut -d' ' -f 3`
 
 if test "x$qstat_version" = "x" ; then
 	AC_MSG_RESULT(qstat not found)
-	echo
-	echo "*** QStat is *required* to run XQF"
-	echo "*** Get it from http://qstat.org/"
-	echo "*** and put it in your path"
-	echo
-	exit 1
+	qstat_is=notfound
 else
 	AC_MSG_RESULT($qstat_version)
 fi
@@ -56,27 +51,14 @@ fi
 AC_SUBST(QSTATEXEC)
 
 case "$qstat_version" in
-	2.0*|2.1*|2.3*|2.4a|2.4b)
-	echo
-	echo "*** You have obsolete QStat beta version installed"
-	echo "*** QStat 2.4c is *required* to run XQF"
-	echo "*** Get it from http://qstat.org/"
-	echo
-	exit 1
-	;;
-
-	2.3c|2.3d|2.3e|2.3f)
-	QSTAT23="-DQSTAT23"
-	;;
-
-	2.3*|2.4*)
-	QSTAT23="-DQSTAT23 -DQSTAT_HAS_UNREAL_SUPPORT"
+	2.0*|2.1*|2.3*|2.4a|2.4b|2.4c|2.4d)
+	qstat_is=tooold
 	;;
 esac
 
-AC_SUBST(QSTAT23)
+QSTAT23="-DQSTAT23 -DQSTAT_HAS_UNREAL_SUPPORT"
 
-AM_PROG_LIBTOOL
+AC_SUBST(QSTAT23)
 
 dnl check if user wants bzip2 compression instead of gzip
 COMPRESSION="-DCOMPRESSOR_GZIP"
@@ -89,12 +71,6 @@ AC_SUBST(DEBUG)
 
 AC_SUBST(VERSION)
 AC_SUBST(QSTATEXEC)
-
-dnl Pick up the gettext, etc macros
-dnl AM_ACLOCAL_INCLUDE(macros)
-AM_GNU_GETTEXT
-
-AM_PATH_GTK(1.2.0,,exit 1)
 
 AC_DEFINE_UNQUOTED(XQF_VERSION, "$VERSION", XQF Version number)
 AC_DEFINE_UNQUOTED(QSTAT_EXEC, "$QSTATEXEC", QSTAT executable path)
@@ -119,3 +95,17 @@ AC_OUTPUT([Makefile intl/Makefile po/Makefile.in \
 src/Makefile src/xpm/Makefile \
 docs/Makefile \
 debian/Makefile])
+
+if test "x$qstat_is" = "xnotfound" ; then
+	AC_MSG_RESULT([
+*** QStat is *required* to run XQF
+*** Get it from http://qstat.org/
+*** and put it in your path
+])
+elif test "x$qstat_is" = "xtooold" ; then
+	AC_MSG_RESULT([
+*** You have an old QStat version installed
+*** QStat 2.4e is recommended to run XQF
+*** Get it from http://qstat.org/
+])
+fi
