@@ -375,7 +375,7 @@ Jan 7, 2001: Alex Burger <alex@fragit_dot_net>
 -Changed all occurences of mod_contains to gametype_contains
 -Version changed to 0.9.6d-beta
 
-Jan 7, 2001: Ludwig Nussel <ludwig.nussel@web.de>
+Jan 7, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 -Added hl_analyze_serverinfo function to display gamedir and
  gamename in columns for Half-Life servers.  For example:
  cstrike and Counter Strike
