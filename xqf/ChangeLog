@@ -1,3 +1,7 @@
+Oct 24, 2002: Alex <alex_b@users.sourceforge.net>
+- Make tooltips global so it can be used anywhere.  Have new tooltips use
+  toolbar tooltip enable / disable option
+
 Oct 24, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Use game_set_attribute / game_get_attribute for game Notes
 - Added notes for SFS, UT2003 and HL
