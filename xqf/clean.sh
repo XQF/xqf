@@ -27,3 +27,22 @@ src/xpm/Makefile \
 po/Makefile.in \
 po/POTFILES \
 po/*.gmo
+
+# gettextize
+rm -rf \
+ABOUT-NLS \
+config.rpath \
+mkinstalldirs \
+m4 \
+po/Makefile.in \
+po/Makevars.template \
+po/Rules-quot \
+po/boldquot.sed \
+po/en@boldquot.header \
+po/en@quot.header \
+po/insert-header.sin \
+po/quot.sed \
+po/remove-potcdate.sin \
+intl/*.* \
+intl/ChangeLog \
+intl/VERSION
