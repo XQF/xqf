@@ -1,3 +1,6 @@
+Jan 03, 2002: Jordi Mallach <jordi@sindominio.net>
+- New Danish translation, from Morten Brix Pedersen.
+
 Dec 25, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - added button to scan for maps without restarting xqf
 - fixed some minor memleaks
