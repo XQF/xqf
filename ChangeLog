@@ -1,3 +1,7 @@
+Nov 24th 2000: Alex Burger <alex@fragit.net>
+-Version changed to XQF 0.9.5a-beta
+-Fixed UT launching.  Now passes proper parameters to UT
+
 Nov 18th 2000: Alex Burger <alex@fragit.net>
 -Version changed to XQF 0.9.5
 

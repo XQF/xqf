@@ -573,7 +573,8 @@ static void launch_close_handler (struct stat_job *job, int killed) {
     }
   }
 
-  con->server = g_strdup_printf ("%s:%5d", inet_ntoa (s->host->ip), s->port);
+//  con->server = g_strdup_printf ("%s:%5d", inet_ntoa (s->host->ip), s->port);
+  con->server = g_strdup_printf ("%s:%d", inet_ntoa (s->host->ip), s->port);
   con->gamedir = g_strdup (s->game);
 
   if (props && props->rcon_password)
