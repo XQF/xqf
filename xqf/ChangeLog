@@ -1,3 +1,11 @@
+Dec 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- --launch now guesses the type from the port if only one argument is given. If
+  not enough information is given (no type, no port) it will prompt the user to
+  choose the type. This way, it should be possible to use --launch now e.g.
+  from within IRC clients where you don't know the type before.
+- add second argument to add_server_dialog() to preset the address
+- make combo_set_vals() work with empty str argument
+
 Dec 02, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - convert server names from iso-8859-1 to UTF-8 if needed
 

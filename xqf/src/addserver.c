@@ -51,9 +51,13 @@ static void select_server_type_callback (GtkWidget *widget,
   *server_type = type;
 }
 
-
-
-char *add_server_dialog (enum server_type *type) {
+/** dialog to prompt user for server type and address
+ * @param type pointer where to store the selected type. if UNKNOWN_SERVER,
+ *             preset type will be read from hitory file
+ * @param addr preset string value for address field, NULL for nothing
+ * @returns address string or NULL if user pressed cancel. string must be freed
+ */
+char *add_server_dialog (enum server_type *type, const char* addr) {
   GtkWidget *window;
   GtkWidget *main_vbox;
   GtkWidget *option_menu;
@@ -61,20 +65,26 @@ char *add_server_dialog (enum server_type *type) {
   GtkWidget *label;
   GtkWidget *button;
   GtkWidget *hseparator;
-  char *typestr;
+
+  g_return_val_if_fail(type != NULL, NULL);
 
   enter_server_result = NULL;
   server_type = type;
  
-  // Get last game type added (stored in server_combo_activate_callback)
-  typestr = config_get_string ("/" CONFIG_FILE "/Add Server/game");
- 
-  if (typestr) {
-    *type = id2type (typestr);
-    g_free (typestr);
-  }
-  else {
-    *type = 0; // Set to first game
+  if(*type == UNKNOWN_SERVER)
+  {
+    char *typestr;
+
+    // Get last game type added (stored in server_combo_activate_callback)
+    typestr = config_get_string ("/" CONFIG_FILE "/Add Server/game");
+   
+    if (typestr) {
+      *type = id2type (typestr);
+      g_free (typestr);
+    }
+    else {
+      *type = 0; // Set to first game
+    }
   }
 
   window = dialog_create_modal_transient_window (_("Add Server"), 
@@ -111,8 +121,7 @@ char *add_server_dialog (enum server_type *type) {
   gtk_widget_grab_focus (GTK_COMBO (server_combo)->entry);
   gtk_widget_show (server_combo);
 
-  if (server_history->items)
-    combo_set_vals (server_combo, server_history->items, "");
+  combo_set_vals (server_combo, server_history->items, addr);
 
   /* Server Type Option Menu */
 

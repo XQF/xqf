@@ -22,7 +22,12 @@
 #include "xqf.h"
 
 
-extern	char *add_server_dialog (enum server_type *type);
+/** dialog to prompt user for server type and address
+ * @param type pointer where to store the selected type
+ * @param addr preset string value for address field, NULL for nothing
+ * @returns address string or NULL if user pressed cancel
+ */
+extern	char *add_server_dialog (enum server_type *type, const char* addr);
 
 extern	void add_server_init (void);
 extern	void add_server_done (void);

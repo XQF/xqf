@@ -1693,12 +1693,14 @@ static void prepare_new_server_to_favorites(enum server_type type, char* str, gb
 
 static void add_server_callback (GtkWidget *widget, gpointer data) {
   char *str = NULL;
-  enum server_type type  = 0;
+  enum server_type type  = UNKNOWN_SERVER;
   
   if (stat_process)
     return;
   
-  str = add_server_dialog (&type);
+  str = add_server_dialog (&type, NULL);
+
+  if(!str) return;
 
   prepare_new_server_to_favorites(type, str, FALSE);
 
@@ -3671,27 +3673,65 @@ static void cmdlinehelp()
 }
 
 static char* cmdline_launch = NULL;
+
+// must always return FALSE to stop g_timeout
 gboolean check_cmdline_launch(gpointer nothing)
 {
     char* token[2] = {0};
-    enum server_type type;
+    enum server_type type = UNKNOWN_SERVER;
+    unsigned n = 0;
+    char* addrstring = NULL; // must point to a copy
+    
     if(!cmdline_launch) return FALSE;
-    if(tokenize_bychar(cmdline_launch, token, 2, ' ') != 2)
+
+    n = tokenize_bychar(cmdline_launch, token, 2, ' ');
+
+    if (n == 2) // type and address given
     {
-	dialog_ok(NULL,"Invalid server specification: %s",cmdline_launch);
-	g_free(cmdline_launch);
-	return FALSE;
+	type = id2type(token[0]);
+
+	if (type == UNKNOWN_SERVER)
+	{
+	    addrstring = add_server_dialog (&type, token[1]);
+	}
+	else
+	{
+	    addrstring = g_strdup(token[1]);
+	}
+    }
+    else if (n == 1) // only address
+    {
+	char *addr;
+	unsigned short port;
+	unsigned matches = 0;
+
+	if (!parse_address (token[0], &addr, &port))
+	{
+	    dialog_ok (NULL, _("\"%s\" is not valid host[:port] combination."), token[0]);
+	    g_free(cmdline_launch);
+	    return FALSE;
+	}
+
+	if(port) // guess the type from the port
+	{
+	    unsigned i = 0;
+	    for (i = 0; i < GAMES_TOTAL; i++)
+	    {
+		if (games[i].default_port == port)
+		{
+		    ++matches;
+		    if (type == UNKNOWN_SERVER) type = i;
+		}
+	    }
+	}
+
+	if(!port || type == UNKNOWN_SERVER || matches > 1)
+	{
+	  addrstring = add_server_dialog (&type, token[0]);
+	}
     }
 
-    type = id2type(token[0]);
-    if(type == UNKNOWN_SERVER)
-    {
-	dialog_ok(NULL,"Invalid server specification: %s",token[0]);
-	g_free(cmdline_launch);
-	return FALSE;
-    }
-
-    prepare_new_server_to_favorites(type,g_strdup(token[1]), TRUE);
+    prepare_new_server_to_favorites(type, addrstring, TRUE);
 
     g_free(cmdline_launch);
     return FALSE;
