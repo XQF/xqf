@@ -94,7 +94,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
   char *retries;
   struct pixmap *retries_pix = NULL;
   int col;
-  char* private_col_text = "";
+//  char* private_col_text = "";
   int slots_buffer;
   
 
@@ -607,10 +607,10 @@ void server_clist_set_list (GSList *servers) {
 void server_clist_build_filtered (GSList *server_list, int update) {
   /* This gets called whenever a user clicks the filter button */
 
-  GSList *delete;
-  GSList *add;
-  GSList *tmp;
-  struct server *server;
+//  GSList *delete;
+//  GSList *add;
+//  GSList *tmp;
+//  struct server *server;
   int row;
 
   debug(3, "server_clist_build_filterd() -- Update? %d", update);

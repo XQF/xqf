@@ -3151,12 +3151,12 @@ void play_sound (const char *sound)
   int pid;
 
   if(!sound_enable) {
-    debug(1,"sound disabled - not playing");
+    debug(2,"sound disabled - not playing");
     return;
   }
 
   if(!sound || !sound_player) {
-    debug(1,"sound player or sound file not defined - not playing anything");
+    debug(2,"sound player or sound file not defined - not playing anything");
     return;
   }
 
