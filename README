@@ -1,6 +1,6 @@
 
-                               XQF 0.9.6b beta
-                             (December 20th 2000)
+                               XQF 0.9.6e beta
+                             (Januaray 21, 2001)
 
 DESCRIPTION
 -----------
@@ -90,6 +90,73 @@ http://		(html page containing list)
 Not specifying a prefix will default to master://
 
 Please send bug reports or suggestions to roma@botik.ru
+
+
+
+QUAKE 3 ARENA SPECIAL INSTRUCTIONS (AKA HACK)
+--------------------------------------------
+
+In Q3A, clients and servers can only talk with each other
+if they are using the same protocol.  The protocol in Q3A
+is defined by a number.  So, for instance, Q3A 1.17 uses
+protocol 45 wile 1.27 uses protocol 48.  During the switch-
+over time after ID releases a new point release, it can be 
+frustrating to not be able to connect to any server one wants.
+However, if you have lots of disk space, it is possible to
+get around this problem.
+
+I (Bill 'EvilBill' Adams) will outline what I did to get it 
+so I can play both 1.17 and 1.27 Q3A games without much fuss. 
+For reference, my Q3A is installed under /usr/local/games/...
+and I have a symlink from /usr/local/bin/quake3 to ../games/quake3/quake3.
+
+(1) Rename /usr/local/games/quake3 (as I used to have it) to
+/usr/local/games/quake3-1.17.
+
+(2) mkdir /usr/local/games/quake3; cd /usr/local/games/quake3
+
+(3) cp -Rav ../quake3-1.17 .
+
+(4) Install the point release, copy all of the TA pk3 files into 
+baseq3.  Remove any old mods from 1.17.
+
+(5) cd..; mv quake3 quake3-1.27
+
+(6) Edit both of the quake3 scripts so the directories all match, here is
+the script I use for 1.17: (/usr/local/games/quake3-1.17/quake3)
+
+==begin==
+#!/bin/sh
+# Needed to make symlinks/shortcuts work.
+# Run Quake III with some default arguments
+ 
+LD_LIBRARY_PATH="/usr/local/games/quake3-1.17"
+export LD_LIBRARY_PATH
+ 
+cd "/usr/local/games/quake3-1.17"
+quake="./quake3.x86"
+"$quake" +set in_dgamouse 1 $*
+exit $?                                                                        ==cut==
+
+(7) [as root], cd into /usr/local/bin.  Make symlinks for each of the
+Q3A directories that correspond to the protocol each uses. So:
+  ln -s ../games/quake3-1.17 quake3proto45
+  ln -s ../games/quake3-1.27 quake3proto48
+  ln -s ../games/quake3-1.27 quake3 
+
+Note the last one is there as the default.
+
+(8) Get a very (CVS) recent version of xqf. You will need >=0.9.6e-beta. 
+Set up the executable for quake3 such that it is the FULL path to 
+quake3, in my case I entered /usr/local/bin/quake3.  This is VERY important
+because of the hack I used where I put 'protoNN' on the end of whatever
+you entered for the program and see if xqf can fopen it.  Without the full
+path, chances are that xqf will not find it.
+
+If you have problems, run xqf with "-d 5" on the command line.  This
+will give you some hints as to that which it is looking.
+
+
 
 
 AVAILABILITY
