@@ -204,15 +204,6 @@ void init_games()
   				   ("Note:  Savage will not launch correctly without\n"\
     				    "modifications to the game's startup script. Please see the\n"\
 			  	    "XQF documentation for more information.")));
-
-  game_set_attribute(SSAM_SERVER,"game_notes",strdup(_
-  				   ("Note: You need to create a qstat config file for this game to work.\n"\
-    				    "Please see the XQF documentation for more information."))); 
-
-  game_set_attribute(SSAMSE_SERVER,"game_notes",strdup(_
-  				   ("Note: You need to create a qstat config file for this game to work.\n"\
-    				    "Please see the XQF documentation for more information."))); 
-
 }
 
 void games_done()
@@ -1576,7 +1567,7 @@ static int quake_config_is_valid (struct server *s) {
     break;
 
   case QW_SERVER:
-    cfgdir = (default_qw_is_quakeforge?"base":"id1");
+    cfgdir = "id1";
     break;
 
   case Q2_SERVER:
@@ -1915,10 +1906,7 @@ static int write_quake_variables (const struct condef *con) {
     break;
 
   case QW_SERVER:
-    if(default_qw_is_quakeforge)
-      file = file_in_dir (games[QW_SERVER].real_dir, "base/" EXEC_CFG);
-    else
-      file = file_in_dir (games[QW_SERVER].real_dir, "id1/" EXEC_CFG);
+    file = file_in_dir (games[QW_SERVER].real_dir, "id1/" EXEC_CFG);
     res =  write_qw_vars (file, con);
     break;
 
@@ -2031,10 +2019,7 @@ static int qw_exec (const struct condef *con, int forkit) {
   switch (con->s->type) {
 
   case QW_SERVER:
-    if(default_qw_is_quakeforge)
-      q_passwd = "base/" PASSWORD_CFG;
-    else
-      q_passwd = "id1/" PASSWORD_CFG;
+    q_passwd = "id1/" PASSWORD_CFG;
     break;
 
   case Q2_SERVER:
