@@ -2,24 +2,26 @@ XQF 0.9.9 -- ?? ??, 2002
 ~~~~~~~~~
 Changes since 0.9.8:
 
-o Added Voyager Elite Force support.
-o Changed default Quake3 protocol to 67.
-o You can now select Quake3 and Wolfenstein's protocol.
-o Added 20sec timeout for wget (nice if Gameaholic is down).
-o Added Tribes2 server statistics.
-o Fixed Tribes2 and Quake3 masters.
-o Added support for LAN broadcast queries.
-o Improved master support handling.
+o Added Voyager Elite Force support
+o Changed default Quake3 protocol to 67
+o You can now select Quake3 and Wolfenstein's protocol
+o Added 20sec timeout for wget (nice if Gameaholic is down)
+o Added Tribes2 server statistics
+o Fixed Tribes2 and Quake3 masters
+o Added support for LAN broadcast queries
+o Improved master support handling
 o Added preferences tab for Quake3 memory settings
+o New Catalan translation
+
 
 XQF 0.9.8 -- December 17, 2001
 ~~~~~~~~~
 Changes since 0.9.7:
 
 o Repackaged with libtool 1.4, so it builds on all
-  Linux architectures.
-o Fixed trasparency of Gamespy's pixmap.
-o Don't distribute debian stuff.
+  Linux architectures
+o Fixed trasparency of Gamespy's pixmap
+o Don't distribute debian stuff
 
 
 XQF 0.9.7 -- December 16, 2001
@@ -60,21 +62,21 @@ XQF 0.9.6f -- March 23, 2001
 Changes since 0.9.5:
 
 o Multiple server filters; Filter name configurable and appears in the
-  status bar.
+  status bar
 o Lock Icon to show if server is private or not; icon next to number 
-  of players turns yellow if all of the public client spaces are full.
+  of players turns yellow if all of the public client spaces are full
 o Pressing "Insert" brings up the add server dialog; pressing SHIFT+Insert 
-  adds the currently selected server to ones favorites.
-o Added support for new Team Arena Game types.
-o Protocol 48 (1.27) Q3A servers get queried with protocol 48 in qstat.
+  adds the currently selected server to ones favorites
+o Added support for new Team Arena Game types
+o Protocol 48 (1.27) Q3A servers get queried with protocol 48 in qstat
 o Execute "PreLaunch" script when launching game (for use with ICQ scripts, 
-  etc.).
-o Improved support for Half-Life servers.
-o Improved support for Unreal Tournament.
-o Improved support for Quake2.
+  etc.)
+o Improved support for Half-Life servers
+o Improved support for Unreal Tournament
+o Improved support for Quake2
 o Hack for supporting multiple Q3A protocols i.e. xqf can run different
-  Q3A's depending on if it is a 1.17 or 1.27 server: see the README file.
+  Q3A's depending on if it is a 1.17 or 1.27 server: see the README file
 o Q3A hack for connecting to arena servers so that all of the vm_* settings
-  are correct on the command line.
+  are correct on the command line
 o Resolved one major source of core dumps. It should be much more stable
-  now.
+  now
