@@ -229,6 +229,14 @@ Kingpin and Heretic II.
 <p><b>Example:</b>
 <p>http://www.gameaholic.com/servers/qspy-heretic2
 <br>&nbsp;</blockquote>
+
+<b>lan://</b><blockquote>Issues a broadcast search for servers in
+your LAN. This does not work with all games. UT and Rune use the
+Gamespy protocol for LAN queries and will therefore be listed under
+"Generic Gamespy".<p><b>Example:</b>
+<p>lan://255.255.255.255 <br>&nbsp;</blockquote>
+
+
 <b>Note</b>:&nbsp; Not specifying a prefix will default to master://</blockquote>
 <b>Delete Master:</b>
 <blockquote>Removes a master from the Source list</blockquote>
@@ -661,7 +669,16 @@ which is why they work
 do I get it back?
 <p><b>A:</b>&nbsp; Edit - Add Default Masters to add ALL the default master
 servers back into the list.&nbsp; If you know the address, you can add
-a single master with Edit - Add Master</blockquote>
+a single master with Edit - Add Master
+
+<p><b>Q:&nbsp;</b>Why do LAN searches not find any servers?
+
+<p><b>A:</b> You either need a default route to your ethernet device
+or a host route for the broadcast address (try e.g. route add -host
+255.255.255.255 eth0).
+
+</blockquote>
+
 <a NAME="Launching games"></a><b><u><font size=+2>Launching games</font></u></b>
 <br>&nbsp;
 <blockquote>Following are notes on launching specific games.&nbsp; Most

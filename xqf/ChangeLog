@@ -1,3 +1,7 @@
+Jun 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- added a short explanation about LAN queries to docu
+- added gametypes and dmflags for q3 freezetag
+
 Jun 28, 2002: Jordi Mallach <jordi@sindominio.net>
 - new Catalan translation
 - added a mnemonic to a menu item
