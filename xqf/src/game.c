@@ -570,8 +570,8 @@ struct game games[] = {
     UT2_DEFAULT_PORT,
     0,
     "UT2S",
-    "gps",
-    "-gps",
+    "UT2S",
+    "-ut2s",
     "-ut2m",
     &ut2_pix,
 
