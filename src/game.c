@@ -1609,11 +1609,11 @@ static int q3_exec (const struct condef *con, int forkit) {
     /* This will rarely (never?) be called. */
     argv[argi++] = "+set fs_game";
     argv[argi++] = fs_game;
-    if (strcmp( fs_game, "arena"))  is_so_mod = 1;
+    if (strcmp( fs_game, "arena") == 0)  is_so_mod = 1;
 
     
   } else if( fs_game =  find_server_setting_for_key ("gamename", con->s->info)){
-    if (strcmp( fs_game, "arena"))  is_so_mod = 1;
+    if (strcmp( fs_game, "arena") == 0 )  is_so_mod = 1;
     argv[argi++] = "+set fs_game";
     argv[argi++] = fs_game;
   }
