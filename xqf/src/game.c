@@ -735,6 +735,22 @@ void init_games()
   game_set_attribute(UN_SERVER,"suggest_commands",strdup("ut"));
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
   game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
+
+  game_set_attribute(SFS_SERVER,"game_notes",strdup(_
+   				   ("Note:  Soldier of Fortune not will connect to a server correctly\n"\
+    				    "without creating a startup script for the game.  Please see the\n"\
+			  	    "XQF documentation for more information."))); 
+  game_set_attribute(UN_SERVER,"game_notes",strdup(_
+  				   ("Note:  Unreal Tournament will not launch correctly without\n"\
+    				    "modifications to the game's startup script.  Please see the\n"\
+			  	    "XQF documentation for more information."))); 
+  game_set_attribute(UT2_SERVER,"game_notes",strdup(_
+  				   ("Note:  To query Unreal Tournament 2003 servers, you need to\n"\
+    				    "properly configure QStat to support the game.  Please see the\n"\
+			  	    "XQF documentation for more information."))); 
+  game_set_attribute(HL_SERVER,"game_notes",strdup(_
+  				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));
+
 }
 
 // retreive game specific value that belongs to key, do not free return value!
@@ -2722,7 +2738,6 @@ static int ut_exec (const struct condef *con, int forkit) {
   char* real_server=NULL;
   char** additional_args = NULL;
   int i;
-  char *tmp;
 
   cmd = strdup_strip (g->cmd);
 

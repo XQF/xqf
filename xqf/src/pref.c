@@ -2159,25 +2159,18 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_widget_show (prefs->cfg_combo);
   }
 
-  // Game specific notes - move contents to games_data to make it generic?
-  switch(type) {
-  
-    case UN_SERVER:
+  // Game specific notes
+  if (game_get_attribute(type,"game_notes")) {
     
     hbox2 = gtk_hbox_new (FALSE, 0);
     gtk_box_pack_end (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
     gtk_widget_show (hbox2);
-        
-    label = gtk_label_new (_("Note:  Unreal Tournament will not launch correctly without\n"\
-    				    "modifications to the game's startup script.  Please see the\n"\
-			  	    "documentation for more information.")); 
-    gtk_label_set_justify (label, GTK_JUSTIFY_LEFT);
+    
+    label = gtk_label_new (game_get_attribute(type,"game_notes"));    
+
+    gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
     gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
     gtk_widget_show (label);
-    break;
-    
-    default:
-    break;
   }
 
   gtk_widget_show (table);
