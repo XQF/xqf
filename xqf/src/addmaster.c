@@ -187,11 +187,13 @@ static void master_address_from_history_selected_callback (GtkWidget *widget,
   master_activate_radio_for_type(type);
 }
 
-static GtkWidget *create_master_type_menu (void) {
+static GtkWidget *create_master_type_menu (enum server_type type) {
   GtkWidget *menu;
   GtkWidget *menu_item;
+  GtkWidget *first_menu_item = NULL;
   int i;
- 
+  int j = 0;
+   
   menu = gtk_menu_new ();
 
   for (i = 0; i < GAMES_TOTAL; i++) {
@@ -199,6 +201,15 @@ static GtkWidget *create_master_type_menu (void) {
     // Skip a game if it's not configured and show only configured is enabled
     if (!games[i].cmd && default_show_only_configured_games)
       continue;
+
+    if (j == type) {
+      // Store first valid game menu item for gtk_menu_item_activate below
+      menu_item = first_menu_item = gtk_menu_item_new ();
+    }
+    else
+      menu_item = gtk_menu_item_new ();
+    
+    j++;
 
     menu_item = gtk_menu_item_new ();
     gtk_menu_append (GTK_MENU (menu), menu_item);
@@ -210,6 +221,9 @@ static GtkWidget *create_master_type_menu (void) {
 
     gtk_widget_show (menu_item);
   }
+
+  // initiates callback to set servertype to first configured game
+  gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
 
   return menu;
 }
@@ -276,6 +290,9 @@ struct master *add_master_dialog (struct master *m) {
 
   master_to_edit = NULL;
   master_to_add = NULL;
+
+  int j;
+  int menu_type = 0;
   
   for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++)
     master_query_type_radios[i]=NULL;
@@ -289,6 +306,7 @@ struct master *add_master_dialog (struct master *m) {
   }
   else
   {
+    // Get last game type added (stored in master_okbutton_callback)
     typestr = config_get_string ("/" CONFIG_FILE "/Add Master/game");
     if (typestr) {
       master_type = id2type (typestr);
@@ -298,6 +316,30 @@ struct master *add_master_dialog (struct master *m) {
       master_type = QW_SERVER;
     }
   }
+
+  if (default_show_only_configured_games) {
+    // Find last configured game in list and set menu_type for menu position
+    for (j = 0; j < GAMES_TOTAL; j++) {
+      if (games[j].cmd) {
+        if (j == master_type)
+          break;
+        menu_type++;
+      }
+    }
+    if (j == GAMES_TOTAL) {
+      // Game not found propbably because last added game is no longer configured.
+      // Look for first configured game and use that.
+      for (j = 0; j < GAMES_TOTAL; j++) {
+        if (games[j].cmd) {
+          master_type = j;
+          menu_type = 0;
+          break;
+        }
+      }
+    }
+  }
+  else
+    menu_type = master_type;
   
   if (master_to_edit)
   {
@@ -360,8 +402,8 @@ struct master *add_master_dialog (struct master *m) {
   option_menu = gtk_option_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
-                                                  create_master_type_menu ());
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), master_type);
+                                                  create_master_type_menu (menu_type));
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
   
   if(master_to_edit)
   {

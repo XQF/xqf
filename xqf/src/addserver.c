@@ -52,12 +52,12 @@ static void select_server_type_callback (GtkWidget *widget,
 }
 
 
-static GtkWidget *create_server_type_menu (void) {
+static GtkWidget *create_server_type_menu (enum server_type type) {
   GtkWidget *menu;
   GtkWidget *menu_item;
   GtkWidget *first_menu_item = NULL;
   int i;
-  int j=0;
+  int j = 0;
   
   menu = gtk_menu_new ();
 
@@ -67,12 +67,14 @@ static GtkWidget *create_server_type_menu (void) {
     if (!games[i].cmd && default_show_only_configured_games)
       continue;
   
-    if (j == 0) {
+    if (j == type) {
+      // Store first valid game menu item for gtk_menu_item_activate below
       menu_item = first_menu_item = gtk_menu_item_new ();
-      j++;
     }
     else
       menu_item = gtk_menu_item_new ();
+    
+    j++;
       
     gtk_menu_append (GTK_MENU (menu), menu_item);
 
@@ -100,10 +102,13 @@ char *add_server_dialog (enum server_type *type) {
   GtkWidget *button;
   GtkWidget *hseparator;
   char *typestr;
+  int i;
+  int menu_type = 0;
 
   enter_server_result = NULL;
   server_type = type;
  
+  // Get last game type added (stored in server_combo_activate_callback)
   typestr = config_get_string ("/" CONFIG_FILE "/Add Server/game");
  
   if (typestr) {
@@ -111,9 +116,33 @@ char *add_server_dialog (enum server_type *type) {
     g_free (typestr);
   }
   else {
-    *type = QW_SERVER;
+    *type = 0; // Set to first game
   }
 
+  if (default_show_only_configured_games) {
+    // Find last configured game in list and set menu_type for menu position
+    for (i = 0; i < GAMES_TOTAL; i++) {
+      if (games[i].cmd) {
+        if (i == *type)
+          break;
+        menu_type++;
+      }
+    }
+    if (i == GAMES_TOTAL) {
+      // Game not found propbably because last added game is no longer configured.
+      // Look for first configured game and use that.
+      for (i = 0; i < GAMES_TOTAL; i++) {
+        if (games[i].cmd) {
+          *type = i;
+          menu_type = 0;
+          break;
+        }
+      }
+    }
+  }
+  else
+    menu_type = *type;
+    
   window = dialog_create_modal_transient_window (_("Add Server"), 
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 0);
@@ -156,10 +185,9 @@ char *add_server_dialog (enum server_type *type) {
   option_menu = gtk_option_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
-                                                  create_server_type_menu ());
+                                                  create_server_type_menu (menu_type));
   // Set default type passed to add_server_dialog
-  //gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), *type);
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
   gtk_widget_show (option_menu);
 
   gtk_widget_show (hbox);
