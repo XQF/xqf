@@ -1,4 +1,7 @@
 Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Updated documentation
+- Added server properties password page support to Unreal, UT2003
+  and Rune
 - Updated ca.po, de.po, es.po for 'Add new Server' and removal of
   ...'s.  Had to remove duplicate 'Properties' because of this.
   Note:  Translation still needs to be done for 'Add new Server' as 

@@ -390,7 +390,7 @@ struct game games[] = {
   },
   {
     KP_SERVER,
-    GAME_CONNECT | GAME_RCON,
+    GAME_CONNECT | GAME_RCON ,
     "Kingpin",
     KP_DEFAULT_PORT,
     0,
@@ -448,7 +448,7 @@ struct game games[] = {
   },
   {
     SOF2S_SERVER,
-    GAME_CONNECT | GAME_RCON,
+    GAME_CONNECT | GAME_RCON | GAME_PASSWORD,
     "Soldier of Fortune 2",
     SOF2S_DEFAULT_PORT,
     SOF2M_DEFAULT_PORT,
@@ -536,7 +536,7 @@ struct game games[] = {
 
   {
     UN_SERVER,
-    GAME_CONNECT,
+    GAME_CONNECT | GAME_PASSWORD,
     "Unreal / UT",
     UN_DEFAULT_PORT,
     0,
@@ -565,7 +565,7 @@ struct game games[] = {
   },
   {
     UT2_SERVER,
-    GAME_CONNECT,
+    GAME_CONNECT | GAME_PASSWORD,
     "UT 2003",
     UT2_DEFAULT_PORT,
     0,
@@ -595,7 +595,7 @@ struct game games[] = {
 
   {
     RUNE_SERVER,
-    GAME_CONNECT,
+    GAME_CONNECT | GAME_PASSWORD,
     "Rune",
     UN_DEFAULT_PORT,
     0,
@@ -2167,7 +2167,6 @@ static int qw_exec (const struct condef *con, int forkit) {
   struct game *g = &games[con->s->type];
   int retval=-1;
   char *to_free = NULL;
-  int game_match_result = 0;
   
   switch (con->s->type) {
 
@@ -2298,7 +2297,6 @@ static int q2_exec (const struct condef *con, int forkit) {
   struct game *g = &games[con->s->type];
   int retval=-1;
   char *to_free = NULL;
-  int game_match_result = 0;
   
   q_passwd = "baseq2/" PASSWORD_CFG;
 
@@ -2381,8 +2379,6 @@ static int q2_exec_generic (const struct condef *con, int forkit) {
 
   char *to_free = NULL;
 
-  int game_match_result = 0;
-  
   cmd = strdup_strip (g->cmd);
 
   argv[argi++] = strtok (cmd, delim);
