@@ -1,3 +1,8 @@
+Feb 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- reworked dialog for adding master
+- added popup menu for master server tree
+- added function for renaming master servers
+
 Feb 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix display of gametypes > MAX_Q3A_TYPES
 

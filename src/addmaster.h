@@ -22,7 +22,7 @@
 #include "xqf.h"
 
 
-extern  char *add_master_dialog (enum server_type *type, char **desc);
+struct master *add_master_dialog (struct master *m);
 extern	void add_master_init (void);
 extern	void add_master_done (void);
 

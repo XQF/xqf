@@ -27,10 +27,6 @@
 #include <time.h>	/* time */
 #include <string.h>	/* strlen */
 
-#ifdef ENABLE_NLS
-#include <locale.h>
-#endif
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -91,6 +87,7 @@ static char *progress_bar_str = NULL;
 //static GtkWidget *server_filter_menu = NULL; /* baa */
 
 static GtkWidget *server_menu = NULL;
+static GtkWidget *source_menu = NULL;
 static GtkWidget *player_menu = NULL;
 
 static GtkWidget *connect_menu_item = NULL;
@@ -112,9 +109,15 @@ static GtkWidget *edit_add_menu_item = NULL;
 static GtkWidget *edit_delete_menu_item = NULL;
 static GtkWidget *edit_update_master_builtin_menu_item = NULL;
 static GtkWidget *edit_add_master_menu_item = NULL;
+static GtkWidget *edit_edit_master_menu_item = NULL;
 static GtkWidget *edit_delete_master_menu_item = NULL;
 static GtkWidget *edit_find_player_menu_item = NULL;
 static GtkWidget *edit_find_again_menu_item = NULL;
+
+// rmb popup
+static GtkWidget *source_add_master_menu_item = NULL;
+static GtkWidget *source_edit_master_menu_item = NULL;
+static GtkWidget *source_delete_master_menu_item = NULL;
 
 static GtkWidget *view_refresh_menu_item = NULL;
 static GtkWidget *view_refrsel_menu_item = NULL;
@@ -254,6 +257,15 @@ void set_widgets_sensitivity (void) {
   sens = (!stat_process && masters_to_delete);
 
   gtk_widget_set_sensitive (edit_delete_master_menu_item, sens);
+  gtk_widget_set_sensitive (source_delete_master_menu_item, sens);
+
+  // you can only edit one server a time, no groups and no favorites
+  sens = (cur_source && cur_source->next == NULL
+	  && ! ((struct master *) cur_source->data)->isgroup
+	  && ! source_is_favorites );
+  
+  gtk_widget_set_sensitive (source_edit_master_menu_item, sens);
+  gtk_widget_set_sensitive (edit_edit_master_menu_item, sens);
 
   sens = (!stat_process && (server_clist->rows > 0));
 
@@ -1190,32 +1202,33 @@ static void update_master_builtin_callback (GtkWidget *widget, gpointer data) {
 }
 
 static void add_master_callback (GtkWidget *widget, gpointer data) {
-  char *str;
-  char *desc;
-  enum server_type type;
   struct master *m;
 
   if (stat_process)
     return;
 
-  str = add_master_dialog (&type, &desc);
-  if (!str || !*str)
-    return;
-
-  m = add_master (str, desc, type, TRUE, FALSE);
+  m = add_master_dialog(NULL);
 
   if (m) {
     source_ctree_add_master (source_ctree, m);
     source_ctree_select_source (m);
   }
-  else {
-    dialog_ok (NULL, _("Master address \"%s\" is not valid."), str);
-  }
-
-  g_free (str);
-  g_free (desc);
 }
 
+// does only work with one master selected
+static void edit_master_callback (GtkWidget *widget, gpointer data) {
+  struct master *master_to_edit, *master_to_add;
+
+  if(!cur_source) return;
+
+  master_to_edit = (struct master *) cur_source->data;
+  source_ctree_select_source (master_to_edit);
+  master_to_add = add_master_dialog(master_to_edit);
+  if (master_to_add) {
+    source_ctree_add_master (source_ctree, master_to_add);
+    source_ctree_select_source (master_to_add);
+  }
+}
 
 static void del_master_callback (GtkWidget *widget, gpointer data) {
   struct master *m;
@@ -1250,8 +1263,12 @@ static void del_master_callback (GtkWidget *widget, gpointer data) {
   }
 
   if (!masters)
+  {
+    dialog_ok(NULL,_("You have to select the server you want to delete"));
     return;
+  }
 
+  // FIXME: plural
   delete = dialog_yesno (NULL, 1, _("Delete"), _("Cancel"), 
         _("Master%s to delete:\n\n%s"), 
 	(g_slist_length (masters) > 1)? "s" : "",
@@ -1434,6 +1451,66 @@ static void server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *even
   }
 }
 
+static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
+  GdkEventButton *bevent = (GdkEventButton *) event;
+  GList *selection;
+  int row;
+  GtkCTreeNode *node, *node_under_mouse;
+  int node_is_in_selection = 0;
+  
+  if (event->type == GDK_BUTTON_PRESS &&
+                   bevent->window == GTK_CLIST(source_ctree)->clist_window) {
+
+    switch (bevent->button) {
+
+    case 3:
+      // lets see which row the cursor is on
+      if (gtk_clist_get_selection_info (GTK_CLIST(source_ctree), 
+                                          bevent->x, bevent->y, &row, NULL)) {
+	// list of selected items
+	selection = GTK_CLIST(source_ctree)->selection;
+        // XXX: what is the first part of the && good for?
+	if (!g_list_find (selection, (gpointer) row) && 
+                 (bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) == 0) {
+	  node_under_mouse = gtk_ctree_node_nth(GTK_CTREE (source_ctree),row);
+	  if(node_under_mouse)
+	  {
+	    // go through all selected masters and search if the one under the
+	    // cursor is among them
+	    while(selection)
+	    {
+	      node = GTK_CTREE_NODE(selection->data);
+	      if(node == node_under_mouse)
+	      {
+		node_is_in_selection = 1;
+		break;
+	      }
+	      selection = selection->next;
+	    }
+
+	    // clear selection and only select the one under the curser
+	    if(!node_is_in_selection)
+	    {
+	      gtk_ctree_unselect_recursive(GTK_CTREE(source_ctree),NULL);
+	      gtk_ctree_select (GTK_CTREE (source_ctree), node_under_mouse);
+	    }
+	  }
+	}
+
+      }
+
+      gtk_menu_popup (GTK_MENU (source_menu), NULL, NULL, NULL, NULL,
+	                                        bevent->button, bevent->time);
+      return TRUE;
+
+    default:
+      return FALSE;
+    }
+
+  }
+  return FALSE;
+}
+
 
 static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
   GdkEventButton *bevent = (GdkEventButton *) event;
@@ -1497,7 +1574,8 @@ static void source_selection_changed (void) {
 
   update_server_lists_from_selected_source ();
   server_clist_set_list (cur_server_list);
-
+  
+  // FIXME: plural form
   print_status (main_status_bar, (server_clist->rows == 1) ?
                         _("%d server") : _("%d servers"), server_clist->rows);
 }
@@ -1505,6 +1583,7 @@ static void source_selection_changed (void) {
 
 static void source_ctree_selection_changed_callback (GtkWidget *widget, 
                     int row, int column, GdkEvent *event, GtkWidget *button) {
+  debug(6,"source_ctree_selection_changed_callback(%p,%d,%d,%p,%p)",widget,row,column,event,button);
   source_selection_changed ();
 }
 
@@ -1770,6 +1849,25 @@ static const struct menuitem file_menu_items[] = {
   { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
 };
 
+// appears on right click on a master server
+static const struct menuitem source_ctree_popup_menu[] = {
+  {
+    MENU_ITEM,          N_("Add _Master..."),        'M',	GDK_CONTROL_MASK,
+    GTK_SIGNAL_FUNC (add_master_callback), NULL,
+    &source_add_master_menu_item
+  },
+  {
+    MENU_ITEM,          N_("_Rename Master..."),        0, 0,
+    GTK_SIGNAL_FUNC (edit_master_callback), NULL,
+    &source_edit_master_menu_item
+  },
+  {
+    MENU_ITEM,          N_("D_elete Master"),        0,	0,
+    GTK_SIGNAL_FUNC (del_master_callback), NULL,
+    &source_delete_master_menu_item
+  }
+};
+
 static const struct menuitem edit_menu_items[] = {
   { 
     MENU_ITEM,		N_("_Add Server..."),	'N',	GDK_CONTROL_MASK,
@@ -1804,6 +1902,11 @@ static const struct menuitem edit_menu_items[] = {
     MENU_ITEM,          N_("Add _Master..."),        'M',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (add_master_callback), NULL,
     &edit_add_master_menu_item
+  },
+  {
+    MENU_ITEM,          N_("_Rename Master..."),        0, 0,
+    GTK_SIGNAL_FUNC (edit_master_callback), NULL,
+    &edit_edit_master_menu_item
   },
   {
     MENU_ITEM,          N_("D_elete Master"),        0,	0,
@@ -2303,6 +2406,7 @@ void create_main_window (void) {
 #endif
 
   server_menu = create_menu (srvopt_menu_items, accel_group);
+  source_menu = create_menu (source_ctree_popup_menu, accel_group);
 
   /* We will call set_server_filter_menu_list_text (); below after we 
      have the filter status bar. It used to be here -baa  */
@@ -2368,6 +2472,8 @@ void create_main_window (void) {
              GTK_SIGNAL_FUNC (source_ctree_selection_changed_callback), NULL);
   gtk_signal_connect (GTK_OBJECT (source_ctree), "tree_unselect_row",
              GTK_SIGNAL_FUNC (source_ctree_selection_changed_callback), NULL);
+  gtk_signal_connect (GTK_OBJECT (source_ctree), "event",
+                         GTK_SIGNAL_FUNC (source_ctree_event_callback), NULL);
 
   gtk_widget_show (scrollwin);
 

@@ -120,6 +120,14 @@ enum master_state {
   SOURCE_ERROR
 };
 
+enum master_query_type { 
+	MASTER_NATIVE=0,
+	MASTER_GAMESPY,
+	MASTER_HTTP,
+	MASTER_NUM_QUERY_TYPES,
+	MASTER_INVALID_TYPE
+};
+
 struct player {
   char	*name;
   int	time;
@@ -195,7 +203,7 @@ struct master {
 
   GSList *masters;
   
-  int master_type;
+  enum master_query_type master_type;
 };
 
 extern	time_t xqf_start_time;
