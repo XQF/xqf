@@ -2762,13 +2762,17 @@ void preferences_dialog (int page_num) {
 }
 
 
+// set some defaults when xqf is called the first time
 static void user_fix_defaults (void) {
-  config_set_string ("/" CONFIG_FILE "/Game: QS/cmd", "squake");
-  config_set_string ("/" CONFIG_FILE "/Game: QWS/cmd", "qwcl.x11");
+  config_set_string ("/" CONFIG_FILE "/Game: QS/cmd", "nq-x11");
+  config_set_string ("/" CONFIG_FILE "/Game: QWS/cmd", "qw-client-x11");
   config_set_string ("/" CONFIG_FILE "/Game: Q2S/cmd", "quake2");
-#ifdef QSTAT23
   config_set_string ("/" CONFIG_FILE "/Game: Q3S/cmd", "quake3");
-#endif
+  config_set_string ("/" CONFIG_FILE "/Game: RUNESRV/cmd", "rune");
+  config_set_string ("/" CONFIG_FILE "/Game: T2S/cmd", "tribes2");
+  config_set_string ("/" CONFIG_FILE "/Game: WOS/cmd", "wolf");
+  config_set_string ("/" CONFIG_FILE "/Game: UNS/cmd", "ut");
+
   config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
                                                           g_get_user_name ());
 }
