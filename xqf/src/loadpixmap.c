@@ -166,6 +166,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 #endif
     if (pixbuf == NULL)
     {
+      // translator: %s = file name
       xqf_warning (_("Error loading pixmap file: %s"), found_filename);
       g_free (found_filename);
       return NULL;
@@ -178,6 +179,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 
   if (pix->pix == NULL)
   {
+    // translator: %s = file name
     xqf_warning (_("Error loading pixmap file: %s"), found_filename);
     g_free (found_filename);
     return NULL;
@@ -196,6 +198,7 @@ void* load_pixmap_as_pixbuf (const gchar* filename)
 
   if(!found_filename)
   {
+    // translator: %s = file name
     xqf_warning (_("Error loading pixmap file: %s"), filename);
     return NULL;
   }
@@ -207,6 +210,7 @@ void* load_pixmap_as_pixbuf (const gchar* filename)
   pixbuf = gdk_pixbuf_new_from_file(found_filename);
 #endif
   if (pixbuf == NULL)
+    // translator: %s = file name
     xqf_warning (_("Error loading pixmap file: %s"), found_filename);
 
   g_free (found_filename);

@@ -1,5 +1,6 @@
 Nov 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - update German translation
+- add wolfmp as main mod of rtcw (reportet by Ruediger Meier)
 
 Nov 11, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add options for qstat source ip and port range (feature #1034631)

@@ -152,6 +152,7 @@
 	<default_home>~/.wolf</default_home>
 	<main_mod>demomain</main_mod>
 	<main_mod>main</main_mod>
+	<main_mod>wolfmp</main_mod>
 	<pd>wolf_private</pd>
     </game>
     <game>
