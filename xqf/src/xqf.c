@@ -1456,7 +1456,13 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
   if (stat_process)
     return;
 
+  // FIXME:
+  // Set type to 0 - what was is supposed to pass?  The last server type selected in the server list???
+  // Alex - 10/14/2002
+  type = 0;
+
   str = add_server_dialog (&type);
+  // str = add_server_dialog (0);
   if (!str || !*str)
     return;
 

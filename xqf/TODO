@@ -7,3 +7,4 @@
   filtering
 - more sophisticated UT launch function, currently not usable with mods like tacops or strikeforce
 - add OS statistic info for UT 2003 and any other missing games
+- update game types for Q3 mods - move to external file

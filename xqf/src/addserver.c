@@ -40,6 +40,7 @@ static void server_combo_activate_callback (GtkWidget *widget, gpointer data) {
   enter_server_result = strdup_strip (gtk_entry_get_text (
                                 GTK_ENTRY (GTK_COMBO (server_combo)->entry)));
   history_add (server_history, enter_server_result);
+
   config_set_string ("/" CONFIG_FILE "/Add Server/game", 
                                                       type2id (*server_type));
 }
@@ -54,19 +55,25 @@ static void select_server_type_callback (GtkWidget *widget,
 static GtkWidget *create_server_type_menu (void) {
   GtkWidget *menu;
   GtkWidget *menu_item;
+  GtkWidget *first_menu_item = NULL;
   int i;
- 
+  int j=0;
+  
   menu = gtk_menu_new ();
 
   for (i = 0; i < GAMES_TOTAL; i++) {
 
     // Skip a game if it's not configured and show only configured is enabled
-    //if (!games[i].cmd && default_show_only_configured_games)
-    //  continue;
-    // Commented out for now.  Causes problems adding server to favorites - see
-    // BUGS
+    if (!games[i].cmd && default_show_only_configured_games)
+      continue;
   
-    menu_item = gtk_menu_item_new ();
+    if (j == 0) {
+      menu_item = first_menu_item = gtk_menu_item_new ();
+      j++;
+    }
+    else
+      menu_item = gtk_menu_item_new ();
+      
     gtk_menu_append (GTK_MENU (menu), menu_item);
 
     gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
@@ -76,7 +83,10 @@ static GtkWidget *create_server_type_menu (void) {
 
     gtk_widget_show (menu_item);
   }
-
+  
+  // initiates callback to set servertype to first configured game
+  gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
+  
   return menu;
 }
 
@@ -93,8 +103,9 @@ char *add_server_dialog (enum server_type *type) {
 
   enter_server_result = NULL;
   server_type = type;
-
+ 
   typestr = config_get_string ("/" CONFIG_FILE "/Add Server/game");
+ 
   if (typestr) {
     *type = id2type (typestr);
     g_free (typestr);
@@ -146,7 +157,9 @@ char *add_server_dialog (enum server_type *type) {
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
                                                   create_server_type_menu ());
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), *type);
+  // Set default type passed to add_server_dialog
+  //gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), *type);
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
   gtk_widget_show (option_menu);
 
   gtk_widget_show (hbox);
