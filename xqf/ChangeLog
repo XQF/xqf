@@ -1,3 +1,6 @@
+Jun 30, 2003: Alex <alex_b@users.sourceforge.net>
+- Replaced fr.po with updated version from Francois Perichon
+
 Jun 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix variable declaration to work with older gcc
 
