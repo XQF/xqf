@@ -1872,8 +1872,11 @@ static void server_clist_select_callback (GtkWidget *widget, int row,
   debug (7, "server_clist_select_callback() -- Row %d", row);
   server_clist_sync_selection ();
 
-  if (bevent && bevent->type == GDK_2BUTTON_PRESS && bevent->button == 1)
+  if (bevent && bevent->type == GDK_2BUTTON_PRESS && bevent->button == 1 &&
+      !((column == 6) && cur_server && (games[cur_server->type].get_mapshot))) // not for map preview
+  {
     launch_callback (NULL, LAUNCH_NORMAL);
+  }
 }
 
 
@@ -1889,7 +1892,7 @@ static void server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *even
 
 {
   
-  debug (3, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval ); 
+  debug (7, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval ); 
   if (event->keyval == GDK_Delete) {
     del_server_callback( widget, event );
   } else if (event->keyval == GDK_Insert ) {
@@ -2063,7 +2066,7 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
   GList *selection;
   int row, column;
   
-  /* debug (7, "server_clist_event_callback() -- "); */
+  debug (7, "server_clist_event_callback() -- ");
   if (event->type == GDK_BUTTON_PRESS &&
                    bevent->window == server_clist->clist_window) {
 
@@ -2089,9 +2092,10 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 	  server_mapshot_preview_popup_show (buf, buflen, bevent->x, bevent->y);
 
 	  g_free (buf);
+	  return TRUE;
 	}
       }
-      return TRUE;
+      break;
 
     case 2:
       if (gtk_clist_get_selection_info (server_clist, 
