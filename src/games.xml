@@ -170,6 +170,26 @@
     </game>
     <game>
 	<base>Q3_SERVER</base>
+	<type>DOOM3_SERVER</type>
+	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_QUAKE3_MASTERPROTOCOL</flags>
+	<name>Doom 3</name>
+	<default_port>27666</default_port>
+	<default_master_port>27650</default_master_port>
+	<id>DM3S</id>
+	<qstat_str>DM3S</qstat_str>
+	<qstat_option>-dm3s</qstat_option>
+	<qstat_master_option>-dm3m</qstat_master_option>
+	<icon>doom3_xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<arch_identifier>si_version</arch_identifier>
+	<command>doom3</command>
+	<default_home>~/.doom3</default_home>
+	<main_mod>base</main_mod>
+	<pd>doom3_private</pd>
+    </game>
+
+    <game>
+	<base>Q3_SERVER</base>
 	<type>EF_SERVER</type>
 	<name>Voyager Elite Force</name>
 	<id>EFS</id>

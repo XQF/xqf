@@ -139,6 +139,7 @@ static struct quake_private wolfet_private;
 static struct quake_private mohaa_private;
 static struct quake_private cod_private;
 static struct quake_private jk3_private;
+static struct quake_private doom3_private;
 
 #include "games.c"
 
@@ -1434,7 +1435,8 @@ static void q3_analyze_serverinfo (struct server *s) {
 	strcmp (*info_ptr, "g_gametypestring") == 0) {
 	s->gametype = info_ptr[1];
     }
-    else if (strcmp (*info_ptr, "g_needpass") == 0) {
+    else if (strcmp (*info_ptr, "g_needpass") == 0
+	|| strcmp (*info_ptr, "si_usepass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
       if ((n & 1) != 0)
 	s->flags |= SERVER_PASSWORD;

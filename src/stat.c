@@ -1173,6 +1173,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       return NULL;
 
     argv[argi++] = QSTAT_EXEC;
+    argv[argi++] = "-errors";
 
     if( access(qstat_configfile, R_OK) == 0 )
     {
@@ -1303,6 +1304,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   debug (6, "stat_open_conn_qstat() -- server list now %lx", job->servers );
 
   argv[argi++] = QSTAT_EXEC;
+  argv[argi++] = "-errors";
   
   if( access(qstat_configfile, R_OK) == 0 )
   {

@@ -257,6 +257,9 @@ static GtkWidget *wo_set_punkbusterbutton;
 static GtkWidget *woet_proto_entry;
 static GtkWidget *woet_setfs_gamebutton;
 
+/* Doom 3 */
+static GtkWidget *doom3_proto_entry;
+
 /* Voyager Elite Force */
 static GtkWidget *ef_proto_entry;
 static GtkWidget *ef_setfs_gamebutton;
@@ -340,6 +343,12 @@ char* sof2_masterprotocols[] = {
 	"2002 - SOF2 1.00",
 	NULL
 };
+
+char* doom3_masterprotocols[] = {
+	"1.33 - retail",
+	NULL
+};
+
 
 static void game_file_dialog(enum server_type type);
 static void game_dir_dialog(enum server_type type);
@@ -771,6 +780,22 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (woet_setfs_gamebutton)->active;
   config_set_bool ("setfs_game", i);
   game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(i)));
+
+  config_pop_prefix ();
+
+  /* doom3 */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: DOOM3");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
+
+  game_set_attribute(DOOM3_SERVER,"masterprotocol",strdup_strip(str));
+  config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
 
   config_pop_prefix ();
 
@@ -2008,7 +2033,7 @@ static void pref_suggest_command(enum server_type type)
 {
     char** files = NULL;
     char* suggested_file = NULL;
-    char* prevcmd = NULL;
+    const char* prevcmd = NULL;
     unsigned i = 0;
 
     files = games[type].command;
@@ -3173,6 +3198,42 @@ static GtkWidget *woet_options_page (void) {
   return page_vbox;
 }
 
+// additional options for doom3
+static GtkWidget *doom3_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  doom3_proto_entry = gtk_combo_new ();
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (doom3_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (doom3_proto_entry),
+			  createGListfromchar(doom3_masterprotocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (doom3_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry),
+		game_get_attribute(DOOM3_SERVER,"masterprotocol"));
+
+	  gtk_box_pack_start (GTK_BOX (hbox), doom3_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (doom3_proto_entry);
+
+	gtk_widget_show (hbox);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
 // additional options for call of duty
 static GtkWidget *cod_options_page (void) {
   GtkWidget *page_vbox;
@@ -3345,6 +3406,11 @@ void add_wolf_options_to_notebook(GtkWidget *notebook)
 void add_woet_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), woet_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_doom3_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), doom3_options_page(), gtk_label_new (_("Options")));
 }
 
 void add_cod_options_to_notebook(GtkWidget *notebook)
@@ -4189,8 +4255,8 @@ static GtkWidget *qstat_options_page (void) {
 
 static void play_sound_pref (GtkWidget *sound_entry)
 {
-  char* file = gtk_entry_get_text (GTK_ENTRY (sound_entry));
-  char* player = gtk_entry_get_text (GTK_ENTRY (sound_player_entry));
+  const char* file = gtk_entry_get_text (GTK_ENTRY (sound_entry));
+  const char* player = gtk_entry_get_text (GTK_ENTRY (sound_player_entry));
   play_sound_with (player, file, 1);
 }
 
@@ -4549,6 +4615,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[UT2_SERVER].add_options_to_notebook = add_ut2_options_to_notebook;
   new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
   new_genprefs[WOET_SERVER].add_options_to_notebook = add_woet_options_to_notebook;
+  new_genprefs[DOOM3_SERVER].add_options_to_notebook = add_doom3_options_to_notebook;
   new_genprefs[COD_SERVER].add_options_to_notebook = add_cod_options_to_notebook;
   new_genprefs[JK3_SERVER].add_options_to_notebook = add_jk3_options_to_notebook;
   new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_sof2_options_to_notebook;
@@ -4984,6 +5051,20 @@ int prefs_load (void) {
 
   config_pop_prefix ();
 
+  /* Doom 3 */
+  config_push_prefix ("/" CONFIG_FILE "/Game: DOOM3");
+  
+  tmp = config_get_string ("protocol=1.33");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+
+  game_set_attribute(DOOM3_SERVER,"masterprotocol",tmp);
+
+  config_pop_prefix ();
+
   /* Call of Duty */
   config_push_prefix ("/" CONFIG_FILE "/Game: CODS");
   
@@ -5147,7 +5228,7 @@ static inline GtkWidget* topmost_parent(GtkWidget* widget)
 void game_file_dialog_ok_callback (GtkWidget *ok_button, gpointer data)
 {
   enum server_type type;
-  char *filename = NULL;
+  const char *filename = NULL;
   GtkWidget* filesel = topmost_parent(ok_button);
 
   if(!filesel)
@@ -5169,7 +5250,7 @@ void game_file_dialog_ok_callback (GtkWidget *ok_button, gpointer data)
 
 void game_file_activate_callback (enum server_type type)
 {
-  char* file = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
+  const char* file = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
 
   pref_guess_dir (type, file, TRUE);
 }
@@ -5179,7 +5260,7 @@ void game_file_activate_callback (enum server_type type)
  */
 void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry)
 {
-    char *filename = NULL;
+    const char *filename = NULL;
     GtkWidget* filesel = topmost_parent(widget);
 
     filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
@@ -5288,7 +5369,7 @@ static GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpoi
 /** create new file_dialog and connect the ok button to the textentry */
 static GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry)
 {
-    GtkWidget* filesel = file_dialog(title, file_dialog_ok_set_textentry, entry);
+    GtkWidget* filesel = file_dialog(title, GTK_SIGNAL_FUNC(file_dialog_ok_set_textentry), entry);
     const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
     if(text && *text)
     {
