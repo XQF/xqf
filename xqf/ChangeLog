@@ -5,6 +5,7 @@ Nov 21, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - util function timet2string, it has yet to be verified this one works on
   none-linux system too.
 - use setlocale(LC_ALL, "");
+- fix __FUNCTION__ warnings
 
 Nov 20, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix wrong pointer passed to userver_ref
