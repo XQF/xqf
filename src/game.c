@@ -97,6 +97,7 @@ static int bf1942_exec (const struct condef *con, int forkit);
 static int exec_generic (const struct condef *con, int forkit);
 static int ssam_exec (const struct condef *con, int forkit);
 static int savage_exec (const struct condef *con, int forkit);
+static int netpanzer_exec (const struct condef *con, int forkit);
 
 /*
 static GList *q1_custom_cfgs (struct game* this, char *dir, char *game);
@@ -2794,6 +2795,33 @@ static int ssam_exec(const struct condef *con, int forkit) {
   return retval;
 }
 
+// Netpanzer: only supports -c
+static int netpanzer_exec(const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->server) {
+    argv[argi++] = "-c";
+    argv[argi++] = con->server;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  return retval;
+}
+
 // launch any game that uses the gamespy protocol
 // the first argument is the content of gamename field (may be empty),
 // the second one the ip of the server
@@ -2804,7 +2832,7 @@ static int gamespy_exec (const struct condef *con, int forkit) {
   struct game *g = NULL;
   int retval;
   char **info_ptr;
-  char* gamename="";
+  char* gamename=NULL;
 
   char* hostport=NULL;
   char* real_server=NULL;
@@ -2823,14 +2851,17 @@ static int gamespy_exec (const struct condef *con, int forkit) {
   // go through all server rules
   for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (!strcmp (*info_ptr, "gamename")) {
-      gamename=info_ptr[1];
+      gamename = strdup_strip(info_ptr[1]);
     }
     else if (!strcmp (*info_ptr, "hostport")) {
       hostport=info_ptr[1];
     }
   }
 
-  argv[argi++] = strdup_strip (gamename);
+  if(gamename)
+    argv[argi++] = gamename;
+  else
+    argv[argi++] = "";
   
   if (con->server) {
     // gamespy port can be different from game port
@@ -2851,6 +2882,7 @@ static int gamespy_exec (const struct condef *con, int forkit) {
 
   g_free (cmd);
   g_free (real_server);
+  g_free (gamename);
   return retval;
 }
 
