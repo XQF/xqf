@@ -28,8 +28,11 @@ src/xpm/Makefile \
 pixmaps/Makefile.in \
 pixmaps/flags/Makefile.in \
 po/Makefile.in \
+po/Makefile.in.in \
 po/POTFILES \
-po/*.gmo
+po/*.gmo \
+INSTALL \
+COPYING
 
 # gettextize
 rm -rf \
@@ -49,6 +52,12 @@ po/remove-potcdate.sin \
 intl/*.* \
 intl/ChangeLog \
 intl/VERSION
+
+#intltool
+rm -rf \
+intltool-*.in \
+po/remove-potcdate.sed \
+po/stamp-po
 
 rm -rf \
 pixmaps/flags/*.png
