@@ -569,7 +569,7 @@ msgstr "Hostnamen anzeigen"
 
 #: src/pref.c:2254
 msgid "Show default port"
-msgstr "Standart Port anzeigen"
+msgstr "Standard Port anzeigen"
 
 #: src/pref.c:2269
 msgid "Sort servers real-time during refresh"
@@ -1206,7 +1206,7 @@ msgstr "_Hostnamen anzeigen"
 
 #: src/xqf.c:1830
 msgid "Show Default _Port"
-msgstr "Standart_port anzeigen"
+msgstr "Standard_port anzeigen"
 
 #: src/xqf.c:1852
 msgid "_Server Filters"

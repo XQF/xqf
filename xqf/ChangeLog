@@ -1,3 +1,9 @@
+Nov 22, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- the ppc problem turned out to be a bug in filter.c, special thanks to Philipp
+  Thomas for finding it!
+- other changes by Philipp Thomas to get rid of some compiler warnings
+- updated german translation
+
 Nov 21, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - fixed the ppc fix (hopefully ;)
 

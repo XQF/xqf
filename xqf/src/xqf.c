@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>	/* atoi */
@@ -24,6 +26,10 @@
 #include <arpa/inet.h>	/* inet_ntoa */
 #include <time.h>	/* time */
 #include <string.h>	/* strlen */
+
+#ifdef ENABLE_NLS
+#include <locale.h>
+#endif
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -56,7 +62,6 @@
 #include "sort.h"
 #include "menus.h"
 #include "config.h"
-#include "gnuconfig.h"
 #include "debug.h"
 
 time_t xqf_start_time;
@@ -2481,7 +2486,12 @@ int main (int argc, char *argv[]) {
   int i,j; /* For parsing the command line. */
 
 #ifdef ENABLE_NLS
+#  ifdef HAVE_LC_MESSAGES
+  setlocale(LC_CTYPE, "");
+  setlocale(LC_MESSAGES, "");
+#  else
   setlocale(LC_ALL, "");
+#  endif
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 #endif

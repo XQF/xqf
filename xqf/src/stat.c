@@ -503,7 +503,7 @@ void parse_saved_server (GSList *strings) {
 
 static void adjust_pointers (GSList *list, gpointer new, gpointer old) {
   while (list) {
-    list->data = new + (list->data - old);
+    list->data = (gpointer) ((char *)new + ((char *)list->data - (char *)old));
     list = list->next;
   }
 }
