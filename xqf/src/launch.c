@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>	/* chmod, waitpid, kill */
 #include <string.h>	/* memchr, strlen */
 #include <unistd.h>	/* execvp, fork, _exit, chdir, read, close */
@@ -27,6 +29,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "game.h"
 #include "pref.h"
@@ -39,13 +42,6 @@
 
 #ifndef WAIT_ANY
 # define WAIT_ANY	-1
-#endif
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
 #endif
 
 #define CLIENT_ERROR_BUFFER	256

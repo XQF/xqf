@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>	/* FILE, fprintf, fopen, fclose */
 #include <string.h>	/* strlen, strcpy, strcmp, strtok */
@@ -28,6 +30,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "pref.h"
 #include "launch.h"

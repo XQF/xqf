@@ -16,14 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "i18n.h"
 #include "menus.h"
-#include "gnuconfig.h"
 
 static void create_menu_recursive (GtkWidget *menu, 
 				   const struct menuitem *items, 

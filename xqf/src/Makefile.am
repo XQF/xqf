@@ -1,7 +1,7 @@
 SUBDIRS = xpm
 
 localedir = $(datadir)/locale
-INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\" -I@includedir@ @GTK_CFLAGS@
+INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\" @GTK_CFLAGS@
 CFLAGS = @CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
 
 bin_PROGRAMS = xqf
@@ -76,4 +76,5 @@ utils.h \
 xqf-ui.h \
 xqf.h \
 xutils.h \
-zipped.h
+zipped.h \
+i18n.h

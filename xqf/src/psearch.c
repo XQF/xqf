@@ -16,12 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <regex.h>
 #include <string.h>	/* strcmp */
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "srv-list.h"
 #include "dialogs.h"
@@ -30,14 +33,6 @@
 #include "history.h"
 #include "config.h"
 #include "psearch.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#define N_(string) (string)
-#else
-#define _(string) (string)
-#endif
 
 #define REGCOMP_FLAGS 	(REG_EXTENDED | REG_NOSUB | REG_ICASE)
 

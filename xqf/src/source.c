@@ -31,6 +31,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "source.h"

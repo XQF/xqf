@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>	/* FD_SETSIZE */
 #include <stdio.h>	/* fprintf */
 #include <stdlib.h>	/* strtol */
@@ -24,6 +26,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "game.h"
 #include "pref.h"
@@ -35,7 +38,6 @@
 #include "xutils.h"
 #include "config.h"
 #include "rc.h"
-#include "gnuconfig.h"
 #include "debug.h"
 
 char 	*user_rcdir = NULL;

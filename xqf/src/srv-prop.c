@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>	/* chmod */
 #include <stdio.h>	/* FILE, fprintf, etc... */
 #include <string.h>	/* strchr, strcmp */
@@ -28,6 +30,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "game.h"
 #include "pref.h"
@@ -39,14 +42,6 @@
 #include "xutils.h"
 #include "dialogs.h"
 #include "srv-prop.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
 
 static  GtkWidget *password_entry;
 static  GtkWidget *spectator_entry;
