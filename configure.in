@@ -63,9 +63,10 @@ AC_SUBST(QSTAT23)
 
 dnl determine if we should include readline support...
 dnl ripped from physfs package
-AC_ARG_ENABLE(readline,
-    AC_HELP_STRING([--enable-externalrcon],[compile external rcon program (default=yes)])
-    , ,enable_rcon=yes)
+dnl AC_ARG_ENABLE(readline,
+dnl    AC_HELP_STRING([--enable-externalrcon],[compile external rcon program (default=yes)])
+dnl    , ,enable_rcon=yes)
+AC_ARG_ENABLE(readline,[  --enable-externalrcon   compile external rcon program (default=yes)], ,enable_rcon=yes)
 if test x$enable_rcon = xyes; then
   AC_CHECK_HEADER(readline/readline.h, have_readline_hdr=yes)
   AC_CHECK_LIB(readline, readline, have_readline_lib=yes, , )
@@ -78,10 +79,10 @@ if test x$enable_rcon = xyes; then
       XQFRCON_LIBS="-lreadline"
       AC_SUBST(XQFRCON_LIBS)
     else
-      AC_MSG_NOTICE(libreadline not found, rcon program disabled)
+      AC_MSG_WARN(libreadline not found, rcon program disabled)
     fi
   else
-    AC_MSG_NOTICE(libreadline not found, rcon program disabled)
+    AC_MSG_WARN(libreadline not found, rcon program disabled)
   fi
 fi
 
