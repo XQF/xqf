@@ -2356,7 +2356,7 @@ static int q3_exec (const struct condef *con, int forkit) {
       //argv[argi++] = con->s->game;
       
       // Get game dir regardless of case
-      argv[argi++] = find_game_dir(g->real_dir, con->s->game);
+      argv[argi++] = find_game_dir(quake3_data_dir(g->real_dir), con->s->game);
     }
     if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
   }
