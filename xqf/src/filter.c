@@ -995,7 +995,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
   /* max timeouts */
 
-  label = gtk_label_new (_("the number of retires is fewer than"));
+  label = gtk_label_new (_("the number of retries is fewer than"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 
                                                                          0, 0);
@@ -1034,7 +1034,7 @@ static void server_filter_page (GtkWidget *notebook) {
   /* GAMETYPE Filter -- baa */
   /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
     
-  label = gtk_label_new (_("The Game Type Contains the String:"));
+  label = gtk_label_new (_("the game type contains the string"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
 		    0, 0);
