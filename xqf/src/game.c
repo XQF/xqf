@@ -2468,21 +2468,30 @@ static int q3_exec (const struct condef *con, int forkit) {
   protocol = find_server_setting_for_key ("protocol", con->s->info);
   debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
   tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
+
+  // Strip of trailing space if it has one and copy to tmp_cmd
   if( strcspn (cmd, " ")) {
     strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
   } else {
     strcpy (tmp_cmd, cmd);
   }
+
+  // Append protoxx to the temp command line
   strcat (tmp_cmd, "proto" ); 
   strcat (tmp_cmd, protocol);
   strcat (tmp_cmd, "\0");
   debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
+
+  // Check to see if we can find that generated filename
   if ((tmp_fp = fopen( tmp_cmd, "r" ))){
     fclose (tmp_fp);
     debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
+    
+    // Found it, so use generated filename.
     argv[argi++] = tmp_cmd;
     strtok (cmd, delim);
   } else {
+    // Could not so use regular filename
     argv[argi++] = strtok (cmd, delim);
   }
 
@@ -2495,28 +2504,6 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "0";
   }
 
-#if 0	// who cares if the password is visible in the process list?
-  if (con->password || con->rcon_password) {
-    game_dir = quake3_data_dir (g->real_dir);
-
-    if (game_dir) {
-      file = file_in_dir (game_dir, PASSWORD_CFG);
-      if (!write_passwords (file, con)) {
-	if (!dialog_yesno (NULL, 1, "Launch", "Cancel", 
-             "Cannot write to file \"%s\".\n\nLaunch client anyway?", file)) {
-	  g_free (file);
-	  g_free (cmd);
-	  return;
-	}
-      }
-      g_free (file);
-      g_free (game_dir);
-    }
-
-    argv[argi++] = "+exec";
-    argv[argi++] = PASSWORD_CFG;
-  }
-#else
   if (con->rcon_password)
   {
     argv[argi++] = "+rconpassword";
@@ -2528,7 +2515,6 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "+password";
     argv[argi++] = con->password;
   }
-#endif
 
   if (con->server) {
     argv[argi++] = "+connect";
