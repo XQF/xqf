@@ -4370,7 +4370,7 @@ static GtkWidget *qstat_options_page (void) {
 
   /* srcip */
 
-  label = gtk_label_new (_("Soure IP Address"));
+  label = gtk_label_new (_("Source IP Address"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
@@ -4391,7 +4391,7 @@ static GtkWidget *qstat_options_page (void) {
 
   {
     char buf[6];
-    label = gtk_label_new (_("Soure Port Range"));
+    label = gtk_label_new (_("Source Port Range"));
     gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
     gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
     gtk_widget_show (label);

@@ -1,3 +1,7 @@
+Nov 22, 2004: Jordi Mallach <jordi@sindominio.net>
+- fix typo: Soure -> Source
+- Update Catalan and Spanish translations
+
 Nov 21, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix compatability issues with gcc 2.95
 - remove unneeded tray icon animation frames
