@@ -60,6 +60,7 @@ extern	struct pixmap sfs_pix;
 extern	struct pixmap t2_pix;
 extern	struct pixmap hr_pix;
 extern	struct pixmap un_pix;
+extern	struct pixmap gamespy3d_pix;
 
 extern	struct pixmap gplus_pix;
 extern	struct pixmap rminus_pix;

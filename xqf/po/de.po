@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-09-27 23:37+0200\n"
-"PO-Revision-Date: 2001-09-27 23:38+GMT\n"
+"POT-Creation-Date: 2001-09-28 11:43+0200\n"
+"PO-Revision-Date: 2001-09-28 11:43+GMT\n"
 "Last-Translator: Ludwig Nussel <ludwig.nussel@web.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -217,6 +217,12 @@ msgstr "Hoch"
 #: src/flt-player.c:830
 msgid "Down"
 msgstr "Runter"
+
+#. server_type
+#. flags
+#: src/game.c:431
+msgid "Generic Gamespy"
+msgstr "Allgemein Gamespy"
 
 #: src/launch.c:72 src/launch.c:191
 msgid "XQF: ERROR!"
@@ -646,6 +652,10 @@ msgid ""
 msgstr ""
 "In Datei %s kann nicht geschrieben werden\n"
 "Fehler: %s\n"
+
+#: src/source.c:1022
+msgid "Favorites"
+msgstr "Favoriten"
 
 #: src/srv-prop.c:332
 msgid "IP Address:"

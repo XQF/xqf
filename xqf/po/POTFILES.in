@@ -9,7 +9,7 @@ src/dialogs.c
 #src/dns.c
 src/filter.c
 src/flt-player.c
-#src/game.c
+src/game.c
 #src/history.c
 #src/host.c
 src/launch.c

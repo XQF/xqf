@@ -57,6 +57,7 @@
 #define	T2_DEFAULT_PORT		28000		/* Tribes 2 */
 #define	HR_DEFAULT_PORT		28910		/* Heretic2 */
 #define	UN_DEFAULT_PORT		7777		/* Unreal */
+#define	GPS_DEFAULT_PORT	27888		/* Gamespy Generic */
 
 #define	QWM_DEFAULT_PORT	27000		/* QuakeWorld */
 #define	Q2M_DEFAULT_PORT	27900		/* Quake2 master */
@@ -99,6 +100,7 @@ enum server_type {
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
   UN_SERVER,
 #endif
+  GPS_SERVER,
   UNKNOWN_SERVER
 };
 
