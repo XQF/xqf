@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.11.2\n"
 "Report-Msgid-Bugs-To: xqf-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2003-11-24 12:44+0100\n"
+"POT-Creation-Date: 2003-11-24 11:58+0100\n"
 "PO-Revision-Date: 2003-11-24 12:51+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -804,7 +804,9 @@ msgstr "Mostrar nombres de servidores"
 
 #: src/pref.c:3622
 msgid "Show hostnames instead of IP addresses if possible"
-msgstr "Mostrar los nombres de los servidores en vez de las direcciones IP si es posible"
+msgstr ""
+"Mostrar los nombres de los servidores en vez de las direcciones IP si es "
+"posible"
 
 #: src/pref.c:3633
 msgid "Show default port"
@@ -926,7 +928,10 @@ msgstr "Parar la canción actual en XMMS"
 msgid ""
 "Stopping XMMS will release /dev/dsp. Activate this option if you use XMMS "
 "and have a cheap soundcard that allows only one application to open /dev/dsp."
-msgstr "Parar XMMS liberará /dev/dsp. Activar esta opción sólo si usas XMMS y teneis una tarjeta de sonido mediocre que sólo permite a una aplicación abrir el /dev/dsp."
+msgstr ""
+"Parar XMMS liberará /dev/dsp. Activar esta opción sólo si usas XMMS y teneis "
+"una tarjeta de sonido mediocre que sólo permite a una aplicación abrir el /"
+"dev/dsp."
 
 #: src/pref.c:4032
 msgid "QStat Options"
