@@ -1,3 +1,6 @@
+Dec 18, 2002: Jordi Mallach <jordi@sindominio.net>
+- Updated Catalan and Spanish translations.
+
 Dec 08, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - update configure.in and autogen.sh to match newer automake/autoconf
 
