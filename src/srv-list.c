@@ -38,6 +38,7 @@
 #include "pixmaps.h"
 #include "srv-info.h"
 #include "srv-list.h"
+#include "srv-prop.h" /*pulp*/
 
 
 GSList *qw_colors_pixmap_cache = NULL;
@@ -94,6 +95,11 @@ static int server_clist_refresh_row (struct server *s, int row) {
   struct pixmap *retries_pix = NULL;
   int col;
   char* private_col_text = "";
+  
+  /*pulp*/
+  int reserved_slots_buffer;
+  char slot_buffer_list[2];
+  struct server_props *p;
 
   text[0] = NULL;
 
@@ -169,7 +175,28 @@ static int server_clist_refresh_row (struct server *s, int row) {
      (s->curplayers >= s->maxplayers)? man_red_pix.mask : man_black_pix.mask);
   }
 #endif
-  if (s->curplayers >= s->maxplayers)
+
+  /*pulp*/
+   p = properties (s);	
+   
+   if (p) {
+  	  if (p->slots_free) {
+
+    	  	strcpy(slot_buffer_list,p->slots_free);
+		reserved_slots_buffer=((int) slot_buffer_list[0])-48;
+    	  }
+
+    	  else {
+    		reserved_slots_buffer=0;
+    	  }
+    }
+
+    else {
+    reserved_slots_buffer=0;
+    }
+
+  /*pulp*/
+  if (s->curplayers >= (s->maxplayers-reserved_slots_buffer))
     gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
                            man_red_pix.pix, man_red_pix.mask );
 

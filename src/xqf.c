@@ -890,8 +890,12 @@ static void stat_one_server (struct server *server) {
 static void launch_close_handler (struct stat_job *job, int killed) {
   struct server_props *props;
   int launch = FALSE;
+
   struct server *s;
   struct condef *con;
+  int reserved_slots;
+  char slot_buffer[2];
+
 
   con = (struct condef *) job->data;
   job->data = NULL;
@@ -918,8 +922,27 @@ static void launch_close_handler (struct stat_job *job, int killed) {
         return;
       }
     }
+    
+    
+    /*pulp*/
+    if (props) {
+  	  if (props->slots_free) {
+    	  	strcpy(slot_buffer,props->slots_free);
+		reserved_slots=((int) slot_buffer[0])-48;
+    	  }
 
-    if (!launch && s->curplayers >= s->maxplayers && !con->spectate) {
+    	  else {
+    		reserved_slots=0;
+    	  }
+    }
+
+    else {
+    reserved_slots=0;
+    }
+
+
+    /*pulp*/
+    if (!launch && s->curplayers >= (s->maxplayers -reserved_slots)  && !con->spectate) {
   //  if (!launch && s->curplayers != 99 && !con->spectate) {
       launch = dialog_yesnoredial (NULL, 1, _("Launch"), _("Cancel"), _("Redial"), 
   		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
@@ -942,7 +965,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
         progress_bar_reset (main_progress_bar);
 	*/
 
-	gboolean launch = redial_dialog(con->s);
+	gboolean launch = redial_dialog(con->s,reserved_slots);/*pulp*/
 
 	if(launch == FALSE)
 	{

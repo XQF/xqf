@@ -29,7 +29,8 @@
 #include "stat.h"
 #include "host.h"
 #include "server.h"
-#include "srv-list.h"
+#include "srv-list.h" /*pulp*/
+
 
 static gboolean launchnow;
 static GtkWidget* redial_window;
@@ -38,6 +39,8 @@ static unsigned countdown;
 static const unsigned default_redial_wait = 5;
 
 static int timeoutid;
+
+static int res_slots; /*pulp*/
 
 static void stat_redial_close_handler (struct stat_job *job, int killed);
 static void stat_redial_server_handler (struct stat_job *job, struct server *s);
@@ -139,7 +142,7 @@ static void stat_redial_close_handler (struct stat_job *job, int killed)
 
     if (!killed)
     {
-	if (con->s->curplayers < con->s->maxplayers)
+	if (con->s->curplayers < (con->s->maxplayers-res_slots)) /*pulp*/
 	//if (con->s->curplayers == 99) 
 	{
 	    // ok, free slot. launch!
@@ -245,7 +248,8 @@ static GtkWidget* create_redialwindow (void)
 /** /glade function */
 
 /** open redial dialog, return true if game should be launched, false otherwise */
-gboolean redial_dialog (struct server* s)
+
+gboolean redial_dialog (struct server* s, int r_slots) /*pulp*/
 {
     GtkWidget* progress;
 
@@ -256,6 +260,7 @@ gboolean redial_dialog (struct server* s)
     timeoutid = -1;
 
     countdown = 0;
+    res_slots=r_slots;
 
     redial_window = create_redialwindow();
     progress = gtk_object_get_data(GTK_OBJECT(redial_window),"secondsprogress");

@@ -31,6 +31,7 @@ struct server_props {
   char *server_password;
   char *spectator_password;
   char *rcon_password;
+  char *slots_free; /*pulp*/
 };
 
 extern	struct server_props *properties (struct server *s);
