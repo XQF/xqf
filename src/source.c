@@ -27,7 +27,9 @@
 #include <arpa/inet.h>	/* inet_aton, inet_ntoa */
 #include <errno.h>	/* errno */
 
+#ifndef errno
 extern	int errno;
+#endif
 
 #include <gtk/gtk.h>
 
@@ -905,7 +907,7 @@ static void update_master_list_action (const char *action) {
 }
 
 
-static void update_master_list_builtin () {
+static void update_master_list_builtin (void) {
   char **ptr;
 
   for (ptr = builtin_masters_update_info; *ptr; ptr++)

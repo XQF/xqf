@@ -163,10 +163,13 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 
 
 static void msg_terminate (char *msg, int *size) {
-  if (!msg || size < 0)
+
+/* FIXME: what is intended here ??? */
+
+  if (!size || !msg || *size < 0)
     return;
 
-  if (size == 0) {
+  if (*size == 0) {
     msg[0] = '\n';
     msg[1] = '\0';
     return;

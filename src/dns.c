@@ -34,7 +34,9 @@
 #include <sys/param.h>	/* MAXHOSTNAMELEN */
 #include <time.h>	/* time */
 
+#ifndef h_errno
 extern int h_errno;	/* h_errno */
+#endif
 
 #include <gtk/gtk.h>
 

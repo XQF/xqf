@@ -671,7 +671,7 @@ void ui_done (void) {
 }
 
 
-void restore_main_window_geometry () {
+void restore_main_window_geometry (void) {
   int height, width;
   int pane1, pane2, pane3;
 

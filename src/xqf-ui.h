@@ -93,7 +93,7 @@ extern	void progress_bar_start (GtkWidget *pbar, int activity_mode);
 extern	void progress_bar_set_percentage (GtkWidget *pbar, float percentage);
 
 extern	void ui_done (void);
-extern	void restore_main_window_geometry ();
+extern	void restore_main_window_geometry (void);
 
 
 #endif /* __XQF_UI_H__ */
