@@ -828,7 +828,7 @@ GtkWidget *create_server_type_menu (int active_type,
       first_menu_item = menu_item;
       menu_type = j;
     }
-    else if (i == 0)
+    else if (!first_menu_item)
       first_menu_item = menu_item;
     
     gtk_menu_append (GTK_MENU (menu), menu_item);
