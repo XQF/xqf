@@ -6,3 +6,4 @@
 - improve performance with huge server lists (halflife), maybe by serverside
   filtering
 - update game types for Q3 mods - move to external file
+- Ability to delete servers from non-Favorites

@@ -1144,6 +1144,18 @@ games should work with basic setup in XQF, but some may require special configur
 <blockquote><b>Quake3:</b>                    
   <blockquote>Under Preferences - Games, enter the 'command line' and 'working
 directory'. Nothing special is <i>normally</i> needed.                   
+<p>XQF uses the 'game' server variable to determine how to launch Quake3. 
+For example, if the server reports a <b>game</b> of <b>q3ut2</b>, Quake3 will be
+launched with <b>+set fs_game q3ut2</b>.  In some cases, a server may report the
+incorrect case such as <b>Q3UT2</b>.  This would cause XQF to launch Quake3 using
+<b>+set fs_game Q3UT2</b> which would result in a new directory being created in
+your Quake3 directory, and none of the mods files being found.</p>
+
+<p>In XQF 0.9.10 and newer, if an exact match is not found in the Quake3 /
+~/.q3a directory, a search will be performed to find a matching directory
+regardless of case.  
+In the above example, Quake3 would be launched with <b>+set fs_game q3ut2</b>
+even if the server reported <b>Q3UT2</b> and you had the mod installed as <b>q3ut2</b>.</p>
              
     <p><b><u>QUAKE 3 ARENA SPECIAL INSTRUCTIONS (AKA HACK) for v1.17 and 1.27</u></b></p>
                                   
