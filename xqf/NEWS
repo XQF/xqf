@@ -3,10 +3,11 @@ XQF 0.9.7
 Changes since 0.9.6g:
 
 o i18n fixes
-o Support for games using the GameSpy protocol
+o Support for games using the GameSpy protocol (please note Descent
+  can't be launched from within XQF at the moment)
 o Support for Rune
 o Reorganization and fixes of settings dialogs
-o Quake3 and Wolf support improvements
+o Quake3 and Wolf support improvements (Wolf uses protocol 57 now)
 o Quake fixes for QuakeForge
 o PowerPC segfault fixed
 o German and Spanish updates
