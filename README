@@ -1,0 +1,93 @@
+
+                                  XQF 0.9.4
+                               (March 18 2000)
+
+DESCRIPTION
+-----------
+
+XQF is Quake/QuakeWorld/Quake2/Quake3 server browser and launcher for X11.
+It uses the GTK+ (http://www.gimp.org/gtk) toolkit.
+XQF is a front-end to QStat, a program by Steve Jankowski.
+
+Development platform: Debian/Linux (glibc2.1), XFree86 3.3.6, GTK+ 1.2.7.
+
+Features:
+  - Supports Quake, QuakeWorld, Quake2, Quake3: Arena, Hexen2, HexenWorld, 
+      Sin, Half-Life, Kingpin, Heretic2, Unreal Tournament
+  - Uses QStat to communicate with masters/servers
+  - Displays server rules and player info
+  - Players and servers sorting
+  - Favorite servers list
+  - Simple filtering for servers
+  - Player Filter (Buddy Lists)
+  - Player name, color, skin and model selection
+  - QuakeWorld skin visualization with coloring
+  - Custom configs
+  - Decodes and displays extended bit-field server flags (dmfalgs, 
+      teamplay, etc...)
+  - Remote server administration tool (rcon) for QuakeWorld, HexenWorld,
+      Quake2, Quake3: Arena, Half-Life, Sin, Kingpin, Heretic2 servers
+
+
+REQUIREMENTS
+------------
+
+ - A UNIX computer and C compiler (gcc)
+ - X11 (X Window System)
+ - GTK+ 1.2.5+ http://www.gtk.org
+ - QStat 2.3g http://www.activesw.com/people/steve/qstat.html
+ - [Optionally] wget ftp://ftp.gnu.org/gnu/wget/ to retrieve server 
+   listings from the Web
+ - [Optionally] gzip http://www.gnu.org/software/gzip/gzip.html 
+   or bzip2 http://www.muraroa.demon.co.uk/ for data file compression
+
+
+COMPILATION
+-----------
+
+Untar the xqf-X.X.XX.tar.gz archive, change directory to xqf-X.X.XX,
+
+   ./configure
+   make
+
+To install the binary become root if necessary and run "make install".
+
+
+USAGE
+-----
+
+QStat 2.2b or 2.3[cdefg] is required.  QStat 2.3g is *HIGHLY* recommended.  
+It must be in your $PATH.
+
+QStat home page is http://www.activesw.com/people/steve/qstat.html
+
+Server list navigation:
+ - Left double-click launches game on selected server.
+ - Right click pops up server option menu.
+ - Middle click selects one server and refreshes its information.
+
+XQF can be customized via GTK's rc files.  XQF parses files
+/etc/gtkrc, $HOME/.gtkrc, $HOME/.qf/gtkrc.
+
+Please send bug reports or suggestions to roma@botik.ru
+
+
+AVAILABILITY
+------------
+
+  http://www.linuxgames.com/xqf/
+  ftp://ftp.linuxgames.com/pub/xqf/
+
+
+COPYRIGHT
+---------
+
+XQF is Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>
+
+Copying is allowed under the terms of GNU General Public License.  
+See the file COPYING for more details.
+
+
+----------------------------------------------------------------------
+Roman Pozlevich <roma@botik.ru>
+
