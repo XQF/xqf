@@ -102,6 +102,7 @@ int 	default_save_plrinfo;
 int	default_auto_favorites;
 int	default_show_splash;
 int	default_auto_maps;
+int	skip_startup_mapscan;
 int	default_show_tray_icon;
 int	default_toolbar_style;
 int	default_toolbar_tips;
@@ -5431,7 +5432,7 @@ int prefs_load (void) {
   {
     load_game_defaults (i);
 
-    if(default_auto_maps)
+    if(default_auto_maps && !skip_startup_mapscan)
       scan_maps_for(i);
 
     if(games[i].cmd_or_dir_changed)

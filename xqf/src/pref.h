@@ -114,6 +114,8 @@ extern	char	*sound_stop;
 extern	char	*sound_server_connect;
 extern	char	*sound_redial_success;
 
+extern int skip_startup_mapscan;
+
 // Quake 3 Arena
 //extern struct q3engineopts q3_opts;
 // Return to Castle Wolfenstein

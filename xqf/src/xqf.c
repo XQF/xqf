@@ -1017,7 +1017,7 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
   */
 
   tray_icon_stop_animation ();
-    print_status (main_status_bar, _("Done."));
+  reset_main_status_bar();
 
   progress_bar_reset (main_progress_bar);
 
@@ -3867,6 +3867,7 @@ static struct option long_options[] =
     {"version", 0, 0, 'v'},
     {"help", 0, 0, 'h'},
     {"newversion", 0, 0, 129},
+    {"nomapscan", 0, 0, 130},
     {0, 0, 0, 0}
 };
 
@@ -3907,6 +3908,9 @@ static void parse_commandline(int argc, char* argv[])
 		break;
 	    case 129:
 		cmdline_newversion = TRUE;
+		break;
+	    case 130:
+		skip_startup_mapscan = TRUE;
 		break;
 	    case '?':
 	    case ':':
