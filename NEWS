@@ -8,7 +8,7 @@ o Internationalization (gettext) support, Spanish and German translations.
 o Added "game type" filter.
 o Added "General" preferences page, which hosts many of the options
   which were in "Appearance" previously.
-
+o Initial Return to Castle Wolfenstein support.
 
 XQF 0.9.6f
 ~~~~~~~~~~
