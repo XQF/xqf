@@ -36,6 +36,7 @@
 #include "debug.h"
 #include "i18n.h"
 
+static char* find_file_in_path2(const char* files, gboolean relative);
 
 short strtosh (const char *str) {
   long tmp;
@@ -521,6 +522,16 @@ const char* bool2str(int i)
  */
 char* find_file_in_path(const char* files)
 {
+  return find_file_in_path2(files, FALSE);
+}
+
+char* find_file_in_path_relative(const char* files)
+{
+  return find_file_in_path2(files, TRUE);
+}
+
+static char* find_file_in_path2(const char* files, gboolean relative)
+{
     char** binaries = NULL;
     char* path = NULL;
     int i = 0, j = 0;
@@ -548,7 +559,7 @@ char* find_file_in_path(const char* files)
 	    {
 		// If directory name is blank, don't add a / - happens if
 		// a complete path was passed
-		if (strlen(directories[j]))
+		if (!relative && strlen(directories[j]))
   		  found = g_strconcat(directories[j],"/",binaries[i],NULL);
 		else
 		  found = g_strdup(binaries[i]);
@@ -558,6 +569,7 @@ char* find_file_in_path(const char* files)
 	}
     }
 
+    g_strfreev(directories);
     g_strfreev(binaries);
 
     return found;
@@ -692,83 +704,152 @@ GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*u
   return list;
 }
 
+/** \brief determine directory for game binary
+ *
+ * Extracts the path from path using the following rules:
+ * - If path is a symlink:
+ *   - If pointed to file contains '..', just stop, otherwise strip filename and
+ *     store as directory
+ *   - If there is no /'s in the pointed to file, use the original path instead and
+ *     strip filename and store as directory
+ * 
+ * - If path is not a symlink:
+ *   - strip filename and store as directory
+ *
+ * Path can be either a file or a directory
+ *
+ * Examples:
+ *
+ * path:	/usr/bin/quake2 symlink to /games/quake2/quake2
+ * result:	/games/quake2/
+ *
+ * path:	/usr/bin/quake symlink to ../../games/quake2/quake2
+ * result:	(stops - leaves as-is)
+ *
+ * path:	/games/quake2/quake2
+ * result:	/games/quake2/
+ *
+ * path:	quake2
+ * result:	search $PATH for binary then use above rules
+ *
+ * path:	~/bin/quake2
+ * result:	expand tilde then use above rules
+ *
+ * @returns game direcory or NULL. must be freed
+ */
+
 char* resolve_path(const char* path)
 {
-  // Extracts the path from path using the following rules:
-  // - If path is a symlink:
-  //   - If pointed to file contains '..', just stop, otherwise strip filename and
-  //     store as directory
-  //   - If there is no /'s in the pointed to file, use the original cmd_entry instead and
-  //     strip filename and store as directory
-  // 
-  // - If path is not a symlink:
-  //   - strip filename and store as directory
-  //
-  // Path can be either a file or a directory
-  //
-  // Examples:
-  //
-  // cmd_entry:		/usr/bin/quake2 symlink to /games/quake2/quake2
-  // result dir:	/games/quake2/
-  //
-  // cmd_entry:		/usr/bin/quake symlink to ../../games/quake2/quake2
-  // result dir:	(stops - leaves as-is)
-  //
-  // cmd_entry:		/games/quake2/quake2
-  // result dir:	/games/quake2/
-  //
-  // cmd_entry:		quake2
-  // result dir:	(stops - leaves as-is)
-  //
   
-  struct stat buf;
+  struct stat statbuf;
   int length = 0;
-  char buf2[256];
+  char buf[256];
   char *ptr = NULL;
   char *dir = NULL;
+  char* tmp = NULL;
   
-  if (strcmp (path, "")) {
-    lstat(path, &buf);
-    if ( S_ISLNK(buf.st_mode) == 1) {
-      // Grab directory from sym link of cmd_entry
-      
-      debug(2, "path is a sym link");    
+  if(!path || !*path)
+    return NULL;
 
-      length = readlink (path, buf2, 255);
-
-      if (length){
-        buf2[length]='\0';
-
-        if(buf2[length-1] == '/')
-          buf2[length-1] = '\0';
-        
-        ptr = strrchr(buf2, '/');
-        
-        if (ptr) {	    			// contains a / so pull from symlink
-          if (!strstr(buf2,"..")) {		// don't bother if it's got any ..'s in it
-            dir = g_strndup(buf2, ptr-buf2+1);
-          }
-        }
-        else {        				// no / so pull from cmd_entry instead
-          ptr = strrchr(path, '/');
-          if (ptr) {      			// contains a /
-            dir = g_strndup(path, ptr-path+1);
-          }
-        }        
-      }
-    }
-    else {
-      // Grab directory from cmd_entry
-      
-      debug(2,"path is NOT a sym link");
-    
-      ptr = strrchr(path, '/');
-  
-      if (ptr) {      				// contains a /
-        dir = g_strndup(path, ptr-path+1);
-      }
-    }  
+  if(path[0] == '~')
+  {
+    tmp = expand_tilde(path);
+    path = tmp;
   }
+  else if(path[0] != '/')
+  {
+    tmp = find_file_in_path(path);
+    if(!tmp)
+    {
+      debug(3, "%s not found in $PATH", path);
+      return NULL;
+    }
+    path = tmp;
+  }
+
+  if(lstat(path, &statbuf) == -1)
+  {
+    debug(3, "lstat on %s failed", path);
+    g_free(tmp);
+    return NULL;
+  }
+  
+  if ( S_ISLNK(statbuf.st_mode) == 1)
+  {
+    // Grab directory from sym link of cmd_entry
+    
+    debug(3, "path is a sym link");    
+
+    length = readlink (path, buf, sizeof(buf) - 1);
+
+    if (length > 0)
+    {
+      buf[length]='\0';
+
+      if(buf[length-1] == '/')
+	buf[length-1] = '\0';
+      
+      ptr = strrchr(buf, '/');
+      
+      if (ptr) {	    			// contains a / so pull from symlink
+	if (!strstr(buf,"..")) {		// don't bother if it's got any ..'s in it
+	  dir = g_strndup(buf, ptr-buf+1);
+	}
+      }
+      else {        				// no / so pull from path instead
+	ptr = strrchr(path, '/');
+	if (ptr) {      			// contains a /
+	  dir = g_strndup(path, ptr-path+1);
+	}
+      }        
+    }
+  }
+  else
+  {
+    // Grab directory from cmd_entry
+    
+    debug(3,"path is NOT a sym link");
+  
+    ptr = strrchr(path, '/');
+
+    if (ptr) // contains a /
+    {
+      gboolean dir_is_path = FALSE;
+      char* PATH = getenv("PATH");
+
+      // ignore direcory if it is in $PATH. It doesn't make sense to suggest
+      // /usr/bin as game direcory
+      if(PATH)
+      {
+	int i;
+	char** directories = g_strsplit(PATH,":",0);
+	char* basedir = g_strndup(path, ptr-path);
+
+	for(i=0; directories[i]; ++i)
+	{
+	  if(!strcmp(directories[i], basedir))
+	  {
+	    dir_is_path = TRUE;
+	    break;
+	  }
+	}
+
+	g_strfreev(directories);
+	g_free(basedir);
+      }
+
+      if(!dir_is_path)
+      {
+	dir = tmp;
+	tmp = NULL;
+      }
+      else
+	debug(3, "found directory %s in $PATH, ignoring", tmp);
+    }
+  }  
+
+  g_free(tmp);
+
   return dir;
 }
 

@@ -275,8 +275,20 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
     else {	/* child */
       close (pipefds[0]);
 
-      if( s->flags & SERVER_PUNKBUSTER )
-	      setenv("XQF_SERVER_ANTICHEAT","1",1);
+      if(s->flags & SERVER_PUNKBUSTER)
+	  setenv("XQF_SERVER_ANTICHEAT", "1", 1);
+
+      if(s->name)
+	  setenv("XQF_SERVER_NAME", s->name, 1);
+
+      if(s->map)
+	  setenv("XQF_SERVER_MAP", s->map, 1);
+
+      if(s->host->name)
+	  setenv("XQF_SERVER_HOSTNAME", s->host->name, 1);
+
+      if(s->game)
+	  setenv("XQF_SERVER_GAME", s->game, 1);
 
       execvp (argv[0], argv);
   

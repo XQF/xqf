@@ -1,3 +1,13 @@
+May 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- create LaunchInfo.txt by default
+- when suggesting a command, don't add full path (since it will be found in
+  $PATH anyway)
+- clean up resolve_path. Let it do path and tilde expansion and don't suggest
+  directories in $PATH.
+- fix some minor memory leaks
+- export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
+  XQF_SERVER_GAME when launching a game (suggested by Ruediger Meier)
+
 May 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - support for Half-Life steam master. Nasty hack, hopefully doesn't break other stuff.
 - set anti-cheat flag for VAC (secure != 0)
