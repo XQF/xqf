@@ -1,3 +1,6 @@
+Sep 12, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- add ET protocol 83 for version 2.56
+
 Aug 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix medal of honor to not check for q3a files (#795017)
 
