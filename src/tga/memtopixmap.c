@@ -119,7 +119,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
 }
 
 void renderMemToGtkPixmap(const guchar* mem, size_t len,
-	GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height)
+	GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, unsigned char brightness)
 {
     GdkPixbuf* pixbuf = renderMemToPixbuf(mem, len);
 
@@ -128,9 +128,38 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 	GdkPixbuf* pixbuf_tmp = NULL;
 	pixbuf_tmp = pixbuf;
 	pixbuf = gdk_pixbuf_scale_simple(pixbuf,320,240,GDK_INTERP_TILES);
-	gdk_pixbuf_render_pixmap_and_mask(pixbuf,pix,mask,0);
 	*height = gdk_pixbuf_get_height(pixbuf);
 	*width = gdk_pixbuf_get_width(pixbuf);
+
+	if(brightness && gdk_pixbuf_get_n_channels (pixbuf) >= 3) // brightness correction
+	{
+	    unsigned x, y;
+	    unsigned w = gdk_pixbuf_get_width (pixbuf);
+	    unsigned h = gdk_pixbuf_get_height (pixbuf);
+	    unsigned rs = gdk_pixbuf_get_rowstride (pixbuf);
+	    unsigned c = gdk_pixbuf_get_n_channels (pixbuf);
+	    unsigned char* p = gdk_pixbuf_get_pixels (pixbuf);
+	    register unsigned tmp;
+	    for(y=0; y < h; ++y)
+	    {
+		for(x=0; x < w; ++x, p+=c)
+		{
+		    tmp = p[0] + brightness;
+		    p[0] = (tmp>0xFF)?0xFF:tmp;
+		    tmp = p[1] + brightness;
+		    p[1] = (tmp>0xFF)?0xFF:tmp;
+		    tmp = p[2] + brightness;
+		    p[2] = (tmp>0xFF)?0xFF:tmp;
+		}
+		if(x*c<rs)
+		{
+		    p += (rs - x*c);
+		}
+	    }
+	}
+
+	gdk_pixbuf_render_pixmap_and_mask(pixbuf,pix,mask,0);
+
 	gdk_pixbuf_unref(pixbuf);
 	gdk_pixbuf_unref(pixbuf_tmp);
     }
@@ -227,7 +256,7 @@ int main (int argc, char* argv[])
 	GdkBitmap* mask = NULL;
 	guint width = 0, height = 0;
 	
-	renderMemToGtkPixmap(mem, statbuf.st_size, &pix, &mask, &width, &height);
+	renderMemToGtkPixmap(mem, statbuf.st_size, &pix, &mask, &width, &height, 64);
 
 	widget = gtk_pixmap_new(pix, mask);
 	gtk_container_add (GTK_CONTAINER (main_window), widget);

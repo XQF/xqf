@@ -21,6 +21,6 @@
 #define _MEMTOPIXMAP_H_
 
 void renderMemToGtkPixmap(const guchar* mem, size_t len,
-    GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height);
+    GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, unsigned char brightness);
 
 #endif
