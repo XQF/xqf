@@ -1,3 +1,7 @@
+Jan 02, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add lan masters per default
+- fix lan browsing for Americas Army
+
 Jan 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove multiplay.co.uk AA master
 - fix some function prototypes
