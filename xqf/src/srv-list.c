@@ -584,9 +584,10 @@ void server_clist_build_filtered (GSList *server_list, int update) {
   struct server *server;
   int row;
 
+  debug (0, "server_clist_build_filterd() -- Update? %d", update);
+
 #if 0
 
-  debug (6, "server_clist_build_filterd() -- Update? %d", update);
   delete = server_clist_all_servers ();
   add = build_filtered_list (cur_filter, server_list); /* in filter.c */
 

@@ -2913,7 +2913,6 @@ void create_main_window (void) {
   // add server filters to menu
   server_filter_menu_items = g_array_new(FALSE,FALSE,sizeof(GtkWidget*));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu());
-  filter_menu_activate_current();
 
   gtk_signal_connect_object (GTK_OBJECT (file_quit_menu_item), "activate",
 	      GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (main_window));
@@ -3230,6 +3229,7 @@ int main (int argc, char *argv[]) {
   create_main_window ();
 
   source_ctree_select_source (favorites);
+  filter_menu_activate_current();
 
   print_status (main_status_bar, NULL);
 
