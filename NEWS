@@ -1,8 +1,7 @@
-XQF 0.9.10 -- ???? ?, ????
+XQF 0.9.10 -- November 15, 2002
 ~~~~~~~~~~
 Changes since 0.9.9:
 
-o 
 o File dialog boxes for adding game command line and directory
 o Greatly speed up the startup of XQF when loading large lists
 o Greatly speed up response time when applying filters to large lists
@@ -24,8 +23,8 @@ o Player search visible improvements
 o Fixed Tribes2 master support and added additional masters
 o Updated QuakeWorld master list
 o Unlimited number of server filters instead of ten
-o Changed default Wolf protocol to 59  
-o Standalone rcon program that doesn't need X
+o Changed default Wolf protocol to 60
+o Standalone rcon program that doesn't need X (xqf-rcon)
 o Quake3 launching now uses 'game' instead of 'gamename' to help prevent launch problems due to case
 o Various segfault fixes
 o XQF now requires qstat 2.5c

@@ -1,3 +1,21 @@
+November 15, 2002
+
+xqf-0.9.10.tar.gz created using:
+
+Mandrake 9
+libtool 1.4.2-9mdk
+gettext-0.11.2-8mdk
+automake-1.4-21.p6.mdk
+
+tar.gz:
+
+-fresh cvs checkout
+-update version in NEWS, configure.in, docs/xqfdocs.html, ChangeLog
+-./autogen.sh
+-./configure
+-make dist
+
+*****
 July 4, 2002
 
 xqf-0.9.9.tar.gz created using:
