@@ -8,3 +8,8 @@ config.log
 config.status
 libtool
 xqf.spec
+ABOUT-NLS
+config.rpath
+intl
+m4
+mkinstalldirs
