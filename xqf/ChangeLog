@@ -1,3 +1,11 @@
+Jan 23, 2001: Bill Adams <bill@evil.inetarena.com>
+-Did BAD hack to game.c::q3_exec( ) so that when
+ connecting to an arena (rocket arena 3) server,
+ it will "+set sv_pure 0 +set vm_* 0" on the command
+ line so arena will load properly.  As a side note,
+ one should use vm_* all at zero unless you have a 
+ really good reason to do otherwise.
+	
 Jan 21, 2001: Bill Adams <bill@evil.inetarena.com>
 -Changed "Insert" behavior.  Now Insert brings up the add
  server dialog while SHIFT+Insert adds a server from the 

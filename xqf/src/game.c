@@ -1612,6 +1612,17 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "+set fs_game";
     argv[argi++] = fs_game;
   }
+
+  /* FIX ME
+    BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
+    to run properly.  This is for at least 1.27g.
+  */
+  if (
+      (strcmp( find_server_setting_for_key ("gamename", con->s->info), "arena" ) == 0) ||
+      (strcmp( find_server_setting_for_key ("fs_game",  con->s->info), "arena" ) == 0)
+      ){
+    argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
+  }
      
 
   argv[argi] = NULL;
