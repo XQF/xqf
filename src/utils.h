@@ -40,6 +40,9 @@ extern	GList *merge_sorted_string_lists (GList *list1, GList *list2);
 
 extern	GSList *unique_strings (GSList *strings);
 
+// build GList from array of char*
+extern GList* createGListfromchar(char* strings[]);
+  
 extern	void on_sig (int signum, void (*func) (int signum));
 extern 	void ignore_sigpipe (void);
 

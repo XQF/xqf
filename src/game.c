@@ -1375,7 +1375,6 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
 
 static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
-  char *endptr;
   long n;
   char *fs_game=NULL;
   char *game=NULL;

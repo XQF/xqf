@@ -183,6 +183,22 @@ struct generic_prefs {
   void (*add_options_to_notebook) (GtkWidget *notebook);
 } *genprefs = NULL;
 
+char* q3_masterprocols[] = {
+	"67 - v1.31",
+	"66 - v1.30",
+	"48 - v1.27",
+	"46 - v1.25",
+	"45 - v1.17",
+	"43 - v1.11",
+	NULL
+};
+
+char* wo_masterprocols[] = {
+	"57 - retail",
+	"56 - test2",
+	"55 - test1",
+	NULL
+};
 
 static void get_new_defaults_for_game (enum server_type type) {
   struct game *g = &games[type];
@@ -263,7 +279,7 @@ static void load_game_defaults (enum server_type type) {
 
 static void get_new_defaults (void) {
   int i;
-  char *str;
+  char *str,*str1;
   
   debug (5, "get_new_defaults()");
 
@@ -410,10 +426,15 @@ static void get_new_defaults (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
 
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (q3proto_entry)));
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
   if (q3_opts.masterprotocol) g_free (q3_opts.masterprotocol);
-  q3_opts.masterprotocol = str;
+  q3_opts.masterprotocol = strdup_strip(str);
   config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
 
   i = GTK_TOGGLE_BUTTON (vmfixbutton)->active;
   if (i != q3_opts.vmfix)
@@ -433,10 +454,15 @@ static void get_new_defaults (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
 
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (wo_proto_entry)));
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
   if (wo_opts.masterprotocol) g_free (wo_opts.masterprotocol);
-  wo_opts.masterprotocol = str;
+  wo_opts.masterprotocol = strdup_strip(str);
   config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
 
   i = GTK_TOGGLE_BUTTON (wo_setfs_gamebutton)->active;
   if (i != wo_opts.setfs_game)
@@ -1848,11 +1874,23 @@ static GtkWidget *q3_options_page (void) {
 	  label = gtk_label_new (_("Masterserver Protocol Version"));
 	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	  gtk_widget_show (label);
-
+#if 0
 	  q3proto_entry = gtk_entry_new ();
 	  gtk_entry_set_max_length(GTK_ENTRY (q3proto_entry),3);
 	  if(q3_opts.masterprotocol)
 	    gtk_entry_set_text (GTK_ENTRY (q3proto_entry), q3_opts.masterprotocol);
+#endif
+	  q3proto_entry = gtk_combo_new ();
+//	  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry), 3);
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (q3proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (q3proto_entry),
+			  createGListfromchar(q3_masterprocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (q3proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  if(q3_opts.masterprotocol)
+	    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry),
+			    q3_opts.masterprotocol);
+
 	  gtk_box_pack_start (GTK_BOX (hbox), q3proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (q3proto_entry);
 
@@ -1894,11 +1932,24 @@ static GtkWidget *wolf_options_page (void) {
 	  label = gtk_label_new (_("Masterserver Protocol Version"));
 	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	  gtk_widget_show (label);
-
+#if 0
 	  wo_proto_entry = gtk_entry_new ();
 	  gtk_entry_set_max_length(GTK_ENTRY (wo_proto_entry),3);
 	  if(wo_opts.masterprotocol)
 	    gtk_entry_set_text (GTK_ENTRY (wo_proto_entry), wo_opts.masterprotocol);
+#endif
+
+	  wo_proto_entry = gtk_combo_new ();
+//	  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry), 3);
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (wo_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (wo_proto_entry),
+			  createGListfromchar(wo_masterprocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (wo_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  if(wo_opts.masterprotocol)
+	    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry),
+			    wo_opts.masterprotocol);
+
 	  gtk_box_pack_start (GTK_BOX (hbox), wo_proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (wo_proto_entry);
 
