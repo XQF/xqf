@@ -484,6 +484,10 @@ static void get_new_defaults_for_game (enum server_type type) {
       str = config_get_string_with_default (buf,&isdefault);
     }
   }
+
+  if(g->update_prefs)
+    g->update_prefs(g);
+
   config_pop_prefix ();
 }
 
@@ -530,7 +534,7 @@ static void load_game_defaults (enum server_type type) {
 }
 
 // verify Quake3 settings, return false if something's not ok
-static int verify_q3_settings (void)
+int verify_q3_settings (void)
 {
   int com_hunkmegs        = 0;
   int com_zonemegs        = 0;
@@ -550,15 +554,9 @@ static int verify_q3_settings (void)
   return TRUE;
 }
 
-static void get_new_defaults (void) {
-  int i;
-  char *str,*str1;
-  
-  debug (5, "get_new_defaults()");
-
-  /* Quake */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: QS");
+void q1_update_prefs (struct game* g)
+{
+  char* str;
 
   if (pref_q1_top_color != default_q1_top_color)
     config_set_int ("top", default_q1_top_color = pref_q1_top_color);
@@ -574,12 +572,13 @@ static void get_new_defaults (void) {
     config_set_string ("player name", (str)? str : "");
   }
   str=NULL;
+}
 
-  config_pop_prefix ();
-
-  /* QuakeWorld (some network settings are used by Q2) */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: QWS");
+/* QuakeWorld (some network settings are used by Q2) */
+void qw_update_prefs (struct game* g)
+{
+  char* str;
+  int i;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_qw_entry)));
   if (str == NULL ||  default_qw_name == NULL ||
@@ -654,12 +653,12 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (qw_is_quakeforge_button)->active;
   if (i != default_qw_is_quakeforge)
     config_set_int ("is quakeforge", default_qw_is_quakeforge = i);
+}
 
-  config_pop_prefix ();
-
-  /* Quake2 */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: Q2S");
+void q2_update_prefs (struct game* g)
+{
+  char* str;
+  int i;
 
   if (pref_q2_skin == NULL || 
                 (default_q2_skin && strcmp (pref_q2_skin, default_q2_skin))) {
@@ -692,12 +691,12 @@ static void get_new_defaults (void) {
 
   if (pref_q2_noskins != default_q2_noskins)
     config_set_int ("noskins", default_q2_noskins = pref_q2_noskins);
+}
 
-  config_pop_prefix ();
-
-  /* Quake 3 */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
+void q3_update_prefs (struct game* g)
+{
+  char* str, *str1;
+  int i;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -751,12 +750,12 @@ static void get_new_defaults (void) {
   i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
   config_set_int ("cg_precachedmodels", i);
   game_set_attribute(Q3_SERVER,"cg_precachedmodels",g_strdup_printf("%d",i));
+}
 
-  config_pop_prefix ();
-
-  /* Wolfenstein */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
+void wo_update_prefs (struct game* g)
+{
+  char* str, *str1;
+  int i;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -775,12 +774,12 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (wo_set_punkbusterbutton)->active;
   config_set_bool ("set_punkbuster", i);
   game_set_attribute(WO_SERVER,"set_punkbuster",g_strdup(bool2str(i)));
-  
-  config_pop_prefix ();
+}
 
-  /* Enemy Territory */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: WOETS");
+void et_update_prefs (struct game* g)
+{
+  char* str, *str1;
+  int i;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (woet_proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -795,12 +794,42 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (woet_setfs_gamebutton)->active;
   config_set_bool ("setfs_game", i);
   game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(i)));
+}
 
-  config_pop_prefix ();
+static void doom3_detect_version(struct game* g)
+{
+  FILE* f;
+  char* verinfo;
+  const char* attrproto;
+  char line[64];
 
-  /* doom3 */
+  debug(3, "cmd: %s, dir: %s", g->cmd, g->real_dir);
 
-  config_push_prefix ("/" CONFIG_FILE "/Game: DOOM3");
+  attrproto = game_get_attribute(g->type,"masterprotocol");
+
+  verinfo = file_in_dir (g->real_dir, "version.info");
+  f = fopen(verinfo, "r");
+  if(!f)
+    goto out;
+
+  if(!fgets(line, sizeof(line), f))
+    goto out;
+
+  if(!fgets(line, sizeof(line), f))
+    goto out;
+
+  debug(3, "detected doom3 protocol version %s", line);
+
+  game_set_attribute(g->type, "_masterprotocol", g_strdup(line));
+
+out:
+  if(f) fclose(f);
+  g_free(verinfo);
+}
+
+void doom3_update_prefs (struct game* g)
+{
+  char* str, *str1;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -812,11 +841,13 @@ static void get_new_defaults (void) {
   g_free(str);
   str=NULL;
 
-  config_pop_prefix ();
+  doom3_detect_version(g);
+}
 
-  /* Voyager Elite Force */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: EFS");
+void ef_update_prefs (struct game* g)
+{
+  char* str, *str1;
+  int i;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -831,12 +862,11 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (ef_setfs_gamebutton)->active;
   config_set_bool ("setfs_game", i);
   game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(i)));
+}
 
-  config_pop_prefix ();
-
-  /* Call of Duty */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: CODS");
+void cod_update_prefs (struct game* g)
+{
+  char* str, *str1;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (cod_proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -847,12 +877,11 @@ static void get_new_defaults (void) {
   config_set_string ("protocol", (str)? str : "");
   g_free(str);
   str=NULL;
+}
 
-  config_pop_prefix ();
-
-/* Jedi Academy */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: JK3S");
+void jk3_update_prefs (struct game* g)
+{
+  char* str, *str1;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (jk3_proto_entry)->entry)));
   // locate first space and mark it as str's end
@@ -863,12 +892,11 @@ static void get_new_defaults (void) {
   config_set_string ("protocol", (str)? str : "");
   g_free(str);
   str=NULL;
+}
 
-  config_pop_prefix ();
-
-  /* Tribes 2 */
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: T2S");
+void tribes2_update_prefs (struct game* g)
+{
+  char* str;
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_t2_entry)));
   if (str == NULL || default_t2_name == NULL ||
@@ -878,8 +906,57 @@ static void get_new_defaults (void) {
     config_set_string ("player name", (str)? str : "");
   }
   str=NULL;
+}
 
-  config_pop_prefix ();
+static void ut2004_detect_cdkey(struct game* g)
+{
+  FILE* f;
+  char* keyfile = NULL;
+
+  debug(2, "cmd: %s, dir: %s, home: %s", g->cmd, g->real_dir, g->real_home);
+
+  keyfile = file_in_dir (g->real_home, "System/cdkey");
+  if(keyfile)
+  {
+    f = fopen(keyfile, "r");
+    if(!f)
+    {
+      g_free(keyfile);
+      keyfile = NULL;
+    }
+  }
+
+  if(!keyfile)
+  {
+    if(f) fclose(f);
+    keyfile = file_in_dir (g->real_dir, "System/cdkey");
+    if(keyfile)
+    {
+      f = fopen(keyfile, "r");
+      if(!f)
+      {
+	g_free(keyfile);
+	keyfile = NULL;
+      }
+    }
+  }
+
+  if(keyfile || (!keyfile && game_get_attribute(g->type,"cdkey")))
+    game_set_attribute(g->type, "cdkey", keyfile);
+
+  if(f) fclose(f);
+}
+
+void ut2004_update_prefs (struct game* g)
+{
+  ut2004_detect_cdkey(g);
+}
+
+static void get_new_defaults (void) {
+  int i;
+  static const char form[] = "/" CONFIG_FILE "/Game: %s";
+  
+  debug (5, "get_new_defaults()");
 
   /* Common part of games config */
 
@@ -3294,14 +3371,6 @@ static GtkWidget *woet_options_page (void) {
   return page_vbox;
 }
 
-
-static gboolean doom3_proto_entry_activate_callback (GtkWidget *widget, gpointer data)
-{
-  games[DOOM3_SERVER].cmd_or_dir_changed(&games[DOOM3_SERVER]);
-  
-  return FALSE;
-}
-
 // additional options for doom3
 static GtkWidget *doom3_options_page (void) {
   GtkWidget *page_vbox;
@@ -3327,12 +3396,6 @@ static GtkWidget *doom3_options_page (void) {
 	  
 	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry),
 		game_get_attribute(DOOM3_SERVER,"masterprotocol"));
-
-	  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (doom3_proto_entry)->entry),
-	      "activate", GTK_SIGNAL_FUNC (doom3_proto_entry_activate_callback), NULL);
-	  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (doom3_proto_entry)->entry),
-	      "focus_out_event", GTK_SIGNAL_FUNC (doom3_proto_entry_activate_callback), NULL);
-
 
 	  gtk_box_pack_start (GTK_BOX (hbox), doom3_proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (doom3_proto_entry);

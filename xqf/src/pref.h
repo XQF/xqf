@@ -21,6 +21,7 @@
 
 
 #include <gtk/gtk.h>
+#include "game.h"
 
 
 #ifndef PATH_MAX
@@ -119,6 +120,19 @@ extern	char	*sound_redial_success;
 //extern struct q3engineopts wo_opts;
 // Any other game with Q3 engine
 //extern struct q3engineopts generic_q3_opts;
+
+void q1_update_prefs (struct game* g);
+void qw_update_prefs (struct game* g);
+void q2_update_prefs (struct game* g);
+void q3_update_prefs (struct game* g);
+void wo_update_prefs (struct game* g);
+void et_update_prefs (struct game* g);
+void doom3_update_prefs (struct game* g);
+void ef_update_prefs (struct game* g);
+void cod_update_prefs (struct game* g);
+void jk3_update_prefs (struct game* g);
+void tribes2_update_prefs (struct game* g);
+void ut2004_update_prefs (struct game* g);
 
 extern	int set_working_dir (char *dir);
 extern  void preferences_dialog (int page_num);
