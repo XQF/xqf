@@ -22,16 +22,19 @@
 #include <gtk/gtk.h>
 
 #include "xqf.h"
+#include "pixmaps.h"
 
-#define FILTERS_TOTAL		2
-#define FILTERS_MASK		0x03
+#define FILTERS_TOTAL		3
+#define FILTERS_MASK		0x07
 
 #define	FILTER_SERVER_MASK	0x01
 #define	FILTER_PLAYER_MASK	0x02
+#define	FILTER_QUICK_MASK	0x04
 
 enum filter_num {
   FILTER_SERVER = 0,
-  FILTER_PLAYER = 1
+  FILTER_PLAYER = 1,
+  FILTER_QUICK = 2
 };
 
 enum filter_status {
@@ -76,6 +79,9 @@ struct filter {
 
   unsigned last_changed;
   enum filter_status changed;
+
+  struct pixmap* pix;
+  struct pixmap* cfg_pix;
 };
 
 extern  struct filter filters[];
@@ -97,11 +103,15 @@ extern  int 	filter_not_empty;
 extern  int	filter_no_cheats;
 extern  int	filter_no_password;
 
-extern	unsigned filter_current_time;
-
 extern	int	filters_cfg_dialog (int page_num);
 
 extern	void	filters_init (void);
 extern	void	filters_done (void);
+
+extern	void	filter_quick_set (const char* str);
+extern	const char*	filter_quick_get (void);
+extern	void	filter_quick_unset (void);
+
+extern unsigned filter_time_inc();
 
 #endif /* __FILTER_H__ */

@@ -80,6 +80,16 @@ static GArray* backup_server_filters; // copy of server_filters, for restoring o
 
 static gboolean cleaned_up = FALSE;
 
+/* QUICK FILTER */
+
+static char quick_filter_str[512] = {0};
+static int quick_filter (struct server *s);
+void filter_quick_set (const char* str);
+const char* filter_quick_get(void);
+void filter_quick_unset (void);
+
+/* /QUICK FILTER */
+
 struct filter filters[FILTERS_TOTAL] = {
   {
     N_("Server"),
@@ -91,7 +101,9 @@ struct filter filters[FILTERS_TOTAL] = {
     server_filter_on_ok,
     server_filter_on_cancel,
     1,
-    FILTER_NOT_CHANGED
+    FILTER_NOT_CHANGED,
+    &filter_pix[0],
+    &filter_cfg_pix[0],
   },
   { 
     N_("Player"),
@@ -103,14 +115,30 @@ struct filter filters[FILTERS_TOTAL] = {
     player_filter_new_defaults,
     NULL,
     1,
-    FILTER_NOT_CHANGED
+    FILTER_NOT_CHANGED,
+    &filter_pix[0],
+    &filter_cfg_pix[0],
+  },
+  { 
+    N_("Quick"),
+    N_("Q Filter"),
+    N_("QCFG"),
+    quick_filter,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    1,
+    FILTER_NOT_CHANGED,
+    NULL,
+    NULL,
   }
 };
 
 
 unsigned char cur_filter = 0;
 
-unsigned filter_current_time = 1;
+static unsigned filter_current_time = 1;
 
 unsigned server_filter_dialog_current_filter = 0;
 
@@ -892,7 +920,7 @@ static void server_filter_save_settings (int number,
   config_pop_prefix ();
 
   if (filters[FILTER_SERVER].changed == FILTER_CHANGED)
-    filters[FILTER_SERVER].last_changed = ++filter_current_time;
+    filters[FILTER_SERVER].last_changed = filter_time_inc();
 }
 
 // store changed widget values
@@ -2103,3 +2131,73 @@ static void country_create_popup_window(void)
 
 }
 #endif
+
+unsigned filter_time_inc()
+{
+  ++filter_current_time;
+  if(!filter_current_time)
+  {
+    struct server* s;
+    printf("CONGRATULATION! You managed to filter more than %u times\n", UINT_MAX);
+    GSList* list = all_servers();
+    for(;list; list = list->next)
+    {
+      s = (struct server *) list->data;
+      s->flt_last = 0;
+    }
+    ++filter_current_time;
+  }
+  return filter_current_time;
+}
+
+static int quick_filter (struct server *s)
+{
+  if(!s || !quick_filter_str) return TRUE;
+
+  if(s->map && strstr(s->map, quick_filter_str))
+    return TRUE;
+
+  if(s->game && lowcasestrstr(s->game, quick_filter_str))
+    return TRUE;
+
+  if(s->gametype && lowcasestrstr(s->gametype, quick_filter_str))
+    return TRUE;
+
+  if(s->name && lowcasestrstr(s->name, quick_filter_str))
+    return TRUE;
+
+  if(s->host && s->host->name && lowcasestrstr(s->host->name, quick_filter_str))
+    return TRUE;
+
+  {
+    char **info_ptr;
+    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+    {
+      if(lowcasestrstr(info_ptr[1], quick_filter_str))
+	return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+void filter_quick_set (const char* str)
+{
+  if(str)
+    strncpy(quick_filter_str, str, sizeof(quick_filter_str));
+  else
+    quick_filter_str[0] = '\0';
+}
+
+const char* filter_quick_get(void)
+{
+  if(!*quick_filter_str)
+    return NULL;
+  return quick_filter_str;
+}
+
+void filter_quick_unset (void)
+{
+  quick_filter_str[0] = '\0';
+}
+

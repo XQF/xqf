@@ -946,7 +946,7 @@ void player_filter_new_defaults (void) {
   switch (filters[FILTER_PLAYER].changed) {
 
   case FILTER_CHANGED:
-    filters[FILTER_PLAYER].last_changed = ++filter_current_time;
+    filters[FILTER_PLAYER].last_changed = filter_time_inc();
     /* fall through */
 
   case FILTER_DATA_CHANGED:
@@ -1012,7 +1012,7 @@ int player_filter_add_player (char *name, unsigned mask) {
   if ((pp->groups & mask) != mask) {
     pp->groups |= mask;
 
-    filters[FILTER_PLAYER].last_changed = ++filter_current_time;
+    filters[FILTER_PLAYER].last_changed = filter_time_inc();
     player_filter_save_patterns ();
 
     changed = TRUE;
@@ -1215,7 +1215,7 @@ static void player_filter_load_patterns (void) {
   close (fd);
 
   if (filters[FILTER_PLAYER].changed != FILTER_NOT_CHANGED)
-    filters[FILTER_PLAYER].last_changed = ++filter_current_time;
+    filters[FILTER_PLAYER].last_changed = filter_time_inc();
 }
 
 

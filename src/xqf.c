@@ -645,6 +645,8 @@ void set_widgets_sensitivity (void) {
   sens = (stat_process == NULL);
 
   for (i = 0; i < FILTERS_TOTAL; i++) {
+    if(!filter_buttons[i])
+      continue;
     gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_NORMAL);
     gtk_widget_set_sensitive (filter_buttons[i], sens);
     if(GTK_IS_TOGGLE_BUTTON(filter_buttons[i]) && GTK_TOGGLE_BUTTON(filter_buttons[i])->active)
@@ -823,7 +825,7 @@ static void server_filter_select_callback (GtkWidget *widget, int number) {
   current_server_filter = number;
 
   filters[FILTER_SERVER].changed = FILTER_CHANGED;
-  filters[FILTER_SERVER].last_changed = ++filter_current_time;
+  filters[FILTER_SERVER].last_changed = filter_time_inc();
 
   server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
   set_server_filter_menu_list_text ();
@@ -3108,11 +3110,17 @@ static void populate_main_toolbar (void) {
    *  Filter buttons
    */
 
-  for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
+  for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1)
+  {
+    if(!filters[i].pix)
+    {
+      filter_buttons[i] = NULL;
+      continue;
+    }
     // Translators: e.g. Server Filter
     g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
 
-    pixmap = gtk_pixmap_new (filter_pix[i].pix, filter_pix[i].mask);
+    pixmap = gtk_pixmap_new (filters[i].pix->pix, filters[i].pix->mask);
     gtk_widget_show (pixmap);
 
     filter_buttons[i] = gtk_toolbar_append_element (
@@ -3286,9 +3294,35 @@ static GtkWidget* create_filter_menu()
 //  filter_menu = menu;
   return menu;
 }
+
+static void quick_filter_entry_changed(GtkWidget* entry, gpointer data)
+{
+  const char* text = gtk_entry_get_text(GTK_ENTRY(entry));
+  int mask = 0;
+
+  if(!text || !*text)
+  {
+    mask = FILTER_QUICK_MASK;
+    filter_quick_set(NULL);
+  }
+  else
+  {
+    if (!filter_quick_get())
+    {
+      mask = FILTER_QUICK_MASK;
+    }
+    filter_quick_set(text);
+  }
+
+  filters[FILTER_QUICK].last_changed = filter_time_inc();
+
+  filter_toggle_callback(NULL, mask);
+}
+
 void create_main_window (void) {
   GtkWidget *main_vbox;
   GtkWidget *vbox;
+  GtkWidget *vbox2;
   GtkWidget *hbox;
   GtkWidget *hpaned;
   GtkWidget *hpaned2;
@@ -3296,6 +3330,8 @@ void create_main_window (void) {
   GtkWidget *menu_bar;
   GtkWidget *handlebox;
   GtkWidget *scrollwin;
+  GtkWidget *entry;
+  GtkWidget *label;
   GtkAccelGroup *accel_group;
   int i;
 //  char *buf;
@@ -3488,8 +3524,26 @@ void create_main_window (void) {
    *  Server CList
    */
 
+  vbox2 = gtk_vbox_new (FALSE, 4);
+  gtk_paned_add1 (GTK_PANED (vpaned), vbox2);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  label = gtk_label_new(_("Quick Filter:"));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  entry = gtk_entry_new();
+  gtk_signal_connect(GTK_OBJECT(entry), "changed", quick_filter_entry_changed, NULL);
+  gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
+  gtk_widget_show (entry);
+
+  gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
+  gtk_widget_show (hbox);
+
   scrollwin = gtk_scrolled_window_new (NULL, NULL);
-  gtk_paned_add1 (GTK_PANED (vpaned), scrollwin);
+  
+  gtk_box_pack_start (GTK_BOX (vbox2), scrollwin, TRUE, TRUE, 0);
+  gtk_widget_show (vbox2);
 
   server_clist = GTK_CLIST (create_cwidget (scrollwin, &server_clist_def));
 
@@ -3619,6 +3673,8 @@ void create_main_window (void) {
     gtk_tooltips_enable(tooltips);
   else
     gtk_tooltips_disable(tooltips);
+
+  gtk_widget_grab_focus(entry);
 }
 
 void play_sound (const char *sound, gboolean override)
