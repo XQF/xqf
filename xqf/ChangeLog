@@ -1,4 +1,5 @@
 Oct 29, 2002: Alex Burger <alex_b@users.sourceforge.net>
+- Fixup master_check_master_addr_prefix
 - Create resolve_path function for use with guess_dir, user_fix_defaults etc
 
 Oct 29, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -268,13 +269,6 @@ Oct 09, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Changed Unreal / UT icon to UT 2003 icon (without a number)
 - Changed Unreal name to 'Unreal / UT'
 
-Oct 04, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added Preferences Appearance option of 'Show only configured games'.
-  Masters added will still be stored, but only displayed on the screen
-  if the command line for the game is configured.  Defaults to false.
-  I was tired of scrolling past games I don't have.
-- Changed source_ctree_remove_master_group() to not be static.
-
 Oct 08, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - Q3 protocol 68
 
@@ -285,6 +279,13 @@ Oct 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
   as gametype. You can generate a suitable config file at
   http://qstat.uglypunk.com/. Keep in mind that you may have to remove the file
   when a new qstat version is released!
+
+Oct 05, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Added Preferences Appearance option of 'Show only configured games'.
+  Masters added will still be stored, but only displayed on the screen
+  if the command line for the game is configured.  Defaults to false.
+  I was tired of scrolling past games I don't have.
+- Changed source_ctree_remove_master_group() to not be static.
 
 Oct 04, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - modified that ugly ut2 master hack a little
