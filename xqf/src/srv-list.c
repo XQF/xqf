@@ -99,6 +99,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
   int col;
 //  char* private_col_text = "";
   int slots_buffer;
+  unsigned short players = 0;
   
 
   struct server_props *p;
@@ -145,13 +146,18 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
   text[3] = text[4] = NULL;
 
+  players = s->curplayers;
+  if(serverlist_countbots && s->curbots <= players)
+	  players-=s->curbots;
+
   if(s->private_client)
-    g_snprintf (buf4, 32, "%d/%d(-%d)", s->curplayers, s->maxplayers,s->private_client);
+    g_snprintf (buf4, 32, "%d/%d(-%d)", players, s->maxplayers,s->private_client);
   else
-    g_snprintf (buf4, 32, "%d/%d", s->curplayers, s->maxplayers);
+    g_snprintf (buf4, 32, "%d/%d", players, s->maxplayers);
+
   // set text only if no players are on the server. Otherwise an icon is added
   // later together with this text
-  text[5] = (!s->curplayers)? buf4 : NULL;
+  text[5] = (!players)? buf4 : NULL;
 
   text[6] = (s->map) ?  s->map : NULL;
   text[7] = (s->game)? s->game : NULL;
@@ -203,15 +209,15 @@ static int server_clist_refresh_row (struct server *s, int row) {
     slots_buffer=0;
     }
 
-  if (s->curplayers >= (s->maxplayers-slots_buffer))
+  if (players >= (s->maxplayers-slots_buffer))
     gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
                            man_red_pix.pix, man_red_pix.mask );
 
-  else if ( (s->curplayers + s->private_client ) >= s->maxplayers)
+  else if ( (players + s->private_client ) >= s->maxplayers)
     gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
                            man_yellow_pix.pix, man_yellow_pix.mask );
   
-  else if (s->curplayers)
+  else if (players)
     gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
                            man_black_pix.pix, man_black_pix.mask );
   

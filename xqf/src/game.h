@@ -55,7 +55,7 @@ struct game {
   char *qstat_master_option;
   struct pixmap *pix;
 
-  struct player * (*parse_player) (char *tokens[], int num);
+  struct player * (*parse_player) (char *tokens[], int num, struct server *s);
   void (*parse_server) (char *tokens[], int num, struct server *s);
   void (*analyze_serverinfo) (struct server *s);
   int (*config_is_valid) (struct server *s);

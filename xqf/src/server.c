@@ -220,6 +220,7 @@ void server_free_info (struct server *s) {
   s->flags = 0;
   s->maxplayers = 0;
   s->curplayers = 0;
+  s->curbots = 0;
 
   s->filters = 0;
   s->flt_mask = 0;

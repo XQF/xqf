@@ -34,6 +34,7 @@
 #include "filter.h"
 #include "flt-player.h"
 #include "utils.h"
+#include "pref.h"
 
 static void server_filter_vars_free(struct server_filter_vars* v);
 
@@ -256,6 +257,7 @@ GSList *build_filtered_list (unsigned mask, GSList *server_list) {
 static int server_pass_filter (struct server *s){
   char **info_ptr;
   struct server_filter_vars* filter;
+  int players = s->curplayers;
 
   /* Filter Zero is No Filter */
   if( current_server_filter == 0 ){ return TRUE; }
@@ -273,10 +275,13 @@ static int server_pass_filter (struct server *s){
   if(s->ping >= filter->filter_ping)
     return FALSE;
 
-  if(filter->filter_not_full && (s->curplayers >= s->maxplayers))
+  if(serverlist_countbots && s->curbots <= players)
+	  players-=s->curbots;
+
+  if(filter->filter_not_full && (players >= s->maxplayers))
     return FALSE;
 
-  if(filter->filter_not_empty && (s->curplayers == 0))
+  if(filter->filter_not_empty && (players == 0))
     return FALSE;
 
   if(filter->filter_no_cheats && ((s->flags & SERVER_CHEATS) != 0))

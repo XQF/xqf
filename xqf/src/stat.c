@@ -405,6 +405,7 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
       server->flt_mask &= ~FILTER_PLAYER_MASK;
     }
     server->curplayers = 0;
+    server->curbots = 0;
 
   }
   else {
@@ -474,7 +475,7 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
   if (strings && games[s->type].parse_player) {
     while (strings) {
       n = tokenize_bychar ((char *) strings->data, token, 256, QSTAT_DELIM);
-      p = (*games[s->type].parse_player) (token, n);
+      p = (*games[s->type].parse_player) (token, n, s);
       if (!p)		/* error, try to recover */
 	return;
 
