@@ -915,8 +915,6 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   }
   else {
     
-    char* masterprotocol;
-
     if (m->master_type!=MASTER_LAN && !games[m->type].qstat_master_option)
       return NULL;
 
@@ -931,8 +929,6 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     argv[argi++] = buf2;
 
-    // TODO: master protocol should be server specific
-    masterprotocol = g_datalist_get_data(&games[m->type].games_data,"masterprotocol");
 
     if(m->master_type==MASTER_LAN)
     {
@@ -944,9 +940,18 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
     }
     // add master arguments
-    else if((m->type==Q3_SERVER || m->type==WO_SERVER || m->type==EF_SERVER) && masterprotocol)
+    else if( games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL )
     {
-      g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,masterprotocol);
+      // TODO: master protocol should be server specific
+      char* masterprotocol = g_datalist_get_data(&games[m->type].games_data,"masterprotocol");
+
+      if(masterprotocol)
+	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,masterprotocol);
+      else
+      {
+	xqf_warning("GAME_QUAKE3_MASTERPROTOCOL flag set, but no protocol specified");
+	g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
+      }
     }
     else
     {

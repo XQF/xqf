@@ -27,6 +27,7 @@
 #include <sys/socket.h>	/* inet_ntoa */
 #include <netinet/in.h>	/* inet_ntoa */
 #include <arpa/inet.h>	/* inet_ntoa */
+#include <stdlib.h>	/* atoi */
 
 #include "i18n.h"
 #include "xqf-ui.h"
@@ -79,7 +80,7 @@ static struct server_props *__properties (const struct host *h,
   struct server_props *res;
   GSList *tmp;
 
-  if (!h || p == 0 || p > 65535)
+  if (!h || p == 0 /* || p > 65535 */)
     return NULL;
 
   for (tmp = props_list; tmp; tmp = tmp->next) {
@@ -173,7 +174,6 @@ void props_load (void) {
   unsigned short port;
   char buf[1024];
   char *ptr;
-  char *buffer;
 
   props_free_all ();
 
@@ -408,7 +408,7 @@ static GtkWidget *server_info_page (struct server *s) {
   if (s->last_answer) {
     GtkStyle *style;
     GdkColor color;
-    guint max_days = 3; // XXX: hardcoded, has to be configurable some time
+    time_t max_days = 3; // XXX: hardcoded, has to be configurable some time
     char* str = timet2string(&s->last_answer);
 
     label = gtk_label_new (str);
