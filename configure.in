@@ -3,7 +3,7 @@
 # Initially written by Markus Fischer <mfischer@josefine.ben.tuwien.ac.at>
 #
 
-AC_INIT([XQF],[0.9.14.2],[xqf-developer@lists.sourceforge.net], [xqf])
+AC_INIT([XQF],[1.0],[xqf-developer@lists.sourceforge.net], [xqf])
 AC_CONFIG_SRCDIR([src/xqf.c])
 AC_PREREQ(2.52)
 
