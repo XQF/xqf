@@ -1174,8 +1174,7 @@ static void hl_analyze_serverinfo (struct server *s) {
 }
 
 
-#ifdef QSTAT23
-
+// TODO: read this stuff from a config file
 #define MAX_Q3A_TYPES 9
 static char *q3a_gametypes[MAX_Q3A_TYPES] = {
   "FFA",		/* 0 = Free for All */
@@ -1211,6 +1210,21 @@ static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
   "Capture & Hold",     /* 6 = Capture & Hold */
   "CTF",		/* 7 = Capture the Flag */
   NULL,			/* 8+ ?? */
+};
+
+#define MAX_Q3A_TRUECOMBAT_TYPES 11
+static char *q3a_truecombat_gametypes[MAX_Q3A_TRUECOMBAT_TYPES] = {
+  "FFA",		// 0 = Free for All
+  NULL,			// 1 = ?
+  NULL,			// 2 = ?
+  "Survivor",		// 3 = Survivor
+  "TDM",		// 4 = Team Deathmatch
+  NULL,			// 5 = ?
+  "Team Survivor",	// 6 = Team Survivor
+  NULL,			// 7 = ?
+  "Capture & Hold",     // 8 = Capture & Hold
+  "King Of The Hill",	// 9 = King of the hill
+  NULL,			// 10+ ??
 };
 
 #define MAX_Q3A_THREEWAVE_TYPES 12
@@ -1255,6 +1269,109 @@ static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   "WolfCP",		// 7 - Checkpoint mode
   NULL			// 8+ ???
 };
+
+struct q3a_gametype_s {
+  char* mod;
+  char** gametypes;
+  int number;
+};
+
+struct q3a_gametype_s q3a_gametype_map[] =
+{
+  {
+    "baseq3",
+    q3a_gametypes,
+    MAX_Q3A_TYPES
+  },
+  {
+    "osp",
+    q3a_osp_gametypes,
+    MAX_Q3A_OSP_TYPES
+  },
+  {
+    "q3ut2",
+    q3a_ut2_gametypes,
+    MAX_Q3A_UT2_TYPES
+  },
+  {
+    "threewave",
+    q3a_threewave_gametypes,
+    MAX_Q3A_THREEWAVE_TYPES
+  },
+  {
+    "TribalCTF",
+    q3a_tribalctf_gametypes,
+    MAX_Q3A_TRIBALCTF_TYPES
+  },
+  {
+    "missionpack",
+    q3a_gametypes,
+    MAX_Q3A_TYPES
+  },
+  {
+    "generations",
+    q3a_gametypes,
+    MAX_Q3A_TYPES
+  },
+  {
+    "q3tc045",
+    q3a_truecombat_gametypes,
+    MAX_Q3A_TRUECOMBAT_TYPES
+  },
+  {
+    NULL,
+    NULL,
+    0
+  }
+};
+
+struct q3a_gametype_s wolf_gametype_map[] =
+{
+  {
+    "main",
+    wolf_gametypes,
+    MAX_WOLF_TYPES
+  },
+};
+
+// didn't find docu about this, so use q3a types
+struct q3a_gametype_s stvef_gametype_map[] =
+{
+  {
+    "baseEF",
+    q3a_gametypes,
+    MAX_Q3A_TYPES
+  }
+};
+
+void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
+{
+  char *endptr;
+  int n;
+  int found=0;
+  struct q3a_gametype_s* ptr;
+
+  if(!s->game) return;
+
+  n = strtol (s->gametype, &endptr, 10);
+
+  // strtol returns a pointer to the first invalid digit, if both pointers
+  // are equal there was no number at all
+  if (s->gametype == endptr)
+    return;
+
+  for( ptr=map; !found && ptr && ptr->mod != NULL; ptr++ )
+  {
+    if( !strcasecmp (s->game, ptr->mod)
+	&& n >=0
+	&& n < MAX_Q3A_TYPES
+	&& ptr->gametypes[n] )
+    {
+      	s->gametype = ptr->gametypes[n];
+	found=1;
+    }
+  }
+}
 
 static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
@@ -1345,90 +1462,17 @@ static void q3_analyze_serverinfo (struct server *s) {
   }
 
   if(s->gametype) {
-    n = strtol (s->gametype, &endptr, 10);
-
-    if ( s->type == Q3_SERVER && endptr != s->gametype)
+    if ( s->type == Q3_SERVER)
     {
-      if(s->game) {
-	if (!strcmp(s->game,"osp"))
-	{
-	  if( n >= MAX_Q3A_OSP_TYPES )
-	    n = MAX_Q3A_OSP_TYPES - 1;
-
-	  s->gametype = q3a_osp_gametypes[n];
-	  
-	} 
-	else if (!strcasecmp(s->game,"q3ut2"))
-	{
-	  if( n >= MAX_Q3A_UT2_TYPES )
-	    n = MAX_Q3A_UT2_TYPES - 1;
-
-	  s->gametype = q3a_ut2_gametypes[n];
-	  
-	} 
-	else if (!strcasecmp(s->game,"threewave"))
-	{
-	  if( n >= MAX_Q3A_THREEWAVE_TYPES )
-	    n = MAX_Q3A_THREEWAVE_TYPES - 1;
-
-	  s->gametype = q3a_threewave_gametypes[n];
-	}
-	else if (!strcasecmp(s->game,"TribalCTF"))
-	{
-	  if( n >= MAX_Q3A_TRIBALCTF_TYPES )
-	    n = MAX_Q3A_TRIBALCTF_TYPES - 1;
-
-	  s->gametype = q3a_tribalctf_gametypes[n];
-	}
-	else if (!strcasecmp(s->game,"missionpack"))
-	{
-	  if( n >= MAX_Q3A_TYPES )
-	    n = MAX_Q3A_TYPES - 1;
-
-	  s->gametype = q3a_gametypes[n];
-	}
-	else if (!strcasecmp(s->game,"generations"))
-	{
-	  if( n >= MAX_Q3A_TYPES )
-	    n = MAX_Q3A_TYPES - 1;
-
-	  s->gametype = q3a_gametypes[n];
-	}
-	if (!strcasecmp (s->game, "baseq3"))
-	{
-	  if( n >= MAX_Q3A_TYPES )
-	    n = MAX_Q3A_TYPES - 1;
-
-	  s->gametype = q3a_gametypes[n];
-	}
-      }
+      q3_decode_gametype( s, q3a_gametype_map );
     }
-    else if ( s->type == WO_SERVER && endptr != s->gametype)
+    else if ( s->type == WO_SERVER)
     {
-      if(s->game)
-      {
-	if (!strcasecmp (s->game, "main"))
-	{
-	  if( n >= MAX_WOLF_TYPES )
-	    n = MAX_WOLF_TYPES - 1;
-
-	  s->gametype = wolf_gametypes[n];
-	}
-      }
+      q3_decode_gametype( s, wolf_gametype_map );
     }
-    else if ( s->type == STVEF_SERVER && endptr != s->gametype)
+    else if ( s->type == STVEF_SERVER)
     {
-      if(s->game)
-      {
-	if (!strcasecmp (s->game, "baseEF"))
-	{
-	  // didn't find docu about this, so use q3a type
-	  if( n >= MAX_Q3A_TYPES )
-	    n = MAX_Q3A_TYPES - 1;
-
-	  s->gametype = q3a_gametypes[n];
-	}
-      }
+      q3_decode_gametype( s, stvef_gametype_map );
     }
   }
 
@@ -1449,8 +1493,6 @@ static void q3_analyze_serverinfo (struct server *s) {
     }
   }
 }
-
-#endif
 
 
 static int quake_config_is_valid (struct server *s) {
