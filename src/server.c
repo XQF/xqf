@@ -124,6 +124,7 @@ struct server *server_add (struct host *h, unsigned short port,
     for (ptr = servers.nodes[node]; ptr; ptr = ptr->next) {
       s = (struct server *) ptr->data;
       if (s->host == h && s->port == port) {
+	server_ref (s); /* baa -- added Dec-27, 2000 CORE FIX? */
 	return s;
       }
     }
