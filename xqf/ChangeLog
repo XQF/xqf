@@ -2,6 +2,11 @@ Oct 15, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - switch fix conversion when adding ut2s as gps
 - update german translation
 
+Oct 15, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Few minor changes to make it compile on gcc <3
+- Properly fixed create_server_type_menu and create_master_type_menu
+  bugs
+
 Oct 14, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Fixed create_server_type_menu bug
 - Added punkbuster (and locked_punkbuster) XPMs
