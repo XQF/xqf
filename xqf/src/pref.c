@@ -2066,6 +2066,9 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
 
     case UT2004_SERVER:
       add_custom_args_defaults2("ROTeamGame", "-mod=RedOrchestra",UT2004_SERVER, data);
+      add_custom_args_defaults2("TObjectiveGame", "-mod=Troopers",UT2004_SERVER, data);
+      add_custom_args_defaults2("TTeamGame", "-mod=Troopers",UT2004_SERVER, data);
+      add_custom_args_defaults2("TCTFGame", "-mod=Troopers",UT2004_SERVER, data);
       break;
 
     default:
