@@ -1,3 +1,12 @@
+XQF 1.0.1 -- ?, 2004
+~~~~~~~~~
+Changes since 1.0:
+
+o New games: Netpanzer
+o Support for Gslist
+o Automatic detection of the Doom3 network protocol version
+o Various bugfixes as usual
+
 XQF 1.0 -- August 15, 2004
 ~~~~~~~
 Changes since 0.9.14:
