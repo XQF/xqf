@@ -1,5 +1,6 @@
 May 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Added master protocol version for full version of Enemy Territory
+- added master protocol version for full version of Enemy Territory
+- add qstat.cfg as EXTRA_DIST in Makefile.am
 
 May 20, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - install a qstat.cfg to $datadir/xqf to make ssam work out of the box

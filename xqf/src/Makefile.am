@@ -6,6 +6,8 @@ INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS) @QSTA
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
 
+EXTRA_DIST = qstat.cfg
+
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
 
