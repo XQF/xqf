@@ -83,6 +83,9 @@ extern	struct pixmap server_status[];
 
 extern	struct pixmap locked_pix;
 
+extern	struct pixmap punkbuster_pix;
+extern	struct pixmap locked_punkbuster_pix;
+
 extern	int pixmap_height (GdkPixmap *pixmap);
 extern	int pixmap_width (GdkPixmap *pixmap);
 

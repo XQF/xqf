@@ -81,6 +81,8 @@
 #include "xpm/server-to.xpm"
 #include "xpm/server-error.xpm"
 #include "xpm/locked.xpm"
+#include "xpm/punkbuster.xpm"
+#include "xpm/locked_punkbuster.xpm"
 
 struct pixmap update_pix;
 struct pixmap refresh_pix;
@@ -131,6 +133,8 @@ struct pixmap error_pix;
 
 struct pixmap server_status[5];
 struct pixmap locked_pix;
+struct pixmap punkbuster_pix;
+struct pixmap locked_punkbuster_pix;
 
 static GdkGC *pixmaps_gc;
 static GdkGC *masks_gc;
@@ -242,6 +246,9 @@ void free_pixmaps (void) {
 
   free_pixmap (&locked_pix);
 
+  free_pixmap (&punkbuster_pix);
+  free_pixmap (&locked_punkbuster_pix);
+
   if (pixmaps_gc) {
     gdk_gc_destroy (pixmaps_gc);
     pixmaps_gc = NULL;
@@ -319,6 +326,8 @@ void init_pixmaps (GtkWidget *window) {
 
   create_pixmap (window, &error_pix, error_xpm);
   create_pixmap (window, &locked_pix, locked_xpm);
+  create_pixmap (window, &punkbuster_pix, punkbuster_xpm);
+  create_pixmap (window, &locked_punkbuster_pix, locked_punkbuster_xpm);
 }
 
 
