@@ -1,3 +1,7 @@
+Oct 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- added gameaholic.com rune server list
+- game and gametype are now displayed in LaunchInfo.txt
+
 Oct 07, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - changed default commandline for qs & qws for quakeforge
 - added default commandlines for rune,tribes2,wolf and ut

@@ -856,6 +856,8 @@ static char *builtin_masters_update_info[] = {
   "ADD GPS http://www.gameaholic.com/servers/qspy-turok2 Turok 2 - gameaholic.com",
   "ADD GPS http://www.gameaholic.com/servers/qspy-shogo Shogo - gameaholic.com",
 
+  "ADD RUNESRV http://www.gameaholic.com/servers/qspy-rune gameaholic.com",
+
   NULL
 };
 
