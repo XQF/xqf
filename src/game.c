@@ -850,6 +850,17 @@ static char *q3a_gametypes[9] = {
   " mod ",              /* 8+ is usually a client-side mod */
 };
 
+#define MAX_Q3A_OSP_TYPES 7
+static char *q3a_osp_gametypes[MAX_Q3A_OSP_TYPES] = {
+  "FFA",		/* 0 = Free for All */
+  "1v1",	 	/* 1 = Tournament */
+  "FFA Comp",  		/* 2 = FFA, Competition */
+  "TDM",		/* 3 = Team Deathmatch */
+  "CTF",		/* 4 = Capture the Flag */
+  "Clan Arena",		/* 5 = Clan Arena */
+  "Custom OSP",         /* 6+ is usually a custom OSP setting */
+};
+
 
 static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
@@ -857,11 +868,13 @@ static void q3_analyze_serverinfo (struct server *s) {
   long n;
   int newtypes;
 
+  int is_osp;
+
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
-// Get the server version first.
-// If it is 1.2+, the new game types are used
+  // Get the server version first.
+  // If it is 1.2+, the new game types are used
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
   if (strcmp (*info_ptr, "version") == 0) {
       if (info_ptr[1][3] >= '1')	// eg: 1 of 1.27
@@ -871,7 +884,22 @@ static void q3_analyze_serverinfo (struct server *s) {
         newtypes=0;
     }
   }
-  
+
+  /*
+    Next figure out if it is an OSP server, if it is
+    then the g_gametype has a different meaning
+  */
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "gamename") == 0) {
+      if (strcmp (info_ptr[1], "osp") == 0) {
+	is_osp = 1;
+      } else {
+	is_osp = 0;
+      }
+    }
+  }
+
+
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
  
     /*
@@ -902,7 +930,15 @@ static void q3_analyze_serverinfo (struct server *s) {
 	s->gametype = info_ptr[1];
       }
       else {
-        if (newtypes == 1)
+	if (is_osp == 1)
+	{
+	  if( n >= MAX_Q3A_OSP_TYPES )
+	    n = MAX_Q3A_OSP_TYPES - 1;
+
+	  s->gametype = q3a_osp_gametypes[n];
+	  
+	} 
+	else if (newtypes == 1)
         {
   	  if (n < 10)
 	    s->gametype = q3a_gametypes[n];
@@ -1515,7 +1551,7 @@ static int qw_exec (const struct condef *con, int forkit) {
 #ifdef QSTAT23
 
 static int q3_exec (const struct condef *con, int forkit) {
-  char *argv[32];
+  char *argv[64];
   int argi = 0;
   char *cmd;
   char *game_dir;
