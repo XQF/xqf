@@ -1,3 +1,7 @@
+Sep 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- q3a gametypes for afterwards. that stuff should really be stored in a runtime
+  parsed, external file
+
 Sep 26, 2002: Jordi Mallach <jordi@sindominio.net>
 - updated Catalan & Spanish translations
 
