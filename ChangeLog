@@ -1,6 +1,7 @@
 Aug 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix quickfilter not working when pressing backspace or delete in the empty
   textentry (thanks Ruediger Meier for spotting this one).
+- add new tray icons from Jochen Baier
 
 Aug 15, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix compile with gcc 2.95 (patch by Thomas Zajic)
