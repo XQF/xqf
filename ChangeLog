@@ -1,6 +1,7 @@
 Nov 13th 2000: Alex Burger <alex@fragit.net>
 -Bug fix to prevent filter buttons from not staying 'pressed' after doing a
  refresh.  Thanks to slashdev for the fix.
+-Now requires QStat 2.4a
 
 Nov 12th 2000: Alex Burger <alex@fragit.net>
 -Changed Copy+ menu to use double spaces instead of commas to separate
