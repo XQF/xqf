@@ -909,7 +909,7 @@ msgstr "Keiner <--"
 
 #: src/xqf.c:336 src/xqf.c:2267
 msgid "None"
-msgstr "Keine"
+msgstr "Keiner"
 
 #: src/xqf.c:350
 #, c-format
