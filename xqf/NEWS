@@ -1,3 +1,17 @@
+XQF 0.9.7
+~~~~~~~~~
+Changes since 0.9.6g:
+
+o i18n fixes
+o Support for games using the GameSpy protocol
+o Support for Rune
+o Reorganization and fixes of settings dialogs
+o Quake3 and Wolf support improvements
+o Quake fixes for QuakeForge
+o PowerPC segfault fixed
+o German and Spanish updates
+
+
 XQF 0.9.6g
 ~~~~~~~~~~
 Changes since 0.9.6f:
