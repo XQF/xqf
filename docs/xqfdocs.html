@@ -7,7 +7,7 @@
 </head>
 <body>
 <center> <b><u><font size="+3">XQF 0.9.12.1</font></u></b>
-<p>June 11th, 2003<br>
+<p>Octobter 7th, 2003<br>
 Documentatiom written by:<br>
 Alex Burger &lt;<a href="mailto:alex_b@users.sourceforge.net">alex_b@users.sourceforge.net</a>&gt;</p>
 <p>Documentation contributors:<br>
@@ -21,7 +21,7 @@ Jordi Mallach &lt;<a href="mailto:jordi@debian.org">jordi@debian.org</a>&gt;<br>
   <p><a href="#Downloading">Downloading<br>
   </a></p>
   <p><a href="#ChangeLog">Change Log</a></p>
-  <p><a href="#Installation_/_Compiling">Installation /       Compiling</a></p>
+  <p><a href="#Installation_/_Compiling">Installation / Compiling</a></p>
   <blockquote> <a href="#RPM_Binary_package">RPM Binary package</a><br>
     <a href="#DEB_Binary_package">DEB Binary package</a><br>
     <a href="#TAR.GZ_source_code">TAR.GZ source code</a><br>
@@ -40,8 +40,7 @@ Jordi Mallach &lt;<a href="mailto:jordi@debian.org">jordi@debian.org</a>&gt;<br>
       <a href="#Preferences">Preferences</a><br>
       <a href="#Filters">Server Filters</a></blockquote>
   </blockquote>
-  <p><a href="#Game_Specific_Information">Game Specific      
-Information<br>
+  <p><a href="#Game_Specific_Information">Game Specific Information<br>
   </a></p>
   <blockquote> <a href="#Q3">Quake 3</a><br>
     <a href="#SoF">Soldier of Fortune</a><br>
@@ -56,12 +55,12 @@ Information<br>
 &nbsp;</p>
 </blockquote>
 <p><a name="Overview"></a><b><u><font size="+2">Overview</font></u></b></p>
-<p><a href="http://www.linuxgames.com/xqf/">XQF</a> is a 3D     action
-game (such as Quake, sequels and derivatives) server     browser. It
+<p><a href="http://www.linuxgames.com/xqf/">XQF</a> is a 3D action
+game (such as Quake, sequels and derivatives) server browser. It
 uses X and is written using the <a href="http://www.gtk.org/">GIMP
 Tool Kit</a>.</p>
 <p>XQF is a front-end to <a href="http://www.qstat.org/">QStat</a>, a
-program by Steve Jankowsk     which is used to retrieve server info.</p>
+program by Steve Jankowsk which is used to retrieve server info.</p>
 <p>With&nbsp; XQF you can search for the following games:</p>
 <blockquote> Quake<br>
 Quake World<br>
@@ -84,23 +83,23 @@ Rune<br>
 Descent 3<br>
 Serious Sam: The First Encounter<br>
 Serious Sam: The Second Encounter<br>
-  <p>Other games that use the 'Gamespy' type master protocol       such
+  <p>Other games that use the 'Gamespy' type master protocol such
 as<br>
 &nbsp;&nbsp;&nbsp; No one Lives Forever<br>
 &nbsp;&nbsp;&nbsp; Rally Masters<br>
 &nbsp;&nbsp;&nbsp; Turok 2<br>
 &nbsp;&nbsp;&nbsp; Shogo</p>
 </blockquote>
-Searching for games involves communicating with 'master     servers' on
-the Internet which game servers advertise to on the     Internet.&nbsp;
-XQF can spawn your client into a selected     server with customized
-options.&nbsp; You can also apply     filters while searching for
-servers, trimming full or empty     servers, for example.
-<p>The program has been translated to the following languages:    
-English, Spanish, German, Catalan, Danish and French.<br>
+Searching for games involves communicating with 'master servers' on
+the Internet which game servers advertise to on the Internet.&nbsp;
+XQF can spawn your client into a selected server with customized
+options.&nbsp; You can also apply filters while searching for
+servers, trimming full or empty servers, for example.
+<p>The program has been translated to the following languages: English,
+Spanish, German, Catalan, Danish and French.<br>
 </p>
 <p>Highlight of features:<br>
-&nbsp; - Supports (unauthenticated) Gamespy style master     servers
+&nbsp; - Supports (unauthenticated) Gamespy style master servers
 using QStat 2.4a<br>
 &nbsp; - Displays server rules and player info<br>
 &nbsp; - Players and servers sorting<br>
@@ -110,12 +109,11 @@ using QStat 2.4a<br>
 &nbsp; - Player name, color, skin and model selection<br>
 &nbsp; - QuakeWorld skin visualization with coloring<br>
 &nbsp; - Custom configs<br>
-&nbsp; - Decodes and displays extended bit-field server flags    
-(dmfalgs,<br>
+&nbsp; - Decodes and displays extended bit-field server flags (dmfalgs,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; teamplay, etc...)<br>
-&nbsp; - Remote server administration tool (rcon) for     QuakeWorld,
+&nbsp; - Remote server administration tool (rcon) for QuakeWorld,
 HexenWorld,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quake2, Quake3: Arena,     Half-Life,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quake2, Quake3: Arena, Half-Life,
 Sin, Kingpin, Heretic2 servers&nbsp;<br>
 &nbsp; - Busy server redial<br>
 </p>
@@ -124,7 +122,7 @@ Sin, Kingpin, Heretic2 servers&nbsp;<br>
 Requirements</font></u></b></p>
 <p>The minimum system requirements are:</p>
 <p>A UNIX computer and C compiler (gcc)<br>
-<a href="http://www.qstat.org">QSTAT 2.5c</a> (latest version    
+<a href="http://www.qstat.org">QSTAT 2.5c</a> (latest version
 recommended to ensure full functionality)<br>
 glibc 2.1+<br>
 Xfree86 3.3.3+<br>
@@ -133,21 +131,21 @@ Xfree86 3.3.3+<br>
 gdk-pixbuf</a><br>
 <a href="http://www.gnu.org/software/gettext/">gettext</a> 0.10.36+
 (ONLY required when building directly from CVS)<br>
-<a href="ftp://ftp.gnu.org/gnu/wget/">wget</a> to retrieve     html
+<a href="ftp://ftp.gnu.org/gnu/wget/">wget</a> to retrieve html
 server listings from the Web</p>
-<p>XQF has been tested as is known to run on Intel / AMD and    
-PowerPC platforms.<br>
+<p>XQF has been tested as is known to run on Intel / AMD and PowerPC
+platforms.<br>
 &nbsp;</p>
 <p><a name="Downloading"></a><b><u><font size="+2">Downloading</font></u></b><br>
 &nbsp;</p>
-<p>XQF can be downloaded as a pre-compiled binary for some    
-distributions, or as source code. The source code can be     downloaded
-as either a .tar.gz file, or via CVS.&nbsp; See the     file section of <a
+<p>XQF can be downloaded as a pre-compiled binary for some
+distributions, or as source code. The source code can be downloaded
+as either a .tar.gz file, or via CVS.&nbsp; See the file section of <a
  href="http://www.linuxgames.com/xqf">http://www.linuxgames.com/xqf</a>for
 downloading instructions.<br>
 <br>
 </p>
-<p><b><u><font size="+2"><a name="ChangeLog"></a>Change     Log</font></u></b>&nbsp;<br>
+<p><b><u><font size="+2"><a name="ChangeLog"></a>Change Log</font></u></b>&nbsp;<br>
 </p>
 <blockquote> <u><b>XQF 0.9.12 -- June 10, 2003</b></u>
   <ul style="list-style-type: disc;">
@@ -187,51 +185,47 @@ buttons from toolbar</li>
 </blockquote>
 <blockquote><u><b>XQF 0.9.11 -- December 18, 2002</b></u>
   <ul>
-    <li>Serious Sam support (requires SMS gametype via        
-~/.qstatrc). &nbsp;Does not currently support any         masters.</li>
+    <li>Serious Sam support (requires SMS gametype via ~/.qstatrc).
+&nbsp;Does not currently support any masters.</li>
     <li>Fixed -game parameter for Half-Life</li>
     <li>RTCW voteflags decoded in properties pane</li>
-    <li>Visual marker in Map column to show if you have the        
-listed map installed on your comptuer. (Q3, RTCW, UT, Rune,         UT2)</li>
+    <li>Visual marker in Map column to show if you have the listed map
+installed on your comptuer. (Q3, RTCW, UT, Rune, UT2)</li>
   </ul>
   <u><b>XQF 0.9.10 -- November 16, 2002</b></u>
   <ul>
-    <li>File dialog boxes for adding game command line and        
-directory</li>
-    <li>Greatly speed up the startup of XQF when loading large        
+    <li>File dialog boxes for adding game command line and directory</li>
+    <li>Greatly speed up the startup of XQF when loading large lists</li>
+    <li>Greatly speed up response time when applying filters to large
 lists</li>
-    <li>Greatly speed up response time when applying filters to        
-large lists</li>
-    <li>Ability to automatically set cl_punkbuster when        
-connecting to a server in Q3A</li>
+    <li>Ability to automatically set cl_punkbuster when connecting to a
+server in Q3A</li>
     <li>Added Punkbuster icon to Priv column</li>
-    <li>Ability to define custom command-line arguments for a        
-game based on the 'game type</li>
-    <li>Q3A now searches for a matching mod directory.&nbsp;        
-Should correctly launch even if mod directory is incorrect         by
+    <li>Ability to define custom command-line arguments for a game
+based on the 'game type</li>
+    <li>Q3A now searches for a matching mod directory.&nbsp; Should
+correctly launch even if mod directory is incorrect by
 case</li>
     <li>Added sound disable support for Unreal based games</li>
     <li>Can now hide games that are not configured</li>
     <li>Changed default Quake3 protocol to 68</li>
-    <li>Sound support for XQF events using external sound         player</li>
+    <li>Sound support for XQF events using external sound player</li>
     <li>Busy server redial with reserved slots support</li>
-    <li>Soldier of Fortune 2 support (requires qstat sof2s        
-gametype via ~/.qstatrc or qstat &gt;2.5b)</li>
-    <li>Use correct parameters (-game,+connect,+password) when        
+    <li>Soldier of Fortune 2 support (requires qstat sof2s gametype via
+~/.qstatrc or qstat &gt;2.5b)</li>
+    <li>Use correct parameters (-game,+connect,+password) when
 launching Half-Life</li>
-    <li>New master type of "file" to read IP addresses from a        
-file</li>
+    <li>New master type of "file" to read IP addresses from a file</li>
     <li>Unreal Tournament 2003 support</li>
     <li>Fixed Half-Life rcon support</li>
     <li>Player search visible improvements</li>
-    <li>Fixed Tribes2 master support and added additional        
-masters</li>
+    <li>Fixed Tribes2 master support and added additional masters</li>
     <li>Updated QuakeWorld master list</li>
     <li>Unlimited number of server filters instead of ten</li>
     <li>Changed default Wolf protocol to 60</li>
-    <li>Standalone rcon program that doesn't need X         (xqf-rcon)</li>
-    <li>Quake3 launching now uses 'game' instead of 'gamename'        
-to help prevent launch problems due to case</li>
+    <li>Standalone rcon program that doesn't need X (xqf-rcon)</li>
+    <li>Quake3 launching now uses 'game' instead of 'gamename' to help
+prevent launch problems due to case</li>
     <li>Various segfault fixes</li>
     <li>XQF now requires qstat 2.5c</li>
   </ul>
@@ -239,9 +233,8 @@ to help prevent launch problems due to case</li>
   <ul>
     <li>Added Voyager Elite Force support</li>
     <li>Changed default Quake3 protocol to 67</li>
-    <li>You can now select Quake3 and Wolfenstein's         protocol</li>
-    <li>Added 20sec timeout for wget (nice if Gameaholic is        
-down)</li>
+    <li>You can now select Quake3 and Wolfenstein's protocol</li>
+    <li>Added 20sec timeout for wget (nice if Gameaholic is down)</li>
     <li>Added Tribes2 server statistics</li>
     <li>Fixed Tribes2 and Quake3 masters</li>
     <li>Added support for LAN broadcast queries</li>
@@ -251,7 +244,7 @@ down)</li>
   </ul>
   <u><b>XQF 0.9.8 -- December 17, 2001</b></u>
   <ul>
-    <li>Repackaged with libtool 1.4, so it builds on all Linux        
+    <li>Repackaged with libtool 1.4, so it builds on all Linux
 architectures</li>
     <li>Fixed trasparency of Gamespy's pixmap</li>
     <li>Don't distribute debian stuff</li>
@@ -259,56 +252,55 @@ architectures</li>
   <u><b>XQF 0.9.7 -- December 16, 2001</b></u><br>
   <ul>
     <li>Support for games using the GameSpy protocol</li>
-    <li>Support for Descent3 with qstat 2.4e (please note        
-Descent can't be launched from within XQF at the         moment)</li>
+    <li>Support for Descent3 with qstat 2.4e (please note Descent can't
+be launched from within XQF at the moment)</li>
     <li>Support for Rune</li>
     <li>Reorganization of settings dialogs</li>
-    <li>New gametypes for Quake3 mods Threewave and         TribalCTF</li>
+    <li>New gametypes for Quake3 mods Threewave and TribalCTF</li>
     <li>Support for Wolfenstein retail (protocol 57)</li>
-    <li>Server statistics for Wolfenstein, Kingpin and         Half-Life</li>
+    <li>Server statistics for Wolfenstein, Kingpin and Half-Life</li>
     <li>Works on PowerPC again</li>
   </ul>
   <u><b>XQF 0.9.6g -- September 25, 2001</b></u><br>
   <ul>
-    <li>Internationalization (gettext) support, Spanish and        
-German translations</li>
+    <li>Internationalization (gettext) support, Spanish and German
+translations</li>
     <li>Initial Return to Castle Wolfenstein support</li>
     <li>Tribes2 support</li>
     <li>Support for Q3A protocol v66</li>
-    <li>Added "Quake3" preferences page which allows the        
-protocol version and other options to be changed</li>
-    <li>Added "General" preferences page, which hosts many of        
-the options which were in "Appearance" previously</li>
+    <li>Added "Quake3" preferences page which allows the protocol
+version and other options to be changed</li>
+    <li>Added "General" preferences page, which hosts many of the
+options which were in "Appearance" previously</li>
     <li>Added "game type" filter</li>
     <li>New man page</li>
-    <li>New documentation in html format         (docs/xqfdocs.html)</li>
+    <li>New documentation in html format (docs/xqfdocs.html)</li>
     <li>XQF now requires qstat 2.4c</li>
   </ul>
   <u><b>XQF 0.9.6f -- March 23, 2001</b></u>
   <ul>
-    <li>Multiple server filters; Filter name configurable and        
-appears in the status bar</li>
-    <li>Lock Icon to show if server is private or not; icon        
-next to number of players turns yellow if all of the public        
-client spaces are full</li>
-    <li>Pressing "Insert" brings up the add server dialog;        
-pressing SHIFT+Insert adds the currently selected server to        
-ones favorites</li>
+    <li>Multiple server filters; Filter name configurable and appears
+in the status bar</li>
+    <li>Lock Icon to show if server is private or not; icon next to
+number of players turns yellow if all of the public client spaces are
+full</li>
+    <li>Pressing "Insert" brings up the add server dialog; pressing
+SHIFT+Insert adds the currently selected server to ones favorites</li>
     <li>Added support for new Team Arena Game types</li>
-    <li>Protocol 48 (1.27) Q3A servers get queried with        
-protocol 48 in qstat</li>
-    <li>Execute "PreLaunch" script when launching game (for use        
-with ICQ scripts, etc.)</li>
+    <li>Protocol 48 (1.27) Q3A servers get queried with protocol 48 in
+qstat</li>
+    <li>Execute "PreLaunch" script when launching game (for use with
+ICQ scripts, etc.)</li>
     <li>Improved support for Half-Life servers</li>
     <li>Improved support for Unreal Tournament</li>
     <li>Improved support for Quake2</li>
-    <li>Hack for supporting multiple Q3A protocols i.e. xqf can        
-run different Q3A's depending on if it is a 1.17 or 1.27        
-server: see the README file</li>
-    <li>Q3A hack for connecting to arena servers so that all of        
-the vm_* settings are correct on the command line</li>
-    <li>Resolved one major source of core dumps. It should be        
-much more stable now</li>
+    <li>Hack for supporting multiple Q3A protocols i.e. xqf can run
+different Q3A's depending on if it is a 1.17 or 1.27 server: see the
+README file</li>
+    <li>Q3A hack for connecting to arena servers so that all of the
+vm_* settings are correct on the command line</li>
+    <li>Resolved one major source of core dumps. It should be much more
+stable now</li>
   </ul>
 </blockquote>
 <p><br>
@@ -317,21 +309,21 @@ much more stable now</li>
 / Compiling</font></u></b><br>
 &nbsp;</p>
 <blockquote> <a name="RPM_Binary_package"></a><b><u><font size="+1">RPM
- Binary package:</font></u></b>
+Binary package:</font></u></b>
   <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
 or higher is already installed
     <p>As root, execute the command:</p>
     <p><b><i>rpm -Uvh xqf-xxx-i386.rpm</i></b></p>
   </blockquote>
-  <a name="DEB_Binary_package"></a><b><u><font size="+1">DEB      
-Binary package:</font></u></b>
+  <a name="DEB_Binary_package"></a><b><u><font size="+1">DEB Binary
+package:</font></u></b>
   <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
 or higher is already installed
     <p>As root, execute the command:</p>
     <p><b><i>dpkg -i xqf_xxx-v_arch.deb</i></b></p>
   </blockquote>
-  <a name="TAR.GZ_source_code"></a><b><u><font size="+1">TAR.GZ      
-source code</font></u></b>
+  <a name="TAR.GZ_source_code"></a><b><u><font size="+1">TAR.GZ source
+code</font></u></b>
   <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
 or higher is already installed
     <p>Extract the source code:</p>
@@ -342,12 +334,12 @@ or higher is already installed
     <p><b><i>./configure</i></b></p>
     <p>Compile source code:</p>
     <p><b><i>make</i></b></p>
-    <p>Install compiled binary and man page (this step must be        
-done as root):</p>
+    <p>Install compiled binary and man page (this step must be done as
+root):</p>
     <p><b><i>make install</i></b><br>
 &nbsp;</p>
   </blockquote>
-  <a name="CVS_source_code"></a><b><u><font size="+1">CVS       source
+  <a name="CVS_source_code"></a><b><u><font size="+1">CVS source
 code</font></u></b>
   <blockquote> Make sure <a href="http://www.qstat.org">QSTAT 2.5c</a>
 or higher is already installed
@@ -357,8 +349,8 @@ or higher is already installed
     <p><b><i>./configure</i></b></p>
     <p>Compile source code:</p>
     <p><b><i>make</i></b></p>
-    <p>Install compiled binary and man page (this step must be        
-done as root):</p>
+    <p>Install compiled binary and man page (this step must be done as
+root):</p>
     <p><b><i>make install</i></b></p>
     <p>The default location for XQF /usr/local/bin.</p>
   </blockquote>
@@ -367,44 +359,44 @@ done as root):</p>
 <a name="Using_XQF"></a><b><u><font size="+2">Using XQF<br>
 </font></u></b><br>
 </p>
-<p><a name="Launching_XQF"></a><b><u><font size="+1">Launching     XQF:</font></u></b></p>
+<p><a name="Launching_XQF"></a><b><u><font size="+1">Launching XQF:</font></u></b></p>
 <blockquote> <br>
-The first time you launch XQF, it will attempt to search for      
-games in your path. &nbsp;If any are found, it will       automatically
-configure the command line for the game and       attempt to configure
-the game directory based on the command       line found. &nbsp;This
-should work with Quake1, QuakeWorld,       Quake2, Quake3, Return to
-Castle Wolfenstein, Enemy       Territory, Soldier of Fortune,
-Descent3, Tribes 2, Unreal       Tournament 1 / 2003, Rune and Serious
+The first time you launch XQF, it will attempt to search for games in
+your path. &nbsp;If any are found, it will automatically
+configure the command line for the game and attempt to configure
+the game directory based on the command line found. &nbsp;This
+should work with Quake1, QuakeWorld, Quake2, Quake3, Return to
+Castle Wolfenstein, Enemy Territory, Soldier of Fortune,
+Descent3, Tribes 2, Unreal Tournament 1 / 2003, Rune and Serious
 Sam 1&amp;2<br>
   <br>
-If no games are found, the Source list will show ALL       supported
-games. &nbsp;If XQF finds one or more supported       games, it will
-only show CONFIGURED games in the Source       column. &nbsp;See the
-Preferences / Appearance menu       documentation for more information.<br>
+If no games are found, the Source list will show ALL supported
+games. &nbsp;If XQF finds one or more supported games, it will
+only show CONFIGURED games in the Source column. &nbsp;See the
+Preferences / Appearance menu documentation for more information.<br>
   <br>
-&nbsp;XQF doesn't accept any command line options at the       moment,
+&nbsp;XQF doesn't accept any command line options at the moment,
 except for a debug setting. </blockquote>
 <blockquote> <b><i>xqf -d</i> N</b>
-  <p>Sets debug level to `N', where N is greater than 0. If N       is
-greater than 5, XQF will output a lot of debug       information.</p>
-  <p>XQF is normally installed into /usr/local/bin.&nbsp; If      
+  <p>Sets debug level to `N', where N is greater than 0. If N is
+greater than 5, XQF will output a lot of debug information.</p>
+  <p>XQF is normally installed into /usr/local/bin.&nbsp; If
 /usr/local/bin is not in your path, launch xqf with:</p>
   <p><b><i>/usr/local/bin/xqf -d</i> N</b></p>
-  <p>You can also add the directory to your path, or simply       make
-a symbolic link in /usr/bin.&nbsp; For example, as       root:</p>
+  <p>You can also add the directory to your path, or simply make
+a symbolic link in /usr/bin.&nbsp; For example, as root:</p>
   <p><b>ln -s /usr/local/bin/xqf /usr/bin/xqf</b></p>
-  <p>XQF can be customized via GTK's rc files.&nbsp; XQF parses      
-files /etc/gtkrc, $HOME/.gtkrc and $HOME/.qf/gtkrc.<br>
+  <p>XQF can be customized via GTK's rc files.&nbsp; XQF parses files
+/etc/gtkrc, $HOME/.gtkrc and $HOME/.qf/gtkrc.<br>
 &nbsp;</p>
 </blockquote>
 <p><a name="Configuring_XQF"></a><b><u><font size="+1">Configuring XQF:</font></u></b></p>
 <blockquote> <br>
-Please see the <a href="#Preferences">Menu Bar /       Preferences</a>
-section for a description of the Preferences       menu items.<br>
+Please see the <a href="#Preferences">Menu Bar / Preferences</a>
+section for a description of the Preferences menu items.<br>
 </blockquote>
 <p><a name="Toolbar"></a><b><u><font size="+1">Toolbar:</font></u></b></p>
-<blockquote> Update, Refresh, Refresh Selected, Stop, Connect, Observe, 
+<blockquote> Update, Refresh, Refresh Selected, Stop, Connect, Observe,
 Record S Filter, P Filter, SF Cfg, PF Cfg
   <p><b>Update:</b></p>
 </blockquote>
@@ -427,7 +419,8 @@ Record S Filter, P Filter, SF Cfg, PF Cfg
   <b>P Filter:</b>
   <blockquote> Enable the currently selected Player filter </blockquote>
   <b></b></blockquote>
-<a name="Window_Panes"></a><b><u><font size="+1">Window     Panes:</font></u></b> <br>
+<a name="Window_Panes"></a><b><u><font size="+1">Window Panes:</font></u></b>
+<br>
 &nbsp;
 <blockquote> Left pane:&nbsp; Source<br>
 Top pane:&nbsp; Server list<br>
@@ -435,10 +428,9 @@ Middle bottom pane:&nbsp; Player list<br>
 Bottom right pane:&nbsp; Server info
   <p>While in the Server pane:</p>
   <ul>
-    <li>Left double-click launches game on selected         server.</li>
+    <li>Left double-click launches game on selected server.</li>
     <li>Right click pops up server option menu.</li>
-    <li>Middle click selects one server and refreshes its        
-information.</li>
+    <li>Middle click selects one server and refreshes its information.</li>
     <li>Clicking on a map name for Quake3 based games (Wolfenstein etc)
 will bring up a map screen shot if it exists in the .PK3 file.&nbsp;
 Otherwise an 'X' will appear.</li>
@@ -457,23 +449,23 @@ While in the Server, Player or Server info pane:<br>
 </ul>
 </div>
 <blockquote> </blockquote>
-<a name="Bottom_status_bar"></a><b><u><font size="+1">Bottom     status
+<a name="Bottom_status_bar"></a><b><u><font size="+1">Bottom status
 bar:</font></u></b> <br>
 &nbsp;
 <blockquote> Left bar: Current XQF activity<br>
 Middle bar: Filter information<br>
 Right bar: Moving activity bar </blockquote>
-<a name="Menu_bar"></a><b><u><font size="+1">Menu     bar:</font></u></b>
+<a name="Menu_bar"></a><b><u><font size="+1">Menu bar:</font></u></b>
 <p>File, Edit, View, Server, Preferences</p>
 <p><a name="File"></a><b><u>File:</u></b></p>
 <blockquote> <b>Statistics:</b>
   <blockquote> <b>Servers tab:</b>
-    <p>Display server statistics for all games such as number        
-of servers, # up, times on, # down, # info not available, #         of
+    <p>Display server statistics for all games such as number of
+servers, # up, times on, # down, # info not available, # of
 players</p>
     <p><b>O/S tab:</b></p>
-    <p>Quake2, Quake3, Wolfenstein, Kingpin and Half-Life        
-server statistics based on CPU/architecture and operating         system</p>
+    <p>Quake2, Quake3, Wolfenstein, Kingpin and Half-Life server
+statistics based on CPU/architecture and operating system</p>
   </blockquote>
   <p><br>
   <b>Exit:</b></p>
@@ -490,7 +482,7 @@ server statistics based on CPU/architecture and operating         system</p>
 list </blockquote>
   <b>Remove from Favorites:</b>
   <blockquote> Delete server entry from Favorites list. &nbsp;This is
-only         available when viewing the Favorites list. </blockquote>
+only available when viewing the Favorites list. </blockquote>
   <b>Copy:</b>
   <blockquote> Copy basic server information to clip board:
     <p>ip:port</p>
@@ -498,10 +490,10 @@ only         available when viewing the Favorites list. </blockquote>
     <p>24.101.93.126:27912</p>
   </blockquote>
   <b>Copy+:</b>
-  <blockquote> Copy more detailed server information to clip board:   
+  <blockquote> Copy more detailed server information to clip board:
     <p>ping ip:port name map curplayers maxplayers</p>
     <p><b>Example:</b></p>
-    <p>0 24.101.93.126:27912 Toronto_NH_BatCave q2dm2 0 of         5</p>
+    <p>0 24.101.93.126:27912 Toronto_NH_BatCave q2dm2 0 of 5</p>
   </blockquote>
   <b>Add Default Masters:</b> <br>
   <br>
@@ -513,37 +505,37 @@ master.<br>
   <br>
   <b>Add Master:</b>
   <blockquote> Add a master server to the 'Source' pane.
-    <p>Enter the name of the master server, the type of game,        
-and the master server address. XQF supports the following         types
+    <p>Enter the name of the master server, the type of game, and the
+master server address. XQF supports the following types
 of master servers in the address field:</p>
     <p><b>master://</b></p>
-    <blockquote> Considered a standard master server. When XQF calls    
-QSTAT, it will use use QSTAT's standard master support.           For
+    <blockquote> Considered a standard master server. When XQF calls
+QSTAT, it will use use QSTAT's standard master support. For
 example, Quake2 would use the qstat option '-q2m'
       <p><b>Example:</b></p>
       <p>master://q2master.planetquake.com</p>
     </blockquote>
     <b>gmaster://</b>
-    <blockquote> When XQF calls QSTAT, it will use the '-gps' option to 
-query 'Gamespy' style master servers. This will not allow           you
-to query master servers at gamespy.com, as they use           an key to
-only allow Gamespy users to use their master           servers.      
-      <p>Unreal Tournament uses this type of master server          
-protocol, but does not require the key.</p>
+    <blockquote> When XQF calls QSTAT, it will use the '-gps' option to
+query 'Gamespy' style master servers. This will not allow you
+to query master servers at gamespy.com, as they use an key to
+only allow Gamespy users to use their master servers.
+      <p>Unreal Tournament uses this type of master server protocol,
+but does not require the key.</p>
       <p><b>Example:</b></p>
       <p>gmaster://unreal.epicgames.com</p>
     </blockquote>
     <b>http://</b>
     <blockquote> Parses html pages for server listings. Common in
-Quake1,           Quake2, Kingpin and Heretic II.
+Quake1, Quake2, Kingpin and Heretic II.
       <p><b>Example:</b></p>
       <p>http://www.gameaholic.com/servers/qspy-heretic2<br>
 &nbsp;</p>
     </blockquote>
     <b>lan://</b>
-    <blockquote> Issues a broadcast search for servers in your LAN. This
- does not work with all games. UT and Rune use the Gamespy          
-protocol for LAN queries and will therefore be listed           under
+    <blockquote> Issues a broadcast search for servers in your LAN.
+This does not work with all games. UT and Rune use the Gamespy protocol
+for LAN queries and will therefore be listed under
 "Generic Gamespy".
       <p><b>Example:</b></p>
       <p>lan://255.255.255.255<br>
@@ -553,8 +545,8 @@ protocol for LAN queries and will therefore be listed           under
     <p><b>file://</b><br>
     </p>
     <blockquote>
-      <p>Parses a list of servers from a local text file that          
-is in the html master format.</p>
+      <p>Parses a list of servers from a local text file that is in the
+html master format.</p>
       <p><b>Example:</b></p>
 file://~/quake3-servers<br>
 file:///home/alex/quake3-servers<br>
@@ -565,19 +557,18 @@ file:///home/alex/quake3-servers<br>
 68.41.236.152:27960<br>
 213.40.130.42:27961<br>
     </blockquote>
-    <b>Note</b>:&nbsp; Not specifying a prefix will default to        
-master://<br>
+    <b>Note</b>:&nbsp; Not specifying a prefix will default to master://<br>
   </blockquote>
   <b>Rename Master:</b>
-  <blockquote> Allow you to change the name of the master. &nbsp;You can
- not modify the address or game type. </blockquote>
+  <blockquote> Allow you to change the name of the master. &nbsp;You
+can not modify the address or game type. </blockquote>
   <b>Delete Master:</b>
   <blockquote> Removes a master from the Source list </blockquote>
   <b>Find Player:</b>
-  <blockquote> Search for a player by name using an exact match string, 
+  <blockquote> Search for a player by name using an exact match string,
 sub string or regular expression. </blockquote>
   <b>Find Again:</b>
-  <blockquote> Find the next player that matches the previously defined 
+  <blockquote> Find the next player that matches the previously defined
 search string. </blockquote>
   <b>Properties:</b>
   <blockquote> Displays the following server properties:<br>
@@ -594,23 +585,23 @@ search string. </blockquote>
       <li>RCon password (if supported for this game)</li>
     </ul>
     <br>
-Number of reserved slots is used by the redial feature to        
-determine how many free slots must be free on a server         before
-it attempts to connect. &nbsp;For example, if the         reserved
-slots are set to 2 and there are a max of 8         players in the
-game, there must be 3 free slots avabilabe         (5/8 players in the
+Number of reserved slots is used by the redial feature to determine how
+many free slots must be free on a server before
+it attempts to connect. &nbsp;For example, if the reserved
+slots are set to 2 and there are a max of 8 players in the
+game, there must be 3 free slots avabilabe (5/8 players in the
 game) for it to launch the game.<br>
     <br>
-Server, spectator and RCon password allow you to set the        
-password for that particular server so you will not be         prompted
-when connecting. &nbsp;The password is stored in         the
-configuration file (~/.qf/config). &nbsp;The selected         game
+Server, spectator and RCon password allow you to set the password for
+that particular server so you will not be prompted
+when connecting. &nbsp;The password is stored in the
+configuration file (~/.qf/config). &nbsp;The selected game
 determines which of these options are available.<br>
     <br>
-For custom cfg, enter a custom configuration file to be        
-executed when the game starts. &nbsp;For example:        
-&nbsp;custom2.cfg. &nbsp;If you have specified a custom        
-configuration file for the game in Preferences / Games,         they
+For custom cfg, enter a custom configuration file to be executed when
+the game starts. &nbsp;For example: &nbsp;custom2.cfg. &nbsp;If you
+have specified a custom configuration file for the game in Preferences
+/ Games, they
 will both be executed.<br>
   </blockquote>
 </blockquote>
@@ -619,9 +610,10 @@ will both be executed.<br>
   <blockquote> Refresh (ping) all servers for the current game /
 source.&nbsp; Note: &nbsp;If more than 100 servers are to be updated,
 the screen is not immediately refreshed.&nbsp; This helps eliminate
-long delays when a large number of serves is being updated / refreshed. </blockquote>
+long delays when a large number of serves is being updated / refreshed.
+  </blockquote>
   <b>Refresh selected:</b>
-  <blockquote> Refresh (ping) all servers for the currently selected /  
+  <blockquote> Refresh (ping) all servers for the currently selected /
 highlighted servers.&nbsp; Note: &nbsp;If more than 100 servers are to
 be updated, the screen is not immediately refreshed.&nbsp; This helps
 eliminate long delays when a large number of serves is being updated /
@@ -633,48 +625,43 @@ the screen is not immediately refreshed.&nbsp; This helps eliminate
 long delays when a large number of serves is being updated / refreshed.<br>
   </blockquote>
   <b>Show host names:</b>
-  <blockquote> Configure XQF to attempt to convert IP addresses to host 
+  <blockquote> Configure XQF to attempt to convert IP addresses to host
 names. &nbsp;Also available in Preferences menu. </blockquote>
   <b>Show default port:</b>
   <blockquote> Configure XQF to display the port next to the IP address
-if         it is considered the default port for the game. &nbsp;Also  
-available in the Preferences menu.&nbsp;
+if it is considered the default port for the game. &nbsp;Also available
+in the Preferences menu.&nbsp;
     <p><b>For example:</b></p>
-    <p>When on, a Quake2 server on port 27910 would be        
-displayed as:</p>
+    <p>When on, a Quake2 server on port 27910 would be displayed as:</p>
     <p>quake2.somedomain.com:27910</p>
-    <p>When off, a Quake2 server on port 27910 would be        
-displayed as:</p>
+    <p>When off, a Quake2 server on port 27910 would be displayed as:</p>
     <p>quake2.somedomain.com</p>
   </blockquote>
 </blockquote>
 <a name="Server"></a><b><u>Server:</u></b>
 <blockquote> <b>Server Filters:</b>
-  <blockquote> Select a custom filter. &nbsp;The bottom status bar will 
-update showing your selection. &nbsp;The filter is not        
-activated until you click the 'S Filter' button on the tool        
-bar. </blockquote>
+  <blockquote> Select a custom filter. &nbsp;The bottom status bar will
+update showing your selection. &nbsp;The filter is not activated until
+you click the 'S Filter' button on the tool bar. </blockquote>
   <b>Connect:</b>
   <blockquote> Connect to selected server.
-    <p>The server is 'pinged / refreshed' before the connection        
-is attempted.&nbsp; If the server is found to be down, you         will
+    <p>The server is 'pinged / refreshed' before the connection is
+attempted.&nbsp; If the server is found to be down, you will
 be warned before the game is launched.<br>
     <br>
-If the game is busy (no free player slots) you can choose         to
-Launch anyways, Cancel or Redial. &nbsp;When redialing,         XQF
-will refresh the server every 5 seconds until a free         slot is
-available. &nbsp;For servers that reserve slots for        
-administrators, you can define the number of free slots by        
-right clicking on the server and entering the number of        
-reserved slots.</p>
-    <p>If the server has a password set, a password prompt will        
-appear.</p>
+If the game is busy (no free player slots) you can choose to
+Launch anyways, Cancel or Redial. &nbsp;When redialing, XQF
+will refresh the server every 5 seconds until a free slot is
+available. &nbsp;For servers that reserve slots for administrators, you
+can define the number of free slots by right clicking on the server and
+entering the number of reserved slots.</p>
+    <p>If the server has a password set, a password prompt will appear.</p>
   </blockquote>
   <b>Observe:</b>
-  <blockquote> Launches the game in observer / spectator mode. Only     
+  <blockquote> Launches the game in observer / spectator mode. Only
 effective for some games. </blockquote>
   <b>Record Demo:</b>
-  <blockquote> Launches game with +record option. Only works in Quake1, 
+  <blockquote> Launches game with +record option. Only works in Quake1,
 Quake2 and Quake3. </blockquote>
   <b>Add new Server:</b>
   <blockquote> Add a new server to the list.<br>
@@ -685,11 +672,11 @@ list. </blockquote>
   <b>Remove from Favorites:</b>
   <blockquote> Delete server entry from Favorites list. </blockquote>
   <b>DNS Lookup:</b>
-  <blockquote> Attempt to convert IP addresses to host names of the     
+  <blockquote> Attempt to convert IP addresses to host names of the
 selected servers. </blockquote>
   <b>RCON:</b>
   <blockquote> Remote Console to Quake2 servers. Will be prompted for
-rcon         password. </blockquote>
+rcon password. </blockquote>
   <b>Properties:</b>
   <blockquote> See Edit / Properties </blockquote>
 </blockquote>
@@ -697,17 +684,17 @@ rcon         password. </blockquote>
 <blockquote> <b>General:</b>
   <blockquote> <b>On Startup</b>
     <blockquote> <b>Refresh Favorites:</b>
-      <p>Refresh / ping servers in Favorites when XQF           starts<br>
+      <p>Refresh / ping servers in Favorites when XQF starts<br>
       </p>
       <p><b>Show splash screen:</b> <br>
       </p>
-      <p>Show the splash screen if it exists when XQF          
-starts.&nbsp; File should be in $datadir/xqf/pixmaps/xqflogo.png
+      <p>Show the splash screen if it exists when XQF starts.&nbsp;
+File should be in $datadir/xqf/pixmaps/xqflogo.png
 (usually /usr/share/xqf/pixmaps). </p>
       <p><b>Scan for Maps:</b><br>
       </p>
-      <p>Scans your game directories for maps you have          
-installed for the following games:<br>
+      <p>Scans your game directories for maps you have installed for
+the following games:<br>
       </p>
       <ul>
         <li>Quake</li>
@@ -721,63 +708,65 @@ installed for the following games:<br>
         <li>Unreal Tournament 2003</li>
         <li>Rune</li>
       </ul>
-The Game column will contain a red -- before the game           name if
-you do not have the map installed on your           computer. For some
-games a small preview window with a           picture of the map is
-also shown when clicking the map           column<br>
+The Game column will contain a red -- before the game name if
+you do not have the map installed on your computer. For some
+games a small preview window with a picture of the map is
+also shown when clicking the map column<br>
       <br>
-Note: &nbsp;This will increase the time it takes for XQF           to
-launch and you will notice a lot of disk activity           during
+Note: &nbsp;This will increase the time it takes for XQF to
+launch and you will notice a lot of disk activity during
 startup.<br>
       <br>
 To re-scan for maps, click the 'scan now' button.<br>
     </blockquote>
     <b>On Exit</b>
     <blockquote> <b>Save Server lists:</b>
-      <p>Save list of servers when you quit XQF.          
-&nbsp;Recommended if you have a slow connection</p>
+      <p>Save list of servers when you quit XQF. &nbsp;Recommended if
+you have a slow connection</p>
       <p><b>Save server information:</b></p>
-      <p>Save server information such as map name, game type,          
-flags etc when you quit XQF. Recommended if you have a           slow
+      <p>Save server information such as map name, game type, flags etc
+when you quit XQF. Recommended if you have a slow
 connection</p>
       <p><b>Save player information:</b></p>
       <p>Save list of players and scores when you quit XQF.</p>
     </blockquote>
     <b>When Launching a Game</b>
     <blockquote> <b>Terminate XQF:</b>
-      <p>Quit XQF when you launch a game. Not normally          
-necessary unless you areextremely low on RAM</p>
+      <p>Quit XQF when you launch a game. Not normally necessary unless
+you areextremely low on RAM</p>
       <p><b>Create Launchinfo.txt:</b></p>
-      <p>A Launchinfo.txt file will be created in the (home          
-directory)/.qf directory. This can be used by external          
-programs such as IRC scripts that notify other people in           IRC
-that you are playing a game. &nbsp;Usually used in          
-combination with 'Execute prelaunch'. &nbsp;Saves the           same
+      <p>A Launchinfo.txt file will be created in the (home
+directory)/.qf directory. This can be used by external programs such as
+      <a href="http://doug.freeshell.org/xqf-xchat/">IRC scripts</a>
+that notify other people in IRC
+that you are playing a game. &nbsp;Usually used in combination with
+'Execute prelaunch'. &nbsp;Saves the same
 information as Copy+ does:</p>
       <p>ping ip:port name map curplayers maxplayers</p>
       <p><b>Iconify XQF window:</b></p>
-      <p>Iconify / minimize the XQF window when you launch a          
-game.</p>
+      <p>Iconify / minimize the XQF window when you launch a game.</p>
       <p><b>Execute prelaunch:</b></p>
-      <p>A file (if exists) PreLaunch will be launched /          
-executed from the (home directory)/.qf directory before          
-launching the game. This can be used by external programs          
-such as IRC scripts that notify other people in IRC that           you
-are playing a game. Two arguments are passed, the           qstat type
-name (e.g. Q3S) and the address of the server           (e.g.
-10.0.0.1:27960). Also Useful in combination with           'Create
+      <p>A file (if exists) PreLaunch will be launched / executed from
+the (home directory)/.qf directory before launching the game. This can
+be used by external programs such as <a
+ href="http://doug.freeshell.org/xqf-xchat/">IRC scripts</a> that
+notify other
+people in IRC that you
+are playing a game. Two arguments are passed, the qstat type
+name (e.g. Q3S) and the address of the server (e.g.
+10.0.0.1:27960). Also Useful in combination with 'Create
 Launchinfo.txt'.<br>
       </p>
-      <p>A sample PreLaunch script is included in the XQF source in the <span
- style="font-weight: bold;">docs</span> folder..<br>
+      <p>A sample PreLaunch script is included in the XQF source in the
+      <span style="font-weight: bold;">docs</span> folder..<br>
       </p>
     </blockquote>
   </blockquote>
   <b>Games</b>
-  <blockquote> For each game supported by XQF there are one or more     
+  <blockquote> For each game supported by XQF there are one or more
 configuration tabs. &nbsp;<br>
     <br>
-    <u><b>Following are the common options for all         games.</b></u>
+    <u><b>Following are the common options for all games.</b></u>
     <p><b>Invoking:</b></p>
     <blockquote> <b>Command Line:</b>
       <blockquote> Command to execute the game
@@ -785,34 +774,34 @@ configuration tabs. &nbsp;<br>
         </p>
         <p><b>Example with game not in your path:</b> /usr/bin/quake2<br>
         </p>
-        <p>Note: If the command you enter is in your path, it          
-will be expanded to the full path when you click <b>OK</b>,
-if you press <b>&amp;ltenter&gt;</b> inside             the text box,
+        <p>Note: If the command you enter is in your path, it will be
+expanded to the full path when you click <b>OK</b>,
+if you press <b>&amp;ltenter&gt;</b> inside the text box,
 or you click on the <b>Guess</b> button.</p>
-        <p>The <b>Suggest</b> button will search for the game          
-in the search path and if found, will populate the             command
-line. This should work with Quake1, QuakeWorld,             Quake2,
-Quake3, Return to Castle Wolfenstein, Soldier             of Fortune,
-Descent3, Tribes 2, Unreal Tournament 1 /             2003 and Rune.<br>
+        <p>The <b>Suggest</b> button will search for the game in the
+search path and if found, will populate the command
+line. This should work with Quake1, QuakeWorld, Quake2,
+Quake3, Return to Castle Wolfenstein, Soldier of Fortune,
+Descent3, Tribes 2, Unreal Tournament 1 / 2003 and Rune.<br>
         </p>
       </blockquote>
       <b>Working directory:</b>
       <blockquote> Directory to run the game from
         <p><b>Example:</b> /games/quake2</p>
-        <p>The <b>Guess</b> button will try to determine the           
-correct directory for the game. This is done by using             the
+        <p>The <b>Guess</b> button will try to determine the correct
+directory for the game. This is done by using the
 following rules:<br>
         <br>
         </p>
         <blockquote>
           <ul class="noindent">
-            <li>If Command Line is a symbolic link, use path of        
-the directory of the file it is linked to</li>
+            <li>If Command Line is a symbolic link, use path of the
+directory of the file it is linked to</li>
             <li
  style="list-style-type: none; list-style-position: outside; list-style-image: none;"><br>
             </li>
-            <li>If Command Line is NOT a symbolic link, use            
-path of the defined Command Line</li>
+            <li>If Command Line is NOT a symbolic link, use path of the
+defined Command Line</li>
             <li
  style="list-style-type: none; list-style-position: outside; list-style-image: none;"><br>
               <br>
@@ -822,8 +811,8 @@ path of the defined Command Line</li>
 For example:
         <blockquote>
           <ul class="noindent">
-            <li><b>quake2</b> is in your path and is a sym link         
-to <b>/games/quake2/quake2</b> would result in <b>/games/quake2/</b></li>
+            <li><b>quake2</b> is in your path and is a sym link to <b>/games/quake2/quake2</b>
+would result in <b>/games/quake2/</b></li>
             <li
  style="list-style-type: none; list-style-position: outside; list-style-image: none;"><br>
             </li>
@@ -832,24 +821,24 @@ would result in <b>/games/quake2/</b></li>
             <li
  style="list-style-type: none; list-style-position: outside; list-style-image: none;"><br>
             </li>
-            <li><b>/games/quake2/quake2</b> (not a sym link)            
-would result in <b>/games/quake2/</b></li>
+            <li><b>/games/quake2/quake2</b> (not a sym link) would
+result in <b>/games/quake2/</b></li>
             <li
  style="list-style-type: none; list-style-position: outside; list-style-image: none;"><br>
             </li>
           </ul>
         </blockquote>
-Note: If the Command Line does not contain a path and             is
-not in your search path, or a symbolic link contains             any
-'..'s (such as <b>../../games/quake2</b>) then             nothing is
+Note: If the Command Line does not contain a path and is
+not in your search path, or a symbolic link contains any
+'..'s (such as <b>../../games/quake2</b>) then nothing is
 returned.<br>
         <br>
       </blockquote>
     </blockquote>
     <blockquote> <b>Disable sound:</b> </blockquote>
     <blockquote>
-      <blockquote> Disable sound if the game supports the option on the 
-command line. For example, Quake2 would be called with             the<br>
+      <blockquote> Disable sound if the game supports the option on the
+command line. For example, Quake2 would be called with the<br>
         <br>
 +nosound switch<br>
       </blockquote>
@@ -857,45 +846,43 @@ command line. For example, Quake2 would be called with             the<br>
     <blockquote> <b>Disable CD audio:</b> </blockquote>
     <blockquote>
       <blockquote> Disable cd audio if the game supports the option on
-the             command line. For example, Quake2 would be called with 
-the<br>
+the command line. For example, Quake2 would be called with the<br>
         <br>
 +nocd switch </blockquote>
     </blockquote>
-    <p><u><b>Following are the game specific         options:</b></u></p>
+    <p><u><b>Following are the game specific options:</b></u></p>
     <p><b>Quake<br>
     </b></p>
     <blockquote> <b>Invoking:<br>
       </b>
       <blockquote> Custom CFG:<br>
         <blockquote> Enter a custom configuration file to be executed
-when               the game starts. &nbsp;For example:              
-&nbsp;custom.cfg<br>
+when the game starts. &nbsp;For example: &nbsp;custom.cfg<br>
         </blockquote>
       </blockquote>
     </blockquote>
     <blockquote> <b>Player Profile</b>
-      <blockquote> Enter your player name. Can also define your player's
- colour, skin or model </blockquote>
+      <blockquote> Enter your player name. Can also define your
+player's colour, skin or model </blockquote>
     </blockquote>
     <b>QuakeWorld<br>
     </b>
     <blockquote> <b>Weapons</b> </blockquote>
     <blockquote>
-      <blockquote> <b>The highest weapon that Quake should switch to</b> </blockquote>
+      <blockquote> <b>The highest weapon that Quake should switch to</b>
+      </blockquote>
       <blockquote>
         <blockquote> <b>upon a weapon pickup:</b>
           <blockquote> Choose the highest weapon that Quake should
-switch                 to when you pick up a new weapon. Passed to     
-Quakeworld as the 'setinfo w_switch x' switch </blockquote>
+switch to when you pick up a new weapon. Passed to Quakeworld as the
+'setinfo w_switch x' switch </blockquote>
           <b>upon a backpack pickup:</b>
           <blockquote> Choose the highest weapon that Quake should
-switch                 to when you pick up a backpack. Passed to       
-Quakeworld as the 'setinfo b_switch x' switch </blockquote>
+switch to when you pick up a backpack. Passed to Quakeworld as the
+'setinfo b_switch x' switch </blockquote>
           <b>Disable auto-aiming:</b>
           <blockquote> Disable automatic aiming
-            <p>This is passed to Quakeworld as the 'noaim'             
-switch.</p>
+            <p>This is passed to Quakeworld as the 'noaim' switch.</p>
           </blockquote>
         </blockquote>
       </blockquote>
@@ -907,12 +894,12 @@ switch.</p>
         <blockquote> <b>Use skins:</b>
           <p>Allow skins to be used during the game.</p>
           <p><b>Don't use skins:</b></p>
-          <p>Disable skins.&nbsp; This is passed to Quakeworld         
-as the 'noskins' switch.</p>
+          <p>Disable skins.&nbsp; This is passed to Quakeworld as the
+'noskins' switch.</p>
           <p><b>Don't download new skins:</b></p>
-          <p>QuakeWorld and Quake2 can automatically download          
-skins from servers you play on if you donot already               have
-the skins on your computer.&nbsp; This options               disables
+          <p>QuakeWorld and Quake2 can automatically download skins
+from servers you play on if you donot already have
+the skins on your computer.&nbsp; This options disables
 the downloading of skins.</p>
         </blockquote>
       </blockquote>
@@ -920,43 +907,35 @@ the downloading of skins.</p>
       </blockquote>
       <blockquote>
         <blockquote> This controls network packets so that your
-connection               bandwidth does not get saturated.&nbsp;
-Lowering the               number reduces the number of packets sent / 
-received.&nbsp; Slower connections should use a lower              
-rate setting.
+connection bandwidth does not get saturated.&nbsp;
+Lowering the number reduces the number of packets sent /
+received.&nbsp; Slower connections should use a lower rate setting.
           <p>Default is 2500.</p>
-          <p>This is passed to Quakeworld/Quake2 as the 'noaim'        
-switch.</p>
+          <p>This is passed to Quakeworld/Quake2 as the 'noaim' switch.</p>
         </blockquote>
       </blockquote>
       <blockquote> <b>Pushlatency:</b>
         <blockquote> <b>Do not set (use game default)</b>
-          <blockquote> Use whatever the Quakeworld default is           </blockquote>
+          <blockquote> Use whatever the Quakeworld default is </blockquote>
           <b>Automatically calculate from server ping time</b>
           <blockquote> Use the following formula to determine
-pushlatency                 setting.
+pushlatency setting.
             <p>If ping is &lt;= 0, set to 10 (minimum)</p>
             <p>If ping is &gt;= 2000, set to 1000 (maximum)</p>
-            <p>Otherwise, set to (((ping / 2) +9 ) / 10 ) *            
-10</p>
-            <p>This is passed to Quakeworld as the                
-'pushlatency' switch.</p>
+            <p>Otherwise, set to (((ping / 2) +9 ) / 10 ) * 10</p>
+            <p>This is passed to Quakeworld as the 'pushlatency' switch.</p>
           </blockquote>
           <b>Fixed value</b>
-          <blockquote> Enter a value to be passed to Quakeworld         </blockquote>
+          <blockquote> Enter a value to be passed to Quakeworld </blockquote>
         </blockquote>
         <b>Troubleshooting:</b>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Disable delta-compression (cl_nodelta)</p>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ??</p>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Disable player/entity prediction             (cl_predict_players)</p>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable player/entity prediction (cl_predict_players)</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ??</p>
       </blockquote>
     </blockquote>
@@ -964,8 +943,8 @@ Disable player/entity prediction             (cl_predict_players)</p>
     <blockquote>
       <blockquote> <b>Name</b>
         <blockquote> Enter your player name. Can also define your
-player's               team, skin and colors. &nbsp;Uses pictures from
-your               Quake directory. </blockquote>
+player's team, skin and colors. &nbsp;Uses pictures from
+your Quake directory. </blockquote>
       </blockquote>
     </blockquote>
     <b>Quake2<br>
@@ -974,8 +953,7 @@ your               Quake directory. </blockquote>
     <blockquote> <b>Invoking:</b><br>
       <blockquote> Custom CFG:<br>
         <blockquote> Enter a custom configuration file to be executed
-when               the game starts. &nbsp;For example: &nbsp;custom.cfg
- </blockquote>
+when the game starts. &nbsp;For example: &nbsp;custom.cfg </blockquote>
       </blockquote>
     </blockquote>
     <blockquote> <b>Options:<br>
@@ -984,35 +962,29 @@ when               the game starts. &nbsp;For example: &nbsp;custom.cfg
         <blockquote> <b>Use skins:</b>
           <p>Allow skins to be used during the game.</p>
           <p><b>Don't use skins:</b></p>
-          <p>Disable skins.&nbsp; This is passed to Quakeworld         
-as the 'noskins' switch.</p>
+          <p>Disable skins.&nbsp; This is passed to Quakeworld as the
+'noskins' switch.</p>
           <p><b>Don't download new skins:</b></p>
-          <p>QuakeWorld and Quake2 can automatically download          
-skins from servers you play on if you donot already               have
-the skins on your computer.&nbsp; This options               disables
+          <p>QuakeWorld and Quake2 can automatically download skins
+from servers you play on if you donot already have
+the skins on your computer.&nbsp; This options disables
 the downloading of skins.</p>
           <blockquote> <b>Rate:</b> </blockquote>
-This controls network packets so that your connection              
-bandwidth does not get saturated.&nbsp; Lowering the              
-number reduces the number of packets sent /              
-received.&nbsp; Slower connections should use a lower              
+This controls network packets so that your connection bandwidth does
+not get saturated.&nbsp; Lowering the number reduces the number of
+packets sent / received.&nbsp; Slower connections should use a lower
 rate setting.
           <p>Default is 2500.</p>
-          <p>This is passed to Quakeworld/Quake2 as the 'noaim'        
-switch.</p>
+          <p>This is passed to Quakeworld/Quake2 as the 'noaim' switch.</p>
         </blockquote>
         <b>Troubleshooting:</b>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Disable delta-compression (cl_nodelta)</p>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ??</p>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Disable player/entity prediction             (cl_predict_players)</p>
-        <p>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable player/entity prediction (cl_predict_players)</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ??</p>
       </blockquote>
     </blockquote>
@@ -1023,7 +995,7 @@ Disable player/entity prediction             (cl_predict_players)</p>
         <blockquote> Enter your player name </blockquote>
         <p><br>
         <b>Model / Skin</b></p>
-        <blockquote> Define your player's model and skin. &nbsp;Uses    
+        <blockquote> Define your player's model and skin. &nbsp;Uses
 pictures from your Quake2 directory. </blockquote>
       </blockquote>
     </blockquote>
@@ -1034,77 +1006,73 @@ pictures from your Quake2 directory. </blockquote>
       <blockquote> Custom CFG:<br>
         <br>
         <blockquote> Enter a custom configuration file to be executed
-when               the game starts. &nbsp;For example:              
-&nbsp;custom.cfg<br>
+when the game starts. &nbsp;For example: &nbsp;custom.cfg<br>
         </blockquote>
       </blockquote>
       <b>Custom Args:</b><br>
-      <blockquote> Custom command line arguments can be defined for any 
+      <blockquote> Custom command line arguments can be defined for any
 game type based on the Game column.<br>
         <br>
-Some game modifications (mods) require special command             line
-options for the game to start correctly. &nbsp;An             example
-is Rocket Arena. &nbsp;For Rocket Arena to             launch
-correctly, the vm_game, vm_cgame and vm_ui             variables must
+Some game modifications (mods) require special command line
+options for the game to start correctly. &nbsp;An example
+is Rocket Arena. &nbsp;For Rocket Arena to launch
+correctly, the vm_game, vm_cgame and vm_ui variables must
 be set to 0.&nbsp; <span style="font-style: italic;">Note: Rocket
 Arena 1.6 and higher does not require custom args</span>.<br>
         <br>
-To create a new argument, click New and enter the name             of
-the game that appears in the game column (example:             arena),
-and in the second box enter the arguments             separated by
-spaces (example: +set vm_game 0 +set             vm_cgame 0 +set vm_ui
-0). &nbsp;Click Add / Update to             insert into the list.<br>
+To create a new argument, click New and enter the name of
+the game that appears in the game column (example: arena),
+and in the second box enter the arguments separated by
+spaces (example: +set vm_game 0 +set vm_cgame 0 +set vm_ui
+0). &nbsp;Click Add / Update to insert into the list.<br>
         <br>
-There can only be one definition for each unique game             at
+There can only be one definition for each unique game at
 one. &nbsp;Case is ignored for the game name.<br>
         <br>
-Clicking 'Add Defaults' will add any default arguments             that
+Clicking 'Add Defaults' will add any default arguments that
 are included with XQF.<br>
         <br>
       </blockquote>
     </blockquote>
     <blockquote> <b>Options:</b><br>
       <blockquote> <b>Master server protocol version:</b>
-        <blockquote> Passes the defined protocol version to QSTAT when  
-finding servers.&nbsp; Each patch for Quake3 usually              
-changes this value.
-          <p>This is passed to QSTAT as -q3m,## where ## is the        
+        <blockquote> Passes the defined protocol version to QSTAT when
+finding servers.&nbsp; Each patch for Quake3 usually changes this
+value.
+          <p>This is passed to QSTAT as -q3m,## where ## is the
 protocol version.&nbsp; Defaults to 68 (v1.32).</p>
         </blockquote>
         <b>vm_cgame_fix:</b>
-        <blockquote> Sets command line options to make Quake3 prefer QVM
- to shared objects (.so).&nbsp; This should only be              
-required if there are .so files from an older release              
-floating around in baseq3. </blockquote>
+        <blockquote> Sets command line options to make Quake3 prefer
+QVM to shared objects (.so).&nbsp; This should only be required if
+there are .so files from an older release floating around in baseq3. </blockquote>
         <b>Rocketarena fix:</b>
-        <blockquote> Sets command line options to make Quake3 prefer    
-shared objects (.so) to QVM.&nbsp; Rocket Arena uses              
-shared objects. &nbsp;Only affects Rocket Arena (game              
-type of arena). </blockquote>
+        <blockquote> Sets command line options to make Quake3 prefer
+shared objects (.so) to QVM.&nbsp; Rocket Arena uses shared objects.
+&nbsp;Only affects Rocket Arena (game type of arena). </blockquote>
         <b>set fs_game on connect:</b>
         <blockquote> XQF will pass the game directory the server is
-using               on the command line to ensure the game launches and
- connects properly.<br>
+using on the command line to ensure the game launches and connects
+properly.<br>
         </blockquote>
         <b>set cl_punkbuster on connect:</b>
         <blockquote> Sets command line options to ensure cl_punkbuster
-is               set to 1 if the server has it enabled (server         
-punkbuster variable)<br>
+is set to 1 if the server has it enabled (server punkbuster variable)<br>
         </blockquote>
       </blockquote>
       <b>Memory</b><br>
       <blockquote> <b>Pass memory settings on command line:</b><br>
-        <blockquote> Enable or disable the passing of the memory options
- specified below<br>
+        <blockquote> Enable or disable the passing of the memory
+options specified below<br>
         </blockquote>
-        <b>com_hunkmegs, com_zonemegs, com_soundmegs,            
+        <b>com_hunkmegs, com_zonemegs, com_soundmegs,
 cg_precacheddmodels:</b><br>
-        <blockquote> Allow you to set the values passed for each of the 
+        <blockquote> Allow you to set the values passed for each of the
 above variables.<br>
         </blockquote>
         <b>Preset values:</b><br>
         <blockquote> Click a button to set the memory options based on
-the               amount of memory you have, or the defaults.<br>
+the amount of memory you have, or the defaults.<br>
         </blockquote>
       </blockquote>
     </blockquote>
@@ -1113,17 +1081,17 @@ the               amount of memory you have, or the defaults.<br>
     <blockquote><b>Options:</b> </blockquote>
     <blockquote>
       <blockquote> <b>Master server protocol version:</b>
-        <blockquote> Passes the defined protocol version to QSTAT when  
-finding servers.&nbsp; Each patch for Wolfenstein               usually
+        <blockquote> Passes the defined protocol version to QSTAT when
+finding servers.&nbsp; Each patch for Wolfenstein usually
 changes this value.
-          <p>This is passed to QSTAT as -q3m,## where ## is the        
+          <p>This is passed to QSTAT as -q3m,## where ## is the
 protocol version.&nbsp; Defaults to 60 (v1.4)</p>
         </blockquote>
       </blockquote>
       <blockquote> <b>set fs_game on connect:</b><br>
         <blockquote> XQF will pass the game directory the server is
-using               on the command line to ensure the game launches and
- connects properly.<br>
+using on the command line to ensure the game launches and connects
+properly.<br>
         </blockquote>
       </blockquote>
     </blockquote>
@@ -1132,17 +1100,17 @@ using               on the command line to ensure the game launches and
     <blockquote><b>Options:</b> </blockquote>
     <blockquote>
       <blockquote> <b>Master server protocol version:</b>
-        <blockquote> Passes the defined protocol version to QSTAT when  
+        <blockquote> Passes the defined protocol version to QSTAT when
 finding servers.&nbsp; Each patch for Enemy Territory usually changes
 this value.
-          <p>This is passed to QSTAT as -q3m,## where ## is the        
+          <p>This is passed to QSTAT as -q3m,## where ## is the
 protocol version.&nbsp; Defaults to 82 (v2.55)</p>
         </blockquote>
       </blockquote>
       <blockquote> <b>set fs_game on connect:</b><br>
         <blockquote> XQF will pass the game directory the server is
-using               on the command line to ensure the game launches and
- connects properly.<br>
+using on the command line to ensure the game launches and connects
+properly.<br>
         </blockquote>
       </blockquote>
     </blockquote>
@@ -1153,10 +1121,10 @@ using               on the command line to ensure the game launches and
     <blockquote>
       <blockquote> <b>Master server protocol version:</b> </blockquote>
       <blockquote>
-        <blockquote> Passes the defined protocol version to QSTAT when  
-finding servers.&nbsp; Each patch for Voyager Elite               Force
+        <blockquote> Passes the defined protocol version to QSTAT when
+finding servers.&nbsp; Each patch for Voyager Elite Force
 usually changes this value.
-          <p>This is passed to QSTAT as -q3m,## where ## is the        
+          <p>This is passed to QSTAT as -q3m,## where ## is the
 protocol version.&nbsp; Defaults to 24.</p>
         </blockquote>
       </blockquote>
@@ -1165,36 +1133,36 @@ protocol version.&nbsp; Defaults to 24.</p>
       <blockquote> <b>set fs_game on connect:</b> </blockquote>
       <blockquote>
         <blockquote> XQF will pass the game directory the server is
-using               on the command line to ensure the game launches and
- connects properly </blockquote>
+using on the command line to ensure the game launches and connects
+properly </blockquote>
       </blockquote>
     </blockquote>
     <b>Tribes 2 - Player Profile:</b>
     <blockquote> <b>Login Name:</b>
-      <blockquote> Login name to use to log into Tribes 2.&nbsp; If     
-present, it will be passed on the command line.&nbsp;             To
-prevent a password prompt, you must save your             password
+      <blockquote> Login name to use to log into Tribes 2.&nbsp; If
+present, it will be passed on the command line.&nbsp; To
+prevent a password prompt, you must save your password
 inside of Tribes 2.<br>
         <br>
       </blockquote>
     </blockquote>
     <b>Unreal / UT / UT 2003</b>
     <blockquote> <b>Custom Args:</b><br>
-Custom command line arguments can be defined for any           game
+Custom command line arguments can be defined for any game
 type based on the Game column.<br>
       <br>
-Some game modifications (mods) require special command           line
+Some game modifications (mods) require special command line
 options for the game to start correctly.<br>
       <br>
-To create a new argument, click New and enter the name           of the
-game that appears in the game column, and in the           second box
-enter the arguments separated by spaces.           &nbsp;Click Add /
+To create a new argument, click New and enter the name of the
+game that appears in the game column, and in the second box
+enter the arguments separated by spaces. &nbsp;Click Add /
 Update to insert into the list.<br>
       <br>
-There can only be one definition for each unique game at           one.
+There can only be one definition for each unique game at one.
 &nbsp;Case is ignored for the game name.<br>
       <br>
-Clicking 'Add Defaults' will add any default arguments           that
+Clicking 'Add Defaults' will add any default arguments that
 are included with XQF.<br>
       <br>
 See the Quake3 section above for an example.<br>
@@ -1203,17 +1171,16 @@ See the Quake3 section above for an example.<br>
   <b>Appearance</b>
   <blockquote> <b>Server List:</b>
     <blockquote> <b>Show host names:</b>
-      <blockquote> Attempt to convert IP addresses to host names.       </blockquote>
+      <blockquote> Attempt to convert IP addresses to host names. </blockquote>
       <b>Show default port:</b>
-      <blockquote> Configure XQF to display the port next to the IP     
-address if it is considered the default port for the             game.
+      <blockquote> Configure XQF to display the port next to the IP
+address if it is considered the default port for the game.
 &nbsp;Also available in the Preferences menu.
         <p>For example</p>
-        <p>When on, a Quake2 server on port 27910 would be            
-displayed as:</p>
+        <p>When on, a Quake2 server on port 27910 would be displayed as:</p>
         <p>quake2.somedomain.com:27910</p>
-        <p>When off, a Quake2 server on port 27910 would be            
-displayed as:</p>
+        <p>When off, a Quake2 server on port 27910 would be displayed
+as:</p>
         <p>quake2.somedomain.com</p>
       </blockquote>
       <b>Do not count bots as players:</b>
@@ -1222,21 +1189,21 @@ player for the 'Players' column.&nbsp; This will not be 100% accurate
 as users running non-dedicated servers normally have a 0 ping.<br>
       </blockquote>
       <b>Sort servers real-time during refresh:</b>
-      <blockquote> Sort servers names while refreshing the list.        </blockquote>
+      <blockquote> Sort servers names while refreshing the list. </blockquote>
       <b>Refresh on Update:</b>
-      <blockquote> Automatically refresh server list after updating list
- of servers.<br>
+      <blockquote> Automatically refresh server list after updating
+list of servers.<br>
       </blockquote>
       <b>Show only configured games:</b>
-      <blockquote> If enabled, will only show games in the Source column
- that have a command line configured. &nbsp; </blockquote>
+      <blockquote> If enabled, will only show games in the Source
+column that have a command line configured. &nbsp; </blockquote>
     </blockquote>
     <b>Toolbar:</b>
     <blockquote> <b>Icons / Text / Both</b>
-      <blockquote> Show top toolbar as icons, text or icons/text        </blockquote>
+      <blockquote> Show top toolbar as icons, text or icons/text </blockquote>
       <b>Tooltips:</b>
-      <blockquote> Enable or disable tooltips. Gives a description of a 
-button when you hold the mouse pointer over it for a             couple
+      <blockquote> Enable or disable tooltips. Gives a description of a
+button when you hold the mouse pointer over it for a couple
 seconds </blockquote>
     </blockquote>
   </blockquote>
@@ -1244,13 +1211,13 @@ seconds </blockquote>
   <blockquote> <b>Qstat Options:</b>
     <blockquote> &nbsp;<br>
       <b>Number of simultaneous servers to query</b>
-      <blockquote> How many servers QSTAT should query at once. This    
-number is passed to QSTAT as the -maxsim switch.            
-&nbsp;Defaults to 20. &nbsp;Increase if you have a high            
-speed connection, lower it if xqf reports bad ping             times.  </blockquote>
+      <blockquote> How many servers QSTAT should query at once. This
+number is passed to QSTAT as the -maxsim switch. &nbsp;Defaults to 20.
+&nbsp;Increase if you have a high speed connection, lower it if xqf
+reports bad ping times. </blockquote>
       <b>Number of retries</b>
-      <blockquote> Number of times QSTAT should retry a server if it    
-doesn't reply to status queries. This number is passed             to
+      <blockquote> Number of times QSTAT should retry a server if it
+doesn't reply to status queries. This number is passed to
 QSTAT as the -retry switch. &nbsp;Defaults to 3<br>
         <br>
       </blockquote>
@@ -1263,39 +1230,38 @@ QSTAT as the -retry switch. &nbsp;Defaults to 3<br>
   <blockquote>
     <blockquote> <b>Enable Sound</b>
       <blockquote> Enable or disable the playing of sounds in XQF when
-an             event occurs.<br>
+an event occurs.<br>
       </blockquote>
       <b>Player Program</b><br>
-      <blockquote> The program used to play sounds. &nbsp;For example:  
+      <blockquote> The program used to play sounds. &nbsp;For example:
 &nbsp;<br>
         <blockquote> <b>esdplay</b><br>
           <br>
           <b>play</b><br>
         </blockquote>
-If the program is not in your path, you must specify             the
+If the program is not in your path, you must specify the
 entire path. &nbsp;For example:<br>
         <blockquote> <b>/myfolder/bin/theplayer</b><br>
         </blockquote>
-Note: &nbsp;You may experience sound blocking problems            
-depending on the programs you are running. &nbsp;For            
-example, while playing a song on a cheap sound card             with
-XMMS configured for OSS output, play (sox) waits             until XMMS
-is finished before playing the sound.             &nbsp;Results may
+Note: &nbsp;You may experience sound blocking problems depending on the
+programs you are running. &nbsp;For example, while playing a song on a
+cheap sound card with
+XMMS configured for OSS output, play (sox) waits until XMMS
+is finished before playing the sound. &nbsp;Results may
 vary depending on your system.<br>
       </blockquote>
     </blockquote>
     <b>Sounds</b>
-    <blockquote> Enter the sound file to play for each event. &nbsp; If 
-the entry does not start with a /, the user's ~/.qf/          
-directory is assumed. &nbsp;For example:<br>
+    <blockquote> Enter the sound file to play for each event. &nbsp; If
+the entry does not start with a /, the user's ~/.qf/ directory is
+assumed. &nbsp;For example:<br>
       <br>
-/home/alex/sounds/stop.wav&nbsp;&nbsp;&nbsp;          
-&nbsp;&nbsp;&nbsp; (absolute path)<br>
+/home/alex/sounds/stop.wav&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+(absolute path)<br>
       <br>
-sounds/stop.wav&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;          
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;          
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; (same as          
-~/.qf/sounds/stop.wav)<br>
+sounds/stop.wav&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; (same as ~/.qf/sounds/stop.wav)<br>
       <br>
     </blockquote>
   </blockquote>
@@ -1305,14 +1271,14 @@ sounds/stop.wav&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
   <blockquote> <span style="font-weight: bold;">Server Filter:</span><br>
     <br>
     <div style="margin-left: 40px;">Server filters can be used to
-reduce and or fine tune the         servers listed.&nbsp; An unlimited
-number of custom filters         can be defined.<br>
+reduce and or fine tune the servers listed.&nbsp; An unlimited
+number of custom filters can be defined.<br>
     <br>
-To create a new filter, click New. &nbsp;To select an         existing
-filter to edit, click the top left menu selector         and select the
+To create a new filter, click New. &nbsp;To select an existing
+filter to edit, click the top left menu selector and select the
 filter.<br>
     <br>
-The current filter can be renamed or deleted by clicking         the
+The current filter can be renamed or deleted by clicking the
 Rename or Delete buttons.<br>
     <br>
 The following options can be defined for each filter:<br>
@@ -1323,40 +1289,44 @@ The following options can be defined for each filter:<br>
     </div>
     <blockquote>
       <blockquote style="margin-left: 80px;"> The server's ping must be
-less than this number to be             displayed </blockquote>
+less than this number to be displayed </blockquote>
       <div style="margin-left: 40px;"> <b>The number of retries is
 fewer than:</b> </div>
       <blockquote style="margin-left: 80px;"> If XQF must retry more
-than this number to contact a             server, remove it from the
+than this number to contact a server, remove it from the
 list </blockquote>
       <div style="margin-left: 40px;"> <b>It is not full:</b> </div>
       <blockquote style="margin-left: 80px;"> The server has room for
 another player </blockquote>
       <div style="margin-left: 40px;"> <b>Is not empty:</b> </div>
       <blockquote style="margin-left: 80px;"> Has someone playing on
-it.&nbsp; BOTS on the server are             considered as players     </blockquote>
+it.&nbsp; BOTS on the server are considered as players </blockquote>
       <div style="margin-left: 40px;"> <b>Cheats are not allowed:</b> </div>
       <blockquote style="margin-left: 80px;"> Cheats is not enabled on
 the server </blockquote>
       <div style="margin-left: 40px;"> <b>No password required:</b> </div>
       <blockquote style="margin-left: 80px;"> Server is a public access
 server </blockquote>
-      <div style="margin-left: 40px;"> <b>The game contains the string:</b> </div>
-      <blockquote style="margin-left: 80px;"> Enter text that must be in
-the game name.&nbsp; For             example: 'arena' </blockquote>
+      <div style="margin-left: 40px;"> <b>The game contains the string:</b>
+      </div>
+      <blockquote style="margin-left: 80px;"> Enter text that must be
+in
+the game name.&nbsp; For example: 'arena' </blockquote>
       <div style="margin-left: 40px;"> <b>The game type contains the
 string:</b></div>
-      <blockquote style="margin-left: 80px;"> Enter text that must be in
-the game name.&nbsp; For             example: 'ctf' </blockquote>
+      <blockquote style="margin-left: 80px;"> Enter text that must be
+in
+the game name.&nbsp; For example: 'ctf' </blockquote>
       <div style="margin-left: 40px;"> <b>The version contains the
 string:</b> </div>
-      <blockquote style="margin-left: 80px;"> Only servers that have the
-text in the 'version'             variable<br>
+      <blockquote style="margin-left: 80px;"> Only servers that have
+the
+text in the 'version' variable<br>
       </blockquote>
       <div style="margin-left: 40px;"><b>The map contains the string:<br>
       </b>
       <div style="margin-left: 40px;"><br>
-Enter text that must be in the map name.&nbsp; For             example:
+Enter text that must be in the map name.&nbsp; For example:
 'q3dm'<br>
       </div>
       </div>
@@ -1367,7 +1337,7 @@ string:</b><br>
     <b> </b></div>
     <div style="margin-left: 40px;"><br>
     <div style="margin-left: 40px;"> Enter text that must be in the
-server name.&nbsp; For             example: 'Batcave'
+server name.&nbsp; For example: 'Batcave'
     <div style="margin-left: 40px;"> </div>
     </div>
     </div>
@@ -1379,15 +1349,15 @@ server name.&nbsp; For             example: 'Batcave'
   <div style="margin-left: 40px;"> <b>Player:</b> <br>
   <br>
   <div style="margin-left: 40px;">Player filters can be used to help
-you find your friends on         servers.&nbsp; Each player defined has
-a colour assigned to         it - red, green or blue.&nbsp; The server
-list will display         the coloured dot next to the server name if
-the player is         found on that server. </div>
+you find your friends on servers.&nbsp; Each player defined has
+a colour assigned to it - red, green or blue.&nbsp; The server
+list will display the coloured dot next to the server name if
+the player is found on that server. </div>
   </div>
   <blockquote>
     <p style="margin-left: 40px;">Click 'New' and enter a player name
-using an exact match         (string), a partial match (substing) or by
-using a regular         expression.<br>
+using an exact match (string), a partial match (substing) or by
+using a regular expression.<br>
     </p>
     <p style="margin-left: 40px;">Note:&nbsp; You can also add a player
 to the player filter by right-clicking the player name in the Players
@@ -1398,52 +1368,52 @@ pane.<br>
 <a name="Game_Specific_Information"></a><b><u><font size="+2">Game
 Specific Information</font></u></b><br>
 &nbsp;<br>
-<blockquote> Following are notes on using specific games with XQF.&nbsp;
- Most games should work with basic setup in XQF, but some may      
+<blockquote> Following are notes on using specific games with
+XQF.&nbsp; Most games should work with basic setup in XQF, but some may
 require special configuration. </blockquote>
 <blockquote> <b><a name="Q3"></a>Quake3:</b>
-  <blockquote> Under Preferences - Games, enter the 'command line' and  
-'working directory'. Nothing special is <i>normally</i> needed.      
-    <p>XQF uses the 'game' server variable to determine how to        
-launch Quake3. For example, if the server reports a <b>game</b>
+  <blockquote> Under Preferences - Games, enter the 'command line' and
+'working directory'. Nothing special is <i>normally</i> needed.
+    <p>XQF uses the 'game' server variable to determine how to launch
+Quake3. For example, if the server reports a <b>game</b>
 of <b>q3ut2</b>, Quake3 will be launched with <b>+set fs_game
-q3ut2</b>. In some cases, a server may         report the incorrect
-case such as <b>Q3UT2</b>. This would         cause XQF to launch
+q3ut2</b>. In some cases, a server may report the incorrect
+case such as <b>Q3UT2</b>. This would cause XQF to launch
 Quake3 using<b>+set fs_game Q3UT2</b> which would result in a new
-directory being created in your         Quake3 directory, and none of
-the mods files being         found.</p>
-    <p>In XQF 0.9.10 and newer, if an exact match is not found        
-in the Quake3 / ~/.q3a directory, a search will be         performed to
-find a matching directory regardless of case.         In the above
-example, Quake3 would be launched with <b>+set         fs_game q3ut2</b>even
+directory being created in your Quake3 directory, and none of
+the mods files being found.</p>
+    <p>In XQF 0.9.10 and newer, if an exact match is not found in the
+Quake3 / ~/.q3a directory, a search will be performed to
+find a matching directory regardless of case. In the above
+example, Quake3 would be launched with <b>+set fs_game q3ut2</b>even
 if the server reported <b>Q3UT2</b> and you had the mod installed as <b>q3ut2</b>.</p>
-    <p><b><u>QUAKE 3 ARENA SPECIAL INSTRUCTIONS (AKA HACK) for        
-v1.17 and 1.27</u></b></p>
-    <p>This may also apply to newer versions of Quake3 as they        
-are released.</p>
-    <p>In Q3A, clients and servers can only talk with each        
-other if they are using the same protocol.&nbsp; The         protocol
-in Q3A is defined by a&nbsp; number.&nbsp; So, for         instance,
-Q3A 1.17 uses&nbsp; protocol 45 wile 1.27 uses         protocol
-48.&nbsp; During the switch-over time after ID         releases a new
-point release, it can be&nbsp; frustrating         to not be able to
-connect to any server one wants. However,         if you have lots of
-disk space, it is possible to get         around this problem.</p>
-    <p>I (Bill 'EvilBill' Adams) will outline what I did to get        
-it so I can play both 1.17 and 1.27 Q3A games without much         fuss.<br>
-For reference, my Q3A is installed under         /usr/local/games/...
-and I have a symlink from         /usr/local/bin/quake3 to
+    <p><b><u>QUAKE 3 ARENA SPECIAL INSTRUCTIONS (AKA HACK) for v1.17
+and 1.27</u></b></p>
+    <p>This may also apply to newer versions of Quake3 as they are
+released.</p>
+    <p>In Q3A, clients and servers can only talk with each other if
+they are using the same protocol.&nbsp; The protocol
+in Q3A is defined by a&nbsp; number.&nbsp; So, for instance,
+Q3A 1.17 uses&nbsp; protocol 45 wile 1.27 uses protocol
+48.&nbsp; During the switch-over time after ID releases a new
+point release, it can be&nbsp; frustrating to not be able to
+connect to any server one wants. However, if you have lots of
+disk space, it is possible to get around this problem.</p>
+    <p>I (Bill 'EvilBill' Adams) will outline what I did to get it so I
+can play both 1.17 and 1.27 Q3A games without much fuss.<br>
+For reference, my Q3A is installed under /usr/local/games/...
+and I have a symlink from /usr/local/bin/quake3 to
 ../games/quake3/quake3.</p>
-    <p><b>(1)</b> Rename /usr/local/games/quake3 (as I used to        
-have it) to /usr/local/games/quake3-1.17.</p>
-    <p><b>(2)</b> mkdir /usr/local/games/quake3; cd        
+    <p><b>(1)</b> Rename /usr/local/games/quake3 (as I used to have it)
+to /usr/local/games/quake3-1.17.</p>
+    <p><b>(2)</b> mkdir /usr/local/games/quake3; cd
 /usr/local/games/quake3</p>
     <p><b>(3)</b> cp -Rav ../quake3-1.17 .</p>
-    <p><b>(4)</b> Install the point release, copy all of the TA        
-pk3 files into baseq3.&nbsp; Remove any old mods from         1.17.</p>
+    <p><b>(4)</b> Install the point release, copy all of the TA pk3
+files into baseq3.&nbsp; Remove any old mods from 1.17.</p>
     <p><b>(5)</b> cd..; mv quake3 quake3-1.27</p>
-    <p><b>(6)</b> Edit both of the quake3 scripts so the        
-directories all match, here is the script I use for 1.17:        
+    <p><b>(6)</b> Edit both of the quake3 scripts so the directories
+all match, here is the script I use for 1.17:
 (/usr/local/games/quake3-1.17/quake3)</p>
     <p>==begin==<br>
 #!/bin/sh<br>
@@ -1456,74 +1426,73 @@ quake="./quake3.x86"<br>
 "$quake" +set in_dgamouse 1 $*<br>
 exit $?<br>
 ==cut==</p>
-    <p><b>(7)</b> [as root], cd into /usr/local/bin.&nbsp; Make        
-symlinks for each of the Q3A directories that correspond to         the
+    <p><b>(7)</b> [as root], cd into /usr/local/bin.&nbsp; Make
+symlinks for each of the Q3A directories that correspond to the
 protocol each uses. So:</p>
     <p>&nbsp; ln -s ../games/quake3-1.17 quake3proto45<br>
 &nbsp; ln -s ../games/quake3-1.27 quake3proto48<br>
 &nbsp; ln -s ../games/quake3-1.27 quake3</p>
     <p>Note the last one is there as the default.</p>
-    <p><b>(8)</b> Get a very (CVS) recent version of xqf. You        
-will need &gt;=0.9.6e-beta. Set up the executable for         quake3
-such that it is the FULL path to&nbsp; quake3, in my         case I
-entered /usr/local/bin/quake3.&nbsp; This is VERY         important
-because of the hack I used where I put 'protoNN'         on the end of
-whatever you entered for the program and see         if xqf can fopen
-it.&nbsp; Without the full path, chances         are that xqf will not
+    <p><b>(8)</b> Get a very (CVS) recent version of xqf. You will need
+&gt;=0.9.6e-beta. Set up the executable for quake3
+such that it is the FULL path to&nbsp; quake3, in my case I
+entered /usr/local/bin/quake3.&nbsp; This is VERY important
+because of the hack I used where I put 'protoNN' on the end of
+whatever you entered for the program and see if xqf can fopen
+it.&nbsp; Without the full path, chances are that xqf will not
 find it.</p>
-    <p>If you have problems, run xqf with "-d 5" on the command        
-line.&nbsp; This will give you some hints as to that which         it
+    <p>If you have problems, run xqf with "-d 5" on the command
+line.&nbsp; This will give you some hints as to that which it
 is looking.<br>
 &nbsp;</p>
   </blockquote>
   <b><a name="SoF"></a>Soldier of Fortune (1.06):</b>
   <blockquote> Create a script in your sof directory called
-'startsof-xqf'         that contains: ./sof +set console 1 +won_login
-username         password $*
-    <p>Replace username and password with your WoN username and        
-password</p>
-    <p>Make the script executable with: chmod +x         startsof-xqf</p>
-    <p>Under Preferences - Games, enter startsof-xqf for        
-'command line' and enter the directory sof is installed in         for
+'startsof-xqf' that contains: ./sof +set console 1 +won_login
+username password $*
+    <p>Replace username and password with your WoN username and password</p>
+    <p>Make the script executable with: chmod +x startsof-xqf</p>
+    <p>Under Preferences - Games, enter startsof-xqf for 'command line'
+and enter the directory sof is installed in for
 'working directory'.</p>
-    <p>When you connect to a server, SoF will authenticate to        
-WoN and you will have to click 'OK' to the hopefully         successful
-login screen.&nbsp; You should then be connected         to the
+    <p>When you connect to a server, SoF will authenticate to WoN and
+you will have to click 'OK' to the hopefully successful
+login screen.&nbsp; You should then be connected to the
 selected server</p>
   </blockquote>
   <b><a name="SoF2"></a>Soldier of Fortune 2:</b><br>
-  <blockquote> Qstat 2.5c supports Soldier of Fortune 2 by using a      
-,qstatrc configuration file (normally stored in your home        
-directory or /etc/qstat.cfg). <b>&nbsp;You must properly        
-install qstat with the qstatrc configuration file for XQF         to
-work with this game. &nbsp;See the qstat documentation         for more
+  <blockquote> Qstat 2.5c supports Soldier of Fortune 2 by using a
+,qstatrc configuration file (normally stored in your home directory or
+/etc/qstat.cfg). <b>&nbsp;You must properly install qstat with the
+qstatrc configuration file for XQF to
+work with this game. &nbsp;See the qstat documentation for more
 information.</b><br>
   </blockquote>
   <br>
   <b><a name="UT"></a>Unreal Tournament (436):</b>
-  <blockquote> Inside of the directory where Unreal Tournament is       
-installed, backup your ut file: cp ut ut.org (ut is a         script
+  <blockquote> Inside of the directory where Unreal Tournament is
+installed, backup your ut file: cp ut ut.org (ut is a script
 that finds and launches ut-bin)
-    <p>Edit the ut file and change the line near the bottom        
-from exec "./ut-bin" -log $* to exec "./ut-bin" $* -log</p>
+    <p>Edit the ut file and change the line near the bottom from exec
+"./ut-bin" -log $* to exec "./ut-bin" $* -log</p>
     <p>(-log and $* need to be swapped)</p>
     <p>Make sure you are using XQF 0.9.5a-beta or later</p>
-    <p>Under Preferences - Games, enter ut for 'command line'        
-and enter the directory UnrealTournament is installed in         for
+    <p>Under Preferences - Games, enter ut for 'command line' and enter
+the directory UnrealTournament is installed in for
 'working directory'.<br>
     </p>
   </blockquote>
   <b><a name="HL"></a>Half-Life:</b>
   <blockquote> Nothing special required anymore, just enter a command
-that         launches a normal Half-Life such as:<br>
+that launches a normal Half-Life such as:<br>
     <blockquote> wine hl.exe -- hl.exe -console<br>
     </blockquote>
-You should no longer need to specify a special script to         launch
+You should no longer need to specify a special script to launch
 Half-Life.<br>
     <br>
-To play Half-Life under Linux, see the following         sites:<br>
+To play Half-Life under Linux, see the following sites:<br>
     <br>
-    <a href="http://lhl.linuxgames.com">Linux         Half-Life</a><br>
+    <a href="http://lhl.linuxgames.com">Linux Half-Life</a><br>
     <a href="http://www.transgaming.com/">TransGaming</a><a
  href="http://lhl.linuxgames.com"></a><br>
     <br>
@@ -1547,11 +1516,11 @@ To play Half-Life under Linux, see the following         sites:<br>
             <p>The <a href="http://lhl.linuxgames.com">Linux Half-Life</a> site contains
             a <a href="http://lhl.linuxgames.com/hl">script</a> in the <a href="http://lhl.linuxgames.com/howto.shtml">How-To</a>
             section that can be easily modified to suite your configuration.
-            --> <b><a
- name="Descent3"></a>Descent 3:</b>
-  <blockquote> Descent 3 does not currently launch from XQF.&nbsp; This 
-appears to be a problem with the Descent3 program, and not        
-XQF.&nbsp; Descent3 for Linux does not accept connections         to
+            -->
+  <b><a name="Descent3"></a>Descent 3:</b>
+  <blockquote> Descent 3 does not currently launch from XQF.&nbsp; This
+appears to be a problem with the Descent3 program, and not XQF.&nbsp;
+Descent3 for Linux does not accept connections to
 servers from the command line.<br>
     <br>
 <!--
@@ -1573,12 +1542,13 @@ servers from the command line.<br>
                 <p>The <a href="http://lhl.linuxgames.com">Linux Half-Life</a> site contains
                 a <a href="http://lhl.linuxgames.com/hl">script</a> in the <a href="http://lhl.linuxgames.com/howto.shtml">How-To</a>
                 section that can be easily modified to suite your configuration.
-                --> </blockquote>
+                -->
+  </blockquote>
   <b><a name="SeriousSam"></a>Serious Sam:</b>
-  <blockquote> For Serious Sam to query properly, a QStat configuration 
+  <blockquote> For Serious Sam to query properly, a QStat configuration
 file is required.<br>
     <br>
-Add the following to the bottom of your ~/.qstatrc         file:<br>
+Add the following to the bottom of your ~/.qstatrc file:<br>
     <br>
     <blockquote> # Config for Serious Sam SMS<br>
 gametype SMS new extend GPS<br>
@@ -1589,13 +1559,13 @@ gametype SMS new extend GPS<br>
 &nbsp;&nbsp; game rule = gametype<br>
 end<br>
     </blockquote>
-The above configuration was created using the 'QSTAT Config        
-Maker' located at <a href="http://qstat.uglypunk.com">qstat.uglypunk.com</a>.<br>
+The above configuration was created using the 'QSTAT Config Maker'
+located at <a href="http://qstat.uglypunk.com">qstat.uglypunk.com</a>.<br>
     <br>
-Note: &nbsp;At the time of this release, there are no         known
-Serious Sam master servers that work with QStat /         XQF.<br>
-Note: &nbsp;This is not needed if xqf-0.9.12 is properly        
-installed as we install a default qstat config file<br>
+Note: &nbsp;At the time of this release, there are no known
+Serious Sam master servers that work with QStat / XQF.<br>
+Note: &nbsp;This is not needed if xqf-0.9.12 is properly installed as
+we install a default qstat config file<br>
     <br>
   </blockquote>
 </blockquote>
@@ -1604,126 +1574,155 @@ installed as we install a default qstat config file<br>
 <blockquote> Please report problems to the XQF home page Forum at <a
  href="http://www.linuxgames.com/xqf">http://www.linuxgames.com/xqf</a>or
 the user mail list at <a href="http://sourceforge.net/projects/xqf">http://sourceforge.net/projects/xqf</a>.
-  <p>Most problems can be solved by deleting the '.qf'       directory
-in your home directory.&nbsp; This directory       contains the
-configuration of XQF including game preferences,       server lists,
+  <p>Most problems can be solved by deleting the '.qf' directory
+in your home directory.&nbsp; This directory contains the
+configuration of XQF including game preferences, server lists,
 player lists etc.</p>
-  <p><b>Q: Do you know of any good web sites with technical      
-information on playing games on Linux?</b></p>
+  <p><b>Q: Do you know of any good web sites with technical information
+on playing games on Linux?</b></p>
   <p><b>A:&nbsp;</b><a href="http://www.icculus.org/lgfaq/">http://www.icculus.org/lgfaq/</a><br>
   </p>
-  <p><b>Q: When I refresh or update a list, all servers come       back
+  <p><b><br>
+Q: When I refresh or update a list, all servers come back
 with a ping of 'n/a'</b></p>
-  <p><b>A:&nbsp;</b> Make sure <b>qstat</b> is in your       path.&nbsp;
-Go to a shell and type <b>qstat</b>.&nbsp; If a       screen full of
-qstat command options does not appear, qstat       is not installed, or
-it is not in your path.&nbsp; After       compiling QStat, copy <b>qstat</b>
+  <p><b>A:&nbsp;</b> Make sure <b>qstat</b> is in your path.&nbsp;
+Go to a shell and type <b>qstat</b>.&nbsp; If a screen full of
+qstat command options does not appear, qstat is not installed, or
+it is not in your path.&nbsp; After compiling QStat, copy <b>qstat</b>
 to the <b>/usr/bin</b> directory.&nbsp; See the <a
- href="http://www.qstat.org/">QStat</a> home page for installation      
+ href="http://www.qstat.org/">QStat</a> home page for installation
 instructions.</p>
-  <p><b>Q: QStat is installed, but when I refresh or update a      
-list, all servers come back with a ping of 'n/a'</b></p>
-  <p><b>A:</b>&nbsp; If you are behind a firewall such as a      
-LinkSys or Dlink router, or are using filtering on your       machine
-(iptables or ipchains) you are probably blocking the       game's
-traffic from entering your computer.&nbsp; Games       generally use
-UDP, not TCP.&nbsp; Because of this, your       firewall needs special
-configuration.&nbsp; Search the       internet for '<i>gamename</i>
-firewall port' and you should       find something helpful. &nbsp;</p>
-  <p><b>Q:&nbsp; When I try to launch XQF, I get 'command not      
-found'</b></p>
+  <p><b><br>
+Q: QStat is installed, but when I refresh or update a list, all servers
+come back with a ping of 'n/a'</b></p>
+  <p><b>A:</b>&nbsp; If you are behind a firewall such as a LinkSys or
+Dlink router, or are using filtering on your machine
+(iptables or ipchains) you are probably blocking the game's
+traffic from entering your computer.&nbsp; Games generally use
+UDP, not TCP.&nbsp; Because of this, your firewall needs special
+configuration.&nbsp; Search the internet for '<i>gamename</i>
+firewall port' and you should find something helpful. &nbsp;</p>
+  <p><b><br>
+Q:&nbsp; When I try to launch XQF, I get 'command not found'</b></p>
   <p><b>A:&nbsp;</b> XQF is not in your path.&nbsp; See the <a
  href="#Launching_XQF">Launching XQF</a> section</p>
-  <p><b>Q:&nbsp; I have added master0.gamespy.com to XQF, but I      
-can not retreive any servers from that master</b></p>
-  <p><b>A:</b>&nbsp; Gamespy's master servers use an      
-authentication sequence that is not supported by QStat.&nbsp;      
-This means that you can not query a Gamespy master using       QStat
-and XQF.&nbsp; Other games such as Unreal Tournament       use the
-Gamespy style master server but do not require       authentication
+  <p><b><br>
+Q:&nbsp; I have added master0.gamespy.com to XQF, but I can not
+retreive any servers from that master</b></p>
+  <p><b>A:</b>&nbsp; Gamespy's master servers use an authentication
+sequence that is not supported by QStat.&nbsp; This means that you can
+not query a Gamespy master using QStat
+and XQF.&nbsp; Other games such as Unreal Tournament use the
+Gamespy style master server but do not require authentication
 which is why they work.</p>
-  <p><b>Q:&nbsp; I deleted one of the default master      
-servers.&nbsp; How do I get it back?</b></p>
-  <p><b>A:</b>&nbsp; Edit - Add Default Masters to add ALL the      
-default master servers back into the list.&nbsp; If you know       the
-address, you can add a single master with Edit - Add       Master.</p>
-  <p><b>Q:&nbsp;Why do LAN searches not find any       servers?</b></p>
-  <p><b>A:</b> You either need a default route to your ethernet      
-device or a host route for the broadcast address (try e.g.       route
+  <p><b>Q:&nbsp; I deleted one of the default master servers.&nbsp; How
+do I get it back?</b></p>
+  <p><b>A:</b>&nbsp; Edit - Add Default Masters to add ALL the default
+master servers back into the list.&nbsp; If you know the
+address, you can add a single master with Edit - Add Master.</p>
+  <p><b><br>
+Q:&nbsp;Why do LAN searches not find any servers?</b></p>
+  <p><b>A:</b> You either need a default route to your ethernet device
+or a host route for the broadcast address (try e.g. route
 add -host 255.255.255.255 eth0).</p>
-  <p><b>Q: I am behind a firewall / proxy server and can not      
-retrieve http master lists</b></p>
+  <p><b><br>
+Q: I am behind a firewall / proxy server and can not retrieve http
+master lists</b></p>
   <p><b>A:</b> XQF uses <b><a href="ftp://ftp.gnu.org/gnu/wget/">wget</a></b>
-to retreive http       master lists.&nbsp; To configure <b>wget</b> to
-use a proxy       server, set the environment variable '<b>http_proxy</b>'
+to retreive http master lists.&nbsp; To configure <b>wget</b> to
+use a proxy server, set the environment variable '<b>http_proxy</b>'
 before launching XQF.&nbsp; For example:</p>
-  <blockquote> export         http_proxy=http://<i>address-of-proxy-server:port</i>/</blockquote>
-  <p><b>Q: My game is not launching properly. &nbsp;What do I       do?</b></p>
-  <p><b>A:</b> The command line arguments passed by XQF may not       be
-correct due to a configuration problem or maybe a bug.      
-&nbsp;Launch XQF from a command prompt using:<br>
+  <blockquote> export http_proxy=http://<i>address-of-proxy-server:port</i>/</blockquote>
+  <p><b><br>
+Q: My game is not launching properly. &nbsp;What do I do?</b></p>
+  <p><b>A:</b> The command line arguments passed by XQF may not be
+correct due to a configuration problem or maybe a bug. &nbsp;Launch XQF
+from a command prompt using:<br>
   </p>
   <p>xqf -d 1<br>
   </p>
-  <p>and 'Connect' to the server. &nbsp;The command line used       by
-XQF to launch the game will be displayed in the console.      
-&nbsp;Use that to figure out what is wrong. &nbsp;If you can      
-determine it is a but, please fill out a bug report at <a
+  <p>and 'Connect' to the server. &nbsp;The command line used by
+XQF to launch the game will be displayed in the console. &nbsp;Use that
+to figure out what is wrong. &nbsp;If you can determine it is a but,
+please fill out a bug report at <a
  href="http://sourceforge.net/projects/xqf">http://sourceforge.net/projects/xqf</a>.</p>
-  <p><b>Q: XQF sounds are not playing when XMMS or another       sound
+  <p><b><br>
+Q: XQF sounds are not playing when XMMS or another sound
 program is running. &nbsp;What do I do?</b></p>
-  <b>A:</b> The Enlightened Sound Daemon (ESD or ESounD) allows      
-multiple programs to play sounds at the same time. &nbsp;The      
-software you are running may or may not be using ESD to play      
-sounds.<br>
+  <b>A:</b> The Enlightened Sound Daemon (ESD or ESounD) allows
+multiple programs to play sounds at the same time. &nbsp;The software
+you are running may or may not be using ESD to play sounds.<br>
   <br>
 To have XQF use ESD, configure the sound player to be <b>/usr/bin/esdplay</b>
 instead of <b>play</b> or <b>sox.</b><br>
   <br>
-Configure your other applications to use ESD. &nbsp;For       example,
-to configure XMMS to use ESD, press Control P inside       of XMMS and
-on the Audio I/O Plugins page select '<b>eSound       Output Plugin</b>'
+Configure your other applications to use ESD. &nbsp;For example,
+to configure XMMS to use ESD, press Control P inside of XMMS and
+on the Audio I/O Plugins page select '<b>eSound Output Plugin</b>'
 for the Output Plugin.<br>
   <br>
-On an RPM based system, use 'rpm -q esound' to see if it ESD       is
+On an RPM based system, use 'rpm -q esound' to see if it ESD is
 installed.<br>
   <br>
 For more information on ESD, see <b>/usr/share/doc/esound*</b>.<br>
   <br>
 Under KDE you may want to use <b>arts</b> and <b>artsplay</b>
 instead<br>
-  <p><b>Q: When updating server lists for Quake3, Wolfenstein       or
-Enemy Territory, XQF only shows servers for an old version       or the
+  <p><b><br>
+Q: When updating server lists for Quake3, Wolfenstein or
+Enemy Territory, XQF only shows servers for an old version or the
 demo. What's wrong?</b></p>
-  <p>You need to choose a suitable Masterserver protcol       version.
-If xqf doesn't know about the newest version yet,       manually add a
-server running the new version and enter the       value of the server
+  <p><span style="font-weight: bold;">A: </span>You need to choose a
+suitable Masterserver protcol version.
+If xqf doesn't know about the newest version yet, manually add a
+server running the new version and enter the value of the server
 rule "protocol"<br>
+  </p>
+  <b><br>
+Q: Can XQF integrate with any chat programs such as IRC or ICQ?<br>
+  </b><span style="font-weight: bold;"><br>
+A: </span>To integrate XQF with XChat or LICQ, use <a
+ href="http://doug.freeshell.org/xqf-xchat/">XQF -&gt; XChat</a>.&nbsp;
+When you start a game with XQF, this script notifies other chat channel
+users that you are playing a game and (optionally) changes your nick to
+reflect your gaming status.&nbsp; Also, your Licq status can be changed
+(n/a, occupied, etc) and the autoresponse message will be changed to
+the stats of the server you are using.<br>
+  <br>
+  <br>
+  <b>Q: Will XQF be availble for Windows?<br>
+  </b>
+  <p><span style="font-weight: bold;">A: </span>We have no plans to
+port XQF to Windows, however there are many Windows game browser
+applications available.&nbsp; We recommend <a
+ href="http://www.agsm.net">aGSM</a> (alternative Game Server Monitor)
+which supports both LAN and Internet gaming for many popular online
+games and is freeware.<br>
   </p>
   <br>
   <a name="XQF-Rcon"></a><b><u><font size="+2">XQF-Rcon</font></u></b><br>
   <br>
-Included in the XQF source is a program called XQF-Rcon.      
-&nbsp;XQF-Rcon is a text mode (does NOT require X) remote       console
-program for Quake2 and other games. &nbsp;The program       is
-completely independant of XQF, but uses some XQF source       files to
-compile. &nbsp;It does NOT replace or alter the       existing RCON
+Included in the XQF source is a program called XQF-Rcon. &nbsp;XQF-Rcon
+is a text mode (does NOT require X) remote console
+program for Quake2 and other games. &nbsp;The program is
+completely independant of XQF, but uses some XQF source files to
+compile. &nbsp;It does NOT replace or alter the existing RCON
 support inside of XQF.<br>
   <br>
 To use xqf-rcon, type:<br>
   <blockquote> <b>xqf-rcon <i>ip</i> <i>port</i></b><br>
   </blockquote>
-You will be prompted for the rcon password and then it       behaves
+You will be prompted for the rcon password and then it behaves
 like a normal shell.<br>
   <br>
-It will always waits for an answer after sending a line.       &nbsp;It
-will time out and return to the prompt if no answer       is received
+It will always waits for an answer after sending a line. &nbsp;It
+will time out and return to the prompt if no answer is received
 within five seconds.<br>
   <br>
-To compile xqf-rcon, make sure you have readline and ncurses      
-development packages. &nbsp;For example, readline-devel and      
+To compile xqf-rcon, make sure you have readline and ncurses
+development packages. &nbsp;For example, readline-devel and
 ncurses5-devel (depends on distribution).
-  <p>To compile xqf-rcon, the steps are the same as compiling       XQF
+  <p>To compile xqf-rcon, the steps are the same as compiling XQF
 except for the ./configure line. &nbsp;See below:<br>
   </p>
   <blockquote>
@@ -1736,10 +1735,10 @@ except for the ./configure line. &nbsp;See below:<br>
     <p>Compile source code:</p>
     <p><b><i>make</i></b></p>
   </blockquote>
-  <p>After compiling, you should have the program 'xqf-rcon' in      
-src/, along with xqf.<br>
+  <p>After compiling, you should have the program 'xqf-rcon' in src/,
+along with xqf.<br>
   </p>
-  <p>Note: &nbsp;To compile from CVS, make sure you are running      
+  <p>Note: &nbsp;To compile from CVS, make sure you are running
 automake 1.6 or newer.<br>
   <br>
   </p>
