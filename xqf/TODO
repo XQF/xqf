@@ -1,5 +1,6 @@
-
+- Configure option for home directory as well as global directory
 - Multiple Favorites
 - More general server filters so one can filter based on any server var.
 - Redial feature to connect to your favorite busy server.
 - Fix the server core dumps!
+- Detection if map is installed (req. home dir option)
