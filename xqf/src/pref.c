@@ -195,6 +195,8 @@ static GtkWidget *custom_args_entry_args[GAMES_TOTAL];
 static GSList *custom_args_entry_list[GAMES_TOTAL];
 static int current_row = -1;
 
+GtkWidget *file_selector;
+
 /* Quake 3 settings */
 static GtkWidget *vmfixbutton;
 //static GtkWidget *rafixbutton;
@@ -257,6 +259,8 @@ char* ef_masterprotocols[] = {
 	"24",
 	NULL
 };
+
+void game_file_dialog();
 
 static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2) {
   int res;
@@ -1852,7 +1856,7 @@ static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type 
   
   if (str1 && str2) {
     if (g_slist_find_custom (custom_args_entry_list[type], str1, custom_args_compare_func) == NULL ) {
-      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], temp);
+      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], g_strdup(temp));
       gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp2);
     }
     else {
@@ -1860,8 +1864,8 @@ static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type 
       		"\nDelete the entry and try again."), str1);
     }
   }
-  
-//  g_free (temp);
+  if(temp)
+    g_free(temp);
 }
 
 
@@ -1889,8 +1893,6 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
       break;
   }
 } 
-
-  
 
 static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   char *temp[2];
@@ -2076,6 +2078,12 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   gtk_box_pack_start (GTK_BOX (hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
   gtk_widget_show (genprefs[type].cmd_entry);
 
+  button = gtk_button_new_with_label ("...");
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                    GTK_SIGNAL_FUNC (game_file_dialog), (gpointer)type);
+  gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
   // translator: button for command suggestion
   button = gtk_button_new_with_label (_("Suggest"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
@@ -2084,6 +2092,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
   gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
   gtk_widget_show (button);
+
 
   /////
   label = gtk_label_new (_("Working Directory"));
@@ -4322,4 +4331,71 @@ void prefs_save (void) {
   config_sync ();
 }
 */
+
+void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+{
+  enum server_type type;
+  char *temp = NULL;
+  char *ptr = NULL;
+  char *dir = NULL;
+  char *file = NULL;
+
+  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  
+  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
+  
+  ptr = strrchr(temp, '/');
+  
+  if (!ptr) {    // no path
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), temp);
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), "");
+  }
+  else {
+    dir = g_strndup(temp, ptr-temp+1);
+    file = g_strdup(ptr+1);
+    
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), file);
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
+  }
+
+  if (temp)
+    g_free (temp);
+  if (dir)
+    g_free (dir);
+  if (file)
+    g_free (file);
+}
+
+void game_file_dialog_destroy_callback (GtkWidget *widget, gpointer data)
+{
+}
+
+void game_file_dialog(enum server_type type) {
+
+    /* Create a new file selection widget */
+    file_selector = gtk_file_selection_new (_("Game selection"));
+    
+    gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
+    
+    gtk_signal_connect (GTK_OBJECT (file_selector), "destroy",
+                        (GtkSignalFunc) game_file_dialog_destroy_callback, &file_selector);
+
+    /* Connect the ok_button to game_file_dialog_ok_callback function */
+    gtk_object_set_user_data (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button), (gpointer) type);
+    gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
+                        "clicked", (GtkSignalFunc) game_file_dialog_ok_callback, file_selector );
+    gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
+                                            (file_selector)->ok_button),
+                               "clicked", (GtkSignalFunc) gtk_widget_destroy,
+                               GTK_OBJECT (file_selector));
+
+    
+    /* Connect the cancel_button to destroy the widget */
+    gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
+                                            (file_selector)->cancel_button),
+                               "clicked", (GtkSignalFunc) gtk_widget_destroy,
+                               GTK_OBJECT (file_selector));
+    
+    gtk_widget_show(file_selector);
+}
 
