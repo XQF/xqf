@@ -3553,9 +3553,15 @@ void create_main_window (void) {
 
   main_status_bar = gtk_statusbar_new ();
   gtk_box_pack_start (GTK_BOX (hbox), main_status_bar, TRUE, TRUE, 0);
+#ifdef USE_GTK2
+  gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_status_bar), FALSE);
+#endif
   gtk_widget_show (main_status_bar);
 
   main_filter_status_bar = gtk_statusbar_new ();
+#ifdef USE_GTK2
+  gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_filter_status_bar), FALSE);
+#endif
   gtk_widget_set_usize (main_filter_status_bar, 100, -1);
   gtk_box_pack_start (GTK_BOX (hbox), main_filter_status_bar, TRUE, TRUE, 0);
   gtk_widget_show (main_filter_status_bar);
