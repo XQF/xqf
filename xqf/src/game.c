@@ -1554,6 +1554,15 @@ static void un_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "hostport") == 0) {
       hostport = atoi(info_ptr[1]);
     }
+    else if ((s->type == UT2004_SERVER || s->type == UT2_SERVER)
+	&& strcmp (*info_ptr, "ServerVersion") == 0
+	&& strlen(info_ptr[1]) == 4)
+    {
+	if(info_ptr[1][0] == '3')
+	  s->type = UT2004_SERVER;
+	else if(info_ptr[1][0] == '2')
+	  s->type = UT2_SERVER;
+    }
     else if (strcmp (*info_ptr, "gamename") == 0) {
       unsigned i;
       for( i = 0 ; gsname2type[i].name ; ++i )
