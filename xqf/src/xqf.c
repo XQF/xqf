@@ -816,7 +816,10 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
     server_clist_build_filtered (cur_server_list, TRUE);
   }
 
-  print_status (main_status_bar, _("Done."));
+  if(redialserver == 1)
+    print_status (main_status_bar, _("Waiting to redial server..."));
+  else
+    print_status (main_status_bar, _("Done."));
 
   progress_bar_reset (main_progress_bar);
 
@@ -931,6 +934,9 @@ static void launch_close_handler (struct stat_job *job, int killed) {
 
         server_clist_refresh_server (s);
 
+        print_status (main_status_bar, _("Waiting to redial server..."));
+        progress_bar_reset (main_progress_bar);
+
         return;
       }
       else
@@ -946,11 +952,14 @@ static gboolean launch_redial(struct condef *con)
   struct server *s;
   s = con->s;
 
-  if(!s) return FALSE; // may not happen
+  if(!s || redialserver == 0 ) // !s may not happen
+  {
+    print_status (main_status_bar, _("Done."));
+    progress_bar_reset (main_progress_bar);
 
-  if (redialserver == 0)
     return FALSE; // stop redialing, we're done
-   
+  }
+
   stat_one_server(s);
 
   debug (1, "launch redial server name: s->name:%s",s->name);
@@ -960,7 +969,10 @@ static gboolean launch_redial(struct condef *con)
   //if (s->curplayers == 99)
   {
     // server not busy!
-    redialserver = 0;
+
+    print_status (main_status_bar, _("Done."));
+    progress_bar_reset (main_progress_bar);
+
     launch_close_handler_part2(con);
     return FALSE; // stop redialing, we're done   
   }
@@ -985,7 +997,7 @@ static void launch_close_handler_part2(struct condef *con)
   char *launchargv[4];
   int pid;
 
-
+  redialserver = 0; // Cancel any redialing
 
   s = con->s;
   props = properties (s);
@@ -1725,6 +1737,9 @@ static void cancelredial_callback (GtkWidget *widget, gpointer data) {
     return;
 
   redialserver = 0;
+  print_status (main_status_bar, _("Done."));
+  progress_bar_reset (main_progress_bar);
+
 }
 
 

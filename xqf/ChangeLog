@@ -1,3 +1,6 @@
+Oct 01, 2002: Alex Burger <alex@fragit_dot_net>
+- Update status bar for redial
+
 Oct 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix segfault because of format error and some cast warnings
 - use q3 parse and launch functions for SOF2
