@@ -1,3 +1,6 @@
+Apr 29, 2003: Jordi Mallach <jordi@sindominio.net>
+- update Catalan translation
+
 Apr 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix keyboard focus in server list
 - don't allow double click on map column if game supports map preview,
