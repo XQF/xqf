@@ -5,7 +5,7 @@ Changes since 0.9.6f:
 o Internationalization (gettext) support, Spanish and German translations
 o Initial Return to Castle Wolfenstein support
 o Tribes2 support
-o Support for Q3A protocol v66.
+o Support for Q3A protocol v66
 o Added "Quake3" preferences page which allows the protocol version
   and other options to be changed
 o Added "General" preferences page, which hosts many of the options
