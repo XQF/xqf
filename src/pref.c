@@ -47,6 +47,7 @@
 #include "sort.h"
 #include "q3maps.h"
 #include "splash.h"
+#include "srv-list.h"
 
 static struct generic_prefs* new_generic_prefs (void);
 static GtkWidget *custom_args_options_page (enum server_type type);
@@ -114,8 +115,10 @@ int	default_show_only_configured_games;
 int     maxretries;
 int     maxsimultaneous;
 char*   qstat_srcip;
-unsigned   qstat_srcport_low;
-unsigned   qstat_srcport_high;
+unsigned short qstat_srcport_low;
+unsigned short qstat_srcport_high;
+gboolean qstat_srcport_changed;
+gboolean qstat_srcip_changed;
 
 int	sound_enable;
 char	*sound_player = NULL;
@@ -141,6 +144,7 @@ static	char *pref_qw_skin;
 static	char *pref_q2_skin;
 
 static  GtkWidget *games_notebook;
+static  GtkWidget *pref_notebook;
 
 static  GtkWidget *rate_spinner[2];
 static  GtkWidget *cl_nodelta_check_button[2];
@@ -1001,6 +1005,30 @@ static void get_new_defaults (void) {
   if (i != maxsimultaneous)
     config_set_int ("maxsimultaneous", maxsimultaneous = i);
 
+  if(qstat_srcip_changed)
+  {
+    if(qstat_srcip)
+      config_set_string ("srcip", qstat_srcip);
+    else
+      config_clean_key("srcip");
+    qstat_srcip_changed = FALSE;
+  }
+
+  if(qstat_srcport_changed)
+  {
+    if(qstat_srcport_low)
+    {
+      config_set_int ("port_low", qstat_srcport_low);
+      config_set_int ("port_high", qstat_srcport_high);
+    }
+    else
+    {
+      config_clean_key("port_low");
+      config_clean_key("port_high");
+    }
+    qstat_srcport_changed = FALSE;
+  }
+
   config_pop_prefix ();
 
   /* Sounds */
@@ -1057,14 +1085,80 @@ static void get_new_defaults (void) {
   rc_save ();
 }
 
+static int check_qstat_source_port()
+{
+  unsigned short low, high;
+  const char* val;
+  struct in_addr in;
+
+  val = gtk_entry_get_text(GTK_ENTRY(qstat_srcport_entry_low));
+  low = atoi(val);
+
+  val = gtk_entry_get_text(GTK_ENTRY(qstat_srcport_entry_high));
+  high = atoi(val);
+
+  val = gtk_entry_get_text(GTK_ENTRY(qstat_srcip_entry));
+  if(val && *val)
+  {
+    if(!inet_aton(val, &in))
+    {
+      dialog_ok(NULL, _("Invalid source IP address"));
+      gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), PREF_PAGE_QSTAT);
+      return FALSE;
+    }
+    else
+    {
+      val = inet_ntoa(in);
+    }
+  }
+
+  if((low != 0 || high != 0) && (low < 1024 || high < 1024 || low > high))
+  {
+    dialog_ok(NULL, _("Invalid source port range"));
+    gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), PREF_PAGE_QSTAT);
+    return FALSE;
+  }
+
+  if(val && *val)
+  {
+    if(!qstat_srcip || strcmp(qstat_srcip,val))
+    {
+      g_free(qstat_srcip);
+      qstat_srcip = g_strdup(val);
+      qstat_srcip_changed = TRUE;
+    }
+  }
+  else if(qstat_srcip)
+  {
+    g_free(qstat_srcip);
+    qstat_srcip = NULL;
+    qstat_srcip_changed = TRUE;
+  }
+
+  if(qstat_srcport_low != low)
+  {
+    qstat_srcport_low = low;
+    qstat_srcport_changed = TRUE;
+  }
+  if(qstat_srcport_high != high)
+  {
+    qstat_srcport_high = high;
+    qstat_srcport_changed = TRUE;
+  }
+
+  return TRUE;
+}
+
 // call various verification fuctions, store settings and destroy preferences
 // window if everything's fine
 static void ok_callback (GtkWidget *widget, GtkWidget* window)
 {
   if(!verify_q3_settings())
-  {
     return;
-  }
+
+  if(!check_qstat_source_port())
+    return;
+  
   get_new_defaults();
   gtk_widget_destroy(window);
 
@@ -3946,6 +4040,8 @@ static void scan_maps_callback (GtkWidget *widget, gpointer data)
     }
 
     destroy_splashscreen();
+
+    server_clist_set_list (cur_server_list);
 }
 
 static GtkWidget *general_options_page (void) {
@@ -4292,39 +4388,51 @@ static GtkWidget *qstat_options_page (void) {
 
   /* srcport */
 
-  label = gtk_label_new (_("Soure Port Range"));
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
-  gtk_widget_show (label);
+  {
+    char buf[6];
+    label = gtk_label_new (_("Soure Port Range"));
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+    gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+    gtk_widget_show (label);
 
-  hbox = gtk_hbox_new (FALSE, 4);
+    hbox = gtk_hbox_new (FALSE, 4);
 
-  qstat_srcport_entry_low = gtk_entry_new ();
-  gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_low), 5);
-  gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_low), "");
-  gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_low, FALSE, FALSE, 0);
-  gtk_widget_set_usize (qstat_srcport_entry_low, 70, -1);
+    if(qstat_srcport_low)
+      snprintf(buf, sizeof(buf), "%hu", qstat_srcport_low);
+    else
+      *buf = '\0';
 
-  label = gtk_label_new ("-");
-  gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+    qstat_srcport_entry_low = gtk_entry_new ();
+    gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_low), 5);
+    gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_low), buf);
+    gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_low, FALSE, FALSE, 0);
+    gtk_widget_set_usize (qstat_srcport_entry_low, 70, -1);
 
-  qstat_srcport_entry_high = gtk_entry_new ();
-  gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_high), 5);
-  gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_high), "");
-  gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_high, FALSE, FALSE, 0);
-  gtk_widget_set_usize (qstat_srcport_entry_high, 70, -1);
+    label = gtk_label_new ("-");
+    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 
-  alignment = gtk_alignment_new (1, 0.5, 0, 0);
-  gtk_container_add (GTK_CONTAINER (alignment), hbox);
-  gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
-  gtk_widget_show (qstat_srcport_entry_low);
-  gtk_widget_show (label);
-  gtk_widget_show (qstat_srcport_entry_high);
-  gtk_widget_show (alignment);
-  gtk_widget_show (hbox);
+    if(qstat_srcport_high)
+      snprintf(buf, sizeof(buf), "%hu", qstat_srcport_high);
+    else
+      *buf = '\0';
 
-  ++row;
+    qstat_srcport_entry_high = gtk_entry_new ();
+    gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_high), 5);
+    gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_high), buf);
+    gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_high, FALSE, FALSE, 0);
+    gtk_widget_set_usize (qstat_srcport_entry_high, 70, -1);
 
+    alignment = gtk_alignment_new (1, 0.5, 0, 0);
+    gtk_container_add (GTK_CONTAINER (alignment), hbox);
+    gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+    gtk_widget_show (qstat_srcport_entry_low);
+    gtk_widget_show (label);
+    gtk_widget_show (qstat_srcport_entry_high);
+    gtk_widget_show (alignment);
+    gtk_widget_show (hbox);
+
+    ++row;
+  }
 
   gtk_widget_show (table);
   gtk_widget_show (frame);
@@ -4733,7 +4841,6 @@ void preferences_dialog (int page_num) {
   GtkWidget *vbox;
   GtkWidget *hbox;
   GtkWidget *label;
-  GtkWidget *notebook;
   GtkWidget *page;
   GtkWidget *button;
   GtkWidget *window;
@@ -4762,55 +4869,55 @@ void preferences_dialog (int page_num) {
    *  Notebook
    */
 
-  notebook = gtk_notebook_new ();
-  gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
-  gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (notebook), 4);
-  gtk_box_pack_start (GTK_BOX (vbox), notebook, FALSE, FALSE, 0);
+  pref_notebook = gtk_notebook_new ();
+  gtk_notebook_set_tab_pos (GTK_NOTEBOOK (pref_notebook), GTK_POS_TOP);
+  gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (pref_notebook), 4);
+  gtk_box_pack_start (GTK_BOX (vbox), pref_notebook, FALSE, FALSE, 0);
 
   page = general_options_page ();
   label = gtk_label_new (_("General"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 /*
   page = player_profile_page ();
   label = gtk_label_new (_("Player Profile"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 */
 
   page = games_config_page (game_num);
   label = gtk_label_new (_("Games"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
   page = appearance_options_page ();
   label = gtk_label_new (_("Appearance"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
   page = qstat_options_page ();
   label = gtk_label_new (_("QStat"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
   page = sound_options_page ();
   label = gtk_label_new (_("Sounds"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 /*
   page = qw_q2_options_page ();
   label = gtk_label_new (_("QW/Q2"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 */
 /*
   page = q3_options_page ();
   label = gtk_label_new (_("Q3/RTCW"));
   gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 */
-  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), page_num);
+  gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), page_num);
 
   /* Initialize skins and custom cfgs */
 
@@ -4827,7 +4934,7 @@ void preferences_dialog (int page_num) {
     update_cfgs (i, genprefs[i].real_dir, games[i].game_cfg);
   }
 
-  gtk_widget_show (notebook);
+  gtk_widget_show (pref_notebook);
 
   /* 
    *  Buttons at the bottom
@@ -5237,6 +5344,11 @@ int prefs_load (void) {
 
   maxretries =                config_get_int ("maxretires=3");
   maxsimultaneous =           config_get_int ("maxsimultaneous=20");
+  qstat_srcport_low =         config_get_int ("port_low=0");
+  qstat_srcport_high =        config_get_int ("port_high=0");
+  qstat_srcport_changed =     FALSE;
+  qstat_srcip =               config_get_string ("srcip");
+  qstat_srcip_changed =       FALSE;
 
   config_pop_prefix ();
 

@@ -1,3 +1,6 @@
+Nov 11, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add options for qstat source ip and port range (feature #1034631)
+
 Nov 06, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - open splash screen with progress bar when clicking the "scan now" button
 
