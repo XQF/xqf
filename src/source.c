@@ -1053,6 +1053,7 @@ static char *builtin_masters_update_info[] = {
   "ADD WOETS lan://255.255.255.255 LAN",
   "ADD EFS lan://255.255.255.255 LAN",
   "ADD UT2S lan://255.255.255.255 LAN",
+  "ADD UT2004S lan://255.255.255.255 LAN",
   "ADD UNS lan://255.255.255.255 LAN",
   "ADD RUNESRV lan://255.255.255.255 LAN",
   "ADD MHS lan://255.255.255.255 LAN",
