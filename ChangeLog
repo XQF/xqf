@@ -1,3 +1,8 @@
+Nov 1, 2002: Alex Burger <alex_b@users.sourceforge.net>
+- Fix for find_file_in_path to not append / if directory is blank.  Caused
+  more and more beginning /'s in game command line each time you pressed 
+  enter in the field.
+
 Oct 31, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove workaround for unreal to use gps for lan broadcasting, this is no
   longer necessary with qstat 2.5c
