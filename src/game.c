@@ -2443,9 +2443,9 @@ static int q3_exec (const struct condef *con, int forkit) {
   
   char *to_free = NULL;
 
-  int is_so_mod = 0;
+  //  int is_so_mod = 0;
 
-  int rafix = str2bool(g_datalist_get_data(&games[g->type].games_data,"rafix"));
+//  int rafix = str2bool(g_datalist_get_data(&games[g->type].games_data,"rafix"));
   int vmfix = str2bool(g_datalist_get_data(&games[g->type].games_data,"vmfix"));
   int setfs_game = str2bool(g_datalist_get_data(&games[g->type].games_data,"setfs_game"));
 
@@ -2454,6 +2454,10 @@ static int q3_exec (const struct condef *con, int forkit) {
   int pass_memory_options = str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"pass_memory_options"));
   
   char* memsettings = NULL;
+  
+  int vm_game_set = 0;
+  int vm_cgame_set = 0;
+  int vm_ui_set = 0;
 
   cmd = strdup_strip (g->cmd);
   /*
@@ -2561,7 +2565,8 @@ static int q3_exec (const struct condef *con, int forkit) {
     If the s->game is set, we want to put fs_game on the command
     line so that the mod is loaded when we connect.
   */
-  if((setfs_game || rafix) && con->s->game) {
+//  if((setfs_game || rafix) && con->s->game) {
+  if((setfs_game) && con->s->game) {
     if (setfs_game) {
       argv[argi++] = "+set fs_game";
       //argv[argi++] = con->s->game;
@@ -2580,7 +2585,7 @@ static int q3_exec (const struct condef *con, int forkit) {
       
       argi++;
     }
-    if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
+//    if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
   }
 
   /* 
@@ -2589,15 +2594,16 @@ static int q3_exec (const struct condef *con, int forkit) {
      Hmm, this seems to break osp when set to 0 (for so only). But
      we actually want to set it a 2 to get vm compilation.
   */
- if ( rafix && is_so_mod) {
-    /* FIX ME
-       BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
-       to run properly.  This is for at least 1.27g.
-    */
-    argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
-  } else if( vmfix ){
-      argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
-  }
+// if ( rafix && is_so_mod) {
+//    /* FIX ME
+//       BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
+//       to run properly.  This is for at least 1.27g.
+//    */
+//    argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
+//  } 
+//  else if( vmfix ){
+//      argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
+//  }
 
   if(pass_memory_options == TRUE)
   {
@@ -2618,8 +2624,26 @@ static int q3_exec (const struct condef *con, int forkit) {
   while(additional_args && additional_args[i] )
   {
     argv[argi++] = additional_args[i];
+
+    // Check to see if vm_game, vm_cgame or vm_ui was set in custom args
+    // Used to prevent them from being re-set if vmfix is enabled below.
+    if (strcmp(additional_args[i], "vm_game") == 0)
+      vm_game_set = 1;
+    else if (strcmp(additional_args[i], "vm_cgame") == 0)
+      vm_cgame_set = 1;
+    else if (strcmp(additional_args[i], "vm_ui") == 0)
+      vm_ui_set = 1;
     i++;
   }
+
+  if(vmfix) {
+    if (!vm_game_set)
+      argv[argi++] = "+set vm_game 2";
+    if (!vm_cgame_set)
+      argv[argi++] = "+set vm_cgame 2";
+    if (!vm_ui_set)
+      argv[argi++] = "+set vm_ui 2";
+  }    
    
   argv[argi] = NULL;
 

@@ -197,7 +197,7 @@ static int current_row = -1;
 
 /* Quake 3 settings */
 static GtkWidget *vmfixbutton;
-static GtkWidget *rafixbutton;
+//static GtkWidget *rafixbutton;
 static GtkWidget *setfs_gamebutton;
 static GtkWidget *set_punkbusterbutton;
 static GtkWidget *q3proto_entry;
@@ -612,10 +612,12 @@ static void get_new_defaults (void) {
     config_set_bool ("vmfix", i);
     game_set_attribute(Q3_SERVER,"vmfix",g_strdup(bool2str(i)));
 
+#if 0
   i = GTK_TOGGLE_BUTTON (rafixbutton)->active;
 //  if (i != q3_opts.rafix)
     config_set_bool ("rafix", i);
     game_set_attribute(Q3_SERVER,"rafix",g_strdup(bool2str(i)));
+#endif
 
   i = GTK_TOGGLE_BUTTON (setfs_gamebutton)->active;
 //  if (i != q3_opts.setfs_game)
@@ -1839,6 +1841,56 @@ static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
    return (1);
 }
 
+static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type type, gpointer data) {
+  char *temp;
+  char *temp2[2];
+  
+  temp = g_strconcat (str1, ",", str2, NULL);
+
+  temp2[0] = strdup_strip (str1);
+  temp2[1] = strdup_strip (str2);
+  
+  if (str1 && str2) {
+    if (g_slist_find_custom (custom_args_entry_list[type], str1, custom_args_compare_func) == NULL ) {
+      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], temp);
+      gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp2);
+    }
+    else {
+      dialog_ok (NULL, _("An entry already exists for the game %s.\n\nA default entry for this game will not be added.\n" \
+      		"\nDelete the entry and try again."), str1);
+    }
+  }
+  
+//  g_free (temp);
+}
+
+
+// Add default custom arguments
+static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
+  enum server_type type;
+  struct game *g;
+  
+  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  g = &games[type];
+
+  switch(type) {
+  
+    case UN_SERVER:
+      add_custom_args_defaults2("s_SWATGame","-ini=TacticalOps.ini",UN_SERVER, data);
+      add_custom_args_defaults2("sfteamdm","-ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER, data);
+      break;
+
+    case Q3_SERVER:
+      add_custom_args_defaults2("arena","+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0",Q3_SERVER, data);
+      break;
+      
+    default:
+      dialog_ok (NULL, _("There are no defaults for this game"));
+      break;
+  }
+} 
+
+  
 
 static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   char *temp[2];
@@ -2089,6 +2141,9 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   return page_vbox;
 }
 
+// Used by user_fix_defaults to add a custom arg
+
+
 static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *hbox1;
   GtkWidget *vbox1;
@@ -2102,6 +2157,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *add_button;
   GtkWidget *delete_button;
   GtkWidget *replace_button;
+  GtkWidget *defaults_button;
   GtkWidget *page_vbox;
   GtkTooltips *tooltips;
   GSList *temp;
@@ -2237,6 +2293,14 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_container_add (GTK_CONTAINER (vbuttonbox1), replace_button);
   GTK_WIDGET_SET_FLAGS (replace_button, GTK_CAN_DEFAULT);
 
+  defaults_button = gtk_button_new_with_label (_("Add Defaults"));
+  gtk_widget_ref (defaults_button);
+  gtk_object_set_data_full (GTK_OBJECT (page_vbox), "defaults_button", defaults_button,
+                 	           (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (defaults_button);
+  gtk_container_add (GTK_CONTAINER (vbuttonbox1), defaults_button);
+  GTK_WIDGET_SET_FLAGS (defaults_button, GTK_CAN_DEFAULT);
+
   gtk_object_set_user_data (GTK_OBJECT (add_button), (gpointer) type);
   gtk_signal_connect (GTK_OBJECT (add_button), "clicked",
                       GTK_SIGNAL_FUNC (add_custom_args_callback),
@@ -2250,6 +2314,11 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_object_set_user_data (GTK_OBJECT (replace_button), (gpointer) type);
   gtk_signal_connect (GTK_OBJECT (replace_button), "clicked",
                       GTK_SIGNAL_FUNC (replace_custom_args_callback),
+                      (gpointer) arguments_clist);
+
+  gtk_object_set_user_data (GTK_OBJECT (defaults_button), (gpointer) type);
+  gtk_signal_connect (GTK_OBJECT (defaults_button), "clicked",
+                      GTK_SIGNAL_FUNC (add_custom_args_defaults),
                       (gpointer) arguments_clist);
 
   // Populate clist with custom_args from g_slist
@@ -2542,12 +2611,13 @@ static GtkWidget *q3_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), vmfixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (vmfixbutton);
 
+#if 0
 	rafixbutton = gtk_check_button_new_with_label (_("Rocketarena fix"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton),
 		str2bool(game_get_attribute(Q3_SERVER,"rafix")));
 	gtk_box_pack_start (GTK_BOX (page_vbox), rafixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (rafixbutton);
-
+#endif
 	setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (setfs_gamebutton),
 		str2bool(game_get_attribute(Q3_SERVER,"setfs_game")));
@@ -3971,48 +4041,6 @@ void preferences_dialog (int page_num) {
   }
 }
 
-// Used by user_fix_defaults to add a custom arg
-static void add_custom_args_defaults (char *str, enum server_type type) {
-  int isdefault = FALSE;
-  char *str2;
-  char *tempstr[2];
-  char str3[256];
-  char conf[64];
-  int j;
-  GSList *templist = NULL;
-
-  g_snprintf (str3, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
-  config_push_prefix (str3);
-
-  // Load up existing custom arguments in temp.  Used to ensure we don't add duplicates
-  j = 0;
-  g_snprintf (conf, 64, "custom_arg%d", j);
-  str2 = config_get_string_with_default (conf,&isdefault);
-  while (!isdefault)
-  {
-    templist = g_slist_append(templist, str2);
-    
-    j++;
-    g_snprintf (conf, 64, "custom_arg%d", j);
-    str2 = config_get_string_with_default (conf,&isdefault);
-  }
-  
-  // Tokenize so we can check the 'game'
-  tokenize (g_strdup(str), tempstr, 2, ",");
-
-  // Make sure we don't already have that game in the config before adding
-  if (tempstr[0] && tempstr[1]) {
-    if (g_slist_find_custom (templist, tempstr[0], custom_args_compare_func) == NULL ) {
-      g_snprintf (conf, 15, "custom_arg%d", j);
-      config_set_string (conf, str);
-      debug(2, "adding: %s=%s for server type: %d\n",conf, str, type);
-    }
-  }
-  config_pop_prefix ();
-
-  if (templist)
-    g_slist_free(templist);
-}
 
 // set some defaults when xqf is called the first time
 static void user_fix_defaults (void)
@@ -4043,10 +4071,6 @@ static void user_fix_defaults (void)
 	
     }
     
-    // Add default custom arguments
-    add_custom_args_defaults("s_SWATGame, -ini=TacticalOps.ini",UN_SERVER);
-    add_custom_args_defaults("sfteamdm, -ini=StrikeForce.ini -userini=SFUser.ini",UN_SERVER);
-
     if (j) {
       config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
       debug(2,"%d games found, set 'show only configured games' to true", j);
@@ -4159,7 +4183,7 @@ int prefs_load (void) {
   }
   game_set_attribute(Q3_SERVER,"masterprotocol",tmp);
   game_set_attribute(Q3_SERVER,"vmfix",config_get_string ("vmfix=true"));
-  game_set_attribute(Q3_SERVER,"rafix",config_get_string ("rafix=true"));
+//  game_set_attribute(Q3_SERVER,"rafix",config_get_string ("rafix=true"));
   game_set_attribute(Q3_SERVER,"setfs_game",config_get_string ("setfs_game=true"));
   game_set_attribute(Q3_SERVER,"set_punkbuster",config_get_string ("set_punkbuster=true"));
   
