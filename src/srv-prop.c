@@ -60,7 +60,7 @@ static void props_free (struct server_props *p) {
     if (p->server_password) g_free (p->server_password);
     if (p->spectator_password) g_free (p->spectator_password);
     if (p->rcon_password) g_free (p->rcon_password);
-    if (p->slots_free) g_free (p->slots_free);
+
     host_unref (p->host);
     g_free (p);
   }
@@ -110,7 +110,7 @@ struct server_props *properties_new (struct host *host, unsigned short port) {
   p->server_password = NULL;
   p->spectator_password = NULL;
   p->rcon_password = NULL;
-  p->slots_free =NULL;
+  p->reserved_slots =0;
 
   props_list = g_slist_append (props_list, p);
 
@@ -142,7 +142,7 @@ void props_save (void) {
   for (list = props_list; list; list = list->next) {
     p = (struct server_props *) list->data;
 
-    if (p->custom_cfg || p->server_password || p->spectator_password || p->rcon_password || p->slots_free) {
+    if (p->custom_cfg || p->server_password || p->spectator_password || p->rcon_password || p->reserved_slots) {
       fprintf (f, "[%s:%d]\n", inet_ntoa (p->host->ip), p->port);
 
       if (p->custom_cfg)
@@ -153,8 +153,8 @@ void props_save (void) {
 	fprintf (f, "spectator_password %s\n", p->spectator_password);
       if (p->rcon_password)
 	fprintf (f, "rcon_password %s\n", p->rcon_password);
-      if (p->slots_free)
-      fprintf (f, "slots_free %s\n", p->slots_free);
+      if (p->reserved_slots)
+      fprintf (f, "reserved_slots %d\n", p->reserved_slots);
 
       fprintf (f, "\n");
     }
@@ -173,6 +173,7 @@ void props_load (void) {
   unsigned short port;
   char buf[1024];
   char *ptr;
+  char *buffer;
 
   props_free_all ();
 
@@ -241,9 +242,10 @@ void props_load (void) {
 	if (p->rcon_password) g_free (p->rcon_password);
 	p->rcon_password = strdup_strip (ptr);
       }
-      else if (strcmp (buf, "slots_free") == 0) {
-	if (p->slots_free) g_free (p->slots_free);
-	p->slots_free = strdup_strip (ptr);
+      else if (strcmp (buf, "reserved_slots") == 0) {
+
+	buffer=strdup_strip (ptr);
+	p->reserved_slots= *buffer - 48;
       }
     }
   }
@@ -258,10 +260,9 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
   char *srvpwd;
   char *spectpwd;
   char *rconpwd;
-  char *sfree; /*pulp*/
-  char *sfree2;
+  int   reserved;
 
-  char slot_buffer[2];
+
 
   customcfg = strdup_strip ( gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry)));
 
@@ -270,29 +271,13 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
   rconpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (rcon_entry)));
 	
   /*pulp*/
-  slot_buffer[0]=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner))+48;
-  slot_buffer[1]='\0';
-
-  if (slot_buffer[0]==48){
-      sfree2=NULL;
-  }
-
-  else {
-
-  sfree2=&slot_buffer[0];
-
-  }
-
-
-  sfree = strdup_strip (sfree2);
+  reserved=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
   
 
-
-  
   props = properties (s);
 
   if (props) {
-    if (customcfg || srvpwd || spectpwd || rconpwd || sfree) {
+    if (customcfg || srvpwd || spectpwd || rconpwd || reserved) {
       if (props->custom_cfg) g_free (props->custom_cfg);
       props->custom_cfg = customcfg;
 
@@ -305,8 +290,7 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
       if (props->rcon_password) g_free (props->rcon_password);
       props->rcon_password = rconpwd;
       
-      if (props->slots_free) g_free (props->slots_free);
-      props->slots_free = sfree;
+      props->reserved_slots = reserved;
     }
     else {
       props_list = g_slist_remove (props_list, props);
@@ -314,13 +298,13 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
     }
   }
   else {
-    if (customcfg || srvpwd || spectpwd || rconpwd || sfree) {
+    if (customcfg || srvpwd || spectpwd || rconpwd || reserved) {
       props = properties_new (s->host, s->port);
       props->custom_cfg = customcfg;
       props->server_password = srvpwd;
       props->spectator_password = spectpwd;
       props->rcon_password = rconpwd;
-      props->slots_free=sfree;
+      props->reserved_slots=reserved;
     }
   }
 
@@ -344,8 +328,9 @@ static GtkWidget *server_info_page (struct server *s) {
   GList *cfgs;
   char *time_str;
   char *tmp;
-  char buffer[2]; /*pulp*/
-  int slots;
+  int slots_buffer;
+
+  
 
   props = properties (s);
 
@@ -416,28 +401,32 @@ static GtkWidget *server_info_page (struct server *s) {
   
   /*pulp*/ /*Reserved Slots spin widget*/
 
+
+   if (props) {
+  	  if (props->reserved_slots) {
+
+
+		slots_buffer=props->reserved_slots;
+    	  }
+
+    	  else {
+    		slots_buffer=0;
+    	  }
+    }
+
+    else {
+    slots_buffer=0;
+    }
+
+
+
   label = gtk_label_new (_("Reserved Slots:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 3, 4);
   gtk_widget_show (label);
 
-  if (props)  {
 
-  	if (props->slots_free)	{
-		strcpy(buffer,props->slots_free);
-		slots=((int) buffer[0])-48;
-	}
-
-	else{
-	  slots=0;
-	}
-  }
-
-  else  {
-  	slots=0;
-  }
-
-  adj = (GtkAdjustment *) gtk_adjustment_new (slots, 0, 9, 1, 2,0);
+  adj = (GtkAdjustment *) gtk_adjustment_new (slots_buffer, 0, 9, 1, 2,0);
   spinner = gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinner), TRUE);
   gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON (spinner), GTK_UPDATE_IF_VALID);

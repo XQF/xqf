@@ -1,7 +1,8 @@
 Oct 14, 2002: Alex Burger <alex@fragit_dot_net>
-- Added reserved slots support for redial from Jochen Baier.
-  Server properties page allows setting for reserved admin slots
-  for the server.
+- Updated reserved slots support to use integers (Jochen Baier)
+- Added reserved slots support for redial from Jochen Baier
+  (email@jochen-baier.de).  Server properties page allows setting 
+  for reserved admin slots for the server.
   
 Oct 13, 2002: Alex Burger <alex@fragit_dot_net>
 - Updated q3_exec to search ~/.q3a and then real game dir for
