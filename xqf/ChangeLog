@@ -1,3 +1,7 @@
+May 29, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add AlienSwarm custom arguments for UT2004, also specify separate log file
+  for each mod (patch by Andreas Schneider)
+
 May 24, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add Troopers custom arguments for UT2004 (patch by Andreas Schneider)
 
