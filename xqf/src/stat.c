@@ -486,7 +486,7 @@ void parse_saved_server (GSList *strings) {
     return;
 
   strings = strings->next;
-  debug (3, "parse_saved_server() -- ");
+  debug (6, "parse_saved_server() -- ");
   n = tokenize_bychar ((char *) strings->data, token, 16, QSTAT_DELIM);
   if (n < 3)
     return;

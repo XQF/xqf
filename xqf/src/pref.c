@@ -47,8 +47,11 @@
 
 char 	*user_rcdir = NULL;
 
-char 	*default_name = NULL;
-char 	*default_team = NULL;
+char 	*default_q1_name = NULL;
+char 	*default_qw_name = NULL;
+char 	*default_q2_name = NULL;
+char 	*default_t2_name = NULL;
+char 	*default_qw_team = NULL;
 char 	*default_qw_skin = NULL;
 char 	*default_q2_skin = NULL;
 int 	default_q1_top_color = 0;
@@ -56,11 +59,15 @@ int 	default_q1_bottom_color = 0;
 int 	default_qw_top_color = 0;
 int 	default_qw_bottom_color = 0;
 
-int 	default_rate;
-int 	default_cl_nodelta;
-int 	default_cl_predict;
+int 	default_qw_rate;
+int 	default_q2_rate;
+int 	default_qw_cl_nodelta;
+int 	default_q2_cl_nodelta;
+int 	default_qw_cl_predict;
+int 	default_q2_cl_predict;
 int 	default_noaim;
-int 	default_noskins;
+int 	default_qw_noskins;
+int 	default_q2_noskins;
 int 	default_b_switch;
 int 	default_w_switch;
 
@@ -98,22 +105,26 @@ static	int pref_qw_top_color;
 static	int pref_qw_bottom_color;
 static	int pref_b_switch;
 static	int pref_w_switch;
-static	int pref_noskins;
+static	int pref_qw_noskins;
+static	int pref_q2_noskins;
 static	char *pref_qw_skin;
 static	char *pref_q2_skin;
 
 static  GtkWidget *profile_notebook;
 static  GtkWidget *games_notebook;
 
-static  GtkWidget *rate_spinner;
-static  GtkWidget *cl_nodelta_check_button;
-static  GtkWidget *cl_predict_check_button;
+static  GtkWidget *rate_spinner[2];
+static  GtkWidget *cl_nodelta_check_button[2];
+static  GtkWidget *cl_predict_check_button[2];
 static  GtkWidget *noaim_check_button;
 static  GtkWidget *pushlat_check_button;
 static  GtkWidget *nosound_check_button;
 static  GtkWidget *nocdaudio_check_button;
-static  GtkWidget *name_entry;
-static  GtkWidget *team_entry;
+static  GtkWidget *name_q1_entry;
+static  GtkWidget *name_qw_entry;
+static  GtkWidget *name_q2_entry;
+static  GtkWidget *name_t2_entry;
+static  GtkWidget *team_qw_entry;
 static  GtkWidget *q1_skin_preview = NULL;
 static  GtkWidget *qw_skin_preview = NULL;
 static  GtkWidget *q2_skin_preview = NULL;
@@ -173,6 +184,8 @@ struct generic_prefs {
   GtkWidget *cmd_entry;
   GtkWidget *cfg_combo;
   GtkWidget *game_button;
+  // function for adding game specific tabs to notebook
+  void (*add_options_to_notebook) (GtkWidget *notebook);
 } *genprefs = NULL;
 
 
@@ -269,18 +282,38 @@ static void get_new_defaults (void) {
   if (pref_q1_bottom_color != default_q1_bottom_color)
     config_set_int ("bottom", default_q1_bottom_color = pref_q1_bottom_color);
 
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_q1_entry)));
+  if (str == NULL ||  default_q1_name == NULL ||
+		  (default_q1_name && strcmp (str, default_q1_name))) {
+    if (default_q1_name) g_free (default_q1_name);
+    default_q1_name = str;
+    config_set_string ("player name", (str)? str : "");
+  }
+  str=NULL;
+
   config_pop_prefix ();
 
   /* QuakeWorld (some network settings are used by Q2) */
 
   config_push_prefix ("/" CONFIG_FILE "/Game: QWS");
 
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (team_entry)));
-  if (str == NULL || (default_team && strcmp (str, default_team))) {
-    if (default_team) g_free (default_team);
-    default_team = str;
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_qw_entry)));
+  if (str == NULL ||  default_qw_name == NULL ||
+		  (default_qw_name && strcmp (str, default_qw_name))) {
+    if (default_qw_name) g_free (default_qw_name);
+    default_qw_name = str;
+    config_set_string ("player name", (str)? str : "");
+  }
+  str=NULL;
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (team_qw_entry)));
+  if (str == NULL || default_qw_team == NULL ||
+		  (default_qw_team && strcmp (str, default_qw_team))) {
+    if (default_qw_team) g_free (default_qw_team);
+    default_qw_team = str;
     config_set_string ("team", (str)? str : "");
   }
+  str=NULL;
 
   if (pref_qw_top_color != default_qw_top_color)
     config_set_int ("top", default_qw_top_color = pref_qw_top_color);
@@ -296,17 +329,20 @@ static void get_new_defaults (void) {
   }
   pref_qw_skin = NULL;
 
-  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (rate_spinner));
-  if (i != default_rate)
-    config_set_int ("rate", default_rate = i);
+  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (rate_spinner[0]));
+  if (i != default_qw_rate)
+    config_set_int ("rate", default_qw_rate = i);
 
-  i = GTK_TOGGLE_BUTTON (cl_nodelta_check_button)->active;
-  if (i != default_cl_nodelta)
-    config_set_int ("cl_nodelta", default_cl_nodelta = i);
+  i = GTK_TOGGLE_BUTTON (cl_nodelta_check_button[0])->active;
+  if (i != default_qw_cl_nodelta)
+    config_set_int ("cl_nodelta", default_qw_cl_nodelta = i);
 
-  i = 1 - GTK_TOGGLE_BUTTON (cl_predict_check_button)->active;
-  if (i != default_cl_predict)
-    config_set_int ("cl_predict", default_cl_predict = i);
+  i = 1 - GTK_TOGGLE_BUTTON (cl_predict_check_button[0])->active;
+  if (i != default_qw_cl_predict)
+    config_set_int ("cl_predict", default_qw_cl_predict = i);
+
+  if (pref_qw_noskins != default_qw_noskins)
+    config_set_int ("noskins", default_qw_noskins = pref_qw_noskins);
 
   i = GTK_TOGGLE_BUTTON (noaim_check_button)->active;
   if (i != default_noaim)
@@ -331,9 +367,6 @@ static void get_new_defaults (void) {
   if (pref_w_switch != default_w_switch)
     config_set_int ("w_switch", default_w_switch = pref_w_switch);
 
-  if (pref_noskins != default_noskins)
-    config_set_int ("noskins", default_noskins = pref_noskins);
-
   config_pop_prefix ();
 
   /* Quake2 */
@@ -347,6 +380,30 @@ static void get_new_defaults (void) {
     config_set_string ("skin", (pref_q2_skin)? pref_q2_skin : "");
   }
   pref_q2_skin = NULL;
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_q2_entry)));
+  if (str == NULL || default_q2_name == NULL ||
+		  (default_q2_name && strcmp (str, default_q2_name))) {
+    if (default_q2_name) g_free (default_q2_name);
+    default_q2_name = str;
+    config_set_string ("player name", (str)? str : "");
+  }
+  str=NULL;
+
+  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (rate_spinner[1]));
+  if (i != default_q2_rate)
+    config_set_int ("rate", default_q2_rate = i);
+
+  i = GTK_TOGGLE_BUTTON (cl_nodelta_check_button[1])->active;
+  if (i != default_q2_cl_nodelta)
+    config_set_int ("cl_nodelta", default_q2_cl_nodelta = i);
+
+  i = 1 - GTK_TOGGLE_BUTTON (cl_predict_check_button[1])->active;
+  if (i != default_q2_cl_predict)
+    config_set_int ("cl_predict", default_q2_cl_predict = i);
+
+  if (pref_q2_noskins != default_q2_noskins)
+    config_set_int ("noskins", default_q2_noskins = pref_q2_noskins);
 
   config_pop_prefix ();
 
@@ -388,16 +445,24 @@ static void get_new_defaults (void) {
 
   config_pop_prefix ();
 
+  /* Tribes 2 */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: T2S");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_t2_entry)));
+  if (str == NULL || default_t2_name == NULL ||
+		  (default_t2_name && strcmp (str, default_t2_name))) {
+    if (default_t2_name) g_free (default_t2_name);
+    default_t2_name = str;
+    config_set_string ("player name", (str)? str : "");
+  }
+  str=NULL;
+
+  config_pop_prefix ();
+
   /* Common part of games config */
 
   config_push_prefix ("/" CONFIG_FILE "/Games Config");
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (name_entry)));
-  if (str == NULL || (default_name && strcmp (str, default_name))) {
-    if (default_name) g_free (default_name);
-    default_name = str;
-    config_set_string ("player name", (str)? str : "");
-  }
 
   i = GTK_TOGGLE_BUTTON (nosound_check_button)->active;
   if (i != default_nosound)
@@ -501,8 +566,8 @@ static void get_new_defaults (void) {
 		  GTK_CHECK_MENU_ITEM (view_defport_menu_item),
                   GTK_TOGGLE_BUTTON (show_defport_check_button)->active);
 
-  i = gtk_notebook_get_current_page (GTK_NOTEBOOK (profile_notebook));
-  config_set_string ("/" CONFIG_FILE "/Player Profile/game", type2id (i));
+//  i = gtk_notebook_get_current_page (GTK_NOTEBOOK (profile_notebook));
+//  config_set_string ("/" CONFIG_FILE "/Player Profile/game", type2id (i));
 
   i = gtk_notebook_get_current_page (GTK_NOTEBOOK (games_notebook));
   config_set_string ("/" CONFIG_FILE "/Games Config/game", type2id (i));
@@ -511,28 +576,6 @@ static void get_new_defaults (void) {
   rc_save ();
 }
 
-
-static void set_pref_defaults (void) {
-  int i;
-
-  pref_q1_top_color    = default_q1_top_color;
-  pref_q1_bottom_color = default_q1_bottom_color;
-
-  pref_qw_top_color    = default_qw_top_color;
-  pref_qw_bottom_color = default_qw_bottom_color;
-
-  pref_b_switch     = default_b_switch;
-  pref_w_switch     = default_w_switch;
-  pref_noskins      = default_noskins;
-
-  pref_qw_skin      = g_strdup (default_qw_skin);
-  pref_q2_skin      = g_strdup (default_q2_skin);
-
-  for (i = 0; i < GAMES_TOTAL; i++) {
-    genprefs[i].pref_dir = g_strdup (games[i].dir);
-    genprefs[i].real_dir = g_strdup (games[i].real_dir);
-  }
-}
 
 
 static void update_q1_skin (void) {
@@ -1079,9 +1122,36 @@ static GtkWidget *player_profile_q1_page (void) {
   GtkWidget *alignment;
   GtkWidget *frame;
   GtkWidget *q1_skin;
+  GtkWidget *hbox;
+  GtkWidget *hbox2;
+  GtkWidget *label;
 
   page_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 6);
+
+  hbox = gtk_hbox_new (TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+  // Player Name
+
+  hbox2 = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
+
+  label = gtk_label_new (_("Name"));
+  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  name_q1_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (name_q1_entry, 96, -1);
+  if (default_q1_name) {
+    gtk_entry_set_text (GTK_ENTRY (name_q1_entry), default_q1_name);
+    gtk_entry_set_position (GTK_ENTRY (name_q1_entry), 0);
+  }
+  gtk_box_pack_start (GTK_BOX (hbox2), name_q1_entry, FALSE, FALSE, 0);
+  gtk_widget_show (name_q1_entry);
+  gtk_widget_show (hbox2);
+
+  // /Player Name
 
   /* Q1 Colors */
 
@@ -1098,11 +1168,50 @@ static GtkWidget *player_profile_q1_page (void) {
   gtk_widget_show (frame);
   gtk_widget_show (alignment);
 
+  gtk_widget_show (hbox);
   gtk_widget_show (page_vbox);
 
   return page_vbox;
 }
 
+static GtkWidget *player_profile_t2_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *hbox2;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 8);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 6);
+
+  hbox = gtk_hbox_new (TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+  // Player Name
+
+  hbox2 = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
+
+  label = gtk_label_new (_("Login name"));
+  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  name_t2_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (name_t2_entry, 96, -1);
+  if (default_t2_name) {
+    gtk_entry_set_text (GTK_ENTRY (name_t2_entry), default_t2_name);
+    gtk_entry_set_position (GTK_ENTRY (name_t2_entry), 0);
+  }
+  gtk_box_pack_start (GTK_BOX (hbox2), name_t2_entry, FALSE, FALSE, 0);
+  gtk_widget_show (name_t2_entry);
+  gtk_widget_show (hbox2);
+
+  // /Player Name
+
+  gtk_widget_show (hbox);
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
 
 static GtkWidget *player_profile_qw_page (void) {
   GtkWidget *page_vbox;
@@ -1110,10 +1219,14 @@ static GtkWidget *player_profile_qw_page (void) {
   GtkWidget *frame;
   GtkWidget *qw_skin;
   GtkWidget *hbox;
+  GtkWidget *hbox2;
   GtkWidget *label;
 
   page_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 6);
+
+  hbox = gtk_hbox_new (TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
   /* QW Skin */
 
@@ -1130,24 +1243,47 @@ static GtkWidget *player_profile_qw_page (void) {
   gtk_widget_show (frame);
   gtk_widget_show (alignment);
 
-  /* QW Team */
+  // Player Name
 
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 4);
+  hbox2 = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
 
-  label = gtk_label_new (_("Team"));
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  label = gtk_label_new (_("Name"));
+  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
-  team_entry = gtk_entry_new_with_max_length (32);
-  gtk_widget_set_usize (team_entry, 96, -1);
-  if (default_team) {
-    gtk_entry_set_text (GTK_ENTRY (team_entry), default_team);
-    gtk_entry_set_position (GTK_ENTRY (team_entry), 0);
+  name_qw_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (name_qw_entry, 96, -1);
+  if (default_qw_name) {
+    gtk_entry_set_text (GTK_ENTRY (name_qw_entry), default_qw_name);
+    gtk_entry_set_position (GTK_ENTRY (name_qw_entry), 0);
   }
-  gtk_box_pack_start (GTK_BOX (hbox), team_entry, FALSE, FALSE, 0);
-  gtk_widget_show (team_entry);
+  gtk_box_pack_start (GTK_BOX (hbox2), name_qw_entry, FALSE, FALSE, 0);
+  gtk_widget_show (name_qw_entry);
+  gtk_widget_show (hbox2);
 
+  // /Player Name
+
+  /* QW Team */
+
+  hbox2 = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 4);
+
+  label = gtk_label_new (_("Team"));
+  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  team_qw_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (team_qw_entry, 96, -1);
+  if (default_qw_team) {
+    gtk_entry_set_text (GTK_ENTRY (team_qw_entry), default_qw_team);
+    gtk_entry_set_position (GTK_ENTRY (team_qw_entry), 0);
+  }
+  gtk_box_pack_start (GTK_BOX (hbox2), team_qw_entry, FALSE, FALSE, 0);
+  gtk_widget_show (team_qw_entry);
+
+  gtk_widget_show (hbox2);
+  
   gtk_widget_show (hbox);
 
   gtk_widget_show (page_vbox);
@@ -1161,9 +1297,32 @@ static GtkWidget *player_profile_q2_page (void) {
   GtkWidget *alignment;
   GtkWidget *frame;
   GtkWidget *q2_skin;
+  GtkWidget *label;
+  GtkWidget *hbox;
 
   page_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+  // Player Name
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+  label = gtk_label_new (_("Name"));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  name_q2_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (name_q2_entry, 96, -1);
+  if (default_q2_name) {
+    gtk_entry_set_text (GTK_ENTRY (name_q2_entry), default_q2_name);
+    gtk_entry_set_position (GTK_ENTRY (name_q2_entry), 0);
+  }
+  gtk_box_pack_start (GTK_BOX (hbox), name_q2_entry, FALSE, FALSE, 0);
+  gtk_widget_show (name_q2_entry);
+  gtk_widget_show (hbox);
+
+  // /Player Name
 
   alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
   gtk_box_pack_start (GTK_BOX (page_vbox), alignment, FALSE, FALSE, 0);
@@ -1183,7 +1342,7 @@ static GtkWidget *player_profile_q2_page (void) {
   return page_vbox;
 }
 
-
+#if 0
 static GtkWidget *player_profile_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *page;
@@ -1251,6 +1410,7 @@ static GtkWidget *player_profile_page (void) {
 
   return page_vbox;
 }
+#endif
 
 
 static char *wb_switch_labels[9] = {
@@ -1295,32 +1455,36 @@ static GtkWidget *create_wb_switch_menu (void (*callback) (GtkWidget *, int)) {
 }
 
 
-static void noskins_option_menu_callback (GtkWidget *widget, int i) {
-  pref_noskins = i;
+static void qw_noskins_option_menu_callback (GtkWidget *widget, int i) {
+  pref_qw_noskins = i;
 }
 
+static void q2_noskins_option_menu_callback (GtkWidget *widget, int i) {
+  pref_q2_noskins = i;
+}
 
-static GtkWidget *create_noskins_menu (void) {
+static GtkWidget *create_noskins_menu (int qworq2) {
   GtkWidget *menu;
   GtkWidget *menu_item;
+  void (*callback)=qworq2?q2_noskins_option_menu_callback:qw_noskins_option_menu_callback;
 
   menu = gtk_menu_new ();
 
   menu_item = gtk_menu_item_new_with_label (_("Use skins"));
   gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                 GTK_SIGNAL_FUNC (noskins_option_menu_callback), (gpointer) 0);
+                 GTK_SIGNAL_FUNC (callback), (gpointer) 0);
   gtk_menu_append (GTK_MENU (menu), menu_item);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_menu_item_new_with_label (_("Don\'t use skins"));
   gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                 GTK_SIGNAL_FUNC (noskins_option_menu_callback), (gpointer) 1);
+                 GTK_SIGNAL_FUNC (callback), (gpointer) 1);
   gtk_menu_append (GTK_MENU (menu), menu_item);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_menu_item_new_with_label (_("Don\'t download new skins"));
   gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                 GTK_SIGNAL_FUNC (noskins_option_menu_callback), (gpointer) 2);
+                 GTK_SIGNAL_FUNC (callback), (gpointer) 2);
   gtk_menu_append (GTK_MENU (menu), menu_item);
   gtk_widget_show (menu_item);
 
@@ -1331,27 +1495,53 @@ static GtkWidget *create_noskins_menu (void) {
 static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *frame;
   GtkWidget *vbox;
+  GtkWidget *page_vbox;
   GtkWidget *table;
   GtkWidget *label;
+  GtkWidget *notebook;
   struct generic_prefs *prefs = &genprefs[type];
 
-  frame = gtk_frame_new (games[type].name);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+//  frame = gtk_frame_new (games[type].name);
+//  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+  
+  page_vbox = gtk_vbox_new (FALSE, 4);
+
+  frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_OUT);
+    label = gtk_label_new (games[type].name);
+    gtk_container_add (GTK_CONTAINER (frame), label);
+    gtk_widget_show (label);
+
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+  gtk_widget_show (frame);
+
+  notebook = gtk_notebook_new ();
 
   vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+  label = gtk_label_new (_("Invoking"));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox, label);
+  gtk_widget_show (label);
+
+  gtk_box_pack_start (GTK_BOX (page_vbox), notebook, TRUE, TRUE, 0);
 
   if ((games[type].flags & GAME_CONNECT) == 0) {
-    label = gtk_label_new ("*** Not Implemented ***");
+    label = gtk_label_new (_("*** Not Implemented ***"));
     gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
     gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
     gtk_widget_show (label);
 
     gtk_widget_show (vbox);
-    gtk_widget_show (frame);
-    return frame;
+    gtk_widget_show (notebook);
+    gtk_widget_show (page_vbox);
+    return page_vbox;
   }
+
+  // call game specific function to add its options
+  if(genprefs[type].add_options_to_notebook)
+    genprefs[type].add_options_to_notebook(notebook);
+    
 
   table = gtk_table_new ((games[type].custom_cfgs)? 3 : 2, 2, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
@@ -1419,9 +1609,13 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   gtk_widget_show (table);
 
   gtk_widget_show (vbox);
-  gtk_widget_show (frame);
 
-  return frame;
+  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), 0);
+
+  gtk_widget_show (notebook);
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
 }
 
 //#define GAMES_RADIOS
@@ -1458,20 +1652,19 @@ static GtkWidget *games_config_page (int defgame) {
   GSList *group = NULL;
 #elif defined GAMES_LIST
   GtkWidget *gtklist=NULL;
-  GtkWidget *page_hbox;
+  GtkWidget *games_hbox;
 #endif
   char *typestr;
   int i;
 
-#ifdef GAMES_LIST
-  page_hbox = gtk_hbox_new (FALSE, 0);
   page_vbox = gtk_vbox_new (FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
-  gtk_box_pack_end (GTK_BOX (page_hbox), page_vbox, TRUE, TRUE, 20);
-#else
-  page_vbox = gtk_vbox_new (FALSE, 0);
-#endif
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+#ifdef GAMES_LIST
+  games_hbox = gtk_hbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
+#endif
 
 #ifdef GAMES_RADIOS
   table = gtk_table_new (GAMES_COLS, GAMES_ROWS, FALSE);
@@ -1517,14 +1710,18 @@ static GtkWidget *games_config_page (int defgame) {
 
   gtk_widget_show(gtklist);
   gtk_container_add (GTK_CONTAINER (frame), gtklist);
-  gtk_box_pack_start (GTK_BOX (page_hbox), frame, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (games_hbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 #endif
 
   games_notebook = gtk_notebook_new ();
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (games_notebook), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (games_notebook), FALSE);
+#if defined GAMES_RADIOS
   gtk_box_pack_start (GTK_BOX (page_vbox), games_notebook, FALSE, FALSE, 0);
+#elif defined GAMES_LIST
+  gtk_box_pack_start (GTK_BOX (games_hbox), games_notebook, FALSE, FALSE, 15);
+#endif
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     page = generic_game_frame (i);
@@ -1559,7 +1756,7 @@ static GtkWidget *games_config_page (int defgame) {
 
   frame = gtk_frame_new (_("Common Options"));
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 20);
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 15);
 
   hbox = gtk_hbox_new (TRUE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
@@ -1588,12 +1785,10 @@ static GtkWidget *games_config_page (int defgame) {
   gtk_widget_show (page_vbox);
 
 #ifdef GAMES_LIST
-  gtk_widget_show (page_hbox);
-
-  return page_hbox;
-#else
-  return page_vbox;
+  gtk_widget_show (games_hbox);
 #endif
+
+  return page_vbox;
 }
 
 
@@ -1642,23 +1837,14 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 static GtkWidget *q3_options_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *frame;
-  GtkWidget *vbox;
   GtkWidget *hbox;
   GtkWidget *label;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-    frame = gtk_frame_new (games[Q3_SERVER].name);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-    gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-
-      vbox = gtk_vbox_new (FALSE, 4);
-      gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-      gtk_container_add (GTK_CONTAINER (frame), vbox);
-
 	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
 	  label = gtk_label_new (_("Masterserver Protocol Version"));
 	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -1675,33 +1861,37 @@ static GtkWidget *q3_options_page (void) {
 
 	vmfixbutton = gtk_check_button_new_with_label (_("vm_cgame fix"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton), q3_opts.vmfix);
-	gtk_box_pack_start (GTK_BOX (vbox), vmfixbutton, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), vmfixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (vmfixbutton);
 
 	rafixbutton = gtk_check_button_new_with_label (_("Rocketarena fix"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton), q3_opts.rafix);
-	gtk_box_pack_start (GTK_BOX (vbox), rafixbutton, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), rafixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (rafixbutton);
 
 	setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (setfs_gamebutton),
 							q3_opts.setfs_game);
-	gtk_box_pack_start (GTK_BOX (vbox), setfs_gamebutton, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (setfs_gamebutton);
 
-      gtk_widget_show (vbox);
-    gtk_widget_show (frame);
+  gtk_widget_show (page_vbox);
 
-    frame = gtk_frame_new (games[WO_SERVER].name);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-    gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+  return page_vbox;
+}
 
-      vbox = gtk_vbox_new (FALSE, 4);
-      gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-      gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+static GtkWidget *wolf_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *frame;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
 	  label = gtk_label_new (_("Masterserver Protocol Version"));
 	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -1719,47 +1909,47 @@ static GtkWidget *q3_options_page (void) {
 	wo_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (wo_setfs_gamebutton),
 							wo_opts.setfs_game);
-	gtk_box_pack_start (GTK_BOX (vbox), wo_setfs_gamebutton, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), wo_setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (wo_setfs_gamebutton);
 
-      gtk_widget_show (vbox);
-    gtk_widget_show (frame);
   gtk_widget_show (page_vbox);
 
   return page_vbox;
 }
 
-static GtkWidget *qw_q2_options_page (void) {
+void add_q3_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_wolf_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), wolf_options_page(), gtk_label_new (_("Options")));
+}
+
+static GtkWidget *qw_options_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *label;
-  GtkWidget *frame;
   GtkWidget *frame2;
   GtkWidget *hbox;
   GtkWidget *hbox2;
-  GtkWidget *vbox;
   GtkWidget *vbox2;
   GtkWidget *option_menu;
   GtkObject *adj;
-  char buf[64];
+
+  debug (5, "qw_options_page()");
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
   /* QW Specific Features */
 
-  frame = gtk_frame_new (games[QW_SERVER].name);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-
-  vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
 
   /* 'w_switch' & 'b_switch' control */
 
   frame2 = gtk_frame_new (_("The highest weapon that Quake should "
 			    "switch to..."));
-  gtk_box_pack_start (GTK_BOX (vbox), frame2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame2, FALSE, FALSE, 0);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
@@ -1803,24 +1993,10 @@ static GtkWidget *qw_q2_options_page (void) {
   gtk_widget_show (vbox2);
   gtk_widget_show (frame2);
 
-  /* 'pushlatency' */
-
-  frame2 = gtk_frame_new (_("pushlatency"));
-  gtk_box_pack_start (GTK_BOX (vbox), frame2, FALSE, FALSE, 0);
-
-  vbox2 = gtk_vbox_new (FALSE, 2);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
-  gtk_container_add (GTK_CONTAINER (frame2), vbox2);
-
-  add_pushlatency_options (vbox2);
-
-  gtk_widget_show (vbox2);
-  gtk_widget_show (frame2);
-
   /* 'noaim' */
 
   hbox = gtk_hbox_new (FALSE, 8);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 10);
 
   noaim_check_button = 
                    gtk_check_button_new_with_label (_("Disable auto-aiming"));
@@ -1831,23 +2007,30 @@ static GtkWidget *qw_q2_options_page (void) {
 
   gtk_widget_show (hbox);
 
-  gtk_widget_show (vbox);
-  gtk_widget_show (frame);
+  gtk_widget_show (page_vbox);
 
-  /* Network Options */
+  return page_vbox;
 
-  g_snprintf (buf, 64, "%s/%s", games[QW_SERVER].name, games[Q2_SERVER].name);
+}
 
-  frame = gtk_frame_new (buf);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+// qworq2: 0=qw/1=q2
+static GtkWidget *qw_q2_options_page (int qworq2) {
+  GtkWidget *page_vbox;
+  GtkWidget *label;
+  GtkWidget *frame2;
+  GtkWidget *hbox;
+  GtkWidget *hbox2;
+  GtkWidget *vbox2;
+  GtkWidget *option_menu;
+  GtkObject *adj;
 
-  vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  debug (5, "qw_q2_options_page(%d)",qworq2);
+  
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
   hbox = gtk_hbox_new (FALSE, 16);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
   /* Skins */
 
@@ -1861,12 +2044,15 @@ static GtkWidget *qw_q2_options_page (void) {
 
   option_menu = gtk_option_menu_new ();
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
-                                                       create_noskins_menu ());
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), pref_noskins);
+					       create_noskins_menu (qworq2));
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu),
+				  qworq2?pref_q2_noskins:pref_qw_noskins);
   gtk_box_pack_end (GTK_BOX (hbox2), option_menu, FALSE, FALSE, 0);
   gtk_widget_show (option_menu);
 
   gtk_widget_show (hbox2);
+
+  /* Network Options */
 
   /* Rate */
 
@@ -1878,23 +2064,42 @@ static GtkWidget *qw_q2_options_page (void) {
   gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
-  adj = gtk_adjustment_new (default_rate, 0.0, 25000.0, 500.0, 1000.0, 0.0);
+  adj = gtk_adjustment_new (qworq2?default_q2_rate:default_qw_rate,
+		  0.0, 25000.0, 500.0, 1000.0, 0.0);
 
-  rate_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
-  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (rate_spinner), 
+  rate_spinner[qworq2] = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
+  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (rate_spinner[qworq2]), 
                                                             GTK_UPDATE_ALWAYS);
-  gtk_widget_set_usize (rate_spinner, 64, -1);
-  gtk_box_pack_end (GTK_BOX (hbox2), rate_spinner, FALSE, FALSE, 0);
-  gtk_widget_show (rate_spinner);
+  gtk_widget_set_usize (rate_spinner[qworq2], 64, -1);
+  gtk_box_pack_end (GTK_BOX (hbox2), rate_spinner[qworq2], FALSE, FALSE, 0);
+  gtk_widget_show (rate_spinner[qworq2]);
 
   gtk_widget_show (hbox2);
 
   gtk_widget_show (hbox);
 
+  /* QW Specific Features */
+  if(qworq2 == 0)
+  {
+    /* 'pushlatency' */
+
+    frame2 = gtk_frame_new (_("pushlatency"));
+    gtk_box_pack_start (GTK_BOX (page_vbox), frame2, FALSE, FALSE, 10);
+
+    vbox2 = gtk_vbox_new (FALSE, 2);
+    gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
+    gtk_container_add (GTK_CONTAINER (frame2), vbox2);
+
+    add_pushlatency_options (vbox2);
+
+    gtk_widget_show (vbox2);
+    gtk_widget_show (frame2);
+  }
+
   /* Troubleshooting */
 
   frame2 = gtk_frame_new (_("Troubleshooting"));
-  gtk_box_pack_start (GTK_BOX (vbox), frame2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame2, FALSE, FALSE, 10);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
@@ -1905,12 +2110,12 @@ static GtkWidget *qw_q2_options_page (void) {
   hbox = gtk_hbox_new (FALSE, 8);
   gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
 
-  cl_nodelta_check_button = gtk_check_button_new_with_label (
+  cl_nodelta_check_button[qworq2] = gtk_check_button_new_with_label (
                                  _("Disable delta-compression (cl_nodelta)"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cl_nodelta_check_button), 
-                                                          default_cl_nodelta);
-  gtk_box_pack_start (GTK_BOX (hbox), cl_nodelta_check_button, FALSE, FALSE, 0);
-  gtk_widget_show (cl_nodelta_check_button);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cl_nodelta_check_button[qworq2]), 
+			  qworq2?default_q2_cl_nodelta:default_qw_cl_nodelta);
+  gtk_box_pack_start (GTK_BOX (hbox), cl_nodelta_check_button[qworq2], FALSE, FALSE, 0);
+  gtk_widget_show (cl_nodelta_check_button[qworq2]);
 
   gtk_widget_show (hbox);
 
@@ -1919,26 +2124,45 @@ static GtkWidget *qw_q2_options_page (void) {
   hbox = gtk_hbox_new (FALSE, 8);
   gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
 
-  cl_predict_check_button = gtk_check_button_new_with_label (
+  cl_predict_check_button[qworq2] = gtk_check_button_new_with_label (
                   _("Disable player/entity prediction (cl_predict_players)"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cl_predict_check_button), 
-                                                      1 - default_cl_predict);
-  gtk_box_pack_start (GTK_BOX (hbox), cl_predict_check_button, FALSE, FALSE, 0);
-  gtk_widget_show (cl_predict_check_button);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cl_predict_check_button[qworq2]), 
+		      1 - (qworq2?default_q2_cl_predict:default_qw_cl_predict));
+  gtk_box_pack_start (GTK_BOX (hbox), cl_predict_check_button[qworq2], FALSE, FALSE, 0);
+  gtk_widget_show (cl_predict_check_button[qworq2]);
 
   gtk_widget_show (hbox);
 
   gtk_widget_show (vbox2);
   gtk_widget_show (frame2);
 
-  gtk_widget_show (vbox);
-  gtk_widget_show (frame);
-
   gtk_widget_show (page_vbox);
 
   return page_vbox;
 }
 
+void add_qw_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), qw_options_page(), gtk_label_new (_("Weapons")));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), qw_q2_options_page(0), gtk_label_new (_("Options")));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_qw_page(), gtk_label_new (_("Player Profile")));
+}
+
+void add_q2_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), qw_q2_options_page(1), gtk_label_new (_("Options")));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_q2_page(), gtk_label_new (_("Player Profile")));
+}
+
+void add_q1_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_q1_page(), gtk_label_new (_("Player Profile")));
+}
+
+void add_t2_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_t2_page(), gtk_label_new (_("Player Profile")));
+}
 
 static void terminate_toggled_callback (GtkWidget *widget, gpointer data) {
   int val;
@@ -2332,6 +2556,35 @@ static GtkWidget *qstat_options_page (void) {
   return page_vbox;
 }
 
+static void set_pref_defaults (void) {
+  int i;
+
+  pref_q1_top_color    = default_q1_top_color;
+  pref_q1_bottom_color = default_q1_bottom_color;
+
+  pref_qw_top_color    = default_qw_top_color;
+  pref_qw_bottom_color = default_qw_bottom_color;
+
+  pref_b_switch     = default_b_switch;
+  pref_w_switch     = default_w_switch;
+  pref_qw_noskins      = default_qw_noskins;
+  pref_q2_noskins      = default_q2_noskins;
+
+  pref_qw_skin      = g_strdup (default_qw_skin);
+  pref_q2_skin      = g_strdup (default_q2_skin);
+
+  genprefs[Q1_SERVER].add_options_to_notebook = add_q1_options_to_notebook;
+  genprefs[QW_SERVER].add_options_to_notebook = add_qw_options_to_notebook;
+  genprefs[Q2_SERVER].add_options_to_notebook = add_q2_options_to_notebook;
+  genprefs[Q3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
+  genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
+
+  for (i = 0; i < GAMES_TOTAL; i++) {
+    genprefs[i].pref_dir = g_strdup (games[i].dir);
+    genprefs[i].real_dir = g_strdup (games[i].real_dir);
+  }
+}
 
 void preferences_dialog (int page_num) {
   GtkWidget *vbox;
@@ -2379,10 +2632,12 @@ void preferences_dialog (int page_num) {
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
+/*
   page = player_profile_page ();
   label = gtk_label_new (_("Player Profile"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+*/
 
   page = games_config_page (game_num);
   label = gtk_label_new (_("Games"));
@@ -2398,17 +2653,18 @@ void preferences_dialog (int page_num) {
   label = gtk_label_new (_("QStat"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
-
+/*
   page = qw_q2_options_page ();
   label = gtk_label_new (_("QW/Q2"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
-
+*/
+/*
   page = q3_options_page ();
   label = gtk_label_new (_("Q3/RTCW"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
-
+*/
   gtk_notebook_set_page (GTK_NOTEBOOK (notebook), page_num);
 
   /* Initialize skins and custom cfgs */
@@ -2548,6 +2804,7 @@ int prefs_load (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Game: QS");
 
+  default_q1_name =              config_get_string ("player name");
   default_q1_top_color =      config_get_int ("top=0");
   default_q1_bottom_color =   config_get_int ("bottom=0");
 
@@ -2555,18 +2812,19 @@ int prefs_load (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Game: QWS");
 
-  default_team =              config_get_string ("team");
+  default_qw_name =              config_get_string ("player name");
+  default_qw_team =              config_get_string ("team");
   default_qw_skin =           config_get_string ("skin");
   default_qw_top_color =      config_get_int ("top=0");
   default_qw_bottom_color =   config_get_int ("bottom=0");
 
-  default_rate =              config_get_int ("rate=2500");
-  default_cl_nodelta =        config_get_int ("cl_nodelta=0");
-  default_cl_predict =        config_get_int ("cl_predict=1");
+  default_qw_rate =              config_get_int ("rate=2500");
+  default_qw_cl_nodelta =        config_get_int ("cl_nodelta=0");
+  default_qw_cl_predict =        config_get_int ("cl_predict=1");
+  default_qw_noskins =           config_get_int ("noskins=0");
   default_noaim =             config_get_int ("noaim=0");
   default_b_switch =          config_get_int ("b_switch=0");
   default_w_switch =          config_get_int ("w_switch=0");
-  default_noskins =           config_get_int ("noskins=0");
   pushlatency_mode =          config_get_int ("pushlatency mode=1");
   pushlatency_value =         config_get_int ("pushlatency value=-50");
 
@@ -2574,7 +2832,12 @@ int prefs_load (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Game: Q2S");
 
+  default_q2_name =              config_get_string ("player name");
   default_q2_skin =           config_get_string ("skin");
+  default_q2_rate =              config_get_int ("rate=2500");
+  default_q2_cl_nodelta =        config_get_int ("cl_nodelta=0");
+  default_q2_cl_predict =        config_get_int ("cl_predict=1");
+  default_q2_noskins =           config_get_int ("noskins=0");
 
   config_pop_prefix ();
 
@@ -2601,11 +2864,16 @@ int prefs_load (void) {
 
   config_pop_prefix ();
 
+  config_push_prefix ("/" CONFIG_FILE "/Game: T2S");
+
+  default_t2_name =              config_get_string ("player name");
+
+  config_pop_prefix ();
+
   config_push_prefix ("/" CONFIG_FILE "/Games Config");
 
   default_nosound =           config_get_bool ("nosound=false");
   default_nocdaudio =         config_get_bool ("nocdaudio=false");
-  default_name =              config_get_string ("player name");
 
   config_pop_prefix ();
 

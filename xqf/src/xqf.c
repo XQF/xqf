@@ -1915,12 +1915,6 @@ static const struct menuitem preferences_menu_items[] = {
     NULL
   },
   { 
-    MENU_ITEM,		N_("_Player Profile..."),	0,	0,
-    GTK_SIGNAL_FUNC (start_preferences_dialog),
-    (gpointer) (PREF_PAGE_PLAYER + UNKNOWN_SERVER * 256),
-    NULL
-  },
-  { 
     MENU_ITEM,		N_("_Games..."),		0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog), 
     (gpointer) (PREF_PAGE_GAMES + UNKNOWN_SERVER * 256),
@@ -1936,18 +1930,6 @@ static const struct menuitem preferences_menu_items[] = {
     MENU_ITEM,		N_("_QStat Options..."),	0,	0, 
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
-    NULL
-  },
-  { 
-    MENU_ITEM,		N_("Q_W/Q2 Options..."),		0,	0,
-    GTK_SIGNAL_FUNC (start_preferences_dialog),
-    (gpointer) (PREF_PAGE_QWQ2 + UNKNOWN_SERVER * 256),
-    NULL
-  },
-  { 
-    MENU_ITEM,		N_("Q_3/RTCW Options..."),		0,	0,
-    GTK_SIGNAL_FUNC (start_preferences_dialog),
-    (gpointer) (PREF_PAGE_Q3 + UNKNOWN_SERVER * 256),
     NULL
   },
 
