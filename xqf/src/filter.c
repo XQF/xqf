@@ -28,6 +28,13 @@
 #include "filter.h"
 #include "flt-player.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
+
 
 static int server_pass_filter (struct server *s, struct server_filter_vars *vars);
 static void server_filter_init (void);
@@ -419,12 +426,12 @@ static void server_filter_page (GtkWidget *notebook) {
   page_hbox = gtk_hbox_new (TRUE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
 
-  label = gtk_label_new ("Server Filter");
+  label = gtk_label_new (_("Server Filter"));
   gtk_widget_show (label);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_hbox, label);
 
-  frame = gtk_frame_new ("Server would pass filter if");
+  frame = gtk_frame_new (_("Server would pass filter if"));
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
   gtk_box_pack_start (GTK_BOX (page_hbox), frame, FALSE, FALSE, 0);
 
@@ -439,7 +446,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
   /* max ping */
 
-  label = gtk_label_new ("ping is less than");
+  label = gtk_label_new (_("ping is less than"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL,
                                                                          0, 0);
@@ -456,7 +463,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
   /* max timeouts */
 
-  label = gtk_label_new ("the number of retires is fewer than");
+  label = gtk_label_new (_("the number of retires is fewer than"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 
                                                                          0, 0);
@@ -476,7 +483,7 @@ static void server_filter_page (GtkWidget *notebook) {
   row = 0;
   sprintf( label_buf, "Filter %d", current_server_filter + 1 );
   
-  label = gtk_label_new ("Filter Name (For Menu):");
+  label = gtk_label_new (_("Filter Name (For Menu):"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
@@ -494,7 +501,7 @@ static void server_filter_page (GtkWidget *notebook) {
   /* GAMETYPE Filter -- baa */
   /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
     
-  label = gtk_label_new ("the game contains the string");
+  label = gtk_label_new (_("the game contains the string"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
 		    0, 0);
@@ -512,7 +519,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
   /* Version Filter -- baa */
     
-  label = gtk_label_new ("the version contains the string");
+  label = gtk_label_new (_("the version contains the string"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
 		    0, 0);
@@ -531,7 +538,7 @@ static void server_filter_page (GtkWidget *notebook) {
   /* not full */
 
   filter_not_full_check_button = 
-                            gtk_check_button_new_with_label ("it is not full");
+                       gtk_check_button_new_with_label (_("it is not full"));
   gtk_toggle_button_set_active (
             GTK_TOGGLE_BUTTON (filter_not_full_check_button), server_filters[current_server_filter].filter_not_full);
   gtk_table_attach_defaults (GTK_TABLE (table), filter_not_full_check_button, 
@@ -541,7 +548,7 @@ static void server_filter_page (GtkWidget *notebook) {
   /* not empty */
 
   filter_not_empty_check_button = 
-                           gtk_check_button_new_with_label ("it is not empty");
+                        gtk_check_button_new_with_label (_("it is not empty"));
   gtk_toggle_button_set_active (
           GTK_TOGGLE_BUTTON (filter_not_empty_check_button), server_filters[current_server_filter].filter_not_empty);
   gtk_table_attach_defaults (GTK_TABLE (table), filter_not_empty_check_button, 
@@ -551,7 +558,7 @@ static void server_filter_page (GtkWidget *notebook) {
   /* no cheats */
 
   filter_no_cheats_check_button = 
-                    gtk_check_button_new_with_label ("cheats are not allowed");
+                  gtk_check_button_new_with_label (_("cheats are not allowed"));
   gtk_toggle_button_set_active (
           GTK_TOGGLE_BUTTON (filter_no_cheats_check_button), 
 	  server_filters[current_server_filter].filter_no_cheats);
@@ -562,7 +569,7 @@ static void server_filter_page (GtkWidget *notebook) {
   /* no password */
 
   filter_no_password_check_button = 
-                      gtk_check_button_new_with_label ("no password required");
+                    gtk_check_button_new_with_label (_("no password required"));
   gtk_toggle_button_set_active (
       GTK_TOGGLE_BUTTON (filter_no_password_check_button), 
       server_filters[current_server_filter].filter_no_password);
@@ -590,7 +597,7 @@ int filters_cfg_dialog (int page_num) {
   const char *flt_status[3] = { "not changed", "changed", "data changed" };
 #endif
 
-  window = dialog_create_modal_transient_window ("XQF: Filters", 
+  window = dialog_create_modal_transient_window (_("XQF: Filters"), 
                                                             TRUE, TRUE, NULL);
   vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
@@ -618,7 +625,7 @@ int filters_cfg_dialog (int page_num) {
   hbox = gtk_hbox_new (FALSE, 8);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label ("Cancel");
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
                    GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
@@ -626,7 +633,7 @@ int filters_cfg_dialog (int page_num) {
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_widget_show (button);
 
-  button = gtk_button_new_with_label ("OK");
+  button = gtk_button_new_with_label (_("OK"));
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                           GTK_SIGNAL_FUNC (server_filter_new_defaults), NULL);

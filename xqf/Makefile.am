@@ -1,6 +1,6 @@
-SUBDIRS = src
 
-EXTRA_DIST = \
+EXTRA_DIST =	ABOUT-NLS AUTHORS BUGS COPYING ChangeLog CVS INSTALL \
+		README TODO install-sh missing mkinstalldirs \
 src/xpm/ \
 src/xpm/q.xpm \
 src/xpm/q2.xpm \
@@ -72,4 +72,6 @@ src/utils.h \
 src/xqf-ui.h \
 src/xutils.h \
 src/zipped.h \
-src/gnuconfig.h \
+src/gnuconfig.h
+
+SUBDIRS = intl po src

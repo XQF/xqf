@@ -56,6 +56,15 @@
 #include "menus.h"
 #include "config.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#define _(string) gettext(string)
+#define N_(string) (string)
+#else
+#define _(string) (string)
+#endif
+
 #include "debug.h"
 
 time_t xqf_start_time;
@@ -476,19 +485,19 @@ static void stat_lists_state_handler (struct stat_job *job,
   switch (state) {
 
   case STAT_UPDATE_SOURCE:
-    progress_bar_str = "Updating lists...";
+    progress_bar_str = _("Updating lists...");
     break;
 
   case STAT_RESOLVE_NAMES:
-    progress_bar_str = "Resolving host names: %d/%d";
+    progress_bar_str = _("Resolving host names: %d/%d");
     break;
 
   case STAT_REFRESH_SERVERS:
-    progress_bar_str = "Refreshing: %d/%d";
+    progress_bar_str = _("Refreshing: %d/%d");
     break;
 
   case STAT_RESOLVE_HOSTS:
-    progress_bar_str = "Resolving host addresses: %d/%d";
+    progress_bar_str = _("Resolving host addresses: %d/%d");
     break;
 
   default:
@@ -513,7 +522,7 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
     server_clist_build_filtered (cur_server_list, TRUE);
   }
 
-  print_status (main_status_bar, "Done.");
+  print_status (main_status_bar, _("Done."));
 
   progress_bar_reset (main_progress_bar);
 
@@ -606,8 +615,8 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   props = properties (s);
 
   if (s->ping >= MAX_PING) {
-    launch = dialog_yesno (NULL, 1, "Launch", "Cancel",
-                     "Server %s:%d is %s.\n\nLaunch client anyway?",
+    launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
+                     _("Server %s:%d is %s.\n\nLaunch client anyway?"),
                      (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
                      s->port,
                      (s->ping == MAX_PING)? "unreachable" : "down");
@@ -618,8 +627,8 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   }
 
   if (!launch && s->curplayers >= s->maxplayers && !con->spectate) {
-    launch = dialog_yesno (NULL, 1, "Launch", "Cancel",
-		     "Server %s:%d is full.\n\nLaunch client anyway?",
+    launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
+		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
 		     (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
 		     s->port);
     if (!launch) {
@@ -638,7 +647,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
       }
       else {
 	con->spectator_password = enter_string_with_option_dialog (FALSE,
-                               "Save Password", &save, "Spectator Password:");
+                         _("Save Password"), &save, _("Spectator Password:"));
 	if (!con->spectator_password) {
 	  condef_free (con);
 	  return;
@@ -658,7 +667,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
     }
     else if ((s->flags & SERVER_PASSWORD) != 0) {
       con->password = enter_string_with_option_dialog (FALSE,
-                                  "Save Password", &save, "Server Password:");
+                            _("Save Password"), &save, _("Server Password:"));
       if (!con->password) {
 	condef_free (con);
 	return;
@@ -791,11 +800,11 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
       return;
 
     if ((games[cur_server->type].flags & GAME_SPECTATE) != 0) {
-      demo = enter_string_with_option_dialog (TRUE, "Spectator", &spectate, 
-                                                                "Demo name:");
+      demo = enter_string_with_option_dialog (TRUE, _("Spectator"), &spectate, 
+                                                             _("Demo name:"));
     }
     else {
-      demo = enter_string_dialog (TRUE, "Demo name:");
+      demo = enter_string_dialog (TRUE, _("Demo name:"));
     }
 
     if (!demo)
@@ -995,7 +1004,7 @@ static void add_server_name_handler (struct stat_job *job, struct userver *us,
   }
   else {
     progress_bar_reset (main_progress_bar);
-    dialog_ok (NULL, "Host %s not found", us->hostname);
+    dialog_ok (NULL, _("Host %s not found"), us->hostname);
   }
 }
 
@@ -1019,7 +1028,7 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
     return;
 
   if (!parse_address (str, &addr, &port)) {
-    dialog_ok (NULL, "\"%s\" is not valid host[:port] combination.", str);
+    dialog_ok (NULL, _("\"%s\" is not valid host[:port] combination."), str);
     g_free (str);
     return;
   }
@@ -1180,7 +1189,7 @@ static void add_master_callback (GtkWidget *widget, gpointer data) {
     source_ctree_select_source (m);
   }
   else {
-    dialog_ok (NULL, "Master address \"%s\" is not valid.", str);
+    dialog_ok (NULL, _("Master address \"%s\" is not valid."), str);
   }
 
   g_free (str);
@@ -1223,8 +1232,9 @@ static void del_master_callback (GtkWidget *widget, gpointer data) {
   if (!masters)
     return;
 
-  delete = dialog_yesno (NULL, 1, "Delete", "Cancel", 
-        "Master%s to delete:\n\n%s", (g_slist_length (masters) > 1)? "s" : "",
+  delete = dialog_yesno (NULL, 1, _("Delete"), _("Cancel"), 
+        _("Master%s to delete:\n\n%s"), 
+	(g_slist_length (masters) > 1)? "s" : "",
         master_names);
 
   if (delete) {
@@ -1246,7 +1256,7 @@ static void find_player_callback (GtkWidget *widget, int find_next) {
   if (find_next || find_player_dialog ()) {
     if (!psearch_data_is_empty ()) {
       pattern = psearch_lookup_pattern ();
-      print_status (main_status_bar, "Find Player: %s", pattern);
+      print_status (main_status_bar, _("Find Player: %s"), pattern);
       g_free (pattern);
 
       find_player (find_next);
@@ -1346,7 +1356,7 @@ static void rcon_callback (GtkWidget *widget, gpointer data) {
 
   if (!sp || !sp->rcon_password) {
     passwd = enter_string_with_option_dialog (FALSE,
-	                          "Save Password", &save, "Server Password:");
+	                          _("Save Password"), &save, _("Server Password:"));
 
     if (!passwd)	/* canceled */
       return;
@@ -1469,7 +1479,7 @@ static void source_selection_changed (void) {
   server_clist_set_list (cur_server_list);
 
   print_status (main_status_bar, (server_clist->rows == 1) ?
-                              "%d server" : "%d servers", server_clist->rows);
+                        _("%d server") : _("%d servers"), server_clist->rows);
 }
 
 
@@ -1612,14 +1622,14 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 
 
 static void about_dialog (GtkWidget *widget, gpointer data) {
-  dialog_ok ("About XQF", 
-	     "X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
-	     "Version " XQF_VERSION "\n\n"
-	     "Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>\n\n"
+  dialog_ok (_("About XQF"), 
+	     _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
+	     "Version %s\n\n"
+	     "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n\n"
 	     "Mod & server version filter: Bill Adams <webmaster@evil.inetarena.com>\n"
-	     "SoF & GameSpy master support: Alex Burger <alex@fragit.net>\n\n"
-
-	     "http://www.linuxgames.com/xqf/");
+	     "SoF & GameSpy master support: Alex Burger <alex@fragit.net>\n"
+	     "Internationalization (i18n): Jordi Mallach <jordi@sindominio.net>\n\n"
+	     "http://www.linuxgames.com/xqf/"), XQF_VERSION);
 }
 
 
@@ -1637,17 +1647,17 @@ struct __menuitem {
 
 static const struct menuitem srvopt_menu_items[] = {
   { 
-    MENU_ITEM,		"Connect",		0,	0,
+    MENU_ITEM,		N_("Connect"),		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL,
     &connect_menu_item
   },
   { 
-    MENU_ITEM,		"Observe",		0,	0,
+    MENU_ITEM,		N_("Observe"),		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_SPECTATE,
     &observe_menu_item
   },
   { 
-    MENU_ITEM,		"Record Demo",		0,	0,
+    MENU_ITEM,		N_("Record Demo"),	0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_RECORD,
     &record_menu_item
   },
@@ -1655,27 +1665,27 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"Add to Favorites",	0,	0,
+    MENU_ITEM,		N_("Add to Favorites"),	0,	0,
     GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
     &favadd_menu_item
   },
   { 
-    MENU_ITEM,		"Add...",		0,   	0,
+    MENU_ITEM,		N_("Add..."),		0,   	0,
     GTK_SIGNAL_FUNC (add_server_callback), NULL,
     &add_menu_item
   },
   { 
-    MENU_ITEM,		"Delete",		0,   	0,
+    MENU_ITEM,		N_("Delete"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &delete_menu_item
   },
   { 
-    MENU_ITEM,		"Copy",			0,   	0,
+    MENU_ITEM,		N_("Copy"),		0,   	0,
     GTK_SIGNAL_FUNC (copy_server_callback), NULL,
     NULL
   },
   { 
-    MENU_ITEM,		"Copy+",			0,   	0,
+    MENU_ITEM,		N_("Copy+"),		0,   	0,
     GTK_SIGNAL_FUNC (copy_server_callback_plus), NULL,
     NULL
   },
@@ -1683,12 +1693,12 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"Refresh",		0,	0,
+    MENU_ITEM,		N_("Refresh"),		0,	0,
     GTK_SIGNAL_FUNC (refresh_callback), NULL,
     &refresh_menu_item
   },
   { 
-    MENU_ITEM,		"Refresh Selected",	0,	0,
+    MENU_ITEM,		N_("Refresh Selected"),	0,	0,
     GTK_SIGNAL_FUNC (refresh_selected_callback), NULL,
     &refrsel_menu_item
   },
@@ -1696,7 +1706,7 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"DNS Lookup",		0,	0,
+    MENU_ITEM,		N_("DNS Lookup"),	0,	0,
     GTK_SIGNAL_FUNC (resolve_callback), NULL,
     &resolve_menu_item
   },
@@ -1704,12 +1714,12 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"RCon...",   		0,	0,
+    MENU_ITEM,		N_("RCon..."),   	0,	0,
     GTK_SIGNAL_FUNC (rcon_callback), NULL,
     &rcon_menu_item
   },
   { 
-    MENU_ITEM,		"Properties...",   	0,	0,
+    MENU_ITEM,		N_("Properties..."),   	0,	0,
     GTK_SIGNAL_FUNC (properties_callback), NULL,
     &properties_menu_item
   },
@@ -1719,7 +1729,7 @@ static const struct menuitem srvopt_menu_items[] = {
 
 static const struct menuitem file_menu_items[] = {
   { 
-    MENU_ITEM,		"_Statistics...",	0,	0,
+    MENU_ITEM,		N_("_Statistics..."),	0,	0,
     GTK_SIGNAL_FUNC (statistics_callback), NULL,
     &file_statistics_menu_item
   },
@@ -1727,7 +1737,7 @@ static const struct menuitem file_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"_Exit",		'Q',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Exit"),		'Q',	GDK_CONTROL_MASK,
     NULL,		NULL,
     &file_quit_menu_item
   },
@@ -1737,22 +1747,22 @@ static const struct menuitem file_menu_items[] = {
 
 static const struct menuitem edit_menu_items[] = {
   { 
-    MENU_ITEM,		"_Add Server...",	'N',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Add Server..."),	'N',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (add_server_callback), NULL,
     &edit_add_menu_item
   },
   { 
-    MENU_ITEM,		"_Delete",		'D',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Delete"),		'D',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &edit_delete_menu_item
   },
   { 
-    MENU_ITEM,		"_Copy",		'C',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Copy"),		'C',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (copy_server_callback), NULL,
     NULL
   },
   { 
-    MENU_ITEM,		"_Copy+",		'O',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Copy+"),		'O',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (copy_server_callback_plus), NULL,
     NULL
   },
@@ -1760,12 +1770,12 @@ static const struct menuitem edit_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   {
-    MENU_ITEM,          "Add _Master...",        'M',	GDK_CONTROL_MASK,
+    MENU_ITEM,          N_("Add _Master..."),        'M',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (add_master_callback), NULL,
     &edit_add_master_menu_item
   },
   {
-    MENU_ITEM,          "D_elete Master",        0,	0,
+    MENU_ITEM,          N_("D_elete Master"),        0,	0,
     GTK_SIGNAL_FUNC (del_master_callback), NULL,
     &edit_delete_master_menu_item
   },
@@ -1773,12 +1783,12 @@ static const struct menuitem edit_menu_items[] = {
   { MENU_SEPARATOR,    NULL,                   0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"_Find Player...",	'F',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Find Player..."),	'F',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (find_player_callback), (gpointer) FALSE,
     &edit_find_player_menu_item
   },
   { 
-    MENU_ITEM,		"Find A_gain",		'G',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("Find A_gain"),		'G',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (find_player_callback), (gpointer) TRUE,
     &edit_find_again_menu_item
   },
@@ -1788,17 +1798,17 @@ static const struct menuitem edit_menu_items[] = {
 
 static const struct menuitem view_menu_items[] = {
   { 
-    MENU_ITEM,		"_Refresh",		'R',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Refresh"),		'R',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (refresh_callback), NULL,
     &view_refresh_menu_item
   },
   { 
-    MENU_ITEM,		"Refresh _Selected",	'S',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("Refresh _Selected"),	'S',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (refresh_selected_callback), NULL,
     &view_refrsel_menu_item
   },
   { 
-    MENU_ITEM,		"_Update From Master",	'U',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Update From Master"),	'U',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (update_source_callback), NULL,
     &view_update_menu_item
   },
@@ -1806,12 +1816,12 @@ static const struct menuitem view_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_CHECK_ITEM,	"Show _Host Names",	'H',	GDK_CONTROL_MASK,
+    MENU_CHECK_ITEM,	N_("Show _Host Names"),	'H',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (show_hostnames_callback), NULL,
     &view_hostnames_menu_item
   },
   { 
-    MENU_CHECK_ITEM,	"Show Default _Port",	0,	0,
+    MENU_CHECK_ITEM,	N_("Show Default _Port"),	0,	0,
     GTK_SIGNAL_FUNC (show_default_port_callback), NULL,
     &view_defport_menu_item
   },
@@ -1833,7 +1843,7 @@ struct menuitem *server_filter_menu_items;
 /* Bad Bill!  The const has been removed from the next line. */
 static struct menuitem server_menu_items[] = {
   {
-    MENU_BRANCH,		"_Server Filters",	0,	0,
+    MENU_BRANCH,		N_("_Server Filters"),	0,	0,
     NULL, 
     NULL,                     /* <-- This gets set to the addres
 				 of server_filter_menu_items after
@@ -1841,17 +1851,17 @@ static struct menuitem server_menu_items[] = {
     NULL
   },
   { 
-    MENU_ITEM,		"_Connect",		0,	0,
+    MENU_ITEM,		N_("_Connect"),		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL,
     &server_connect_menu_item
   },
   { 
-    MENU_ITEM,		"_Observe",		0,	0,
+    MENU_ITEM,		N_("_Observe"),		0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_SPECTATE,
     &server_observe_menu_item
   },
   { 
-    MENU_ITEM,		"Record _Demo",		0,	0,
+    MENU_ITEM,		N_("Record _Demo"),	0,	0,
     GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_RECORD,
     &server_record_menu_item
   },
@@ -1859,18 +1869,18 @@ static struct menuitem server_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"Add to _Favorites",	0, 0,
+    MENU_ITEM,		N_("Add to _Favorites"),	0, 0,
     GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
     &server_favadd_menu_item
   },
   { 
-    MENU_ITEM,		"Delete",		0,   	0,
+    MENU_ITEM,		N_("Delete"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &delete_menu_item
   },
 
   { 
-    MENU_ITEM,		"DNS _Lookup",		'L',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("DNS _Lookup"),		'L',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (resolve_callback), NULL,
     &server_resolve_menu_item
   },
@@ -1878,12 +1888,12 @@ static struct menuitem server_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"_RCon...",   		0,	0,
+    MENU_ITEM,		N_("_RCon..."),   		0,	0,
     GTK_SIGNAL_FUNC (rcon_callback), NULL,
     &server_rcon_menu_item
   },
   { 
-    MENU_ITEM,		"_Properties...",  	0,	0,
+    MENU_ITEM,		N_("_Properties..."),  	0,	0,
     GTK_SIGNAL_FUNC (properties_callback), NULL,
     &server_properties_menu_item
   },
@@ -1893,31 +1903,31 @@ static struct menuitem server_menu_items[] = {
 
 static const struct menuitem preferences_menu_items[] = {
   { 
-    MENU_ITEM,		"_Player Profile...",	0,	0,
+    MENU_ITEM,		N_("_Player Profile..."),	0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_PLAYER + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		"_Games...",		0,	0,
+    MENU_ITEM,		N_("_Games..."),		0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog), 
     (gpointer) (PREF_PAGE_GAMES + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		"_Appearance...",	0,	0,
+    MENU_ITEM,		N_("_Appearance..."),	0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_APPEARANCE + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		"_QStat Options...",	0,	0, 
+    MENU_ITEM,		N_("_QStat Options..."),	0,	0, 
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		"_QW/Q2 Options...",		0,	0,
+    MENU_ITEM,		N_("_QW/Q2 Options..."),		0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_QWQ2 + UNKNOWN_SERVER * 256),
     NULL
@@ -1926,12 +1936,12 @@ static const struct menuitem preferences_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		"_Server Filter...",	0,	0,
+    MENU_ITEM,		N_("_Server Filter..."),	0,	0,
     GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) FILTER_SERVER,
     NULL
   },
   { 
-    MENU_ITEM,		"Player _Filter...",	0,	0,
+    MENU_ITEM,		N_("Player _Filter..."),	0,	0,
     GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) FILTER_PLAYER,
     NULL
   },
@@ -1941,7 +1951,7 @@ static const struct menuitem preferences_menu_items[] = {
 
 static const struct menuitem help_menu_items[] = {
   { 
-    MENU_ITEM,		"_About...",		0,	0,
+    MENU_ITEM,		N_("_About..."),		0,	0,
     GTK_SIGNAL_FUNC (about_dialog), NULL,
     NULL
   },
@@ -1952,32 +1962,32 @@ static const struct menuitem help_menu_items[] = {
 
 static const struct menuitem menubar_menu_items[] = {
   {
-    MENU_BRANCH,		"_File",	0,	0,
+    MENU_BRANCH,		N_("_File"),	0,	0,
     NULL, &file_menu_items,
     NULL
   },
   {
-    MENU_BRANCH,		"_Edit",	0,	0,
+    MENU_BRANCH,		N_("_Edit"),	0,	0,
     NULL, &edit_menu_items,
     NULL
   },
   {
-    MENU_BRANCH,		"_View",	0,	0,
+    MENU_BRANCH,		N_("_View"),	0,	0,
     NULL, &view_menu_items,
     NULL
   },
   {
-    MENU_BRANCH,		"_Server",	0,	0,
+    MENU_BRANCH,		N_("_Server"),	0,	0,
     NULL, &server_menu_items,
     NULL
   },
   {
-    MENU_BRANCH,		"_Preferences",	0,	0,
+    MENU_BRANCH,		N_("_Preferences"),	0,	0,
     NULL, &preferences_menu_items,
     NULL
   },
   {
-    MENU_LAST_BRANCH,		"_Help",	0,	0,
+    MENU_LAST_BRANCH,		N_("_Help"),	0,	0,
     NULL, &help_menu_items,
     NULL
   },
@@ -2020,28 +2030,28 @@ static GtkWidget *create_player_menu (GtkAccelGroup *accel_group) {
 
   marker_menu = gtk_menu_new ();
 
-  menu_item = create_player_menu_item ("Mark as Red", 0);
+  menu_item = create_player_menu_item (_("Mark as Red"), 0);
   gtk_menu_append (GTK_MENU (marker_menu), menu_item);
   gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 		      GTK_SIGNAL_FUNC (add_to_player_filter_callback),
 		      (gpointer) PLAYER_GROUP_RED);
   gtk_widget_show (menu_item);
 
-  menu_item = create_player_menu_item ("Mark as Green", 1);
+  menu_item = create_player_menu_item (_("Mark as Green"), 1);
   gtk_menu_append (GTK_MENU (marker_menu), menu_item);
   gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 		      GTK_SIGNAL_FUNC (add_to_player_filter_callback),
 		      (gpointer) PLAYER_GROUP_GREEN);
   gtk_widget_show (menu_item);
 
-  menu_item = create_player_menu_item ("Mark as Blue", 2);
+  menu_item = create_player_menu_item (_("Mark as Blue"), 2);
   gtk_menu_append (GTK_MENU (marker_menu), menu_item);
   gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 		      GTK_SIGNAL_FUNC (add_to_player_filter_callback),
                       (gpointer) PLAYER_GROUP_BLUE);
   gtk_widget_show (menu_item);
 
-  menu_item = gtk_menu_item_new_with_label ("Add to Player Filter");
+  menu_item = gtk_menu_item_new_with_label (_("Add to Player Filter"));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), marker_menu);
   gtk_menu_append (GTK_MENU (menu), menu_item);
   gtk_widget_show (menu_item);
@@ -2062,7 +2072,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   update_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                   "Update", "Update from master", NULL,
+                   _("Update"), _("Update from master"), NULL,
                    pixmap,
 		   GTK_SIGNAL_FUNC (update_source_callback), NULL);
 
@@ -2070,7 +2080,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   refresh_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                   "Refresh", "Refresh current list", NULL,
+                   _("Refresh"), _("Refresh current list"), NULL,
                    pixmap,
 		   GTK_SIGNAL_FUNC (refresh_callback), NULL);
 
@@ -2078,7 +2088,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   refrsel_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                   "Ref.Sel.", "Refresh selected servers", NULL,
+                   _("Ref.Sel."), _("Refresh selected servers"), NULL,
                    pixmap,
 		   GTK_SIGNAL_FUNC (refresh_selected_callback), NULL);
 
@@ -2086,7 +2096,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   stop_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                   "Stop", "Stop", NULL,
+                   _("Stop"), _("Stop"), NULL,
                    pixmap,
 		   GTK_SIGNAL_FUNC (stop_callback), NULL);
 
@@ -2096,7 +2106,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   connect_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                   "Connect", "Connect", NULL,
+                   _("Connect"), _("Connect"), NULL,
                    pixmap,
                  GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL);
 
@@ -2104,7 +2114,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   observe_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                  "Observe", "Observe", NULL,
+                  _("Observe"), _("Observe"), NULL,
                   pixmap,
                GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_SPECTATE);
 
@@ -2112,7 +2122,7 @@ static void populate_main_toolbar (void) {
   gtk_widget_show (pixmap);
 
   record_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                  "Record", "Record Demo", NULL,
+                  _("Record"), _("Record Demo"), NULL,
                   pixmap,
                  GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_RECORD);
 
@@ -2207,7 +2217,7 @@ void create_main_window (void) {
     i = 0;
     j = 0;
     server_filter_menu_items[i].type       = MENU_ITEM;
-    server_filter_menu_items[i].label      = "Filters";
+    server_filter_menu_items[i].label      = _("Filters");
     server_filter_menu_items[i].accel_key  = 0;
     server_filter_menu_items[i].accel_mods = 0;
     server_filter_menu_items[i].callback   = NULL;
@@ -2227,7 +2237,7 @@ void create_main_window (void) {
     /* Start of the filters */
     filter_start_index = i;
     server_filter_menu_items[i].type       = MENU_ITEM;
-    server_filter_menu_items[i].label      = "None";
+    server_filter_menu_items[i].label      = _("None");
     server_filter_menu_items[i].accel_key  = 0;
     server_filter_menu_items[i].accel_mods = 0;
     server_filter_menu_items[i].callback   = GTK_SIGNAL_FUNC (server_filter_select_callback);
@@ -2461,6 +2471,12 @@ int main (int argc, char *argv[]) {
   int newversion = FALSE;
 
   int i,j; /* For parsing the command line. */
+
+#ifdef ENABLE_NLS
+  setlocale(LC_ALL, "");
+  bindtextdomain(PACKAGE, LOCALEDIR);
+  textdomain(PACKAGE);
+#endif
 
   set_debug_level (DEFAULT_DEBUG_LEVEL);
   debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);

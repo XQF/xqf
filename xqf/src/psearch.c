@@ -31,6 +31,13 @@
 #include "config.h"
 #include "psearch.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#define N_(string) (string)
+#else
+#define _(string) (string)
+#endif
 
 #define REGCOMP_FLAGS 	(REG_EXTENDED | REG_NOSUB | REG_ICASE)
 
@@ -45,9 +52,9 @@ static GtkWidget *mode_buttons[3];
 static int psearch_new_pattern;
 
 static const char *mode_names[3] = { 
-  "Exact Match",
-  "Substring",
-  "Regular Expression"
+  N_("Exact Match"),
+  N_("Substring"),
+  N_("Regular Expression")
 };
 
 
@@ -110,8 +117,9 @@ static int psearch_compile_pattern (void) {
 	error = get_regerror (res, (regex_t *) psearch.data);
 	psearch_free_pattern ();
 
-	dialog_ok ("XQF: Error", "Regular Expression Error!\n\n%s\n\n%s.",
-                                                      psearch.pattern, error);
+	dialog_ok (_("XQF: Error"), 
+                   _("Regular Expression Error!\n\n%s\n\n%s."),
+                   psearch.pattern, error);
 	g_free (error);
 	return FALSE;
       }
@@ -167,7 +175,7 @@ int find_player_dialog (void) {
 
   psearch_new_pattern = FALSE;
 
-  window = dialog_create_modal_transient_window ("Find Player",
+  window = dialog_create_modal_transient_window (_("Find Player"),
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 16);
@@ -178,7 +186,7 @@ int find_player_dialog (void) {
 
   /* Pattern Entry */
 
-  label = gtk_label_new ("Find Player:");
+  label = gtk_label_new (_("Find Player:"));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
@@ -206,7 +214,7 @@ int find_player_dialog (void) {
 
   /* OK Button */
 
-  button = gtk_button_new_with_label (" OK ");
+  button = gtk_button_new_with_label (_("OK"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
 		            GTK_SIGNAL_FUNC (psearch_combo_activate_callback),
 			    GTK_OBJECT (psearch_combo));
@@ -217,7 +225,7 @@ int find_player_dialog (void) {
 
   /* Cancel Button */
 
-  button = gtk_button_new_with_label (" Cancel ");
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
                    GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
@@ -233,7 +241,8 @@ int find_player_dialog (void) {
   group = NULL;
 
   for (i = 0; i < 3; i++) {
-    mode_buttons[i] = gtk_radio_button_new_with_label (group, mode_names[i]);
+    mode_buttons[i] = gtk_radio_button_new_with_label (group,
+		                                       _(mode_names[i]));
     group = gtk_radio_button_group (GTK_RADIO_BUTTON (mode_buttons[i]));
     gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
     gtk_widget_show (mode_buttons[i]);
@@ -386,11 +395,11 @@ void find_player (int find_next) {
   }
 
   if (!find_next || server_clist->selection == NULL) {
-    dialog_ok (NULL, "Player not found.");
+    dialog_ok (NULL, _("Player not found."));
   }
   else {
-    if (dialog_yesno (NULL, 0, "OK", "Cancel",
-	           "End of server list reached.  Continue from beginning?")) {
+    if (dialog_yesno (NULL, 0, _("OK"), _("Cancel"),
+          _("End of server list reached.  Continue from beginning?"))) {
       find_player (FALSE);
     }
   }

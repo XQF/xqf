@@ -43,7 +43,6 @@ extern int h_errno;	/* h_errno */
 #include "host.h"
 #include "utils.h"
 
-
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN		64
 #endif
@@ -505,7 +504,8 @@ static void dns_resolve (char *str) {
 
   if (dns_workers_num >= DNS_MAX_CHILDREN || !dns_dispatch_to_worker (str)) {
 #ifdef DEBUG
-    fprintf (stderr, "DNS Master> \"%s\" is put to the waiting queue\n", str);
+    fprintf (stderr, "DNS Master> \"%s\" is put to the waiting queue\n",
+                     str);
 #endif
     dns_queue_add (strdup (str));
   }
@@ -652,7 +652,8 @@ static void dns_master_mainloop (void) {
 
 #ifdef DEBUG
     fprintf (stderr, "DNS Master> %d workers, queue is %s\n", 
-                            dns_workers_num, (q_head)? "not empty" : "empty");
+                            dns_workers_num,
+			    (q_head)? "not empty" : "empty");
 #endif
 
     FD_ZERO (&readfds);

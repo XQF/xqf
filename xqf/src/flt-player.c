@@ -34,6 +34,13 @@
 #include "flt-player.h"
 #include "filter.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#define N_(string) (string)
+#else
+#define _(string) (string)
+#endif
 
 #define REGCOMP_FLAGS 	(REG_EXTENDED | REG_NOSUB | REG_ICASE)
 
@@ -63,15 +70,15 @@ enum {
 };
 
 static char *mode_symbols[3] = {
-  "string",
-  "substr",
-  "regexp"
+  N_("string"),
+  N_("substr"),
+  N_("regexp")
 };
 
 static const char *mode_names[3] = { 
-  "string", 
-  "substring",
-  "regular expression"
+  N_("string"), 
+  N_("substring"),
+  N_("regular expression")
 };
 
 
@@ -442,7 +449,7 @@ static void show_pattern_error (int row) {
   pp = (struct player_pattern *) list->data;
 
   if (pp->error) {
-    dialog_ok ("XQF: Error", "Regular Expression Error!\n\n%s\n\n%s.", 
+    dialog_ok (_("XQF: Error"), _("Regular Expression Error!\n\n%s\n\n%s."), 
                                                       pp->pattern, pp->error);
   }
 }
@@ -645,7 +652,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
   /* Pattern Entry */
 
-  label = gtk_label_new ("Pattern");
+  label = gtk_label_new (_("Pattern"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 0, 0, 0, 0);
   gtk_widget_show (label);
 
@@ -680,7 +687,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
   /* Comment */
 
-  frame = gtk_frame_new ("Pattern Comment");
+  frame = gtk_frame_new (_("Pattern Comment"));
   gtk_box_pack_end (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
   hbox = gtk_hbox_new (FALSE, 0);
@@ -733,13 +740,13 @@ void player_filter_page (GtkWidget *notebook) {
   GtkWidget *pixmap;
   GtkWidget *button;
   GtkWidget *peditor;
-  char *titles[5] = { "", "", "", "Mode", "Pattern" };
+  char *titles[5] = { "", "", "", N_("Mode"), N_("Pattern") };
   int i;
 
   page_hbox = gtk_hbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
 
-  label = gtk_label_new ("Player Filter");
+  label = gtk_label_new (_("Player Filter"));
   gtk_widget_show (label);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_hbox, label);
@@ -796,13 +803,13 @@ void player_filter_page (GtkWidget *notebook) {
   vbox = gtk_vbox_new (FALSE, 4);
   gtk_box_pack_start (GTK_BOX (page_hbox), vbox, FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label (" New ");
+  button = gtk_button_new_with_label (_("New"));
   gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                                 GTK_SIGNAL_FUNC (new_pattern_callback), NULL);
   gtk_widget_show (button);
 
-  delete_button = gtk_button_new_with_label (" Delete ");
+  delete_button = gtk_button_new_with_label (_("Delete"));
   gtk_box_pack_start (GTK_BOX (vbox), delete_button, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (delete_button), "clicked",
                              GTK_SIGNAL_FUNC (delete_pattern_callback), NULL);
@@ -814,13 +821,13 @@ void player_filter_page (GtkWidget *notebook) {
   vbox2 = gtk_vbox_new (FALSE, 4);
   gtk_container_add (GTK_CONTAINER (alignment), vbox2);
 
-  up_button = gtk_button_new_with_label (" Up ");
+  up_button = gtk_button_new_with_label (_("Up"));
   gtk_box_pack_start (GTK_BOX (vbox2), up_button, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (up_button), "clicked",
                 GTK_SIGNAL_FUNC (move_up_down_pattern_callback), (void *) -1);
   gtk_widget_show (up_button);
 
-  down_button = gtk_button_new_with_label (" Down ");
+  down_button = gtk_button_new_with_label (_("Down"));
   gtk_box_pack_start (GTK_BOX (vbox2), down_button, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (down_button), "clicked",
                  GTK_SIGNAL_FUNC (move_up_down_pattern_callback), (void *) 1);

@@ -29,6 +29,12 @@
 #include "source.h"
 #include "addmaster.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
 
 static struct history *master_history_addr = NULL;
 static struct history *master_history_name = NULL;
@@ -134,7 +140,7 @@ char *add_master_dialog (enum server_type *type, char **desc) {
     *type = QW_SERVER;
   }
 
-  window = dialog_create_modal_transient_window ("Add Master", 
+  window = dialog_create_modal_transient_window (_("Add Master"), 
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), main_vbox);
@@ -147,7 +153,7 @@ char *add_master_dialog (enum server_type *type, char **desc) {
 
   /* Master Name (Description) */
 
-  label = gtk_label_new ("Master Name");
+  label = gtk_label_new (_("Master Name"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 
                                                         GTK_FILL, GTK_FILL, 0, 0);
@@ -192,7 +198,7 @@ char *add_master_dialog (enum server_type *type, char **desc) {
 
   /* Master Address */
 
-  label = gtk_label_new ("Master Address");
+  label = gtk_label_new (_("Master Address"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
                                                         GTK_FILL, GTK_FILL, 0, 0);
@@ -235,7 +241,7 @@ char *add_master_dialog (enum server_type *type, char **desc) {
 
   /* Cancel Button */
 
-  button = gtk_button_new_with_label ("Cancel");
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",

@@ -1,0 +1,36 @@
+# List of source files containing translatable strings.
+
+# Package source files
+src/addmaster.c
+src/addserver.c
+#src/config.c
+#src/debug.c
+src/dialogs.c
+#src/dns.c
+src/filter.c
+src/flt-player.c
+#src/game.c
+#src/history.c
+#src/host.c
+src/launch.c
+#src/menus.c
+#src/pixmaps.c
+src/pref.c
+src/psearch.c
+#src/rc.c
+src/rcon.c
+#src/server.c
+#src/skin.c
+#src/skin_pcx.c
+#src/sort.c
+src/source.c
+#src/srv-info.c
+#src/srv-list.c
+src/srv-prop.c
+src/stat.c
+src/statistics.c
+#src/utils.c
+#src/xqf-ui.c
+src/xqf.c
+#src/xutils.c
+#src/zipped.c

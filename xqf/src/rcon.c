@@ -38,6 +38,12 @@
 #include "config.h"
 #include "rcon.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
 
 #define PACKET_MAXSIZE	(64 * 1024)
 
@@ -342,7 +348,7 @@ void rcon_dialog (struct server *s, char *passwd) {
 
   /* Message */
 
-  label = gtk_label_new ("Cmd:");
+  label = gtk_label_new (_("Cmd:"));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
@@ -369,7 +375,7 @@ void rcon_dialog (struct server *s, char *passwd) {
 
   /* Send Button */
 
-  button = gtk_button_new_with_label (" Send ");
+  button = gtk_button_new_with_label (_("Send"));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (rcon_combo_activate_callback), passwd);
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
@@ -378,7 +384,7 @@ void rcon_dialog (struct server *s, char *passwd) {
 
   /* Status Button */
 
-  button = gtk_button_new_with_label (" Status ");
+  button = gtk_button_new_with_label (_("Status"));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                GTK_SIGNAL_FUNC (rcon_status_button_clicked_callback), passwd);
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
@@ -387,7 +393,7 @@ void rcon_dialog (struct server *s, char *passwd) {
 
   /* Clear Button */
 
-  button = gtk_button_new_with_label (" Clear ");
+  button = gtk_button_new_with_label (_("Clear"));
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                   GTK_SIGNAL_FUNC (rcon_clear_button_clicked_callback), NULL);
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
@@ -409,7 +415,7 @@ void rcon_dialog (struct server *s, char *passwd) {
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label ("Close");
+  button = gtk_button_new_with_label (_("Close"));
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
