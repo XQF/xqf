@@ -1385,7 +1385,7 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
   {
     if( !strcasecmp (s->game, ptr->mod)
 	&& n >=0
-	&& n < MAX_Q3A_TYPES
+	&& n < ptr->number
 	&& ptr->gametypes[n] )
     {
       	s->gametype = ptr->gametypes[n];
