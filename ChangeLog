@@ -1,3 +1,7 @@
+Aug 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- properly detect installed Doom 3 maps. No preview though since gdk-pixbuf
+  doesn't support the TGA format used by id :-(
+
 Aug 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove some obsolete stuff from docu, update list of supported games
 

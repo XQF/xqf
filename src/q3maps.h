@@ -42,14 +42,31 @@ GHashTable* q3_init_maphash();
 /** return true if mapname is contained in maphash, false otherwise */
 gboolean q3_lookup_map(GHashTable* maphash, const char* mapname);
 
+/** return true if mapname is contained in maphash, false otherwise
+ * same as q3_lookup_mapshot except operates on basename of mapname
+ */
+gboolean doom3_lookup_map(GHashTable* maphash, const char* mapname);
+
 /** acquire image data, function allocates space in buf, returns size. buf must
  * be freed by caller */
 size_t q3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf);
+
+/** acquire image data, function allocates space in buf, returns size. buf must
+ * be freed by caller
+ *
+ * same as q3_lookup_mapshot except operates on basename of mapname
+ */
+size_t doom3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf);
 
 /**
  * find all maps in .pk3 files one level under startdir
  */
 void findq3maps(GHashTable* maphash, const char* startdir);
+
+/**
+ * find all maps in .pk4 files one level under startdir
+ */
+void finddoom3maps(GHashTable* maphash, const char* startdir);
 
 void findquakemaps(GHashTable* maphash, const char* startdir);
 

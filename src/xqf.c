@@ -2210,7 +2210,18 @@ static void rendermemintogtkpixmap(const guchar* mem, size_t len,
 /*FIXME_GTK2: gdk_pixbuf_loader_write, gdk_pixbuf_loader_close need GError*/
 #ifdef USE_GTK2
   ok = gdk_pixbuf_loader_write(loader, mem, len,&err);
+  if(err != NULL)
+  {
+    xqf_error("%s", err->message);
+    g_error_free(err);
+  }
+  err = NULL;
   gdk_pixbuf_loader_close(loader,&err);
+  if(err != NULL)
+  {
+    xqf_error("%s", err->message);
+    g_error_free(err);
+  }
 #else
   ok = gdk_pixbuf_loader_write(loader, mem, len);
   gdk_pixbuf_loader_close(loader);
@@ -2218,6 +2229,13 @@ static void rendermemintogtkpixmap(const guchar* mem, size_t len,
 
   if(!ok)
   {
+#if 0
+    {
+      int fd = open("mapshot", O_WRONLY|O_CREAT|O_TRUNC, 0644 );
+      write(fd, mem, len);
+      close(fd);
+    }
+#endif
     g_free(loader);
     return;
   }

@@ -182,6 +182,9 @@
 	<icon>doom3_xpm</icon>
 	<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<init_maps>doom3_init_maps</init_maps>
+	<has_map>doom3_has_map</has_map>
+	<get_mapshot>doom3_get_mapshot</get_mapshot>
 	<arch_identifier>si_version</arch_identifier>
 	<command>doom3</command>
 	<default_home>~/.doom3</default_home>
