@@ -1,3 +1,7 @@
+Feb 04, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- move server filter submenu to top level
+- remove rarely used buttons from toolbar
+
 Feb 03, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - merge patch from Jochen Baier to allow filtering for map and server name
 - update German translation
