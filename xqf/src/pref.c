@@ -3797,7 +3797,7 @@ void play_sound_pref (GtkWidget *sound_entry) {
   char *temp;
 
   temp = g_strdup (gtk_entry_get_text (GTK_ENTRY (sound_entry)));
-  play_sound (temp);
+  play_sound (temp, 1);
   if (temp)
     g_free(temp);
 }
