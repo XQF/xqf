@@ -1094,33 +1094,29 @@ static char *q3a_tribalctf_gametypes[MAX_Q3A_TRIBALCTF_TYPES] = {
   NULL			// 9+ ???
 };
 
+#define MAX_WOLF_TYPES 9
+static char *wolf_gametypes[MAX_WOLF_TYPES] = {
+  NULL,			// 0 - Unknown
+  NULL,			// 1 - Unknown
+  NULL,			// 2 - Unknown
+  NULL,			// 3 - Unknown
+  NULL,			// 4 - Unknown
+  "WolfMP",		// 5 - standard objective mode
+  "WolfSW",		// 6 - Stopwatch mode
+  "WolfCP",		// 7 - Checkpoint mode
+  NULL			// 8+ ???
+};
+
 static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   char *endptr;
   long n;
-  int newtypes;
   char *fs_game=NULL;
   char *game=NULL;
   char *gamename=NULL;
 
-  int is_default=0;
-
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
-
-  // Get the server version first.
-  // If it is 1.2+, the new game types are used
-  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-  if (strcmp (*info_ptr, "version") == 0) {
-      if (info_ptr[1][3] >= '1')	// eg: 1 of 1.27
-      {
-        if (info_ptr[1][5] >= '2')	// eg: 2 of 1.27
-	  newtypes=1;
-      }
-      else
-        newtypes=0;
-    }
-  }
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
  
@@ -1132,24 +1128,13 @@ static void q3_analyze_serverinfo (struct server *s) {
       --baa
     */
     if (strcmp (*info_ptr, "fs_game") == 0) {
-      if (strcmp (info_ptr[1], "baseq3")) {
 	fs_game  = info_ptr[1];
-      }
-      else is_default=1;
     }
     else if (strcmp (*info_ptr, "gamename") == 0) {
-      if (strcmp (info_ptr[1], "baseq3")) {
-	/* We only set the mod if the name is NOT baseq3. */
-	gamename  = info_ptr[1];
-      }
-      else is_default=1;
+      gamename  = info_ptr[1];
     }
     else if (strcmp (*info_ptr, "game") == 0) {
-      if (strcmp (info_ptr[1], "baseq3")) {
-	/* We only set the mod if the name is NOT baseq3. */
-	game  = info_ptr[1];
-      }
-      else is_default=1;
+      game  = info_ptr[1];
     }
 
     else if (strcmp (*info_ptr, "version" ) == 0) {
@@ -1213,7 +1198,8 @@ static void q3_analyze_serverinfo (struct server *s) {
   if(s->gametype) {
     n = strtol (s->gametype, &endptr, 10);
 
-    if (endptr != s->gametype) {
+    if ( s->type == Q3_SERVER && endptr != s->gametype)
+    {
       if(s->game) {
 	if (!strcmp(s->game,"osp"))
 	{
@@ -1252,15 +1238,40 @@ static void q3_analyze_serverinfo (struct server *s) {
 
 	  s->gametype = q3a_gametypes[n];
 	}
-
-      }
-      else if (is_default == 1)
-      {
+	if (!strcasecmp (s->game, "baseq3"))
+	{
 	  if( n >= MAX_Q3A_TYPES )
 	    n = MAX_Q3A_TYPES - 1;
 
 	  s->gametype = q3a_gametypes[n];
+	}
       }
+    }
+    if ( s->type == WO_SERVER && endptr != s->gametype)
+    {
+      if(s->game)
+      {
+	if (!strcasecmp (s->game, "main"))
+	{
+	  if( n >= MAX_WOLF_TYPES )
+	    n = MAX_WOLF_TYPES - 1;
+
+	  s->gametype = wolf_gametypes[n];
+	}
+      }
+    }
+  }
+
+  // unset game if it's no mod
+  if ( s->game )
+  {
+    if ( s->type == Q3_SERVER && !strcasecmp (s->game, "baseq3"))
+    {
+      s->game=NULL;
+    }
+    else if ( s->type == WO_SERVER && !strcasecmp (s->game, "main"))
+    {
+      s->game=NULL;
     }
   }
 }

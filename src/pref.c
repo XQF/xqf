@@ -1507,7 +1507,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
   frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_OUT);
-    label = gtk_label_new (games[type].name);
+    label = gtk_label_new (_(games[type].name));
     gtk_container_add (GTK_CONTAINER (frame), label);
     gtk_widget_show (label);
 
@@ -1714,6 +1714,7 @@ static GtkWidget *games_config_page (int defgame) {
 #endif
 
   games_notebook = gtk_notebook_new ();
+  // the tabs are hidden, so nobody will notice its a notebook
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (games_notebook), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (games_notebook), FALSE);
 #if defined GAMES_RADIOS
@@ -2868,7 +2869,7 @@ int prefs_load (void) {
   /* Wolfenstein */
   config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
 
-  wo_opts.masterprotocol =   config_get_string ("protocol=55");
+  wo_opts.masterprotocol =   config_get_string ("protocol=57");
   if ( strlen( wo_opts.masterprotocol ) == 0 )
 	  wo_opts.masterprotocol = NULL;
   wo_opts.vmfix =            config_get_bool ("vmfix=false");
