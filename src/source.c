@@ -1062,8 +1062,8 @@ static char *builtin_masters_update_info[] = {
   "ADD SNS http://www.gameaholic.com/servers/qspy-sin Gameaholic.Com",
   "ADD SNS http://asp.planetquake.com/sinserverlist/servers.txt PlanetQuake",
 
-  "ADD HLS master://half-life.east.won.net WON East",
-  "ADD HLS master://half-life.west.won.net WON West",
+  "DELETE HLS master://half-life.east.won.net WON East", // switched off
+  "DELETE HLS master://half-life.west.won.net WON West", // switched off
 
   "ADD HLS,-stm master://steam1.steampowered.com Steam 1",
   "ADD HLS,-stm master://steam2.steampowered.com Steam 2",

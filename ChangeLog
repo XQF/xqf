@@ -1,6 +1,8 @@
 Nov 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add country statistics
 - use an empty flag for countries without flag for proper alignment
+- add "clear servers" menu item for master servers
+- delete HL WON servers as they are switched off
 
 Oct 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - UT2004 master server support, needs qstat from CVS
