@@ -45,6 +45,7 @@
 #include "server.h"
 #include "statistics.h"
 #include "server.h"
+#include "config.h"
 #include "debug.h"
 
 
@@ -2537,12 +2538,22 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   /* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
   punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
-  if( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 ){
-    if( set_punkbuster ){
-      argv[argi++] = "+set cl_punkbuster 1";
-    } else {
+  if( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 )
+  {
+    if( set_punkbuster )
+    {
+      argv[argi++] = "+set";
+      argv[argi++] = "cl_punkbuster";
+      argv[argi++] = "1";
+    }
+    else
+    {
       debug( 1, "Got %s for punkbuster\n", punkbuster );
-      dialog_ok (NULL, _("Warning: The Server Has Punkbuster Enabled But it is NOT going to be set on the command line.\nYou may have problems connecting.\nYou Can fix this in the Game Config."));
+      if(!config_get_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown"))
+      {
+	dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
+	config_set_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown",TRUE);
+      }
     }
   }
   
