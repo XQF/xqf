@@ -43,14 +43,11 @@
 static struct player *poqs_parse_player(char *tokens[], int num);
 static struct player *qw_parse_player(char *tokens[], int num);
 static struct player *q2_parse_player(char *tokens[], int num);
-#ifdef QSTAT23
 static struct player *q3_parse_player(char *tokens[], int num);
-#endif
+static struct player *t2_parse_player(char *tokens[], int num);
 static struct player *hl_parse_player(char *tokens[], int num);
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
 static struct player *un_parse_player(char *tokens[], int num);
 static void un_analyze_serverinfo (struct server *s);
-#endif
 static struct player *descent3_parse_player(char *tokens[], int num);
 static void descent3_analyze_serverinfo (struct server *s);
 
@@ -60,23 +57,17 @@ static void qw_analyze_serverinfo (struct server *s);
 static void q2_analyze_serverinfo (struct server *s);
 static void hl_analyze_serverinfo (struct server *s);
 static void t2_analyze_serverinfo (struct server *s);
-#ifdef QSTAT23
 static void q3_analyze_serverinfo (struct server *s);
-#endif
 
 static int quake_config_is_valid (struct server *s);
-#ifdef QSTAT23
 static int quake3_config_is_valid (struct server *s);
-#endif
 static int config_is_valid_generic (struct server *s);
 
 static int write_quake_variables (const struct condef *con);
 
 static int q1_exec_generic (const struct condef *con, int forkit);
 static int qw_exec (const struct condef *con, int forkit);
-#ifdef QSTAT23
 static int q3_exec (const struct condef *con, int forkit);
-#endif
 static int q2_exec_generic (const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
@@ -86,9 +77,7 @@ static int exec_generic (const struct condef *con, int forkit);
 static GList *q1_custom_cfgs (char *dir, char *game);
 static GList *qw_custom_cfgs (char *dir, char *game);
 static GList *q2_custom_cfgs (char *dir, char *game);
-#ifdef QSTAT23
 static GList *q3_custom_cfgs (char *dir, char *game);
-#endif
 
 static void quake_save_info (FILE *f, struct server *s);
 
@@ -473,7 +462,7 @@ struct game games[] = {
     "-t2m", 
     &t2_pix,
 
-    q2_parse_player,
+    t2_parse_player,
     quake_parse_server,
     t2_analyze_serverinfo,
     config_is_valid_generic,
@@ -817,6 +806,38 @@ static struct player *qw_parse_player (char *token[], int n) {
   return player;
 }
 
+// Parse Tribes2 player info, abuse player->model to show when a Player is only
+// a Teamname or a Bot
+// player name, frags, team number, team name, player type, tribe tag
+static struct player *t2_parse_player (char *token[], int n) {
+  struct player *player = NULL;
+  char* name=token[0];
+  char* frags=token[1];
+//  char* team_number=token[2];
+  char* team_name=token[3];
+  char* player_type=token[4];
+//  char* tribe_tag=token[5];
+
+  if (n < 6)
+    return NULL;
+
+  // show TEAM in model column
+  if (!strcmp(team_name,"TEAM"))
+    player_type=team_name;
+
+  player = g_malloc0 (sizeof (struct player) + strlen(name)+1 + strlen(player_type)+1 );
+  player->time  = -1;
+  player->frags = strtosh (frags);
+  player->ping  = -1;
+
+  player->name = (char *) player + sizeof (struct player);
+  strcpy (player->name, name);
+
+  player->model = (char *) player + sizeof (struct player) + strlen(name)+1;
+  strcpy (player->model, player_type);
+
+  return player;
+}
 
 static struct player *q2_parse_player (char *token[], int n) {
   struct player *player = NULL;
