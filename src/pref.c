@@ -1684,6 +1684,43 @@ static GtkWidget *create_noskins_menu (int qworq2) {
   return menu;
 }
 
+/**
+  * return true if game 'type' has suggest_commands
+  */
+static gboolean pref_can_suggest(enum server_type type)
+{
+    return (game_get_attribute(type,"suggest_commands")!=0);
+}
+
+/**
+  * find game binary in path and fill in command entry
+  */
+static void pref_suggest_command(enum server_type type)
+{
+    const char* files = NULL;
+    char* suggested_file = NULL;
+
+    files = game_get_attribute(type,"suggest_commands");
+    if(!files)
+    {
+	return;
+    }
+
+    suggested_file = find_file_in_path(files);
+    if(!suggested_file)
+    {
+	dialog_ok(_("Game not found"),
+		// %s name of a game
+		_("%s not found"),
+		games[type].name);
+	return;
+    }
+
+    // gtk entry does the freeing?
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
+
+    return;
+}
 
 static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *frame;
@@ -1692,6 +1729,8 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *table;
   GtkWidget *label;
   GtkWidget *notebook;
+  GtkWidget *hbox;
+  GtkWidget *button;
   struct generic_prefs *prefs = &genprefs[type];
 
 //  frame = gtk_frame_new (games[type].name);
@@ -1741,21 +1780,35 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
 
+  
   label = gtk_label_new (_("Command Line"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
+  gtk_widget_show (hbox);
+
   genprefs[type].cmd_entry = gtk_entry_new ();
   if (games[type].cmd) {
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), games[type].cmd);
     gtk_entry_set_position (GTK_ENTRY (genprefs[type].cmd_entry), 0);
   }
-  gtk_table_attach_defaults (GTK_TABLE (table), genprefs[type].cmd_entry,
-                                                                  1, 2, 0, 1);
+  gtk_box_pack_start (GTK_BOX (hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
   gtk_widget_show (genprefs[type].cmd_entry);
 
+  // translator: button for command suggestion
+  button = gtk_button_new_with_label (_("Suggest"));
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                    GTK_SIGNAL_FUNC (pref_suggest_command), (gpointer)type);
+  gtk_widget_set_sensitive (button, pref_can_suggest(type));
+
+  gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  /////
   label = gtk_label_new (_("Working Directory"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
@@ -3481,19 +3534,30 @@ void preferences_dialog (int page_num) {
 
 
 // set some defaults when xqf is called the first time
-static void user_fix_defaults (void) {
-  config_set_string ("/" CONFIG_FILE "/Game: QS/cmd", "nq-x11");
-  config_set_string ("/" CONFIG_FILE "/Game: QWS/cmd", "qw-client-x11");
-  config_set_string ("/" CONFIG_FILE "/Game: Q2S/cmd", "quake2");
-  config_set_string ("/" CONFIG_FILE "/Game: Q3S/cmd", "quake3");
-  config_set_string ("/" CONFIG_FILE "/Game: RUNESRV/cmd", "rune");
-  config_set_string ("/" CONFIG_FILE "/Game: T2S/cmd", "tribes2");
-  config_set_string ("/" CONFIG_FILE "/Game: WOS/cmd", "wolf");
-  config_set_string ("/" CONFIG_FILE "/Game: UNS/cmd", "ut");
-  config_set_string ("/" CONFIG_FILE "/Game: UT2S/cmd", "ut2003");
+static void user_fix_defaults (void)
+{
+    const char* files = NULL;
+    char* suggested_file = NULL;
+    char str[256];
+    int i;
+    
+    for (i = 0; i < GAMES_TOTAL; i++)
+    {
+	files = game_get_attribute(games[i].type,"suggest_commands");
+	if(!files) continue;
+	suggested_file = find_file_in_path(files);
+	if(!suggested_file) continue;
 
-  config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
-                                                          g_get_user_name ());
+	g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/cmd", type2id (games[i].type));
+	config_set_string (str, suggested_file);
+	debug(0,"set command %s for %s",suggested_file,games[i].name);
+
+	g_free(suggested_file);
+	suggested_file=NULL;
+    }
+
+    config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
+						  g_get_user_name ());
 }
 
 
@@ -3686,7 +3750,7 @@ int prefs_load (void) {
   default_toolbar_tips =      config_get_bool ("toolbar tips=true");
   default_refresh_sorts =     config_get_bool ("sort on refresh=true");
   default_refresh_on_update = config_get_bool ("refresh on update=true");
-  default_show_only_configured_games =    config_get_bool ("show only configured games=false");
+  default_show_only_configured_games =    config_get_bool ("show only configured games=true");
 
   config_pop_prefix ();
 

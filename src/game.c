@@ -702,8 +702,16 @@ void init_games()
     g_datalist_init(&games[i].games_data);
   }
 
+  game_set_attribute(Q1_SERVER,"suggest_commands",strdup("nq-sgl:nq-glx:nq-sdl:nq-x11"));
+  game_set_attribute(QW_SERVER,"suggest_commands",strdup("qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11"));
+  game_set_attribute(Q3_SERVER,"suggest_commands",strdup("q3:quake3"));
+  game_set_attribute(WO_SERVER,"suggest_commands",strdup("wolf"));
+  game_set_attribute(SFS_SERVER,"suggest_commands",strdup("sof"));
+  game_set_attribute(DESCENT3_SERVER,"suggest_commands",strdup("descent3"));
+  game_set_attribute(T2_SERVER,"suggest_commands",strdup("tribes2"));
+  game_set_attribute(UN_SERVER,"suggest_commands",strdup("ut"));
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
-  game_set_attribute(Q1_SERVER,"suggest_commands",strdup("nq-sgl:nq-glx:nq-sdl:nq-sdl32:nq-x11"));
+  game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
 }
 
 // retreive game specific value that belongs to key, do not free return value!
@@ -759,12 +767,6 @@ enum server_type id2type (const char *id) {
 
 const char *type2id (enum server_type type) {
   switch (type) {
-
-  case QW_SERVER:
-    return "QWS";
-
-  case Q2_SERVER:
-    return "Q2S";
 
   default:
     return games[type].id;

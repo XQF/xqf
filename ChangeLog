@@ -1,6 +1,8 @@
 Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - cleaned up get_custom_arguments
 - custom_arg_count no longer neccessary
+- suggest function for game commands
+- show only configured games by default
 
 Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
 - Modified q3_exec to call find_game_dir using quake3_data_dir

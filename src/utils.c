@@ -26,6 +26,7 @@
 #include <signal.h>	/* sigaction, sigemptyset */
 #include <ctype.h>	/* tolower */
 #include <sys/stat.h>	/* stat */
+#include <unistd.h>	/* access */
 
 #include <gtk/gtk.h>
 
@@ -508,20 +509,47 @@ const char* bool2str(int i)
   return "true";
 }
 
+/** find executable file in $PATH. file is a colon seperated list of
+ * executables to search for. return name of first found file, must be freed
+ * manually
+ */
 char* find_file_in_path(const char* files)
 {
-    enum { maxtoken = 16 };
-    char* token[maxtoken];
-    char* tokenizedstring = strdup(files);
-    int count = tokenize_bychar(tokenizedstring,token,maxtoken,':');
-    char* path = getenv("PATH");
-    int i;
+    char** binaries = NULL;
+    char* path = NULL;
+    int i = 0, j = 0;
+    char** directories = NULL;
+    char* found = NULL;
 
-    for(i = 0; i < count; i++)
+    binaries = g_strsplit(files,":",0);
+    path = getenv("PATH");
+
+    if(!binaries) return NULL;
+    if(!path) return NULL;
+
+    directories = g_strsplit(path,":",0);
+
+    for(i=0; binaries[i] && !found; i++)
     {
+//	debug(0,"search for %s",binaries[i]);
+	for(j=0; directories[j] && !found; j++)
+	{
+//	    debug(0,"search in %s",directories[j]);
+	    char *file = file_in_dir (directories[j], binaries[i]);
+	    if(!file) continue;
+	   
+	    if(!access(file,X_OK))
+	    {
+		found = g_strdup(binaries[i]);
+		debug(3,"found %s",binaries[i]);
+	    }
+	    g_free(file);
+	}
     }
 
-    g_free(tokenizedstring);
+    g_strfreev(binaries);
+
+    return found;
 }
 
 // find a directory inside another, prefer matching case otherwise search case
