@@ -1017,10 +1017,6 @@ static char *builtin_masters_update_info[] = {
   "ADD D3P http://www.gameaholic.com/servers/qspy-descent3 gameaholic.com",
 
   "ADD SFS http://www.gameaholic.com/servers/qspy-soldieroffortune gameaholic.com",
-  "ADD GPS http://www.gameaholic.com/servers/qspy-noonelivesforever Noone Lives Forevere - gameaholic.com",
-  "ADD GPS http://www.gameaholic.com/servers/qspy-rallymasters Rally Masters - gameaholic.com",
-  "ADD GPS http://www.gameaholic.com/servers/qspy-turok2 Turok 2 - gameaholic.com",
-  "ADD GPS http://www.gameaholic.com/servers/qspy-shogo Shogo - gameaholic.com",
 
   "ADD RUNESRV http://www.gameaholic.com/servers/qspy-rune gameaholic.com",
 
@@ -1038,6 +1034,7 @@ static char *builtin_masters_update_info[] = {
   "ADD SOF2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=SOF2&hostport=1 multiplay.co.uk - SOF2",
   "ADD UT2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K3&hostport=1 multiplay.co.uk - UT2003",
   "ADD HLS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=HLS&hostport=1 multiplay.co.uk - Half-Life",
+  "ADD CODS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=COD multiplay.co.uk - Call of Duty",
   
   NULL
 };
@@ -1246,6 +1243,7 @@ static void save_master_list (void) {
 }
 
 void init_masters (int update) {
+  typedef void (*server_unref_void)(void*);
   struct master *m;
   struct master *m2;
   int i;
@@ -1286,7 +1284,7 @@ void init_masters (int update) {
       continue;
     debug (2, "  Working on master: %s",m2->name);
 
-    m2->servers = slist_sort_remove_dups(m2->servers,(GCompareFunc)server_sorting_helper,server_unref);
+    m2->servers = slist_sort_remove_dups(m2->servers,(GCompareFunc)server_sorting_helper,(server_unref_void)server_unref);
     
   }
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: xqf-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2003-10-28 17:46+0100\n"
-"PO-Revision-Date: 2003-10-18 19:36GMT\n"
+"POT-Creation-Date: 2003-11-10 00:10+0100\n"
+"PO-Revision-Date: 2003-11-10 00:11GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid "Master Address"
 msgstr "Master Adresse"
 
 #: src/addmaster.c:515 src/addserver.c:209 src/dialogs.c:415 src/filter.c:1588
-#: src/filter.c:2088 src/game.c:2632 src/game.c:2795 src/game.c:2886
+#: src/filter.c:2088 src/game.c:2681 src/game.c:2844 src/game.c:2935
 #: src/launch.c:329 src/pref.c:4510 src/psearch.c:224 src/redial.c:228
 #: src/srv-prop.c:714 src/xqf.c:1087 src/xqf.c:1111 src/xqf.c:1874
 msgid "Cancel"
@@ -268,11 +268,11 @@ msgstr "Hoch"
 msgid "Down"
 msgstr "Runter"
 
-#: src/game.c:905
+#: src/game.c:910
 msgid "Generic Gamespy"
 msgstr "Allgemein Gamespy"
 
-#: src/game.c:1073
+#: src/game.c:1089
 msgid ""
 "Note:  Soldier of Fortune will not connect to a server correctly\n"
 "without creating a startup script for the game.  Please see the\n"
@@ -282,7 +282,7 @@ msgstr ""
 "müssen Sie ein Startskript erstellen. In der XQF Dokumentation\n"
 "erhalten Sie mehr Information."
 
-#: src/game.c:1077
+#: src/game.c:1093
 msgid ""
 "Note:  Unreal Tournament will not launch correctly without\n"
 "modifications to the game's startup script.  Please see the\n"
@@ -292,11 +292,21 @@ msgstr ""
 "müssen Sie sein Startskript modifizieren. In der XQF Dokumentation\n"
 "erhalten Sie mehr Information."
 
-#: src/game.c:1081
+#: src/game.c:1097
 msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
 msgstr "Beispiel für Kommandozeile: wine hl.exe -- hl.exe -console"
 
-#: src/game.c:1085 src/game.c:1089
+#: src/game.c:1100
+msgid ""
+"Note:  Savage will not launch correctly without\n"
+"modifications to the game's startup script. Please see the\n"
+"XQF documentation for more information."
+msgstr ""
+"Hinweis: Damit Savage ordnungsgemäß startet, müssen\n"
+"Sie sein Startskript modifizieren. In der XQF Dokumentation\n"
+"erhalten Sie mehr Information."
+
+#: src/game.c:1105 src/game.c:1109
 msgid ""
 "Note: You need to create a qstat config file for this game to work.\n"
 "Please see the XQF documentation for more information."
@@ -305,12 +315,12 @@ msgstr ""
 "dieses Spiel  funktioniert. In der XQF Dokumentation erhalten Sie\n"
 "mehr Information."
 
-#: src/game.c:2291
+#: src/game.c:2340
 #, c-format
 msgid "%s command line is empty."
 msgstr "Die %s Kommandozeile ist leer"
 
-#: src/game.c:2298 src/game.c:2404
+#: src/game.c:2347 src/game.c:2453
 #, c-format
 msgid ""
 "\"%s\" is not a directory\n"
@@ -319,12 +329,12 @@ msgstr ""
 "\"%s\" ist kein Verzeichnis.\n"
 "Bitte korrektes Arbeitsverzeichnis für %s angeben."
 
-#: src/game.c:2310
+#: src/game.c:2359
 #, c-format
 msgid "Please specify correct %s working directory."
 msgstr "Bitte korrektes Arbeitsverzeichnis für %s angeben."
 
-#: src/game.c:2316
+#: src/game.c:2365
 #, c-format
 msgid ""
 "Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
@@ -333,7 +343,7 @@ msgstr ""
 "\"%s\" enthält kein \"%s\" Unterverzeichnis.\n"
 "Bitte korrektes Arbeitsverzeichnis für %s angeben."
 
-#: src/game.c:2370
+#: src/game.c:2419
 #, c-format
 msgid ""
 "~/.q3a directory doesn't exist or doesn't contain\n"
@@ -346,7 +356,7 @@ msgstr ""
 "Bitte rufen Sie %s mindestens einmal auf bevor Sie XQF aufrufen,\n"
 "oder geben Sie ein korrektes Arbeitsverzeichnis für %s an."
 
-#: src/game.c:2379
+#: src/game.c:2428
 #, c-format
 msgid ""
 "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
@@ -359,12 +369,12 @@ msgstr ""
 "Bitte geben Sie ein korrektes Arbeitsverzeichnis für %s an,\n"
 "oder lassen Sie es leer (~/.q3a wird Standardmäßig benutzt)"
 
-#: src/game.c:2632 src/game.c:2795 src/game.c:2886 src/launch.c:329
+#: src/game.c:2681 src/game.c:2844 src/game.c:2935 src/launch.c:329
 #: src/xqf.c:1087 src/xqf.c:1111
 msgid "Launch"
 msgstr "Starten"
 
-#: src/game.c:2634 src/game.c:2796 src/game.c:2887
+#: src/game.c:2683 src/game.c:2845 src/game.c:2936
 #, c-format
 msgid ""
 "Cannot write to file \"%s\".\n"
@@ -375,7 +385,7 @@ msgstr ""
 "\n"
 "Client trotzdem starten?"
 
-#: src/game.c:3136
+#: src/game.c:3185
 msgid ""
 "The server has Punkbuster enabled but it is not going\n"
 "to be set on the command line.\n"
@@ -555,8 +565,7 @@ msgstr ""
 
 #: src/pref.c:2104
 msgid "You must enter both a game and at least one argument."
-msgstr ""
-"Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
+msgstr "Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
 
 #: src/pref.c:2203
 msgid "Invoking"
@@ -906,8 +915,7 @@ msgstr "'prelaunch' ausführen"
 
 #: src/pref.c:3915
 msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr ""
-"Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
+msgstr "Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
 
 #: src/pref.c:3924
 msgid "Stop current song in XMMS"
@@ -1197,7 +1205,7 @@ msgstr ""
 msgid "You have to specify a port number for %s."
 msgstr "Sie müssen eine Portnummer für %s angeben"
 
-#: src/source.c:1254
+#: src/source.c:1252
 msgid "Favorites"
 msgstr "Favoriten"
 
@@ -1894,8 +1902,7 @@ msgstr "Starten ..."
 #: src/xqf.c:3802
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr ""
-"Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
+msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
 
 #: src/splash.c:59
 msgid "XQF: Loading"
@@ -1916,3 +1923,4 @@ msgstr "Lade ..."
 
 #~ msgid "_Add Server"
 #~ msgstr "Server _hinzufügen"
+
