@@ -618,3 +618,49 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 
   return g_strdup (game);
 }
+
+/** sort list and remove duplicates
+ * @param list list to sort
+ * @compare_func function to use for comparing
+ * @unref_func function to call for each deleted entry
+ * @return sorted list without duplicates
+ */
+GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*unref_func)(void*))
+{
+  int i;
+  GSList* serverlist = NULL;
+  GSList* serverlistnext = NULL;
+
+  if(!list)
+    return NULL;
+
+  list = serverlist = g_slist_sort (list, compare_func);
+
+  i = 0;
+  while(serverlist)
+  {
+    serverlistnext=serverlist->next;
+    if(!serverlistnext)
+    {
+      // last element, quit loop
+      serverlist = serverlistnext;
+    }
+    else if(!compare_func(serverlist->data,serverlistnext->data))
+    {
+      GSList* dup = serverlistnext;
+      serverlistnext = g_slist_remove_link(serverlistnext, dup);
+      serverlist->next = serverlistnext;
+      if(unref_func) unref_func(dup->data);
+      g_slist_free_1(dup);
+    }
+    else
+    {
+      serverlist= serverlistnext;
+    }
+    i++;
+  }
+  debug(2,"number of servers %d",i);
+
+  return list;
+}
+

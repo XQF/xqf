@@ -224,7 +224,10 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	     o When the "conn" is freed, it will call the function
 	     to free the list returned here
 	  */
-	  conn->servers = server_list_prepend (conn->servers, s);
+	  //XXX
+//	  conn->servers = server_list_prepend (conn->servers, s);
+	  conn->servers = g_slist_prepend (conn->servers, s);
+	  server_ref(s);
 	}
 	host_unref (h);
       }
@@ -232,7 +235,9 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 	g_strdown (addr);
 	if ((us = userver_add (addr, port, type)) != NULL)
-	  conn->uservers = userver_list_add (conn->uservers, us);
+//	  conn->uservers = userver_list_add (conn->uservers, us);
+	  conn->uservers = g_slist_prepend (conn->uservers, us);
+	  userver_ref(s);
       }
       g_free (addr);
     }
@@ -1040,6 +1045,17 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 }
 
 
+// compare pointers
+static gint compare_ptr (gconstpointer s1, gconstpointer s2)
+{
+  if(s1==s2)
+    return 0;
+  else if(s1<s2)
+    return -1;
+  else
+    return 1;
+}
+
 static void stat_master_update_done (struct stat_conn *conn,
 				     struct stat_job *job,
 				     struct master *m,
@@ -1048,17 +1064,20 @@ static void stat_master_update_done (struct stat_conn *conn,
 
   m->state = state;
 
-  debug (3, "stat_master_update_done(%s) -- status %d\n", 
+  debug (1, "stat_master_update_done(%s) -- status %d\n", 
                                 (conn)? conn->master->name : "(null)", state);
+  //XXX
 
   if (state == SOURCE_UP && conn) {
     debug (3, "stat_master_update_done -- state == SOURCE_UP && conn");
     server_list_free (m->servers);
-    m->servers = g_slist_reverse (conn->servers);
+//    m->servers = g_slist_reverse (conn->servers);
+    m->servers = slist_sort_remove_dups(conn->servers,compare_ptr,server_unref);
     conn->servers = NULL;
 
     userver_list_free (m->uservers);
-    m->uservers = g_slist_reverse (conn->uservers);
+//    m->uservers = g_slist_reverse (conn->uservers);
+    m->uservers = slist_sort_remove_dups(conn->uservers,compare_ptr,userver_unref);
     conn->uservers = NULL;
 
     if (default_refresh_on_update)
@@ -1069,6 +1088,7 @@ static void stat_master_update_done (struct stat_conn *conn,
     stat_free_conn (conn);
 
   job->need_redraw = TRUE;
+  /*
   job->delayed.queued_servers = server_list_append_list (
                      job->delayed.queued_servers, m->servers, UNKNOWN_SERVER);
 
@@ -1076,6 +1096,25 @@ static void stat_master_update_done (struct stat_conn *conn,
                                                               UNKNOWN_SERVER);
   job->names = userver_list_append_list (job->names, m->uservers,
                                                               UNKNOWN_SERVER);
+  */
+  for (tmp = m->servers; tmp; tmp = tmp->next)
+  {
+    job->delayed.queued_servers = g_slist_prepend(job->delayed.queued_servers, tmp->data);
+    job->servers = g_slist_prepend(job->servers,tmp->data);
+    server_ref(tmp->data);
+    server_ref(tmp->data);
+  }
+  for (tmp = m->uservers; tmp; tmp = tmp->next)
+  {
+    job->names = g_slist_prepend(job->names,tmp->data);
+    server_ref(tmp->data);
+  }
+
+  job->delayed.queued_servers = slist_sort_remove_dups(job->delayed.queued_servers,compare_ptr,server_unref);
+  
+  job->servers = slist_sort_remove_dups(job->servers,compare_ptr,server_unref);
+  
+  job->names = slist_sort_remove_dups(job->names,compare_ptr,userver_unref);
 
   debug (3, "stat_master_update_done -- job->master_handlers = %p",job->master_handlers);
   for (tmp = job->master_handlers; tmp; tmp = tmp->next)
@@ -1371,7 +1410,7 @@ static void stat_next (struct stat_job *job) {
 
   if (job->servers) {
 
-    debug (3, "stat_next() -- Servers:  Job %lx  server list %lx", job, job->servers );
+    debug (1, "Servers:  Job %lx  server list %lx", job, job->servers );
     if (!job->need_refresh) {
       stat_close (job, FALSE);
       return;
@@ -1388,7 +1427,7 @@ static void stat_next (struct stat_job *job) {
     if (!stat_open_conn_qstat (job)) {
 
       /* It's very bad, stop everything. */
-      debug (1, "job_next() -- Error! Could not stat_open_conn_qstat()");
+      debug (0, "Error! Could not stat_open_conn_qstat()");
       stat_close (job, TRUE);
     }
     debug_decrease_indent();

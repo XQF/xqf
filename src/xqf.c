@@ -395,8 +395,9 @@ int check_qstat_version( const char* version )
 
 void reset_main_status_bar() {
   // Reset bottom left status bar to show number of servers
-  print_status (main_status_bar, (server_clist->rows == 1) ?
-                        _("%d server") : _("%d servers"), server_clist->rows);
+  print_status (main_status_bar,
+		  ngettext(_("%d server"),_("%d servers"), server_clist->rows),
+		  server_clist->rows);
 }
 
 void set_widgets_sensitivity (void) {
