@@ -220,6 +220,9 @@ struct generic_prefs {
   // function for adding game specific tabs to notebook
   void (*add_options_to_notebook) (GtkWidget *notebook);
 
+  GtkWidget *custom_args_entry[10];
+  GSList *custom_args;
+   
   // game specific data
   GData* games_data;
 
@@ -257,6 +260,17 @@ static void get_new_defaults_for_game (enum server_type type) {
   struct generic_prefs *prefs = &genprefs[type];
   char str[256];
 
+  char *arg = NULL;
+  char conf[15];
+  int j = 0;
+  int i = 0;
+  char *stemp;
+
+  GSList *temp;
+  char *str2;
+  int isdefault = FALSE;
+
+  
   debug (5, "get_new_defaults_for_game(%d)",type);
 
   if (prefs->cmd_entry) {
@@ -284,6 +298,24 @@ static void get_new_defaults_for_game (enum server_type type) {
                             GTK_ENTRY (GTK_COMBO (prefs->cfg_combo)->entry)));
   }
 
+  // Custom Arguments
+  if (g->custom_args) {
+    g_slist_free (g->custom_args);
+    g->custom_args = NULL;
+  }
+  for (i = 0; i < 5; i++) {
+    if (prefs->custom_args_entry[i]) {
+      stemp = strdup_strip (gtk_entry_get_text (GTK_ENTRY (prefs->custom_args_entry[i])));
+      if (stemp)
+       {
+        //printf("stemp:%s\n",stemp);
+        g->custom_args = g_slist_append(g->custom_args, 
+        		strdup_strip (gtk_entry_get_text (GTK_ENTRY (prefs->custom_args_entry[i]))) );
+      }
+      g_free (stemp);
+    }
+  }
+
   g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
   config_push_prefix (str);
 
@@ -302,6 +334,40 @@ static void get_new_defaults_for_game (enum server_type type) {
   else
     config_clean_key ("custom cfg");
 
+
+  // Clear existing custom arguments
+  j = 0;
+  g_snprintf (conf, 64, "custom_arg%d", j);
+  str2 = config_get_string_with_default (conf,&isdefault);
+  while (!isdefault)
+  {
+    config_clean_key (conf);
+    
+    j++;
+    g_snprintf (conf, 64, "custom_arg%d", j);
+    str2 = config_get_string_with_default (conf,&isdefault);
+  }
+
+  // Set custom arguments
+  temp = g_slist_nth(g->custom_args, 0);
+
+  if (temp) {
+    j = 0;
+    while (1)
+    {
+      g_snprintf (conf, 15, "custom_arg%d", j++);
+      arg = g_strdup((char *) temp->data);
+    
+      config_set_string (conf, arg);
+
+      // printf("added: %s=%s\n",conf,arg);      
+    
+      if (g_slist_next(temp))
+        temp = g_slist_next(temp);
+      else
+        break;
+    }
+  }
   config_pop_prefix ();
 }
 
@@ -309,6 +375,11 @@ static void get_new_defaults_for_game (enum server_type type) {
 static void load_game_defaults (enum server_type type) {
   struct game *g = &games[type];
   char str[256];
+
+  int isdefault = FALSE;
+  char *str2;
+  char conf[64];
+  int j;
 
   g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
   config_push_prefix (str);
@@ -324,6 +395,20 @@ static void load_game_defaults (enum server_type type) {
 
   if (g->game_cfg) g_free (g->game_cfg);
   g->game_cfg = config_get_string ("custom cfg");
+
+  // Load custom arguments
+  j = 0;
+  g_snprintf (conf, 64, "custom_arg%d", j);
+  str2 = config_get_string_with_default (conf,&isdefault);
+  while (!isdefault)
+  {
+    g->custom_args = g_slist_append(g->custom_args, str2);
+    debug(1,"game: %s: %s=%s",type2id (type), conf,str2);
+    
+    j++;
+    g_snprintf (conf, 64, "custom_arg%d", j);
+    str2 = config_get_string_with_default (conf,&isdefault);
+  }
 
   config_pop_prefix ();
 }
@@ -1731,6 +1816,7 @@ static void pref_suggest_command(enum server_type type)
 static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *frame;
   GtkWidget *vbox;
+  GtkWidget *page_vbox2;
   GtkWidget *page_vbox;
   GtkWidget *table;
   GtkWidget *label;
@@ -1738,6 +1824,11 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *hbox;
   GtkWidget *button;
   struct generic_prefs *prefs = &genprefs[type];
+  GSList *temp;
+  int i;
+  struct game *g;
+  
+  g = &games[type];
 
 //  frame = gtk_frame_new (games[type].name);
 //  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
@@ -1858,6 +1949,48 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_widget_show (prefs->cfg_combo);
   }
 
+  if ((type == Q3_SERVER) ||
+      (type == UN_SERVER) ||
+      (type == UT2_SERVER)) {
+
+    /* Custom Argments frame */
+
+    frame = gtk_frame_new (_("Custom Arguments (may not work with this game)"));
+    gtk_table_attach_defaults (GTK_TABLE (table), frame, 0, 2, 3, 4);
+
+    page_vbox2 = gtk_vbox_new (FALSE, 4);
+
+    /* Custom args */
+
+    temp = g_slist_nth(g->custom_args, 0);  
+    i = 0;
+    for (i=0; i<5; i++) {
+      genprefs[type].custom_args_entry[i] = gtk_entry_new ();
+  
+      if(temp) {
+        gtk_entry_set_text (GTK_ENTRY (genprefs[type].custom_args_entry[i]), (char *)temp->data);
+        gtk_entry_set_position (GTK_ENTRY (genprefs[type].custom_args_entry[i]), 0);
+      }
+      else {
+        gtk_entry_set_text (GTK_ENTRY (genprefs[type].custom_args_entry[i]), "");
+        gtk_entry_set_position (GTK_ENTRY (genprefs[type].custom_args_entry[i]), 0);
+      }
+      gtk_container_add(GTK_CONTAINER(page_vbox2), genprefs[type].custom_args_entry[i]);
+      //gtk_table_attach_defaults (GTK_TABLE (table), genprefs[type].custom_args_entry[i], 0, 2, 3+i, 4+i);
+      gtk_widget_show (genprefs[type].custom_args_entry[i]);
+  
+      if(temp)
+        temp = g_slist_next(temp);
+    }
+  
+    gtk_container_add(GTK_CONTAINER(frame), page_vbox2);
+    
+    gtk_widget_show (page_vbox2);
+  
+    gtk_widget_show (frame);
+  
+  }
+  
   gtk_widget_show (table);
 
   gtk_widget_show (vbox);
@@ -3713,29 +3846,9 @@ int prefs_load (void) {
   config_pop_prefix ();
 
   /* Unreal (Tournament) */
-  config_push_prefix ("/" CONFIG_FILE "/Game: UNS");
+  // config_push_prefix ("/" CONFIG_FILE "/Game: UNS");
   
-  {
-    int isdefault = FALSE;
-    char *str;
-    char conf[64];
-    int j = 0;
-    g_snprintf (conf, 64, "custom_arg%d", j);
-    str = config_get_string_with_default (conf,&isdefault);
-    while (!isdefault)
-    {
-      game_set_attribute(UN_SERVER, conf, str);
-      debug(1,"got %s=%s",conf,str);
-      
-      j++;
-      g_snprintf (conf, 64, "custom_arg%d", j);
-      str = config_get_string_with_default (conf,&isdefault);
-    }
-
-    game_set_attribute(UN_SERVER,"custom_arg_count",g_strdup_printf("%d",j));
-  }
-
-  config_pop_prefix ();
+  // config_pop_prefix ();
 
   /* Voyager Elite Force */
   config_push_prefix ("/" CONFIG_FILE "/Game: EFS");

@@ -59,6 +59,7 @@ struct game {
   int (*exec_client) (const struct condef *con, int forkit);
   GList * (*custom_cfgs) (char *dir, char *game);
   void (*save_info) (FILE *f, struct server *s);
+  GSList *custom_args;
 
   char *arch_identifier;
   enum CPU (*identify_cpu) (struct server *s, const char *versionstr);
