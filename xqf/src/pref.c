@@ -1869,7 +1869,7 @@ static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
  
  tokenize (g_strdup((char *)ptr1), temp, 2, ",");
 
- if (strcmp (temp[0], ptr2) == 0)
+ if (strcasecmp (temp[0], ptr2) == 0)
   return (0);
  else
    return (1);
