@@ -1,3 +1,11 @@
+Oct 23, 2002: Alex Burger <alex@users.sourceforge dot net>
+- removed rafix option from q3_exec
+- modified vmfix option in q3_exec to make custom args preferred over
+  vmfix args
+- added button to add default custom args to editor page
+- add default custom args for UT StrikeForce & TacticalOps
+- add default custom args for Q3A Rocket Arena
+
 Oct 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove old tribes2 master, add three new
 - increase version to 0.9.9.3
