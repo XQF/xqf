@@ -1,4 +1,5 @@
 Oct 25, 2002: Alex <alex_b@users.sourceforge.net>
+- Segfault fix - q3_exec - launch game even if it doesn't respond to refresh
 - Tooltip updates
 
 Oct 24, 2002: Alex <alex_b@users.sourceforge.net>

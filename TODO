@@ -7,8 +7,6 @@
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
 - Fix the server core dumps! (are there any left?)
-- segfault: Connect to a Quake3 that is not reachable - click Launch
-  anyways, segfault
 - improve performance with huge server lists (halflife), maybe by serverside
   filtering
 - More general server filters so one can filter based on any server var.
