@@ -23,6 +23,11 @@
 /* Use this function to set the directory containing installed pixmaps. */
 void add_pixmap_directory (const gchar* directory);
 
+/* search a pixmap in the paths added by add_pixmap_directory()
+ * must free returned path manually
+ * returns NULL if file was not found
+ */
+gchar* find_pixmap_directory(const gchar* filename);
 
 /*
  * Private Functions.

@@ -23,6 +23,7 @@
 #include "i18n.h"
 #include "debug.h"
 #include "pixmaps.h"
+#include "loadpixmap.h"
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <ctype.h>
@@ -30,6 +31,7 @@
 #include <GeoIP.h>
 
 const int MaxCountries = sizeof(GeoIP_country_code)/3;
+static const int LAN_GeoIPid = sizeof(GeoIP_country_code)/3; // MaxCountries doesn't work in C
 
 static GeoIP* gi;
 
@@ -39,7 +41,7 @@ void geoip_init(void)
 {
   gi = GeoIP_new(GEOIP_STANDARD);
   if(gi)
-    flags = g_malloc0(MaxCountries*sizeof(struct pixmap));
+    flags = g_malloc0((MaxCountries+1) *sizeof(struct pixmap)); /*+1-> flag for LAN server*/
   else
     xqf_error("GeoIP initialization failed");
 }
@@ -51,26 +53,98 @@ void geoip_done(void)
   g_free(flags);
 }
 
+gboolean geoip_is_working (void)
+{
+
+  if (gi)
+    return TRUE;
+  else
+    return FALSE;
+}
+
 const char* geoip_code_by_id(int id)
 {
-  if(id < 0 || id >= MaxCountries ) return NULL;
-  return GeoIP_country_code[id];
+  if(id < 0 || id > MaxCountries ) return NULL;
+  
+  /* LAN server have code ="00" */  
+  if (id == LAN_GeoIPid)
+    return "00";
+  else  
+    return GeoIP_country_code[id];
 }
 
 const char* geoip_name_by_id(int id)
 {
-  if(id < 0 || id >= MaxCountries ) return NULL;
-  return GeoIP_country_name[id];
+  if(id < 0 || id > MaxCountries) return NULL;
+  
+  if (id == LAN_GeoIPid)
+    return "LAN";
+  else
+    return GeoIP_country_name[id];
 }
+
+
+/*Checks for RFC1918 private addresses; returns TRUE if is a private address. */
+/*from the napshare source*/
+static gboolean is_private_ip(guint32 ip)
+{
+  /* 10.0.0.0 -- (10/8 prefix) */
+  if ((ip & 0xff000000) == 0xa000000)
+  {
+      return TRUE;
+  }
+
+  /* 172.16.0.0 -- (172.16/12 prefix) */
+  if ((ip & 0xfff00000) == 0xac100000)
+  {
+      return TRUE;
+  }
+
+  /* 192.168.0.0 -- (192.168/16 prefix) */
+  if ((ip & 0xffff0000) == 0xc0a80000)
+  {
+      return TRUE;
+  }
+
+  return FALSE;
+}
+
+
 
 int geoip_id_by_ip(struct in_addr in)
 {
-	if(!gi) return -1;
-	return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
+
+  if(!gi) return -1;
+    
+  /*check if the server is inside a LAN*/
+  if (is_private_ip(htonl(in.s_addr)))
+    return LAN_GeoIPid;
+  else
+    return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
 }
 
+
+int geoip_id_by_code(const char *country)
+{
+  int i;
+
+  if(!gi) return -1;
+
+  if (strcmp(country,"00")==0)
+    return LAN_GeoIPid;
+
+  for (i=1;i<MaxCountries;++i)
+  {
+    if (strcmp(country,GeoIP_country_code[i])==0) 
+      return i;
+  }
+
+  return 0;
+}
+
+  
 #warning enter KDE path
-static char kdeflagpath[]="/opt/kde3/share/locale/l10n/%2s/flag.png";;
+static char kdeflagpath[]="/opt/kde3/share/locale/l10n/%2s/flag.png";
 
 struct pixmap* get_pixmap_for_country(int id)
 {
@@ -95,14 +169,18 @@ struct pixmap* get_pixmap_for_country(int id)
   code = g_strdup(code);
   g_strdown(code);
 
-  filename = g_strdup_printf(kdeflagpath,code);
+  if(id==LAN_GeoIPid)
+    filename = find_pixmap_directory("lan.png");
+  else
+    filename = g_strdup_printf(kdeflagpath,code);
+
   if(!filename)
   {
     g_free(code);
     return NULL;
   }
 
-  debug(0,"loading %s",filename);
+  debug(4,"loading %s",filename);
   
   pixbuf = gdk_pixbuf_new_from_file(filename);
   if (pixbuf == NULL)
