@@ -324,7 +324,7 @@ void set_server_filter_menu_list_text( void ){
   char status_buf[64];
   int i;
 
-  for (i = 0; i <= MAX_SERVER_FILTERS; i++) {
+  for (i = 0; i < MAX_SERVER_FILTERS; i++) {
 
     if( i == 0 ){
       if( current_server_filter == i )
