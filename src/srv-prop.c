@@ -616,7 +616,7 @@ static GtkWidget *server_info_page (struct server *s) {
   if ((games[s->type].flags & GAME_CONNECT) != 0 && 
                                                  games[s->type].custom_cfgs) {
 
-    cfgs = (*games[s->type].custom_cfgs) (NULL, s->game);
+    cfgs = (*games[s->type].custom_cfgs) (&games[s->type], NULL, s->game);
 
     combo_set_vals (customcfg_combo, cfgs, 
                       (props && props->custom_cfg)? props->custom_cfg : NULL);

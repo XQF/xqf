@@ -1,6 +1,12 @@
 May 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - support for Half-Life steam master. Nasty hack, hopefully doesn't break other stuff.
 - set anti-cheat flag for VAC (secure != 0)
+- increase version to 0.9.14.1
+- redial also when only private slots are free and no password is set
+  (suggested by John Stotler)
+- default_home and main_mods (e.g. baseq3) tags in games.xml
+- support custom config in all Q3A based games (suggested by Ruediger Meier)
+- fix fs_game for RTCW, offer it for ET (reported by Ruediger Meier)
 
 Mar 30, 2004: Jordi Mallach <jordi@sindominio.net>
 - add Russian translation by Dan Korostelev <dan@ats.energo.ru>.

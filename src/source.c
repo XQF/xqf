@@ -649,10 +649,6 @@ void master_set_qstat_option(struct master* m, const char* opt)
   g_return_if_fail(m!=NULL);
   g_free(m->_qstat_master_option);
   m->_qstat_master_option = opt?g_strdup(opt):NULL;
-  if(opt)
-  {
-    debug(0, "set %s for %s", opt, m->name);
-  }
 }
 
 struct master *add_master (char *path, char *name, enum server_type type, const char* qstat_query_arg,

@@ -25,6 +25,8 @@
 	<identify_cpu/>
 	<identify_os/>
 	<suggest_commands/>
+	<default_home/>
+	<main_mods/>
 	<pd/>
     </game>
     <game>
@@ -40,10 +42,11 @@
 	<config_is_valid>quake_config_is_valid</config_is_valid>
 	<write_config>write_quake_variables</write_config>
 	<exec_client>q1_exec_generic</exec_client>
-	<custom_cfgs>q1_custom_cfgs</custom_cfgs>
+	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
 	<has_map>quake_has_map</has_map>
 	<suggest_commands>twilight-nq:nq-sgl:nq-glx:nq-sdl:nq-x11</suggest_commands>
+	<main_mods>id1</main_mods>
 	<pd>q1_private</pd>
     </game>
     <game>
@@ -63,10 +66,12 @@
 	<config_is_valid>quake_config_is_valid</config_is_valid>
 	<write_config>write_quake_variables</write_config>
 	<exec_client>qw_exec</exec_client>
-	<custom_cfgs>qw_custom_cfgs</custom_cfgs>
+	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
 	<has_map>quake_has_map</has_map>
 	<suggest_commands>twilight-qw:qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11</suggest_commands>
+	<main_mods>qw</main_mods>
+	<main_mods>id1</main_mods>
 	<pd>qw_private</pd>
     </game>
     <game>
@@ -85,13 +90,14 @@
 	<config_is_valid>quake_config_is_valid</config_is_valid>
 	<write_config>write_quake_variables</write_config>
 	<exec_client>q2_exec</exec_client>
-	<custom_cfgs>q2_custom_cfgs</custom_cfgs>
+	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
 	<has_map>quake_has_map</has_map>
 	<arch_identifier>version</arch_identifier>
 	<identify_cpu>identify_cpu</identify_cpu>
 	<identify_os>identify_os</identify_os>
 	<suggest_commands>quake2</suggest_commands>
+	<main_mods>baseq2</main_mods>
 	<pd>q2_private</pd>
     </game>
     <game>
@@ -109,7 +115,7 @@
 	<analyze_serverinfo>q3_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>quake3_config_is_valid</config_is_valid>
 	<exec_client>q3_exec</exec_client>
-	<custom_cfgs>q3_custom_cfgs</custom_cfgs>
+	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>q3_init_maps</init_maps>
 	<has_map>quake_has_map</has_map>
 	<get_mapshot>q3_get_mapshot</get_mapshot>
@@ -117,6 +123,9 @@
 	<identify_cpu>identify_cpu</identify_cpu>
 	<identify_os>identify_os</identify_os>
 	<suggest_commands>q3:quake3</suggest_commands>
+	<default_home>~/.q3a</default_home>
+	<main_mods>demoq3</main_mods>
+	<main_mods>baseq3</main_mods>
 	<pd>q3_private</pd>
     </game>
     <game>
@@ -126,8 +135,10 @@
 	<id>WOS</id>
 	<icon>wo_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<custom_cfgs>NULL</custom_cfgs>
 	<suggest_commands>wolf</suggest_commands>
+	<default_home>~/.wolf</default_home>
+	<main_mods>demomain</main_mods>
+	<main_mods>main</main_mods>
 	<pd>wolf_private</pd>
     </game>
     <game>
@@ -137,8 +148,9 @@
 	<id>WOETS</id>
 	<icon>et_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<custom_cfgs>NULL</custom_cfgs>
 	<suggest_commands>et</suggest_commands>
+	<default_home>~/.etwolf</default_home>
+	<main_mods>etmain</main_mods>
 	<pd>wolfet_private</pd>
     </game>
     <game>
@@ -150,10 +162,11 @@
 	<icon>ef_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 
-	<custom_cfgs>NULL</custom_cfgs>
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
+	<default_home>NULL</default_home>
+	<main_mods>BaseEF</main_mods>
 	<pd>NULL</pd>
     </game>
     <game>
@@ -253,10 +266,11 @@
 	<id>SOF2S</id>
 	<icon>sof2s_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<custom_cfgs>NULL</custom_cfgs>
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
+	<default_home>NULL</default_home>
+	<main_mods>main</main_mods>
 	<pd>NULL</pd>
     </game>
     <game>
@@ -406,8 +420,9 @@
 	<qstat_option>-mhs</qstat_option>
 	<icon>mohaa_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<custom_cfgs>NULL</custom_cfgs>
 	<suggest_commands>mohaa</suggest_commands>
+	<default_home>~/.mohaa</default_home>
+	<main_mods>main</main_mods>
 	<pd>mohaa_private</pd>
     </game>
     <game>
@@ -422,9 +437,10 @@
 	<qstat_master_option>-codm</qstat_master_option>
 	<icon>cod_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<custom_cfgs>NULL</custom_cfgs>
 	<arch_identifier>NULL</arch_identifier>
 	<suggest_commands>codmp</suggest_commands>
+	<default_home>NULL</default_home>
+	<main_mods>main</main_mods>
 	<pd>cod_private</pd>
     </game>
     <game>
