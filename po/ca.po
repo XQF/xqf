@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.9.1\n"
-"POT-Creation-Date: 2002-07-26 14:06+0200\n"
-"PO-Revision-Date: 2002-07-26 14:10+0200\n"
+"POT-Creation-Date: 2002-08-15 00:39+0200\n"
+"PO-Revision-Date: 2002-08-15 00:40+0200\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
@@ -47,9 +47,9 @@ msgstr "Adreça del mestre"
 
 #. Cancel Button
 #: src/addmaster.c:455 src/addserver.c:161 src/dialogs.c:313 src/filter.c:1183
-#: src/game.c:1964 src/game.c:2122 src/launch.c:334 src/pref.c:3111
-#: src/psearch.c:223 src/psearch.c:396 src/srv-prop.c:590 src/xqf.c:892
-#: src/xqf.c:904 src/xqf.c:1528
+#: src/game.c:1962 src/game.c:2120 src/launch.c:334 src/pref.c:3111
+#: src/psearch.c:223 src/srv-prop.c:590 src/xqf.c:892 src/xqf.c:904
+#: src/xqf.c:1528
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -68,15 +68,15 @@ msgstr "XQF: Atenció!"
 
 #. OK Button
 #: src/dialogs.c:137 src/dialogs.c:302 src/filter.c:1194 src/pref.c:3119
-#: src/psearch.c:212 src/psearch.c:396 src/srv-prop.c:598
+#: src/psearch.c:212 src/srv-prop.c:598
 msgid "OK"
 msgstr "D'acord"
 
-#: src/dialogs.c:208 src/filter.c:784
+#: src/dialogs.c:208 src/filter.c:784 src/psearch.c:396
 msgid "Yes"
 msgstr "Sí"
 
-#: src/dialogs.c:220 src/filter.c:785
+#: src/dialogs.c:220 src/filter.c:785 src/psearch.c:396
 msgid "No"
 msgstr "No"
 
@@ -145,7 +145,7 @@ msgstr "el ping és menor que"
 
 #. max timeouts
 #: src/filter.c:998
-msgid "the number of retires is fewer than"
+msgid "the number of retries is fewer than"
 msgstr "el número de reintents és menor que"
 
 #. GAMECONTAINS Filter -- baa
@@ -157,8 +157,8 @@ msgstr "el joc conté la cadena"
 #. GAMETYPE Filter -- baa
 #. http://developer.gnome.org/doc/API/gtk/gtktable.html
 #: src/filter.c:1037
-msgid "The Game Type Contains the String:"
-msgstr "El tipus de joc conté la cadena"
+msgid "the game type contains the string"
+msgstr "el tipus de joc conté la cadena"
 
 #. Version Filter -- baa
 #: src/filter.c:1055
@@ -252,18 +252,18 @@ msgstr "Baixa"
 
 #. server_type
 #. flags
-#: src/game.c:604
+#: src/game.c:605
 msgid "Generic Gamespy"
 msgstr "Gamespy genèric"
 
 #. %s = game name e.g. QuakeWorld
-#: src/game.c:1605
+#: src/game.c:1603
 #, c-format
 msgid "%s command line is empty."
 msgstr "la línia d'ordres de %s està buida."
 
 #. directory name, game name
-#: src/game.c:1612 src/game.c:1723
+#: src/game.c:1610 src/game.c:1721
 #, c-format
 msgid ""
 "\"%s\" is not a directory\n"
@@ -273,13 +273,13 @@ msgstr ""
 "Especifiqueu un directori de treball de %s correcte."
 
 #. game name
-#: src/game.c:1624
+#: src/game.c:1622
 #, c-format
 msgid "Please specify correct %s working directory."
 msgstr "Especifiqueu un directori de treball de %s correcte."
 
 #. directory, subdirectory, game name
-#: src/game.c:1630
+#: src/game.c:1628
 #, c-format
 msgid ""
 "Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
@@ -289,7 +289,7 @@ msgstr ""
 "Especifiqueu un directori de treball de %s correcte."
 
 #. %s Quake3
-#: src/game.c:1686
+#: src/game.c:1684
 #, c-format
 msgid ""
 "~/.q3a directory doesn't exist or doesn't contain\n"
@@ -303,7 +303,7 @@ msgstr ""
 "XQF o especifiqueu un directori de treball de %s correcte."
 
 #. %s directory, Quake3
-#: src/game.c:1695
+#: src/game.c:1693
 #, c-format
 msgid ""
 "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
@@ -317,13 +317,13 @@ msgstr ""
 " o deixeu-ho en blanc (s'utilitzarà ~/.q3a per defecte)"
 
 #. passwords file could not be written
-#: src/game.c:1964 src/game.c:2122 src/launch.c:334 src/xqf.c:892
+#: src/game.c:1962 src/game.c:2120 src/launch.c:334 src/xqf.c:892
 #: src/xqf.c:904
 msgid "Launch"
 msgstr "Llança"
 
 #. %s frontend.cfg
-#: src/game.c:1966 src/game.c:2123
+#: src/game.c:1964 src/game.c:2121
 #, c-format
 msgid ""
 "Cannot write to file \"%s\".\n"
@@ -781,10 +781,13 @@ msgstr "Cerca jugador:"
 msgid "Player not found."
 msgstr "No s'ha trobat el jugador."
 
+#: src/psearch.c:396
+msgid "XQF: End of server list reached"
+msgstr "XQF: S'ha arribat al final de la llista de servidors"
+
 #: src/psearch.c:397
-msgid "End of server list reached.  Continue from beginning?"
-msgstr ""
-"S'ha arribat al final de la llista de servidors. Continuar des del principi?"
+msgid "Continue search from beginning?"
+msgstr "Continuar la cerca des del principi?"
 
 #. Message
 #: src/rcon.c:350
@@ -1468,6 +1471,9 @@ msgstr "Filtres"
 msgid "You need at least qstat version %s for xqf to function properly"
 msgstr ""
 "Necessiteu al menys la versió %s de qstat per a que xqf funcione correctament"
+
+#~ msgid "The Game Type Contains the String:"
+#~ msgstr "El tipus de joc conté la cadena"
 
 #~ msgid "Filter Name (For Menu):"
 #~ msgstr "Nom del filtre (per al menú):"

@@ -1,3 +1,7 @@
+Aug 15, 2002: Jordi Mallach <jordi@sindominio.net>
+- fixed a typo in the filter dialog
+- updated Catalan & Spanish translations
+
 Aug 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fixed some strings that where marked for translation but the gettext call was
   missing
