@@ -1,3 +1,6 @@
+Oct 28, 2003: Jordi Mallach <jordi@sindominio.net>
+- move list of supported languages to po/LINGUAS.
+
 Oct 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added kde flag icons
 - new splash screen and desktop icons
