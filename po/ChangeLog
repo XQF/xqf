@@ -1,3 +1,8 @@
 2003-10-28  Jordi Mallach  <jordi@sindominio.net>
 
+	* ca.po: Updated Catalan translation, recoded as UTF-8.
+	* da.po, de.po, es.po, fr.po: Recoded as UTF-8.
+
+2003-10-28  Jordi Mallach  <jordi@sindominio.net>
+
 	* LINGUAS: Added, imported from configure.in.
