@@ -79,10 +79,6 @@ static int userver_hash_func (const char *hostname, unsigned short port) {
 static struct server *server_new (struct host *h, unsigned short port, 
 				  enum server_type type) {
   struct server *server;
-			
-#ifdef USE_GEOIP
-  int *country_id;
-#endif
 
   if (port == 0 || type == UNKNOWN_SERVER)
     return NULL;

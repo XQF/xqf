@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -45,11 +46,10 @@ static void country_delete_button(GtkWidget * widget, gpointer data);
 static void country_clear_list(GtkWidget * widget, gpointer data);
 static void country_create_popup_window(void);
 
-
-static GSList *selected_countries_list = NULL;
 static gint selected_row_left_list=-1;
 static gint selected_row_right_list=-1;
 static int last_row_right_list = 0;
+static int last_row_country_list = 0;
 #endif
 
 static void server_filter_vars_free(struct server_filter_vars* v);
@@ -153,7 +153,7 @@ static struct server_filter_vars* server_filter_vars_new()
     f->map_contains = NULL;
     f->server_name_contains=NULL;
 #ifdef USE_GEOIP
-    f->server_country_contains=NULL;
+    f->countries = g_array_new (FALSE, FALSE, sizeof (int));
 #endif
 
     return f;
@@ -170,7 +170,8 @@ static void server_filter_vars_free(struct server_filter_vars* v)
   g_free(v->server_name_contains);
   g_free(v->game_type);
 #ifdef USE_GEOIP
-  g_free(v->server_country_contains);
+  g_array_free(v->countries,TRUE);
+  v->countries=NULL;
 #endif
 }
 
@@ -178,6 +179,7 @@ static void server_filter_vars_free(struct server_filter_vars* v)
 static struct server_filter_vars* server_filter_vars_copy(struct server_filter_vars* v)
 {
   struct server_filter_vars* f;
+  int i;
  
   if(!v) return NULL;
 
@@ -197,13 +199,22 @@ static struct server_filter_vars* server_filter_vars_copy(struct server_filter_v
   f->map_contains       	= g_strdup(v->map_contains);
   f->server_name_contains       = g_strdup(v->server_name_contains);
 #ifdef USE_GEOIP
-  f->server_country_contains    = g_strdup(v->server_country_contains);
+
+  //FIXME reserve space first, then insert
+  for (i =0; i< v->countries->len;i++)
+    g_array_append_val (f->countries,g_array_index(v->countries,int,i));
+ 
 #endif
+
   return f;
 }
 
 void server_filter_print(struct server_filter_vars* f)
 {
+#ifdef USE_GEOIP 
+ int i;
+#endif
+
   printf("Filter: %s\n",f->filter_name);
   printf("  retries: %d\n",f->filter_retries);
   printf("  ping: %d\n",f->filter_ping);
@@ -217,7 +228,11 @@ void server_filter_print(struct server_filter_vars* f)
   printf("  map: %s\n",f->map_contains);
   printf("  server name: %s\n",f->server_name_contains);
 #ifdef USE_GEOIP
-  printf("  country: %s\n",f->server_country_contains);
+  
+  for (i =0; i< f->countries->len;i++)
+  	printf("country id: %d ",g_array_index(f->countries,int,i));
+  printf("\n");
+    
 #endif
 }
 
@@ -295,6 +310,11 @@ static int server_pass_filter (struct server *s){
   char **info_ptr;
   struct server_filter_vars* filter;
   int players = s->curplayers;
+  
+#ifdef USE_GEOIP
+  gboolean have_country=FALSE;
+  int i;
+#endif
 
   /* Filter Zero is No Filter */
   if( current_server_filter == 0 ){ return TRUE; }
@@ -369,13 +389,20 @@ static int server_pass_filter (struct server *s){
   }/*end version check */
   
 #ifdef USE_GEOIP
-  if (filter->server_country_contains && *filter->server_country_contains)
-  {
+  if (filter->countries->len > 0 ) {
+
     if (!s->country_id)
       return FALSE;
-    else if (!strstr(filter->server_country_contains,geoip_code_by_id(s->country_id)))
-      return FALSE;
-  }
+    else {  
+      for (i = 0; i < filter->countries->len; ++i)
+        if (g_array_index(filter->countries,int,i)==s->country_id)
+	  have_country=TRUE;
+      
+      if (!have_country)       
+        return FALSE;
+    }
+  } 
+
 #endif
 
   if( filter->server_name_contains && *filter->server_name_contains )
@@ -397,6 +424,11 @@ static void server_filter_init (void) {
   char config_section[64];
   int isdefault = FALSE; // used to determine whether key exists in config
   char* filtername;
+
+#ifdef USE_GEOIP
+  char *str = NULL;
+#endif
+
 
   struct server_filter_vars* filter;
   
@@ -430,7 +462,25 @@ static void server_filter_init (void) {
     filter->map_contains       		= config_get_string("map_contains");
     filter->server_name_contains	= config_get_string("server_name_contains");
 #ifdef USE_GEOIP
-    filter->server_country_contains	= config_get_string("server_country_contains");
+
+    /*country filter ids*/
+    str = config_get_string("server_country_contains");
+    if(str)
+    {
+      int nr;
+      gchar **buf = NULL;
+      buf = g_strsplit(str," ",0);
+
+      for(nr = 0; buf && buf[nr]; ++nr)
+      {
+	int flag_nr = geoip_id_by_code(buf[nr]);
+	if(flag_nr > 0)
+	  g_array_append_val (filter->countries,flag_nr);
+      }
+
+      g_strfreev(buf);
+    }
+      
 #endif
     g_array_append_val(server_filters,filter);
     
@@ -480,8 +530,8 @@ static void server_filter_on_cancel()
 static struct server_filter_vars* server_filter_new_from_widgets()
 {
 #ifdef USE_GEOIP
-  char buffer[256] = "";
-  GSList *tmp_list=NULL;
+ int country_nr;
+ int i;
 #endif
 
   struct server_filter_vars* filter = server_filter_vars_new();
@@ -500,18 +550,12 @@ static struct server_filter_vars* server_filter_new_from_widgets()
   filter->server_name_contains = gtk_editable_get_chars (GTK_EDITABLE (server_name_contains_entry), 0, -1 );
 
 #ifdef USE_GEOIP
-  filter->server_country_contains = "";
-  tmp_list=selected_countries_list;
 
-  while (tmp_list != NULL) {
-    // FIXME ugly
-    strncat(buffer,":",sizeof(buffer)-1-strlen(buffer));
-    strncat(buffer,geoip_code_by_id(GPOINTER_TO_INT(tmp_list->data)),sizeof(buffer)-1-strlen(buffer));
-    tmp_list = g_slist_next(tmp_list);
+  for (i = 0; i < last_row_country_list; ++i) {
+    country_nr=GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_filter_list), i));
+    g_array_append_val(filter->countries,country_nr);
   }
-
-  filter->server_country_contains = strdup(buffer);
-  g_slist_free(tmp_list);
+  
 #endif
 
   return filter;
@@ -603,6 +647,7 @@ static void server_filter_on_ok ()
 }
 
 /** save settings of current server filter and detect if filter has changed
+ * oldfilter is currently dummy
  */
 static void server_filter_save_settings (int number,
       struct server_filter_vars* oldfilter,
@@ -745,10 +790,7 @@ static void server_filter_save_settings (int number,
     }
     oldfilter->map_contains= NULL;
   }  /* end of map filter */
-  
-  
-  
-
+ 
   /* servername string values */
   text_changed = 0;
   if( newfilter->server_name_contains && strlen( newfilter->server_name_contains )){
@@ -778,33 +820,32 @@ static void server_filter_save_settings (int number,
   }  /* end of server filter */
 
 #ifdef USE_GEOIP
+
   /* country string values */
-  text_changed = 0;
-  if( newfilter->server_country_contains && strlen( newfilter->server_country_contains )){
-    /*
-      First case, the user entered something.  See if the value
-      is different
-    */
-    if (oldfilter->server_country_contains){
-      if( strcmp( newfilter->server_country_contains, oldfilter->server_country_contains )) text_changed = 1;
-      g_free( oldfilter->server_country_contains);
-    } else {
-      text_changed = 1;
+
+  if (newfilter->countries->len > 0)
+  {
+    unsigned i;
+    char* buf = NULL;
+    buf = g_new(char,newfilter->countries->len*3);
+
+    for (i = 0; i < newfilter->countries->len; ++i)
+    {
+      const char* code = geoip_code_by_id(g_array_index(newfilter->countries,int,i));
+      if(strlen(code)!=2) code = "  "; // may not happen
+      buf[i*3]=code[0];
+      buf[i*3+1]=code[1];
+      buf[i*3+2]=' ';
     }
-    oldfilter->server_country_contains = g_strdup( newfilter->server_country_contains );
-    if (text_changed) {
-      config_set_string ("server_country_contains", oldfilter->server_country_contains );
-      filters[FILTER_SERVER].changed = FILTER_CHANGED;
-    }
-  } else {
-    if (oldfilter->server_country_contains){
-      text_changed = 1; /* From something to nothing */
-      g_free( oldfilter->server_country_contains );
-      config_set_string ("server_country_contains", "" );
-      filters[FILTER_SERVER].changed = FILTER_CHANGED;
-    }
-    oldfilter->server_country_contains = NULL;
-  }  /* end of country filter */
+    buf[i*3-1]='\0';
+	      
+    config_set_string ("server_country_contains", buf);
+
+    g_free(buf);
+
+    filters[FILTER_SERVER].changed = FILTER_CHANGED;
+  }
+
 #endif
 
 
@@ -1073,30 +1114,32 @@ static void server_filter_fill_widgets(guint num)
   gtk_entry_set_text (GTK_ENTRY (server_name_contains_entry), filter->server_name_contains?filter->server_name_contains:"" );
 #ifdef USE_GEOIP
   gtk_clist_clear(GTK_CLIST(country_filter_list));
-  selected_countries_list = NULL;
-
+ 
+  last_row_country_list=0;
+  
+  /*fill the country_filter_list from filter->countries*/
   if (geoip_is_working()) {
   
-    if (filter->server_country_contains != NULL) {
+    if (filter->countries != NULL) {
     
-        for (i = 1; i < strlen(filter->server_country_contains); i = i + 3) {
+      for (i = 0; i < filter->countries->len; i++) {
     
-          strncpy(buf, filter->server_country_contains + i,2);
-          f_number=geoip_id_by_code(buf); 
-        
-          gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
-        
-          countrypix = get_pixmap_for_country(f_number);
-        
-        
-          gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), rw, 0,geoip_name_by_id(f_number), 4,
+        f_number=g_array_index(filter->countries,int,i);
+
+	gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
+        countrypix = get_pixmap_for_country(f_number);
+        gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), rw, 0,geoip_name_by_id(f_number), 4,
             countrypix->pix, countrypix->mask);
-          rw++;
-          selected_countries_list =
-          g_slist_append(selected_countries_list,GINT_TO_POINTER(f_number));
+        gtk_clist_set_row_data(GTK_CLIST(country_filter_list),rw,GINT_TO_POINTER(f_number));
+
+	last_row_country_list++;
+        rw++;
+	
+        
       }
-    }
+    } 
   }
+  
 #endif
 
   gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
@@ -1396,6 +1439,7 @@ static void server_filter_page (GtkWidget *notebook) {
   gtk_widget_show (filter_no_password_check_button);
 
   row++;
+
    /*country list */
 #ifdef USE_GEOIP 
   label = gtk_label_new(_("Country filter:"));
@@ -1636,7 +1680,6 @@ void country_selection_right_list(GtkWidget * list,
           gint column,
           GdkEventButton * event, gpointer data)
 {
-   
   selected_row_right_list = row_select;
   return;
 }
@@ -1654,18 +1697,14 @@ void country_unselection_right_list(GtkWidget * list,
 /*show the country selection popup window*/
 static void country_select_button_pressed(GtkWidget * widget, gpointer data)
 {
-
-   country_create_popup_window();
-
+  country_create_popup_window();
 }
 
 /*callback: clear button*/
 static void country_clear_list(GtkWidget * widget, gpointer data)
 {
-
-     gtk_clist_clear(GTK_CLIST(country_filter_list));
-     selected_countries_list = NULL;
-
+  gtk_clist_clear(GTK_CLIST(country_filter_list));
+  last_row_country_list=0;
 }
 
 /*callback: >> button*/
@@ -1679,8 +1718,6 @@ static void country_add_button(GtkWidget * widget, gpointer data)
 
   text[0] = NULL;
     
-  
-   
   if (selected_row_left_list!=-1) {
   
     flag_id=GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_left_list), selected_row_left_list));
@@ -1692,7 +1729,6 @@ static void country_add_button(GtkWidget * widget, gpointer data)
         break;
       }
     }
-
     
     if (!wehave) {
     
@@ -1796,8 +1832,7 @@ static void country_selection_on_ok(void)
   struct pixmap* countrypix = NULL;
   
   text[0] = NULL;
-
-  selected_countries_list = NULL;
+  
   selected_row_right_list=-1;
   gtk_clist_clear(GTK_CLIST(country_filter_list));
   
@@ -1809,11 +1844,10 @@ static void country_selection_on_ok(void)
     gtk_clist_insert(GTK_CLIST(country_filter_list), i, text);
     gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), i, 0,
             geoip_name_by_id(country_nr), 4,countrypix->pix,countrypix->mask);
-
-    selected_countries_list =g_slist_append(selected_countries_list,GINT_TO_POINTER(country_nr));
-
+    gtk_clist_set_row_data(GTK_CLIST(country_filter_list),i,GINT_TO_POINTER(country_nr));
+    
   }
-  
+  last_row_country_list=last_row_right_list;
 
 }
 
@@ -1846,7 +1880,7 @@ static void country_create_popup_window(void)
 
   int i;
   int row_number;
-  GSList *tmp_list=NULL;
+  int flag_nr;
   gchar *text[1];
   
   struct pixmap* countrypix = NULL;
@@ -1973,28 +2007,26 @@ static void country_create_popup_window(void)
          GTK_SIGNAL_FUNC(country_mouse_click_right_list),
          NULL);
 
-  last_row_right_list=0;
-  tmp_list=selected_countries_list;
+    
+  /*fill the clist with the same countries as in country_filter_list */
+   
+  for (i = 0; i<last_row_country_list;i++) {
   
-  /*fill the clist with the selected countries*/
-  while (tmp_list != NULL) {
+    flag_nr=GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_filter_list), i));
+   
+    countrypix =get_pixmap_for_country(flag_nr);
   
-    countrypix =get_pixmap_for_country(GPOINTER_TO_INT(tmp_list->data));
-  
-    gtk_clist_insert(GTK_CLIST(country_right_list), last_row_right_list, text);
-    gtk_clist_set_pixtext(GTK_CLIST(country_right_list), last_row_right_list, 0,
-          geoip_name_by_id(GPOINTER_TO_INT(tmp_list->data)), 4,
+    gtk_clist_insert(GTK_CLIST(country_right_list),i, text);
+    gtk_clist_set_pixtext(GTK_CLIST(country_right_list),i, 0,
+          geoip_name_by_id(flag_nr), 4,
           countrypix->pix,countrypix->mask);
     
-    gtk_clist_set_row_data(GTK_CLIST(country_right_list), last_row_right_list,
-         tmp_list->data);
-  
-  
-    tmp_list = g_slist_next(tmp_list);
-    last_row_right_list++;
+    gtk_clist_set_row_data(GTK_CLIST(country_right_list),i,GINT_TO_POINTER(flag_nr));
+      
   }
 
-  g_slist_free(tmp_list);
+  last_row_right_list=last_row_country_list;
+  
 
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW
           (scrolledwindow2), country_right_list);
