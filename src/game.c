@@ -653,75 +653,77 @@ static struct player *un_parse_player (char *token[], int n) {
 #endif
 
 
-static void quake_parse_server (char *token[], int n, struct server *s) {
+static void quake_parse_server (char *token[], int n, struct server *server) {
   /*
     This does both Quake (?) and Unreal servers
   */
   int poqs;
   int offs;
 
-  poqs = (s->type == Q1_SERVER || s->type == H2_SERVER);
+  /* debug (6, "quake_parse_server: Parse %s", server->name); */
+  poqs = (server->type == Q1_SERVER || server->type == H2_SERVER);
 
   if ((poqs && n != 10) || (!poqs && n != 8))
     return;
 
 #ifdef QSTAT23
   if (*(token[2])) {		/* if name is not empty */
-    if (s->type != Q3_SERVER) {
-      s->name = g_strdup (token[2]);
+    if (server->type != Q3_SERVER) {
+      server->name = g_strdup (token[2]);
     }
     else {
-      s->name = g_malloc (strlen (token[2]) + 1);
-      q3_unescape (s->name, token[2]);
+      server->name = g_malloc (strlen (token[2]) + 1);
+      q3_unescape (server->name, token[2]);
     }
   }
 #else
   if (*(token[2]))		/* if name is not empty */
-    s->name = g_strdup (token[2]);
+    server->name = g_strdup (token[2]);
 #endif
 
   offs = (poqs)? 5 : 3;
 
   if (*(token[offs]))            /* if map is not empty */
-    s->map  = g_strdup (token[offs]);
+    server->map  = g_strdup (token[offs]);
 
-  s->maxplayers = strtoush (token[offs + 1]);
-  s->curplayers = strtoush (token[offs + 2]);
+  server->maxplayers = strtoush (token[offs + 1]);
+  server->curplayers = strtoush (token[offs + 2]);
 
-  s->ping = strtosh (token[offs + 3]);
-  s->retries = strtosh (token[offs + 4]);
+  server->ping = strtosh (token[offs + 3]);
+  server->retries = strtosh (token[offs + 4]);
 }
 
 
-static void qw_analyze_serverinfo (struct server *s) {
+static void qw_analyze_serverinfo (struct server *server) {
   char **info_ptr;
   long n;
 
-  if ((games[s->type].flags & GAME_SPECTATE) != 0)
-    s->flags |= SERVER_SPECTATE;
+  /* debug( 6, "qw_analyze_serverinfo: Analyze %s", server->name ); */
+  if ((games[server->type].flags & GAME_SPECTATE) != 0)
+    server->flags |= SERVER_SPECTATE;
 
-  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+  for (info_ptr = server->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "*gamedir") == 0) {
-      s->game = info_ptr[1];
+      server->game = info_ptr[1];
     }
     else if (strcmp (*info_ptr, "*cheats") == 0) {
-      s->flags |= SERVER_CHEATS;
+      server->flags |= SERVER_CHEATS;
     }
     else if (strcmp (*info_ptr, "maxspectators") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
       if (n <= 0)
-        s->flags &= ~SERVER_SPECTATE;
+        server->flags &= ~SERVER_SPECTATE;
     }
     else if (strcmp (*info_ptr, "needpass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
       if ((n & 1) != 0)
-	s->flags |= SERVER_PASSWORD;
+	server->flags |= SERVER_PASSWORD;
       if ((n & 2) != 0)
-	s->flags |= SERVER_SP_PASSWORD;
+	server->flags |= SERVER_SP_PASSWORD;
     }
   }
-
 }
+
 
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
 static void un_analyze_serverinfo (struct server *s) {

@@ -32,6 +32,23 @@ void debug(int level, char *fmt, ...)
   fprintf(stderr, "\n");
 }
 
+
+void debug_cmd(int level, char *argv[], char *fmt, ...)
+{
+  va_list argp;
+  int i;
+  if( level > debug_level ) return;
+  fprintf(stderr, "debug(%d): ", level);
+  va_start(argp, fmt);
+  vfprintf(stderr, fmt, argp);
+  va_end(argp);
+  fprintf(stderr, "  EXEC> ");
+  for (i = 0; argv[i]; ++i)
+    fprintf (stderr, "%s ", argv[i]);
+  fprintf(stderr, "\n");
+}
+
+
 void set_debug_level (int level)
 {
   debug_level = level;

@@ -113,23 +113,30 @@ void apply_filters (unsigned mask, struct server *s) {
 }
 
 
-GSList *build_filtered_list (unsigned mask, GSList *servers) {
-  struct server *s;
+/*
+  build_filtered_list -- Return a list of servers that pass the filter
+  requirements. Called from server_clist_setlist() and 
+  server_clist_build_filtered().
+*/
+
+GSList *build_filtered_list (unsigned mask, GSList *server_list) {
+  struct server *server;
   GSList *list = NULL;
 
   unsigned i;
   int n;
 
-  while (servers) {
-    s = (struct server *) servers->data;
-    apply_filters (mask | FILTER_PLAYER_MASK, s); /* in filter.c */
+  while (server_list) {
+    server = (struct server *) server_list->data;
+    apply_filters (mask | FILTER_PLAYER_MASK, server); /* in filter.c */
 
-    if ((s->filters & mask) == mask) {
-      list = g_slist_prepend (list, s);
-      server_ref (s);
+    if ((server->filters & mask) == mask) {
+      list = g_slist_prepend (list, server);
+      debug (6, "build_filtered_list() -- Server %lx added to list", server);
+      server_ref (server);
     }
 
-    servers = servers->next;
+    server_list = server_list->next;
   }
 
   list = g_slist_reverse (list);
