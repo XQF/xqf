@@ -38,6 +38,7 @@ tar.gz:
 
 -fresh cvs checkout
 -update version in NEWS, configure.in, docs/xqfdocs.html, ChangeLog
+-update NEWS file, update Change Log section in docs/xqfdocs.html
 -./autogen.sh
 -./configure
 -make dist

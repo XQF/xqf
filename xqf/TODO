@@ -31,5 +31,7 @@ Required for XQF 1.0:
   'Show hostnames' simply enable / disable displaying of a host name if it
   exists in the server record.  Add a 'Resolve hostnames on Update / Refresh'
   option to set whether or not to do the resolving on update / refresh
+- Splash screen.  Should show current activities on startup such as loading 
+  server lists, searching map directories etc
 
 
