@@ -1413,8 +1413,8 @@ msgid "Record Demo"
 msgstr "Filma demo"
 
 #: src/xqf.c:2211
-msgid "Add..."
-msgstr "Afegeix..."
+msgid "Add new Server"
+msgstr "Afegeix"
 
 #: src/xqf.c:2216
 msgid "Add to Favorites"
@@ -1445,36 +1445,32 @@ msgid "DNS Lookup"
 msgstr "Consulta de DNS"
 
 #: src/xqf.c:2260
-msgid "RCon..."
-msgstr "RCon..."
-
-#: src/xqf.c:2265
-msgid "Properties..."
-msgstr "Propietats..."
+msgid "RCon"
+msgstr "RCon"
 
 #: src/xqf.c:2275
-msgid "_Statistics..."
-msgstr "E_stadístiques..."
+msgid "_Statistics"
+msgstr "E_stadístiques"
 
 #: src/xqf.c:2283
 msgid "_Exit"
 msgstr "_Surt"
 
 #: src/xqf.c:2294 src/xqf.c:2341
-msgid "Add _Master..."
-msgstr "Afegeix _Mestre..."
+msgid "Add _Master"
+msgstr "Afegeix _Mestre"
 
 #: src/xqf.c:2299 src/xqf.c:2346
-msgid "_Rename Master..."
-msgstr "_Reanomena mestre..."
+msgid "_Rename Master"
+msgstr "_Reanomena mestre"
 
 #: src/xqf.c:2304 src/xqf.c:2351
 msgid "D_elete Master"
 msgstr "_Elimina mestre"
 
 #: src/xqf.c:2312
-msgid "_Add Server..."
-msgstr "_Afegeix servidor..."
+msgid "_Add Server"
+msgstr "_Afegeix servidor"
 
 #: src/xqf.c:2317 src/xqf.c:2451
 msgid "_Remove from Favorites"
@@ -1493,8 +1489,8 @@ msgid "Add Default Masters"
 msgstr "Afegeix mestres predeterminats"
 
 #: src/xqf.c:2359
-msgid "_Find Player..."
-msgstr "Cerca _jugador..."
+msgid "_Find Player"
+msgstr "Cerca _jugador"
 
 #: src/xqf.c:2364
 msgid "Find A_gain"
@@ -1545,44 +1541,44 @@ msgid "DNS _Lookup"
 msgstr "Cerca de _DNS"
 
 #: src/xqf.c:2465
-msgid "_RCon..."
-msgstr "_Rcon..."
+msgid "_RCon"
+msgstr "_Rcon"
 
 #: src/xqf.c:2470
-msgid "_Properties..."
-msgstr "_Propietats..."
+msgid "_Properties"
+msgstr "_Propietats"
 
 #: src/xqf.c:2480
-msgid "_General..."
-msgstr "_General..."
+msgid "_General"
+msgstr "_General"
 
 #: src/xqf.c:2486
-msgid "_Games..."
-msgstr "_Jocs..."
+msgid "_Games"
+msgstr "_Jocs"
 
 #: src/xqf.c:2492
-msgid "_Appearance..."
+msgid "_Appearance"
 msgstr "_Aparença"
 
 #: src/xqf.c:2498
-msgid "_QStat Options..."
-msgstr "Opcions de _QStat..."
+msgid "_QStat Options"
+msgstr "Opcions de _QStat"
 
 #: src/xqf.c:2504
-msgid "_Sound Options..."
-msgstr "Opcio_ns de só..."
+msgid "_Sound Options"
+msgstr "Opcio_ns de só"
 
 #: src/xqf.c:2513
-msgid "_Server Filter..."
-msgstr "Filtre de _servidors..."
+msgid "_Server Filter"
+msgstr "Filtre de _servidors"
 
 #: src/xqf.c:2518
-msgid "Player _Filter..."
-msgstr "_Filtres de jugadors..."
+msgid "Player _Filter"
+msgstr "_Filtres de jugadors"
 
 #: src/xqf.c:2528
-msgid "_About..."
-msgstr "_Quant a..."
+msgid "_About"
+msgstr "_Quant a"
 
 #: src/xqf.c:2539
 msgid "_File"
