@@ -88,7 +88,7 @@
 #include "country-filter.h"
 #endif
 
-static const char required_qstat_version[]="2.4e";
+static const char required_qstat_version[]="2.6";
 
 time_t xqf_start_time;
 
@@ -483,7 +483,7 @@ int check_qstat_version()
     return -1;
   }
 
-  conn.bufsize = 256;
+  conn.bufsize = 512;
   conn.buf = g_new0(char,conn.bufsize);
   conn.result = FALSE;
   conn.do_quit = TRUE;
