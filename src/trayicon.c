@@ -469,11 +469,13 @@ void tray_create_menu (void)
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), separator1);
   gtk_widget_set_sensitive(separator1, FALSE);
   
+  // translator: show main window
   show_item = gtk_menu_item_new_with_label(_("Show"));
   g_signal_connect(G_OBJECT(show_item), "activate",
    G_CALLBACK(show_main_window_call), NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), show_item);
   
+  // translator: hide main window
   hide_item= gtk_menu_item_new_with_label(_("Hide"));
   g_signal_connect(G_OBJECT(hide_item), "activate",
    G_CALLBACK(hide_main_window_call), NULL);
