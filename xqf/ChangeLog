@@ -1,3 +1,8 @@
+Sep 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- improved debug functions, debug level can be in- and decreased with SIGUSR1
+  and SIGUSR2
+- proper launch function for Half-Life
+
 Sep 16, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - changed some macros to make cvs work with older autoconf/automake
 

@@ -19,20 +19,26 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <time.h>
 #include "debug.h"
 
 static int indent_level;
+static int debug_level;
 
-void debug(int level, char *fmt, ...)
+void debug_int(const char* file, int line, const char* function, int level, const char* fmt, ...)
 {
   va_list argp;
   int i;
+  char buf[9];
+  time_t now;
   if( level > debug_level ) return;
   for (i=0;i<indent_level;i++)
   {
     fprintf(stderr, " ");
   }
-  fprintf(stderr, "debug(%d): ", level);
+  now = time(NULL);
+  strftime(buf,9,"%T",localtime(&now));
+  fprintf(stderr, "debug(%d) %s %s:%d %s() - ", level, buf, file, line, function);
   va_start(argp, fmt);
   vfprintf(stderr, fmt, argp);
   va_end(argp);
