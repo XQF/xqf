@@ -1036,7 +1036,7 @@ msgstr "Incapable pour recevoir le nom d'utilisateur/la maison/tmpdir\n"
 #: src/pref.c:4839
 #, c-format
 msgid "Searching for %s maps"
-msgstr "Recherche %S des cartes"
+msgstr "Recherche %s des cartes"
 
 #: src/pref.c:5025
 msgid "Game Command Selection"
