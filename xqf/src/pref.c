@@ -2151,8 +2151,8 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (arguments_clist);
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), arguments_clist);
-  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, 80);
-  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1, 1024);
+//  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, 80);
+//  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1, 1024);
   gtk_clist_column_titles_show (GTK_CLIST (arguments_clist));
   gtk_signal_connect (GTK_OBJECT (arguments_clist), "select_row",
                   GTK_SIGNAL_FUNC (custom_args_clist_select_row_callback), arguments_clist);
@@ -2270,6 +2270,14 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
         break;
     }
   }
+
+  {
+      gint width = gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 0);
+      gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, width?width:60);
+      gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1,
+	      gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 1));
+  }
+  
 
   gtk_widget_show (page_vbox);
 
