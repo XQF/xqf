@@ -1,3 +1,8 @@
+Dec 20th 2000: Bill Adams <bill@evil.inetarena.com>
+--The filter name now appears in the status bar.
+--Version changed to 0.9.6b-beta
+--There are still core dumps :(.
+
 Dec 04th 2000: Bill Adams <bill@evil.inetarena.com>
 -Added the ability to have multiple filters.  Right now the
  number is set at compile time to 10 (see xqf.h:MAX_SERVER_FILTERS

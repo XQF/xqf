@@ -75,6 +75,7 @@ struct stat_job *stat_process = NULL;
 
 static GtkWidget *main_toolbar = NULL;
 static GtkWidget *main_status_bar = NULL;
+static GtkWidget *main_filter_status_bar = NULL;
 static GtkWidget *main_progress_bar = NULL;
 
 static char *progress_bar_str = NULL;
@@ -312,6 +313,7 @@ void set_server_filter_menu_list_text( void ){
      the config file. The server_filters is defined in filter.h */
 
   char buf[64];
+  char status_buf[64];
   int i;
 
   for (i = 0; i <= MAX_SERVER_FILTERS; i++) {
@@ -349,6 +351,19 @@ void set_server_filter_menu_list_text( void ){
 	  gtk_label_set (GTK_LABEL (child), buf );
       }
   }
+
+  /* Show the active filter on the status bar 
+     -- Add code to indicate if the filter button is checked.
+   */
+  if( current_server_filter == 0 ){
+    sprintf( status_buf, "No Server Filter Active" );
+  } else if( server_filters[current_server_filter].filter_name ){
+    sprintf( status_buf, "Server Filter: %s", server_filters[current_server_filter].filter_name );
+  } else {
+    sprintf( status_buf, "Server Filter: %d", current_server_filter );
+  }
+  
+  print_status (main_filter_status_bar, status_buf); 
 
 }
 
@@ -2148,7 +2163,8 @@ void create_main_window (void) {
 
   server_menu = create_menu (srvopt_menu_items, accel_group);
 
-  set_server_filter_menu_list_text ();
+  /* We will call set_server_filter_menu_list_text (); below after we 
+     have the filter status bar. It used to be here -baa  */
 
   player_menu = create_player_menu (accel_group);
 
@@ -2304,10 +2320,18 @@ void create_main_window (void) {
   gtk_box_pack_start (GTK_BOX (hbox), main_status_bar, TRUE, TRUE, 0);
   gtk_widget_show (main_status_bar);
 
+  main_filter_status_bar = gtk_statusbar_new ();
+  gtk_widget_set_usize (main_filter_status_bar, 100, -1);
+  gtk_box_pack_start (GTK_BOX (hbox), main_filter_status_bar, TRUE, TRUE, 0);
+  gtk_widget_show (main_filter_status_bar);
+
   main_progress_bar = create_progress_bar ();
   gtk_widget_set_usize (main_progress_bar, 200, -1);
   gtk_box_pack_end (GTK_BOX (hbox), main_progress_bar, FALSE, FALSE, 0);
   gtk_widget_show (main_progress_bar);
+
+  /* Make sure the current filter is dispalyed and applied if needed */
+  set_server_filter_menu_list_text (); 
 
   gtk_widget_show (hbox);
 
