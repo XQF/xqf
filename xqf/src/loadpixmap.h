@@ -38,5 +38,5 @@ GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename);
 struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix);
 
 /** load a pixmap in search path as GdkPixbuf, void* just to avoid a special header */
-void* load_pixmap_as_pixbuf (GtkWidget* widget, const gchar* filename);
+void* load_pixmap_as_pixbuf (const gchar* filename);
 #endif

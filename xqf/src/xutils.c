@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <X11/Xlib.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
@@ -47,7 +49,7 @@ void window_set_icon (GtkWidget *win)
   pixbuf = load_pixmap_as_pixbuf(minimize_icon);
   if(pixbuf)
   {
-    gtk_window_set_icon (GTK_WINDOW (main_window), pixbuf);
+    gtk_window_set_icon (GTK_WINDOW (win), pixbuf);
     gdk_pixbuf_unref (pixbuf);
   }
 #else

@@ -187,13 +187,11 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
   return pix;
 }
 
-void* load_pixmap_as_pixbuf (GtkWidget* widget, const gchar* filename)
+void* load_pixmap_as_pixbuf (const gchar* filename)
 {
   gchar *found_filename = NULL;
   GdkPixbuf* pixbuf = NULL;
   
-  g_return_val_if_fail(widget!=NULL,NULL);
-
   found_filename = find_pixmap_file(filename);
 
   if(!found_filename)
