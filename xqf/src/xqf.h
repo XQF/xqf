@@ -67,6 +67,7 @@
 #define	WOM_DEFAULT_PORT	27950		/* Wolfenstein master */
 #define	HLM_DEFAULT_PORT	27010		/* Half-Life master */
 #define	D3M_DEFAULT_PORT	3445		/* Descent 3 master */
+#define	EFM_DEFAULT_PORT	27953		/* Elite Force master */
 
 #define PLAYER_GROUP_MASK	0x07
 #define PLAYER_GROUP_RED	0x01

@@ -255,7 +255,7 @@ struct game games[] = {
     GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
     "Voyager Elite Force",
     EF_DEFAULT_PORT,
-    Q3M_DEFAULT_PORT,
+    EFM_DEFAULT_PORT,
     "EFS",
     "Q3S",
     "-q3s",

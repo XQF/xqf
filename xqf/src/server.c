@@ -38,8 +38,8 @@ struct server_hash {
   GSList **nodes;
 };
 
-static struct server_hash servers = { 251, NULL };
-static struct server_hash uservers = { 17, NULL };
+static struct server_hash servers = { 2333, NULL };
+static struct server_hash uservers = { 251, NULL };
 
 
 static int server_hash_func (const struct host *h, unsigned short port) {
@@ -348,13 +348,21 @@ GSList *userver_list_append_list (GSList *list, GSList *uservers,
 
 int servers_total (void) {
   int i;
-  int size = 0;
+  int size = 0, len;
+  int min=-1, max=0;
 
   if (!servers.nodes)
     return 0;
 
   for (i = 0; i < servers.num; i++)
-    size += g_slist_length (servers.nodes[i]);
+  {
+    len = g_slist_length (servers.nodes[i]);
+    size += len;
+    if (min == -1 || len < min) min=len;
+    if (len > max) max=len;
+  }
+
+  debug(1,"server hash (min/max/avg) %d/%d/%5.2f",min,max,size/(servers.num*1.0));
 
   return size;
 }
