@@ -1123,6 +1123,19 @@ static gboolean check_launch (struct condef* con)
     }
   }
 
+  if(s->flags & SERVER_INCOMPATIBLE)
+  {
+    launch = dialog_yesno (NULL, 1, _("Yes"), _("No"),
+	_("This server is not compatible with the version of %s you have"
+	  " installed.\nLaunch client anyway?"), games[s->type].name);
+
+    if (!launch)
+    {
+      condef_free (con);
+      return FALSE;
+    }
+  }
+
     if (s->ping >= MAX_PING) {
       launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
                        _("Server %s:%d is %s.\n\nLaunch client anyway?"),

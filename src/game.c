@@ -1550,6 +1550,13 @@ static void doom3_analyze_serverinfo (struct server *s) {
       if ((n & 2) != 0)
 	s->flags |= SERVER_SP_PASSWORD;
     }
+    else if (strcmp (*info_ptr, "osmask") == 0) {
+      unsigned long n = atol (info_ptr[1]);
+      if(n == -1UL)
+	s->flags |= SERVER_CHEATS;
+      else if((n & 2) != 2)
+	s->flags |= SERVER_INCOMPATIBLE;
+    }
   }
 
   if(fs_game)
