@@ -1,3 +1,6 @@
+Jul 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- Fix default ET protocol, now 82. Thanks cjay for not reporting ;-)
+
 Jun 30, 2003: Alex <alex_b@users.sourceforge.net>
 - Replaced fr.po with updated version from Francois Perichon
 
