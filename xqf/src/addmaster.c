@@ -195,47 +195,6 @@ static void master_address_from_history_selected_callback (GtkWidget *widget,
   master_activate_radio_for_type(type);
 }
 
-static char *master2url( struct master *m )
-{
-  char *query_type;
-  char *address;
-  char *result = NULL;
-
-  if ( m->master_type >= MASTER_NATIVE
-      && m->master_type < MASTER_NUM_QUERY_TYPES )
-  {
-    query_type = master_prefixes[m->master_type];
-  }
-  else
-    return NULL;
-
-  switch(m->master_type)
-  {
-    case MASTER_NATIVE:
-    case MASTER_GAMESPY:
-    case MASTER_LAN:
-      if(m->host)
-      {
-	address = inet_ntoa(m->host->ip);
-      }
-      else
-      {
-	address = m->hostname;
-      }
-      result = g_strdup_printf("%s%s:%d",query_type,address,m->port);
-      break;
-    case MASTER_HTTP:
-    case MASTER_FILE:
-      result = strdup(m->url);
-      break;
-    case MASTER_NUM_QUERY_TYPES:
-    case MASTER_INVALID_TYPE:
-      break;
-  }
-
-  return result;
-}
-
 
 struct master *add_master_dialog (struct master *m) {
   GtkWidget *window;
@@ -389,7 +348,7 @@ struct master *add_master_dialog (struct master *m) {
 
   if(master_to_edit)
   {
-    char* url = master2url(master_to_edit);
+    char* url = master_to_url(master_to_edit);
     gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry), url);
     gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
     gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);

@@ -64,7 +64,7 @@ extern	void userver_list_fprintf (FILE *f, GSList *uservers);
 static inline void server_ref (struct server *server) {
   if (server){ 
     server->ref_count++;
-    debug (6, "server_ref() -- Server %lx now at %d", server, server->ref_count);
+    debug (7, "server_ref() -- Server %lx now at %d", server, server->ref_count);
   }
 }
 

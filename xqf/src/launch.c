@@ -230,13 +230,6 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
   int flags;
   char msg[CLIENT_ERROR_BUFFER];
 
-  if (dir && dir[0] != '\0') {
-    if (chdir (dir) != 0) {
-      dialog_failed ("chdir", dir);
-      return -1;
-    }
-  }
-
   if (get_debug_level() || dontlaunch)
   {
     char* cmdline = g_strjoinv(" # ",argv);
@@ -275,6 +268,15 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
     else {	/* child */
       close (pipefds[0]);
 
+      if (dir && dir[0] != '\0') {
+	if (chdir (dir) != 0) {
+	  g_snprintf (msg, CLIENT_ERROR_BUFFER, "chdir failed: %s", 
+                          CLIENT_ERROR_MSG_HEAD, g_strerror (errno));
+	  goto error_out;
+	}
+      }
+
+
       if(s->flags & SERVER_PUNKBUSTER)
 	  setenv("XQF_SERVER_ANTICHEAT", "1", 1);
 
@@ -295,6 +297,7 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
       g_snprintf (msg, CLIENT_ERROR_BUFFER, "%sexec(%s) failed: %s", 
                           CLIENT_ERROR_MSG_HEAD, argv[0], g_strerror (errno));
 
+error_out:
       write (pipefds[1], msg, strlen (msg) + 1);
       close (pipefds[1]);
 

@@ -52,6 +52,7 @@ extern	void save_favorites (void);
 
 extern	void init_masters (int autoupdate);
 extern	void update_master_list_builtin (void);
+extern	void update_master_gslist_builtin (void);
 
 extern	void free_masters (void);
 
@@ -66,6 +67,12 @@ extern	GSList *references_to_server (struct server *s);
 
 extern enum master_query_type get_master_query_type_from_address(char* address);
 
+
+/** \brief check whether any gslist master is configured */
+extern gboolean have_gslist_masters();
+
+/** \brief check whether the gslist program is in $PATH */
+extern gboolean have_gslist_installed();
 
 #endif /* __SOURCE_H__ */
 

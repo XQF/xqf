@@ -145,6 +145,7 @@ enum master_query_type {
 	MASTER_HTTP,
 	MASTER_LAN,
 	MASTER_FILE,
+	MASTER_GSLIST,
 	MASTER_NUM_QUERY_TYPES,
 	MASTER_INVALID_TYPE
 };
@@ -221,11 +222,17 @@ struct userver {
   int 	ref_count;
 };
 
-struct master {
+typedef struct {
+  int portadjust;      /* value added to port */
+  char* gsmtype;        /* type for gslist master */
+} QFMasterOptions;
+
+typedef struct master {
   char *name;
   enum server_type type;
   int isgroup;		/* is it a real master or master group? */
   int user;		/* is it added or edited by user? */
+  QFMasterOptions options;
 
   struct host *host;
   unsigned short port;
@@ -243,10 +250,12 @@ struct master {
 
   /** private */
   char* _qstat_master_option; // optional override from games[type].qstat_master_option
-};
+} QFMaster;
 
 char* master_qstat_option(struct master* m);
 void master_set_qstat_option(struct master* m, const char* opt);
+
+char* master_to_url(QFMaster* m);
 
 extern	time_t xqf_start_time;
 extern char* xqf_PACKAGE_DATA_DIR;
