@@ -10,6 +10,7 @@ o Added Tribes2 server statistics.
 o Fixed Tribes2 and Quake3 masters.
 o Added support for LAN broadcast queries.
 o Improved master support handling.
+o Added preferences tab for Quake3 memory settings
 
 XQF 0.9.8 -- December 17, 2001
 ~~~~~~~~~
