@@ -385,6 +385,44 @@ static struct master *read_list_parse_master (char *str, char *str2) {
   return m;
 }
 
+int server_sorting_helper (const struct server *s1, 
+				      const struct server *s2) {
+
+  int res = 0;
+  
+  if  (s1->host->ip.s_addr == s2->host->ip.s_addr) {
+    if (s1->port == s2->port)
+      res = 0;
+    else
+      res = s1->port > s2->port ? 1 : -1;
+  }
+  else
+    res = ( g_ntohl (s1->host->ip.s_addr) > g_ntohl (s2->host->ip.s_addr) )? 1 : -1;
+ 
+  //printf("res: %d\n",res);
+
+  return res;
+}
+
+int userver_sorting_helper (const struct userver *us1, 
+				      const struct userver *us2) {
+// Not fully tested!
+
+  int res = 0;
+  
+  if  (strcmp (us1->hostname, us2->hostname) == 0) {
+    if (us1->port == us2->port)
+      res = 0;
+    else
+      res = us1->port > us2->port ? 1 : -1;
+  }
+  else
+    res = ( strcmp (us1->hostname, us2->hostname) > 0 )? 1 : -1;
+ 
+  //printf("res: %d\n",res);
+
+  return res;
+}
 
 static void master_add_server (struct master *m, char *str, 
                                                       enum server_type type) {
@@ -400,9 +438,9 @@ static void master_add_server (struct master *m, char *str,
     if (h) {						/* IP address */
       host_ref (h);
       if ((s = server_add (h, port, type)) != NULL) {
-	m->servers = server_list_prepend (m->servers, s);
+	m->servers = server_list_prepend_ndp (m->servers, s);
 	/* Since the server_add increments the ref count, and 
-	   server_list_prepend ups the ref_count, we should
+	   server_list_prepend_ndp ups the ref_count, we should
 	   unref it once because we are only keeping it in
 	   one list after this function.
 	*/
@@ -418,7 +456,6 @@ static void master_add_server (struct master *m, char *str,
     g_free (addr);
   }
 }
-
 
 static void read_lists (const char *filename) {
   struct zstream z;
@@ -476,7 +513,7 @@ static void read_lists (const char *filename) {
 	master_add_server (m, token[1], type);
     }
   }
-
+  
   if (m && m->servers)
     m->servers = g_slist_reverse (m->servers);
 
@@ -1224,10 +1261,17 @@ static void save_master_list (void) {
   config_pop_prefix ();
 }
 
-
 void init_masters (int update) {
   struct master *m;
   int i;
+  GSList *list;
+  GSList *list2;
+  GSList *list3 = NULL;
+  struct master *m2 = NULL;
+  struct server *s1 = NULL;
+  struct server *s2 = NULL;
+  char *temp1 = NULL;
+  char *temp2 = NULL;
 
   favorites = create_master (N_("Favorites"), UNKNOWN_SERVER, FALSE);
 
@@ -1249,6 +1293,65 @@ void init_masters (int update) {
   debug (1, "starting to read server list");
   read_lists (FILENAME_LISTS);
   debug (1, "finished reading server list");
+
+  // Go through all servers, sort them and then remove duplicates
+  // master_add_server now uses server_list_prepend_ndp which does not
+  // search for duplicates while adding servers.  This is much faster.
+  // Because of this, duplicate checking must be done here.
+  // Only working on servers, not uservers.  Lists file only contains IPs.
+  debug (1, "Searching for duplicate server entries");
+
+  for (list = all_masters; list; list = list->next) {
+    m2 = (struct master *) list->data;
+    debug (1, "  Working on master: %s",m2->name);
+    
+    if (m2 && m2->servers)
+      m2->servers = g_slist_sort (m2->servers, (GCompareFunc) server_sorting_helper);
+
+    //FIXME:  Is this right?  I tried g_slist_free, but it sits there for a long time.
+    if (list3)
+      list3 = NULL;
+
+    s1 = NULL;
+    s2 = NULL;
+
+    list2 = m2->servers;   
+
+    while (list2) {
+      s1 = (struct server *) list2->data;
+      if (list2->next)
+        s2 = (struct server *) list2->next->data;
+      else
+        s2 = NULL;
+        
+      if (s1 && s2) {
+        temp1 = g_strdup_printf("%s:%d",inet_ntoa (s1->host->ip), s1->port);
+        temp2 = g_strdup_printf("%s:%d",inet_ntoa (s2->host->ip), s2->port);
+        
+        if (strcmp (temp1, temp2) == 0) {
+          g_free (temp1);
+          g_free (temp2);
+          debug (1, "  Skipping duplicate server entry");
+          server_unref (s1);
+          list2 = list2->next;
+          continue;
+        }
+        
+        list3 = g_slist_prepend (list3, s1);
+        g_free (temp1);
+        g_free (temp2);
+      }
+      else if (s1) {
+        temp1 = g_strdup(inet_ntoa (s1->host->ip));
+        list3 = g_slist_prepend (list3, s1);
+        g_free (temp1);
+      }
+      list2 = list2->next;
+    }
+        
+    if (list3)
+      m2->servers = list3;
+  } 
 
   read_server_info (FILENAME_SRVINFO);
 }

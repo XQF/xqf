@@ -1,3 +1,10 @@
+Oct 16, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Created server_list_prepend_ndp which does not check for duplicates.
+  Modified master_add_server to use server_list_prepend_ndp.  Modified
+  init_master to do a duplicate check after loading all the masters.
+  Greatly reduces startup time with large lists of serves.  Does NOT
+  affect updating of masters once inside XQF.
+
 Oct 16, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - show punkbuster warning only once
 
