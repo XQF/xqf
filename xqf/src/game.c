@@ -726,6 +726,7 @@ void init_games()
   }
 
   game_set_attribute(Q1_SERVER,"suggest_commands",strdup("nq-sgl:nq-glx:nq-sdl:nq-x11"));
+  game_set_attribute(Q2_SERVER,"suggest_commands",strdup("quake2"));
   game_set_attribute(QW_SERVER,"suggest_commands",strdup("qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11"));
   game_set_attribute(Q3_SERVER,"suggest_commands",strdup("q3:quake3"));
   game_set_attribute(WO_SERVER,"suggest_commands",strdup("wolf"));
@@ -743,10 +744,6 @@ void init_games()
   game_set_attribute(UN_SERVER,"game_notes",strdup(_
   				   ("Note:  Unreal Tournament will not launch correctly without\n"\
     				    "modifications to the game's startup script.  Please see the\n"\
-			  	    "XQF documentation for more information."))); 
-  game_set_attribute(UT2_SERVER,"game_notes",strdup(_
-  				   ("Note:  To query Unreal Tournament 2003 servers, you need to\n"\
-    				    "properly configure QStat to support the game.  Please see the\n"\
 			  	    "XQF documentation for more information."))); 
   game_set_attribute(HL_SERVER,"game_notes",strdup(_
   				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));

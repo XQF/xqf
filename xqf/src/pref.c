@@ -1827,45 +1827,6 @@ static GtkWidget *create_noskins_menu (int qworq2) {
   return menu;
 }
 
-/**
-  * return true if game 'type' has suggest_commands
-  */
-static gboolean pref_can_suggest(enum server_type type)
-{
-    return (game_get_attribute(type,"suggest_commands")!=0);
-}
-
-/**
-  * find game binary in path and fill in command entry
-  */
-static void pref_suggest_command(enum server_type type)
-{
-    const char* files = NULL;
-    char* suggested_file = NULL;
-
-    files = game_get_attribute(type,"suggest_commands");
-    if(!files)
-    {
-	return;
-    }
-
-    suggested_file = find_file_in_path(files);
-    if(!suggested_file)
-    {
-	dialog_ok(_("Game not found"),
-		// %s name of a game
-		_("%s not found"),
-		games[type].name);
-	return;
-    }
-
-    // gtk entry does the freeing? -- no
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
-    g_free(suggested_file);
-
-    return;
-}
-
 static void pref_guess_dir(enum server_type type)
 {
   // Tries to guess the game / working directory using the following rules:
@@ -1954,6 +1915,50 @@ static void pref_guess_dir(enum server_type type)
   if (dir)
     g_free (dir);
 }
+
+
+/**
+  * return true if game 'type' has suggest_commands
+  */
+static gboolean pref_can_suggest(enum server_type type)
+{
+    return (game_get_attribute(type,"suggest_commands")!=0);
+}
+
+/**
+  * find game binary in path and fill in command entry
+  */
+static void pref_suggest_command(enum server_type type)
+{
+    const char* files = NULL;
+    char* suggested_file = NULL;
+
+    files = game_get_attribute(type,"suggest_commands");
+    if(!files)
+    {
+	return;
+    }
+
+    suggested_file = find_file_in_path(files);
+    if(!suggested_file)
+    {
+	dialog_ok(_("Game not found"),
+		// %s name of a game
+		_("%s not found"),
+		games[type].name);
+	return;
+    }
+
+    // gtk entry does the freeing? -- no
+    gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
+    g_free(suggested_file);
+
+    if ( !strcmp ( gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry)), ""))
+      pref_guess_dir (type);
+    
+    return;
+}
+
 
 static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
  // ptr1 = entire string
@@ -4301,38 +4306,93 @@ void preferences_dialog (int page_num) {
 // set some defaults when xqf is called the first time
 static void user_fix_defaults (void)
 {
-    const char* files = NULL;
-    char* suggested_file = NULL;
-    char str[256];
-    int i;
-    int j = 0;
+  const char* files = NULL;
+  char* suggested_file = NULL;
+  char str[256];
+  int i;
+  int j = 0;
+  struct stat buf;
+  int length = 0;
+  char buf2[256];
+  char *ptr = NULL;
+  char *dir = NULL;
     
-    debug(1, "Setting defaults");
+  debug(1, "Setting defaults");
     
-    for (i = 0; i < GAMES_TOTAL; i++)
-    {
-	files = game_get_attribute(games[i].type,"suggest_commands");
-	if(!files) continue;
-	suggested_file = find_file_in_path(files);
-	if(!suggested_file) continue;
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    files = game_get_attribute(games[i].type,"suggest_commands");
+    if(!files) continue;
+    suggested_file = find_file_in_path(files);
+    if(!suggested_file) continue;
 
-        j++;
+    j++;
 
-	g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/cmd", type2id (games[i].type));
-	config_set_string (str, suggested_file);
-	debug(0,"set command %s for %s",suggested_file,games[i].name);
+    g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/cmd", type2id (games[i].type));
+    config_set_string (str, suggested_file);
+    debug(1,"set command %s for %s",suggested_file,games[i].name);
 
-	g_free(suggested_file);
-	suggested_file=NULL;
-	
+    // Working dir start
+
+    lstat(suggested_file, &buf);
+    if ( S_ISLNK(buf.st_mode) == 1) {
+      // Grab directory from sym link of suggested_file
+      
+      debug(1, "suggested_file is a sym link");    
+
+      length = readlink (suggested_file, buf2, 255);
+
+      if (length){
+        buf2[length]='\0';
+
+        if(buf2[length-1] == '/')
+           buf2[length-1] = '\0';
+        
+        ptr = strrchr(buf2, '/');
+        
+        if (ptr) {	    			// contains a / so pull from symlink
+          if (!strstr(buf2,"..")) {		// don't bother if it's got any ..'s in it
+            dir = g_strndup(buf2, ptr-buf2+1);
+            g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
+            config_set_string (str, dir);
+          }
+        }
+        else {        				// no / so pull from suggest_file instead
+          ptr = strrchr(suggested_file, '/');
+          if (ptr) {      			// contains a /
+            dir = g_strndup(suggested_file, ptr-suggested_file+1);
+            g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
+            config_set_string (str, dir);
+          }
+        }        
+      }
     }
-    
-    if (j) {
-      config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
-      debug(2,"%d games found, set 'show only configured games' to true", j);
-    }
+    else {
+      // Grab directory from suggested_file
 
-    config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
+      debug(1,"suggested_file is NOT a sym link");
+      ptr = strrchr(suggested_file, '/');
+      if (ptr) {      				// contains a /
+        dir = g_strndup(suggested_file, ptr-suggested_file+1);
+        g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
+        config_set_string (str, dir);
+      }
+    }  
+    // Working dir end
+
+    if (dir)
+    g_free (dir);
+
+    g_free(suggested_file);
+    suggested_file=NULL;
+  }
+  
+  if (j) {
+    config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
+    debug(2,"%d games found, set 'show only configured games' to true", j);
+  }
+
+  config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
 						  g_get_user_name ());
 }
 
