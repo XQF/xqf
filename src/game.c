@@ -75,8 +75,9 @@ static int write_quake_variables (const struct condef *con);
 
 static int q1_exec_generic (const struct condef *con, int forkit);
 static int qw_exec (const struct condef *con, int forkit);
-static int q3_exec (const struct condef *con, int forkit);
+static int q2_exec (const struct condef *con, int forkit);
 static int q2_exec_generic (const struct condef *con, int forkit);
+static int q3_exec (const struct condef *con, int forkit);
 static int hl_exec(const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
@@ -165,7 +166,7 @@ struct game games[] = {
     q2_analyze_serverinfo,
     quake_config_is_valid,
     write_quake_variables,
-    qw_exec,
+    q2_exec,
     q2_custom_cfgs,
     quake_save_info,
     "version",		// arch_identifier
@@ -2105,6 +2106,10 @@ static int q1_exec_generic (const struct condef *con, int forkit) {
 
 
 static int qw_exec (const struct condef *con, int forkit) {
+
+  // Not used for Quake2 anymore, but not changed as I can't test it
+  // right now
+
   char *argv[32];
   int argi = 0;
   char *q_passwd;
@@ -2112,7 +2117,9 @@ static int qw_exec (const struct condef *con, int forkit) {
   char *file;
   struct game *g = &games[con->s->type];
   int retval=-1;
-
+  char *to_free = NULL;
+  int game_match_result = 0;
+  
   switch (con->s->type) {
 
   case QW_SERVER:
@@ -2169,8 +2176,7 @@ static int qw_exec (const struct condef *con, int forkit) {
       //argv[argi++] = con->gamedir;
 
       // Get game dir regardless of case
-      // FIXME: must be freed
-      argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
+      argv[argi++] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
     }
 
     break;
@@ -2232,9 +2238,172 @@ static int qw_exec (const struct condef *con, int forkit) {
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
   g_free (cmd);
+  if (to_free)
+    g_free (to_free);
   return retval;
 }
 
+static int q2_exec (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *q_passwd;
+  char *cmd;
+  char *file;
+  struct game *g = &games[con->s->type];
+  int retval=-1;
+  char *to_free = NULL;
+  int game_match_result = 0;
+  
+  q_passwd = "baseq2/" PASSWORD_CFG;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (default_nosound) {
+    argv[argi++] = "+set";
+    argv[argi++] = "s_initsound";
+    argv[argi++] = "0";
+  }
+
+  argv[argi++] = "+set";
+  argv[argi++] = "cd_nocd";
+  argv[argi++] = (default_nocdaudio)? "1" : "0";
+
+  if (con->gamedir) {
+    argv[argi++] = "+set";
+    argv[argi++] = "game";
+
+    // Get game dir regardless of case.  results: 0=not found, 1=exact, 2=differnet case match
+
+    // Look in home directory /.quake2 first
+    argv[argi] = to_free = find_game_dir(expand_tilde ("~/.quake2"), con->gamedir, &game_match_result);
+    debug (1, "find_game_dir result: %d",game_match_result);
+      
+    if (game_match_result == 0) {
+      // Didn't find in home directory /.q3a so look in real directory if defined
+      if (to_free) // Holding what was returned from find_game_dir above.  Get rid of it
+        g_free (to_free);
+
+      // Pass real_dir.  If real_dir wasn't defined, will get copy of con->s->game back
+      argv[argi] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
+    }
+      
+    argi++;
+
+    //argv[argi++] = con->gamedir;
+
+    // Get game dir regardless of case
+    //argv[argi++] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
+  }
+
+  if (con->password || con->rcon_password || 
+                                    real_password (con->spectator_password)) {
+    file = file_in_dir (g->real_dir, q_passwd);
+
+    if (!write_passwords (file, con)) {
+      //passwords file could not be written
+      if (!dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
+             _("Cannot write to file \"%s\".\n\nLaunch client anyway?"), file)) {
+	g_free (file);
+	g_free (cmd);
+	return retval;
+      }
+    }
+
+    g_free (file);
+
+    argv[argi++] = "+exec";
+    argv[argi++] = PASSWORD_CFG;
+  }
+  else {
+    if (con->spectator_password) {
+	argv[argi++] = "+spectator";
+	argv[argi++] = con->spectator_password;
+    }
+  }
+
+  argv[argi++] = "+exec";
+  argv[argi++] = EXEC_CFG;
+
+  if (con->server) {
+      argv[argi++] = "+connect";
+      argv[argi++] = con->server;
+  }
+  if (con->demo) {
+    argv[argi++] = "+record";
+    argv[argi++] = con->demo;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  if (to_free)
+    g_free (to_free);
+  return retval;
+}
+
+static int q2_exec_generic (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  char *to_free = NULL;
+
+  int game_match_result = 0;
+  
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (default_nosound) {
+    argv[argi++] = "+set";
+    argv[argi++] = "s_initsound";
+    argv[argi++] = "0";
+  }
+
+  argv[argi++] = "+set";
+  argv[argi++] = "cd_nocd";
+  argv[argi++] = (default_nocdaudio)? "1" : "0";
+
+  if (con->gamedir) {
+    argv[argi++] = "+set";
+    argv[argi++] = "game";
+    //argv[argi++] = con->gamedir;
+    
+    // Get game dir regardless of case
+    argv[argi++] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
+
+  }
+
+  if (con->server) {
+    argv[argi++] = "+connect";
+    argv[argi++] = con->server;
+  }
+
+  if (con->demo) {
+    argv[argi++] = "+record";
+    argv[argi++] = con->demo;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  if (to_free)
+    g_free (to_free);
+
+  return retval;
+}
 
 static int q3_exec (const struct condef *con, int forkit) {
   char *argv[64];
@@ -2247,6 +2416,10 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   struct game *g = &games[con->s->type];
   int retval;
+  
+  int game_match_result = 0;
+  
+  char *to_free = NULL;
 
   int is_so_mod = 0;
 
@@ -2361,9 +2534,22 @@ static int q3_exec (const struct condef *con, int forkit) {
       argv[argi++] = "+set fs_game";
       //argv[argi++] = con->s->game;
       
-      // Get game dir regardless of case
-      // FIXME: must be freed
-      argv[argi++] = find_game_dir(quake3_data_dir(g->real_dir), con->s->game);
+      // Get game dir regardless of case.  results: 0=not found, 1=exact, 2=differnet case match
+
+      // Look in home directory /.q3a first
+      argv[argi] = to_free = find_game_dir(expand_tilde ("~/.q3a"), con->s->game, &game_match_result);
+      debug (1, "find_game_dir result: %d",game_match_result);
+      
+      if (game_match_result == 0) {
+        // Didn't find in home directory /.q3a so look in real directory if defined
+        if (to_free) // Holding what was returned from find_game_dir above.  Get rid of it
+          g_free (to_free);
+
+        // Pass real_dir.  If real_dir wasn't defined, will get copy of con->s->game back
+        argv[argi] = to_free = find_game_dir(g->real_dir, con->s->game, &game_match_result);
+      }
+      
+      argi++;
     }
     if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
   }
@@ -2419,6 +2605,8 @@ static int q3_exec (const struct condef *con, int forkit) {
   if (memsettings) g_free (memsettings);
   g_free (cmd);
   g_free (tmp_cmd);
+  if (to_free)
+    g_free (to_free);
   return retval;
 }
 
@@ -2439,9 +2627,7 @@ static int hl_exec (const struct condef *con, int forkit) {
     argv[argi++] = "-game";
     // argv[argi++] = con->gamedir;
 
-    // Get game dir regardless of case
-      // FIXME: must be freed
-    argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
+    argv[argi++] = g->real_dir;
   }
 
   if (con->server) {
@@ -2462,57 +2648,6 @@ static int hl_exec (const struct condef *con, int forkit) {
   return retval;
 }
 
-static int q2_exec_generic (const struct condef *con, int forkit) {
-  char *argv[32];
-  int argi = 0;
-  char *cmd;
-  struct game *g = &games[con->s->type];
-  int retval;
-
-  cmd = strdup_strip (g->cmd);
-
-  argv[argi++] = strtok (cmd, delim);
-  while ((argv[argi] = strtok (NULL, delim)) != NULL)
-    argi++;
-
-  if (default_nosound) {
-    argv[argi++] = "+set";
-    argv[argi++] = "s_initsound";
-    argv[argi++] = "0";
-  }
-
-  argv[argi++] = "+set";
-  argv[argi++] = "cd_nocd";
-  argv[argi++] = (default_nocdaudio)? "1" : "0";
-
-  if (con->gamedir) {
-    argv[argi++] = "+set";
-    argv[argi++] = "game";
-    //argv[argi++] = con->gamedir;
-    
-    // Get game dir regardless of case
-      // FIXME: must be freed
-    argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
-
-  }
-
-  if (con->server) {
-    argv[argi++] = "+connect";
-    argv[argi++] = con->server;
-  }
-
-  if (con->demo) {
-    argv[argi++] = "+record";
-    argv[argi++] = con->demo;
-  }
-
-  argv[argi] = NULL;
-
-  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
-
-  g_free (cmd);
-  return retval;
-}
 
 static int ut_exec (const struct condef *con, int forkit) {
   char *argv[32];
@@ -2594,6 +2729,8 @@ static int ut_exec (const struct condef *con, int forkit) {
   if(additional_args) g_strfreev(additional_args);
   return retval;
 }
+
+
 
 // this one just passes the ip address as first parameter
 static int exec_generic (const struct condef *con, int forkit) {

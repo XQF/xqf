@@ -57,7 +57,8 @@ extern	int tokenize_bychar (char *str, char *token[], int max, char dlm);
 
 extern	int hostname_is_valid (const char *hostname);
 
-extern char *find_game_dir (const char *basegamedir, const char *game);
+extern char *find_game_dir (const char *basegamedir, const char *game,
+						int *match_result);
 
 
 /* 

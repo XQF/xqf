@@ -555,13 +555,16 @@ char* find_file_in_path(const char* files)
 // find a directory inside another, prefer matching case otherwise search case
 // insensitive
 // returns name of found directory or duplicate of game, must be freed manually
-char *find_game_dir (const char *basegamedir, const char *game)
+char *find_game_dir (const char *basegamedir, const char *game, int *match_result)
 {
   DIR *dp;
   struct dirent *ep;
   struct stat buf;
   char *path;
+  char *temp;
 
+  *match_result = 0; // No match, unless changed below
+  
   if(!game)
     return g_strdup("");
 
@@ -578,10 +581,11 @@ char *find_game_dir (const char *basegamedir, const char *game)
       // directory found
       g_free (path);
       debug( 1, "Found exact match for subdir/symlink %s in %s", game, basegamedir);
+      *match_result = 1; // Exact match
       return g_strdup (game);
     }
   }
-  // FIXME: path must be freed
+  g_free (path);
   debug( 1, "Did not find exact match for subdir/symlink %s in %s", game, basegamedir);
 
   // Did not find exact match, perform search
@@ -597,17 +601,20 @@ char *find_game_dir (const char *basegamedir, const char *game)
 	    if (!strcasecmp(ep->d_name,game)) {
               debug( 1, "Found subdir/symlink %s in %s that matches %s", ep->d_name, basegamedir,
                                                                     game);
-	      return g_strdup (ep->d_name);
-	      // FIXME: bad, closedir will not happen
+              *match_result = 2; // Different case match
+	      temp = g_strdup (ep->d_name);
+	      closedir (dp);
+	      return (temp);
 	      break;
 	    }
   	  }
       }
-      (void) closedir (dp);
-      debug( 1, "Could not find any match for subdir/symlink %s in %s.  Using %s",game, 
+      closedir (dp);
+      debug( 1, "Could not find any match for subdir/symlink %s in %s.  Returning %s",game, 
                                                                 basegamedir, game);
     }
   else
     debug( 1, "Could not open base directory %s!!", basegamedir);
+
   return g_strdup (game);
 }
