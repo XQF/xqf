@@ -1,5 +1,6 @@
 Nov 22, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - link GeoIP statically when using ./configure --enable-geoip=static
+- fix wrong function argument in rcon.c
 
 Nov 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - allow data and localedir to be overridden via environment variables
