@@ -371,14 +371,24 @@ static char *q3_generations_genflags[Q3_GENERATIONS_GENFLAGS] = {
   "Class-Based Teams ",		// 64 In DM, each class is its own team.
 };
 
-#define Q3_Q3UT3_VOTEFLAGS	5
-
+#define Q3_Q3UT3_VOTEFLAGS	6
 static char *q3_q3ut3_voteflags[Q3_Q3UT3_VOTEFLAGS] = {
   "Map, Team, Friendlyfire",    // 1
   "Gametype, Wave Respawn",	// 2
   "Time-, Capture-, Fraglimit",	// 4
   "Various delays and times",	// 8
   "Matchmode, exec",		// 16
+  "Gear",			// 32
+};
+
+#define Q3_Q3UT3_GEARFLAGS	6
+static char *q3_q3ut3_gearflags[Q3_Q3UT3_GEARFLAGS] = {
+    "No Grenades",			// 1
+    "No Snipers (psg1 or sr8)",		// 2
+    "No Spas",				// 4
+    "No Pistols",			// 8
+    "No Autos (primary or secondary)",  // 16
+    "No Negev",				// 32
 };
 
 #define Q3_FREEZE_DMFLAGS	11
@@ -590,6 +600,11 @@ void srvinf_ctree_set_server (struct server *s) {
       else if (info[0] && !g_strcasecmp (info[0], "g_allowvote")) {
 	if (s->game && !g_strcasecmp (s->game, "q3ut3")) {
 	  show_extended_flags (info[1], q3_q3ut3_voteflags, Q3_Q3UT3_VOTEFLAGS, FALSE, node);
+	}
+      }
+      else if (info[0] && !g_strcasecmp (info[0], "g_gear")) {
+	if (s->game && !g_strcasecmp (s->game, "q3ut3")) {
+	  show_extended_flags (info[1], q3_q3ut3_gearflags, Q3_Q3UT3_GEARFLAGS, FALSE, node);
 	}
       }
       else if (info[0] && !strcmp (info[0], "genflags")) {
