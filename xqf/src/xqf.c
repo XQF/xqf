@@ -115,6 +115,7 @@ static GtkWidget *refrsel_menu_item = NULL;
 static GtkWidget *resolve_menu_item = NULL;
 static GtkWidget *properties_menu_item = NULL;
 static GtkWidget *rcon_menu_item = NULL;
+static GtkWidget *cancel_redial_menu_item = NULL;
 
 static GtkWidget *file_quit_menu_item = NULL;
 static GtkWidget *file_statistics_menu_item = NULL;
@@ -147,6 +148,7 @@ static GtkWidget *server_favadd_menu_item = NULL;
 static GtkWidget *server_resolve_menu_item = NULL;
 static GtkWidget *server_properties_menu_item = NULL;
 static GtkWidget *server_rcon_menu_item = NULL;
+static GtkWidget *server_cancel_redial_menu_item = NULL;
 
 static GtkWidget *server_serverfilter_menu_item = NULL;
 static GArray* server_filter_menu_items;
@@ -531,6 +533,11 @@ void set_widgets_sensitivity (void) {
     if(GTK_TOGGLE_BUTTON(filter_buttons[ i ])->active)
       gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_ACTIVE);
   }
+
+  // grey out button if not redialing
+  sens = (redialserver == 1);
+  gtk_widget_set_sensitive (cancel_redial_menu_item, sens);
+  gtk_widget_set_sensitive (server_cancel_redial_menu_item, sens);
 }
 
 
@@ -866,7 +873,7 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers,
 static void stat_one_server (struct server *server) {
   GSList *list;
 
-  debug (6, "stat_one_server() -- Server %lx", server);
+  debug (6, "Server %lx", server);
   if (!stat_process && server) {
     list = server_list_prepend (NULL, server);
     stat_lists (NULL, NULL, list, NULL);
@@ -944,7 +951,7 @@ static gboolean launch_redial(struct condef *con)
   if (redialserver == 0)
     return FALSE; // stop redialing, we're done
    
-  refresh_selected_callback(NULL, NULL);
+  stat_one_server(s);
 
   debug (1, "launch redial server name: s->name:%s",s->name);
   debug (1, "launch redial server ping: s->ping:%d",s->ping);  
@@ -983,7 +990,7 @@ static void launch_close_handler_part2(struct condef *con)
   s = con->s;
   props = properties (s);
 
-printf("rest of launch_close_handler\n"); // alex
+  debug(3,"rest of launch_close_handler"); // alex
 
   if (con->spectate) {
     if ((s->flags & SERVER_SP_PASSWORD) == 0) {
@@ -1097,7 +1104,7 @@ printf("rest of launch_close_handler\n"); // alex
           strcpy(launchargv[2],user_rcdir);
           strcat(launchargv[2],"/PreLaunch");
           launchargv[3]= 0;
-          printf("launchargv[2] is %s\n",launchargv[2]);
+          debug(0,"launchargv[2] is %s\n",launchargv[2]);
           execv("/bin/sh",launchargv);
         }     
   }
@@ -1258,8 +1265,7 @@ static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
 
   if (stat_process)
   {
-	  printf("nope\n");
-	  
+    debug(1,"nope");
     return;
   }
 
@@ -2114,7 +2120,7 @@ static const struct menuitem srvopt_menu_items[] = {
   { 
     MENU_ITEM,		N_("Cancel Redial"),   	0,	0,
     GTK_SIGNAL_FUNC (cancelredial_callback), NULL,
-    &properties_menu_item
+    &cancel_redial_menu_item
   },
   
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
@@ -2348,7 +2354,7 @@ static const struct menuitem server_menu_items[] = {
   { 
     MENU_ITEM,		N_("Cancel Redial"),  	0,	0,
     GTK_SIGNAL_FUNC (cancelredial_callback), NULL,
-    &server_properties_menu_item
+    &server_cancel_redial_menu_item
   },
    
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
