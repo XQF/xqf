@@ -332,6 +332,27 @@ struct game games[] = {
     quake_save_info
   },
   {
+    T2_SERVER,
+    GAME_CONNECT | GAME_RCON,
+    "Tribes 2",
+    T2_DEFAULT_PORT,
+    0,
+    "T2S",
+    "T2S",
+    "-t2s",
+    "-t2m", 
+    &t2_pix,
+
+    q2_parse_player,
+    quake_parse_server,
+    q2_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    q2_exec_generic,
+    NULL,
+    quake_save_info
+  },
+  {
     HR_SERVER,
     GAME_CONNECT | GAME_RCON,
     "Heretic2",
@@ -663,8 +684,13 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
   /* debug (6, "quake_parse_server: Parse %s", server->name); */
   poqs = (server->type == Q1_SERVER || server->type == H2_SERVER);
 
-  if ((poqs && n != 10) || (!poqs && n != 8))
-    return;
+  if (server->type != T2_SERVER) // T2 server only reports 6 tokens
+  				 // in RAW format with qstat 2.4b/c
+  				 // instead of 8 as Q2 etc..
+  {
+    if ((poqs && n != 10) || (!poqs && n != 8))
+      return;
+  }
 
 #ifdef QSTAT23
   if (*(token[2])) {		/* if name is not empty */
@@ -686,8 +712,16 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
   if (*(token[offs]))            /* if map is not empty */
     server->map  = g_strdup (token[offs]);
 
-  server->maxplayers = strtoush (token[offs + 1]);
-  server->curplayers = strtoush (token[offs + 2]);
+  if (server->type != T2_SERVER) // max/cur backwards in qstat 2.4b/c!
+  {
+    server->maxplayers = strtoush (token[offs + 1]);
+    server->curplayers = strtoush (token[offs + 2]);
+  }
+  else
+  {
+    server->curplayers = strtoush (token[offs + 1]);
+    server->maxplayers = strtoush (token[offs + 2]);
+  }
 
   server->ping = strtosh (token[offs + 3]);
   server->retries = strtosh (token[offs + 4]);
