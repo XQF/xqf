@@ -2065,10 +2065,12 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
       break;
 
     case UT2004_SERVER:
-      add_custom_args_defaults2("ROTeamGame", "-mod=RedOrchestra",UT2004_SERVER, data);
-      add_custom_args_defaults2("TObjectiveGame", "-mod=Troopers",UT2004_SERVER, data);
-      add_custom_args_defaults2("TTeamGame", "-mod=Troopers",UT2004_SERVER, data);
-      add_custom_args_defaults2("TCTFGame", "-mod=Troopers",UT2004_SERVER, data);
+      add_custom_args_defaults2("ROTeamGame", "-mod=RedOrchestra -log=RedOrchestra.log",UT2004_SERVER, data);
+      add_custom_args_defaults2("TObjectiveGame", "-mod=Troopers -log=Troopers.log",UT2004_SERVER, data);
+      add_custom_args_defaults2("TTeamGame", "-mod=Troopers -log=Troopers.log",UT2004_SERVER, data);
+      add_custom_args_defaults2("TCTFGame", "-mod=Troopers -log=Troopers.log",UT2004_SERVER, data);
+      add_custom_args_defaults2("AoGameInfo", "-mod=AlienSwarm -log=AlienSwarm.log",UT2004_SERVER, data);
+      add_custom_args_defaults2("AoCampaignLobbyGame", "-mod=AlienSwarm -log=AlienSwarm.log",UT2004_SERVER, data);
       break;
 
     default:
