@@ -5736,3 +5736,13 @@ void q2_cmd_or_dir_changed(struct game* g)
 {
     update_q2_skins (NULL);
 }
+
+void ut2004_cmd_or_dir_changed(struct game* g)
+{
+  ut2004_detect_cdkey(g);
+}
+
+void doom3_cmd_or_dir_changed(struct game* g)
+{
+  doom3_detect_version(g);
+}

@@ -54,6 +54,8 @@
 extern void q1_cmd_or_dir_changed(struct game* g);
 extern void qw_cmd_or_dir_changed(struct game* g);
 extern void q2_cmd_or_dir_changed(struct game* g);
+extern void ut2004_cmd_or_dir_changed(struct game* g);
+extern void doom3_cmd_or_dir_changed(struct game* g);
 
 static struct player *poqs_parse_player(char *tokens[], int num, struct server *s);
 static struct player *qw_parse_player(char *tokens[], int num, struct server *s);
