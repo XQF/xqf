@@ -58,6 +58,9 @@ char *strdup_strip (const char *str) {
 
   for (start = str; *start && isspace (*start); start++);
 
+  if (!strlen(str))
+    return NULL;
+
   for (end = str + strlen (str) - 1; end >= start && isspace (*end); end--);
 
   if (start > end)
