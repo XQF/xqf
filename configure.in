@@ -78,14 +78,14 @@ dnl    , ,enable_rcon=yes)
 AC_ARG_ENABLE(readline,[  --enable-externalrcon   compile external rcon program (default=yes)], ,enable_rcon=yes)
 if test x$enable_rcon = xyes; then
   AC_CHECK_HEADER(readline/readline.h, have_readline_hdr=yes)
-  AC_CHECK_LIB(readline, readline, have_readline_lib=yes, , )
+  AC_CHECK_LIB(readline, readline, have_readline_lib=yes, , -lncurses )
   AC_CHECK_HEADER(readline/history.h, have_history_hdr=yes)
-  AC_CHECK_LIB(readline, add_history, have_history_lib=yes, , )
+  AC_CHECK_LIB(readline, add_history, have_history_lib=yes, , -lncurses )
   if test x$have_readline_hdr = xyes -a x$have_readline_lib = xyes; then
     if test x$have_history_hdr = xyes -a x$have_history_lib = xyes; then
       XQFRCON="xqf-rcon";
       AC_SUBST(XQFRCON)
-      XQFRCON_LIBS="-lreadline"
+      XQFRCON_LIBS="-lreadline -lncurses"
       AC_SUBST(XQFRCON_LIBS)
     else
       AC_MSG_WARN(libreadline not found, rcon program disabled)
