@@ -23,4 +23,6 @@ src/gnuconfig.h \
 src/gnuconfig.h.in \
 src/xpm/Makefile.in \
 src/xpm/Makefile \
-announce/Makefile.in
+po/Makefile.in \
+po/POTFILES \
+po/*.gmo
