@@ -1,3 +1,7 @@
+Oct 03, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- initial descent3 support (requires qstat 2.4e)
+- changed version to 0.9.7c (new master for descent3)
+
 Oct  1, 2001: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation, again :)
 

@@ -847,6 +847,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD WOS master://wolf.idsoftware.com:27950 id",
 
+  "ADD D3P master://gt.pxo.net:3445 PXO",
+
   "ADD SFS http://www.gameaholic.com/servers/qspy-soldieroffortune gameaholic.com",
   "ADD GPS http://www.gameaholic.com/servers/qspy-noonelivesforever Noone Lives Forevere - gameaholic.com",
   "ADD GPS http://www.gameaholic.com/servers/qspy-rallymasters Rally Masters - gameaholic.com",

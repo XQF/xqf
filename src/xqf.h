@@ -58,12 +58,14 @@
 #define	HR_DEFAULT_PORT		28910		/* Heretic2 */
 #define	UN_DEFAULT_PORT		7777		/* Unreal */
 #define	GPS_DEFAULT_PORT	27888		/* Gamespy Generic */
+#define	DESCENT3_DEFAULT_PORT	2092		/* Descent 3 */
 
 #define	QWM_DEFAULT_PORT	27000		/* QuakeWorld */
 #define	Q2M_DEFAULT_PORT	27900		/* Quake2 master */
 #define	Q3M_DEFAULT_PORT	27950		/* Quake3 master */
 #define	WOM_DEFAULT_PORT	27950		/* Wolfenstein master */
 #define	HLM_DEFAULT_PORT	27010		/* Half-Life master */
+#define	D3M_DEFAULT_PORT	3445		/* Descent 3 master */
 
 #define PLAYER_GROUP_MASK	0x07
 #define PLAYER_GROUP_RED	0x01
@@ -101,6 +103,7 @@ enum server_type {
   UN_SERVER,
   RUNE_SERVER,
 #endif
+  DESCENT3_SERVER,
   GPS_SERVER,
   UNKNOWN_SERVER
 };

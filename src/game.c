@@ -49,6 +49,8 @@ static struct player *hl_parse_player(char *tokens[], int num);
 static struct player *un_parse_player(char *tokens[], int num);
 static void un_analyze_serverinfo (struct server *s);
 #endif
+static struct player *descent3_parse_player(char *tokens[], int num);
+static void descent3_analyze_serverinfo (struct server *s);
 
 static void quake_parse_server (char *tokens[], int num, struct server *s);
 
@@ -78,6 +80,7 @@ static int q2_exec_generic (const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
 static int gamespy_exec (const struct condef *con, int forkit);
+static int exec_generic (const struct condef *con, int forkit);
 
 static GList *q1_custom_cfgs (char *dir, char *game);
 static GList *qw_custom_cfgs (char *dir, char *game);
@@ -445,6 +448,28 @@ struct game games[] = {
     quake_save_info
   },
 #endif
+  // Descent 3
+  {
+    DESCENT3_SERVER,		// server_type
+    GAME_CONNECT,		// flags
+    "Descent 3",		// name
+    DESCENT3_DEFAULT_PORT,	// default_port
+    D3M_DEFAULT_PORT,		// default_master_port
+    "D3P",			// id
+    "D3P",			// qstat_str
+    "-d3p",			// qstat_option
+    "-d3m",			// qstat_master_option
+    &descent3_pix,		// pixmap
+
+    descent3_parse_player,	// parse_player
+    quake_parse_server,		// parse_server
+    descent3_analyze_serverinfo,	// analyze_serverinfo
+    config_is_valid_generic,	// config_is_valid
+    NULL,			// write_config
+    exec_generic,		// exec_client
+    NULL,			// custom_cfgs
+    quake_save_info		// save_info
+  },
   // any game using the gamespy protocol
   {
     GPS_SERVER,			// server_type
@@ -661,6 +686,23 @@ static struct player *q2_parse_player (char *token[], int n) {
   return player;
 }
 
+// Descent 3: player name, frags, deaths, ping time, team
+static struct player *descent3_parse_player (char *token[], int n) {
+  struct player *player = NULL;
+
+  if (n < 5)
+    return NULL;
+
+  player = g_malloc0 (sizeof (struct player) + strlen (token[0]) + 1);
+  player->time  = -1;
+  player->frags = strtosh (token[1]);
+  player->ping  = strtosh (token[3]);
+
+  player->name = (char *) player + sizeof (struct player);
+  strcpy (player->name, token[0]);
+
+  return player;
+}
 
 static struct player *q3_parse_player (char *token[], int n) {
   struct player *player = NULL;
@@ -838,6 +880,22 @@ static void un_analyze_serverinfo (struct server *s) {
 }
 #endif //QSTAT_HAS_UNREAL_SUPPORT
 
+static void descent3_analyze_serverinfo (struct server *s) {
+  char **info_ptr;
+  long n;
+
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "gametype") == 0) {
+      s->game = info_ptr[1];
+    }
+/*
+    //password required?
+    else if (strcmp (*info_ptr, "password") == 0 && strcmp(info_ptr[1],"False")) {
+      s->flags |= SERVER_PASSWORD;
+    }
+*/
+  }
+}
 
 static void q2_analyze_serverinfo (struct server *s) {
   char **info_ptr;
@@ -2000,6 +2058,32 @@ static int ut_exec (const struct condef *con, int forkit) {
 
   if (default_nosound) {
     argv[argi++] = "-nosound";
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  return retval;
+}
+
+// this one just passes the ip address as first parameter
+static int exec_generic (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->server) {
+    argv[argi++] = con->server;
   }
 
   argv[argi] = NULL;
