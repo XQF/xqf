@@ -66,41 +66,63 @@ typedef enum
     TAG_invalid,
 } GameTag;
 
-// TODO: add inheritable flag
-static const xmlChar* tagstr[] =
+typedef struct
 {
-    "type",
-    "flags",
-    "name",
-    "default_port",
-    "default_master_port",
-    "id",
-    "qstat_str",
-    "qstat_option",
-    "qstat_master_option",
-    "icon",
-    "parse_player",
-    "parse_server",
-    "analyze_serverinfo",
-    "config_is_valid",
-    "write_config",
-    "exec_client",
-    "custom_cfgs",
-    "save_info",
-    "init_maps",
-    "has_map",
-    "get_mapshot",
-    "arch_identifier",
-    "identify_cpu",
-    "identify_os",
-    "suggest_commands",
-    "default_home",
-    "pd",
-    "data",
-    "main_mods",
-    "base",
-    NULL,
+    unsigned inherit: 1;
+    const xmlChar* name;
+
+} Tag;
+
+static const Tag tags[] =
+{
+    { 0, "type" },
+    { 1, "flags" },
+    { 0, "name" },
+    { 1, "default_port" },
+    { 1, "default_master_port" },
+    { 0, "id" },
+    { 1, "qstat_str" },
+    { 1, "qstat_option" },
+    { 1, "qstat_master_option" },
+    { 1, "icon" },
+    { 1, "parse_player" },
+    { 1, "parse_server" },
+    { 1, "analyze_serverinfo" },
+    { 1, "config_is_valid" },
+    { 1, "write_config" },
+    { 1, "exec_client" },
+    { 1, "custom_cfgs" },
+    { 1, "save_info" },
+    { 1, "init_maps" },
+    { 1, "has_map" },
+    { 1, "get_mapshot" },
+    { 1, "arch_identifier" },
+    { 1, "identify_cpu" },
+    { 1, "identify_os" },
+    { 0, "suggest_commands" },
+    { 0, "default_home" },
+    { 0, "pd" },
+    { 0, "data" },
+    { 0, "main_mods" },
+    { 0, "base" },
+    { 0, NULL },
 };
+
+const xmlChar* tagStr(GameTag tag)
+{
+    if(tag < TAG_start_basic || tag >= TAG_invalid)
+	return NULL;
+
+    return tags[tag].name;
+}
+
+unsigned tagInherit(GameTag tag)
+{
+    if(tag < TAG_start_basic || tag >= TAG_invalid)
+	return 0;
+
+    return tags[tag].inherit;
+}
 
 struct MultiTag
 {
@@ -128,9 +150,9 @@ GameTag getGameTag(const xmlChar* str)
     unsigned i;
     GameTag tag = TAG_invalid;
 
-    for ( i = 0; tagstr[i]; ++i)
+    for ( i = 0; tagStr(i); ++i)
     {
-	if(!xmlStrcmp(str, tagstr[i]))
+	if(!xmlStrcmp(str, tagStr(i)))
 	{
 	    tag = i;
 	    break;
@@ -239,7 +261,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
     {
 	xmlChar* val = rg->basic[tag];
 	
-	if(!val && rg->base)
+	if(!val && rg->base && tagInherit(tag))
 	    val = rg->base->basic[tag];
 	
 	if(!val)
@@ -258,13 +280,13 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
 	    case TAG_pix:
 	    case TAG_suggest_commands:
 	    case TAG_default_home:
-		fprintf(f, "    %-20s: \"%s\",\n", tagstr[tag], val);
+		fprintf(f, "    %-20s: \"%s\",\n", tagStr(tag), val);
 		break;
 	    case TAG_pd:
-		fprintf(f, "    %-20s: &%s,\n", tagstr[tag], val);
+		fprintf(f, "    %-20s: &%s,\n", tagStr(tag), val);
 		break;
 	    default:
-		fprintf(f, "    %-20s: %s,\n", tagstr[tag], val);
+		fprintf(f, "    %-20s: %s,\n", tagStr(tag), val);
 		break;
 	}
     }
@@ -273,7 +295,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
     {
 	struct MultiTag* m = rg->multi[tag - TAG_start_multi];
 	
-	if(!m && rg->base)
+	if(!m && rg->base && tagInherit(tag))
 	    m = rg->base->multi[tag - TAG_start_multi];
 	
 	if(!m)
@@ -281,7 +303,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
 	
 	if(!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
 
-	fprintf(f, "    %-20s: stringlist%03u,\n", tagstr[tag], rg->num_multitags++ );
+	fprintf(f, "    %-20s: stringlist%03u,\n", tagStr(tag), rg->num_multitags++ );
     }
 
     fputs("  },\n", f);
