@@ -57,6 +57,7 @@
 #define	T2_DEFAULT_PORT		28000		/* Tribes 2 */
 #define	HR_DEFAULT_PORT		28910		/* Heretic2 */
 #define	UN_DEFAULT_PORT		7777		/* Unreal */
+#define	AAO_DEFAULT_PORT	1716		/* AAO */
 #define	UT2_DEFAULT_PORT	7777		/* Unreal Tournament 2003 */
 #define	GPS_DEFAULT_PORT	27888		/* Gamespy Generic */
 #define	DESCENT3_DEFAULT_PORT	2092		/* Descent 3 */
@@ -111,6 +112,7 @@ enum server_type {
   UN_SERVER,
   UT2_SERVER,
   RUNE_SERVER,
+  AAO_SERVER,
   DESCENT3_SERVER,
   SSAM_SERVER,
   SSAMSE_SERVER,

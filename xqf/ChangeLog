@@ -1,3 +1,6 @@
+Jul 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- Support for America's Army. Thanks Florian Riepler for the patch.
+
 Jul 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix default ET protocol, now 82. Thanks cjay for not reporting ;-)
 

@@ -63,6 +63,7 @@ extern	struct pixmap sof2s_pix;
 extern	struct pixmap t2_pix;
 extern	struct pixmap hr_pix;
 extern	struct pixmap un_pix;
+extern	struct pixmap aao_pix;
 extern	struct pixmap ut2_pix;
 extern	struct pixmap rune_pix;
 extern	struct pixmap descent3_pix;
