@@ -3,6 +3,9 @@ SUBDIRS = xpm zip
 localedir = $(datadir)/locale
 INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS) @QSTAT23@ @DEBUG@ @COMPRESSION@ $(GDK_PIXBUF_CFLAGS)
 
+qstatcfgdir = $(pkgdatadir)
+qstatcfg_DATA = qstat.cfg
+
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
 
