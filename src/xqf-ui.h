@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __XQF_UI_H__
-#define __XQF_UI_H__
+#ifndef XQF_UI_H__
+#define XQF_UI_H__
 
 #include <gtk/gtk.h>
 
@@ -119,4 +119,12 @@ extern	void restore_main_window_geometry (void);
 
 extern 	GtkTooltips *tooltips;
 
-#endif /* __XQF_UI_H__ */
+/*
+ * This function returns a widget in a component created by Glade.
+ * Call it with the toplevel widget in the component (i.e. a window/dialog),
+ * or alternatively any widget in the component, and the name of the widget
+ * you want returned.
+ */
+GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name);
+
+#endif /* XQF_UI_H__ */

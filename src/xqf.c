@@ -74,6 +74,8 @@
 #include "config.h"
 #include "debug.h"
 #include "redial.h"
+#include "splash.h"
+#include "loadpixmap.h"
 
 time_t xqf_start_time;
 
@@ -3268,8 +3270,9 @@ int main (int argc, char *argv[]) {
       fprintf (stderr, "main() -- Unknown Option '%s' (only -d N is valid, N>5 == Lots of output)\n", argv[i]);
     }
   }
-      
 
+  add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
+  
   dns_gtk_init ();
 
   rc_check_dir ();
@@ -3285,7 +3288,9 @@ int main (int argc, char *argv[]) {
   filters_init ();
 
   host_cache_load ();
+  splash_increase_progress(_("Reading server lists"),0);
   init_masters (newversion);
+  splash_set_progress(_("Starting ..."),100);
 
   client_init ();
   ignore_sigpipe ();
@@ -3318,6 +3323,8 @@ int main (int argc, char *argv[]) {
   }
 
   debug(1,"startup time %ds", time(NULL)-xqf_start_time);
+
+  destroy_splashscreen();
 
   gtk_main ();
 

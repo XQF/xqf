@@ -37,6 +37,8 @@ AM_GNU_GETTEXT
 AM_PATH_GLIB(1.2.0,,exit 1)
 AM_PATH_GTK(1.2.0,,exit 1)
 
+AM_PATH_GDK_PIXBUF
+
 dnl check for qstat
 AC_ARG_WITH(qstat,[  --with-qstat=CMD        use CMD to run qstat])
 
@@ -124,9 +126,15 @@ if test "$USE_INCLUDED_LIBINTL" = "yes"; then
 	ln -s libgnuintl.h intl/libintl.h
 fi
 
-if test "x$GCC" = xyes; then
-	CFLAGS="$CFLAGS -Wall"
+dnl Use -Wall if we have gcc.
+changequote(,)dnl
+if test "x$GCC" = "xyes"; then
+  case " $CFLAGS " in
+  *[\ \	]-Wall[\ \	]*) ;;
+  *) CFLAGS="$CFLAGS -Wall" ;;
+  esac
 fi
+changequote([,])dnl
 
 AC_ARG_ENABLE(profiling,[  --enable-profiling   compile with profiling (default=no)], enable_profile=yes, )
 AC_MSG_CHECKING(whether profiling is requested)
@@ -136,6 +144,9 @@ if test x$enable_profile = xyes; then
 else
 	AC_MSG_RESULT([no])
 fi
+
+xqf_pkgdata=`eval echo ${datadir}/${PACKAGE}`
+AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, ["${xqf_pkgdata}"], Architecture independent data files)
 
 AC_CONFIG_FILES([
 Makefile

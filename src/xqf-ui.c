@@ -691,8 +691,8 @@ void restore_main_window_geometry (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Main Window Geometry/");
 
-  height = config_get_int ("height");
-  width  = config_get_int ("width");
+  height = config_get_int ("height=480");
+  width  = config_get_int ("width=640");
   pane1  = config_get_int ("pane1");
   pane2  = config_get_int ("pane2");
   pane3  = config_get_int ("pane3");
@@ -710,4 +710,27 @@ void restore_main_window_geometry (void) {
   gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 :
            player_clist_def.height + GTK_PANED (pane3_widget)->gutter_size/2);
 }
+
+GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name)
+{
+  GtkWidget *parent, *found_widget;
+
+  for (;;)
+    {
+      if (GTK_IS_MENU (widget))
+        parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
+      else
+        parent = widget->parent;
+      if (parent == NULL)
+        break;
+      widget = parent;
+    }
+
+  found_widget = (GtkWidget*) gtk_object_get_data (GTK_OBJECT (widget),
+                                                   widget_name);
+  if (!found_widget)
+    g_warning ("Widget not found: %s", widget_name);
+  return found_widget;
+}
+
 
