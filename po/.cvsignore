@@ -3,3 +3,5 @@ Makefile.in
 POTFILES
 *.gmo
 messages
+messages.mo
+xqf.pot
