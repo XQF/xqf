@@ -97,16 +97,28 @@ static void quake_save_info (FILE *f, struct server *s);
 
 char **get_custom_arguments(enum server_type type, const char *gamestring);
 
+static void q1_init_maps();
+static void qw_init_maps();
+static void q2_init_maps();
+static void hl_init_maps();
 static void q3_init_maps();
 static void wolf_init_maps();
 static void un_init_maps();
 static void ut2_init_maps();
 static void rune_init_maps();
+static gboolean q1_has_map(struct server* s);
+static gboolean qw_has_map(struct server* s);
+static gboolean q2_has_map(struct server* s);
+static gboolean hl_has_map(struct server* s);
 static gboolean q3_has_map(struct server* s);
 static gboolean wolf_has_map(struct server* s);
 static gboolean ut_has_map(struct server* s);
 static gboolean ut2_has_map(struct server* s);
 static gboolean rune_has_map(struct server* s);
+static GHashTable* q1_maphash = NULL;
+static GHashTable* qw_maphash = NULL;
+static GHashTable* q2_maphash = NULL;
+static GHashTable* hl_maphash = NULL;
 static GHashTable* q3_maphash = NULL;
 static GHashTable* wolf_maphash = NULL;
 static GHashTable* ut_maphash = NULL;
@@ -134,8 +146,8 @@ struct game games[] = {
     q1_exec_generic,
     q1_custom_cfgs,
     quake_save_info,
-    NULL,		// init_maps
-    NULL,		// has_map
+    q1_init_maps,	// init_maps
+    q1_has_map,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -165,8 +177,8 @@ struct game games[] = {
     qw_exec,
     qw_custom_cfgs,
     quake_save_info,
-    NULL,		// init_maps
-    NULL,		// has_map
+    qw_init_maps,	// init_maps
+    qw_has_map,		// has_map
     NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
@@ -195,8 +207,8 @@ struct game games[] = {
     q2_exec,
     q2_custom_cfgs,
     quake_save_info,
-    NULL,		// init_maps
-    NULL,		// has_map
+    q2_init_maps,	// init_maps
+    q2_has_map,		// has_map
     NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
@@ -416,8 +428,8 @@ struct game games[] = {
     hl_exec,
     NULL,
     quake_save_info,
-    NULL,		// init_maps
-    NULL,		// has_map
+    hl_init_maps,	// init_maps
+    hl_has_map,		// has_map
     NULL,		// Custom arguments
     "sv_os",		// arch_identifier
     NULL,		// identify_cpu
@@ -3553,15 +3565,43 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
 
 /** map functions */
 
+static void q1_init_maps()
+{
+  q3_clear_maps(q1_maphash); // important to avoid memleak when called second time
+  q1_maphash = q3_init_maphash();
+  findquakemaps(q1_maphash,games[Q1_SERVER].real_dir);
+}
+
+static void qw_init_maps()
+{
+  q3_clear_maps(qw_maphash); // important to avoid memleak when called second time
+  qw_maphash = q3_init_maphash();
+  findquakemaps(qw_maphash,games[QW_SERVER].real_dir);
+}
+
+static void q2_init_maps()
+{
+  q3_clear_maps(q2_maphash); // important to avoid memleak when called second time
+  q2_maphash = q3_init_maphash();
+  findquakemaps(q2_maphash,games[Q2_SERVER].real_dir);
+}
+
+static void hl_init_maps()
+{
+  q3_clear_maps(hl_maphash); // important to avoid memleak when called second time
+  hl_maphash = q3_init_maphash();
+  findquakemaps(hl_maphash,games[HL_SERVER].real_dir);
+}
+
 static void q3_init_maps()
 {
   q3_clear_maps(q3_maphash); // important to avoid memleak when called second time
   q3_maphash = q3_init_maphash();
-  findq3maps_dir(q3_maphash,games[Q3_SERVER].real_dir);
+  findq3maps(q3_maphash,games[Q3_SERVER].real_dir);
 
   {
     char* q3home = expand_tilde("~/.q3a");
-    findq3maps_dir(q3_maphash,q3home);
+    findq3maps(q3_maphash,q3home);
     g_free(q3home);
   }
 }
@@ -3570,11 +3610,11 @@ static void wolf_init_maps()
 {
   q3_clear_maps(wolf_maphash); // important to avoid memleak when called second time
   wolf_maphash = q3_init_maphash();
-  findq3maps_dir(wolf_maphash,games[WO_SERVER].real_dir);
+  findq3maps(wolf_maphash,games[WO_SERVER].real_dir);
 
   {
     char* q3home = expand_tilde("~/.wolf");
-    findq3maps_dir(wolf_maphash,q3home);
+    findq3maps(wolf_maphash,q3home);
     g_free(q3home);
   }
 }
@@ -3598,6 +3638,50 @@ static void rune_init_maps()
   ut_clear_maps(rune_maphash);
   rune_maphash = ut_init_maphash();
   findutmaps_dir(rune_maphash,games[RUNE_SERVER].real_dir,".run");
+}
+
+static gboolean q1_has_map(struct server* s)
+{
+  if(!q1_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return q3_lookup_map(q1_maphash,s->map);
+}
+
+static gboolean qw_has_map(struct server* s)
+{
+  if(!qw_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return q3_lookup_map(qw_maphash,s->map);
+}
+
+static gboolean q2_has_map(struct server* s)
+{
+  if(!q2_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return q3_lookup_map(q2_maphash,s->map);
+}
+
+static gboolean hl_has_map(struct server* s)
+{
+  if(!hl_maphash)
+    return TRUE;
+
+  if(!s->map)
+    return FALSE;
+
+  return q3_lookup_map(hl_maphash,s->map);
 }
 
 static gboolean q3_has_map(struct server* s)

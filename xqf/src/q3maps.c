@@ -1,5 +1,5 @@
 /* XQF - Quake server browser and launcher
- * Functions for finding installed q3 maps
+ * Functions for finding installed q1-q3&clones maps
  * Copyright (C) 2002 Ludwig Nussel <l-n@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,11 +25,111 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 
 #include <glib.h>
 
 #include "debug.h"
 #include "zip/unzip.h"
+
+#include "q3maps.h"
+
+
+/** pak file code ripped from q2 */
+
+typedef unsigned char 		byte;
+
+#define IDPAKHEADER		(('K'<<24)+('C'<<16)+('A'<<8)+'P')
+
+typedef struct
+{
+    char	name[56];
+    int		filepos, filelen;
+} dpackfile_t;
+
+typedef struct
+{
+    int		ident;		// == IDPAKHEADER
+    int		dirofs;
+    int		dirlen;
+} dpackheader_t;
+
+static inline int    LittleLong (int l)
+{
+#if BYTE_ORDER == BIG_ENDIAN
+    byte    b1,b2,b3,b4;
+
+    b1 = l&255;
+    b2 = (l>>8)&255;
+    b3 = (l>>16)&255;
+    b4 = (l>>24)&255;
+
+    return ((int)b1<<24) + ((int)b2<<16) + ((int)b3<<8) + b4;
+#else
+    return l;
+#endif
+}
+
+static void findmaps_pak(const char* packfile, GHashTable* maphash)
+{
+    dpackheader_t header;
+    int numpackfiles;
+    int fd;
+    dpackfile_t info;
+
+    fd = open(packfile, O_RDONLY);
+    if (fd < 0)
+    {
+	perror(packfile);
+	return;
+    }
+
+    if(read (fd, &header, sizeof(header))<0)
+    {
+	perror(packfile);
+	return;
+    }
+    if (LittleLong(header.ident) != IDPAKHEADER)
+    {
+	debug(0,"%s is not a packfile\n", packfile);
+	return;
+    }
+    header.dirofs = LittleLong (header.dirofs);
+    header.dirlen = LittleLong (header.dirlen);
+
+    numpackfiles = header.dirlen / sizeof(dpackfile_t);
+
+//    printf ("packfile %s (%i files)\n", packfile, numpackfiles);
+
+    if(lseek (fd, header.dirofs, SEEK_SET)==-1)
+    {
+	perror(packfile);
+	return;
+    }
+
+    while(read (fd,&info, sizeof(dpackfile_t))>0)
+    {
+	if(!strncmp(info.name,"maps/",5) &&
+	    !strcmp(info.name+strlen(info.name)-4,".bsp"))
+	{
+	    // s#maps/(.*)\.bsp#\1#
+	    char* mapname=g_strndup(info.name+5,strlen(info.name)-4-5);
+	    if(g_hash_table_lookup(maphash,mapname))
+	    {
+		g_free(mapname);
+	    }
+	    else
+	    {
+		g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(1));
+	    }
+
+	}
+    }
+
+    close(fd);
+
+    return;
+}
 
 /** open zip file and insert all contained .bsp into maphash */
 static void findq3maps_zip(const char* path, GHashTable* maphash)
@@ -76,18 +176,81 @@ static void findq3maps_zip(const char* path, GHashTable* maphash)
     }
 }
 
-/**
- * find all .pk3 files one level under startdir, call findq3maps_zip to insert
- * maps into maphash
- */
-void findq3maps_dir(GHashTable* maphash, const char* startdir)
+gboolean quake_contains_dir(const char* name, int level, GHashTable* maphash)
+{
+//   printf("directory %s at level %d\n",name,level);
+    if(level == 0)
+	return TRUE;
+    if(level == 1 && !g_strcasecmp(name+strlen(name)-4,"maps"))
+	return TRUE;
+
+    return FALSE;
+}
+
+void quake_contains_file( const char* name, int level, GHashTable* maphash)
+{
+//    printf("%s at level %d\n",name,level);
+    if(strlen(name)>4
+	&& !g_strcasecmp(name+strlen(name)-4,".pak")
+	&& level == 1)
+    {
+	findmaps_pak(name,maphash);
+    }
+    if(strlen(name)>4
+	&& !g_strcasecmp(name+strlen(name)-4,".bsp")
+	&& level == 2)
+    {
+	char* basename = g_basename(name);
+	char* mapname=g_strndup(basename,strlen(basename)-4);
+	if(g_hash_table_lookup(maphash,mapname))
+	{
+	    g_free(mapname);
+	}
+	else
+	{
+	    g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(1));
+	}
+    }
+}
+
+
+void q3_contains_file(const char* name, int level, GHashTable* maphash)
+{
+//    printf("%s at level %d\n",name,level);
+    if(strlen(name)>4
+	&& !g_strcasecmp(name+strlen(name)-4,".pk3")
+	&& level == 1)
+    {
+	findq3maps_zip(name,maphash);
+    }
+    if(strlen(name)>4
+	&& !g_strcasecmp(name+strlen(name)-4,".bsp")
+	&& level == 2)
+    {
+	char* basename = g_basename(name);
+	char* mapname=g_strndup(basename,strlen(basename)-4);
+	if(g_hash_table_lookup(maphash,mapname))
+	{
+	    g_free(mapname);
+	}
+	else
+	{
+	    g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(1));
+	}
+    }
+}
+
+/** 
+ * traverse directory tree starting at startdir. Calls found_file for each file
+ * and found_dir for each directory (non-recoursive). Note: There is no loop
+ * detection so make sure found_dir returns false at some level.
+**/
+void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFunction found_dir, gpointer data)
 {
     DIR* dir = NULL;
     struct dirent* dire = NULL;
     char* curdir = NULL;
     GSList* dirstack = NULL;
-    int maxlevel = 1;
-    char* mod = NULL;	
     typedef struct
     {
 	char* name;
@@ -96,7 +259,7 @@ void findq3maps_dir(GHashTable* maphash, const char* startdir)
 
     DirStackEntry* dse;
     
-    if(!startdir || !maphash)
+    if(!startdir || !found_dir || !found_file)
 	return;
 
     dse = g_new0(DirStackEntry,1);
@@ -111,11 +274,6 @@ void findq3maps_dir(GHashTable* maphash, const char* startdir)
 
 	dse = current->data;
 	curdir = dse->name;
-	if(dse->level == 1)
-	{
-	    if(mod) g_free(mod);
-	    mod=g_strdup(g_basename(curdir));
-	}
 
 	dir = opendir(curdir);
 	if(!dir)
@@ -143,7 +301,7 @@ void findq3maps_dir(GHashTable* maphash, const char* startdir)
 	    }
 	    if(S_ISDIR(statbuf.st_mode))
 	    {
-		if(maxlevel>=0 && dse->level<maxlevel)
+		if(found_dir(name, dse->level, data))
 		{
 		    DirStackEntry* tmpdse = g_new0(DirStackEntry,1);
 		    tmpdse->name=name;
@@ -157,11 +315,7 @@ void findq3maps_dir(GHashTable* maphash, const char* startdir)
 	    }
 	    else
 	    {
-		if(strlen(dire->d_name)>4
-		    && !g_strcasecmp(dire->d_name+strlen(dire->d_name)-4,".pk3"))
-		{
-		    findq3maps_zip(name,maphash);
-		}
+		found_file(name, dse->level, data);
 		g_free(name);
 	    }
 	}
@@ -170,8 +324,6 @@ void findq3maps_dir(GHashTable* maphash, const char* startdir)
 	g_free(curdir);
 	g_free(dse);
     }
-    if(mod)
-	g_free(mod);
 }
 
 // case insensitive compare for hash
@@ -189,12 +341,6 @@ static gboolean maphashforeachremovefunc(gpointer key, gpointer value, gpointer 
 {
     g_free(key);
     return TRUE;
-}
-
-static void q3_print_maps(GHashTable* maphash)
-{
-    g_hash_table_foreach(maphash, (GHFunc) maphashforeachfunc, NULL);
-    printf("\n");
 }
 
 /** free all keys and destroy maphash */
@@ -220,21 +366,44 @@ gboolean q3_lookup_map(GHashTable* maphash, const char* mapname)
     return FALSE;
 }
 
+void findq3maps(GHashTable* maphash, const char* startdir)
+{
+    traverse_dir(startdir, (FoundFileFunction)q3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+}
+
+void findquakemaps(GHashTable* maphash, const char* startdir)
+{
+    traverse_dir(startdir, (FoundFileFunction)quake_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+}
+
+
+
 #if 0
+
+// gcc -g -Wall -O0 `glib-config --cflags` `glib-config --libs` -lz -o listq3maps q3maps.c zip/*.c debug.c
+
+static void q3_print_maps(GHashTable* maphash)
+{
+    g_hash_table_foreach(maphash, (GHFunc) maphashforeachfunc, NULL);
+    printf("\n");
+}
+
 int main (void)
 {
-    const char q3dirname[]="/usr/local/games/quake3";
     GHashTable* maphash = NULL;
 
-    maphash = q3_init_maps();
+    maphash = q3_init_maphash();
 
-    q3_addmaps(maphash,q3dirname);
-    q3_addmaps(maphash,"/home/madmax/.q3a");
+//    traverse_dir("/usr/local/games/quake3", (FoundFileFunction)q3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+//    traverse_dir("/home/madmax/.q3a", (FoundFileFunction)q3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+//    traverse_dir("/usr/share/games/quakeforge", (FoundFileFunction)quake_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+//    traverse_dir("/usr/share/games/quake2", (FoundFileFunction)quake_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+    traverse_dir("/usr/local/games/hl", (FoundFileFunction)quake_contains_file, (FoundDirFunction)quake_contains_dir, (gpointer)maphash);
 
     q3_print_maps(maphash);
 
-    printf("%d\n",q3_has_map(maphash,"blub"));
-    printf("%d\n",q3_has_map(maphash,"q3dm1"));
+    printf("%d\n",q3_lookup_map(maphash,"blub"));
+    printf("%d\n",q3_lookup_map(maphash,"q3dm1"));
 
     q3_clear_maps(maphash);
 

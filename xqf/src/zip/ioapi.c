@@ -56,7 +56,7 @@ long ZCALLBACK fseek_file_func OF((
    uLong offset,
    int origin));
 
-long ZCALLBACK fclose_file_func OF((
+int ZCALLBACK fclose_file_func OF((
    voidpf opaque,
    voidpf stream));
 
@@ -145,11 +145,11 @@ long ZCALLBACK fseek_file_func (opaque, stream, offset, origin)
     return ret;
 }
 
-long ZCALLBACK fclose_file_func (opaque, stream)
+int ZCALLBACK fclose_file_func (opaque, stream)
    voidpf opaque;
    voidpf stream;
 {
-    long ret;
+    int ret;
     ret = fclose((FILE *)stream);
     return ret;
 }
