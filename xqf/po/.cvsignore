@@ -1,7 +1,13 @@
 Makefile
 Makefile.in
+Makefile.in.in
 POTFILES
 *.gmo
 messages
 messages.mo
 xqf.pot
+*.header
+*.sin
+*.sed
+Rules-quot
+Makevars.template
