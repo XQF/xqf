@@ -313,7 +313,7 @@ int dialog_yesnoredial (char *title, int defbutton, char *yes, char *no, char *r
   gtk_widget_show (button);
 
   button = gtk_button_new_with_label ((redial)? redial : _("Redial"));
-//  gtk_widget_set_usize (button, 96, -1);
+  gtk_widget_set_usize (button, 96, -1);
   gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
 		      GTK_SIGNAL_FUNC (redial_button_clicked_callback), &res);

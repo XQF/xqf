@@ -1,4 +1,5 @@
 Oct 20, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Fixed width of redial button
 - Added support for ~ in file master filename
 - Fix edit menu sensitivity problem for add / remove fav
 
