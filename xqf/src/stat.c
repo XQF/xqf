@@ -687,9 +687,13 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
                           GdkInputFunction input_callback, struct master *m)
 {
     struct stat_conn *conn;
+    char *file2;
+    
     int fd = -1;
 
-    fd = open(file,O_RDONLY);
+    file2 = expand_tilde(file);
+        
+    fd = open(file2,O_RDONLY);
     if(fd == -1)
     {
 	perror(__FUNCTION__);
@@ -720,6 +724,9 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
     conn->tag = gdk_input_add (conn->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
 				     (GdkInputFunction) input_callback, conn);
     conn->input_callback = (GdkInputFunction) input_callback;
+
+    if (file2)
+      g_free(file2);
 
     return conn;
 }

@@ -1,4 +1,5 @@
 Oct 20, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Added support for ~ in file master filename
 - Fix edit menu sensitivity problem for add / remove fav
 
 Oct 19, 2002: Alex Burger <alex@users.sourceforge dot net>
