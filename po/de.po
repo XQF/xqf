@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-13 01:14+0100\n"
-"PO-Revision-Date: 2004-11-13 01:20GMT\n"
+"POT-Creation-Date: 2004-11-13 15:39+0100\n"
+"PO-Revision-Date: 2004-11-13 15:37GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -29,12 +29,12 @@ msgstr "XQF Spieleserver Browser"
 
 #: src/addmaster.c:111
 msgid "You have to specify a name and an address."
-msgstr "Sie müssen einen Namen und eine Adresse angeben"
+msgstr "Sie müssen einen Namen und eine Adresse angeben."
 
 #: src/addmaster.c:118
 #, c-format
 msgid "Master address \"%s\" is not valid."
-msgstr "Master Adresse \"%s\" ist nicht zulässig"
+msgstr "Master Adresse \"%s\" ist nicht zulässig."
 
 #: src/addmaster.c:174 src/source.c:69
 msgid "LAN"
@@ -650,7 +650,8 @@ msgstr ""
 
 #: src/pref.c:2306
 msgid "You must enter both a game and at least one argument."
-msgstr "Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
+msgstr ""
+"Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
 
 #: src/pref.c:2405
 msgid "Invoking"
@@ -1023,7 +1024,8 @@ msgstr "'prelaunch' ausführen"
 
 #: src/pref.c:4267
 msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
+msgstr ""
+"Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
 
 #: src/pref.c:4276
 msgid "Stop current song in XMMS"
@@ -1109,7 +1111,7 @@ msgid "Refresh Done"
 msgstr "Auffrischen fertig"
 
 #. Sound Stop
-#: src/pref.c:4668 src/xqf.c:3101
+#: src/pref.c:4668 src/xqf.c:3101 src/trayicon.c:462
 msgid "Stop"
 msgstr "Stop"
 
@@ -1512,6 +1514,11 @@ msgstr "Alle Spiele"
 msgid "Statistics"
 msgstr "Statistiken"
 
+#. error converting time to string representation, shouldn't happen
+#: src/utils.c:898
+msgid "<error>"
+msgstr "<Fehler>"
+
 #: src/xqf-ui.c:52
 msgid "Address"
 msgstr "Adresse"
@@ -1759,7 +1766,7 @@ msgstr "Kopieren"
 msgid "Copy+"
 msgstr "Kopieren+"
 
-#: src/xqf.c:2622 src/xqf.c:3085
+#: src/xqf.c:2622 src/xqf.c:3085 src/trayicon.c:452
 msgid "Refresh"
 msgstr "Auffrischen"
 
@@ -1956,7 +1963,7 @@ msgstr "Blau Markieren"
 msgid "Add to Player Filter"
 msgstr "Zu Spielerfilter hinzufügen"
 
-#: src/xqf.c:3077
+#: src/xqf.c:3077 src/trayicon.c:457
 msgid "Update"
 msgstr "Aktualisieren"
 
@@ -2039,7 +2046,8 @@ msgstr "Starten ..."
 #: src/xqf.c:4010
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
+msgstr ""
+"Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
 
 #: src/splash.c:61
 msgid "XQF: Loading"
@@ -2048,6 +2056,33 @@ msgstr "XQF: Lade"
 #: src/splash.c:87
 msgid "Loading ..."
 msgstr "Lade ..."
+
+#. translator: %s = file name
+#: src/country-filter.c:214 src/loadpixmap.c:148 src/loadpixmap.c:170
+#: src/loadpixmap.c:183 src/loadpixmap.c:202 src/loadpixmap.c:214
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Fehler beim Laden von Pixmapdatei %s"
+
+#: src/trayicon.c:376 src/trayicon.c:382 src/trayicon.c:390 src/trayicon.c:396
+#: src/trayicon.c:410
+#, c-format
+msgid "Error in file: %s line: %d\n"
+msgstr "Fehler in Datei %s, Zeile %d\n"
+
+#. translator: show main window
+#: src/trayicon.c:473
+msgid "Show"
+msgstr "Anzeigen"
+
+#. translator: hide main window
+#: src/trayicon.c:479
+msgid "Hide"
+msgstr "Verstecken"
+
+#: src/trayicon.c:484
+msgid "Exit"
+msgstr "Beenden"
 
 #, fuzzy
 #~ msgid "Q Filter"
@@ -2140,4 +2175,3 @@ msgstr "Lade ..."
 
 #~ msgid "_Add Server"
 #~ msgstr "Server _hinzufügen"
-
