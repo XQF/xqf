@@ -1,3 +1,7 @@
+Sept 24,2001: Alex Burger <alex@fragit_dot_net>
+- Added wo_exec function to properly launch Wolf.  Tested with
+  Wolfmptest 0.7.16-1
+
 Sept 19, 2001: Alex Burger <alex@fragit_dot_net>
 - Added Wolfenstein support.  Currently uses q3_exec to launch
   the game, but will change when Wolf client for Linux is released.
