@@ -181,7 +181,7 @@ static GtkWidget *server_filter_3_widget = NULL;
 
 //XXX GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
 
-static gboolean launch_redial(struct condef *con);
+static gboolean check_launch (struct condef* con);
 static void refresh_selected_callback (GtkWidget *widget, gpointer data);
 static void launch_close_handler_part2(struct condef *con);
 
@@ -901,25 +901,33 @@ static void stat_one_server (struct server *server) {
   }
 }
 
-
-static void launch_close_handler (struct stat_job *job, int killed) {
-  struct server_props *props;
-  gboolean launch = FALSE;
-
-  struct server *s;
-  struct condef *con;
-  int slots_buffer;
+static void launch_close_handler (struct stat_job *job, int killed)
+{
+  struct condef* con;
 
   con = (struct condef *) job->data;
   job->data = NULL;
-
-  if (!con)
-    return;
 
   if (killed) {
     condef_free (con);
     return;
   }
+
+  gtk_timeout_add(0,(GtkFunction)check_launch, (gpointer)con);
+}
+
+/** called from inside timer, always return FALSE to stop it */
+static gboolean check_launch (struct condef* con)
+{
+  struct server_props *props;
+  gboolean launch = FALSE;
+
+  struct server *s;
+  int reserved_slots;
+
+
+  if (!con)
+    return FALSE;
 
   s = con->s;
   props = properties (s);
@@ -932,34 +940,22 @@ static void launch_close_handler (struct stat_job *job, int killed) {
                        (s->ping == MAX_PING)? "unreachable" : "down");
       if (!launch) {
         condef_free (con);
-        return;
+        return FALSE;
       }
     }
     
-
-
-
     /*pulp*/
-    if (props) {
-  	  if (props->reserved_slots) {
-
-
-		slots_buffer=props->reserved_slots;
-    	  }
-
-    	  else {
-    		slots_buffer=0;
-    	  }
+    if (props && props->reserved_slots)
+    {
+      reserved_slots=props->reserved_slots;
     }
-
-    else {
-    slots_buffer=0;
+    else
+    {
+      reserved_slots=0;
     }
 
 
-
-
-    if (!launch && s->curplayers >= (s->maxplayers -slots_buffer)  && !con->spectate) {
+    if (!launch && s->curplayers >= (s->maxplayers - reserved_slots)  && !con->spectate) {
   //  if (!launch && s->curplayers != 99 && !con->spectate) {
       launch = dialog_yesnoredial (NULL, 1, _("Launch"), _("Cancel"), _("Redial"), 
   		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
@@ -967,68 +963,27 @@ static void launch_close_handler (struct stat_job *job, int killed) {
 		     s->port);
       if (!launch) {
         condef_free (con);
-        return;
+        return FALSE;
       }
       else if (launch==2) 
       {
         redialserver = 1;
  
-	/*
-        gtk_timeout_add (5000, (GtkFunction)launch_redial, (gpointer) con);
-
-        server_clist_refresh_server (s);
-
-        print_status (main_status_bar, _("Waiting to redial server(s)..."));
-        progress_bar_reset (main_progress_bar);
-	*/
-
-	launch = redial_dialog(con->s,slots_buffer);/*pulp*/
+	launch = redial_dialog(con->s,reserved_slots);/*pulp*/
 
 	if(launch == FALSE)
 	{
 	    condef_free (con);
-	    return;
+	    return FALSE;
 	}
       }
       else
         redialserver = 0;
     }
 
-//  if(redialserver == 0) // we don't need to redial, so continue
     launch_close_handler_part2(con);
-}
 
-static gboolean launch_redial(struct condef *con)
-{
-  struct server *s;
-  s = con->s;
-
-  if(!s /*|| redialserver == 0*/ ) // !s may not happen
-  {
-    print_status (main_status_bar, _("Done."));
-    progress_bar_reset (main_progress_bar);
-
-    return FALSE; // stop redialing, we're done
-  }
-
-  stat_one_server(s);
-
-  debug (1, "launch redial server name: s->name:%s",s->name);
-  debug (1, "launch redial server ping: s->ping:%d",s->ping);  
-  
-  if (s->curplayers < s->maxplayers)
- // if (s->curplayers == 99)
-  {
-    // server not busy!
-
-    print_status (main_status_bar, _("Done."));
-    progress_bar_reset (main_progress_bar);
-
-    launch_close_handler_part2(con);
-    return FALSE; // stop redialing, we're done   
-  }
-  else
-    return TRUE;
+    return FALSE;
 }
 
 
@@ -1174,6 +1129,7 @@ static void launch_close_handler_part2(struct condef *con)
           launchargv[3]= 0;
           debug(0,"launchargv[2] is %s\n",launchargv[2]);
           execv("/bin/sh",launchargv);
+	  _exit(EXIT_FAILURE);
         }     
   }
 

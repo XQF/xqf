@@ -1,3 +1,8 @@
+Feb 01, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix high cpu load when dialogs are shown during launch phase. It's
+  obviously no good idea to enter the gtk event loop from inside a
+  gdk input callback.
+
 Jan 20, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - image loading through gdk-pixbuf (png, jpeg etc.)
 - splash screen, logo in $datadir/xqf/pixmaps/xqflogo.png
