@@ -4,6 +4,7 @@ Oct 13, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
   which servers have to be deleted or added.
 - when deleting last server from favorites, do not display it any longer
 - replace unsigned char type by enum server_type type
+- grey out delete button for masters != favorites
 
 Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - cleaned up get_custom_arguments

@@ -2409,7 +2409,7 @@ static const struct menuitem server_menu_items[] = {
   { 
     MENU_ITEM,		N_("_Delete"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
-    &delete_menu_item
+    &edit_delete_menu_item
   },
 
   { 
