@@ -1,8 +1,14 @@
-Oct 22, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+Oct 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- remove old tribes2 master, add three new
+- increase version to 0.9.9.3
+
+Oct 22, 2002: Alex Burger <alex@users.sourceforge dot net>
 - user_fix_defaults is now called if the version changes at all
 - add_custom_args_defaults created, user_fix_defaults calls it to 
   add some default args for games
 - add default custom args for StrikeForce & TacticalOps
+
+Oct 22, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - use optimal width for arguments editor
 
 Oct 21, 2002: Alex Burger <alex@users.sourceforge dot net>
