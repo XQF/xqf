@@ -8,14 +8,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: XQF CVS\n"
-"Report-Msgid-Bugs-To: xqf-developer@lists.sourceforge.net\n"
-"POT-Creation-Date: 2003-11-24 11:58+0100\n"
+"POT-Creation-Date: 2003-11-26 19:19-0500\n"
 "PO-Revision-Date: 2003-10-22 19:09+0200\n"
 "Last-Translator: Michel Briand <michelbriand@free.fr>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: xqf-developer@lists.sourceforge.net\n"
 
 #: src/addmaster.c:111
 msgid "You have to specify a name and an address."

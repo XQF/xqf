@@ -1,3 +1,7 @@
+Nov 27, 2003: Alex <alex_b@users.sourceforge.net>
+- Changed version to 0.9.13.1
+- Added filter support for server rules (no GUI!)
+
 Nov 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - released 0.9.13
 
