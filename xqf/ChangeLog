@@ -1,4 +1,8 @@
 Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
+- Modified q3_exec to call find_game_dir using quake3_data_dir
+- Added NULL checks to find_game_dir
+
+Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
 - Added function get_custom_arguments.  Used by ut_exec to pass user
   defined command line arguments to UT when launching.  Currently does 
   not have a GUI front end. To use, add something like the following

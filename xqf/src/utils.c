@@ -513,6 +513,12 @@ char *find_game_dir (char *basegamedir, char *game)
   struct stat buf;
   char *path;
 
+  if(!game)
+    return g_strdup("");
+
+  if(!basegamedir)
+    return g_strdup(game);  
+
   debug( 1, "Looking for subdir %s in %s", game, basegamedir);
   
   // Look for exact match
