@@ -545,7 +545,7 @@ struct game games[] = {
   {
     UN_SERVER,
     GAME_CONNECT,
-    "Unreal",
+    "Unreal / UT",
     UN_DEFAULT_PORT,
     0,
     "UNS",
@@ -2542,6 +2542,9 @@ static int ut_exec (const struct condef *con, int forkit) {
   char **info_ptr;
   char* hostport=NULL;
   char* real_server=NULL;
+  gchar* temp1=NULL;
+  gchar* temp2=NULL;
+  gchar* temp3=NULL;
 
   cmd = strdup_strip (g->cmd);
 
@@ -2571,22 +2574,38 @@ static int ut_exec (const struct condef *con, int forkit) {
     if(hostport)
     {
       real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
-      argv[argi++] = real_server;
+      argv[argi] = real_server;
     }
     else
-    {
-      argv[argi++] = con->server;
-    }
-  }
+      argv[argi] = con->server;
 
-  if (default_nosound) {
-    argv[argi++] = "-nosound";
+    // Add password if exists
+    if (con->password) {
+      temp1 = g_strdup_printf ("?password=%s",con->password);
+      temp2 = g_strconcat (argv[argi], temp1, NULL);
+      g_free(temp1);
+      argv[argi] = temp2;
+    }
+    // printf("argv[argi]:%s\n",argv[argi]);
+
+    // Disable sound if needed
+    if (default_nosound) {
+      temp1 = g_strdup_printf ("?UseSound=False");
+      temp3 = g_strconcat (argv[argi], temp1, NULL);
+      g_free(temp1);
+      argv[argi] = temp3;
+    }
+    // printf("argv[argi]:%s\n",argv[argi]);
+
+    argi++;      
   }
 
   argv[argi] = NULL;
 
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
+  if(temp2) g_free (temp2);
+  if(temp3) g_free (temp3);
   g_free (cmd);
   g_free (real_server);
   return retval;

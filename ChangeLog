@@ -1,3 +1,13 @@
+Oct 05, 2002: Alex Burger <alex@fragit_dot_net>
+- Added password support to Unreal based games (games that use
+  un_exec - Unreal, UT 2003, Rune)
+- Added sound disable support to Unreal based games
+- Changed UT 2003 icon to have a #2 at the bottom right hand corner.
+  I used KEdit which seams to have changed the format of the file, but it
+  still looks fine in XQF.
+- Changed Unreal / UT icon to UT 2003 icon (without a number)
+- Changed Unreal name to 'Unreal / UT'
+
 Oct 04, 2002: Alex Burger <alex@fragit_dot_net>
 - Added Preferences Appearance option of 'Show only configured games'.
   Masters added will still be stored, but only displayed on the screen
