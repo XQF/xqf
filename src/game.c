@@ -2444,9 +2444,9 @@ static int q3_exec (const struct condef *con, int forkit) {
   int argi = 0;
   char *cmd;
 
-  char *protocol;
+  char *protocol = NULL;
   char *punkbuster;
-  char *tmp_cmd;
+  char *tmp_cmd = NULL;
   FILE* tmp_fp;
 
   char** additional_args = NULL;
@@ -2485,35 +2485,40 @@ static int q3_exec (const struct condef *con, int forkit) {
     or have it in your cwd.  You need to name 
     the scripts like quake3proto48. --baa
   */
+
   protocol = find_server_setting_for_key ("protocol", con->s->info);
-  debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
-  tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
+  if (protocol) {
+    debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
+    tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
 
-  // Strip of trailing space if it has one and copy to tmp_cmd
-  if( strcspn (cmd, " ")) {
-    strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
-  } else {
-    strcpy (tmp_cmd, cmd);
-  }
+    // Strip of trailing space if it has one and copy to tmp_cmd
+    if( strcspn (cmd, " ")) {
+      strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
+    } else {
+      strcpy (tmp_cmd, cmd);
+    }
 
-  // Append protoxx to the temp command line
-  strcat (tmp_cmd, "proto" ); 
-  strcat (tmp_cmd, protocol);
-  strcat (tmp_cmd, "\0");
-  debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
-
-  // Check to see if we can find that generated filename
-  if ((tmp_fp = fopen( tmp_cmd, "r" ))){
-    fclose (tmp_fp);
-    debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
+    // Append protoxx to the temp command line
+    strcat (tmp_cmd, "proto" ); 
+    strcat (tmp_cmd, protocol);
+    strcat (tmp_cmd, "\0");
+    debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
+  
+    // Check to see if we can find that generated filename
+    if ((tmp_fp = fopen( tmp_cmd, "r" ))){
+      fclose (tmp_fp);
+      debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
     
-    // Found it, so use generated filename.
-    argv[argi++] = tmp_cmd;
-    strtok (cmd, delim);
-  } else {
-    // Could not so use regular filename
-    argv[argi++] = strtok (cmd, delim);
+      // Found it, so use generated filename.
+      argv[argi++] = tmp_cmd;
+      strtok (cmd, delim);
+    } else {
+      // Could not so use regular filename
+      argv[argi++] = strtok (cmd, delim);
+    }
   }
+  else
+    argv[argi++] = strtok (cmd, delim);
 
   while ((argv[argi] = strtok (NULL, delim)) != NULL)
     argi++;
