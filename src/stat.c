@@ -1400,6 +1400,7 @@ static void stat_master_resolved_callback (char *id, struct host *h,
 }
 
 
+// ip for hostname resolved
 static void stat_name_resolved_callback (char *id, struct host *h,
                                          enum dns_status status, void *data) {
   struct stat_job *job = (struct stat_job *) data;
@@ -1407,7 +1408,7 @@ static void stat_name_resolved_callback (char *id, struct host *h,
   GSList *list;
   GSList *tmp;
 
-  debug (6, "stat_name_resolved_callback(%s,%p,%d,%p)--",id,h,status,data);
+  debug (6, "%s,%p,%d,%p",id,h,status,data);
 
   if (!job || !id)
     return;
@@ -1439,6 +1440,8 @@ static void stat_name_resolved_callback (char *id, struct host *h,
       for (tmp = job->name_handlers; tmp; tmp = tmp->next)
 	(* (name_func) tmp->data) (job, us, status);
 
+      // TODO optimizable, no need to start from start of list. on the other
+      // hand, it's unlikely that the list is big anyway...
       list = job->names = g_slist_remove (job->names, us);
       userver_unref (us);
       continue;
@@ -1506,143 +1509,164 @@ static void move_q2masters_to_top (GSList **list) {
   *list = g_slist_concat (q2masters, *list);
 }
 
-static void stat_next (struct stat_job *job) {
-  GSList *list;
-  GSList *tmp;
+static void stat_next_masters (struct stat_job *job)
+{
+  GSList *list = NULL;
+  GSList *tmp = NULL;
   GSList *hostnames = NULL;
-  struct userver *us;
-  struct master *m;
-  struct host *h;
+  struct master *m = NULL;
 
   debug_increase_indent();
-  debug (3, "stat_next(%p)",job);
-  job->progress.done = 0;
+  debug (3, "Job %lx  Have job->masters", job );
+  job->state = STAT_UPDATE_SOURCE;
 
-  if (job->masters) {
-    debug (3, "stat_next() -- Job %lx  Have job->masters", job );
-    job->state = STAT_UPDATE_SOURCE;
+  move_q2masters_to_top (&job->masters);
 
-    move_q2masters_to_top (&job->masters);
+  // store all unresolved hostnames in hostnames
+  for (list = job->masters; list; list = list->next) {
+    m = (struct master *) list->data;
 
-    // store all unresolved hostnames in hostnames
-    for (list = job->masters; list; list = list->next) {
-      m = (struct master *) list->data;
-
-      if (!m->host && m->hostname) {
-	for (tmp = hostnames; tmp; tmp = tmp->next) {
-	  if (strcmp (tmp->data, m->hostname) == 0)
-	    break;
-	}
-	if (tmp == NULL) {
-	  hostnames = g_slist_prepend (hostnames, m->hostname);
-	}
-      }
-    }
-
-    job->masters_to_resolve = g_slist_length (hostnames);
-    job->progress.tasks = -1;
-    change_state (job, STAT_UPDATE_SOURCE);
-
-    if (hostnames) {
-      dns_set_callback (stat_master_resolved_callback, job);
-
-      for (list = hostnames; list; list = list->next)
-	dns_lookup ((char *) list->data);
-
-      g_slist_free (hostnames);
-      hostnames = NULL;
-    }
-
-    stat_update_masters (job);
-    debug_decrease_indent();
-    return;
-  }
-
-  if (job->names) {
-    debug (3, "stat_next() -- Job %lx  job->names", job );
-    job->state = STAT_RESOLVE_NAMES;
-
-    for (list = job->names; list; list = list->next) {
-      us = (struct userver *) list->data;
-
+    if (!m->host && m->hostname) {
       for (tmp = hostnames; tmp; tmp = tmp->next) {
-	if (strcmp (tmp->data, us->hostname) == 0)
+	if (strcmp (tmp->data, m->hostname) == 0)
 	  break;
       }
       if (tmp == NULL) {
-	hostnames = g_slist_prepend (hostnames, us->hostname);
+	hostnames = g_slist_prepend (hostnames, m->hostname);
       }
     }
+  }
 
-    dns_set_callback (stat_name_resolved_callback, job);
-    job->progress.tasks = g_slist_length (hostnames);
-    change_state (job, STAT_RESOLVE_NAMES);
-    
+  job->masters_to_resolve = g_slist_length (hostnames);
+  job->progress.tasks = -1;
+  change_state (job, STAT_UPDATE_SOURCE);
+
+  if (hostnames) {
+    dns_set_callback (stat_master_resolved_callback, job);
+
     for (list = hostnames; list; list = list->next)
       dns_lookup ((char *) list->data);
 
     g_slist_free (hostnames);
     hostnames = NULL;
-    debug_decrease_indent();
-    return;
   }
 
-  if (job->servers) {
-
-    debug (1, "Servers:  Job %lx  server list %lx", job, job->servers );
-    if (!job->need_refresh) {
-      stat_close (job, FALSE);
-      return;
-    }
-
-    job->state = STAT_REFRESH_SERVERS;
-
-    if (default_resolve_on_update)
-      job->hosts = merge_hosts_to_resolve (job->hosts, job->servers);
-
-    job->progress.tasks = g_slist_length (job->servers);
-    change_state (job, STAT_REFRESH_SERVERS);
-
-    if (!stat_open_conn_qstat (job)) {
-
-      /* It's very bad, stop everything. */
-      xqf_error ("Error! Could not stat_open_conn_qstat()");
-      stat_close (job, TRUE);
-    }
-    debug_decrease_indent();
-    return;
-  }
-
-  if (job->hosts) {
-
-    debug (3, "stat_next() -- Job %lx  job->hosts", job);
-
-    job->state = STAT_RESOLVE_HOSTS;
-
-    dns_set_callback (stat_host_resolved_callback, job);
-
-    job->progress.tasks = g_slist_length (job->hosts);
-    change_state (job, STAT_RESOLVE_HOSTS);
-
-    for (list = job->hosts; list; list = list->next) {
-      h = (struct host *) list->data;
-      if (h) dns_lookup (inet_ntoa (h->ip));
-    }
-    debug_decrease_indent();
-    return;
-  }
-
-  debug (3, "stat_next() -- Job %lx  Job Done, Closing the job...", job);
-
-  stat_close (job, FALSE);
+  stat_update_masters (job);
   debug_decrease_indent();
+  return;
 }
 
+static void stat_next_names (struct stat_job *job)
+{
+  GSList *list = NULL;
+  GSList *tmp = NULL;
+  GSList *hostnames = NULL;
+  struct userver *us = NULL;
+
+  debug (3, "Job %lx  job->names", job );
+  job->state = STAT_RESOLVE_NAMES;
+
+  for (list = job->names; list; list = list->next) {
+    us = (struct userver *) list->data;
+
+    for (tmp = hostnames; tmp; tmp = tmp->next) {
+      if (strcmp (tmp->data, us->hostname) == 0)
+	break;
+    }
+    if (tmp == NULL) {
+      hostnames = g_slist_prepend (hostnames, us->hostname);
+    }
+  }
+
+  dns_set_callback (stat_name_resolved_callback, job);
+  job->progress.tasks = g_slist_length (hostnames);
+  change_state (job, STAT_RESOLVE_NAMES);
+  
+  for (list = hostnames; list; list = list->next)
+    dns_lookup ((char *) list->data);
+
+  g_slist_free (hostnames);
+  hostnames = NULL;
+
+  return;
+}
+
+static void stat_next_servers (struct stat_job *job)
+{
+  debug (3, "Servers:  Job %lx  server list %lx", job, job->servers );
+  if (!job->need_refresh) {
+    stat_close (job, FALSE);
+    return;
+  }
+
+  job->state = STAT_REFRESH_SERVERS;
+
+  if (default_resolve_on_update)
+    job->hosts = merge_hosts_to_resolve (job->hosts, job->servers);
+
+  job->progress.tasks = g_slist_length (job->servers);
+  change_state (job, STAT_REFRESH_SERVERS);
+
+  if (!stat_open_conn_qstat (job)) {
+
+    /* It's very bad, stop everything. */
+    xqf_error ("Error! Could not stat_open_conn_qstat()");
+    stat_close (job, TRUE);
+  }
+  return;
+}
+
+static void stat_next_hosts (struct stat_job *job)
+{
+  GSList *list = NULL;
+  struct host *h = NULL;
+
+  debug (3, "Job %p job->hosts", job);
+
+  job->state = STAT_RESOLVE_HOSTS;
+
+  dns_set_callback (stat_host_resolved_callback, job);
+
+  job->progress.tasks = g_slist_length (job->hosts);
+  change_state (job, STAT_RESOLVE_HOSTS);
+
+  for (list = job->hosts; list; list = list->next) {
+    h = (struct host *) list->data;
+    if (h) dns_lookup (inet_ntoa (h->ip));
+  }
+
+  return;
+}
+
+static void stat_next (struct stat_job *job)
+{
+  debug_increase_indent();
+  debug (3, "Job %p",job);
+  job->progress.done = 0;
+
+  if (job->masters) {
+    stat_next_masters(job);
+  }
+  else if (job->names) {
+    stat_next_names(job);
+  }
+  else if (job->servers) {
+    stat_next_servers(job);
+  }
+  else if (job->hosts) {
+    stat_next_hosts(job);
+  }
+  else {
+    debug (3, "Job %p Done, Closing the job...", job);
+    stat_close (job, FALSE);
+  }
+  debug_decrease_indent();
+}
 
 void stat_start (struct stat_job *job) {
 
   debug_increase_indent();
-  debug (3, "stat_start() -- Job %p", job);
+  debug (3, "Job %p", job);
   if (job->delayed.refresh_handler) {
     job->delayed.timeout_id = gtk_timeout_add (1000, 
                                            job->delayed.refresh_handler, job);
@@ -1653,12 +1677,9 @@ void stat_start (struct stat_job *job) {
 }
 
 
-void stat_stop (struct stat_job *job) {
-
-#ifdef DEBUG
-  fprintf (stderr, "stat_stop()\n");
-#endif
-  debug (3, "stat_stop() -- Job %lx", job);
+void stat_stop (struct stat_job *job)
+{
+  debug (3, "Job %lx", job);
   stat_close (job, TRUE);
 }
 
@@ -1668,7 +1689,7 @@ struct stat_job *stat_job_create (GSList *masters, GSList *names,
   struct stat_job *job;
 
   job = g_malloc (sizeof (struct stat_job));
-  debug (3, "stat_job_create() -- New Job %lx  Server List %lx", job, servers);
+  debug (3, "New Job %lx  Server List %lx", job, servers);
   job->masters = masters;
   job->hosts   = hosts;
   job->servers = servers;
@@ -1707,7 +1728,7 @@ struct stat_job *stat_job_create (GSList *masters, GSList *names,
 
 void stat_job_free (struct stat_job *job) {
 
-  debug (3, "stat_job_free() -- Job %lx  server list %lx", job, job->servers);
+  debug (3, "Job %lx  server list %lx", job, job->servers);
   if (job->masters) g_slist_free (job->masters);
   if (job->servers) server_list_free (job->servers);
   if (job->hosts)   host_list_free (job->hosts);

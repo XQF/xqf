@@ -270,6 +270,9 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
     else {	/* child */
       close (pipefds[0]);
 
+      if( s->flags & SERVER_PUNKBUSTER )
+	      setenv("XQF_SERVER_ANTICHEAT","1",1);
+
       execvp (argv[0], argv);
   
       g_snprintf (msg, CLIENT_ERROR_BUFFER, "%sexec(%s) failed: %s", 
