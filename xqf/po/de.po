@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: xqf\n"
 "POT-Creation-Date: 2001-10-03 17:09+0200\n"
 "PO-Revision-Date: 2001-10-03 17:10+GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
