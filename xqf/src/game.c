@@ -2360,6 +2360,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 
   }
 
+#if 0 // not possible to filter for baseq3 otherwise
   // unset game if it's no mod
   if ( s->game )
   {
@@ -2376,6 +2377,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       s->game=NULL;
     }
   }
+#endif
 }
 
 
