@@ -2,7 +2,7 @@
 - Multiple Favorites
 - More general server filters so one can filter based on any server var.
 - Redial feature to connect to your favorite busy server.
-- Fix the server core dumps!
+- Fix the server core dumps! (are there any left?)
 - Detection if map is installed (req. home dir option)
 - improve performance with huge server lists (halflife), maybe by serverside
   filtering
