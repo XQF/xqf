@@ -1,4 +1,7 @@
 Oct 22, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- user_fix_defaults is now called if the version changes at all
+- add_custom_args_defaults created, user_fix_defaults calls it to 
+  add some default args for games
 - add default custom args for StrikeForce & TacticalOps
 - use optimal width for arguments editor
 
