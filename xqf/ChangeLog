@@ -1,3 +1,35 @@
+Jan 21, 2001: Bill Adams <bill@evil.inetarena.com>
+-Changed "Insert" behavior.  Now Insert brings up the add
+ server dialog while SHIFT+Insert adds a server from the 
+ server list to your favorites.  I am not sure about 
+ this because one can also use CTRL+N to add another 
+ server via a dialog. But I am told the Insert == Dialog
+ is how GameSpy works so there it is.
+-q3_exec now adds +set fs_game SSSS for either the
+ fs_game or gamename.  This should improve connecting
+ as it will load the mod when Q3A starts.
+-Added a function in util.c to get the value for
+ any server variable that shows up in the server info
+ pane.  This is a setup for arbitrary server filters
+ and for...
+-q3_exec will now check for <quake3exec>protoNN before
+ it just runs <quake3exec>.  To use this feature you
+ have to configure xqf to point to the FULL path to
+ your q3 exec script.  Then you can put scripts that
+ are named with the "protoNN" on the end to have xqf
+ automatically connect to the right server.  See
+ the instructions in the README.  This allows you (if
+ you have LOTS of disk space) to be able to connect to
+ multiple point-releases.
+-added -d N command line option to get more debugging
+ output.  Added debug.c and debug.h to facilitate this
+ new feature.  Only a few code segments use the new
+ debug() function.
+-added self to AUTHORS.
+-Version now 0.9.6e-beta.
+-Fixed config.in to have the correct version.
+	
+	
 Jan 7, 2001: Alex Burger <alex@fragit.net>
 -Renamed MOD column to GameType
 -Swapped Quake3 'Game' and 'Mod/GameType' columns

@@ -470,11 +470,13 @@ void srvinf_ctree_set_server (struct server *s) {
       }
       break;
 
+#ifdef QSTAT23
     case Q3_SERVER:
       if (info[0] && !strcmp (info[0], "dmflags")) {
 	show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
       }
       break;
+#endif
 
     default:
       break;

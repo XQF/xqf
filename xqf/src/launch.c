@@ -35,6 +35,7 @@
 #include "server.h"
 #include "launch.h"
 
+#include "debug.h"
 
 #ifndef WAIT_ANY
 # define WAIT_ANY	-1
@@ -230,16 +231,13 @@ int client_launch_exec (int forkit, char *dir, char *argv[],
     }
   }
 
-#ifdef DEBUG
-  {
+  if (get_debug_level()){
     char **argptr = argv;
-
-    fprintf (stderr, "EXEC> ");
+    fprintf (stderr, "client_launch_exec() -- EXEC> ");
     while (*argptr)
       fprintf (stderr, "%s ", *argptr++);
     fprintf (stderr, "\n");
   }
-#endif
 
   if (forkit) {
 
@@ -294,7 +292,6 @@ int client_launch_exec (int forkit, char *dir, char *argv[],
       sleep (15);
       _exit (1);
     }
-
     return pid;
   }
 

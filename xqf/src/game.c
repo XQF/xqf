@@ -1520,12 +1520,48 @@ static int q3_exec (const struct condef *con, int forkit) {
   char *cmd;
   char *game_dir;
   char *file;
+
+  char *protocol;
+  char *tmp_cmd;
+  FILE* tmp_fp;
+  char *fs_game;
+
   struct game *g = &games[con->s->type];
   int retval;
 
-  cmd = strdup_strip (g->cmd);
 
-  argv[argi++] = strtok (cmd, delim);
+
+  cmd = strdup_strip (g->cmd);
+  /*
+    Figure out what protocal the server
+    is running so we can try to connect
+    with a specialized quake3 script.
+    Please not that for this to work you
+    have to specify the full path to quake3
+    or have it in your cwd.  You need to name 
+    the scripts like quake3proto48. --baa
+  */
+  protocol = find_server_setting_for_key ("protocol", con->s->info);
+  debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
+  tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
+  if( strcspn (cmd, " ")) {
+    strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
+  } else {
+    strcpy (tmp_cmd, cmd);
+  }
+  strcat (tmp_cmd, "proto" ); 
+  strcat (tmp_cmd, protocol);
+  strcat (tmp_cmd, "\0");
+  debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
+  if (tmp_fp = fopen( tmp_cmd, "r" )){
+    fclose (tmp_fp);
+    debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
+    argv[argi++] = tmp_cmd;
+    strtok (cmd, delim);
+  } else {
+    argv[argi++] = strtok (cmd, delim);
+  }
+
   while ((argv[argi] = strtok (NULL, delim)) != NULL)
     argi++;
 
@@ -1566,11 +1602,35 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = con->demo;
   }
 
+  /* If the fs_game or -- more likely -- gamename is set, we want to
+     put fs_game on the command line so that the mod is loaded when
+     we connect. */
+  if( fs_game =  find_server_setting_for_key ("fs_game", con->s->info)){
+    argv[argi++] = "+set fs_game";
+    argv[argi++] = fs_game;
+  } else if( fs_game =  find_server_setting_for_key ("gamename", con->s->info)){
+    argv[argi++] = "+set fs_game";
+    argv[argi++] = fs_game;
+  }
+     
+
   argv[argi] = NULL;
 
+#if 1
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+#else
+  if (get_debug_level()){
+    char **argptr = argv;
+    fprintf (stderr, "q3_exec() -- Would have EXEC> ");
+    while (*argptr)
+      fprintf (stderr, "%s ", *argptr++);
+    fprintf (stderr, "\n");
+  }
 
+  retval = 1;
+#endif
   g_free (cmd);
+  g_free (tmp_cmd);
   return retval;
 }
 

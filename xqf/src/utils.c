@@ -449,3 +449,20 @@ int hostname_is_valid (const char *hostname) {
   return TRUE;
 }
 
+
+char* find_server_setting_for_key (char *key, char **info_ptr){
+  char **ptr;
+  
+  if (key == NULL || info_ptr == NULL) return (NULL);
+  
+  for (ptr = info_ptr; ptr && *ptr; ptr += 2) {
+    if( strcasecmp (*ptr, key) == 0){
+      debug( 3, "find_server_setting_for_key() -- Found key '%s' with value '%s'", key, *(ptr+1)  );
+      return (*(ptr+1));
+    } else {
+      debug( 8, "Key '%s' w/val '%s' did not match '%s'", *ptr, *(ptr+1), key);
+    }
+  }
+  return (NULL);
+}
+  

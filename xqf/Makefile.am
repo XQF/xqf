@@ -42,6 +42,7 @@ src/xqf.h \
 src/addserver.h \
 src/config.h \
 src/dialogs.h \
+src/debug.h \
 src/dns.h \
 src/filter.h \
 src/flt-player.h \

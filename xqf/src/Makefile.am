@@ -9,6 +9,7 @@ xqf_SOURCES =  \
 addmaster.c \
 addserver.c \
 config.c \
+debug.c \
 dialogs.c \
 dns.c \
 filter.c \
