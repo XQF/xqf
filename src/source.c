@@ -907,7 +907,14 @@ static void update_master_list_action (const char *action) {
 }
 
 
-static void update_master_list_builtin (void) {
+void update_master_list_builtin (void) {
+  char **ptr;
+
+  for (ptr = builtin_masters_update_info; *ptr; ptr++)
+    update_master_list_action (*ptr);
+}
+
+void update_master_list_web (void) {
   char **ptr;
 
   for (ptr = builtin_masters_update_info; *ptr; ptr++)

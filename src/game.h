@@ -72,5 +72,4 @@ extern	enum server_type id2type (const char *id);
 extern	const char *type2id (enum server_type type);
 extern	GtkWidget *game_pixmap_with_label (enum server_type type);
 
-
 #endif /* __GAME_H__ */

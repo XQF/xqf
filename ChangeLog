@@ -1,3 +1,7 @@
+Dec 15, 2001: Alex Burger <alex@fragit_dot_net>
+- Added Edit / Add Default Masters command.  Adds in all the default
+  master servers in case you accidentally deleted one (or all)
+
 Dec 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - qstat no longer required at build time
 

@@ -48,6 +48,8 @@ extern	void free_master (struct master *m);
 extern	void save_favorites (void);
 
 extern	void init_masters (int autoupdate);
+extern	void update_master_list_builtin (void);
+
 extern	void free_masters (void);
 
 extern	void collate_server_lists (GSList *masters, GSList **servers, 

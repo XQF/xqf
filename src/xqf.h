@@ -222,6 +222,7 @@ extern	GtkWidget *top_window (void);
 
 extern	void set_widgets_sensitivity (void);
 
+
 /* This is defined in here so that filter.c can see it */
 GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
 
