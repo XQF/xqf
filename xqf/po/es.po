@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-16 15:47+0100\n"
+"POT-Creation-Date: 2004-03-20 21:48+0100\n"
 "PO-Revision-Date: 2004-03-16 15:55+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -79,8 +79,6 @@ msgstr "Servidor:"
 msgid "XQF: Warning!"
 msgstr "XQF: Atención!"
 
-#. OK Button
-#. gtk_button_box_set_child_size(GTK_BUTTON_BOX(hbuttonbox1), 79, 38);
 #. OK Button
 #: src/dialogs.c:149 src/dialogs.c:410 src/dialogs.c:600 src/filter.c:1599
 #: src/filter.c:2076 src/pref.c:4651 src/psearch.c:213 src/srv-prop.c:849
@@ -391,7 +389,6 @@ msgid "%s command line is empty."
 msgstr "La línea de comando de %s está vacía."
 
 #. directory name, game name
-#. %s directory, game name
 #: src/game.c:2427 src/game.c:2533
 #, c-format
 msgid ""
@@ -446,7 +443,6 @@ msgstr ""
 "o déjalo vacío (se usa ~/.q3a por defecto)"
 
 #. passwords file could not be written
-#. if (!launch && s->curplayers != 99 && !con->spectate) {
 #: src/game.c:2761 src/game.c:2924 src/game.c:3015 src/launch.c:333
 #: src/xqf.c:1111 src/xqf.c:1135
 msgid "Launch"
@@ -961,7 +957,9 @@ msgstr "Buscar mapas"
 msgid ""
 "Scan game directories for installed maps. xqf will take longer to start up "
 "when enabled."
-msgstr "Escanear los directorios de juego para buscar mapas instalados. xqf tardará más en arrancar cuando está habilitado."
+msgstr ""
+"Escanear los directorios de juego para buscar mapas instalados. xqf tardará "
+"más en arrancar cuando está habilitado."
 
 #: src/pref.c:3907
 msgid "scan now"
@@ -1244,12 +1242,10 @@ msgid "Usage: %s [server type] <ip> <port>\n"
 msgstr "Uso: %s [tipo de servidor] <ip> <port>\n"
 
 #: src/rcon.c:650
-#, c-format
 msgid "  server type is either --qws, --hws or --hls.\n"
 msgstr "  el tipo de servidor es --qws, --hws o --hls.\n"
 
 #: src/rcon.c:651
-#, c-format
 msgid "  If no server type is specified, Q3 style rcon is assumed.\n"
 msgstr ""
 "  Si no se especifica un tipo de servidor, se asume rcon de estilo Q3.\n"
@@ -1538,12 +1534,10 @@ msgstr "%d servidores"
 
 #. server filter
 #: src/xqf.c:745
-#, c-format
 msgid "None <--"
 msgstr "Ninguno <--"
 
 #: src/xqf.c:747 src/xqf.c:3168 src/xqf.c:3225 src/xqf.c:3326
-#, c-format
 msgid "None"
 msgstr "Ninguno"
 
@@ -1559,7 +1553,6 @@ msgid "Filter %d"
 msgstr "Filtro %d"
 
 #: src/xqf.c:785
-#, c-format
 msgid "No Server Filter Active"
 msgstr "No hay filtros de servidor activos"
 
@@ -1961,8 +1954,10 @@ msgstr ""
 "\txqf [OPTIONS]\n"
 "\n"
 "OPCIONES:\n"
-"\t--launch \"[TIPOSERVIDOR] IP\"\tlanzar el juego en el servidor especificado\n"
-"\t--add    \"[TIPOSERVIDOR] IP\"\tañadir el servidor especificado a favoritos\n"
+"\t--launch \"[TIPOSERVIDOR] IP\"\tlanzar el juego en el servidor "
+"especificado\n"
+"\t--add    \"[TIPOSERVIDOR] IP\"\tañadir el servidor especificado a "
+"favoritos\n"
 "\t--debug <nivel>\t\t\testablecer el nivel de depuración\n"
 "\t--version\t\t\tmostrar la versión y salir\n"
 

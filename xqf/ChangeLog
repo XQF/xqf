@@ -1,3 +1,6 @@
+Mar 21, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- released 0.9.14
+
 Mar 20, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - load GeoIP.dat from location specified in environment variable xqf_GEOIPDAT
 

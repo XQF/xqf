@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-14 16:03+0100\n"
+"POT-Creation-Date: 2004-03-20 21:48+0100\n"
 "PO-Revision-Date: 2004-03-14 16:03GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
@@ -80,7 +80,7 @@ msgid "XQF: Warning!"
 msgstr "XQF: Warnung!"
 
 #. OK Button
-#: src/dialogs.c:149 src/dialogs.c:410 src/dialogs.c:611 src/filter.c:1599
+#: src/dialogs.c:149 src/dialogs.c:410 src/dialogs.c:600 src/filter.c:1599
 #: src/filter.c:2076 src/pref.c:4651 src/psearch.c:213 src/srv-prop.c:849
 msgid "OK"
 msgstr "OK"
@@ -121,11 +121,11 @@ msgstr "Mitwirkende:"
 msgid "Bug reports and feature requests:"
 msgstr "Fehlerberichte und Wünsche:"
 
-#: src/dialogs.c:567
+#: src/dialogs.c:556
 msgid "About XQF"
 msgstr "Über XQF"
 
-#: src/dialogs.c:594
+#: src/dialogs.c:583
 msgid "[placeholder, do not translate]"
 msgstr "[placeholder, do not translate]"
 
@@ -645,7 +645,8 @@ msgstr ""
 
 #: src/pref.c:2141
 msgid "You must enter both a game and at least one argument."
-msgstr "Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
+msgstr ""
+"Sie müssen sowohl ein Spiel als auch mindestens ein Argument eintragen."
 
 #: src/pref.c:2240
 msgid "Invoking"
@@ -1011,7 +1012,8 @@ msgstr "'prelaunch' ausführen"
 
 #: src/pref.c:4046
 msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
+msgstr ""
+"Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
 
 #: src/pref.c:4055
 msgid "Stop current song in XMMS"
@@ -1966,7 +1968,8 @@ msgstr "Starten ..."
 #: src/xqf.c:3884
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
+msgstr ""
+"Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
 
 #: src/splash.c:60
 msgid "XQF: Loading"
@@ -2053,4 +2056,3 @@ msgstr "Lade ..."
 
 #~ msgid "_Add Server"
 #~ msgstr "Server _hinzufügen"
-

@@ -1,3 +1,19 @@
+XQF 0.9.14 -- March 21, 2004
+~~~~~~~~~~
+Changes since 0.9.13:
+
+o New games: UT2004, Postal2, BF1942(wine). All without official master.
+o Improved --launch parameter, now only requires IP address and asks for type
+  if needed. It's possible now to use this together with e.g. XChat.
+o Add --add parameter to just add a server to favorites
+o Fix LAN browsing
+o Add LAN masters by default
+o Support password on Savage servers
+o New server properties: Comment and "this server sucks"
+o Add exec function for hexenworld (anyone ever played that game?)
+o Switch to intltool for i18n
+o Install desktop files
+
 XQF 0.9.13 -- November 24, 2003
 ~~~~~~~~~~
 Changes since 0.9.12:
