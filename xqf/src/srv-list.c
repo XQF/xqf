@@ -400,25 +400,25 @@ int server_clist_refresh_server (struct server *s) {
 
   debug (6, "server_clist_refresh_server() -- Server %lx", s );
 
-//  apply_filters (cur_filter | FILTER_PLAYER_MASK, s);
+  apply_filters (cur_filter | FILTER_PLAYER_MASK, s);
 
   row = gtk_clist_find_row_from_data (server_clist, s);
 
   if (row >= 0) {
     debug (6, "server_clist_refresh_server() -- Server %lx is at row %d", s, row );
 
-//    if (default_refresh_sorts && (s->filters & cur_filter) != cur_filter) {
-//      gtk_clist_remove (server_clist, row);
-//      return FALSE;
-//    }
-//    else {
+    if (default_refresh_sorts && (s->filters & cur_filter) != cur_filter) {
+      gtk_clist_remove (server_clist, row);
+      return FALSE;
+    }
+    else {
       server_clist_refresh_row (s, row);
       return TRUE;
-//    }
+    }
 
   }
   else {
-//    if ((s->filters & cur_filter) == cur_filter) {
+    if ((s->filters & cur_filter) == cur_filter) {
       debug (6, "server_clist_refresh_server() -- Server %lx needs to be added.");
       row = server_clist_refresh_row (s, -1);
       gtk_clist_set_row_data_full (server_clist, row, s, 
@@ -426,7 +426,7 @@ int server_clist_refresh_server (struct server *s) {
       server_ref (s);
       return TRUE;
     }
-//  }
+  }
 
   return FALSE;
 }
