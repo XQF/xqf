@@ -80,8 +80,6 @@ int 	default_q2_noskins;
 int 	default_b_switch;
 int 	default_w_switch;
 
-int	default_qw_is_quakeforge;
-
 int 	pushlatency_mode;
 int 	pushlatency_value;
 
@@ -166,8 +164,6 @@ static  GtkWidget *q1_top_color_button;
 static  GtkWidget *q1_bottom_color_button;
 static  GtkWidget *qw_top_color_button;
 static  GtkWidget *qw_bottom_color_button;
-
-static  GtkWidget *qw_is_quakeforge_button;
 
 static  GtkWidget *terminate_check_button;
 static  GtkWidget *iconify_check_button;
@@ -649,10 +645,6 @@ void qw_update_prefs (struct game* g)
 
   if (pref_w_switch != default_w_switch)
     config_set_int ("w_switch", default_w_switch = pref_w_switch);
-
-  i = GTK_TOGGLE_BUTTON (qw_is_quakeforge_button)->active;
-  if (i != default_qw_is_quakeforge)
-    config_set_int ("is quakeforge", default_qw_is_quakeforge = i);
 }
 
 void q2_update_prefs (struct game* g)
@@ -3813,18 +3805,6 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
   gtk_widget_show (vbox2);
   gtk_widget_show (frame2);
 
-  /* QW Quakeforge workaround */
-  if(qworq2 == 0)
-  {
-    qw_is_quakeforge_button = gtk_check_button_new_with_label (
-	  _("QuakeForge workaround (uses base/ instead of id1/)"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (qw_is_quakeforge_button),
-						    default_qw_is_quakeforge);
-    gtk_box_pack_start (GTK_BOX (page_vbox), qw_is_quakeforge_button, FALSE, FALSE, 5);
-// no longer neccessary for quakeforge >= 0.5.0
-//    gtk_widget_show (qw_is_quakeforge_button);
-  }
-
   gtk_widget_show (page_vbox);
 
   return page_vbox;
@@ -5218,7 +5198,6 @@ int prefs_load (void) {
   default_w_switch =          config_get_int ("w_switch=0");
   pushlatency_mode =          config_get_int ("pushlatency mode=1");
   pushlatency_value =         config_get_int ("pushlatency value=-50");
-  default_qw_is_quakeforge =     config_get_int ("is quakeforge=0");
 
   config_pop_prefix ();
 
