@@ -3250,9 +3250,14 @@ static void quick_filter_entry_changed(GtkWidget* entry, gpointer data)
   const char* text = gtk_entry_get_text(GTK_ENTRY(entry));
   int mask = 0;
 
+  debug(3,"%d <%s>", strlen(text), text);
+
   if(!text || !*text)
   {
-    mask = FILTER_QUICK_MASK;
+    if(filter_quick_get())
+    {
+      mask = FILTER_QUICK_MASK;
+    }
     filter_quick_set(NULL);
   }
   else
