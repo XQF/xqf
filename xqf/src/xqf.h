@@ -73,17 +73,20 @@
 #define	T2M_DEFAULT_PORT	28000		/* Tribes 2 */
 #define	SOF2M_DEFAULT_PORT	20110		/* Soldier of Fortune 2 */
 
-#define PLAYER_GROUP_MASK	0x07
-#define PLAYER_GROUP_RED	0x01
-#define PLAYER_GROUP_GREEN	0x02
-#define PLAYER_GROUP_BLUE	0x04
+/* max 0x8000, server->flags is unsigned */
+enum server_flags {
+  PLAYER_GROUP_RED =	0x001,
+  PLAYER_GROUP_GREEN =	0x002,
+  PLAYER_GROUP_BLUE =	0x004,
+  PLAYER_GROUP_MASK =	0x007,
 
-/* max 0x80, server->flags is char */
-#define SERVER_CHEATS		0x08
-#define SERVER_PASSWORD		0x10
-#define SERVER_SP_PASSWORD	0x20
-#define SERVER_SPECTATE		0x40
-#define SERVER_PUNKBUSTER	0x80
+  SERVER_CHEATS =	0x008,
+  SERVER_PASSWORD =	0x010,
+  SERVER_SP_PASSWORD =	0x020,
+  SERVER_SPECTATE =	0x040,
+  SERVER_PUNKBUSTER =	0x080,
+  SERVER_INCOMPATIBLE =	0x100
+};
 
 enum launch_mode { 
   LAUNCH_NORMAL,
@@ -203,7 +206,7 @@ struct server {
   int country_id;
 #endif
 
-  unsigned char flags;
+  unsigned flags;
 
   unsigned char filters;
   unsigned char flt_mask;
