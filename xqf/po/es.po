@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.11\n"
-"POT-Creation-Date: 2002-12-18 10:44+0100\n"
+"POT-Creation-Date: 2002-12-18 11:28-0500\n"
 "PO-Revision-Date: 2002-12-18 10:50+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -847,7 +847,9 @@ msgstr "Buscar mapas"
 msgid ""
 "Scan game directories for installed maps. xqf will take longer to start up "
 "when enabled."
-msgstr "Escanea los directorios de juego para buscar mapas instalados. xqf tardará más en arrancar cuando está habilitado."
+msgstr ""
+"Escanea los directorios de juego para buscar mapas instalados. xqf tardará "
+"más en arrancar cuando está habilitado."
 
 #. On Exit
 #: src/pref.c:3623

@@ -1,4 +1,28 @@
-?????
+December 18, 2002
+
+xqf-0.9.10.tar.gz created using:
+
+Mandrake 9.0
+libtool 1.4.2-3mdk
+gettext-0.11.2-8mdk
+automake1.6-1.6.3-1mdk
+
+tar.gz:
+
+-fresh cvs checkout
+-update version in NEWS, configure.in, docs/xqfdocs.html, ChangeLog
+-update NEWS file, update Change Log section in docs/xqfdocs.html
+-./autogen.sh
+-./configure
+-make dist
+
+Other things to do:
+-web site: news.shtml, download.html, contents.html, docs.html
+-upload binaries to web site
+-upload binaries to sourceforge
+-create new release on sourceforge
+-create new release on freshmeat
+-notify linuxgames.com, linuxgaming.co.uk
 
 Mandrake RPM:
 -0.9.10 known to work on RH 7.1, 7.2, 7.3 also
@@ -10,10 +34,6 @@ automake1.6-1.6.3-1mdk
 readline-devel-4.3-4mdk
 
 -reference - http://www.rpm.org/RPM-HOWTO/build.html
--checkout clean xqf
--./autogen.sh
--./configure
--make dist
 -copy xqf.xxx.tar.gz /usr/src/RPM/SOURCES/
 -cp xqf.spec xqf-(version).spec (eg: xqf-0.9.10.spec)
 -Modify new spec file - Change Packager to you. Ex: Alex Burger <alex_b@users.sourceforge.net>
