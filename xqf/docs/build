@@ -15,6 +15,14 @@ tar.gz:
 -./configure
 -make dist
 
+Other things to do:
+-web site: news.shtml, download.html, content.html
+-upload binaries to web site
+-upload binaries to sourceforge
+-create new release on sourceforge
+-create new release on freshmeat
+-notify linuxgames.com, linuxgaming.co.uk
+
 *****
 July 4, 2002
 
