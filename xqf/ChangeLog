@@ -1,3 +1,7 @@
+Jan 20, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- image loading through gdk-pixbuf (png, jpeg etc.)
+- splash screen, logo in $datadir/xqf/pixmaps/xqflogo.png
+
 Jan 03, 2002: Jordi Mallach <jordi@sindominio.net>
 - New Danish translation, from Morten Brix Pedersen.
 

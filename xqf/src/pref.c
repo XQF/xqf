@@ -44,6 +44,7 @@
 #include "debug.h"
 #include "sort.h"
 #include "q3maps.h"
+#include "splash.h"
 
 static struct generic_prefs* new_generic_prefs (void);
 
@@ -92,6 +93,7 @@ int	default_save_lists;
 int 	default_save_srvinfo;
 int 	default_save_plrinfo;
 int	default_auto_favorites;
+int	default_show_splash;
 int	default_auto_maps;
 int	default_toolbar_style;
 int	default_toolbar_tips;
@@ -158,6 +160,7 @@ static  GtkWidget *save_lists_check_button;
 static  GtkWidget *save_srvinfo_check_button;
 static  GtkWidget *save_plrinfo_check_button;
 static  GtkWidget *auto_favorites_check_button;
+static  GtkWidget *show_splash_button;
 static  GtkWidget *auto_maps_check_button;
 static  GtkWidget *show_hostnames_check_button;
 static  GtkWidget *show_defport_check_button;
@@ -836,6 +839,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (auto_favorites_check_button)->active;
   if (i != default_auto_favorites)
     config_set_bool ("refresh favorites", default_auto_favorites = i);
+
+  i = GTK_TOGGLE_BUTTON (show_splash_button)->active;
+  if (i != default_show_splash)
+    config_set_bool ("splash screen", default_show_splash = i);
 
   i = GTK_TOGGLE_BUTTON (auto_maps_check_button)->active;
   if (i != default_auto_maps)
@@ -3614,6 +3621,20 @@ static GtkWidget *general_options_page (void) {
       hbox = gtk_hbox_new (FALSE, 4);
       gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
+	show_splash_button = 
+			   gtk_check_button_new_with_label (_("Show splash screen"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_splash_button),
+							     default_show_splash);
+	gtk_box_pack_start (GTK_BOX (hbox), show_splash_button, 
+								   FALSE, FALSE, 0);
+	gtk_widget_show (show_splash_button);
+
+      gtk_widget_show (hbox);
+
+
+      hbox = gtk_hbox_new (FALSE, 4);
+      gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
 	auto_maps_check_button = 
 			   gtk_check_button_new_with_label (_("Scan for maps"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_maps_check_button),
@@ -4629,6 +4650,7 @@ int prefs_load (void) {
   default_save_srvinfo =      config_get_bool ("save srvinfo=true");
   default_save_plrinfo =      config_get_bool ("save players=false");
   default_auto_favorites =    config_get_bool ("refresh favorites=false");
+  default_show_splash =       config_get_bool ("splash screen=true");
   default_auto_maps =         config_get_bool ("search maps=false");
 
   config_pop_prefix ();
@@ -4665,17 +4687,26 @@ int prefs_load (void) {
                             (newversion)? "changed" : "not changed");
 #endif
 
+  create_splashscreen ();
+
   /* Convert "dir" -> "real_dir" for all game types */
 
-  for (i = 0; i < GAMES_TOTAL; i++) {
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    // translator: %s = game name, e.g. Quake 3 Arena
+    char* msg = g_strdup_printf(_("Searching for %s maps"),games[i].name);
+    guint per = 100/GAMES_TOTAL;
+
     if (games[i].real_dir) g_free (games[i].real_dir);
     games[i].real_dir = expand_tilde (games[i].dir);
 
+    splash_increase_progress(msg,per);
     if(default_auto_maps && games[i].init_maps)
     {
-      debug(0,"Searching for %s maps",games[i].name);
       games[i].init_maps();
     }
+
+    g_free(msg);
   }
 
   return newversion;

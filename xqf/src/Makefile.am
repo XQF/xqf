@@ -1,13 +1,12 @@
 SUBDIRS = xpm zip
 
 localedir = $(datadir)/locale
-INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" @GTK_CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
+INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS) @QSTAT23@ @DEBUG@ @COMPRESSION@ $(GDK_PIXBUF_CFLAGS)
 
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
 
-xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) -lz
-xqf_CFLAGS = $(GTK_CFLAGS)
+xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS)
 xqf_rcon_SOURCES = rcon.c debug.c
@@ -50,6 +49,8 @@ zipped.c \
 redial.c \
 q3maps.c \
 utmaps.c \
+loadpixmap.c \
+splash.c \
 addmaster.h \
 addserver.h \
 config.h \
@@ -88,4 +89,6 @@ zipped.h \
 redial.h \
 q3maps.h \
 utmaps.h \
-i18n.h
+i18n.h \
+loadpixmap.h \
+splash.h

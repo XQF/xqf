@@ -84,6 +84,7 @@ extern  int 	default_save_lists;
 extern	int 	default_save_srvinfo;
 extern	int 	default_save_plrinfo;
 extern	int	default_auto_favorites;
+extern	int	default_show_splash;
 extern	int	default_always_resolve;
 extern	int	default_toolbar_style;
 extern	int	default_toolbar_tips;
