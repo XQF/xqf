@@ -2078,6 +2078,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_widget_show (scrolledwindow1);
   gtk_box_pack_start (GTK_BOX (vbox1), scrolledwindow1, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 2);
+//  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   arguments_clist = gtk_clist_new (2);
   gtk_widget_ref (arguments_clist);
@@ -2086,7 +2087,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_widget_show (arguments_clist);
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), arguments_clist);
   gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, 80);
-  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1, 80);
+  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1, 1024);
   gtk_clist_column_titles_show (GTK_CLIST (arguments_clist));
   gtk_signal_connect (GTK_OBJECT (arguments_clist), "select_row",
                   GTK_SIGNAL_FUNC (custom_args_clist_select_row_callback), arguments_clist);
@@ -2096,6 +2097,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_widget_ref (game_label);
   gtk_object_set_data_full (GTK_OBJECT (page_vbox), "game_label", game_label,
                             (GtkDestroyNotify) gtk_widget_unref);
+  gtk_label_set_justify (GTK_LABEL (game_label), GTK_JUSTIFY_LEFT);
   gtk_widget_show (game_label);
   gtk_clist_set_column_widget (GTK_CLIST (arguments_clist), 0, game_label);
 
@@ -2103,6 +2105,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   gtk_widget_ref (arguments_label);
   gtk_object_set_data_full (GTK_OBJECT (page_vbox), "arguments_label", arguments_label,
                             (GtkDestroyNotify) gtk_widget_unref);
+  gtk_label_set_justify (GTK_LABEL (arguments_label), GTK_JUSTIFY_LEFT);
   gtk_widget_show (arguments_label);
   gtk_clist_set_column_widget (GTK_CLIST (arguments_clist), 1, arguments_label);
 
@@ -2124,6 +2127,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
   custom_args_entry_game[type] = gtk_entry_new ();
   gtk_widget_ref (custom_args_entry_game[type]);
+  gtk_widget_set_usize (custom_args_entry_game[type], 90, -2);
   gtk_object_set_data_full (GTK_OBJECT (page_vbox), "custom_args_entry_game[type]", custom_args_entry_game[type],
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (custom_args_entry_game[type]);
