@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xqf 0.9.10.1\n"
-"POT-Creation-Date: 2002-11-28 13:33+0100\n"
-"PO-Revision-Date: 2002-11-22 17:09+0100\n"
+"Project-Id-Version: xqf 0.9.11\n"
+"POT-Creation-Date: 2002-12-18 10:44+0100\n"
+"PO-Revision-Date: 2002-12-18 10:50+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,8 +46,8 @@ msgstr "Dirección del Maestro"
 
 #. Cancel Button
 #: src/addmaster.c:515 src/addserver.c:209 src/dialogs.c:410 src/filter.c:1182
-#: src/game.c:2170 src/game.c:2333 src/game.c:2424 src/launch.c:325
-#: src/pref.c:4302 src/psearch.c:224 src/redial.c:228 src/srv-prop.c:686
+#: src/game.c:2268 src/game.c:2431 src/game.c:2522 src/launch.c:325
+#: src/pref.c:4321 src/psearch.c:224 src/redial.c:228 src/srv-prop.c:686
 #: src/xqf.c:926 src/xqf.c:962 src/xqf.c:1698
 msgid "Cancel"
 msgstr "Cancelar"
@@ -66,7 +66,7 @@ msgid "XQF: Warning!"
 msgstr "XQF: Atención!"
 
 #. OK Button
-#: src/dialogs.c:138 src/dialogs.c:399 src/filter.c:1193 src/pref.c:4310
+#: src/dialogs.c:138 src/dialogs.c:399 src/filter.c:1193 src/pref.c:4329
 #: src/psearch.c:213 src/srv-prop.c:694
 msgid "OK"
 msgstr "Aceptar"
@@ -124,7 +124,7 @@ msgstr "De verdad quieres borrar el filtro de servidor \"%s\"?"
 msgid "Server Filter"
 msgstr "Filtro de Servidor"
 
-#: src/filter.c:942 src/flt-player.c:817 src/pref.c:2427
+#: src/filter.c:942 src/flt-player.c:817 src/pref.c:2431
 msgid "New"
 msgstr "Nuevo"
 
@@ -133,7 +133,7 @@ msgid "Rename"
 msgstr "Renombrar"
 
 #. FIXME: plural
-#: src/filter.c:956 src/flt-player.c:823 src/pref.c:2435 src/xqf.c:1698
+#: src/filter.c:956 src/flt-player.c:823 src/pref.c:2439 src/xqf.c:1698
 msgid "Delete"
 msgstr "Borrar"
 
@@ -255,21 +255,21 @@ msgstr "Abajo"
 
 #. server_type
 #. flags
-#: src/game.c:659
+#: src/game.c:747
 msgid "Generic Gamespy"
 msgstr "Gamespy Genérico"
 
-#: src/game.c:741
+#: src/game.c:834
 msgid ""
-"Note:  Soldier of Fortune not will connect to a server correctly\n"
+"Note:  Soldier of Fortune will not connect to a server correctly\n"
 "without creating a startup script for the game.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
-"Nota: Soldier of Fortuno no se conectará correctamente a un servidor\n"
+"Nota: Soldier of Fortune no se conectará correctamente a un servidor\n"
 "sin antes crear un script de arranque para el juego. Mira la\n"
 "documentación de XQF para más información."
 
-#: src/game.c:745
+#: src/game.c:838
 msgid ""
 "Note:  Unreal Tournament will not launch correctly without\n"
 "modifications to the game's startup script.  Please see the\n"
@@ -279,18 +279,26 @@ msgstr ""
 "modificaciones al script de arranque del juego. Mira la\n"
 "documentación de XQF para más información."
 
-#: src/game.c:749
+#: src/game.c:842
 msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
 msgstr "Ejemplo de línea de comando: wine hl.exe -- hl.exe -console"
 
+#: src/game.c:846
+msgid ""
+"Note: You need to create a qstat config file for this game to work.\n"
+"Please see the XQF documentation for more information."
+msgstr ""
+"Nota: Necesitas crear un fichero de configuración de qstat para que este\n"
+"juego funcione. Mira la documentación de XQF para más información."
+
 #. %s = game name e.g. QuakeWorld
-#: src/game.c:1816
+#: src/game.c:1914
 #, c-format
 msgid "%s command line is empty."
 msgstr "La línea de comando de %s está vacía."
 
 #. directory name, game name
-#: src/game.c:1823 src/game.c:1929
+#: src/game.c:1921 src/game.c:2027
 #, c-format
 msgid ""
 "\"%s\" is not a directory\n"
@@ -300,13 +308,13 @@ msgstr ""
 "Por favor, especifica un directorio de trabajo para %s correcto."
 
 #. game name
-#: src/game.c:1835
+#: src/game.c:1933
 #, c-format
 msgid "Please specify correct %s working directory."
 msgstr "Por favor especifica un directorio de trabajo para %s correcto."
 
 #. directory, subdirectory, game name
-#: src/game.c:1841
+#: src/game.c:1939
 #, c-format
 msgid ""
 "Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
@@ -316,7 +324,7 @@ msgstr ""
 "Por favor especifica un directorio de trabajo para %s correcto."
 
 #. %s Quake3
-#: src/game.c:1895
+#: src/game.c:1993
 #, c-format
 msgid ""
 "~/.q3a directory doesn't exist or doesn't contain\n"
@@ -330,7 +338,7 @@ msgstr ""
 "usar XQF o especifica un directorio de trabajo para %s correcto."
 
 #. %s directory, Quake3
-#: src/game.c:1904
+#: src/game.c:2002
 #, c-format
 msgid ""
 "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
@@ -344,13 +352,13 @@ msgstr ""
 "o déjalo vacío (se usa ~/.q3a por defecto)"
 
 #. passwords file could not be written
-#: src/game.c:2170 src/game.c:2333 src/game.c:2424 src/launch.c:325
+#: src/game.c:2268 src/game.c:2431 src/game.c:2522 src/launch.c:325
 #: src/xqf.c:926 src/xqf.c:962
 msgid "Launch"
 msgstr "Lanzar"
 
 #. %s frontend.cfg
-#: src/game.c:2172 src/game.c:2334 src/game.c:2425
+#: src/game.c:2270 src/game.c:2432 src/game.c:2523
 #, c-format
 msgid ""
 "Cannot write to file \"%s\".\n"
@@ -361,7 +369,7 @@ msgstr ""
 "\n"
 "¿Lanzar cliente igualmente?"
 
-#: src/game.c:2674
+#: src/game.c:2772
 msgid ""
 "The server has Punkbuster enabled but it is not going\n"
 "to be set on the command line.\n"
@@ -415,104 +423,104 @@ msgid "com_soundmegs and com_zonemegs must be lower than com_hunkmegs"
 msgstr "com_soundmegs y com_zonemegs han de ser más bajos que com_hunkmegs"
 
 #. Top (Shirt) Color
-#: src/pref.c:1229 src/pref.c:1328
+#: src/pref.c:1233 src/pref.c:1332
 msgid "Top"
 msgstr "Superior"
 
 #. Bottom (Pants) Color
-#: src/pref.c:1245 src/pref.c:1344
+#: src/pref.c:1249 src/pref.c:1348
 msgid "Bottom"
 msgstr "Inferior"
 
 #. Player Name
-#: src/pref.c:1491 src/pref.c:1602 src/pref.c:1662 src/pref.c:1714
+#: src/pref.c:1495 src/pref.c:1606 src/pref.c:1666 src/pref.c:1718
 #: src/xqf-ui.c:48 src/xqf-ui.c:71
 msgid "Name"
 msgstr "Nombre"
 
-#: src/pref.c:1512 src/xqf-ui.c:73
+#: src/pref.c:1516 src/xqf-ui.c:73
 msgid "Colors"
 msgstr "Colores"
 
-#: src/pref.c:1545
+#: src/pref.c:1549
 msgid "Login name"
 msgstr "Nombre de usuario"
 
-#: src/pref.c:1587
+#: src/pref.c:1591
 msgid "Skin/Colors"
 msgstr "Piel/Colores"
 
-#: src/pref.c:1623
+#: src/pref.c:1627
 msgid "Team"
 msgstr "Equipo"
 
-#: src/pref.c:1681
+#: src/pref.c:1685
 msgid "Model/Skin"
 msgstr "Modelo/Piel"
 
-#: src/pref.c:1768
+#: src/pref.c:1772
 msgid "--- Anything ---"
 msgstr "--- Cualquiera ---"
 
-#: src/pref.c:1769
+#: src/pref.c:1773
 msgid "Axe"
 msgstr "Hacha"
 
-#: src/pref.c:1770
+#: src/pref.c:1774
 msgid "Shotgun"
 msgstr "Escopeta"
 
-#: src/pref.c:1771
+#: src/pref.c:1775
 msgid "Super Shotgun"
 msgstr "Súper Escopeta"
 
-#: src/pref.c:1772
+#: src/pref.c:1776
 msgid "Nailgun"
 msgstr "Pistola de Clavos"
 
-#: src/pref.c:1773
+#: src/pref.c:1777
 msgid "Super Nailgun"
 msgstr "Súper Pistola de Clavos"
 
-#: src/pref.c:1774
+#: src/pref.c:1778
 msgid "Grenade Launcher"
 msgstr "Lanza Granadas"
 
-#: src/pref.c:1775
+#: src/pref.c:1779
 msgid "Rocket Launcher"
 msgstr "Lanza Cohetes"
 
-#: src/pref.c:1776
+#: src/pref.c:1780
 msgid "ThunderBolt"
 msgstr "Lanza Descargas"
 
-#: src/pref.c:1824
+#: src/pref.c:1828
 msgid "Use skins"
 msgstr "Usar pieles"
 
-#: src/pref.c:1830
+#: src/pref.c:1834
 msgid "Don't use skins"
 msgstr "No usar pieles"
 
-#: src/pref.c:1836
+#: src/pref.c:1840
 msgid "Don't download new skins"
 msgstr "No descargar nuevas pieles"
 
-#: src/pref.c:1878
+#: src/pref.c:1882
 msgid "You must configure a command line first"
 msgstr "Tienes que configurar una línea de comando antes"
 
-#: src/pref.c:1907
+#: src/pref.c:1911
 msgid "Game not found"
 msgstr "Juego no encontrado"
 
 #. %s name of a game
-#: src/pref.c:1909
+#: src/pref.c:1913
 #, c-format
 msgid "%s not found"
 msgstr "%s no encontrado"
 
-#: src/pref.c:1952
+#: src/pref.c:1956
 #, c-format
 msgid ""
 "An entry already exists for the game %s.\n"
@@ -527,11 +535,11 @@ msgstr ""
 "\n"
 "Borra la entrada y vuelve a intentarlo."
 
-#: src/pref.c:1981
+#: src/pref.c:1985
 msgid "There are no defaults for this game"
 msgstr "No hay valores por defecto para este juego"
 
-#: src/pref.c:2042
+#: src/pref.c:2046
 msgid ""
 "There is already an entry for this game.\n"
 "\n"
@@ -543,287 +551,287 @@ msgstr ""
 "Para modificarla, seleccionala de la lista, modifícala\n"
 "y haz clic en Añadir/Actualizar."
 
-#: src/pref.c:2046
+#: src/pref.c:2050
 msgid "You must enter both a game and at least one argument."
 msgstr "Tienes que introducir un juego y al menos un argumento."
 
-#: src/pref.c:2145
+#: src/pref.c:2149
 msgid "Invoking"
 msgstr "Ejecución"
 
-#: src/pref.c:2152
+#: src/pref.c:2156
 msgid "*** Not Implemented ***"
 msgstr "*** No implementado ***"
 
-#: src/pref.c:2173
+#: src/pref.c:2177
 msgid "Command Line"
 msgstr "Línea de comando"
 
 #. translator: button for command suggestion
-#: src/pref.c:2200
+#: src/pref.c:2204
 msgid "Suggest"
 msgstr "Sugerencia"
 
-#: src/pref.c:2206
+#: src/pref.c:2210
 msgid "Searches the path for the game executable"
 msgstr "Busca el ejecutable del juego en el path"
 
 #. ///
-#: src/pref.c:2213
+#: src/pref.c:2217
 msgid "Working Directory"
 msgstr "Directorio de trabajo"
 
 #. translator: button for directory guess
-#: src/pref.c:2238
+#: src/pref.c:2242
 msgid "Guess"
 msgstr "Adivinar"
 
-#: src/pref.c:2244
+#: src/pref.c:2248
 msgid "Tries to guess the working directory based on the command line"
 msgstr ""
 "Intenta adivinar el directorio de trabajo basándose en la línea de comandos"
 
-#: src/pref.c:2262
+#: src/pref.c:2266
 msgid "Custom CFG"
 msgstr "CFG propia"
 
-#: src/pref.c:2369 src/xqf-ui.c:55
+#: src/pref.c:2373 src/xqf-ui.c:55
 msgid "Game"
 msgstr "Juego"
 
-#: src/pref.c:2377
+#: src/pref.c:2381
 msgid "Arguments"
 msgstr "Argumentos"
 
-#: src/pref.c:2385
+#: src/pref.c:2389
 msgid "Game and Arguments"
 msgstr "Juego y argumentos"
 
-#: src/pref.c:2408
+#: src/pref.c:2412
 msgid "Enter the game name from the game column"
 msgstr "Introduce el nombre del juego desde la columna de juegos"
 
-#: src/pref.c:2417
+#: src/pref.c:2421
 msgid "Enter the arguments separated by spaces"
 msgstr "Introduce los argumentos separados por espacios"
 
-#: src/pref.c:2443
+#: src/pref.c:2447
 msgid "Add Defaults"
 msgstr "Añadir valores por defecto"
 
-#: src/pref.c:2451
+#: src/pref.c:2455
 msgid "Add/Update"
 msgstr "Añadir/Actualizar"
 
 #. Common Options
-#: src/pref.c:2648
+#: src/pref.c:2652
 msgid "Common Options"
 msgstr "Opciones comunes"
 
-#: src/pref.c:2659
+#: src/pref.c:2663
 msgid "Disable CD Audio"
 msgstr "Deshabilitar audio CD"
 
 #. Disable Sound
-#: src/pref.c:2667
+#: src/pref.c:2671
 msgid "Disable Sound"
 msgstr "Deshabilitar sonido"
 
-#: src/pref.c:2693
+#: src/pref.c:2697
 msgid "Do not set (use game default)"
 msgstr "No establecer (usar el valor por defecto)"
 
-#: src/pref.c:2694
+#: src/pref.c:2698
 msgid "Automatically calculate from server ping time"
 msgstr "Calcular automáticamente por el tiempo de ping del servidor"
 
-#: src/pref.c:2695
+#: src/pref.c:2699
 msgid "Fixed value"
 msgstr "Valor fijo"
 
-#: src/pref.c:2739 src/pref.c:2994 src/pref.c:3049
+#: src/pref.c:2743 src/pref.c:2998 src/pref.c:3053
 msgid "Masterserver Protocol Version"
 msgstr "Versión del protocolo del servidor maestro"
 
-#: src/pref.c:2764
+#: src/pref.c:2768
 msgid "vm_cgame fix"
 msgstr "arreglo para vm_cgame"
 
-#: src/pref.c:2771
+#: src/pref.c:2775
 msgid "Rocketarena fix"
 msgstr "arreglo para rocketarena"
 
-#: src/pref.c:2777 src/pref.c:3020 src/pref.c:3068
+#: src/pref.c:2781 src/pref.c:3024 src/pref.c:3072
 msgid "set fs_game on connect"
 msgstr "establecer fs_game al conectar"
 
-#: src/pref.c:2784 src/pref.c:3026
+#: src/pref.c:2788 src/pref.c:3030
 msgid "set cl_punkbuster on connect"
 msgstr "establecer cl_punkbuster al conectar"
 
-#: src/pref.c:2845
+#: src/pref.c:2849
 msgid "Pass memory settings on command line"
 msgstr "Fijar la configuración de la memoria en la línea de comandos"
 
 #. Mega Byte
-#: src/pref.c:2863 src/pref.c:2886 src/pref.c:2909 src/pref.c:2933
+#: src/pref.c:2867 src/pref.c:2890 src/pref.c:2913 src/pref.c:2937
 msgid "MB"
 msgstr "MiB"
 
-#: src/pref.c:2867
+#: src/pref.c:2871
 msgid "com_hunkmegs"
 msgstr "com_hunkmegs"
 
-#: src/pref.c:2890
+#: src/pref.c:2894
 msgid "com_zonemegs"
 msgstr "com_zonemegs"
 
-#: src/pref.c:2913
+#: src/pref.c:2917
 msgid "com_soundmegs"
 msgstr "com_soundmegs"
 
-#: src/pref.c:2937
+#: src/pref.c:2941
 msgid "cg_precachedmodels"
 msgstr "cg_precachedmodels"
 
-#: src/pref.c:2946
+#: src/pref.c:2950
 msgid "Preset values"
 msgstr "Valores preestablecidos"
 
-#: src/pref.c:2953
+#: src/pref.c:2957
 msgid "Default"
 msgstr "Por defecto"
 
-#: src/pref.c:2959
+#: src/pref.c:2963
 msgid "128MB"
 msgstr "128MiB"
 
-#: src/pref.c:2965
+#: src/pref.c:2969
 msgid ">256MB"
 msgstr ">256MiB"
 
-#: src/pref.c:3081 src/pref.c:3088 src/pref.c:3093
+#: src/pref.c:3085 src/pref.c:3092 src/pref.c:3097
 msgid "Custom Args"
 msgstr "Args propios"
 
-#: src/pref.c:3082 src/pref.c:3098 src/pref.c:3103 src/pref.c:3333
-#: src/pref.c:3339
+#: src/pref.c:3086 src/pref.c:3102 src/pref.c:3107 src/pref.c:3337
+#: src/pref.c:3343
 msgid "Options"
 msgstr "Opciones"
 
-#: src/pref.c:3083
+#: src/pref.c:3087
 msgid "Memory"
 msgstr "Memoria"
 
 #. QW Specific Features
 #. 'w_switch' & 'b_switch' control
-#: src/pref.c:3124
+#: src/pref.c:3128
 msgid "The highest weapon that Quake should switch to..."
 msgstr "El arma más alta a la que Quake debería cambiar..."
 
-#: src/pref.c:3137
+#: src/pref.c:3141
 msgid "upon a weapon pickup"
 msgstr "al coger un arma"
 
-#: src/pref.c:3155
+#: src/pref.c:3159
 msgid "upon a backpack pickup"
 msgstr "al coger una mochila"
 
-#: src/pref.c:3176
+#: src/pref.c:3180
 msgid "Disable auto-aiming"
 msgstr "Deshabilitar autoapuntar"
 
-#: src/pref.c:3214
+#: src/pref.c:3218
 msgid "Skins"
 msgstr "Pieles"
 
-#: src/pref.c:3236
+#: src/pref.c:3240
 msgid "Rate"
 msgstr "Valor"
 
 #. 'pushlatency'
-#: src/pref.c:3260
+#: src/pref.c:3264
 msgid "pushlatency"
 msgstr "pushlatency"
 
 #. Troubleshooting
-#: src/pref.c:3275
+#: src/pref.c:3279
 msgid "Troubleshooting"
 msgstr "Solución de problemas"
 
-#: src/pref.c:3288
+#: src/pref.c:3292
 msgid "Disable delta-compression (cl_nodelta)"
 msgstr "Deshabilitar compresión-delta (cl_nodelta)"
 
-#: src/pref.c:3302
+#: src/pref.c:3306
 msgid "Disable player/entity prediction (cl_predict_players)"
 msgstr "Deshabilitar predicción de jugadores/objetos (cl_predict_players)"
 
-#: src/pref.c:3317
+#: src/pref.c:3321
 msgid "QuakeForge workaround (uses base/ instead of id1/)"
 msgstr "Alternativa para QuakeForge (usa base/ en vez de id1/)"
 
-#: src/pref.c:3332
+#: src/pref.c:3336
 msgid "Weapons"
 msgstr "Armas"
 
-#: src/pref.c:3334 src/pref.c:3340 src/pref.c:3345 src/pref.c:3350
+#: src/pref.c:3338 src/pref.c:3344 src/pref.c:3349 src/pref.c:3354
 msgid "Player Profile"
 msgstr "Ficha de jugador"
 
-#: src/pref.c:3426
+#: src/pref.c:3430
 msgid "Icons"
 msgstr "Iconos"
 
-#: src/pref.c:3426
+#: src/pref.c:3430
 msgid "Text"
 msgstr "Texto"
 
-#: src/pref.c:3426
+#: src/pref.c:3430
 msgid "Both"
 msgstr "Ambos"
 
 # src/pref.c:
-#: src/pref.c:3432
+#: src/pref.c:3436
 msgid "Server List"
 msgstr "Lista de servidores"
 
-#: src/pref.c:3445
+#: src/pref.c:3449
 msgid "Show host names"
 msgstr "Mostrar nombres de servidores"
 
-#: src/pref.c:3450
+#: src/pref.c:3454
 msgid "Enable or disable DNS resolution of IP addresses"
 msgstr "Habilitar o deshabilitar la resolución DNS de direcciones IP"
 
-#: src/pref.c:3461
+#: src/pref.c:3465
 msgid "Show default port"
 msgstr "Mostrar puerto predeterminado"
 
-#: src/pref.c:3476
+#: src/pref.c:3480
 msgid "Sort servers real-time during refresh"
 msgstr "Ordenar servidores durante refrescos"
 
-#: src/pref.c:3491
+#: src/pref.c:3495
 msgid "Refresh on update"
 msgstr "Refrescar al actualizar"
 
-#: src/pref.c:3507
+#: src/pref.c:3511
 msgid "Show only configured games"
 msgstr "Mostrar sólo los juegos configurados"
 
 #. Toolbar
-#: src/pref.c:3522
+#: src/pref.c:3526
 msgid "Toolbar"
 msgstr "Barra de herramientas"
 
 #. Toolbar Tips
-#: src/pref.c:3547
+#: src/pref.c:3551
 msgid "Tooltips"
 msgstr "Pistas"
 
 #. On Startup
-#: src/pref.c:3581
+#: src/pref.c:3578
 msgid "On Startup"
 msgstr "Al iniciar"
 
@@ -831,41 +839,51 @@ msgstr "Al iniciar"
 msgid "Refresh Favorites"
 msgstr "Refrescar favoritos"
 
-#. On Exit
 #: src/pref.c:3604
+msgid "Scan for maps"
+msgstr "Buscar mapas"
+
+#: src/pref.c:3609
+msgid ""
+"Scan game directories for installed maps. xqf will take longer to start up "
+"when enabled."
+msgstr "Escanea los directorios de juego para buscar mapas instalados. xqf tardará más en arrancar cuando está habilitado."
+
+#. On Exit
+#: src/pref.c:3623
 msgid "On Exit"
 msgstr "Al salir"
 
-#: src/pref.c:3617
+#: src/pref.c:3636
 msgid "Save server lists"
 msgstr "Guardar listas de servidores"
 
-#: src/pref.c:3632
+#: src/pref.c:3651
 msgid "Save server information"
 msgstr "Guardar información sobre servidores"
 
-#: src/pref.c:3649
+#: src/pref.c:3668
 msgid "Save player information"
 msgstr "Guardar información sobre jugadores"
 
 #. When launching a Game
-#: src/pref.c:3665
+#: src/pref.c:3684
 msgid "When launching a game..."
 msgstr "Al iniciar un juego..."
 
-#: src/pref.c:3679
+#: src/pref.c:3698
 msgid "Terminate XQF"
 msgstr "Cerrar XQF"
 
-#: src/pref.c:3694
+#: src/pref.c:3713
 msgid "Iconify XQF window"
 msgstr "Iconificar la ventana de XQF"
 
-#: src/pref.c:3709
+#: src/pref.c:3728
 msgid "Create LaunchInfo.txt"
 msgstr "Crear LaunchInfo.txt"
 
-#: src/pref.c:3715
+#: src/pref.c:3734
 msgid ""
 "Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
@@ -873,156 +891,156 @@ msgstr ""
 "Crea el fichero ~/.qf/LaunchInfo.txt con: ping ip:puerto nombre mapa "
 "jugactuales máxjugadores"
 
-#: src/pref.c:3721
+#: src/pref.c:3740
 msgid "Execute prelaunch"
 msgstr "Ejecutar prelaunch"
 
-#: src/pref.c:3726
+#: src/pref.c:3745
 msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
 msgstr "Ejecuta ~/.qf/PreLaunch (si existe) antes de lanzar el juego"
 
 #. QStat preferences -- maxsimultaneous & maxretries
-#: src/pref.c:3759
+#: src/pref.c:3778
 msgid "QStat Options"
 msgstr "Opciones de QStat"
 
 #. maxsimultaneous
-#: src/pref.c:3770
+#: src/pref.c:3789
 msgid "Number of simultaneous servers to query"
 msgstr "Número de servidores a consultar simultáneamente"
 
 #. maxretries
-#: src/pref.c:3787
+#: src/pref.c:3806
 msgid "Number of retries"
 msgstr "Número de reintentos"
 
 #. Translator: sound test button
-#: src/pref.c:3821
+#: src/pref.c:3840
 msgid "Test"
 msgstr "Probar"
 
 #. Sound Enable / Disable frame
 #. Sounds Enable / Disable
-#: src/pref.c:3838
+#: src/pref.c:3857
 msgid "Sound Enable / Disable"
 msgstr "Habilitar / deshabilitar el sonido"
 
-#: src/pref.c:3852
+#: src/pref.c:3871
 msgid "Enable Sound"
 msgstr "Habilitar el sonido"
 
 #. Sound Player
-#: src/pref.c:3863
+#: src/pref.c:3882
 msgid "Player program"
 msgstr "Programa reproductor"
 
 #. Sound Files frame
 #. Sounds preferences -- player and various sounds
-#: src/pref.c:3891
+#: src/pref.c:3910
 msgid "Sound Files"
 msgstr "Ficheros de sonido"
 
 #. Sound XQF Start
-#: src/pref.c:3903
+#: src/pref.c:3922
 msgid "XQF Start"
 msgstr "Inicio de XQF"
 
 #. Sound XQF Quit
-#: src/pref.c:3935
+#: src/pref.c:3954
 msgid "XQF Quit"
 msgstr "Salida de XQF"
 
 #. Sound Update Done
-#: src/pref.c:3967
+#: src/pref.c:3986
 msgid "Update Done"
 msgstr "Actualización completada"
 
 #. Sound Refresh Done
-#: src/pref.c:4000
+#: src/pref.c:4019
 msgid "Refresh Done"
 msgstr "Refresco completado"
 
 #. Sound Stop
-#: src/pref.c:4033 src/xqf.c:2704
+#: src/pref.c:4052 src/xqf.c:2704
 msgid "Stop"
 msgstr "Parar"
 
 #. Sound Server Connect
-#: src/pref.c:4066
+#: src/pref.c:4085
 msgid "Server Connect"
 msgstr "Conexión al servidor"
 
 #. Sound Redial Success Start
-#: src/pref.c:4099
+#: src/pref.c:4118
 msgid "Redial Success"
 msgstr "Éxito de la rellamada"
 
-#: src/pref.c:4214
+#: src/pref.c:4233
 msgid "XQF: Preferences"
 msgstr "XQF: Preferencias"
 
 # src/pref.c:
-#: src/pref.c:4234
+#: src/pref.c:4253
 msgid "General"
 msgstr "General"
 
-#: src/pref.c:4246
+#: src/pref.c:4265
 msgid "Games"
 msgstr "Juegos"
 
-#: src/pref.c:4251
+#: src/pref.c:4270
 msgid "Appearance"
 msgstr "Apariencia"
 
-#: src/pref.c:4256
+#: src/pref.c:4275
 msgid "QStat"
 msgstr "QStat"
 
-#: src/pref.c:4261
+#: src/pref.c:4280
 msgid "Sounds"
 msgstr "Sonidos"
 
-#: src/pref.c:4407
+#: src/pref.c:4426
 msgid "Unable to get user name/home/tmpdir\n"
 msgstr "No se ha podido obtener el nombre/home/dirtmp del usuario\n"
 
-#: src/pref.c:4794
+#: src/pref.c:4820
 msgid "Game Command Selection"
 msgstr "Selección del comando del juego"
 
-#: src/pref.c:4798
+#: src/pref.c:4824
 msgid "Game Directory Selection"
 msgstr "Selección del directorio del juego"
 
-#: src/pref.c:4802
+#: src/pref.c:4828
 msgid "Sound Player Selection"
 msgstr "Selección del reproductor de sonido"
 
-#: src/pref.c:4806
+#: src/pref.c:4832
 msgid "XQF Start Sound Selection"
 msgstr "Selección del sonido para «inicio de XQF»"
 
-#: src/pref.c:4810
+#: src/pref.c:4836
 msgid "XQF Quit Sound Selection"
 msgstr "Selección del sonido para «salida de XQF»"
 
-#: src/pref.c:4814
+#: src/pref.c:4840
 msgid "Update Done Sound Selection"
 msgstr "Selección de sonido para «actualización completada»"
 
-#: src/pref.c:4818
+#: src/pref.c:4844
 msgid "Refresh Done Sound Selection"
 msgstr "Selección del sonido para «refresco completado»"
 
-#: src/pref.c:4822
+#: src/pref.c:4848
 msgid "Stop Sound Selection"
 msgstr "Selección de sonido para «parar»"
 
-#: src/pref.c:4826
+#: src/pref.c:4852
 msgid "Server Connect Sound Selection"
 msgstr "Selección de sonido para «conexión al servidor»"
 
-#: src/pref.c:4830
+#: src/pref.c:4856
 msgid "Redial Success Sound Selection"
 msgstr "Selección de sonido para «éxito de la rellamada»"
 
