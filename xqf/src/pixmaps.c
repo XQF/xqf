@@ -61,6 +61,7 @@
 #include "xpm/gamespy3d.xpm"
 #include "xpm/ssam.xpm"
 #include "xpm/mohaa.xpm"
+#include "xpm/savage.xpm"
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"
@@ -124,6 +125,7 @@ struct pixmap descent3_pix;
 struct pixmap gamespy3d_pix;
 struct pixmap ssam_pix;
 struct pixmap mohaa_pix;
+struct pixmap savage_pix;
 
 struct pixmap gplus_pix;
 struct pixmap rminus_pix;
@@ -235,6 +237,7 @@ void free_pixmaps (void) {
   free_pixmap (&gamespy3d_pix);
   free_pixmap (&ssam_pix);
   free_pixmap (&mohaa_pix);
+  free_pixmap (&savage_pix);
 
   free_pixmap (&gplus_pix);
   free_pixmap (&rminus_pix);
@@ -316,6 +319,7 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &gamespy3d_pix, gamespy3d_xpm);
   create_pixmap (window, &ssam_pix, ssam_xpm);
   create_pixmap (window, &mohaa_pix, mohaa_xpm);
+  create_pixmap (window, &savage_pix, savage_xpm);
 
   create_pixmap (window, &gplus_pix, green_plus_xpm);
   create_pixmap (window, &rminus_pix, red_minus_xpm);

@@ -1029,6 +1029,8 @@ static char *builtin_masters_update_info[] = {
   "ADD UT2S http://ut2003master.epicgames.com/serverlist/full-all.txt Epic",
   "ADD UT2S http://ut2003master.epicgames.com/serverlist/demo-all.txt Epic Demo",
   
+  "ADD SAS http://masterserver.savagedemo.s2games.com/gamelist.dat S2 Games",
+  
   NULL
 };
 
