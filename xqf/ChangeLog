@@ -1,12 +1,12 @@
 Sept 5, 2001: Alex Burger <alex@fragit_dot_net>
-- Patch by  Ludwig Nussel ludwig_dot_nussel_@_web_dot_de to add German
+- Patch by  Ludwig Nussel ludwig.nussel@gmx.de to add German
   translation and some code fixes.
 
 Aug 19, 2001: Bill Adams <bill@evilbill.org>
 - Removed BUILD_INCLUDED_LIBINTL from intl/Makefile.pm and replaced it with
   USE_INCLUDED_LIBINTL as that is the only variable defined in gettext.m4 for
   gettext 0.10.35.
-- Patch by  Ludwig Nussel ludwig_dot_nussel_@_web_dot_de to fix some of the
+- Patch by  Ludwig Nussel ludwig.nussel@gmx.de to fix some of the
   q3a game types, options for setting fs_game on the command line and
   r3a hack for the vm_* settings.
   
