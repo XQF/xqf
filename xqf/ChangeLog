@@ -1,6 +1,7 @@
 Oct 21, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Added tooltips to custom args editor
 - Update docs
-- Add Replace button
+- Add Replace button to custom args editor
 - Cleaned up new arguments editor
 
 Oct 21, 2002: Alex Burger <alex@users.sourceforge dot net>
