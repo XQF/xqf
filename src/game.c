@@ -1609,8 +1609,6 @@ static void q3_analyze_serverinfo (struct server *s) {
     }
     else if (strcmp (*info_ptr, "g_needpass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
-      printf( "Need Pass: %s  %d\n", info_ptr[1], n );
-      
       if ((n & 1) != 0)
 	s->flags |= SERVER_PASSWORD;
       if ((n & 2) != 0)
