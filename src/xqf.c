@@ -1627,9 +1627,11 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	     _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
 	     "Version %s\n\n"
 	     "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n\n"
-	     "Mod & server version filter: Bill Adams <webmaster@evil.inetarena.com>\n"
-	     "SoF & GameSpy master support: Alex Burger <alex@fragit.net>\n"
-	     "Internationalization (i18n): Jordi Mallach <jordi@sindominio.net>\n\n"
+	     "Contributors:\n\n"
+	     "Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
+	     "Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolf, GameSpy master support\n"
+	     "Jordi Mallach <jordi@sindominio.net>: Internationalization (i18n) & Spanish traslation\n"
+	     "Ludwig Nussell <ludwig@nussel@gmx.de>: German translation & Quake3 fixes\n\n"
 	     "http://www.linuxgames.com/xqf/"), XQF_VERSION);
 }
 
