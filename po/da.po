@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.11\n"
-"POT-Creation-Date: 2003-06-07 11:45-0400\n"
+"POT-Creation-Date: 2003-06-10 11:24-0400\n"
 "PO-Revision-Date: 2002-12-28 21:34+0100\n"
 "Last-Translator: Morten Brix Pedersen <morten@wtf.dk>\n"
 "Language-Team: n/a\n"

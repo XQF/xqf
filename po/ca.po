@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf 0.9.11.2\n"
-"POT-Creation-Date: 2003-06-07 11:45-0400\n"
+"POT-Creation-Date: 2003-06-10 11:24-0400\n"
 "PO-Revision-Date: 2003-05-20 01:29+0200\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
