@@ -47,6 +47,7 @@
 #include "debug.h"
 
 static void stat_next (struct stat_job *job);
+static void parse_qstat_record (struct stat_conn *conn);
 
 
 static int failed (char *name, char *arg) {
@@ -100,7 +101,8 @@ static void stat_free_conn (struct stat_conn *conn) {
 
 
 static void stat_update_masters (struct stat_job *job);
-static void stat_master_update_done (struct stat_conn *conn,
+static void stat_master_update_done
+				    (struct stat_conn *conn,
 				     struct stat_job *job,
 				     struct master *m,
 				     enum master_state state);
@@ -117,11 +119,20 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   struct userver *us;
   struct host *h;
 
-  debug (6, "parse_master_output() --");
-
+  debug (6, "parse_master_output(%s,%p)",str,conn);
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 
-  if (n >= 3) {
+  // output from broadcast, last line contains
+  // <servertype> <bcastaddr> <number>
+  // this line is skipped by n>3
+  if(conn->master->master_type == MASTER_LAN)
+  {
+    if( n > 3 )
+      return TRUE;
+    type = id2type (token[0]);
+    n = 2;
+  }
+  else if (n >= 3) {
 
     /* Master address/status */
 
@@ -155,6 +166,12 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
       return TRUE;
 
     }
+  }
+  else
+  {
+    debug(3,"parse_master_output() -- unkown string %s",str);
+    return TRUE;
+  }
 
     /* server address is in token[n - 1] */
 
@@ -188,7 +205,6 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
       }
       g_free (addr);
     }
-  }
 
   return TRUE;
 }
@@ -201,6 +217,9 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
   char *tmp;
   int res;
 
+  debug_increase_indent();
+  debug(3,"stat_master_input_callback(%p,%d,...)",conn,fd);
+
   while (1) {
     first_used = 0;
 
@@ -208,21 +227,26 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
       fprintf (stderr, "server address string is too long\n");
       stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
       stat_update_masters (job);
+      debug_decrease_indent();
       return;
     }
 
     res = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
     if (res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
+	debug_decrease_indent();
 	return;
       failed ("read", NULL);
       stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
       stat_update_masters (job);
+      debug_decrease_indent();
       return;
     }
     if (res == 0) {	/* EOF */
+      debug(3,"stat_master_input_callback -- eof");
       stat_master_update_done (conn, job, conn->master, SOURCE_UP);
       stat_update_masters (job);
+      debug_decrease_indent();
       return;
     }
 
@@ -235,6 +259,7 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
       if (!parse_master_output (conn->buf + first_used, conn)) {
 	stat_master_update_done (conn, job, conn->master, conn->master->state);
 	stat_update_masters (job);
+	debug_decrease_indent();
 	return;
       }
 
@@ -249,6 +274,7 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
       conn->pos = conn->pos - first_used;
     }
   }
+  debug_decrease_indent();
 }
 
 
@@ -726,7 +752,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   struct stat_conn *conn;
   char *cmd = NULL;
 
-  debug (3, "stat_upate_master_qstat() -- Master %lx", m);
+  debug (3, "stat_update_master_qstat(%p,%p)", job, m);
   if (!m)
     return NULL;
 
@@ -758,27 +784,31 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     argv[argi++] = buf2;
 
-    if (m->master_type == MASTER_GAMESPY)
+    if(m->master_type==MASTER_LAN)
+    {
+      debug (3, "stat_update_master_qstat() -- MASTER_LAN");
+      g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_option);
+    }
+    else if (m->master_type == MASTER_GAMESPY)
+    {
     	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
+    }
+    // add master arguments
+    else if(m->type==Q3_SERVER && q3_opts.masterprotocol)
+    {
+      g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,q3_opts.masterprotocol);
+    }
+    else if(m->type==WO_SERVER && wo_opts.masterprotocol)
+    {
+      g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,wo_opts.masterprotocol);
+    }
     else
     {
-      // add master arguments
-      if(m->type==Q3_SERVER && q3_opts.masterprotocol)
-      {
-    	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,q3_opts.masterprotocol);
-      }
-      else if(m->type==WO_SERVER && wo_opts.masterprotocol)
-      {
-    	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,wo_opts.masterprotocol);
-      }
-      else
-      {
-    	g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
-      }
+      g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
     }
 
     argv[argi++] = buf3;
-    g_snprintf (buf3, 64, "%s:%d,-", inet_ntoa (m->host->ip), m->port);
+    g_snprintf (buf3, 64, "%s%s:%d,-", m->master_type==MASTER_LAN?"+":"" ,inet_ntoa (m->host->ip), m->port);
 
     argv[argi] = NULL;
 
@@ -898,12 +928,11 @@ static void stat_master_update_done (struct stat_conn *conn,
 
   m->state = state;
 
-#ifdef DEBUG
-  fprintf (stderr, "stat_master_update_done(%s) -- status %d\n", 
+  debug (3, "stat_master_update_done(%s) -- status %d\n", 
                                 (conn)? conn->master->name : "(null)", state);
-#endif
 
   if (state == SOURCE_UP && conn) {
+    debug (3, "stat_master_update_done -- state == SOURCE_UP && conn");
     server_list_free (m->servers);
     m->servers = g_slist_reverse (conn->servers);
     conn->servers = NULL;
@@ -928,6 +957,7 @@ static void stat_master_update_done (struct stat_conn *conn,
   job->names = userver_list_append_list (job->names, m->uservers,
                                                               UNKNOWN_SERVER);
 
+  debug (3, "stat_master_update_done -- job->master_handlers = %p",job->master_handlers);
   for (tmp = job->master_handlers; tmp; tmp = tmp->next)
     (* (master_func) tmp->data) (job, m);
 
@@ -946,10 +976,7 @@ static void stat_update_masters (struct stat_job *job) {
   freecons = maxsimultaneous - job->masters_to_resolve - 
                                                    g_slist_length (job->cons);
 
-#ifdef DEBUG
-  fprintf (stderr, "stat_update_masters() -- freecons: %d\n", freecons);
-#endif
-  debug (3, "stat_update_masters() -- freecons: %d", freecons);
+  debug (3, "stat_update_masters(%p) -- freecons: %d", job,freecons);
   tmp = job->masters;
 
   while (tmp && freecons > 0) {
@@ -997,13 +1024,10 @@ static void stat_master_resolved_callback (char *id, struct host *h,
   GSList *list;
   enum master_state state;
 
+  debug (3, "stat_master_resolved_callback(%s,%p,%d,%p)", id, h,status,data);
+
   if (!job || !id)
     return;
-
-#ifdef DEBUG
-  fprintf (stderr, "stat_master_resolved_callback(%s) -- status %d\n",
-                                                                  id, status);
-#endif
 
   job->masters_to_resolve--;
   job->progress.done++;
@@ -1044,11 +1068,12 @@ static void stat_name_resolved_callback (char *id, struct host *h,
   GSList *list;
   GSList *tmp;
 
+  debug (6, "stat_name_resolved_callback(%s,%p,%d,%p)--",id,h,status,data);
+
   if (!job || !id)
     return;
 
   list = job->names;
-  debug (6, "stat_name_resolved_callback() --");
   while (list) {
     us = (struct userver *) list->data;
     if (strcmp (us->hostname, id) == 0) {
@@ -1151,9 +1176,8 @@ static void stat_next (struct stat_job *job) {
   struct master *m;
   struct host *h;
 
-#ifdef DEBUG
-  fprintf (stderr, "stat_next() -- \n");
-#endif
+  debug_increase_indent();
+  debug (3, "stat_next(%p)",job);
   job->progress.done = 0;
 
   if (job->masters) {
@@ -1162,6 +1186,7 @@ static void stat_next (struct stat_job *job) {
 
     move_q2masters_to_top (&job->masters);
 
+    // store all unresolved hostnames in hostnames
     for (list = job->masters; list; list = list->next) {
       m = (struct master *) list->data;
 
@@ -1191,6 +1216,7 @@ static void stat_next (struct stat_job *job) {
     }
 
     stat_update_masters (job);
+    debug_decrease_indent();
     return;
   }
 
@@ -1219,6 +1245,7 @@ static void stat_next (struct stat_job *job) {
 
     g_slist_free (hostnames);
     hostnames = NULL;
+    debug_decrease_indent();
     return;
   }
 
@@ -1244,6 +1271,7 @@ static void stat_next (struct stat_job *job) {
       debug (1, "job_next() -- Error! Could not stat_open_conn_qstat()");
       stat_close (job, TRUE);
     }
+    debug_decrease_indent();
     return;
   }
 
@@ -1262,28 +1290,28 @@ static void stat_next (struct stat_job *job) {
       h = (struct host *) list->data;
       if (h) dns_lookup (inet_ntoa (h->ip));
     }
+    debug_decrease_indent();
     return;
   }
 
   debug (3, "stat_next() -- Job %lx  Job Done, Closing the job...", job);
 
   stat_close (job, FALSE);
+  debug_decrease_indent();
 }
 
 
 void stat_start (struct stat_job *job) {
 
-#ifdef DEBUG
-  fprintf (stderr, "stat_start()\n");
-#endif
-
-  debug (3, "stat_start() -- Job %lx", job);
+  debug_increase_indent();
+  debug (3, "stat_start() -- Job %p", job);
   if (job->delayed.refresh_handler) {
     job->delayed.timeout_id = gtk_timeout_add (1000, 
                                            job->delayed.refresh_handler, job);
   }
 
   stat_next (job);
+  debug_decrease_indent();
 }
 
 

@@ -26,4 +26,7 @@ void set_debug_level (int);
 int get_debug_level (void);
 int debug_level;
 
+int debug_increase_indent();
+int debug_decrease_indent();
+
 #endif

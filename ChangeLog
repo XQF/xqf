@@ -1,3 +1,6 @@
+Feb 17, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- support for LAN broadcast queries
+
 Feb 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - check for correct version of qstat on startup
 
