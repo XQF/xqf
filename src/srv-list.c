@@ -98,7 +98,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
   struct pixmap* countrypix = NULL;
 #endif
   
-  char buf1[256], buf2[32], buf3[32], buf4[32], buf5[4];
+  char buf1[256], buf2[32], buf3[32], buf4[32];
   char *retries;
   struct pixmap *retries_pix = NULL;
   int col;
@@ -168,14 +168,6 @@ static int server_clist_refresh_row (struct server *s, int row) {
   text[7] = (s->game)? s->game : NULL;
   text[8] = (s->gametype) ? s->gametype : NULL; 
 	  
-  /*
-    baa- Change xqf-ui.c such that the server_clist_def calls out
-    10 columns if you want this shown.
-  
-  sprintf (buf5, "[%c]", ( s->sv_os ? s->sv_os : ' '));
-  text[9] = buf5;
-	*/
-
   if (row < 0) {
     row = gtk_clist_append (server_clist, text);
   }
