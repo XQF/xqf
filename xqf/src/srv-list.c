@@ -351,11 +351,14 @@ void server_clist_sync_selection (void) {
 int server_clist_refresh_server (struct server *s) {
   int row;
 
+  debug (6, "server_clist_refresh_server() -- Server %lx", s );
+
   apply_filters (cur_filter | FILTER_PLAYER_MASK, s);
 
   row = gtk_clist_find_row_from_data (server_clist, s);
 
   if (row >= 0) {
+    debug (6, "server_clist_refresh_server() -- Server %lx is at row %d", s, row );
 
     if (default_refresh_sorts && (s->filters & cur_filter) != cur_filter) {
       gtk_clist_remove (server_clist, row);
