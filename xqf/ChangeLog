@@ -1,5 +1,7 @@
 Aug 15, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix compile with gcc 2.95 (patch by Thomas Zajic)
+- Fix --add when one server without type is specified whose port matches
+  exactly one game.
 
 Aug 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Use TGA loader from quake2 if gdk-pixbuf fails to load a mapshot. Useful for
