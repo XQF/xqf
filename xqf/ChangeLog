@@ -1,3 +1,6 @@
+Jan 25, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- Halflife2 support (untested)
+
 Jan 21, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - highly experimental: optionally use DT_AUXILIARY stub libraries to not depend
   on libGeoIP and libgdk_pixbuf at runtime

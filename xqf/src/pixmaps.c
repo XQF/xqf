@@ -53,6 +53,7 @@
 #include "xpm/hw.xpm"
 #include "xpm/sn.xpm"
 #include "xpm/hl.xpm"
+#include "xpm/hl2.xpm"
 #include "xpm/kp.xpm"
 #include "xpm/sfs.xpm"
 #include "xpm/sof2s.xpm"
