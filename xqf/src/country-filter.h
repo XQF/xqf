@@ -44,7 +44,22 @@ int geoip_id_by_code(const char *country);
 /** return TRUE if geoip init was successful */
 gboolean geoip_is_working (void);
 
+/** \brief get a flag pixmap for country
+ *
+ * @returns flag pixmap or NULL
+ */
 struct pixmap* get_pixmap_for_country(int id);
+
+/** \brief get a flag pixmap for country
+ *
+ * same as get_pixmap_for_country but try to create a completely transparent
+ * flag if no suitable one could be loaded.
+ * @returns flag pixmap or NULL
+ */
+struct pixmap* get_pixmap_for_country_with_fallback(int id);
+
+/** \brief get number of countries */
+unsigned geoip_num_countries();
 
 
 #endif

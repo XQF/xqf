@@ -799,7 +799,7 @@ gboolean create_server_type_menu_filter_configured(enum server_type type)
 	return TRUE;
 }
 
-GtkWidget *create_server_type_menu (enum server_type active_type,
+GtkWidget *create_server_type_menu (int active_type,
 	gboolean (*filterfunc)(enum server_type),
 	GtkSignalFunc callback)
 {
@@ -844,13 +844,14 @@ GtkWidget *create_server_type_menu (enum server_type active_type,
     ++j; // must be here in case the continue was used
   }
 
-  // initiates callback to set servertype to first configured game
-  if(first_menu_item)
-      gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
-
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
 
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
+  // initiates callback to set servertype to first configured game
+  if(active_type != -1 && first_menu_item)
+  {
+    gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
+    gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
+  }
 
   return option_menu;
 }

@@ -111,6 +111,9 @@ int	default_show_only_configured_games;
 
 int     maxretries;
 int     maxsimultaneous;
+char*   qstat_srcip;
+unsigned   qstat_srcport_low;
+unsigned   qstat_srcport_high;
 
 int	sound_enable;
 char	*sound_player = NULL;
@@ -189,6 +192,9 @@ static  GtkWidget *pushlatency_value_spinner;
 
 static  GtkWidget *maxretries_spinner;
 static  GtkWidget *maxsimultaneous_spinner;
+static  GtkWidget *qstat_srcip_entry;
+static  GtkWidget *qstat_srcport_entry_low;
+static  GtkWidget *qstat_srcport_entry_high;
 
 static  GtkWidget *sound_enable_check_button;
 
@@ -4201,6 +4207,9 @@ static GtkWidget *qstat_options_page (void) {
   GtkWidget *table;
   GtkWidget *label;
   GtkObject *adj;
+  GtkWidget* alignment;
+  GtkWidget* hbox;
+  unsigned row = 0;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -4210,7 +4219,7 @@ static GtkWidget *qstat_options_page (void) {
   frame = gtk_frame_new (_("QStat Options"));
   gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
-  table = gtk_table_new (2, 2, FALSE);
+  table = gtk_table_new (2, 3, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -4220,8 +4229,9 @@ static GtkWidget *qstat_options_page (void) {
 
   label = gtk_label_new (_("Number of simultaneous servers to query"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
+
 
   adj = gtk_adjustment_new (maxsimultaneous, 1.0, FD_SETSIZE, 1.0, 5.0, 0.0);
 
@@ -4229,24 +4239,89 @@ static GtkWidget *qstat_options_page (void) {
   gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (maxsimultaneous_spinner),
                                                            GTK_UPDATE_ALWAYS);
   gtk_widget_set_usize (maxsimultaneous_spinner, 48, -1);
-  gtk_table_attach (GTK_TABLE (table), maxsimultaneous_spinner, 1, 2, 0, 1,
-                                                                  0, 0, 0, 0);
+
+  alignment = gtk_alignment_new (1, 0.5, 0, 0);
+  gtk_container_add (GTK_CONTAINER (alignment), maxsimultaneous_spinner);
+
+  gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
   gtk_widget_show (maxsimultaneous_spinner);
+  gtk_widget_show(alignment);
+
+  ++row;
 
   /* maxretries */
 
   label = gtk_label_new (_("Number of retries"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
   gtk_widget_show (label);
 
   adj = gtk_adjustment_new (maxretries, 1.0, MAX_RETRIES, 1.0, 1.0, 0.0);
-
   maxretries_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
   gtk_widget_set_usize (maxretries_spinner, 48, -1);
-  gtk_table_attach (GTK_TABLE (table), maxretries_spinner, 1, 2, 1, 2, 
-                                                                  0, 0, 0, 0);
+
+  alignment = gtk_alignment_new (1, 0.5, 0, 0);
+  gtk_container_add (GTK_CONTAINER (alignment), maxretries_spinner);
+  gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1); 
   gtk_widget_show (maxretries_spinner);
+  gtk_widget_show(alignment);
+
+  ++row;
+
+  /* srcip */
+
+  label = gtk_label_new (_("Soure IP Address"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+  gtk_widget_show (label);
+
+  qstat_srcip_entry = gtk_entry_new ();
+  gtk_entry_set_max_length(GTK_ENTRY(qstat_srcip_entry), 15);
+  gtk_entry_set_text (GTK_ENTRY (qstat_srcip_entry), qstat_srcip?qstat_srcip:"");
+
+  alignment = gtk_alignment_new (1, 0.5, 0, 0);
+  gtk_container_add (GTK_CONTAINER (alignment), qstat_srcip_entry);
+  gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+  gtk_widget_show (qstat_srcip_entry);
+  gtk_widget_show (alignment);
+
+  ++row;
+
+  /* srcport */
+
+  label = gtk_label_new (_("Soure Port Range"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+  gtk_widget_show (label);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+
+  qstat_srcport_entry_low = gtk_entry_new ();
+  gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_low), 5);
+  gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_low), "");
+  gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_low, FALSE, FALSE, 0);
+  gtk_widget_set_usize (qstat_srcport_entry_low, 70, -1);
+
+  label = gtk_label_new ("-");
+  gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+
+  qstat_srcport_entry_high = gtk_entry_new ();
+  gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_high), 5);
+  gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_high), "");
+  gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_high, FALSE, FALSE, 0);
+  gtk_widget_set_usize (qstat_srcport_entry_high, 70, -1);
+
+  alignment = gtk_alignment_new (1, 0.5, 0, 0);
+  gtk_container_add (GTK_CONTAINER (alignment), hbox);
+  gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+  gtk_widget_show (qstat_srcport_entry_low);
+  gtk_widget_show (label);
+  gtk_widget_show (qstat_srcport_entry_high);
+  gtk_widget_show (alignment);
+  gtk_widget_show (hbox);
+
+  ++row;
+
 
   gtk_widget_show (table);
   gtk_widget_show (frame);

@@ -20,6 +20,7 @@
 
 #include <sys/types.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>	/* memset, strcmp */
 #include <sys/socket.h>	/* inet_ntoa */
 #include <netinet/in.h>	/* inet_ntoa */
@@ -37,6 +38,7 @@
 #include "utils.h"
 #include "config.h"
 #include "statistics.h"
+#include "country-filter.h"
 #include "debug.h"
 
 #define PERCENTS(A,B)	((B)? (A)/((B)/100.0) : 0)
@@ -64,6 +66,15 @@ struct arch_stats {
   int notebookpage; // page in notebook
 };
 
+struct country_num {
+  int c;
+  int n;
+};
+struct country_stats {
+  unsigned nonzero;
+  int notebookpage; // page in notebook
+  struct country_num* country;
+};
 
 static const char *srv_headers[6] = {
   //The space behind up and down is to make the strings different from
@@ -81,10 +92,14 @@ static const char *cpu_names[CPU_NUM] = {
 
 const char *srv_label = N_("Servers");
 const char *arch_label = N_("OS/CPU");
+const char *country_label = N_("Country");
 
 
 static struct server_stats *srv_stats;
 static struct arch_stats *srv_archs;
+#ifdef USE_GEOIP
+static struct country_stats *srv_countries;
+#endif
 
 struct players_s
 {
@@ -97,14 +112,33 @@ static struct players_s* players;
 static int servers_count;
 static int players_count;
 
+#ifdef USE_GEOIP
+static GtkWidget *country_notebook;
+#endif
 static GtkWidget *stat_notebook;
 static GtkWidget *arch_notebook;
 static enum server_type selected_type;
+static enum server_type selected_country;
 
 
-static void server_stats_create (void) {
+static void server_stats_create (void)
+{
+#ifdef USE_GEOIP
+  unsigned g;
+  // position GAMES_TOTAL is used for total number of all games
+  unsigned i = (sizeof(struct country_stats) + geoip_num_countries()*sizeof(struct country_num)) * (GAMES_TOTAL+1);
+  srv_countries  = g_malloc0 (i);
 
-  srv_stats = g_malloc0 (sizeof (struct server_stats) * GAMES_TOTAL);
+  for(g = 0; g < GAMES_TOTAL+1; ++g)
+  {
+    srv_countries[g].country = (struct country_num*)((void*)srv_countries
+	+ sizeof(struct country_stats)*(GAMES_TOTAL+1) + g*geoip_num_countries()*sizeof(struct country_num));
+  }
+#endif
+
+  // position GAMES_TOTAL is used for total number of all games
+  srv_stats = g_malloc0 (sizeof (struct server_stats) * (GAMES_TOTAL+1));
+
   srv_archs  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
   players  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
 
@@ -114,14 +148,14 @@ static void server_stats_create (void) {
 
 
 static void server_stats_destroy (void) {
-  if (srv_stats) {
-    g_free (srv_stats);
-    srv_stats = NULL;
-  }
-  if (srv_archs) {
-    g_free (srv_archs);
-    srv_archs = NULL;
-  }
+  g_free (srv_stats);
+  srv_stats = NULL;
+  g_free (srv_archs);
+  srv_archs = NULL;
+#ifdef USE_GEOIP
+  g_free(srv_countries);
+  srv_countries = NULL;
+#endif
 }
 
 
@@ -182,6 +216,21 @@ enum OS t2_identify_os (struct server *s, char *versionstr)
   return OS_WINDOWS;
 }
 
+#ifdef USE_GEOIP
+static int country_stat_compare_func(const void* va, const void* vb)
+{
+  const struct country_num* a = va;
+  const struct country_num* b = vb;
+
+  if(a->n > b->n)
+    return -1;
+  else if(a->n == b->n)
+    return 0;
+  else
+    return 1;
+}
+#endif
+
 static void collect_statistics (void) {
   GSList *servers;
   GSList *tmp;
@@ -224,6 +273,22 @@ static void collect_statistics (void) {
 	  srv_stats[s->type].down++;
       }
 
+#ifdef USE_GEOIP
+      if(s->country_id >= 0 && s->country_id < geoip_num_countries())
+      {
+	if(++srv_countries[s->type].country[s->country_id].n == 1)
+	{
+	  srv_countries[s->type].country[s->country_id].c = s->country_id;
+	  ++srv_countries[s->type].nonzero;
+	}
+	if(++srv_countries[GAMES_TOTAL].country[s->country_id].n == 1)
+	{
+	  srv_countries[GAMES_TOTAL].country[s->country_id].c = s->country_id;
+	  ++srv_countries[GAMES_TOTAL].nonzero;
+	}
+      }
+#endif
+
       if (info && games[s->type].arch_identifier)
       {
 	while (info[0]) {
@@ -259,6 +324,16 @@ static void collect_statistics (void) {
 
     server_list_free (servers);
   }
+
+#ifdef USE_GEOIP
+  {
+    unsigned g;
+    for(g = 0; g < GAMES_TOTAL+1; ++g)
+    {
+      qsort(srv_countries[g].country, geoip_num_countries(), sizeof(struct country_num), country_stat_compare_func);
+    }
+  }
+#endif
 }
 
 
@@ -358,13 +433,13 @@ static GtkWidget *server_stats_page (void) {
 
     put_server_stats (table, i, row);
 
-    if (i > 0) {
-      srv_stats[0].servers += srv_stats[i].servers;
-      srv_stats[0].ok      += srv_stats[i].ok;
-      srv_stats[0].timeout += srv_stats[i].timeout;
-      srv_stats[0].down    += srv_stats[i].down;
-      srv_stats[0].na      += srv_stats[i].na;
-      srv_stats[0].players += srv_stats[i].players;
+    {
+      srv_stats[GAMES_TOTAL].servers += srv_stats[i].servers;
+      srv_stats[GAMES_TOTAL].ok      += srv_stats[i].ok;
+      srv_stats[GAMES_TOTAL].timeout += srv_stats[i].timeout;
+      srv_stats[GAMES_TOTAL].down    += srv_stats[i].down;
+      srv_stats[GAMES_TOTAL].na      += srv_stats[i].na;
+      srv_stats[GAMES_TOTAL].players += srv_stats[i].players;
     }
     
     row++;
@@ -372,7 +447,7 @@ static GtkWidget *server_stats_page (void) {
 
   put_label_to_table (table, _("Total"), 0.0, 0, row + 1);
 
-  put_server_stats (table, 0, row + 1);
+  put_server_stats (table, GAMES_TOTAL, row + 1);
 
   gtk_widget_show (table);
   gtk_widget_show (scrollwin);
@@ -522,14 +597,173 @@ static GtkWidget *archs_stats_page (void) {
   return page_vbox;
 }
 
+#ifdef USE_GEOIP
+static gboolean create_server_type_menu_filter_hascountries(enum server_type type)
+{
+  return (srv_countries[type].nonzero != 0);
+}
+
+static void country_notebook_page (GtkWidget *notebook, 
+                             enum server_type type, struct country_stats *stats) {
+  GtkWidget *table;
+  GtkWidget *scrollwin;
+  GtkWidget *alignment;
+  unsigned c;
+  char buf[16] = {0};
+
+  scrollwin = gtk_scrolled_window_new (NULL, NULL);
+
+  alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
+
+  table = gtk_table_new (stats->nonzero+2, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 4);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+
+  gtk_container_add (GTK_CONTAINER (alignment), table);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrollwin, NULL);
+
+  for(c = 0; c < stats->nonzero; ++c)
+  {
+    int id;
+    unsigned numservers;
+    id = stats->country[c].c;
+    if(type == UNKNOWN_SERVER)
+    {
+      numservers = servers_count;
+    }
+    else
+    {
+      numservers = srv_stats[type].ok;
+    }
+
+    snprintf(buf, sizeof(buf), "%u (%.2f%%)",
+	stats->country[c].n,
+	PERCENTS(stats->country[c].n, numservers));
+    put_label_to_table (table, buf , 1.0, 0, c);
+
+#ifdef USE_GEOIP
+    {
+      GtkWidget* label;
+      GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
+      struct pixmap* pix = get_pixmap_for_country_with_fallback(id);
+      if(pix)
+      {
+	GtkWidget *pixmap = gtk_pixmap_new(pix->pix,pix->mask);
+	gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
+	gtk_widget_show (pixmap);
+      }
+
+      label = gtk_label_new (geoip_name_by_id(id));
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+      gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+      gtk_widget_show (label);
+
+      gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, c, c+1);
+      gtk_widget_show (hbox);
+    }
+#endif
+  }
+
+  gtk_widget_show(table);
+  gtk_widget_show(scrollwin);
+  gtk_widget_show(alignment);
+}
+
+static void select_country_server_type_callback(GtkWidget *widget, enum server_type type)
+{
+  gtk_notebook_set_page (GTK_NOTEBOOK (country_notebook), srv_countries[type].notebookpage );
+  selected_country = type;
+}
+
+static GtkWidget *country_stats_page (void)
+{
+  GtkWidget *page_vbox;
+  GtkWidget *option_menu;
+  GtkWidget *hbox;
+  int pagenum = 0;
+  enum server_type type = Q2_SERVER;
+  enum server_type to_activate = UNKNOWN_SERVER;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+  country_notebook = gtk_notebook_new ();
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (country_notebook), FALSE);
+  gtk_notebook_set_tab_pos (GTK_NOTEBOOK (country_notebook), GTK_POS_TOP);
+  gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (country_notebook), 4);
+  gtk_notebook_set_show_border(GTK_NOTEBOOK(country_notebook), FALSE);
+
+  selected_country = to_activate = config_get_int("/" CONFIG_FILE "/Statistics/country");
+
+  for (type = 0; type <= GAMES_TOTAL; ++type)
+  {
+    if(!srv_countries[type].nonzero)
+      continue;
+
+    srv_countries[type].notebookpage=pagenum++;
+
+    country_notebook_page (country_notebook, type, &srv_countries[type]);
+  }
+
+  // the notebook must exist to allow activate events of the menu
+  hbox = gtk_hbox_new(FALSE,0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
+
+    option_menu = create_server_type_menu (to_activate==GAMES_TOTAL?-1:to_activate,
+		    create_server_type_menu_filter_hascountries,
+		    GTK_SIGNAL_FUNC(select_country_server_type_callback));
+    {
+      GtkWidget* menu_item = gtk_menu_item_new ();
+      GtkWidget* label = gtk_label_new(_("All Games"));
+      GtkWidget* menu = gtk_option_menu_get_menu(GTK_OPTION_MENU(option_menu));
+
+      // separator
+      gtk_widget_set_sensitive (menu_item, FALSE);
+      gtk_menu_prepend (GTK_MENU (menu), menu_item);
+      gtk_widget_show (menu_item);
+      
+      menu_item = gtk_menu_item_new ();
+      gtk_menu_prepend (GTK_MENU (menu), menu_item);
+      gtk_container_add (GTK_CONTAINER (menu_item), label);
+
+      gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+	    GTK_SIGNAL_FUNC (select_country_server_type_callback), (gpointer)GAMES_TOTAL);
+
+      gtk_widget_show (menu_item);
+      gtk_widget_show (label);
+
+      if(to_activate == GAMES_TOTAL)
+      {
+	gtk_menu_item_activate (GTK_MENU_ITEM (menu_item)); 
+	gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
+      }
+    }
+
+    gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
+    gtk_widget_show (option_menu);
+
+  gtk_widget_show(hbox);
+
+  gtk_box_pack_start (GTK_BOX (page_vbox), country_notebook, TRUE, TRUE, 0);
+
+  gtk_widget_show (country_notebook);
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+#endif
 
 static void grab_defaults (GtkWidget *w, gpointer data)
 {
+  config_set_int ("/" CONFIG_FILE "/Statistics/country", selected_country);
   config_set_int ("/" CONFIG_FILE "/Statistics/game", selected_type);
 
-  config_set_string ("/" CONFIG_FILE "/Statistics/page", 
-        (gtk_notebook_get_current_page (GTK_NOTEBOOK (stat_notebook)) == 0) ?
-                                                      srv_label : arch_label);
+  config_set_int ("/" CONFIG_FILE "/Statistics/page", 
+        gtk_notebook_get_current_page (GTK_NOTEBOOK (stat_notebook)));
 }
 
 static void statistics_save_geometry (GtkWidget *window, gpointer data) {
@@ -561,7 +795,6 @@ void statistics_dialog (void) {
   GtkWidget *hbox;
   GtkWidget *label;
   GtkWidget *button;
-  char *saved_page;
   int page_num = 0;
 
   server_stats_create ();
@@ -595,12 +828,15 @@ void statistics_dialog (void) {
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
 
-  saved_page = config_get_string ("/" CONFIG_FILE "/Statistics/page");
-  if (saved_page) {
-    if (strcmp (saved_page, arch_label) == 0)
-      page_num = 1;
-    g_free (saved_page);
-  }
+#ifdef USE_GEOIP
+  page = country_stats_page ();
+  label = gtk_label_new (_(country_label));
+  gtk_widget_show (label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
+#endif
+
+  page_num = config_get_int ("/" CONFIG_FILE "/Statistics/page");
+
   gtk_notebook_set_page (GTK_NOTEBOOK (stat_notebook), page_num);
 
   gtk_widget_show (stat_notebook);

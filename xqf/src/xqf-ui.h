@@ -125,14 +125,14 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name);
 
 /**
   create a GtkOptionMenu that contains all game names
-  @param active_type which game to set active by default
+  @param active_type which game to set active by default. set to -1 for none
   @param filterfunc only add game to menu if this function return true. can be
 	  NULL to show all
   @param callback a callback function to connect if a game entry is activated.
 	  the user_data will be set to the game type
   @return a GtkOptionMenu
   */
-GtkWidget *create_server_type_menu (enum server_type active_type,
+GtkWidget *create_server_type_menu (int active_type,
 	gboolean (*filterfunc)(enum server_type),
 	GtkSignalFunc callback);
 

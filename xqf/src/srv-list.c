@@ -243,7 +243,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
                    (s->name)? s->name : "", 2, server_pixmap, server_pixmask);
 
 #ifdef USE_GEOIP
-  countrypix = get_pixmap_for_country(s->country_id);
+  countrypix = get_pixmap_for_country_with_fallback(s->country_id);
   if(countrypix)
 	  gtk_clist_set_pixtext (server_clist, row, 1, 
                    text[1], 2, countrypix->pix, countrypix->mask);
