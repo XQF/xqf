@@ -50,7 +50,7 @@ print OUT "static void segv(void) { char* die = 0; ++*die; }\n";
 
 foreach my $file (@ARGV)
 {
-    open (IN, "/usr/bin/nm $file|");
+    open (IN, "/usr/bin/nm -D $file|");
     while(<IN>)
     {
 	my ($addr, $type, $sym) = split(/ +/);
