@@ -29,6 +29,7 @@
 extern	int hosts_total (void);
 extern	GSList *all_hosts (void);
 extern	struct host *host_add (const char *address);
+extern  struct host *host_add_in (struct in_addr addr);
 extern	void host_unref (struct host *h);
 
 extern	GSList *merge_host_to_resolve  (GSList *hosts, struct host *h);

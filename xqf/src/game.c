@@ -1537,7 +1537,16 @@ static void un_analyze_serverinfo (struct server *s) {
 
 static void savage_analyze_serverinfo (struct server *s)
 {
-#warning TODO
+  char **info_ptr;
+
+  /* Clear out the flags */
+  s->flags = 0;
+  
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "gametype") == 0) {
+      s->game = info_ptr[1];
+    }
+  }
 }
 
 static void descent3_analyze_serverinfo (struct server *s) {
@@ -3377,7 +3386,33 @@ static int ut_exec (const struct condef *con, int forkit) {
 
 static int savage_exec(const struct condef *con, int forkit)
 {
-#warning TODO
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+  char connect_arg[] = "connect 123.123.123.123:12345";
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->server) {
+    argv[argi++] = "set";
+    argv[argi++] = "autoexec";
+    snprintf(connect_arg,sizeof(connect_arg),"connect %s",con->server);
+    argv[argi++] = connect_arg;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  return retval;
+
   return 0;
 }
 

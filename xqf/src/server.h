@@ -61,7 +61,6 @@ extern	void server_lists_intersect (GSList **list1, GSList **list2);
 extern	void server_list_fprintf (FILE *f, GSList *servers);
 extern	void userver_list_fprintf (FILE *f, GSList *uservers);
 
-
 static inline void server_ref (struct server *server) {
   if (server){ 
     server->ref_count++;
