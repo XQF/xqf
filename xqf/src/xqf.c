@@ -122,6 +122,7 @@ static GtkWidget *file_quit_menu_item = NULL;
 static GtkWidget *file_statistics_menu_item = NULL;
 
 static GtkWidget *edit_add_menu_item = NULL;
+static GtkWidget *edit_favadd_menu_item = NULL;
 static GtkWidget *edit_delete_menu_item = NULL;
 static GtkWidget *edit_update_master_builtin_menu_item = NULL;
 static GtkWidget *edit_add_master_menu_item = NULL;
@@ -146,6 +147,7 @@ static GtkWidget *server_connect_menu_item = NULL;
 static GtkWidget *server_observe_menu_item = NULL;
 static GtkWidget *server_record_menu_item = NULL;
 static GtkWidget *server_favadd_menu_item = NULL;
+static GtkWidget *server_delete_menu_item = NULL;
 static GtkWidget *server_resolve_menu_item = NULL;
 static GtkWidget *server_properties_menu_item = NULL;
 static GtkWidget *server_rcon_menu_item = NULL;
@@ -483,12 +485,14 @@ void set_widgets_sensitivity (void) {
   sens = (!stat_process && selected && !source_is_favorites);
 
   gtk_widget_set_sensitive (favadd_menu_item, sens);
+  gtk_widget_set_sensitive (edit_favadd_menu_item, sens);
   gtk_widget_set_sensitive (server_favadd_menu_item, sens);
 
   sens = (!stat_process && selected && source_is_favorites);
 
   gtk_widget_set_sensitive (delete_menu_item, sens);
   gtk_widget_set_sensitive (edit_delete_menu_item, sens);
+  gtk_widget_set_sensitive (server_delete_menu_item, sens);
 
   sens = (!stat_process && masters_to_delete);
 
@@ -2316,7 +2320,7 @@ static const struct menuitem edit_menu_items[] = {
   { 
     MENU_ITEM,		N_("Add to _Favorites"),	0, 0,
     GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
-    &server_favadd_menu_item
+    &edit_favadd_menu_item
   },
   { 
     MENU_ITEM,		N_("_Remove from Favorites"),		'D',   	GDK_CONTROL_MASK,
@@ -2468,7 +2472,7 @@ static const struct menuitem server_menu_items[] = {
   { 
     MENU_ITEM,		N_("_Remove from Favorites"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
-    &edit_delete_menu_item
+    &server_delete_menu_item
   },
 
   { 
