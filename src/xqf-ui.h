@@ -101,6 +101,7 @@ extern	void source_ctree_show_node_status (GtkWidget *ctree,
 
 extern	void source_ctree_add_master (GtkWidget *ctree, struct master *m);
 extern	void source_ctree_delete_master (GtkWidget *ctree, struct master *m);
+extern	void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m);
 extern	GtkWidget *create_source_ctree (GtkWidget *scrollwin);
 extern	void source_ctree_select_source (struct master *m);
 

@@ -32,6 +32,7 @@
 #include "game.h"
 #include "config.h"
 #include "sort.h"
+#include "pref.h"
 
 static GSList *xqf_windows = NULL;
 static GtkWidget *target_window = NULL;
@@ -348,6 +349,12 @@ void source_ctree_add_master (GtkWidget *ctree, struct master *m) {
   if (m->isgroup)
     return;
 
+  // If set to display only configured games, and game is not configured,
+  // and it's not the 'Favorites' master, just return so the display
+  // isn't updated with the game type and masters.
+  if (!(games[m->type].cmd) && default_show_only_configured_games && m != favorites)
+    return;
+  
   if (m->type != UNKNOWN_SERVER) {
     group = (struct master *) g_slist_nth_data (master_groups, m->type);
     source_ctree_enable_master_group (ctree, group, TRUE);
@@ -367,7 +374,8 @@ void source_ctree_add_master (GtkWidget *ctree, struct master *m) {
 }
 
 
-static void source_ctree_remove_master_group (GtkWidget *ctree,
+//static void source_ctree_remove_master_group (GtkWidget *ctree,
+void source_ctree_remove_master_group (GtkWidget *ctree,
 					      struct master *m) {
   GtkCTreeNode *node;
 
@@ -416,15 +424,20 @@ static void fill_source_ctree (GtkWidget *ctree) {
   for (list = master_groups; list; list = list->next) {
     group = (struct master *) list->data;
     if (group->masters) {
-      source_ctree_enable_master_group (ctree, group, FALSE);
-      parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
+      // If set to display only configured games, and game is not configured,
+      // don't update the display with the master.
+      if (games[group->type].cmd || !default_show_only_configured_games)
+      {
+        source_ctree_enable_master_group (ctree, group, FALSE);
+        parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
 
-      for (list2 = group->masters; list2; list2 = list2->next) {
-	m = (struct master *) list2->data;
-	node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL, NULL, 4,
+        for (list2 = group->masters; list2; list2 = list2->next) {
+  	  m = (struct master *) list2->data;
+	  node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL, NULL, 4,
                                          NULL, NULL, NULL, NULL, TRUE, FALSE);
-	gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
-	source_ctree_show_node_status (ctree, m);
+	  gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
+	  source_ctree_show_node_status (ctree, m);
+        }
       }
     }
   }

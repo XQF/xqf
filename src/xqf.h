@@ -235,5 +235,7 @@ int redialserver;
 
 int event_type;
 
+extern	void refresh_source_list (void);
+
 #endif /* __XQF_H__ */
 

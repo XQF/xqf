@@ -1071,6 +1071,49 @@ void update_master_list_builtin (void) {
     update_master_list_action (*ptr);
 }
 
+// Refresh list of games and masters in left pane
+void refresh_source_list (void) {
+  GtkCTreeNode *node;
+  GSList *list;
+  struct master *m;
+  struct master *group = NULL;
+
+  // Re-add masters to the list, or remove them if game is not
+  // configured and set to show only configured games.
+  for (list = all_masters; list; list = list->next) {
+    m = (struct master *) list->data;
+
+    if (m == favorites || m->isgroup)
+      continue;
+
+    // Look for existing entry in ctree so we only re-add if needed,
+    // otherwise everthing gets re-expanded
+    node = gtk_ctree_find_by_row_data (GTK_CTREE (source_ctree), NULL, m);
+
+    // If it's not there check to see if we should add it
+    if (!node) // It's not in the list so maybe we should add it
+    {
+      if (!default_show_only_configured_games || games[m->type].cmd)
+        source_ctree_add_master (source_ctree, m);
+    }
+    else // It's in the list so maybe we should delete it
+      if (default_show_only_configured_games && !games[m->type].cmd)
+        source_ctree_delete_master (source_ctree, m);
+  }
+  // Remove master group if set to show only configured games.
+  for (list = all_masters; list; list = list->next) {
+    m = (struct master *) list->data;
+
+    if (m == favorites)
+      continue;
+
+    if (default_show_only_configured_games && !games[m->type].cmd) {
+      group = (struct master *) g_slist_nth_data (master_groups, m->type);
+      source_ctree_remove_master_group (source_ctree, group);
+    }
+  }
+}
+
 void update_master_list_web (void) {
   char **ptr;
 
