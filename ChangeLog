@@ -1,3 +1,7 @@
+Nov 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- use gtk functions instead of spaces to make test button look nice
+- update german translation
+
 Nov 3, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Add Test buttons to Preferences - Sound page
 
