@@ -89,8 +89,6 @@ struct game {
   enum CPU (*identify_cpu) (struct server *s, const char *versionstr);
   enum OS (*identify_os) (struct server *s, char *versionstr);
 
-  char* suggest_commands;
-
   char *cmd;
   char *dir;
   char *real_dir;
@@ -101,7 +99,11 @@ struct game {
   /** tilde expanded game specific home directory */
   char *real_home;
 
-  char** main_mods;
+  /** NULL terminated list of main mods (eg baseq3 for q3)*/
+  char** main_mod;
+
+  /** NULL terminated list of commands to search in $PATH for suggestion */
+  char** command;
 
   char *game_cfg;
   GData *games_data;

@@ -267,7 +267,8 @@ int compare_qstat_version ( const char* have, const char* expected );
 int start_prog_and_return_fd(char *const argv[], pid_t *pid);
 int check_qstat_version(void);
 
-extern	void play_sound (const char *sound, const int override);
+void play_sound (const char *sound, gboolean override);
+void play_sound_with (const char* player, const char *sound, gboolean override);
 
 extern	void reset_main_status_bar(void);
 

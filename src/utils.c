@@ -36,7 +36,8 @@
 #include "debug.h"
 #include "i18n.h"
 
-static char* find_file_in_path2(const char* files, gboolean relative);
+static char* _find_file_in_path(const char* files, gboolean relative);
+static char* _find_file_in_path_list(char** binaries, gboolean relative);
 
 short strtosh (const char *str) {
   long tmp;
@@ -522,23 +523,34 @@ const char* bool2str(int i)
  */
 char* find_file_in_path(const char* files)
 {
-  return find_file_in_path2(files, FALSE);
+  return _find_file_in_path(files, FALSE);
 }
 
 char* find_file_in_path_relative(const char* files)
 {
-  return find_file_in_path2(files, TRUE);
+  return _find_file_in_path(files, TRUE);
 }
 
-static char* find_file_in_path2(const char* files, gboolean relative)
+char* find_file_in_path_list(char** files)
 {
-    char** binaries = NULL;
+  return _find_file_in_path_list(files, FALSE);
+}
+
+char* find_file_in_path_list_relative(char** files)
+{
+  return _find_file_in_path_list(files, TRUE);
+}
+
+/**
+  @param binaries NULL terminated list of strings
+ */
+static char* _find_file_in_path_list(char** binaries, gboolean relative)
+{
     char* path = NULL;
     int i = 0, j = 0;
     char** directories = NULL;
     char* found = NULL;
 
-    binaries = g_strsplit(files,":",0);
     path = getenv("PATH");
 
     if(!binaries) return NULL;
@@ -570,6 +582,19 @@ static char* find_file_in_path2(const char* files, gboolean relative)
     }
 
     g_strfreev(directories);
+
+    return found;
+}
+
+static char* _find_file_in_path(const char* files, gboolean relative)
+{
+    char** binaries = NULL;
+    char* found = NULL;
+
+    binaries = g_strsplit(files,":",0);
+
+    found = _find_file_in_path_list(binaries, relative);
+
     g_strfreev(binaries);
 
     return found;

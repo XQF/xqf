@@ -91,6 +91,18 @@ char* find_file_in_path(const char* files);
  */
 char* find_file_in_path_relative(const char* files);
 
+/** \brief find executable file in $PATH.
+ *
+ * like find_file_in_path but take a NULL terminated list of files
+ */
+char* find_file_in_path_list(char** files);
+
+/** \brief find executable file in $PATH.
+ *
+ * like find_file_in_path_relative but take a NULL terminated list of files
+ */
+char* find_file_in_path_list_relative(char** files);
+
 /** sort list and remove duplicates
  * @param list list to sort
  * @compare_func function to use for comparing
