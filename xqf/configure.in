@@ -23,6 +23,7 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
 
+AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
 dnl Checks for header files.
@@ -93,13 +94,14 @@ QSTAT23="-DQSTAT23 -DQSTAT_HAS_UNREAL_SUPPORT"
 AC_SUBST(QSTAT23)
 
 AC_CHECK_HEADER(zlib.h,,[AC_MSG_ERROR([zlib.h not found, please install zlib development files])])
-AC_CHECK_LIB(z, crc32,,[AC_MSG_ERROR([libz not found])])
+AC_CHECK_LIB(z, crc32,[AC_DEFINE([HAVE_LIBZ],[],[Whether libz is installed])],[AC_MSG_ERROR([libz not found])])
 
 dnl determine if we should include readline support...
 dnl ripped from physfs package
 dnl AC_ARG_ENABLE(readline,
 dnl    AC_HELP_STRING([--enable-externalrcon],[compile external rcon program (default=yes)])
 dnl    , ,enable_rcon=yes)
+XQFRCON_LIBS=
 AC_ARG_ENABLE(externalrcon,[  --enable-externalrcon   compile external rcon program (default=no)])
 if test x$enable_externalrcon = xyes; then
   AC_CHECK_HEADER(readline/readline.h, have_readline_hdr=yes)
@@ -108,8 +110,6 @@ if test x$enable_externalrcon = xyes; then
   AC_CHECK_LIB(readline, add_history, have_history_lib=yes, , -lncurses )
   if test x$have_readline_hdr = xyes -a x$have_readline_lib = xyes; then
     if test x$have_history_hdr = xyes -a x$have_history_lib = xyes; then
-      XQFRCON="xqf-rcon";
-      AC_SUBST(XQFRCON)
       XQFRCON_LIBS="-lreadline -lncurses"
       AC_SUBST(XQFRCON_LIBS)
     else
@@ -119,6 +119,7 @@ if test x$enable_externalrcon = xyes; then
     AC_MSG_WARN([libreadline not found, rcon program disabled])
   fi
 fi
+AM_CONDITIONAL(BUILD_XQFRCON, test "x$XQFRCON_LIBS" != x)
 
 dnl determine whether GeoIP should be used
 AC_CHECK_HEADER(GeoIP.h,have_geoip_hdr=yes,have_geoip_hdr=no)
@@ -126,11 +127,31 @@ AC_MSG_CHECKING([whether GeoIP should be used])
 AC_ARG_ENABLE(geoip,[  --enable-geoip    		use GeoIP (default=auto)],USE_GEOIP=$enableval, USE_GEOIP=yes)
 AC_MSG_RESULT([$USE_GEOIP])
 
+# --enable-geoip-dummy=/usr/lib/libGeoIP.so
+AC_MSG_CHECKING([whether a GeoIP dummy library should be used])
+AC_ARG_ENABLE(geoip_dummy,
+    [  --enable-geoip-dummy=FILE  	use dummy GeoIP lib based on FILE (default=no)],
+    use_geoip_dummy="$enableval", use_geoip_dummy=no)
+AC_MSG_RESULT([$use_geoip_dummy])
+
 if test "x$USE_GEOIP" != "xno"; then
 	if test "x$have_geoip_hdr" = "xyes";then
   		AC_DEFINE_UNQUOTED(USE_GEOIP,1,Define if we should use GeoIP)
 		if test "x$USE_GEOIP" = "xyes"; then
+		    if test "x$use_geoip_dummy" != "xno"; then
+			DUMMY_LIBGEOIP_SONAME=`objdump -p "$use_geoip_dummy"|awk '$1 == "SONAME" {print $2}'`
+			if test "x$DUMMY_LIBGEOIP_SONAME" != x; then
+			    DUMMY_LIBGEOIP_ORIG="$use_geoip_dummy"
+			    GEOIP_LIB="libxqf_dummy_GeoIP.la"
+
+			    AC_SUBST(DUMMY_LIBGEOIP_SONAME)
+			    AC_SUBST(DUMMY_LIBGEOIP_ORIG)
+			else
+			    AC_MSG_ERROR([$use_geoip_dummy is no valid GeoIP library])
+			fi
+		    else
 			GEOIP_LIB="-lGeoIP"
+		    fi
 		else
 			GEOIP_LIB="$USE_GEOIP"
 		fi
@@ -140,6 +161,29 @@ if test "x$USE_GEOIP" != "xno"; then
 		AC_MSG_WARN([GeoIP.h not found, GeoIP feature disabled])
 	fi
 fi
+
+AM_CONDITIONAL(DUMMY_LIBGEOIP, test x$DUMMY_LIBGEOIP_SONAME != x)
+
+# --enable-geoip-dummy=/usr/lib/libGeoIP.so
+AC_MSG_CHECKING([whether a GDK-Pixbuf dummy library should be used])
+AC_ARG_ENABLE(pixbuf_dummy,
+    [  --enable-pixbuf-dummy=FILE  	use dummy gdk-pixbuf lib based on FILE (default=no)],
+    use_pixbuf_dummy="$enableval", use_pixbuf_dummy=no)
+AC_MSG_RESULT([$use_pixbuf_dummy])
+if test "x$use_pixbuf_dummy" != "xno"; then
+    DUMMY_LIBGDKPIXBUF_SONAME=`objdump -p "$use_pixbuf_dummy"|awk '$1 == "SONAME" {print $2}'`
+    if test "x$DUMMY_LIBGDKPIXBUF_SONAME" != x; then
+	DUMMY_LIBGDKPIXBUF_ORIG="$use_pixbuf_dummy"
+	GDK_PIXBUF_LIBS="libxqf_dummy_gdk_pixbuf.la"
+
+	AC_SUBST(DUMMY_LIBGDKPIXBUF_SONAME)
+	AC_SUBST(DUMMY_LIBGDKPIXBUF_ORIG)
+    else
+	AC_MSG_ERROR([$use_pixbuf_dummy is no valid library])
+    fi
+    AC_SUBST(GDK_PIXBUF_LIBS)
+fi
+AM_CONDITIONAL(DUMMY_LIBGDKPIXBUF, test x$DUMMY_LIBGDKPIXBUF_SONAME != x)
 
 dnl check if user wants bzip2 compression instead of gzip
 COMPRESSION="-DCOMPRESSOR_GZIP"

@@ -16,12 +16,25 @@ INCLUDES = -I$(top_srcdir)/intl \
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
 
-EXTRA_DIST = qstat.cfg games.xml games.c
+EXTRA_DIST = qstat.cfg games.xml games.c $(noinst_SCRIPTS)
 
-bin_PROGRAMS = xqf @XQFRCON@
-EXTRA_PROGRAMS = xqf-rcon gamesxml2c
+bin_PROGRAMS = xqf
+if BUILD_XQFRCON
+bin_PROGRAMS += xqf-rcon
+endif
 
-xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(top_builddir)/src/tga/libtga.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB) @PACKAGE_LIBS@
+EXTRA_PROGRAMS = gamesxml2c
+
+xqf_LDADD = $(INTLLIBS) \
+	    $(top_builddir)/src/zip/libunzip.a \
+	    $(top_builddir)/src/tga/libtga.a \
+	    $(GTK_LIBS) \
+	    $(GEOIP_LIB) \
+	    $(PACKAGE_LIBS) \
+	    $(GDK_PIXBUF_LIBS) \
+	    -lz
+
+xqf_LDFLAGS = #-Wl,-rpath,\$$ORIGIN
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS) @PACKAGE_LIBS@
 xqf_rcon_SOURCES = \
@@ -115,6 +128,7 @@ i18n.h \
 loadpixmap.h \
 splash.h
 
+noinst_SCRIPTS = gensyms.pl
 noinst_PROGRAMS = test_utils
 test_utils_SOURCES = test_utils.c \
 		     utils.c utils.h \
@@ -124,6 +138,35 @@ test_utils_LDADD = $(xqf_LDADD)
 # it's only temporary, so ...
 gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
 gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
+
+pkglib_LTLIBRARIES =
+if DUMMY_LIBGEOIP
+pkglib_LTLIBRARIES += libxqf_dummy_GeoIP.la
+endif
+if DUMMY_LIBGDKPIXBUF
+pkglib_LTLIBRARIES += libxqf_dummy_gdk_pixbuf.la
+endif
+
+libxqf_dummy_gdk_pixbuf.c:
+	$(top_srcdir)/src/gensyms.pl -x gdk_pixbuf_new_from_file,gdk_pixbuf_render_pixmap_and_mask,gdk_pixbuf_unref /opt/gnome/lib/libgdk_pixbuf.so -o $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c || rm $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c
+	test -s $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c
+
+libxqf_dummy_gdk_pixbuf_la_SOURCES = libxqf_dummy_gdk_pixbuf_stubs.c
+nodist_libxqf_dummy_gdk_pixbuf_la_SOURCES = libxqf_dummy_gdk_pixbuf.c
+libxqf_dummy_gdk_pixbuf_la_LDFLAGS = -nostdlib -shared -Wl,-f,libgdk_pixbuf.so.2
+libxqf_dummy_gdk_pixbuf_la_LIBADD =
+
+libxqf_dummy_GeoIP.c:
+	$(top_srcdir)/src/gensyms.pl -x GeoIP_new,GeoIP_open $(DUMMY_LIBGEOIP_ORIG) -o $(top_srcdir)/src/libxqf_dummy_GeoIP.c || rm $(top_srcdir)/src/libxqf_dummy_GeoIP.c
+	test -s $(top_srcdir)/src/libxqf_dummy_GeoIP.c
+
+libxqf_dummy_GeoIP_la_SOURCES = libxqf_dummy_GeoIP_stubs.c
+nodist_libxqf_dummy_GeoIP_la_SOURCES = libxqf_dummy_GeoIP.c
+libxqf_dummy_GeoIP_la_LDFLAGS = -nostdlib -shared -Wl,-f,$(DUMMY_LIBGEOIP_SONAME)
+libxqf_dummy_GeoIP_la_LIBADD =
+
+
+CLEANFILES = $(nodist_libxqf_dummy_gdk_pixbuf_la_SOURCES) $(nodist_libxqf_dummy_GeoIP_la_SOURCES)
 
 gamelist: gamesxml2c
 	$(top_builddir)/src/gamesxml2c $(top_srcdir)/src/games.xml > $(top_srcdir)/src/games.c
