@@ -1,3 +1,8 @@
+Dec 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- added gametypes for truecombat
+- wrote function for determining the gametype to get rid of all
+  those ugly else if's
+
 Dec 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added 20sec timeout for wget
 - support for Voyager Elite Force
