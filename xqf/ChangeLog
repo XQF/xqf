@@ -1,3 +1,7 @@
+Nov 30, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- new function create_server_type_menu creates a GtkOptionMenu with all games
+- modify statistics dialog to make it smaller, scollbars
+
 Nov 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - move help menu item to the left
 - pack games list in preferences into a scrolled window

@@ -61,6 +61,7 @@ struct server_stats {
 struct arch_stats {
   int oscpu[OS_NUM][CPU_NUM];
   int count;
+  int notebookpage; // page in notebook
 };
 
 
@@ -98,6 +99,7 @@ static int players_count;
 
 static GtkWidget *stat_notebook;
 static GtkWidget *arch_notebook;
+static enum server_type selected_type;
 
 
 static void server_stats_create (void) {
@@ -312,24 +314,28 @@ static void put_server_stats (GtkWidget *table, int num, int row) {
 static GtkWidget *server_stats_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *alignment;
-  GtkWidget *frame;
+  GtkWidget *frame = NULL;
   GtkWidget *table;
   GtkWidget *game_label;
+  GtkWidget *scrollwin;
   int i;
   int row = 0;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-  alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_box_pack_start (GTK_BOX (page_vbox), alignment, TRUE, TRUE, 0);
+  scrollwin = gtk_scrolled_window_new (NULL, NULL);
+  gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
 
-  frame = gtk_frame_new (NULL);
-  gtk_container_add (GTK_CONTAINER (alignment), frame);
+  alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
+
+//  frame = gtk_frame_new (NULL);
+//  gtk_container_add (GTK_CONTAINER (alignment), frame);
 
   table = gtk_table_new (GAMES_TOTAL + 2, 7, FALSE);
+  gtk_container_add (GTK_CONTAINER (alignment), table);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-  gtk_container_add (GTK_CONTAINER (frame), table);
 
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table), 8);
@@ -373,7 +379,8 @@ static GtkWidget *server_stats_page (void) {
   put_server_stats (table, 0, row + 1);
 
   gtk_widget_show (table);
-  gtk_widget_show (frame);
+  gtk_widget_show (scrollwin);
+//  gtk_widget_show (frame);
 
   gtk_widget_show (alignment);
   gtk_widget_show (page_vbox);
@@ -399,8 +406,7 @@ static void arch_notebook_page (GtkWidget *notebook,
 
   table = gtk_table_new (OS_NUM + 2, CPU_NUM + 3, FALSE);
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, 
-                                               game_pixmap_with_label (type));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, NULL);
 
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
@@ -449,38 +455,70 @@ static void arch_notebook_page (GtkWidget *notebook,
   gtk_widget_show (table);
 }
 
+gboolean create_server_type_menu_filter_hasharch(enum server_type type)
+{
+    if ((!games[type].cmd && default_show_only_configured_games)
+	  || !games[type].arch_identifier)
+	return FALSE;
+    else
+	return TRUE;
+}
+
+static void select_server_type_callback(GtkWidget *widget, enum server_type type)
+{
+  gtk_notebook_set_page (GTK_NOTEBOOK (arch_notebook), srv_archs[type].notebookpage );
+  selected_type = type;
+}
 
 static GtkWidget *archs_stats_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *alignment;
-  int pagenum;
+  GtkWidget *option_menu;
+  GtkWidget *hbox;
+  int pagenum = 0;
   enum server_type type = Q2_SERVER;
+  enum server_type to_activate = UNKNOWN_SERVER;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
+
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_box_pack_start (GTK_BOX (page_vbox), alignment, TRUE, TRUE, 0);
 
   arch_notebook = gtk_notebook_new ();
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (arch_notebook), FALSE);
   gtk_notebook_set_tab_pos (GTK_NOTEBOOK (arch_notebook), GTK_POS_TOP);
   gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (arch_notebook), 4);
+  gtk_notebook_set_show_border(GTK_NOTEBOOK(arch_notebook), FALSE);
   gtk_container_add (GTK_CONTAINER (alignment), arch_notebook);
 
-  for (type = 0; type < GAMES_TOTAL; type++)
+  to_activate = config_get_int_with_default ("/" CONFIG_FILE "/Statistics/game", 0);
+
+  for (type = 0; type < GAMES_TOTAL; ++type)
   {
-    // Skip a game if it's not configured and show only configured is enabled
-    if (!games[type].cmd && default_show_only_configured_games)
+    if(!create_server_type_menu_filter_hasharch(type))
       continue;
 
-    if(games[type].arch_identifier)
-    {
-      arch_notebook_page (arch_notebook, type, &srv_archs[type]);
-    }
-  }
-  pagenum = config_get_int_with_default ("/" CONFIG_FILE "/Statistics/game", 0);
+    srv_archs[type].notebookpage=pagenum++;
 
-  gtk_notebook_set_page (GTK_NOTEBOOK (arch_notebook), pagenum );
+    arch_notebook_page (arch_notebook, type, &srv_archs[type]);
+  }
+
+  // the notebook must exist to allow activate events of the menu
+  hbox = gtk_hbox_new(FALSE,0);
+  gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
+
+    option_menu = create_server_type_menu (to_activate,
+		    create_server_type_menu_filter_hasharch,
+		    GTK_SIGNAL_FUNC(select_server_type_callback));
+
+
+    gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
+    gtk_widget_show (option_menu);
+
+  gtk_widget_show(hbox);
+
+  gtk_box_pack_start (GTK_BOX (page_vbox), alignment, TRUE, TRUE, 0);
 
   gtk_widget_show (arch_notebook);
   gtk_widget_show (alignment);
@@ -490,12 +528,9 @@ static GtkWidget *archs_stats_page (void) {
 }
 
 
-static void grab_defaults (GtkWidget *w, gpointer data) {
-  int pagenum;
-
-  pagenum = gtk_notebook_get_current_page (GTK_NOTEBOOK (arch_notebook));
-
-  config_set_int ("/" CONFIG_FILE "/Statistics/game", pagenum);
+static void grab_defaults (GtkWidget *w, gpointer data)
+{
+  config_set_int ("/" CONFIG_FILE "/Statistics/game", selected_type);
 
   config_set_string ("/" CONFIG_FILE "/Statistics/page", 
         (gtk_notebook_get_current_page (GTK_NOTEBOOK (stat_notebook)) == 0) ?
@@ -517,7 +552,7 @@ void statistics_dialog (void) {
   collect_statistics ();
 
   window = dialog_create_modal_transient_window (_("Statistics"), 
-                                                           TRUE, FALSE, NULL);
+                                                           TRUE, TRUE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
   gtk_container_add (GTK_CONTAINER (window), main_vbox);
@@ -529,7 +564,7 @@ void statistics_dialog (void) {
   stat_notebook = gtk_notebook_new ();
   gtk_notebook_set_tab_pos (GTK_NOTEBOOK (stat_notebook), GTK_POS_TOP);
   gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (stat_notebook), 4);
-  gtk_box_pack_start (GTK_BOX (main_vbox), stat_notebook, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_vbox), stat_notebook, TRUE, TRUE, 0);
 
   page = server_stats_page ();
   label = gtk_label_new (_(srv_label));

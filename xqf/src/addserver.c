@@ -52,46 +52,6 @@ static void select_server_type_callback (GtkWidget *widget,
 }
 
 
-static GtkWidget *create_server_type_menu (enum server_type type) {
-  GtkWidget *menu;
-  GtkWidget *menu_item;
-  GtkWidget *first_menu_item = NULL;
-  int i;
-  int j = 0;
-  
-  menu = gtk_menu_new ();
-
-  for (i = 0; i < GAMES_TOTAL; i++) {
-
-    // Skip a game if it's not configured and show only configured is enabled
-    if (!games[i].cmd && default_show_only_configured_games)
-      continue;
-  
-    if (j == type) {
-      // Store first valid game menu item for gtk_menu_item_activate below
-      menu_item = first_menu_item = gtk_menu_item_new ();
-    }
-    else
-      menu_item = gtk_menu_item_new ();
-    
-    j++;
-      
-    gtk_menu_append (GTK_MENU (menu), menu_item);
-
-    gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
-
-    gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                 GTK_SIGNAL_FUNC (select_server_type_callback), (gpointer) i);
-
-    gtk_widget_show (menu_item);
-  }
-  
-  // initiates callback to set servertype to first configured game
-  gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
-  
-  return menu;
-}
-
 
 char *add_server_dialog (enum server_type *type) {
   GtkWidget *window;
@@ -102,8 +62,6 @@ char *add_server_dialog (enum server_type *type) {
   GtkWidget *button;
   GtkWidget *hseparator;
   char *typestr;
-  int i;
-  int menu_type = 0;
 
   enter_server_result = NULL;
   server_type = type;
@@ -119,30 +77,6 @@ char *add_server_dialog (enum server_type *type) {
     *type = 0; // Set to first game
   }
 
-  if (default_show_only_configured_games) {
-    // Find last configured game in list and set menu_type for menu position
-    for (i = 0; i < GAMES_TOTAL; i++) {
-      if (games[i].cmd) {
-        if (i == *type)
-          break;
-        menu_type++;
-      }
-    }
-    if (i == GAMES_TOTAL) {
-      // Game not found propbably because last added game is no longer configured.
-      // Look for first configured game and use that.
-      for (i = 0; i < GAMES_TOTAL; i++) {
-        if (games[i].cmd) {
-          *type = i;
-          menu_type = 0;
-          break;
-        }
-      }
-    }
-  }
-  else
-    menu_type = *type;
-    
   window = dialog_create_modal_transient_window (_("Add Server"), 
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 0);
@@ -182,12 +116,11 @@ char *add_server_dialog (enum server_type *type) {
 
   /* Server Type Option Menu */
 
-  option_menu = gtk_option_menu_new ();
+  option_menu = create_server_type_menu (*type,
+		      create_server_type_menu_filter_configured,
+		      GTK_SIGNAL_FUNC(select_server_type_callback));
+
   gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), 
-                                                  create_server_type_menu (menu_type));
-  // Set default type passed to add_server_dialog
-  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
   gtk_widget_show (option_menu);
 
   gtk_widget_show (hbox);
