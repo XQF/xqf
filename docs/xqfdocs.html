@@ -7,7 +7,7 @@
 </head>
 <body>
 <center> <b><u><font size="+3">XQF 1.0</font></u></b>
-<p>August ?th, 2004<br>
+<p>August 15th, 2004<br>
 Documentatiom written by:<br>
 Alex Burger &lt;<a href="mailto:alex_b@users.sourceforge.net">alex_b@users.sourceforge.net</a>&gt;</p>
 <p>Documentation contributors:<br>
@@ -56,7 +56,7 @@ of Fortune (1.06)</a></li>
           <li><a href="#mozTocId251777">Soldier
 of Fortune 2</a></li>
           <li><a href="#mozTocId76858">Unreal
-Tournament (436)</a></li>
+Tournament (436) and Rune </a></li>
           <li><a href="#mozTocId148550">Half-Life</a></li>
           <li><a href="#mozTocId111654">Descent
 3</a></li>
@@ -67,7 +67,8 @@ of Honor</a></li>
           <li><a href="#mozTocId755086">Call
 of Duty</a></li>
           <li><a href="#mozTocId941470">Savage</a></li>
-          <li><a href="#mozTocId290185">Jedi Knight: Jedi Academy</a></li>
+          <li><a href="#mozTocId290185">Jedi
+Knight: Jedi Academy</a></li>
         </ol>
       </li>
     </ol>
@@ -181,7 +182,8 @@ using QStat 2.4a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; teamplay, etc...)<br>
 &nbsp; - Remote server administration tool (rcon) for QuakeWorld,
 HexenWorld,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quake2, Quake3: Arena, Half-Life,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quake2, Quake3, RTCW, Enemy Territory,
+Doom3, Half-Life,
 Sin, Kingpin, Heretic2 servers&nbsp;<br>
 &nbsp; - Busy server redial<br>
 </p>
@@ -205,7 +207,6 @@ server listings from the Web<br>
 <p>XQF has been tested as is known to run on Intel / AMD and PowerPC
 platforms.<br>
 &nbsp;</p>
-<p></p>
 <h1><a class="mozTocH1" name="mozTocId65065"></a><a name="Downloading"></a>Downloading</h1>
 <p>XQF can be downloaded as a pre-compiled binary for some
 distributions, or as source code. The source code can be downloaded
@@ -417,7 +418,6 @@ vm_* settings are correct on the command line</li>
 stable now</li>
   </ul>
 </blockquote>
-<p></p>
 <h1><a class="mozTocH1" name="mozTocId861671"></a><a
  name="Installation_/_Compiling"></a>Installation
 / Compiling</h1>
@@ -425,9 +425,10 @@ stable now</li>
   <h2><a class="mozTocH2" name="mozTocId790280"></a><a
  name="RPM_Binary_package"></a>Loki-Setup
 installer</h2>
-  <blockquote>Execute the commands
-    <p><b><i>chmod 755 xqf-xxx.i386.run<br>
-./</i></b><b><i>xqf-xxx.i386.run<br>
+  <blockquote>Execute the commands (substitute xxx with the actual
+version number):
+    <p><b><i>chmod 755 xqf-xxx.x86.run<br>
+./</i></b><b><i>xqf-xxx.x86.run<br>
     </i></b></p>
     <p>The installer alreay includes suitable versions of qstat and
 GeoIP. You still need to install the gdk-pixbuf package provided by
@@ -437,7 +438,8 @@ your distribution. The installer itself additionally depends on libxml1.<br>
   <h2><a class="mozTocH2" name="mozTocId297059"></a><a
  name="RPM_Binary_package"></a>RPM
 Binary package</h2>
-  <blockquote>As root, execute the command:
+  <blockquote>As root, execute the command (substitute xxx with the
+actual version number):
     <p><b><i>rpm -Uvh xqf.xxx.i386.rpm<br>
     </i></b><br>
 The RPM package depends on qstat, GeoIP and gdk-pixbuf. The latter is
@@ -448,7 +450,8 @@ can be downloaded from the XQF home page.<br>
   <h2><a class="mozTocH2" name="mozTocId688017"></a><a
  name="DEB_Binary_package"></a>DEB Binary
 package</h2>
-  <blockquote>As root, execute the command:
+  <blockquote>As root, execute the command (substitute xxx with the
+actual version number):
     <p><b><i>dpkg -i xqf_xxx-v_arch.deb</i></b></p>
   </blockquote>
   <h2><a class="mozTocH2" name="mozTocId497478"></a><a
@@ -457,7 +460,8 @@ code</h2>
   <blockquote>Make sure you have the development packages of GTK,
 gdk-pixbuf, GLIB and X installed.<br>
     <br>
-Extract the source code:
+Extract the source code (substitute xxx with the actual version
+number):
     <p><b><i>tar xvfz xqf-xxx.tar.gz</i></b></p>
     <p>cd into the directory:</p>
     <p><b><i>cd xqf-*</i></b></p>
@@ -506,29 +510,41 @@ The first time you launch XQF, it will attempt to search for games in
 your path. &nbsp;If any are found, it will automatically
 configure the command line for the game and attempt to configure
 the game directory based on the command line found. &nbsp;This
-should work with Quake1, QuakeWorld, Quake2, Quake3, Return to
-Castle Wolfenstein, Enemy Territory, Soldier of Fortune,
-Descent3, Tribes 2, Unreal Tournament 1 / 2003, Rune and Serious
-Sam 1&amp;2<br>
+should work with most native games. Wine games need to be configured
+manually.<br>
   <br>
 If no games are found, the Source list will show ALL supported
 games. &nbsp;If XQF finds one or more supported games, it will
 only show CONFIGURED games in the Source column. &nbsp;See the
 Preferences / Appearance menu documentation for more information.<br>
   <br>
-&nbsp;XQF doesn't accept any command line options at the moment,
-except for a debug setting. </blockquote>
-<blockquote> <b><i>xqf -d</i> N</b>
-  <p>Sets debug level to `N', where N is greater than 0. If N is
-greater than 5, XQF will output a lot of debug information.</p>
+&nbsp;XQF accepts several command line parameters:<b><br>
+  </b>
+  <ul>
+    <li><em>--launch "[SERVERTYPE] IP"</em>:&nbsp; adds the server
+specified with <em>IP</em> (e.g. 10.10.0.1:27666) to the favorites,
+queries it and launches the game. XQF tries to automatically determine
+the correct game based on the port. If the autodetections fails XQF
+will ask you for the game. Alternatively you may directly specify the
+game type on the command line (e.g. Q3S).</li>
+    <li><em>--add&nbsp;&nbsp;&nbsp; "[SERVERTYPE] IP"</em>: adds the
+specified server to the favories and queries it. Basically the same as <em>--launch</em>
+except that the game is not launched ;-)</li>
+    <li><em>--debug &lt;level&gt;</em>:&nbsp; set the specified debug
+level. Use this if you experience problems with XQF. Level 3 is usually
+sufficient for debugging most problems. Higher levels product <span
+ style="text-decoration: underline;">lots</span> of output.</li>
+    <li><em>--version</em>: prints the version of XQF.<br>
+    </li>
+  </ul>
   <p>XQF is normally installed into /usr/local/bin.&nbsp; If
 /usr/local/bin is not in your path, launch xqf with:</p>
-  <p><b><i>/usr/local/bin/xqf -d</i> N</b></p>
+  <p><b><i>/usr/local/bin/xqf</i></b></p>
   <p>You can also add the directory to your path, or simply make
 a symbolic link in /usr/bin.&nbsp; For example, as root:</p>
   <p><b>ln -s /usr/local/bin/xqf /usr/bin/xqf</b></p>
-  <p>XQF can be customized via GTK's rc files.&nbsp; XQF parses files
-/etc/gtkrc, $HOME/.gtkrc and $HOME/.qf/gtkrc.<br>
+  <p>XQF can be customized via GTK's rc files.&nbsp; XQF parses
+$HOME/.qf/gtkrc in addition to the built in defaults of GTK.<br>
 &nbsp;</p>
 </blockquote>
 <h2><a class="mozTocH2" name="mozTocId400409"></a><a
@@ -560,7 +576,7 @@ Record S Filter, P Filter, SF Cfg, PF Cfg
   <blockquote> Enable the currently selected Server filter </blockquote>
   <b>P Filter:</b>
   <blockquote> Enable the currently selected Player filter </blockquote>
-  <b></b></blockquote>
+</blockquote>
 <a name="Window_Panes"></a><b><u><font size="+1">Window Panes:</font></u></b>
 <br>
 &nbsp;
@@ -1508,6 +1524,11 @@ pane.<br>
     </p>
   </blockquote>
 </blockquote>
+<p><a name="Filters"></a><b><u><font size="+1">Quick Filter:</font></u></b><br>
+</p>
+<blockquote>&nbsp; Words typed here are searched in every server's
+name, hostname, map, game, gametype and rule value.
+</blockquote>
 <h2><a class="mozTocH2" name="mozTocId971220"></a><a
  name="Game_Specific_Information"></a>Game
 Specific Information</h2>
@@ -1646,8 +1667,7 @@ Half-Life.<br>
 To play Half-Life under Linux, see the following sites:<br>
     <br>
     <a href="http://lhl.linuxgames.com">Linux Half-Life</a><br>
-    <a href="http://www.transgaming.com/">TransGaming</a><a
- href="http://lhl.linuxgames.com"></a><br>
+    <a href="http://www.transgaming.com/">TransGaming</a><br>
     <br>
   </blockquote>
 <!--
