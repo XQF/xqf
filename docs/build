@@ -1,6 +1,37 @@
 ?????
 
+RedHat RPM:
+
+RedHat 8.0
+libtool-1.4.2-12
+gettext-0.11.4-3
+automake1.6.3-1
+readline-devel-4.3-3
+
+-reference - http://www.rpm.org/RPM-HOWTO/build.html
+-checkout clean xqf
+-./autogen.sh
+-./configure --enable-externalrcon
+-make dist
+-copy xqf.xxx.tar.gz /usr/src/redhat/SOURCES
+-cp xqf.spec xqf-(version).spec (eg: xqf-0.9.10.spec)
+-Modify new spec file - Change Packager to you. Ex: Alex Burger <alex_b@users.sourceforge.net>
+-Add %{_prefix}/bin/xqf-rcon to bottom of spec file to include new rcon
+-rpmbuild -ba xqf-(version).spec
+-RPM should be in /usr/src/redhat/RPMS/i386
+-SRPM should be in /usr/src/redhat/SRPMS
+-view contents of RPM: rpm -q -l -p xxxx.rpm
+-view info for RPM: rpm -q -i -p xxxx.rpm
+
+
 Mandrake RPM:
+
+Mandrake 9.0
+libtool-1.4.2-9mdk
+gettext-0.11.2-8mdk
+automake1.6-1.6.3-1mdk
+readline-devel-4.3-4mdk
+
 -reference - http://www.rpm.org/RPM-HOWTO/build.html
 -checkout clean xqf
 -./autogen.sh
