@@ -1,3 +1,7 @@
+May 23, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- enable custom args for all games
+- add RedOrchestra custom arguments for UT2004
+
 May 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - replace no longer working Tribes2 master server addresses with
   current ones (#954570)

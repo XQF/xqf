@@ -671,6 +671,7 @@ static void drop_key (struct config_file *file,
   g_free (key->name);
   g_free (key->value);
   section->keys = g_list_remove (section->keys, key);
+  g_free(key);
 
   file->dirty = TRUE;
 
