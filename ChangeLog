@@ -1,3 +1,6 @@
+Mar 22, 2004: Jordi Mallach <jordi@sindominio.net>
+- fix clean rule in toplevel Makefile.am.
+
 Mar 21, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - released 0.9.14
 

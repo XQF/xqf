@@ -2,10 +2,13 @@ SUBDIRS = po src docs pixmaps
 
 man_MANS = xqf.6
 
-Applicationsdir = $(datadir)/applications
-Applications_in_files = xqf.desktop.in
-Applications_DATA = $(Applications_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
+
+DESKTOP_IN_FILES = xqf.desktop.in
+DESKTOP_FILES = $(DESKTOP_IN_FILES:.desktop.in=.desktop)
+
+desktopdir= $(datadir)/applications
+desktop_DATA = $(DESKTOP_FILES)
 
 EXTRA_DIST =			\
 	BUGS			\
@@ -13,7 +16,7 @@ EXTRA_DIST =			\
 	clean.sh		\
 	$(man_MANS)		\
 	xqf.spec		\
-	$(Applications_DATA)	\
+	$(DESKTOP_IN_FILES)	\
 	intltool-merge.in	\
 	intltool-update.in	\
 	intltool-extract.in
@@ -23,5 +26,5 @@ DISTCLEANFILES =			\
 	intltool-extract		\
 	intltool-merge			\
 	intltool-update			\
-	$(Applications_DATA)
+	$(DESKTOP_FILES)
 
