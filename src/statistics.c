@@ -316,6 +316,7 @@ static GtkWidget *server_stats_page (void) {
   GtkWidget *table;
   GtkWidget *game_label;
   int i;
+  int row = 0;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -342,7 +343,7 @@ static GtkWidget *server_stats_page (void) {
   for (i = 0; i < 6; i++)
     put_label_to_table (table, _(srv_headers[i]), 1.0, i + 1, 0);
 
-  for (i = 0; i < GAMES_TOTAL; i++) {
+  for (i = 0, row = 1; i < GAMES_TOTAL; i++) {
   
     // Skip a game if it's not configured and show only configured is enabled
     if (!games[i].cmd && default_show_only_configured_games)
@@ -351,9 +352,9 @@ static GtkWidget *server_stats_page (void) {
     game_label = game_pixmap_with_label (i);
     gtk_table_attach_defaults (GTK_TABLE (table), 
 				 game_label, 
-				 0, 1, i + 1, i + 2);
+				 0, 1, row, row+1);
 
-    put_server_stats (table, i, i + 1);
+    put_server_stats (table, i, row);
 
     if (i > 0) {
       srv_stats[0].servers += srv_stats[i].servers;
@@ -363,11 +364,13 @@ static GtkWidget *server_stats_page (void) {
       srv_stats[0].na      += srv_stats[i].na;
       srv_stats[0].players += srv_stats[i].players;
     }
+    
+    row++;
   }
 
-  put_label_to_table (table, _("Total"), 0.0, 0, GAMES_TOTAL + 1);
+  put_label_to_table (table, _("Total"), 0.0, 0, row + 1);
 
-  put_server_stats (table, 0, GAMES_TOTAL + 1);
+  put_server_stats (table, 0, row + 1);
 
   gtk_widget_show (table);
   gtk_widget_show (frame);

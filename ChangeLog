@@ -8,6 +8,7 @@ Oct 13, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - comment out unused redial code
 - rename "Delete" -> "Remove from Favorites"
 - update german translation
+- remove empty lines for unconfigures games in statistics dialog
 
 Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - cleaned up get_custom_arguments
