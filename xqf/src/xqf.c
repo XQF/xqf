@@ -817,7 +817,7 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
   }
 
   if(redialserver == 1)
-    print_status (main_status_bar, _("Waiting to redial server..."));
+    print_status (main_status_bar, _("Waiting to redial server(s)..."));
   else
     print_status (main_status_bar, _("Done."));
 
@@ -934,7 +934,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
 
         server_clist_refresh_server (s);
 
-        print_status (main_status_bar, _("Waiting to redial server..."));
+        print_status (main_status_bar, _("Waiting to redial server(s)..."));
         progress_bar_reset (main_progress_bar);
 
         return;
