@@ -1,4 +1,7 @@
 Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Only Q3A uses find_game_dir now
+
+Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Changed default port for UT2003 to 7777
 - Continuing on with the October 11th addition of get_custom_arguments:
   -arguments now stored in a GSList

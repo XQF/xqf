@@ -2222,10 +2222,7 @@ static int qw_exec (const struct condef *con, int forkit) {
     if (con->gamedir) {
       argv[argi++] = "+set";
       argv[argi++] = "game";
-      //argv[argi++] = con->gamedir;
-
-      // Get game dir regardless of case
-      argv[argi++] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
+      argv[argi++] = con->gamedir;
     }
 
     break;
@@ -2324,28 +2321,7 @@ static int q2_exec (const struct condef *con, int forkit) {
   if (con->gamedir) {
     argv[argi++] = "+set";
     argv[argi++] = "game";
-
-    // Get game dir regardless of case.  results: 0=not found, 1=exact, 2=differnet case match
-
-    // Look in home directory /.quake2 first
-    argv[argi] = to_free = find_game_dir(expand_tilde ("~/.quake2"), con->gamedir, &game_match_result);
-    debug (1, "find_game_dir result: %d",game_match_result);
-      
-    if (game_match_result == 0) {
-      // Didn't find in home directory /.q3a so look in real directory if defined
-      if (to_free) // Holding what was returned from find_game_dir above.  Get rid of it
-        g_free (to_free);
-
-      // Pass real_dir.  If real_dir wasn't defined, will get copy of con->s->game back
-      argv[argi] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
-    }
-      
-    argi++;
-
-    //argv[argi++] = con->gamedir;
-
-    // Get game dir regardless of case
-    //argv[argi++] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
+    argv[argi++] = con->gamedir;
   }
 
   if (con->password || con->rcon_password || 
@@ -2426,11 +2402,8 @@ static int q2_exec_generic (const struct condef *con, int forkit) {
   if (con->gamedir) {
     argv[argi++] = "+set";
     argv[argi++] = "game";
-    //argv[argi++] = con->gamedir;
+    argv[argi++] = con->gamedir;
     
-    // Get game dir regardless of case
-    argv[argi++] = to_free = find_game_dir(g->real_dir, con->gamedir, &game_match_result);
-
   }
 
   if (con->server) {
@@ -2611,18 +2584,15 @@ static int q3_exec (const struct condef *con, int forkit) {
       argv[argi++] = "+set fs_game";
       //argv[argi++] = con->s->game;
       
-      // Get game dir regardless of case.  results: 0=not found, 1=exact, 2=differnet case match
-
       // Look in home directory /.q3a first
       argv[argi] = to_free = find_game_dir(expand_tilde ("~/.q3a"), con->s->game, &game_match_result);
       debug (1, "find_game_dir result: %d",game_match_result);
       
-      if (game_match_result == 0) {
-        // Didn't find in home directory /.q3a so look in real directory if defined
+      if (game_match_result == 0) {  		// 0=not found, 1=exact, 2=differnet case match
         if (to_free) // Holding what was returned from find_game_dir above.  Get rid of it
           g_free (to_free);
 
-        // Pass real_dir.  If real_dir wasn't defined, will get copy of con->s->game back
+        // Didn't find in home directory /.q3a so look in real directory if defined
         argv[argi] = to_free = find_game_dir(g->real_dir, con->s->game, &game_match_result);
       }
       

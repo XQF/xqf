@@ -2,12 +2,19 @@ XQF 0.9.10 -- ???? ?, ????
 ~~~~~~~~~~
 Changes since 0.9.9:
 
+o
+o 
+o Greatly speed up the startup of XQF when loading large lists
+o Ability to set automatically set cl_punkbuster when connecting to a server in Q3A
+o Added Punkbuster icon to Priv column
+o Ability to defind custom command-line arguments for a game based on the 'game' type
+o Q3A now searches for a matching mod directory.  Should correctly launch even if mod directory is incorrect by case
 o Various segfault fixes
 o Added sound disable support for Unreal based games
 o Can now hide games that are not configured
 o Changed default Quake3 protocol to 68
 o Sound support for XQF events 
-o Busy server redial
+o Busy server redial with reserved slots support
 o Soldier of Fortune 2 support  (requires qstat sof2s gametype via ~/.qstatrc or qstat >2.5b)
 o Use correct parameters (-game,+connect,+password) when launching Half-Life
 o New master type of "file" to read IP addresses from a file
@@ -18,6 +25,7 @@ o Fixed Tribes2 master support
 o Unlimited number of server filters instead of ten
 o Changed default Wolf protocol to 59  
 o Standalone rcon program that doesn't need X
+o Quake3 launching now uses 'game' instead of 'gamename' to help prevent launch problems do to case
 
 
 XQF 0.9.9 -- July 3, 2002
