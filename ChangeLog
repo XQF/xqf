@@ -1,3 +1,6 @@
+Aug 03, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- Fix default ping value when reading server filters
+
 Jul 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Support for America's Army. Thanks Florian Riepler for the patch.
 
