@@ -542,6 +542,35 @@ struct game games[] = {
     NULL		// game_cfg
   },
   {
+    UT2D_SERVER,
+    GAME_CONNECT,
+    "Unreal 2003 Demo",
+    7787,
+    0,
+    "UT2DS",
+    "GPS",
+    "-gps",
+    "gps",
+    &ut2_pix,
+
+    un_parse_player,
+    quake_parse_server,
+    un_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    ut_exec,
+    NULL,
+    quake_save_info,
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
+  },
+
+  {
     RUNE_SERVER,
     GAME_CONNECT,
     "Rune",
@@ -1070,6 +1099,10 @@ static void un_analyze_serverinfo (struct server *s) {
       {
 	s->type = UN_SERVER;
       }
+      else if(!strcmp(info_ptr[1],"ut2d"))
+      {
+	s->type = UT2D_SERVER;
+      }
     }
 
     //password required?
@@ -1078,12 +1111,16 @@ static void un_analyze_serverinfo (struct server *s) {
     }
   }
 
-  // adjust port if type has changed
-  if(s->type != GPS_SERVER && hostport )
+  // adjust port for unreal and rune
+  switch(s->type)
   {
-    server_change_port(s,hostport);
+    case UN_SERVER:
+    case RUNE_SERVER:
+      server_change_port(s,hostport);
+      break;
+    default:
+      break;
   }
-
 }
 
 static void descent3_analyze_serverinfo (struct server *s) {
@@ -2410,6 +2447,9 @@ static int ut_exec (const struct condef *con, int forkit) {
   char *cmd;
   struct game *g = &games[con->s->type];
   int retval;
+  char **info_ptr;
+  char* hostport=NULL;
+  char* real_server=NULL;
 
   cmd = strdup_strip (g->cmd);
 
@@ -2417,13 +2457,34 @@ static int ut_exec (const struct condef *con, int forkit) {
   while ((argv[argi] = strtok (NULL, delim)) != NULL)
     argi++;
 
+
 // Pass server IP address first otherwise it won't work.
 // Make sure ut/ut script (from installed game) contains
 // exec "./ut-bin" $* -log and not -log $* at the end
 // otherwise XQF you can not connect via the command line!
 
-  if (con->server) {
-    argv[argi++] = con->server;
+  if(con->s->type == UT2D_SERVER)
+  {
+    // go through all server rules
+    for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
+      if (!strcmp (*info_ptr, "hostport")) {
+	hostport=info_ptr[1];
+      }
+    }
+  }
+
+  if (con->server)
+  {
+    // gamespy port can be different from game port
+    if(hostport)
+    {
+      real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
+      argv[argi++] = real_server;
+    }
+    else
+    {
+      argv[argi++] = con->server;
+    }
   }
 
   if (default_nosound) {
@@ -2435,6 +2496,7 @@ static int ut_exec (const struct condef *con, int forkit) {
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
   g_free (cmd);
+  g_free (real_server);
   return retval;
 }
 

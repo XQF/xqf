@@ -3171,6 +3171,7 @@ static void user_fix_defaults (void) {
   config_set_string ("/" CONFIG_FILE "/Game: T2S/cmd", "tribes2");
   config_set_string ("/" CONFIG_FILE "/Game: WOS/cmd", "wolf");
   config_set_string ("/" CONFIG_FILE "/Game: UNS/cmd", "ut");
+  config_set_string ("/" CONFIG_FILE "/Game: UT2DS/cmd", "ut2003_demo");
 
   config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
                                                           g_get_user_name ());
