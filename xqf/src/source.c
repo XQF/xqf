@@ -1095,8 +1095,8 @@ static char *builtin_masters_update_info[] = {
   "ADD EFS http://www.gameaholic.com/servers/qspy-startrekeliteforce Gameaholic.com",
   "ADD EFS master://master.stef1.ravensoft.com:27953  Ravensoft",
 
-  "ADD D3P master://gt.pxo.net:3445 PXO",
-  "ADD D3P http://www.gameaholic.com/servers/qspy-descent3 gameaholic.com",
+  "DELETE D3P master://gt.pxo.net:3445 PXO", // doesn't work
+  "DELETE D3P http://www.gameaholic.com/servers/qspy-descent3 gameaholic.com", // no usable servers anymore
 
   "ADD SFS http://www.gameaholic.com/servers/qspy-soldieroffortune gameaholic.com",
 
@@ -1164,6 +1164,7 @@ static char *builtin_gslist_masters_update_info[] = {
   "ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2 Gslist",
   "ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2d Gslist (Demo)",
   "ADD AMS gslist://master.gamespy.com;portadjust=-1;gsmtype=armygame Gslist",
+  "ADD D3G gslist://master.gamespy.com;gsmtype=descent3 Gslist",
 //  "ADD GPS gslist://master.gamespy.com;gsmtype=mohaa Gslist", // no fixed port offset
 //  "ADD SMS gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussam Gslist", // not compatible with linux version
 //  "ADD SMSSE gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussamse Gslist", // not compatible with linux version
