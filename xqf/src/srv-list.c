@@ -660,7 +660,7 @@ void server_clist_build_filtered (GSList *server_list, int update) {
 //  struct server *server;
   int row;
 
-  debug(3, "server_clist_build_filterd() -- Update? %d", update);
+  debug(3, "update: %d", update);
 
 #if 0
 
