@@ -19,6 +19,8 @@
 #ifndef __SERVER_H__
 #define __SERVER_H__
 
+#include <stdio.h>
+
 #include <glib.h>
 
 #include "xqf.h"

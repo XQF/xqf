@@ -47,6 +47,7 @@ xqf.c \
 xqf-ui.c \
 xutils.c \
 zipped.c \
+redial.c \
 addmaster.h \
 addserver.h \
 config.h \
@@ -82,4 +83,5 @@ xqf-ui.h \
 xqf.h \
 xutils.h \
 zipped.h \
+redial.h \
 i18n.h
