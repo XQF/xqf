@@ -980,6 +980,19 @@ static void q3_analyze_serverinfo (struct server *s) {
 	s->game  = info_ptr[1];
       }
     }
+
+    else if (strcmp (*info_ptr, "version" ) == 0) {
+      if (strstr (info_ptr[1], "linux")) {
+	s->sv_os = 'L';
+      } else if (strstr (info_ptr[1], "win" )) {
+	s->sv_os = 'W';
+      } else if (strstr (info_ptr[1], "Mac" )) {
+	s->sv_os = 'M';
+      } else {
+	s->sv_os = '?';
+      }
+    }
+    
     else if (strcmp (*info_ptr, "gamename") == 0) {
       if (strcmp (info_ptr[1], "baseq3")) {
 	/* We only set the mod if the name is NOT baseq3. */
@@ -1719,6 +1732,18 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "+set fs_game";
     argv[argi++] = fs_game;
   }
+
+  /* 
+     Apprenenly for q3a version 1.29 Linux users are supposed
+     to go back to vm_* = 0 because they fixed the vm compiler.
+  */
+  if( fs_game =  find_server_setting_for_key ("version", con->s->info)){
+    if (strstr( fs_game, "1.29")){  
+      argv[argi++] = "+set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
+      debug (5, "Game is version %s, run with all vm_* at zero.\n", fs_game);
+    }    
+  }
+  
 
   /* FIX ME
     BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0

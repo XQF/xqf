@@ -90,8 +90,8 @@ void assemble_server_address (char *buf, int size, struct server *s) {
 static int server_clist_refresh_row (struct server *s, int row) {
   GdkPixmap *server_pixmap;
   GdkBitmap *server_pixmask;
-  char *text[9];
-  char buf1[256], buf2[32], buf3[32], buf4[32];
+  char *text[10];
+  char buf1[256], buf2[32], buf3[32], buf4[32], buf5[4];
   char *retries;
   struct pixmap *retries_pix = NULL;
   int col;
@@ -143,13 +143,20 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
   text[6] = (s->map) ?  s->map : NULL;
   text[7] = (s->game)? s->game : NULL;
-  text[8] = (s->gametype) ? s->gametype : NULL;
+  text[8] = (s->gametype) ? s->gametype : NULL; 
+  
+  /*
+    baa- Change xqf-ui.c such that the server_clist_def calls out
+    10 columns if you want this shown.
+  */
+  sprintf (buf5, "[%c]", ( s->sv_os ? s->sv_os : ' '));
+  text[9] = buf5;
 
   if (row < 0) {
     row = gtk_clist_append (server_clist, text);
   }
   else {
-    for (col = 1; col < 8; col++) {
+    for (col = 1; col < 9; col++) {
       gtk_clist_set_text (server_clist, row, col, text[col]);
     }
   }

@@ -77,6 +77,7 @@ static  GtkWidget *filter_no_cheats_check_button;
 static  GtkWidget *filter_no_password_check_button;
 static  GtkWidget *server_filter_name_entry;
 static  GtkWidget *game_contains_entry;
+static  GtkWidget *filter_game_type_entry;
 static  GtkWidget *version_contains_entry;
 
 
@@ -165,8 +166,16 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
   /* Filter Zero is No Filter */
   if( current_server_filter == 0 ){ return TRUE; }
 
+  /* So that we do not get a core dump in the check below we 
+     will first check that if we are filtering on a string that
+     the string is actually set in the server structure.
+  */
   if( server_filters[current_server_filter].game_contains && 
       strlen( server_filters[current_server_filter].game_contains )  && ! s->game )
+    return FALSE;
+
+  if( server_filters[current_server_filter].game_type && 
+      strlen( server_filters[current_server_filter].game_type )  && ! s->gametype )
     return FALSE;
 
   if( server_filters[current_server_filter].version_contains && 
@@ -187,6 +196,10 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
       ( !server_filters[current_server_filter].game_contains || 
 	!strlen( server_filters[current_server_filter].game_contains ) || 
 	( s->game && strstr( s->game, server_filters[current_server_filter].game_contains ))) &&
+
+      ( !server_filters[current_server_filter].game_type || 
+	!strlen( server_filters[current_server_filter].game_type ) || 
+	( s->gametype && strstr( s->gametype, server_filters[current_server_filter].game_type ))) &&
 
       
       (!server_filters[current_server_filter].filter_not_full    || s->curplayers != s->maxplayers) && 
@@ -216,8 +229,9 @@ static void server_filter_init (void) {
     server_filters[i].filter_no_cheats   = config_get_bool ("no cheats=false");
     server_filters[i].filter_no_password = config_get_bool ("no password=false");
     server_filters[i].filter_name        = config_get_string_with_default ("filter_name",NULL);
-    server_filters[i].game_contains       = config_get_string_with_default ("game_contains",NULL);
+    server_filters[i].game_contains      = config_get_string_with_default ("game_contains",NULL);
     server_filters[i].version_contains   = config_get_string_with_default ("version_contains",NULL);
+    server_filters[i].game_type          = config_get_string_with_default ("game_type",NULL);
     
     /* This is called before the window has been created so
        we cannot set the filter names in the pulldown yet. */
@@ -292,7 +306,7 @@ static void server_filter_new_defaults (void) {
   g_free( gcptr );
 
 
-  /* GAMETYPE string values -- baa */
+  /* GAMECONTAINS string values -- baa */
   gcptr = gtk_editable_get_chars (GTK_EDITABLE (game_contains_entry), 0, -1 );
   text_changed = 0;
   if( strlen( gcptr )){
@@ -357,6 +371,38 @@ static void server_filter_new_defaults (void) {
   g_free( gcptr );
 
 
+  /* GAMETYPE string values -- baa */
+  gcptr = gtk_editable_get_chars (GTK_EDITABLE (filter_game_type_entry), 0, -1 );
+  text_changed = 0;
+  if( strlen( gcptr )){
+    /*
+      First case, the user entered something.  See if the value
+      is different 
+    */
+    if (server_filters[current_server_filter].game_type){
+      if( strcmp( gcptr, server_filters[current_server_filter].game_type )) text_changed = 1;
+      g_free( server_filters[current_server_filter].game_type );
+    } else {
+      text_changed = 1;
+    }
+    server_filters[current_server_filter].game_type = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
+    sprintf( server_filters[current_server_filter].game_type, "%s\0",  gcptr );
+    if (text_changed) {
+      config_set_string ("game_type", server_filters[current_server_filter].game_type );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+  } else {
+    if (server_filters[current_server_filter].game_type){
+      text_changed = 1; /* From something to nothing */
+      g_free( server_filters[current_server_filter].game_type );
+      config_set_string ("game_type", "" );
+      filters[FILTER_SERVER].changed = FILTER_CHANGED;
+    }
+    server_filters[current_server_filter].game_type = NULL;
+  } 
+  g_free( gcptr );
+  /* end game_type filter */
+  
 
   i = GTK_TOGGLE_BUTTON (filter_not_full_check_button)->active;
   if (server_filters[current_server_filter].filter_not_full != i) {
@@ -498,7 +544,7 @@ static void server_filter_page (GtkWidget *notebook) {
   gtk_widget_show (server_filter_name_entry);
   row++;
 
-  /* GAMETYPE Filter -- baa */
+  /* GAMECONTAINS Filter -- baa */
   /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
     
   label = gtk_label_new (_("the game contains the string"));
@@ -516,6 +562,26 @@ static void server_filter_page (GtkWidget *notebook) {
   gtk_table_attach_defaults (GTK_TABLE (table), game_contains_entry, 4, 5, row, row+1);
   gtk_widget_show (game_contains_entry);
   row++;
+
+  /* GAMETYPE Filter -- baa */
+  /* http://developer.gnome.org/doc/API/gtk/gtktable.html */
+    
+  label = gtk_label_new (_("The Game Type Contains the String:"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 
+		    0, 0);
+  gtk_widget_show (label);
+  filter_game_type_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (filter_game_type_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (filter_game_type_entry), TRUE);
+  gtk_entry_set_text (GTK_ENTRY (filter_game_type_entry), 
+		      (server_filters[current_server_filter].game_type) ?
+		      server_filters[current_server_filter].game_type : "");
+
+  gtk_table_attach_defaults (GTK_TABLE (table), filter_game_type_entry, 4, 5, row, row+1);
+  gtk_widget_show (filter_game_type_entry);
+  row++;
+
 
   /* Version Filter -- baa */
     
