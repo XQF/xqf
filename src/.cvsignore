@@ -1,4 +1,5 @@
 gnuconfig.h
+gnuconfig.h.in
 Makefile
 Makefile.in
 stamp-h.in

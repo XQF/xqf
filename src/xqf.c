@@ -1636,7 +1636,7 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	"Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
 	"Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolfenstein, GameSpy master support\n"
 	"Jordi Mallach <jordi@sindominio.net>: Internationalization (i18n) & Spanish translation\n"
-	"Ludwig Nussel <l-n@sourceforge.net>: German translation, i18n & Quake3 fixes\n\n");
+	"Ludwig Nussel <l-n@users.sourceforge.net>: German translation, i18n & various fixes\n\n");
   char *urls = _("http://www.linuxgames.com/xqf/\n"
 	     "http://sourceforge.net/projects/xqf/");
   dialog_ok (_("About XQF"), 

@@ -1,3 +1,7 @@
+Oct 23, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- changed wording and my email in about dialog
+- removed gnuconfig.h.in from cvs
+
 Oct 18, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - fixed compiler warnings
 - replaced some strange sprintf's with g_strdup
