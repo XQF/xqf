@@ -1,4 +1,7 @@
 Feb 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- check for correct version of qstat on startup
+
+Feb 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - reworked dialog for adding master
 - added popup menu for master server tree
 - added function for renaming master servers

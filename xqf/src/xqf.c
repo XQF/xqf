@@ -26,6 +26,15 @@
 #include <arpa/inet.h>	/* inet_ntoa */
 #include <time.h>	/* time */
 #include <string.h>	/* strlen */
+#include <ctype.h>	/* isspace */
+
+// select, fork, pipe ...
+#include <sys/time.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -154,6 +163,202 @@ static GtkWidget *server_filter_1_widget = NULL;
 static GtkWidget *server_filter_2_widget = NULL;
 static GtkWidget *server_filter_3_widget = NULL;
 */
+
+GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
+
+// returns 0 if equal, -1 if too old, 1 if have > expected
+int compare_qstat_version ( const char* have, const char* expected )
+{
+  int have_major, expected_major;
+  int have_minor, expected_minor;
+  char have_pl=0, expected_pl=0;
+  const char* have_pos1=NULL, *expected_pos1=NULL;
+  const char* have_pos2=NULL, *expected_pos2=NULL;
+  char* buf;
+
+  debug(3,"compare_qstat_version(%s,%s)",have,expected);
+
+  if(!strcmp(have,expected)) return 0;
+
+  have_pos1 = strchr(have,'.');
+  expected_pos1 = strchr(expected,'.');
+
+  if(!have_pos1 || !expected_pos1)
+    return -1;
+  
+  buf = g_strndup(have,have_pos1-have);
+  have_major = atoi(buf);
+  g_free(buf);
+  buf = g_strndup(expected,expected_pos1-expected);
+  expected_major = atoi(buf);
+  g_free(buf);
+
+  debug(3,"compare_qstat_version -- compare major %d %d",have_major,expected_major);
+  if(have_major < expected_major) return -1;
+  if(have_major > expected_major) return 1;
+
+  have_pos1++;
+  expected_pos1++;
+
+  for(have_pos2=have_pos1;
+      have_pos2 && *have_pos2 && isdigit(*have_pos2);
+      have_pos2++);
+  for(expected_pos2=expected_pos1;
+      expected_pos2 && *expected_pos2 && isdigit(*expected_pos2);
+      expected_pos2++);
+
+  buf = g_strndup(have_pos1,have_pos2-have_pos1);
+  have_minor = atoi(buf);
+  g_free(buf);
+  buf = g_strndup(expected_pos1,expected_pos2-expected_pos1);
+  expected_minor = atoi(buf);
+  g_free(buf);
+  
+  debug(3,"compare_qstat_version -- compare minor %d %d",have_minor,expected_minor);
+  if(have_minor < expected_minor) return -1;
+  if(have_minor > expected_minor) return 1;
+
+  if(have_pos2 && *have_pos2) have_pl=*have_pos2;
+  if(expected_pos2 && *expected_pos2) expected_pl=*expected_pos2;
+
+  debug(3,"compare_qstat_version -- compare pl %c %c",have_pl,expected_pl);
+  if(!have_pl && expected_pl) return -1;
+  if(have_pl && expected_pl && have_pl < expected_pl) return -1;
+
+  return 1;
+}
+
+int start_prog_and_return_fd(const char *file, char *const argv[], pid_t *pid)
+{
+  int pipefds[2];
+
+  *pid = -1;
+
+  if (pipe (pipefds) < 0)
+  {
+    debug(0,"start_prog_and_return_fd -- error creating pipe: %s",strerror(errno));
+    return -1;
+  }
+  *pid = fork();
+  if (*pid < (pid_t) 0)
+  {
+    debug(0,"start_prog_and_return_fd -- fork failed: %s",strerror(errno));
+    return -1;
+  }
+  
+  if (*pid == 0)	// child
+  {
+    close(1);
+//    close(2);
+    close (pipefds[0]);
+    dup2 (pipefds[1], 1);
+//    dup2 (pipefds[1], 2);
+    close (pipefds[1]);
+    
+    debug(3,"start_prog_and_return_fd -- child created");
+
+    execvp (file, argv);
+
+    debug(0,"start_prog_and_return_fd -- failed to exec %s: %s",file,strerror(errno));
+
+    _exit (1);
+  }
+
+  close (pipefds[1]);
+
+  return pipefds[0];
+}
+
+int check_qstat_version( const char* version )
+{
+
+  // qstat output has to fit in here
+  enum { QSTAT_BUFFER_SIZE = 4096 };
+  char buffer[QSTAT_BUFFER_SIZE] = {0};
+  int read_ret;
+  int fd;
+  pid_t pid;
+
+  char* cmd = "qstat";
+
+  int ret = FALSE;
+
+  fd_set rfds;
+  struct timeval tv;
+  int retval;
+
+  int flags;
+
+  fd = start_prog_and_return_fd(cmd,NULL,&pid);
+
+  if (fd<0||pid<=0)
+    return FALSE;
+
+  flags = fcntl (fd, F_GETFL, 0);
+  if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0)
+  {
+    debug(0,"fcntl failed: %s", strerror(errno));
+    return -1;
+  }
+
+  FD_ZERO(&rfds);
+  FD_SET(fd, &rfds);
+  
+  // wait up to two seconds
+  tv.tv_sec = 2;
+  tv.tv_usec = 0;
+
+  retval = select(fd+1, &rfds, NULL, NULL, &tv);
+
+  if (!retval)
+  {
+    debug(0,"check_qstat_version -- No data within two seconds.");
+    return FALSE;
+  }
+
+  // -1 because of \0!
+  read_ret = read(fd,buffer,QSTAT_BUFFER_SIZE-1);
+  // read error
+  if (read_ret < 0)
+  {
+    debug(0,"check_qstat_version -- read failed: %s", strerror(errno));
+    return FALSE;
+  }
+  // read hasn't read anything
+  else if(read_ret == 0)
+  {
+    debug(0,"check_qstat_version -- din't read anything");
+    return FALSE;
+  }
+
+  {
+    char *search_for = "qstat version";
+    char *found_version, *version_end;
+    
+    found_version = strstr(buffer,search_for);
+    
+    if(!found_version) return FALSE;
+    
+    found_version = found_version+strlen(search_for);
+    // skip whitespace
+    for(;isspace(*found_version);found_version++);
+    if(!*found_version) return FALSE;
+    // skip until end of version string
+    for(version_end=found_version;
+	version_end &&
+	*version_end != '\0' && !isspace(*version_end);
+	version_end++);
+    found_version=g_strndup(found_version,version_end-found_version);
+    debug(3,"check_qstat_version -- found version <%s>",found_version);
+
+    if(compare_qstat_version(found_version,version)>=0)
+      ret=TRUE;
+
+    g_free(found_version);
+  }
+
+  return ret;
+}
 
 
 void set_widgets_sensitivity (void) {
@@ -2602,6 +2807,7 @@ void create_main_window (void) {
 int main (int argc, char *argv[]) {
   char *gtk_config;
   int newversion = FALSE;
+  char required_qstat_version[]="2.4e";
 
   int i,j; /* For parsing the command line. */
 
@@ -2688,6 +2894,13 @@ int main (int argc, char *argv[]) {
 
   if (default_auto_favorites)
     refresh_callback (NULL, NULL);
+
+  if(check_qstat_version(required_qstat_version) == FALSE)
+  {
+    dialog_ok(NULL,
+	_("You need at least qstat version %s for xqf to function properly"),
+	required_qstat_version);
+  }
 
   gtk_main ();
 
