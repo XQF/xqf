@@ -792,6 +792,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
 
 
 #if 0
+{ /* for xemacs so it does not loose its mind -- baa */
   if (g_strncasecmp (path, master_prefixes[MASTER_NATIVE],
 			  strlen(master_prefixes[MASTER_NATIVE])) == 0) {
     if (parse_address (path + strlen(master_prefixes[MASTER_NATIVE]), &addr, &port)) {
@@ -1308,10 +1309,9 @@ void init_masters (int update) {
     if (m2 && m2->servers)
       m2->servers = g_slist_sort (m2->servers, (GCompareFunc) server_sorting_helper);
 
-    //FIXME:  Is this right?  I tried g_slist_free, but it sits there for a long time.
     if (list3)
       list3 = NULL;
-
+    
     s1 = NULL;
     s2 = NULL;
 
@@ -1336,8 +1336,8 @@ void init_masters (int update) {
           list2 = list2->next;
           continue;
         }
-        
         list3 = g_slist_prepend (list3, s1);
+	
         g_free (temp1);
         g_free (temp2);
       }
@@ -1349,8 +1349,10 @@ void init_masters (int update) {
       list2 = list2->next;
     }
         
-    if (list3)
+    if (list3) {
+      g_slist_free (m2->servers);
       m2->servers = list3;
+    }
   } 
 
   read_server_info (FILENAME_SRVINFO);
