@@ -1059,6 +1059,9 @@ static void qw_analyze_serverinfo (struct server *server) {
   char **info_ptr;
   long n;
 
+  /* Clear out the flags */
+  s->flags = 0;
+  
   /* debug( 6, "qw_analyze_serverinfo: Analyze %s", server->name ); */
   if ((games[server->type].flags & GAME_SPECTATE) != 0)
     server->flags |= SERVER_SPECTATE;
@@ -1092,6 +1095,9 @@ static void un_analyze_serverinfo (struct server *s) {
 
   enum server_type oldtype = s->type;
 
+  /* Clear out the flags */
+  s->flags = 0;
+  
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
       s->game = info_ptr[1];
@@ -1145,6 +1151,9 @@ static void un_analyze_serverinfo (struct server *s) {
 static void descent3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
 
+  /* Clear out the flags */
+  s->flags = 0;
+  
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
       s->game = info_ptr[1];
@@ -1162,6 +1171,9 @@ static void q2_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   long n;
 
+  /* Clear out the flags */
+  s->flags = 0;
+  
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
@@ -1217,6 +1229,9 @@ static void t2_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   long n;
 
+  /* Clear out the flags */
+  s->flags = 0;
+
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
@@ -1257,6 +1272,9 @@ static void t2_analyze_serverinfo (struct server *s) {
 static void hl_analyze_serverinfo (struct server *s) {
   char **info_ptr;
 
+  /* Clear out the flags */
+  s->flags = 0;
+  
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
@@ -1530,6 +1548,9 @@ static void q3_analyze_serverinfo (struct server *s) {
   char *game=NULL;
   char *gamename=NULL;
 
+  /* Clear out the flags */
+  s->flags = 0;
+
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
@@ -1588,6 +1609,8 @@ static void q3_analyze_serverinfo (struct server *s) {
     }
     else if (strcmp (*info_ptr, "g_needpass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
+      printf( "Need Pass: %s  %d\n", info_ptr[1], n );
+      
       if ((n & 1) != 0)
 	s->flags |= SERVER_PASSWORD;
       if ((n & 2) != 0)

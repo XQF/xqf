@@ -1,4 +1,7 @@
 Oct 17, 2002: Bill Adams <nospam-200201@evilbill.org>
+- Clear s->flags when analyzing server info.
+
+Oct 17, 2002: Bill Adams <nospam-200201@evilbill.org>
 - Fixed init_masters to not have a memory leak.
 
 Oct 16, 2002: Alex Burger <alex@users.sourceforge dot net>
