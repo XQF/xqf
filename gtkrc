@@ -25,6 +25,6 @@ style "default"
   base[INSENSITIVE] = "#EEEEEBEBE7E7"
 }
 
-class "GtkWidget" style "default"
+class "*" style "default"
 
 # vim: syntax=gtkrc

@@ -1,3 +1,6 @@
+Feb 20, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix logic for applying colors
+
 Feb 19, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - use GTK2 colors and Raleigh theme by default in GTK1 version
 - update German translation

@@ -5201,11 +5201,16 @@ static void set_style()
       snprintf(path, sizeof(path), "%s/%s/" XQF_GTKRCNAME, default_icontheme, xqf_PACKAGE_DATA_DIR);
 
       if(access(path, R_OK) != 0)
-	snprintf(path, sizeof(path), "%s/default/" XQF_GTKRCNAME, xqf_PACKAGE_DATA_DIR);
-
-      if(access(path, R_OK) == 0)
-	gtk_rc_parse(path);
+	path[0] = '\0';
     }
+    else
+      path[0] = '\0';
+
+    if(!*path)
+      snprintf(path, sizeof(path), "%s/default/" XQF_GTKRCNAME, xqf_PACKAGE_DATA_DIR);
+
+    if(access(path, R_OK) == 0)
+      gtk_rc_parse(path);
   }
 }
 
