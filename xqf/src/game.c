@@ -785,11 +785,12 @@ static void q3_analyze_serverinfo (struct server *s) {
     s->flags |= SERVER_SPECTATE;
 
 // Get the server version first.
-// If it is 1.27, the new game types are used
+// If it is 1.2+, the new game types are used
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
   if (strcmp (*info_ptr, "version") == 0) {
-      if (!strncmp(info_ptr[1], "Q3 1.27",7))
-	newtypes=1;
+      if (info_ptr[1][3] >= '1')	// eg: 1 of 1.27
+        if (info_ptr[1][5] >= '2')	// eg: 2 of 1.27
+	  newtypes=1;
       else
         newtypes=0;
     }
