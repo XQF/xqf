@@ -90,7 +90,7 @@ static GList *q3_custom_cfgs (char *dir, char *game);
 
 static void quake_save_info (FILE *f, struct server *s);
 
-char *get_custom_arguments(enum server_type type, char *gamestring);
+char **get_custom_arguments(enum server_type type, const char *gamestring);
 
 struct game games[] = {
   {
@@ -701,6 +701,9 @@ void init_games()
   {
     g_datalist_init(&games[i].games_data);
   }
+
+  game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
+  game_set_attribute(Q1_SERVER,"suggest_commands",strdup("nq-sgl:nq-glx:nq-sdl:nq-sdl32:nq-x11"));
 }
 
 // retreive game specific value that belongs to key, do not free return value!
@@ -2164,6 +2167,7 @@ static int qw_exec (const struct condef *con, int forkit) {
       //argv[argi++] = con->gamedir;
 
       // Get game dir regardless of case
+      // FIXME: must be freed
       argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
     }
 
@@ -2356,6 +2360,7 @@ static int q3_exec (const struct condef *con, int forkit) {
       //argv[argi++] = con->s->game;
       
       // Get game dir regardless of case
+      // FIXME: must be freed
       argv[argi++] = find_game_dir(quake3_data_dir(g->real_dir), con->s->game);
     }
     if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
@@ -2433,6 +2438,7 @@ static int hl_exec (const struct condef *con, int forkit) {
     // argv[argi++] = con->gamedir;
 
     // Get game dir regardless of case
+      // FIXME: must be freed
     argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
   }
 
@@ -2483,6 +2489,7 @@ static int q2_exec_generic (const struct condef *con, int forkit) {
     //argv[argi++] = con->gamedir;
     
     // Get game dir regardless of case
+      // FIXME: must be freed
     argv[argi++] = find_game_dir(g->real_dir, con->gamedir);
 
   }
@@ -2511,11 +2518,9 @@ static int ut_exec (const struct condef *con, int forkit) {
   char *cmd;
   struct game *g = &games[con->s->type];
   int retval;
-  char **info_ptr;
   char* hostport=NULL;
   char* real_server=NULL;
-  char *game_temp;
-  char temp[320];
+  char** additional_args = NULL;
 
   cmd = strdup_strip (g->cmd);
 
@@ -2529,78 +2534,50 @@ static int ut_exec (const struct condef *con, int forkit) {
 // exec "./ut-bin" $* -log and not -log $* at the end
 // otherwise XQF you can not connect via the command line!
 
-  if(con->s->type == UT2_SERVER)
-  {
-    // go through all server rules
-    for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
-      if (!strcmp (*info_ptr, "hostport")) {
-	hostport=info_ptr[1];
-      }
-    }
-  }
-
-#if 0
-  if (con->server)
-  {
-    // gamespy port can be different from game port
-    if(hostport)
-    {
-      if (con->password)
-        real_server = g_strdup_printf ("%s:%s?password=%s", inet_ntoa (con->s->host->ip),
-                                                                  hostport, con->password);
-      else
-        real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
-      argv[argi++] = real_server;
-    }
-    else
-    {
-      if (con->password) {
-        real_server = g_strdup_printf ("%s?password=%s", con->server, con->password);
-        argv[argi++] = real_server; 
-      }
-      else 
-        argv[argi++] = con->server;
-    }
-  }
-#endif
-
-
   if (con->server)
   {
     // gamespy port can be different from game port
     if(hostport)
     {
       real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
-      strcpy(temp,real_server);
     }
     else
-      strcpy(temp,con->server);
+      real_server = strdup(con->server);
 
     // Add password if exists
     if (con->password) {
-      strcat(temp, "?password=");
-      strcat(temp, con->password);
+      char* tmp = g_strdup_printf("%s?password=%s",real_server,con->password);
+      g_free(real_server);
+      real_server=tmp;
     }
+  }
 
+  if(con->s)
+  {
+    int i = 0;
     // Append additional args if needed
-    game_temp = get_custom_arguments(UN_SERVER, con->s->game);
-    if(game_temp) {
-      // printf("game_temp:%s\n",game_temp);
-      strcat(temp, game_temp);
-      // printf("temp:%s\n",temp);
-
+    additional_args = get_custom_arguments(UN_SERVER, con->s->game);
+    while(additional_args && additional_args[i] )
+    {
+      // append first argument to server address
+      if(i == 0)
+      {
+	char* tmp = g_strconcat(real_server,additional_args[i]);
+	g_free(real_server);
+	real_server=tmp;
+	argv[argi++] = real_server;
+      }
+      else
+      {
+	argv[argi++] = additional_args[i];
+      }
+      i++;
     }
-    // printf("temp is now:%s\n",temp);
-    argv[argi++] = g_strdup(temp);
   }
 
   if (default_nosound) {
     argv[argi++] = "-nosound";
   }
-
-  // Alex
-  
-  
 
   argv[argi] = NULL;
 
@@ -2608,6 +2585,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 
   g_free (cmd);
   g_free (real_server);
+  if(additional_args) g_strfreev(additional_args);
   return retval;
 }
 
@@ -3064,18 +3042,20 @@ static void quake_save_info (FILE *f, struct server *s) {
   fputc ('\n', f);
 }
 
-// vim: sw=2
-
-
-
-char *get_custom_arguments(enum server_type type, char *gamestring)
+// fetch additional arguments when launching server of type 'type' and it's
+// game matches 'gamestring'
+// returns a newly-allocated array of strings. Use g_strfreev() to free it. 
+// TODO use struct server instead of char* to be able to match any variable
+char **get_custom_arguments(enum server_type type, const char *gamestring)
 {
-  char *arg;
+  char *arg = NULL;
   int num_args;
   int j;
   char conf[15];
   char *token[2];
   int n;
+
+  if(!gamestring) return NULL;
   
   num_args = atoi(game_get_attribute(type,"custom_arg_count"));
   
@@ -3086,15 +3066,15 @@ char *get_custom_arguments(enum server_type type, char *gamestring)
     n = tokenize (arg, token, 2, ",");
     
     if(!(strcasecmp(token[0],gamestring))) {
+      char** ret = g_strsplit(token[1]," ",0);
       debug(1, "get_custom_arguments: found entry for:%s.  Returning argument:%s\n",gamestring,token[1]);
-      return g_strdup(token[1]);        
+      g_free(arg);
+      return ret;
     }
   }
   debug(1, "get_custom_arguments: Didn't find an entry for %s",gamestring);
-  return 0;
+  g_free(arg);
+  return NULL;
 }
 
-
-
-
-
+// vim: sw=2

@@ -73,4 +73,11 @@ const char* bool2str(int i);
 // returns true if str is "true", false otherwise
 int str2bool(const char* str);
 
+
+/** find executable file in $PATH. file is a colon seperated list of
+ * executables to search for. return name of first found file, must be freed
+ * manually
+ */
+char* find_file_in_path(const char* files);
+
 #endif /* __UTILS_H__ */

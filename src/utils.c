@@ -75,6 +75,8 @@ char *strdup_strip (const char *str) {
 }
 
 
+// concatenate dir and file, insert slash if necessary
+// returned string must be freed manually
 char *file_in_dir (const char *dir, const char *file) {
   char *res, *tmp;
   int need_slash = 0;
@@ -506,6 +508,27 @@ const char* bool2str(int i)
   return "true";
 }
 
+char* find_file_in_path(const char* files)
+{
+    enum { maxtoken = 16 };
+    char* token[maxtoken];
+    char* tokenizedstring = strdup(files);
+    int count = tokenize_bychar(tokenizedstring,token,maxtoken,':');
+    char* path = getenv("PATH");
+    int i;
+
+    for(i = 0; i < count; i++)
+    {
+    }
+
+    g_free(tokenizedstring);
+}
+
+// find a directory inside another, prefer matching case otherwise search case
+// insensitive
+// returns name of found directory or duplicate of game, must be freed manually
+// FIXME: use const
+// FIXME: do not check for directory, mods might be symlinked
 char *find_game_dir (char *basegamedir, char *game)
 {
   DIR *dp;
@@ -531,6 +554,7 @@ char *find_game_dir (char *basegamedir, char *game)
       return g_strdup (game);
     }
   }
+  // FIXME: path must be freed
   debug( 1, "Did not find exact match for subdir %s in %s", game, basegamedir);
 
   // Did not find exact match, perform search
@@ -547,6 +571,7 @@ char *find_game_dir (char *basegamedir, char *game)
               debug( 1, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir,
                                                                     game);
 	      return g_strdup (ep->d_name);
+	      // FIXME: bad, closedir will not happen
 	      break;
 	    }
   	  }

@@ -3531,9 +3531,6 @@ int prefs_load (void) {
 
   char* tmp;
 
-  int j = 0;
-  char *str;
-  char conf[64];
 
   oldversion = config_get_string ("/" CONFIG_FILE "/Program/version");
 
@@ -3631,25 +3628,26 @@ int prefs_load (void) {
   /* Unreal (Tournament) */
   config_push_prefix ("/" CONFIG_FILE "/Game: UNS");
   
-  while (1)
   {
-    //printf("looking\n");
-
+    int isdefault = FALSE;
+    char *str;
+    char conf[64];
+    int j = 0;
     g_snprintf (conf, 64, "custom_arg%d", j);
-    str = config_get_string (conf);
-   
-    if (!str)
-      break;
+    str = config_get_string_with_default (conf,&isdefault);
+    while (!isdefault)
+    {
+      game_set_attribute(UN_SERVER, conf, str);
+      debug(1,"got %s=%s",conf,str);
+      
+      j++;
+      g_snprintf (conf, 64, "custom_arg%d", j);
+      str = config_get_string_with_default (conf,&isdefault);
+    }
 
-    game_set_attribute(UN_SERVER, conf, str);
-    //printf("alex-%s,%s\n",conf,str);
-     
-    j++;
-       
+    game_set_attribute(UN_SERVER,"custom_arg_count",g_strdup_printf("%d",j));
   }
 
-  game_set_attribute(UN_SERVER,"custom_arg_count",config_get_string("custom_arg_count=0"));
-  
   config_pop_prefix ();
 
   /* Voyager Elite Force */
