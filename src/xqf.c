@@ -2221,7 +2221,7 @@ static struct menuitem server_menu_items[] = {
     &server_favadd_menu_item
   },
   { 
-    MENU_ITEM,		N_("Delete"),		0,   	0,
+    MENU_ITEM,		N_("_Delete"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &delete_menu_item
   },
