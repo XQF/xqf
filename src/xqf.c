@@ -3143,6 +3143,14 @@ void create_main_window (void) {
 
   gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
   gtk_accel_group_unref (accel_group);
+  
+  // Set tooltips - also in prefs_load
+  tooltips = gtk_tooltips_new ();
+  if (default_toolbar_tips)
+    gtk_tooltips_enable(tooltips);
+  else
+    gtk_tooltips_disable(tooltips);
+                
 }
 
 void play_sound (const char *sound)
@@ -3207,8 +3215,7 @@ int main (int argc, char *argv[]) {
   xqf_start_time = time (NULL);
 
   redialserver=0;
-
-
+  
 #ifdef ENABLE_NLS
 #  ifdef HAVE_LC_MESSAGES
   setlocale(LC_CTYPE, "");

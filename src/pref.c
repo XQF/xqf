@@ -108,6 +108,8 @@ char	*sound_stop = NULL;
 char	*sound_server_connect = NULL;
 char	*sound_redial_success = NULL;
 
+GtkTooltips *tooltips;
+
 /* Quake 3 settings */
 //struct q3engineopts wo_opts={0}, generic_q3_opts={0};
 
@@ -880,6 +882,12 @@ static void ok_callback (GtkWidget *widget, GtkWidget* window)
   // Refresh list of sources on screen in case the 'Show only configured games' 
   // setting has changes, or a game command line has been added or removed.
   refresh_source_list();
+  
+  // Enable / disable tooltips after config change
+  if (default_toolbar_tips)
+    gtk_tooltips_enable(tooltips);
+  else
+    gtk_tooltips_disable(tooltips);
 }
 
 static void update_q1_skin (void) {
@@ -2202,13 +2210,12 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *delete_button;
   GtkWidget *defaults_button;
   GtkWidget *page_vbox;
-  GtkTooltips *tooltips;
   GSList *temp;
   int i;
   struct game *g;
   char *temp2[2];
 
-  tooltips = gtk_tooltips_new ();
+  //tooltips = gtk_tooltips_new ();
   
   g = &games[type];
   
@@ -4157,7 +4164,6 @@ int prefs_load (void) {
   int newversion = FALSE;
 
   char* tmp;
-
 
   oldversion = config_get_string ("/" CONFIG_FILE "/Program/version");
 

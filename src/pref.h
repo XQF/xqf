@@ -104,6 +104,8 @@ extern	char	*sound_stop;
 extern	char	*sound_server_connect;
 extern	char	*sound_redial_success;
 
+extern 	GtkTooltips *tooltips;
+
 /* Quake 3 settings */
 struct q3engineopts
 {
