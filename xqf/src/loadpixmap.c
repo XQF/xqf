@@ -106,6 +106,11 @@ load_pixmap                          (GtkWidget       *widget,
   GdkBitmap *mask;
   GtkWidget *pixmap;
 
+#ifdef USE_GTK2
+  GError *err = NULL;
+#endif
+
+
   if (!filename || !filename[0])
     return create_dummy_pixmap (widget);
 
@@ -133,7 +138,13 @@ load_pixmap                          (GtkWidget       *widget,
   }
   else
   {
+
+/*FIXME_GTK2: need GError*/
+#ifdef USE_GTK2
+    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename, &err);
+#else
     GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename);
+#endif
     if (pixbuf == NULL)
     {
       g_warning (_("Error loading pixmap file: %s"), found_filename);

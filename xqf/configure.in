@@ -35,10 +35,30 @@ dnl Pick up the gettext, etc macros
 dnl AM_ACLOCAL_INCLUDE(macros)
 AM_GNU_GETTEXT
 
-AM_PATH_GLIB(1.2.0,,exit 1)
-AM_PATH_GTK(1.2.0,,exit 1)
+dnl compile with gtk 1.2 or gtk 2 ?
+AC_MSG_CHECKING([whether GTK 2 should be used])
+AC_ARG_ENABLE(gtk2,[  --enable-gtk2      enable experimental GTK2 support (default=no)],USE_GTK2=$enableval, USE_GTK2=no)
+AC_MSG_RESULT([$USE_GTK2])
 
-AM_PATH_GDK_PIXBUF(,,[AC_MSG_ERROR([gdk-pixbuf not found, please install gdk-pixbuf-devel])])
+if test "x$USE_GTK2" != "xno"; then
+
+        AC_DEFINE_UNQUOTED(USE_GTK2,1,Define if we should use GTK2)
+        AC_MSG_RESULT([$USE_GTK2])
+
+        OLD_GTK_SUPPORT="-DGTK_ENABLE_BROKEN=1"
+        AC_SUBST(OLD_GTK_SUPPORT)        
+
+        pkg_modules="gtk+-2.0 >= 2.0.0"
+        PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
+        AC_SUBST(PACKAGE_CFLAGS)
+        AC_SUBST(PACKAGE_LIBS)                
+else
+
+        AM_PATH_GLIB(1.2.0,,exit 1)
+        AM_PATH_GTK(1.2.0,,exit 1)
+        AM_PATH_GDK_PIXBUF(,,[AC_MSG_ERROR([gdk-pixbuf not found, please install gdk-pixbuf-devel])])
+
+fi
 
 dnl check for qstat
 AC_ARG_WITH(qstat,[  --with-qstat=CMD        use CMD to run qstat])

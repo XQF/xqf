@@ -2,6 +2,7 @@ Oct 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove gettext stuff from repository. Instead autogen.sh will run gettextize
   to create the necessary files
 - fix alpha threshold when rendering flag icons
+- add GTK2 patch from Jochen Baier
 
 Oct 23, 2003: Alex <alex_b@users.sourceforge.net>
 - Replaced French translation with new fr.po from

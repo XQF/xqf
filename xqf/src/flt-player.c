@@ -803,11 +803,15 @@ void player_filter_page (GtkWidget *notebook) {
   gtk_widget_show (scrollwin);
 
   gtk_widget_ensure_style (pattern_clist);
+
+/*FIXME_GTK2: style->font not working with gtk2*/
+#ifndef USE_GTK2
   i = MAX (pixmap_height (group_pix[0].pix), 
 	      pattern_clist->style->font->ascent + 
 	      pattern_clist->style->font->descent + 1);
 
   gtk_clist_set_row_height (GTK_CLIST (pattern_clist), i);
+#endif
 
   /* Buttons */
 

@@ -50,7 +50,12 @@ GtkWidget *dialog_create_modal_transient_window (char *title,
   GtkWidget *window;
   GtkWidget *parent;
 
+/*FIXME_GTK2: "GTK_WINDOW_DIALOG" is deprecated */
+#ifdef USE_GTK2
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+#else
   window = gtk_window_new (GTK_WINDOW_DIALOG);
+#endif
 
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",

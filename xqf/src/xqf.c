@@ -2136,6 +2136,10 @@ static void rendermemintogtkpixmap(const guchar* mem, size_t len,
   GdkPixbuf* pixbuf = NULL;
   GdkPixbuf* pixbuf2 = NULL;
 
+#ifdef USE_GTK2
+  GError *err=NULL;
+#endif
+
   *width=0;
   *height=0;
 
@@ -2145,8 +2149,14 @@ static void rendermemintogtkpixmap(const guchar* mem, size_t len,
   loader = gdk_pixbuf_loader_new();
   g_return_if_fail(loader!=NULL);
   
+/*FIXME_GTK2: gdk_pixbuf_loader_write, gdk_pixbuf_loader_close need GError*/
+#ifdef USE_GTK2
+  ok = gdk_pixbuf_loader_write(loader, mem, len,&err);
+  gdk_pixbuf_loader_close(loader,&err);
+#else
   ok = gdk_pixbuf_loader_write(loader, mem, len);
   gdk_pixbuf_loader_close(loader);
+#endif
 
   if(!ok)
   {
@@ -2219,7 +2229,13 @@ static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, in
 
 //  debug(0,"%d %d %d %d %d %d",scr_w,scr_h,x,y,w,h);
 
+/*FIXME_GTK2: gtk_widget_popup() is deprecated */
+#ifdef USE_GTK2
+  gtk_widget_set_uposition (server_mapshot_popup, x, y);
+  gtk_widget_show(server_mapshot_popup);
+#else
   gtk_widget_popup (server_mapshot_popup, x, y);
+#endif
 }
 
 static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
@@ -2380,7 +2396,13 @@ static void player_skin_preview_popup_show (guchar *skin,
   x = (x + 320 > scr_w)? scr_w - 320 : x;
   y = (y + 200 > scr_h)? scr_h - 200 : y;
 
+/*FIXME_GTK2: gtk_widget_popup() is deprecated */
+#ifdef USE_GTK2
+  gtk_widget_set_uposition (player_skin_popup, x, y);
+  gtk_widget_show(player_skin_popup);
+#else
   gtk_widget_popup (player_skin_popup, x, y);
+#endif
 
   draw_qw_skin (player_skin_popup_preview, skin, top, bottom);
 }
@@ -3388,8 +3410,16 @@ void create_main_window (void) {
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
+/*FIXME_GTK2:*/
+#ifdef USE_GTK2
+  main_toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR(main_toolbar),GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR(main_toolbar),GTK_TOOLBAR_BOTH);
+#else
   main_toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
                                                             GTK_TOOLBAR_BOTH);
+#endif
+
   gtk_box_pack_start (GTK_BOX (vbox), main_toolbar, FALSE, FALSE, 0);
   populate_main_toolbar ();
   gtk_widget_show (main_toolbar);
@@ -3702,6 +3732,9 @@ int main (int argc, char *argv[]) {
 #ifdef ENABLE_NLS
   setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
+#ifdef USE_GTK2
+  bind_textdomain_codeset(PACKAGE, "UTF-8");
+#endif
   textdomain(PACKAGE);
 #endif
 
