@@ -5,7 +5,7 @@ Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
   -added to game structure and all games
   -added basic ability to add arguments to Games Invoking pref page
   -only visible for Quake3, Unreal Tournament and UT2003
-  -added support to q3_exec and (ut_exec already done)
+  -added support to q3_exec (ut_exec already done)
 - Flipped locked_punkbuster icon
 - Increased default width of Priv column
 - Applied Ludwig's patch which reduces code needed to speed up the
