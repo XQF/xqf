@@ -960,6 +960,7 @@ void init_games()
   games[WOET_SERVER].name="Enemy Territory";
   games[WOET_SERVER].id="WOETS";
   games[WOET_SERVER].pd=&wolfet_private;
+  games[WOET_SERVER].pix=&et_pix;
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
