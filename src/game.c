@@ -196,7 +196,7 @@ struct game games[] = {
     quake_parse_server,
     q3_analyze_serverinfo,
     quake3_config_is_valid,
-    write_quake_variables,
+    NULL,
     q3_exec,
     q3_custom_cfgs,
     quake_save_info
@@ -1176,14 +1176,16 @@ static int quake_config_is_valid (struct server *s) {
   }
 
   if (g->cmd == NULL || g->cmd[0] == '\0') {
-    dialog_ok (NULL, "%s command line is empty.", g->name);
+    // %s = game name e.g. QuakeWorld
+    dialog_ok (NULL, _("%s command line is empty."), g->name);
     return FALSE;
   }
 
   if (g->real_dir != NULL && g->real_dir[0] != '\0') {
     if (stat (g->real_dir, &stat_buf) != 0 || !S_ISDIR (stat_buf.st_mode)) {
-      dialog_ok (NULL, "\"%s\" is not a directory\n"
-	              "Please specify correct %s working directory.", 
+      // directory name, game name
+      dialog_ok (NULL, _("\"%s\" is not a directory\n"
+	              "Please specify correct %s working directory."), 
                        g->real_dir, g->name);
       return FALSE;
     }
@@ -1193,13 +1195,15 @@ static int quake_config_is_valid (struct server *s) {
 
   if (stat (path, &stat_buf) || !S_ISDIR (stat_buf.st_mode)) {
     if (!g->real_dir || g->real_dir[0] == '\0') {
-      dialog_ok (NULL, "Please specify correct %s working directory.", 
+      // game name
+      dialog_ok (NULL, _("Please specify correct %s working directory."), 
                                                                      g->name);
     }
     else {
       dialog_ok (NULL,  
-		 "Directory \"%s\" doesn\'t contain \"%s\" subdirectory.\n"
-		 "Please specify correct %s working directory.", 
+		// directory, subdirectory, game name
+		 _("Directory \"%s\" doesn\'t contain \"%s\" subdirectory.\n"
+		 "Please specify correct %s working directory."), 
 		 g->real_dir, cfgdir, g->name);
     }
     g_free (path);
@@ -1253,18 +1257,20 @@ static int quake3_config_is_valid (struct server *s) {
   if (path == NULL) {
     if (!g->real_dir || g->real_dir[0] == '\0') {
       dialog_ok (NULL, 
-		 "~/.q3a directory doesn\'t exist or doesn\'t contain\n"
+		 // %s Quake3
+		 _("~/.q3a directory doesn\'t exist or doesn\'t contain\n"
 		 "\"baseq3\" (\"demoq3\") subdirectory.\n"
 		 "Please run %s client at least once before running XQF\n"
-		 "or specify correct %s working directory.",
+		 "or specify correct %s working directory."),
 		 g->name, g->name);
     }
     else {
       dialog_ok (NULL, 
-		 "\"%s\" directory doesn\'t exist or doesn\'t contain "
+		 // %s directory, Quake3
+		 _("\"%s\" directory doesn\'t exist or doesn\'t contain "
 		 "\"baseq3\" (\"demoq3\") subdirectory.\n"
 		 "Please specify correct %s working directory\n"
-  	         "or leave it empty (~/.q3a is used by default)", 
+  	         "or leave it empty (~/.q3a is used by default)"), 
 		 g->real_dir, g->name);
     }
     return FALSE;
@@ -1288,8 +1294,9 @@ static int config_is_valid_generic (struct server *s) {
 
   if (g->real_dir != NULL && g->real_dir[0] != '\0') {
     if (stat (g->real_dir, &stat_buf) != 0 || !S_ISDIR (stat_buf.st_mode)) {
-      dialog_ok (NULL, "\"%s\" is not a directory\n"
-	              "Please specify correct %s working directory.", 
+      // %s directory, game name
+      dialog_ok (NULL, _("\"%s\" is not a directory\n"
+	              "Please specify correct %s working directory."), 
                        g->real_dir, g->name);
       return FALSE;
     }
@@ -1454,7 +1461,7 @@ static int write_q2_vars (const char *filename, const struct condef *con) {
   return TRUE;
 }
 
-
+/*
 #ifdef QSTAT23
 
 static int write_q3_vars (const char *filename, const struct condef *con) {
@@ -1478,7 +1485,7 @@ static int write_q3_vars (const char *filename, const struct condef *con) {
 }
 
 #endif
-
+*/
 
 static int write_quake_variables (const struct condef *con) {
 #ifdef QSTAT23
@@ -1504,6 +1511,7 @@ static int write_quake_variables (const struct condef *con) {
     res = write_q2_vars (file, con);
     break;
 
+/*
 #ifdef QSTAT23
   case Q3_SERVER:
     path = quake3_data_dir (games[Q3_SERVER].dir);
@@ -1514,6 +1522,7 @@ static int write_quake_variables (const struct condef *con) {
     }
     break;
 #endif
+*/
 
   default:
     return FALSE;
@@ -1675,8 +1684,9 @@ static int qw_exec (const struct condef *con, int forkit) {
     file = file_in_dir (g->real_dir, q_passwd);
 
     if (!write_passwords (file, con)) {
-      if (!dialog_yesno (NULL, 1, "Launch", "Cancel", 
-             "Cannot write to file \"%s\".\n\nLaunch client anyway?", file)) {
+      //passwords file could not be written
+      if (!dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
+             _("Cannot write to file \"%s\".\n\nLaunch client anyway?"), file)) {
 	g_free (file);
 	g_free (cmd);
 	return;
@@ -1844,6 +1854,16 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = con->demo;
   }
 
+  if(g->game_cfg) {
+    argv[argi++] = "+exec";
+    argv[argi++] = g->game_cfg;
+  }
+
+  if (con->custom_cfg) {
+    argv[argi++] = "+exec";
+    argv[argi++] = con->custom_cfg;
+  }
+  
   /* If the fs_game or -- more likely -- gamename is set, we want to
      put fs_game on the command line so that the mod is loaded when
      we connect. */
@@ -2218,7 +2238,6 @@ static GList *q2_custom_cfgs (char *dir, char *game) {
   return cfgs;
 }
 
-
 #ifdef QSTAT23
 
 static GList *q3_custom_cfgs (char *dir, char *game) {
@@ -2226,6 +2245,8 @@ static GList *q3_custom_cfgs (char *dir, char *game) {
   char *qdir;
   char *path = NULL;
   char *mod_path = NULL;
+
+  debug (5, "q3_custom_cfgs(%s,%s)",dir,game);
 
   qdir = expand_tilde ((dir)? dir : games[Q3_SERVER].dir);
 
@@ -2245,7 +2266,6 @@ static GList *q3_custom_cfgs (char *dir, char *game) {
 }
 
 #endif
-
 
 static void quake_save_server_rules (FILE *f, struct server *s) {
   char **info;

@@ -1,15 +1,21 @@
-Sep 28, 2001: Ludwig Nussel <l-n@sourceforge.net>
+Sep 30, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- disabled write_quake_variables function for q3
+- added ability to use custom configs for q3
+- made some error popups translatable
+- updated german translation
+
+Sep 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added Rune support
 - changed layout of game configuration screen
 
-Sep 28, 2001: Ludwig Nussel <l-n@sourceforge.net>
+Sep 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added support for games using the gamespy protocol
 - added q3,ut,sof,nolf,rally masters,turok2 and shogo masters
 - made game names translatable
 - updated german translation
 - changed version to 0.9.7b
 
-Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
+Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - more translatable strings marked
 - updated german translation
 
@@ -17,7 +23,7 @@ Sep 27, 2001: Jordi Mallach <jordi@sindominio.net>
 - Updated Spanish translation
 - added gettext cruft to po/.cvsignore
 
-Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
+Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - made q3_exec usable for Wofenstein, removed wo_exec
 - identify q3/rtcw servers by their version string
 - use common option struct for all games with q3 engine

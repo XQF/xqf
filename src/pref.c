@@ -181,6 +181,8 @@ static void get_new_defaults_for_game (enum server_type type) {
   struct generic_prefs *prefs = &genprefs[type];
   char str[256];
 
+  debug (5, "get_new_defaults_for_game(%d)",type);
+
   if (prefs->cmd_entry) {
     if (g->cmd) g_free (g->cmd);
     g->cmd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (prefs->cmd_entry)));
@@ -254,6 +256,8 @@ static void load_game_defaults (enum server_type type) {
 static void get_new_defaults (void) {
   int i;
   char *str;
+  
+  debug (5, "get_new_defaults()");
 
   /* Quake */
 
@@ -638,6 +642,11 @@ static void update_cfgs (enum server_type type, char *dir, char *initstr) {
   GList *cfgs;
   char *str = NULL;
 
+  debug (5, "update_cfgs(%d,%s,%s)",type,dir,initstr);
+
+  if(!prefs->cfg_combo)
+    return;
+
   cfgs = (*games[type].custom_cfgs) (dir, NULL);
 
   if (initstr) {
@@ -665,6 +674,8 @@ static void dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
 
   type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
   prefs = &genprefs[type];
+
+  debug (5, "dir_entry_activate_callback() type=%d",type);
 
   if (prefs->pref_dir) g_free (prefs->pref_dir);
   prefs->pref_dir = strdup_strip (gtk_entry_get_text (
@@ -2331,6 +2342,9 @@ void preferences_dialog (int page_num) {
   GtkWidget *button;
   GtkWidget *window;
   int game_num;
+  int i;
+
+  debug (5, "preferences_dialog()");
 
   game_num = page_num / 256;
   page_num = page_num % 256;
@@ -2401,16 +2415,17 @@ void preferences_dialog (int page_num) {
 
   q1_skin_is_valid = TRUE;
   update_q1_skin ();
-  update_cfgs (Q1_SERVER, genprefs[Q1_SERVER].real_dir,
-                                                   games[Q1_SERVER].game_cfg);
+
   qw_skin_is_valid = TRUE;
   update_qw_skins (pref_qw_skin);
-  update_cfgs (QW_SERVER, genprefs[QW_SERVER].real_dir, 
-                                                   games[QW_SERVER].game_cfg);
+
   q2_skin_is_valid = TRUE;
   update_q2_skins (pref_q2_skin);
-  update_cfgs (Q2_SERVER, genprefs[Q2_SERVER].real_dir, 
-                                                   games[Q2_SERVER].game_cfg);
+
+  for (i = 0; i < GAMES_TOTAL; i++) {
+    update_cfgs (i, genprefs[i].real_dir, games[i].game_cfg);
+  }
+
   gtk_widget_show (notebook);
 
   /* 
