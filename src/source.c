@@ -918,6 +918,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD BF1942 http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=BF1942&hostport=1 multiplay.co.uk - BF1942",
 
+  "ADD JK3S master://masterjk3.ravensoft.com:29060 Ravensoft",
+
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
   "ADD Q2S lan://255.255.255.255 LAN",
@@ -933,6 +935,7 @@ static char *builtin_masters_update_info[] = {
   "ADD MHS lan://255.255.255.255 LAN",
   "ADD AMS lan://255.255.255.255 LAN",
   "ADD CODS lan://255.255.255.255 LAN",
+  "ADD JK3S lan://255.255.255.255 LAN",
   "ADD T2S lan://255.255.255.255 LAN",
   "ADD POSTAL2 lan://255.255.255.255 LAN",
   "ADD SFS lan://255.255.255.255 LAN",

@@ -9,6 +9,7 @@ static char* stringlist006[] = { "BaseEF", NULL };
 static char* stringlist007[] = { "main", NULL };
 static char* stringlist008[] = { "main", NULL };
 static char* stringlist009[] = { "main", NULL };
+static char* stringlist010[] = { "base", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -639,6 +640,33 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : gamespy_exec,
     save_info           : quake_save_info,
+  },
+  {
+    type                : JK3_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    name                : "Jedi Academy",
+    default_port        : 29070,
+    default_master_port : 29060,
+    id                  : "JK3S",
+    qstat_str           : "JK3S",
+    qstat_option        : "-jk3s",
+    qstat_master_option : "-jk3m",
+    icon                : "jk3_xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    suggest_commands    : "jamp",
+    pd                  : &jk3_private,
+    main_mods           : stringlist010,
   },
   {
     type                : UNKNOWN_SERVER,

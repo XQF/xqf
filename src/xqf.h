@@ -123,6 +123,7 @@ enum server_type {
   SAS_SERVER,
   BF1942_SERVER,
   GPS_SERVER,
+  JK3_SERVER,
   UNKNOWN_SERVER
 };
 

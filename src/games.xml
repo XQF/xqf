@@ -488,6 +488,23 @@
 	<exec_client>gamespy_exec</exec_client>
     </game>
     <game>
+	<base>Q3_SERVER</base>
+	<type>JK3_SERVER</type>
+	<name>Jedi Academy</name>
+	<default_port>29070</default_port>
+	<default_master_port>29060</default_master_port>
+	<id>JK3S</id>
+	<qstat_str>JK3S</qstat_str>
+	<qstat_option>-jk3s</qstat_option>
+	<qstat_master_option>-jk3m</qstat_master_option>
+	<icon>jk3_xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<arch_identifier>NULL</arch_identifier>
+	<suggest_commands>jamp</suggest_commands>
+	<main_mods>base</main_mods>
+	<pd>jk3_private</pd>
+    </game>
+    <game>
 	<type>UNKNOWN_SERVER</type>
 	<name>unknown</name>
     </game>
