@@ -1055,11 +1055,14 @@ void init_games()
   games[COD_SERVER].name="Call of Duty";
   games[COD_SERVER].default_port=27201;
   games[COD_SERVER].id="CODS";
-  games[COD_SERVER].default_master_port=0;
-  games[COD_SERVER].qstat_master_option=NULL;
+  games[COD_SERVER].qstat_str="CODS";
+  games[COD_SERVER].qstat_option="-cods";
+  games[COD_SERVER].default_master_port=20510;
+  games[COD_SERVER].qstat_master_option="-codm";
   games[COD_SERVER].pd=&cod_private;
   games[COD_SERVER].pix=&cod_pix;
   games[COD_SERVER].config_is_valid=config_is_valid_generic;
+  games[COD_SERVER].arch_identifier=NULL;
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
