@@ -1,3 +1,9 @@
+Oct 28, 2002: Alex <alex_b@users.sourceforge.net>
+- Changed UT2003 default port to 7777
+- Changed UT2003 back to -ut2s as the next version of qstat (soon!)
+  will support another UT2 query method that works off of gameport+1
+  which is the same as the in-game browser in UT2003
+
 Oct 28, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix source menu
 - update german translation

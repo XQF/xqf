@@ -57,7 +57,7 @@
 #define	T2_DEFAULT_PORT		28000		/* Tribes 2 */
 #define	HR_DEFAULT_PORT		28910		/* Heretic2 */
 #define	UN_DEFAULT_PORT		7777		/* Unreal */
-#define	UT2_DEFAULT_PORT	7787		/* Unreal Tournament 2003 */
+#define	UT2_DEFAULT_PORT	7777		/* Unreal Tournament 2003 */
 #define	GPS_DEFAULT_PORT	27888		/* Gamespy Generic */
 #define	DESCENT3_DEFAULT_PORT	2092		/* Descent 3 */
 
