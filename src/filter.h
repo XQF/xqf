@@ -23,7 +23,6 @@
 
 #include "xqf.h"
 
-
 #define FILTERS_TOTAL		2
 #define FILTERS_MASK		0x03
 
@@ -41,12 +40,25 @@ enum filter_status {
   FILTER_DATA_CHANGED	/* data changed, but no need to re-apply filter */
 }; 
 
+
+struct server_filter_vars {
+  int	  filter_retries;
+  int	  filter_ping;
+  int 	  filter_not_full;
+  int 	  filter_not_empty;
+  int	  filter_no_cheats;
+  int	  filter_no_password;
+  char    *mod_contains;
+  char    *version_contains;
+};
+
+
 struct filter {
   char *name;
   char *short_name;
   char *short_cfg_name;
 
-  int (*func) (struct server *s);
+  int (*func) (struct server *s, struct server_filter_vars *vars);
 
   void (*filter_init) (void);
   void (*filter_done) (void);
@@ -57,6 +69,9 @@ struct filter {
 
 extern  struct filter filters[];
 extern	unsigned char cur_filter;
+
+
+
 
 extern	void apply_filters (unsigned mask, struct server *s);
 extern	GSList *build_filtered_list (unsigned mask, GSList *servers);
