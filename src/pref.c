@@ -2579,6 +2579,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *defaults_button;
   GtkWidget *page_vbox;
   struct game *g;
+  int width;
 
   //tooltips = gtk_tooltips_new ();
   
@@ -2753,7 +2754,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
     }
   }
 
-  gint width = gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 0);
+  width = gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 0);
   gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, width?width:60);
   gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1,
 	  gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 1));
