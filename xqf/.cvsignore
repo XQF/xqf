@@ -17,6 +17,7 @@ intltool-update.in
 intltool-extract
 intltool-merge
 intltool-update
+intltool-modules
 libtool
 m4
 mkinstalldirs

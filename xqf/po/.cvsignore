@@ -11,3 +11,4 @@ xqf.pot
 *.sed
 Rules-quot
 Makevars.template
+.intltool-merge-cache
