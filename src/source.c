@@ -379,6 +379,7 @@ static struct master *read_list_parse_master (char *str, char *str2) {
       break;
     case MASTER_NUM_QUERY_TYPES:
     case MASTER_INVALID_TYPE:
+      break;
   }
 
   return m;
