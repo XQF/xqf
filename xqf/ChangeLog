@@ -1,4 +1,5 @@
 Oct 17, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Changed default for 'show_only_configured_games' to false
 - Modified server_clist_refresh_server by removing code that
   applies filters.  This results in a 2 * speed increase in
   doing Updates on large server lists (pause after the server
