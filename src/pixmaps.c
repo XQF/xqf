@@ -90,8 +90,8 @@ struct pixmap record_pix;
 
 // Workaround for ppc compiler bug
 // which does not initialize arrays with 0
-struct pixmap filter_pix[2] = { 0 };
-struct pixmap filter_cfg_pix[2] = { 0 };
+struct pixmap filter_pix[2] = {{0}};
+struct pixmap filter_cfg_pix[2] = {{0}};
 
 struct pixmap q_pix;
 struct pixmap q1_pix;
@@ -118,12 +118,12 @@ struct pixmap man_black_pix;
 struct pixmap man_red_pix;
 struct pixmap man_yellow_pix;
 
-struct pixmap group_pix[3] = { 0 };
-struct pixmap buddy_pix[9] = { 0 };
+struct pixmap group_pix[3] = {{0}};
+struct pixmap buddy_pix[9] = {{0}};
 
 struct pixmap error_pix;
 
-struct pixmap server_status[5] = { 0 };
+struct pixmap server_status[5] = {{0}};
 struct pixmap locked_pix;
 
 static GdkGC *pixmaps_gc;
