@@ -1092,9 +1092,13 @@ static void stopxmms()
     waitpid(pid,&status,0);
 
     if(WIFEXITED(status))
+    {
       debug(3,"xmms exited normally");
+    }
     else
+    {
       debug(3,"xmms exited with status %d",WEXITSTATUS(status));
+    }
     if(WIFSIGNALED(status))
       debug(3,"xmms was killed by signal %d",WTERMSIG(status));
   }

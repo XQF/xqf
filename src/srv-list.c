@@ -93,7 +93,7 @@ void assemble_server_address (char *buf, int size, const struct server *s) {
 static int server_clist_refresh_row (struct server *s, int row) {
   GdkPixmap *server_pixmap;
   GdkBitmap *server_pixmask;
-  const char *text[9];
+  char *text[9];
 #ifdef USE_GEOIP
   struct pixmap* countrypix = NULL;
 #endif

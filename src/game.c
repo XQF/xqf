@@ -120,6 +120,7 @@ struct unreal_private
 static struct unreal_private ut_private = { NULL, ".unr" };
 static struct unreal_private ut2_private = { NULL, ".ut2" };
 static struct unreal_private rune_private = { NULL, ".run" };
+static struct unreal_private aao_private = { NULL, ".aao" };
 
 static struct quake_private q1_private, qw_private, q2_private, hl_private;
 static struct quake_private q3_private = { NULL, "~/.q3a" };
@@ -748,6 +749,11 @@ struct game games[] = {
     NULL,		// Custom arguments
     (gpointer)&rune_private,	// pd
   },
+
+  {
+    AAO_SERVER,
+  },
+
   // Descent 3
   {
     DESCENT3_SERVER,		// server_type
@@ -920,6 +926,25 @@ struct game games[] = {
   }
 };
 
+struct gsname2type_s
+{
+	char* name;
+	enum server_type type;
+};
+
+// gamespy names, used to determine the server type
+static struct gsname2type_s gsname2type[] =
+{
+	{ "ut", UN_SERVER },
+	{ "ut2", UT2_SERVER },
+	{ "ut2d", UT2_SERVER },
+	{ "rune", RUNE_SERVER },
+	{ "serioussam", SSAM_SERVER },
+	{ "serioussamse", SSAMSE_SERVER },
+	{ "aao", AAO_SERVER },
+	{ NULL, UNKNOWN_SERVER }
+};
+
 // might be handy in the future instead of copy&paste
 static void game_copy_static_options(enum server_type dest, enum server_type src)
 {
@@ -961,6 +986,12 @@ void init_games()
   games[WOET_SERVER].pd=&wolfet_private;
   games[WOET_SERVER].pix=&et_pix;
 
+  game_copy_static_options(AAO_SERVER,UN_SERVER);
+  games[AAO_SERVER].name="America's Army";
+  games[AAO_SERVER].id="AMS"; // http://qstat.uglypunk.com/
+  games[AAO_SERVER].pd=&aao_private;
+  games[AAO_SERVER].pix=&aao_pix;
+
   for (i = 0; i < GAMES_TOTAL; i++)
   {
     g_datalist_init(&games[i].games_data);
@@ -978,6 +1009,7 @@ void init_games()
   game_set_attribute(UN_SERVER,"suggest_commands",strdup("ut"));
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
   game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
+  game_set_attribute(AAO_SERVER,"suggest_commands",strdup("armyops"));
   game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
   game_set_attribute(SSAMSE_SERVER,"suggest_commands",strdup("ssamtse"));
 
@@ -1379,7 +1411,6 @@ static void qw_analyze_serverinfo (struct server *server) {
   }
 }
 
-
 static void un_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   unsigned short hostport=0;
@@ -1403,25 +1434,14 @@ static void un_analyze_serverinfo (struct server *s) {
       hostport = atoi(info_ptr[1]);
     }
     else if (strcmp (*info_ptr, "gamename") == 0) {
-      if(!strcmp(info_ptr[1],"rune"))
+      unsigned i;
+      for( i = 0 ; gsname2type[i].name ; ++i )
       {
-	s->type = RUNE_SERVER;
-      }
-      else if(!strcmp(info_ptr[1],"ut"))
-      {
-	s->type = UN_SERVER;
-      }
-      else if(!strcmp(info_ptr[1],"ut2") || !strcmp(info_ptr[1],"ut2d"))
-      {
-	s->type = UT2_SERVER;
-      }
-      else if(!strcmp(info_ptr[1],"serioussam"))
-      {
-	s->type = SSAM_SERVER;
-      }
-      else if(!strcmp(info_ptr[1],"serioussamse"))
-      {
-	s->type = SSAMSE_SERVER;
+	if(!strcmp(info_ptr[1],gsname2type[i].name))
+	{
+	  s->type = gsname2type[i].type;
+	  break;
+	}
       }
     }
 
@@ -1444,6 +1464,7 @@ static void un_analyze_serverinfo (struct server *s) {
       case UN_SERVER:
       case UT2_SERVER:
       case RUNE_SERVER:
+      case AAO_SERVER:
 	server_change_port(s,hostport);
 	break;
       default:
