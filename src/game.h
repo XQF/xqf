@@ -39,11 +39,12 @@ enum {
   GAME_QUAKE1_PLAYER_COLORS	= 0x0100,
   GAME_QUAKE1_SKIN		= 0x0200,
   GAME_QUAKE3_MASTERPROTOCOL	= 0x0400, // master server protocol version is in games_data["masterprotocol"]
+  GAME_LAUNCH_HOSTPORT		= 0x0800, // use hostport rule as port when launching
 };
 
 struct game {
   enum server_type type;
-  unsigned flags;
+  unsigned long flags;
 
   char *name;
   unsigned short default_port;

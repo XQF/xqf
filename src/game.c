@@ -688,7 +688,7 @@ struct game games[] = {
   },
   {
     UT2_SERVER,
-    GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD,
+    GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT,
     "UT 2003",
     UT2_DEFAULT_PORT,
     0,
@@ -997,7 +997,7 @@ static struct gsname2type_s gsname2type[] =
 	{ "serioussamse", SSAMSE_SERVER },
 	{ "postal2", POSTAL2_SERVER },
 	{ "postal2d", POSTAL2_SERVER },
-	{ "aao", AAO_SERVER },
+	{ "armygame", AAO_SERVER },
 	{ NULL, UNKNOWN_SERVER }
 };
 
@@ -1044,12 +1044,14 @@ void init_games()
 
   game_copy_static_options(POSTAL2_SERVER,UN_SERVER);
   games[POSTAL2_SERVER].name="Postal 2";
-  games[POSTAL2_SERVER].id="POSTAL2"; // http://qstat.uglypunk.com/
+  games[POSTAL2_SERVER].id="POSTAL2";
   games[POSTAL2_SERVER].pd=&postal2_private;
   games[POSTAL2_SERVER].pix=&postal2_pix;
 
   game_copy_static_options(AAO_SERVER,UN_SERVER);
   games[AAO_SERVER].name="America's Army";
+  games[AAO_SERVER].flags |= GAME_SPECTATE;
+  games[AAO_SERVER].flags |= GAME_LAUNCH_HOSTPORT;
   games[AAO_SERVER].id="AMS"; // http://qstat.uglypunk.com/
   games[AAO_SERVER].pd=&aao_private;
   games[AAO_SERVER].pix=&aao_pix;
@@ -1563,7 +1565,7 @@ static void un_analyze_serverinfo (struct server *s) {
       case UT2_SERVER:
       case RUNE_SERVER:
       case POSTAL2_SERVER:
-      case AAO_SERVER:
+//      case AAO_SERVER: // doesn't work on lan
 	server_change_port(s,hostport);
 	break;
       default:
@@ -3376,7 +3378,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 // exec "./ut-bin" $* -log and not -log $* at the end
 // otherwise XQF you can not connect via the command line!
 
-  if(con->s->type == UT2_SERVER) {
+  if(g->flags & GAME_LAUNCH_HOSTPORT) {
     // go through all server rules
     for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
       if (!strcmp (*info_ptr, "hostport")) {

@@ -1039,6 +1039,24 @@ static char *builtin_masters_update_info[] = {
 
   "ADD CODS master://cod01.activision.com Activision",
   "ADD CODS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=COD multiplay.co.uk - Call of Duty",
+
+  "ADD QS lan://255.255.255.255 LAN",
+  "ADD QWS lan://255.255.255.255 LAN",
+  "ADD Q2S lan://255.255.255.255 LAN",
+  "ADD HLS lan://255.255.255.255 LAN",
+  "ADD Q3S lan://255.255.255.255 LAN",
+  "ADD WOS lan://255.255.255.255 LAN",
+  "ADD WOETS lan://255.255.255.255 LAN",
+  "ADD EFS lan://255.255.255.255 LAN",
+  "ADD UT2S lan://255.255.255.255 LAN",
+  "ADD UNS lan://255.255.255.255 LAN",
+  "ADD RUNESRV lan://255.255.255.255 LAN",
+  "ADD MHS lan://255.255.255.255 LAN",
+  "ADD AMS lan://255.255.255.255 LAN",
+  "ADD CODS lan://255.255.255.255 LAN",
+  "ADD T2S lan://255.255.255.255 LAN",
+  "ADD POSTAL2 lan://255.255.255.255 LAN",
+  "ADD SFS lan://255.255.255.255 LAN",
   
   NULL
 };
