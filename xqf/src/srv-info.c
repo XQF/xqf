@@ -403,6 +403,32 @@ static char *rtcw_voteflags[RTCW_VOTEFLAGS] = {
   "Change Map",		/*    128 */
 };
 
+#define WOET_VOTEFLAGS	17
+
+static char *woet_voteflags[WOET_VOTEFLAGS] = {
+  "No Competition Settings",	/*      1 */
+  "No Game Type",		/*      2 */
+  "No Player Kick",		/*      4 */
+  "No Map Change",		/*      8 */
+				            
+  "No Match Reset",		/*     16 */
+  "No Mute Spectators",		/*     32 */
+  "No Next Map",		/*     64 */
+  "No Public Settings",		/*    128 */
+  
+  "No Referee",			/*    256 */
+  "No Shuffle Teams by XP",	/*    512 */
+  "No Swap Teams",		/*   1024 */
+  "No Friendly Fire",		/*   2048 */
+  
+  "No Timelimit",		/*   4096 */
+  "No Warmup Damage",		/*   8192 */
+  "No Anti-Lag",		/*  16384 */
+  "No Balanced Teams",		/*  32768 */
+  
+  "No Muting",			/*  65536 */
+};
+
 static void show_extended_flags (const char *str, char *names[], int size,
                                           int showall, GtkCTreeNode *parent) {
   unsigned long flags;
@@ -564,6 +590,14 @@ void srvinf_ctree_set_server (struct server *s) {
 	  show_extended_flags (info[1], rtcw_voteflags, RTCW_VOTEFLAGS, FALSE, node);
       }
       break;
+
+    case WOET_SERVER:
+      if (info[0] && !g_strcasecmp (info[0], "voteflags"))
+      {
+	  show_extended_flags (info[1], woet_voteflags, WOET_VOTEFLAGS, FALSE, node);
+      }
+      break;
+
 
     default:
       break;

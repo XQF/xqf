@@ -1,3 +1,6 @@
+May 31, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- added ET voteflags
+
 May 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added master protocol version for full version of Enemy Territory
 - add qstat.cfg as EXTRA_DIST in Makefile.am
