@@ -1,3 +1,7 @@
+Aug 10, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- use getopt for command line parameters
+- add --launch parameter, syntax subject to modification
+
 Aug 03, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Fix default ping value when reading server filters
 

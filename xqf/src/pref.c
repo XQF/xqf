@@ -4617,7 +4617,7 @@ int fix_qw_player_color (int color) {
 
 int init_user_info (void) {
   if (!g_get_user_name () || !g_get_home_dir () || !g_get_tmp_dir ()) {
-    fprintf (stderr, _("Unable to get user name/home/tmpdir\n"));
+    xqf_error(_("Unable to get user name/home/tmpdir"));
     return FALSE;
   }
   user_rcdir  = file_in_dir (g_get_home_dir (), RC_DIR);
