@@ -27,6 +27,7 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <ctype.h>
+#include <unistd.h> // access()
 
 #include <GeoIP.h>
 
@@ -35,6 +36,12 @@ static const int LAN_GeoIPid = sizeof(GeoIP_country_code)/3; // MaxCountries doe
 
 static GeoIP* gi;
 
+/* array of (struct pixmap*), indexed by country id.
+   flags[id] has three states:
+     -1     flag unavailable
+      0     flag not yet loaded
+     <else> pointer to struct pixmap
+*/
 static struct pixmap* flags = NULL;
 
 void geoip_init(void)
@@ -140,9 +147,8 @@ int geoip_id_by_ip(struct in_addr in)
     return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
 }
 
-  
-#warning enter KDE path
-static char kdeflagpath[]="/opt/kde3/share/locale/l10n/%2s/flag.png";
+// TODO: create gui to make "default" part configurable
+static char flagpath[]=PACKAGE_DATA_DIR "/flags/default/%2s.png";
 
 struct pixmap* get_pixmap_for_country(int id)
 {
@@ -171,9 +177,9 @@ struct pixmap* get_pixmap_for_country(int id)
   if(id==LAN_GeoIPid)
     filename = find_pixmap_directory("lan.png");
   else
-    filename = g_strdup_printf(kdeflagpath,code);
+    filename = g_strdup_printf(flagpath,code);
 
-  if(!filename)
+  if(!filename || access(filename,R_OK))
   {
     g_free(code);
     return NULL;

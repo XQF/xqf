@@ -1,0 +1,34 @@
+#!/bin/bash
+# convert flags from http://www.maxmind.com/flag.zip into pngs
+
+if [ ! -r "$1" -o ! -d "$2" ]; then
+	echo "Usage: $0 flag.zip <destination directory>"
+	exit 1
+fi
+
+from="$1"
+to="$2"
+convert=`which convert`
+unzip=`which unzip`
+
+if [ ! -x "$convert" ]; then
+	echo "you need the convert program from ImageMagick"
+	exit 1
+fi
+if [ ! -x "$unzip" ]; then
+	echo "you need the unzip program"
+	exit 1
+fi
+
+set -e
+
+unzip "$from" -d "$to"
+
+cd "$to"
+for i in flag/*.gif; do
+	flag=${i##*/}
+	flag=${flag%gif}png
+	convert $i $flag
+	rm $i
+done
+rmdir flag
