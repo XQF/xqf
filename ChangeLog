@@ -2,6 +2,7 @@ Oct 23, 2002: Jordi Mallach <jordi@sindominio.net>
 - Update Catalan and Spanish translations.
 
 Oct 23, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Add spacing around button
 - Added file dialog box (... button) to game config page
 - Removed rafix option from q3_exec
 - Modified vmfix option in q3_exec to make custom args preferred over
