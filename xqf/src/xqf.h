@@ -47,6 +47,7 @@
 #define	QW_DEFAULT_PORT		27500		/* QuakeWorld */
 #define	Q2_DEFAULT_PORT		27910		/* Quake2 */
 #define	Q3_DEFAULT_PORT		27960		/* Quake3: Arena */
+#define	WO_DEFAULT_PORT		27960		/* Wolfenstein */
 #define	H2_DEFAULT_PORT		26900		/* Hexen2 */
 #define	HW_DEFAULT_PORT		26950		/* HexenWorld */
 #define	SN_DEFAULT_PORT		22450		/* Sin */
@@ -60,6 +61,7 @@
 #define	QWM_DEFAULT_PORT	27000		/* QuakeWorld */
 #define	Q2M_DEFAULT_PORT	27900		/* Quake2 master */
 #define	Q3M_DEFAULT_PORT	27950		/* Quake3 master */
+#define	WOM_DEFAULT_PORT	27950		/* Wolfenstein master */
 #define	HLM_DEFAULT_PORT	27010		/* Half-Life master */
 
 #define PLAYER_GROUP_MASK	0x07
@@ -85,6 +87,7 @@ enum server_type {
 #ifdef QSTAT23
   Q3_SERVER,
 #endif
+  WO_SERVER,
   H2_SERVER,
   HW_SERVER,
   SN_SERVER,
