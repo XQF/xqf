@@ -45,6 +45,7 @@ extern	int servers_total (void);
 extern	int uservers_total (void);
 extern	GSList *all_servers (void);
 
+
 extern	int parse_address (char *str, char **addr, unsigned short *port);
 
 extern	struct server *userver_set_host (struct userver *s, struct host *h);
@@ -86,6 +87,7 @@ static inline GSList *server_list_append (GSList *list, struct server *server) {
 }
 
 static inline GSList *server_list_remove (GSList *list, struct server *s) {
+  debug (6, "server_list_remove() -- remove server %lx from list %lx", s, list);
   if (g_slist_find (list, s)) {
     list = g_slist_remove (list, s);
     server_unref (s);

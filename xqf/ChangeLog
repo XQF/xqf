@@ -1,3 +1,13 @@
+Feb 14, 2001: Bill Adams <bill@evil.inetarena.com>
+-Oh dear god, I think I fixed the core dumps related
+ to the reference counting on the server structures.
+ At least to the best of my ability, I cannot make
+ the server references increase or decrease
+ over time: i.e. the program always exits with
+ a reference count of one on all server structures.
+ I could not figure out why it was 1 and not zero
+ but I will deal with that later.
+
 Feb 13, 2001: Bill Adams <bill@evil.inetarena.com>
 -Changed version to 0.9.6f, added announcement dir
  and announcement.

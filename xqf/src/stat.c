@@ -448,10 +448,10 @@ static void parse_qstat_record (struct stat_conn *conn) {
       count as does the prepend below. So we need to decrement it
       one just for fun.
     */
-    server_unref (server);
     job->delayed.queued_servers = 
       server_list_prepend (job->delayed.queued_servers, server);
     job->progress.done++;
+    server_unref (server);
 
     debug (6, "parse_qstat_record() -- Server %lx in delayed list %lx.", server, job->delayed.queued_servers);
 
