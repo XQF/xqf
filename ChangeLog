@@ -1,6 +1,7 @@
 Jun 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Option to stop current song in XMMS when launching a game
 - Merge GeoIP branch
+- Ability to directly join ut2k3 servers as spectator, even with password
 
 Jun 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Display team of player for Q3 mods that provide the necessary information
