@@ -1,4 +1,4 @@
-XQF 1.0.1 -- November 26, 2004
+XQF 1.0.2 -- December 22, 2004
 ~~~~~~~~~
 Changes since 1.0:
 
@@ -7,11 +7,11 @@ o Support for Gslist (http://aluigi.altervista.org/papers.htm#gslist)
 o Automatic detection of the Doom3 network protocol version
 o Check osmask of Doom3 servers and warn if the server has no Linux support
 o Configurable qstat source ip and port range for people with broken NAT
-o Contry statistics for game servers
+o Country statistics for game servers
 o Additional Descent3 server listing
-o UT2004 Master support (requires qstat 2.7)
+o UT2004 Master support
 o xqf-rcon uses $XQF_RCON_PASSWORD for the rcon password if set
-o Various bugfixes as usual
+o Requries qstat 2.7
 
 XQF 1.0 -- August 15, 2004
 ~~~~~~~

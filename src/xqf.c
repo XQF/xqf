@@ -89,7 +89,7 @@
 
 static const char gslisthome[] = "http://aluigi.altervista.org/papers.htm#gslist";
 
-static const char required_qstat_version[]="2.6";
+static const char required_qstat_version[]="2.7";
 
 time_t xqf_start_time;
 

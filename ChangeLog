@@ -1,3 +1,8 @@
+Dec 22, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- prepare for 1.0.2
+- set TF_U2_NAMES qstat flag for armyops
+- require qstat 2.7
+
 Dec 19, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - manpage corrections
 - add Netpanzer master
