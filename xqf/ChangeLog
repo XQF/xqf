@@ -1,3 +1,6 @@
+Oct 25, 2002: Alex <alex_b@users.sourceforge.net>
+- Tooltip updates
+
 Oct 24, 2002: Alex <alex_b@users.sourceforge.net>
 - Make tooltips global so it can be used anywhere.  Have new tooltips use
   toolbar tooltip enable / disable option

@@ -2120,6 +2120,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   gtk_widget_set_sensitive (button, pref_can_suggest(type));
 
   gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, button, _("Searches the path for the game executable"), NULL);
   gtk_widget_show (button);
 
 
@@ -3317,6 +3318,7 @@ static GtkWidget *appearance_options_page (void) {
                                                               show_hostnames);
   gtk_box_pack_start (GTK_BOX (hbox), show_hostnames_check_button, 
                                                              FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, show_hostnames_check_button, _("Enable or disable DNS resolution of IP addresses"), NULL);
   gtk_widget_show (show_hostnames_check_button);
 
   gtk_widget_show (hbox);
@@ -3581,7 +3583,7 @@ static GtkWidget *general_options_page (void) {
   gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled",
                           GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
   gtk_table_attach_defaults(GTK_TABLE(table),launchinfo_check_button, 0, 1, 1, 2);
-
+  gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
   gtk_widget_show (launchinfo_check_button);
 
   /* Prelaunchinfo */
@@ -3592,6 +3594,7 @@ static GtkWidget *general_options_page (void) {
                                                            default_prelaunchexec);
   gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled",
                           GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
+  gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.qf/PreLaunch (if it exists) before launching the game"), NULL);
   gtk_widget_show (prelaunchexec_check_button);
 
   gtk_table_attach_defaults(GTK_TABLE(table),prelaunchexec_check_button, 2, 3, 1, 2);

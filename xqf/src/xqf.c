@@ -2730,7 +2730,7 @@ static void populate_main_toolbar (void) {
 
   for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
     // Translators: e.g. Server Filter
-    g_snprintf (buf, 128, _("%s Filter"), _(filters[i].name));
+    g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
 
     pixmap = gtk_pixmap_new (filter_pix[i].pix, filter_pix[i].mask);
     gtk_widget_show (pixmap);
