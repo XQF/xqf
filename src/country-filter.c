@@ -46,7 +46,16 @@ static struct pixmap* flags = NULL;
 
 void geoip_init(void)
 {
-  gi = GeoIP_new(GEOIP_STANDARD);
+  const char* geoipdat = getenv("xqf_GEOIPDAT");
+
+  if(gi) return; // already initialized
+
+  if(geoipdat)
+    gi = GeoIP_open(geoipdat, GEOIP_STANDARD);
+
+  if(!gi)
+    gi = GeoIP_new(GEOIP_STANDARD);
+
   if(gi)
     flags = g_malloc0((MaxCountries+1) *sizeof(struct pixmap)); /*+1-> flag for LAN server*/
   else
