@@ -1,3 +1,7 @@
+Oct 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- update german translation
+- run msgfmt -c in po/updateonepo
+
 Oct 16, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - display players on savage servers
 
