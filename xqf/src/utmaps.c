@@ -49,10 +49,12 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 	int level;
     } DirStackEntry;
 
+    DirStackEntry* dse;
+    
     if(!startdir || !maphash || !suffix)
 	return;
 
-    DirStackEntry* dse = g_new0(DirStackEntry,1);
+    dse = g_new0(DirStackEntry,1);
     dse->name=g_strdup(startdir);
 
     dirstack = g_slist_prepend(dirstack,dse);
