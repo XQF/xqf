@@ -68,7 +68,7 @@ void create_splashscreen (void)
   gtk_container_add (GTK_CONTAINER (splashscreen), vbox1);
   gtk_container_set_border_width (GTK_CONTAINER (vbox1), 3);
 
-  logo = load_pixmap (splashscreen, "xqflogo.png");
+  logo = load_pixmap (splashscreen, "splash.png");
   gtk_widget_ref (logo);
   gtk_object_set_data_full (GTK_OBJECT (splashscreen), "logo", logo,
                             (GtkDestroyNotify) gtk_widget_unref);

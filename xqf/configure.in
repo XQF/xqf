@@ -43,7 +43,6 @@ AC_MSG_RESULT([$USE_GTK2])
 if test "x$USE_GTK2" != "xno"; then
 
         AC_DEFINE_UNQUOTED(USE_GTK2,1,Define if we should use GTK2)
-        AC_MSG_RESULT([$USE_GTK2])
 
         OLD_GTK_SUPPORT="-DGTK_ENABLE_BROKEN=1"
         AC_SUBST(OLD_GTK_SUPPORT)        
@@ -196,6 +195,8 @@ AC_CONFIG_FILES([
 	src/xpm/Makefile
 	src/zip/Makefile
 	docs/Makefile
+	pixmaps/Makefile
+	pixmaps/flags/Makefile
 	xqf.spec
 	intl/Makefile
 	po/Makefile.in

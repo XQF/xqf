@@ -1,3 +1,8 @@
+Oct 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- added kde flag icons
+- new splash screen and desktop icons
+- new directory layout
+
 Oct 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove gettext stuff from repository. Instead autogen.sh will run gettextize
   to create the necessary files

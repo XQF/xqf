@@ -147,45 +147,45 @@ int geoip_id_by_ip(struct in_addr in)
     return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
 }
 
-// TODO: create gui to make "default" part configurable
-static char flagpath[]=PACKAGE_DATA_DIR "/flags/default/%2s.png";
+static char* find_flag_file(int id)
+{
+  char file[] = "flags/lan.png";
+  char* filename;
+
+  if (id != LAN_GeoIPid)
+  {
+    const char* code = geoip_code_by_id(id);
+    if(!code) return NULL;
+    strncpy(file+strlen("flags/"),code,2);
+    strcpy(file+strlen("flags/")+2,".png");
+    g_strdown(file);
+  }
+
+  filename = find_pixmap_directory(file);
+
+  return filename;
+}
 
 struct pixmap* get_pixmap_for_country(int id)
 {
   GdkPixbuf* pixbuf = NULL;
   struct pixmap* pix = NULL;
 
-#ifdef USE_GTK2
-  GError *err=NULL;
-#endif
-
   char* filename = NULL;
 
-  char* code = NULL;
-
-  
   if(!flags) return NULL;
   if(id < 1) return NULL; // no flag for N/A
   
-  code = (char*)geoip_code_by_id(id);
-  if(!code) return NULL;
-
   pix = &flags[id];
 
   if(pix->pix == GINT_TO_POINTER(-1)) return NULL;
   if(pix->pix) return pix;
 
-  code = g_strdup(code);
-  g_strdown(code);
-
-  if(id==LAN_GeoIPid)
-    filename = find_pixmap_directory("lan.png");
-  else
-    filename = g_strdup_printf(flagpath,code);
+  filename = find_flag_file(id);
 
   if(!filename || access(filename,R_OK))
   {
-    g_free(code);
+    g_free(filename);
     return NULL;
   }
 
@@ -193,7 +193,7 @@ struct pixmap* get_pixmap_for_country(int id)
 
 /*FIXME_GTK2: need GError*/
 #ifdef USE_GTK2
-  pixbuf = gdk_pixbuf_new_from_file(filename, &err);
+  pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 #else
   pixbuf = gdk_pixbuf_new_from_file(filename);
 #endif
@@ -203,14 +203,12 @@ struct pixmap* get_pixmap_for_country(int id)
     pix->pix=GINT_TO_POINTER(-1);
     g_warning (_("Error loading pixmap file: %s"), filename);
     g_free (filename);
-    g_free(code);
     return NULL;
   }
 
   gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
 
   gdk_pixbuf_unref(pixbuf);
-  g_free(code);
   g_free (filename);
 
   return pix;

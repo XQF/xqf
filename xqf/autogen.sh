@@ -17,6 +17,10 @@ test -z "$srcdir" && srcdir=.
 (
 cd $srcdir
 
+# extract flag icons
+rm pixmaps/flags/*.png
+tar -C pixmaps -xzf pixmaps/flags.tar.gz
+
 # The autoconf cache (version after 2.52) is not reliable yet.
 rm -rf autom4te.cache
 
