@@ -2542,9 +2542,8 @@ static int ut_exec (const struct condef *con, int forkit) {
   char **info_ptr;
   char* hostport=NULL;
   char* real_server=NULL;
-  gchar* temp1=NULL;
-  gchar* temp2=NULL;
-  gchar* temp3=NULL;
+  char* temp1=NULL;
+  char* temp2=NULL;
 
   cmd = strdup_strip (g->cmd);
 
@@ -2573,39 +2572,32 @@ static int ut_exec (const struct condef *con, int forkit) {
     // gamespy port can be different from game port
     if(hostport)
     {
-      real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
-      argv[argi] = real_server;
+      if (con->password)
+        real_server = g_strdup_printf ("%s:%s?password=%s", inet_ntoa (con->s->host->ip),
+                                                                  hostport, con->password);
+      else
+        real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
+      argv[argi++] = real_server;
     }
     else
-      argv[argi] = con->server;
-
-    // Add password if exists
-    if (con->password) {
-      temp1 = g_strdup_printf ("?password=%s",con->password);
-      temp2 = g_strconcat (argv[argi], temp1, NULL);
-      g_free(temp1);
-      argv[argi] = temp2;
+    {
+      if (con->password) {
+        real_server = g_strdup_printf ("%s?password=%s", con->server, con->password);
+        argv[argi++] = real_server; 
+      }
+      else 
+        argv[argi++] = con->server;
     }
-    // printf("argv[argi]:%s\n",argv[argi]);
+  }
 
-    // Disable sound if needed
-    if (default_nosound) {
-      temp1 = g_strdup_printf ("?UseSound=False");
-      temp3 = g_strconcat (argv[argi], temp1, NULL);
-      g_free(temp1);
-      argv[argi] = temp3;
-    }
-    // printf("argv[argi]:%s\n",argv[argi]);
-
-    argi++;      
+  if (default_nosound) {
+    argv[argi++] = "-nosound";
   }
 
   argv[argi] = NULL;
 
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
-  if(temp2) g_free (temp2);
-  if(temp3) g_free (temp3);
   g_free (cmd);
   g_free (real_server);
   return retval;
