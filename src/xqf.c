@@ -2143,8 +2143,11 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 static void about_dialog (GtkWidget *widget, gpointer data) {
   char *intro = _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n");
   char *version = g_strdup_printf(_("Version %s\n\n"),XQF_VERSION);
+
   /* 8859-1 translators can use the copyright symbol © instead of (C) */
   char *author = _("Copyright (C) 1998-2002 Roman Pozlevich <roma@botik.ru>\n\n");
+  char *urls = _("http://www.linuxgames.com/xqf\n"
+		"http://sourceforge.net/projects/xqf\n\n");
   char *contrib = _("Significant Contributors:\n\n"
 	"Bill Adams <webmaster@evil.inetarena.com>\n"
 	"Alex Burger <alex_b@users.sourceforge.net>\n"
@@ -2152,11 +2155,12 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	"Ludwig Nussel <l-n@users.sourceforge.net>\n\n");
   char *contrib2 = _("Other Contributors:\n\n"
 	"Jochen Baier <email@jochen-baier.de>\n\n");
-  char *urls = _("Web sites:\n\n"
-		"http://www.linuxgames.com/xqf\n"
-		"http://sourceforge.net/projects/xqf");
+  char *bugs = _("Bug reports:\n\n"
+		"http://sourceforge.net/projects/xqf\n\n");
+  char *features = _("Feature requests:\n\n"
+		"http://www.linuxgames.com/xqf Forums section\n");
   dialog_ok (_("About XQF"), 
-	     "%s%s%s%s%s%s",intro,version,author,contrib,contrib2, urls);
+	     "%s%s%s%s%s%s%s%s",intro,version,author,urls,contrib,contrib2,bugs,features);
   g_free(version);
 }
 
