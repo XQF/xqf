@@ -51,7 +51,7 @@ static GtkWidget *master_query_type_radios[MASTER_NUM_QUERY_TYPES];
 
 // get text from master address entry, check if prefix matches radio buttons,
 // modify and write back if needed
-static void master_check_master_addr_prefix()
+static void master_check_master_addr_prefix(void)
 {
   char *pos;
   char *master_addr;
@@ -195,7 +195,7 @@ static void master_address_from_history_selected_callback (GtkWidget *widget,
   master_activate_radio_for_type(type);
 }
 
-char *master2url( struct master *m )
+static char *master2url( struct master *m )
 {
   char *query_type;
   char *address;

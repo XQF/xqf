@@ -83,11 +83,6 @@ extern GtkWidget *server_filter_widget[];
 
 extern	void print_status (GtkWidget *sbar, char *fmt, ...);
 
-extern	int window_delete_event_callback (GtkWidget *widget, gpointer data);
-extern	void register_window (GtkWidget *window);
-extern	void unregister_window (GtkWidget *window);
-extern	GtkWidget *top_window (void);
-
 extern	GtkWidget *create_cwidget (GtkWidget *scrollwin, 
                                                      struct clist_def *cldef);
 
