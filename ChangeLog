@@ -1,3 +1,7 @@
+Sep 27, 2001: Jordi Mallach <jordi@sindominio.net>
+- Updated Spanish translation
+- added gettext cruft to po/.cvsignore
+
 Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
 - made q3_exec usable for Wofenstein, removed wo_exec
 - identify q3/rtcw servers by their version string
