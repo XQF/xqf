@@ -1,3 +1,7 @@
+May 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- replace no longer working Tribes2 master server addresses with
+  current ones (#954570)
+
 May 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - create LaunchInfo.txt by default
 - when suggesting a command, don't add full path (since it will be found in

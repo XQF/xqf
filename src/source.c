@@ -872,9 +872,14 @@ static char *builtin_masters_update_info[] = {
 
   "DELETE T2S master://211.233.32.77:28002 Tribes2 Master", // does no longer work
 
-  "ADD T2S master://198.74.32.54:27999 Master 1",
-  "ADD T2S master://198.74.32.55:27999 Master 2",
-  "ADD T2S master://211.233.86.203:28002 Master 3",
+  "DELETE T2S master://198.74.32.54:27999 Master 1", // does no longer work
+  "DELETE T2S master://198.74.32.55:27999 Master 2", // does no longer work
+  "DELETE T2S master://211.233.86.203:28002 Master 3", // does no longer work
+
+  "ADD T2S master://198.74.35.11:27999 Master 1",
+  "ADD T2S master://198.74.35.17:27999 Master 2",
+  "ADD T2S master://198.74.35.18:27999 Master 3",
+
 
   "ADD WOS master://wolf.idsoftware.com:27950 id",
   "ADD WOETS master://etmaster.idsoftware.com:27950 id",
