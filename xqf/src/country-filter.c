@@ -123,6 +123,12 @@ int geoip_id_by_code(const char *country)
 /*from the napshare source*/
 static gboolean is_private_ip(guint32 ip)
 {
+  /* 127.0.0.0 -- (localhost) */
+  if ((ip & 0xff000000) == 0x7f000000)
+  {
+      return TRUE;
+  }
+
   /* 10.0.0.0 -- (10/8 prefix) */
   if ((ip & 0xff000000) == 0xa000000)
   {
