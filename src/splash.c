@@ -61,6 +61,9 @@ void create_splashscreen (void)
   gtk_window_set_title (GTK_WINDOW (splashscreen), _("XQF: Loading"));
   gtk_window_set_position (GTK_WINDOW (splashscreen), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (splashscreen), TRUE);
+#ifdef USE_GTK2
+  gtk_window_set_type_hint(GTK_WINDOW (splashscreen), GDK_WINDOW_TYPE_HINT_SPLASHSCREEN);
+#endif
 
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_widget_ref (vbox1);

@@ -1,3 +1,7 @@
+Nov 22, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- update German translation because of typo
+- set window type of splash screen in gtk2 version
+
 Nov 22, 2004: Jordi Mallach <jordi@sindominio.net>
 - fix typo: Soure -> Source
 - Update Catalan and Spanish translations
