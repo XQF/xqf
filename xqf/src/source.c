@@ -985,6 +985,8 @@ static char *builtin_masters_update_info[] = {
   "ADD Q3S master://q3master.barrysworld.com:27950 BarrysWorld",
   "ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 Gameaholic.com",
 
+  "ADD HWS master://santa.quakeforge.net:26950 QuakeForge",
+
   "ADD SNS http://www.gameaholic.com/servers/qspy-sin Gameaholic.Com",
   "ADD SNS http://asp.planetquake.com/sinserverlist/servers.txt PlanetQuake",
 
