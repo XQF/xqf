@@ -237,7 +237,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	if ((us = userver_add (addr, port, type)) != NULL)
 //	  conn->uservers = userver_list_add (conn->uservers, us);
 	  conn->uservers = g_slist_prepend (conn->uservers, us);
-	  userver_ref(s);
+	  userver_ref(us);
       }
       g_free (addr);
     }
