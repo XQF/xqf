@@ -1,7 +1,7 @@
 /* unzip.h -- IO for uncompress .zip files using zlib 
-   Version 0.20, September 01th, 2002
+   Version 0.21, March 10th, 2003
 
-   Copyright (C) 1998-2002 Gilles Vollant
+   Copyright (C) 1998-2003 Gilles Vollant
 
    This unzip package allow extract file from .ZIP file, compatible with PKZip 2.04g
      WinZip, InfoZip tools and compatible.
