@@ -1,3 +1,7 @@
+Oct 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add descent3 server listing from d3.descent.cx. Thanks Esa for providing a
+  format suitable for XQF!
+
 Oct 10, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Show UT200[34] mutators as tree like dmflags
 - Add gslist master for RTCW
