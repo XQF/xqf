@@ -581,6 +581,9 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   char *temp_name;
   char *temp_mod;
 
+  char *launchargv[4];
+  int pid;
+   
   con = (struct condef *) job->data;
   job->data = NULL;
 
@@ -703,12 +706,30 @@ static void launch_close_handler (struct stat_job *job, int killed) {
     }
     g_free (fn);
   }
+
+  // Launch pre-launch script
+  if (default_prelaunchexec) {
+
+        pid = fork();
+        if (pid == 0) {
+
+          launchargv[0] = "sh";
+          launchargv[1] = "-c";
+          strcpy(launchargv[2],user_rcdir);
+          strcat(launchargv[2],"/PreLaunch");
+          launchargv[3]= 0;
+          printf("launchargv[2] is %s\n",launchargv[2]);
+          execv("/bin/sh",launchargv);
+        }     
+  }
+
   if (main_window && default_iconify && !default_terminate)
     iconify_window (main_window->window);
 
   if (main_window && default_terminate)
     gtk_widget_destroy (main_window);
 }
+
 
 static void launch_server_handler (struct stat_job *job, struct server *s) {
 

@@ -70,6 +70,7 @@ extern	int	show_default_port;
 extern	int	default_terminate;
 extern	int	default_iconify;
 extern	int	default_launchinfo;
+extern	int	default_prelaunchexec;
 extern  int 	default_save_lists;
 extern	int 	default_save_srvinfo;
 extern	int 	default_save_plrinfo;
