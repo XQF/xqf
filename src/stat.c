@@ -279,16 +279,14 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
   // output from broadcast, last line contains
   // <servertype> <bcastaddr> <number>
-  // this line is skipped by n>3
+  // this line is skipped by n <= 3
   if(conn->master->master_type == MASTER_LAN)
   {
-    if( n > 3 )
+    if( n <= 3 )
       return TRUE;
     type = id2type (token[0]);
-    n = 2;
+    n = 2; // we only need type and ip
   }
-
-
   else if (n >= 3) {
 
     /* Master address/status */
