@@ -768,9 +768,14 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
     else
     {
-      if(m->type==Q3_SERVER && default_q3proto)
+      // add master arguments
+      if(m->type==Q3_SERVER && q3_opts.masterprotocol)
       {
-    	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,default_q3proto);
+    	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,q3_opts.masterprotocol);
+      }
+      else if(m->type==WO_SERVER && wo_opts.masterprotocol)
+      {
+    	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,wo_opts.masterprotocol);
       }
       else
       {

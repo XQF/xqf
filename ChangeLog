@@ -1,3 +1,9 @@
+Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
+- made q3_exec usable for Wofenstein, removed wo_exec
+- identify q3/rtcw servers by their version string
+- use common option struct for all games with q3 engine
+- add configuration options for Wolfenstein to q3 tab
+
 Sept 24,2001: Alex Burger <alex@fragit_dot_net>
 - Changed version to 0.9.7a
 

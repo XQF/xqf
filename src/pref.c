@@ -90,10 +90,7 @@ int     maxretries;
 int     maxsimultaneous;
 
 /* Quake 3 settings */
-char *default_q3proto = NULL;
-int default_q3vmfix;
-int default_q3rafix;
-int default_q3setfs_game;
+struct q3engineopts q3_opts={0}, wo_opts={0}, generic_q3_opts={0};
 
 static	int pref_q1_top_color;
 static	int pref_q1_bottom_color;
@@ -164,6 +161,10 @@ static GtkWidget *vmfixbutton;
 static GtkWidget *rafixbutton;
 static GtkWidget *setfs_gamebutton;
 static GtkWidget *q3proto_entry;
+
+/* Wolfenstein */
+static GtkWidget *wo_proto_entry;
+static GtkWidget *wo_setfs_gamebutton;
 
 struct generic_prefs {
   char *pref_dir;
@@ -350,21 +351,36 @@ static void get_new_defaults (void) {
   config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
 
   str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (q3proto_entry)));
-  if (default_q3proto) g_free (default_q3proto);
-  default_q3proto = str;
+  if (q3_opts.masterprotocol) g_free (q3_opts.masterprotocol);
+  q3_opts.masterprotocol = str;
   config_set_string ("protocol", (str)? str : "");
 
   i = GTK_TOGGLE_BUTTON (vmfixbutton)->active;
-  if (i != default_q3vmfix)
-    config_set_bool ("vmfix", default_q3vmfix = i);
+  if (i != q3_opts.vmfix)
+    config_set_bool ("vmfix", q3_opts.vmfix = i);
 
   i = GTK_TOGGLE_BUTTON (rafixbutton)->active;
-  if (i != default_q3rafix)
-    config_set_bool ("rafix", default_q3rafix = i);
+  if (i != q3_opts.rafix)
+    config_set_bool ("rafix", q3_opts.rafix = i);
 
   i = GTK_TOGGLE_BUTTON (setfs_gamebutton)->active;
-  if (i != default_q3setfs_game)
-    config_set_bool ("setfs_game", default_q3setfs_game = i);
+  if (i != q3_opts.setfs_game)
+    config_set_bool ("setfs_game", q3_opts.setfs_game = i);
+
+  config_pop_prefix ();
+
+  /* Wolfenstein */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (wo_proto_entry)));
+  if (wo_opts.masterprotocol) g_free (wo_opts.masterprotocol);
+  wo_opts.masterprotocol = str;
+  config_set_string ("protocol", (str)? str : "");
+
+  i = GTK_TOGGLE_BUTTON (wo_setfs_gamebutton)->active;
+  if (i != wo_opts.setfs_game)
+    config_set_bool ("setfs_game", wo_opts.setfs_game = i);
 
   config_pop_prefix ();
 
@@ -1584,28 +1600,61 @@ static GtkWidget *q3_options_page (void) {
 
 	  q3proto_entry = gtk_entry_new ();
 	  gtk_entry_set_max_length(GTK_ENTRY (q3proto_entry),3);
-	  if(default_q3proto)
-	    gtk_entry_set_text (GTK_ENTRY (q3proto_entry), default_q3proto);
+	  if(q3_opts.masterprotocol)
+	    gtk_entry_set_text (GTK_ENTRY (q3proto_entry), q3_opts.masterprotocol);
 	  gtk_box_pack_start (GTK_BOX (hbox), q3proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (q3proto_entry);
 
 	gtk_widget_show (hbox);
 
 	vmfixbutton = gtk_check_button_new_with_label (_("vm_cgame fix"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton), default_q3vmfix);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton), q3_opts.vmfix);
 	gtk_box_pack_start (GTK_BOX (vbox), vmfixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (vmfixbutton);
 
 	rafixbutton = gtk_check_button_new_with_label (_("Rocketarena fix"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton), default_q3rafix);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton), q3_opts.rafix);
 	gtk_box_pack_start (GTK_BOX (vbox), rafixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (rafixbutton);
 
 	setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (setfs_gamebutton),
-							default_q3setfs_game);
+							q3_opts.setfs_game);
 	gtk_box_pack_start (GTK_BOX (vbox), setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (setfs_gamebutton);
+
+      gtk_widget_show (vbox);
+    gtk_widget_show (frame);
+
+    frame = gtk_frame_new (games[WO_SERVER].name);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+    gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+
+      vbox = gtk_vbox_new (FALSE, 4);
+      gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+      gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  wo_proto_entry = gtk_entry_new ();
+	  gtk_entry_set_max_length(GTK_ENTRY (wo_proto_entry),3);
+	  if(wo_opts.masterprotocol)
+	    gtk_entry_set_text (GTK_ENTRY (wo_proto_entry), wo_opts.masterprotocol);
+	  gtk_box_pack_start (GTK_BOX (hbox), wo_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (wo_proto_entry);
+
+	gtk_widget_show (hbox);
+
+	wo_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (wo_setfs_gamebutton),
+							wo_opts.setfs_game);
+	gtk_box_pack_start (GTK_BOX (vbox), wo_setfs_gamebutton, FALSE, FALSE, 0);
+	gtk_widget_show (wo_setfs_gamebutton);
 
       gtk_widget_show (vbox);
     gtk_widget_show (frame);
@@ -2290,7 +2339,7 @@ void preferences_dialog (int page_num) {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
   page = q3_options_page ();
-  label = gtk_label_new (_("Q3"));
+  label = gtk_label_new (_("Q3/RTCW"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
@@ -2465,11 +2514,23 @@ int prefs_load (void) {
   /* Quake3 */
   config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
 
-  default_q3proto =           config_get_string ("protocol=66");
-  if(strlen(default_q3proto)==0) default_q3proto=NULL;
-  default_q3vmfix =           config_get_bool ("vmfix=true");
-  default_q3rafix =           config_get_bool ("rafix=true");
-  default_q3setfs_game =           config_get_bool ("setfs_game=true");
+  q3_opts.masterprotocol =   config_get_string ("protocol=66");
+  if ( strlen( q3_opts.masterprotocol ) == 0 )
+	  q3_opts.masterprotocol = NULL;
+  q3_opts.vmfix =            config_get_bool ("vmfix=true");
+  q3_opts.rafix =            config_get_bool ("rafix=true");
+  q3_opts.setfs_game =       config_get_bool ("setfs_game=true");
+
+  config_pop_prefix ();
+
+  /* Wolfenstein */
+  config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
+
+  wo_opts.masterprotocol =   config_get_string ("protocol=55");
+  if ( strlen( wo_opts.masterprotocol ) == 0 )
+	  wo_opts.masterprotocol = NULL;
+  wo_opts.vmfix =            config_get_bool ("vmfix=false");
+  wo_opts.setfs_game =       config_get_bool ("setfs_game=false");
 
   config_pop_prefix ();
 

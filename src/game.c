@@ -219,7 +219,7 @@ struct game games[] = {
     q3_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
-    wo_exec,
+    q3_exec,
     NULL,
     quake_save_info
   },
@@ -1029,6 +1029,16 @@ static void q3_analyze_serverinfo (struct server *s) {
       } else {
 	s->sv_os = '?';
       }
+
+      // check if it's really a q3 server
+      if(!strncmp(info_ptr[1],"Q3",2))
+      {
+	s->type=Q3_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"Wolf",4))
+      {
+	s->type=WO_SERVER;
+      }
     }
     
     else if (strcmp (*info_ptr, "gamename") == 0) {
@@ -1685,6 +1695,21 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   int is_so_mod = 0;
 
+  struct q3engineopts *opts=NULL;
+
+  switch (g->type)
+  {
+    case Q3_SERVER:
+      opts=&q3_opts;
+      break;
+    case WO_SERVER:
+      opts=&wo_opts;
+      break;
+    default:
+      opts=&generic_q3_opts;
+      break;
+  }
+
   cmd = strdup_strip (g->cmd);
   /*
     Figure out what protocal the server
@@ -1759,18 +1784,20 @@ static int q3_exec (const struct condef *con, int forkit) {
   /* If the fs_game or -- more likely -- gamename is set, we want to
      put fs_game on the command line so that the mod is loaded when
      we connect. */
-  if( fs_game =  find_server_setting_for_key ("fs_game", con->s->info)){
+  if((opts->setfs_game || opts->rafix)
+     && (fs_game =  find_server_setting_for_key ("fs_game", con->s->info))){
     /* This will rarely (never?) be called. */
-    if (default_q3setfs_game) {
+    if (opts->setfs_game) {
       argv[argi++] = "+set fs_game";
       argv[argi++] = fs_game;
     }
     if (strcmp( fs_game, "arena") == 0)  is_so_mod = 1;
 
     
-  } else if( fs_game =  find_server_setting_for_key ("gamename", con->s->info)){
+  } else if((opts->setfs_game || opts->rafix)
+      && (fs_game =  find_server_setting_for_key ("gamename", con->s->info))){
     if (strcmp( fs_game, "arena") == 0 )  is_so_mod = 1;
-    if (default_q3setfs_game) {
+    if (opts->setfs_game) {
       argv[argi++] = "+set fs_game";
       argv[argi++] = fs_game;
     }
@@ -1782,17 +1809,14 @@ static int q3_exec (const struct condef *con, int forkit) {
      Hmm, this seems to break osp when set to 0 (for so only). But
      we actually want to set it a 2 to get vm compilation.
   */
- if ( default_q3rafix && is_so_mod) {
+ if ( opts->rafix && is_so_mod) {
     /* FIX ME
        BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
        to run properly.  This is for at least 1.27g.
     */
     argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
-  } else if( default_q3vmfix && ( fs_game =  find_server_setting_for_key ("version", con->s->info))){
-    if (strstr( fs_game, "1.29")){  
+  } else if( opts->vmfix ){
       argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
-      debug (1, "Game is version %s, run with all vm_* at two.\n", fs_game);
-    }    
   }
    
   argv[argi] = NULL;
@@ -1820,119 +1844,6 @@ static int q3_exec (const struct condef *con, int forkit) {
 }
 
 #endif
-
-static int wo_exec (const struct condef *con, int forkit) {
-  char *argv[64];
-  int argi = 0;
-  char *cmd;
-  char *game_dir;
-  char *file;
-
-  char *protocol;
-  char *tmp_cmd;
-  FILE* tmp_fp;
-  char *fs_game;
-
-  struct game *g = &games[con->s->type];
-  int retval;
-
-  int is_so_mod = 0;
-
-  cmd = strdup_strip (g->cmd);
-  /*
-    Figure out what protocal the server
-    is running so we can try to connect
-    with a specialized quake3 script.
-    Please not that for this to work you
-    have to specify the full path to quake3
-    or have it in your cwd.  You need to name 
-    the scripts like quake3proto48. --baa
-  */
-  protocol = find_server_setting_for_key ("protocol", con->s->info);
-  debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
-  tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
-  if( strcspn (cmd, " ")) {
-    strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
-  } else {
-    strcpy (tmp_cmd, cmd);
-  }
-  strcat (tmp_cmd, "proto" ); 
-  strcat (tmp_cmd, protocol);
-  strcat (tmp_cmd, "\0");
-  debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
-  if (tmp_fp = fopen( tmp_cmd, "r" )){
-    fclose (tmp_fp);
-    debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
-    argv[argi++] = tmp_cmd;
-    strtok (cmd, delim);
-  } else {
-    argv[argi++] = strtok (cmd, delim);
-  }
-
-  while ((argv[argi] = strtok (NULL, delim)) != NULL)
-    argi++;
-
-  if (default_nosound) {
-    argv[argi++] = "+set";
-    argv[argi++] = "s_initsound";
-    argv[argi++] = "0";
-  }
-
-  if (con->password || con->rcon_password) {
-    game_dir = quake3_data_dir (g->real_dir);
-
-    if (game_dir) {
-      file = file_in_dir (game_dir, PASSWORD_CFG);
-      if (!write_passwords (file, con)) {
-	if (!dialog_yesno (NULL, 1, "Launch", "Cancel", 
-             "Cannot write to file \"%s\".\n\nLaunch client anyway?", file)) {
-	  g_free (file);
-	  g_free (cmd);
-	  return;
-	}
-      }
-      g_free (file);
-      g_free (game_dir);
-    }
-
-    argv[argi++] = "+exec";
-    argv[argi++] = PASSWORD_CFG;
-  }
-
-  if (con->server) {
-    argv[argi++] = "+connect";
-    argv[argi++] = con->server;
-  }
-
-  if (con->demo) {
-    argv[argi++] = "+record";
-    argv[argi++] = con->demo;
-  }
-
-  argv[argi] = NULL;
-
-#if 1
-  /*
-    If you have the debug level set (e.g. -d 1) then this
-    will show you the command line being exicted.
-  */
-  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
-#else
-  if (get_debug_level()){
-    char **argptr = argv;
-    fprintf (stderr, "wo_exec() -- Would have EXEC> ");
-    while (*argptr)
-      fprintf (stderr, "%s ", *argptr++);
-    fprintf (stderr, "\n");
-  }
-  retval = 1;
-#endif
-
-  g_free (cmd);
-  g_free (tmp_cmd);
-  return retval;
-}
-
 
 
 static int q2_exec_generic (const struct condef *con, int forkit) {
