@@ -65,13 +65,14 @@ gboolean geoip_is_working (void)
 const char* geoip_code_by_id(int id)
 {
   if(id < 0 || id > MaxCountries ) return NULL;
-  
+
   /* LAN server have code ="00" */  
   if (id == LAN_GeoIPid)
     return "00";
-  else  
+  else
     return GeoIP_country_code[id];
 }
+
 
 const char* geoip_name_by_id(int id)
 {
@@ -83,6 +84,23 @@ const char* geoip_name_by_id(int id)
     return GeoIP_country_name[id];
 }
 
+int geoip_id_by_code(const char *country)
+{
+  int i;
+
+  if(!gi) return -1;
+
+  if (strcmp(country,"00")==0)
+    return LAN_GeoIPid;
+
+  for (i=1;i<MaxCountries;++i)
+  {
+    if (strcmp(country,GeoIP_country_code[i])==0) 
+      return i;
+  }
+
+  return 0;
+}
 
 /*Checks for RFC1918 private addresses; returns TRUE if is a private address. */
 /*from the napshare source*/
@@ -110,7 +128,6 @@ static gboolean is_private_ip(guint32 ip)
 }
 
 
-
 int geoip_id_by_ip(struct in_addr in)
 {
 
@@ -121,25 +138,6 @@ int geoip_id_by_ip(struct in_addr in)
     return LAN_GeoIPid;
   else
     return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
-}
-
-
-int geoip_id_by_code(const char *country)
-{
-  int i;
-
-  if(!gi) return -1;
-
-  if (strcmp(country,"00")==0)
-    return LAN_GeoIPid;
-
-  for (i=1;i<MaxCountries;++i)
-  {
-    if (strcmp(country,GeoIP_country_code[i])==0) 
-      return i;
-  }
-
-  return 0;
 }
 
   
@@ -155,6 +153,7 @@ struct pixmap* get_pixmap_for_country(int id)
 
   char* code = NULL;
 
+  
   if(!flags) return NULL;
   if(id < 1) return NULL; // no flag for N/A
   

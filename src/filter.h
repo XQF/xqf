@@ -56,7 +56,7 @@ struct server_filter_vars {
   char 	  *map_contains;
   char	  *server_name_contains;
 #ifdef USE_GEOIP
-  char	  *server_country_contains;
+  GArray *countries;
 #endif
 
 };
