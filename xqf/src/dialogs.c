@@ -160,6 +160,10 @@ static void yes_button_clicked_callback (GtkWidget *widget, int *data) {
   *data = 1;
 }
 
+static void redial_button_clicked_callback (GtkWidget *widget, int *data) {
+  *data = 2;
+}
+
 
 int dialog_yesno (char *title, int defbutton, char *yes, char *no, 
                                                              char *fmt, ...) {
@@ -225,6 +229,98 @@ int dialog_yesno (char *title, int defbutton, char *yes, char *no,
                    GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   if (defbutton == 1)
+    gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
+  gtk_widget_show (hbox);
+
+  gtk_widget_show (main_vbox);
+
+  gtk_widget_show (window);
+
+  gtk_main ();
+
+  unregister_window (window);
+
+  return res;
+}
+
+int dialog_yesnoredial (char *title, int defbutton, char *yes, char *no, char *redial,
+                                                             char *fmt, ...) {
+  GtkWidget *window;
+  GtkWidget *main_vbox;
+  GtkWidget *vbox;
+  GtkWidget *hbox;
+  GtkWidget *button;
+  GtkWidget *label;
+  int res = 0;
+  char buf[2048];
+  va_list ap;
+
+  if (!fmt)
+    return res;
+
+  va_start (ap, fmt);
+  g_vsnprintf (buf, 2048, fmt, ap);
+  va_end (ap);
+
+  window = dialog_create_modal_transient_window (
+                         (title)? title : _("XQF: Warning!"),
+                                          TRUE, TRUE, NULL);
+
+  main_vbox = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
+  gtk_container_add (GTK_CONTAINER (window), main_vbox);
+
+  /* Message */
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 32);
+  gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
+
+  label = gtk_label_new (buf);
+  gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+  gtk_widget_show (label);
+
+  gtk_widget_show (vbox);
+
+  /* Buttons */
+
+  hbox = gtk_hbox_new (TRUE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
+
+  button = gtk_button_new_with_label ((yes)? yes : _("Yes"));
+  gtk_widget_set_usize (button, 96, -1);
+  gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      GTK_SIGNAL_FUNC (yes_button_clicked_callback), &res);
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  if (defbutton == 0)
+    gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
+  button = gtk_button_new_with_label ((no)? no : _("No"));
+  gtk_widget_set_usize (button, 96, -1);
+  gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  if (defbutton == 1)
+    gtk_widget_grab_default (button);
+  gtk_widget_show (button);
+
+  button = gtk_button_new_with_label ((redial)? redial : _("Redial"));
+  gtk_widget_set_usize (button, 96, -1);
+  gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+		      GTK_SIGNAL_FUNC (redial_button_clicked_callback), &res);
+  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+  if (defbutton == 2)
     gtk_widget_grab_default (button);
   gtk_widget_show (button);
 

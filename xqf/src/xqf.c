@@ -34,7 +34,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <signal.h>	/* kill, ... */
 
 #ifdef ENABLE_NLS
 #  include <locale.h>
@@ -174,22 +173,16 @@ static GtkWidget *server_filter_3_widget = NULL;
 
 //XXX GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
 
+static gboolean launch_redial(struct condef *con);
+static void refresh_selected_callback (GtkWidget *widget, gpointer data);
+static void launch_close_handler_part2(struct condef *con);
+
 /** build server filter menu for menubar
  */
 static GtkWidget* create_filter_menu();
 //static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
 static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
-
-void sighandler_debug(int signum)
-{
-    if( signum == SIGUSR1)
-	set_debug_level(get_debug_level()+1);
-    else if( signum == SIGUSR2)
-	set_debug_level(get_debug_level()-1);
-
-    debug(0,"debug level now at %d", get_debug_level());
-}
-
+  
 // returns 0 if equal, -1 if too old, 1 if have > expected
 int compare_qstat_version ( const char* have, const char* expected )
 {
@@ -722,7 +715,7 @@ static void update_server_lists_from_selected_source (void) {
 static int stat_lists_refresh (struct stat_job *job) {
   int items;
   int freeze;
-
+ 
   debug (6, "stat_lists_refresh() -- Job %lx", job);
   items = g_slist_length (job->delayed.queued_servers) + 
                                    g_slist_length (job->delayed.queued_hosts);
@@ -832,7 +825,8 @@ static void stat_lists_master_handler (struct stat_job *job,
 
 
 static void stat_lists (GSList *masters, GSList *names, GSList *servers, 
-                                                              GSList *hosts) {
+                                                   GSList *hosts) {
+
   if (stat_process || (!masters && !names && !servers && !hosts))
     return;
   debug_increase_indent();
@@ -872,19 +866,9 @@ static void stat_one_server (struct server *server) {
 static void launch_close_handler (struct stat_job *job, int killed) {
   struct server_props *props;
   int launch = FALSE;
-  int save = 0;
   struct server *s;
   struct condef *con;
 
-  FILE *f;
-  char *fn;
-  char *temp_name;
-  char *temp_mod;
-  char *temp_game;
-
-  char *launchargv[4];
-  int pid;
-   
   con = (struct condef *) job->data;
   job->data = NULL;
 
@@ -899,28 +883,94 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   s = con->s;
   props = properties (s);
 
-  if (s->ping >= MAX_PING) {
-    launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
-                     _("Server %s:%d is %s.\n\nLaunch client anyway?"),
-                     (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
-                     s->port,
-                     (s->ping == MAX_PING)? "unreachable" : "down");
-    if (!launch) {
-      condef_free (con);
-      return;
+    if (s->ping >= MAX_PING) {
+      launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
+                       _("Server %s:%d is %s.\n\nLaunch client anyway?"),
+                       (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
+                       s->port,
+                       (s->ping == MAX_PING)? "unreachable" : "down");
+      if (!launch) {
+        condef_free (con);
+        return;
+      }
     }
-  }
 
-  if (!launch && s->curplayers >= s->maxplayers && !con->spectate) {
-    launch = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
-		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
-		     (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
+    if (!launch && s->curplayers >= s->maxplayers && !con->spectate) {
+  //  if (!launch && s->curplayers != 99 && !con->spectate) {
+      launch = dialog_yesnoredial (NULL, 1, _("Launch"), _("Cancel"), _("Redial"), 
+  		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
+  		     (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
 		     s->port);
-    if (!launch) {
-      condef_free (con);
-      return;
+      if (!launch) {
+        condef_free (con);
+        return;
+      }
+      else if (launch==2) 
+      {
+        redialserver = 1;
+ 
+        gtk_timeout_add (5000, launch_redial, (gpointer) con);
+
+        server_clist_refresh_server (s);
+
+        return;
+      }
+      else
+        redialserver = 0;
     }
+
+  if(redialserver == 0) // we don't need to redial, so continue
+    launch_close_handler_part2(con);
+}
+
+static gboolean launch_redial(struct condef *con)
+{
+  struct server *s;
+  s = con->s;
+
+  if (redialserver == 0)
+    return FALSE; // stop redialing, we're done
+   
+  refresh_selected_callback(NULL, NULL);
+
+  debug (1, "launch redial server name: s->name:%s\n",s->name);
+  debug (1, "launch redial server ping: s->ping:%s\n",s->ping);  
+  
+  if (s->curplayers < s->maxplayers)
+  //if (s->curplayers == 99)
+  {
+    // server not busy!
+    redialserver = 0;
+    launch_close_handler_part2(con);
+    return FALSE; // stop redialing, we're done   
   }
+  else
+    return TRUE;
+}
+
+
+static void launch_close_handler_part2(struct condef *con)
+{
+  struct server_props *props;
+  int launch = FALSE; 
+  int save = 0;
+  FILE *f;
+  char *fn;
+  char *temp_name;
+  char *temp_mod;
+  char *temp_game;
+
+  struct server *s;
+
+  char *launchargv[4];
+  int pid;
+
+
+
+  s = con->s;
+  props = properties (s);
+
+printf("rest of launch_close_handler\n"); // alex
 
   if (con->spectate) {
     if ((s->flags & SERVER_SP_PASSWORD) == 0) {
@@ -975,6 +1025,8 @@ static void launch_close_handler (struct stat_job *job, int killed) {
 
   if (props && props->custom_cfg)
     con->custom_cfg = g_strdup (props->custom_cfg);
+
+
 
   launch = client_launch (con, TRUE);
   condef_free (con);
@@ -1074,7 +1126,6 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
                         (games[cur_server->type].flags & GAME_CONNECT) == 0) {
     return;
   }
-
   if (games[cur_server->type].config_is_valid && 
                    !(*games[cur_server->type].config_is_valid) (cur_server)) {
     start_preferences_dialog (NULL, PREF_PAGE_GAMES + cur_server->type * 256);
@@ -1112,13 +1163,12 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
 
   }
 
-
   con = condef_new (cur_server);
   con->demo = demo;
   con->spectate = spectate;
 
   stat_process = stat_job_create (NULL, NULL, 
-                                server_list_prepend (NULL, cur_server), NULL);
+                        server_list_prepend (NULL, cur_server), NULL);
   stat_process->data = con;
 
   stat_process->state_handlers = g_slist_prepend (
@@ -1194,7 +1244,11 @@ static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
   GSList *list;
 
   if (stat_process)
+  {
+	  printf("nope\n");
+	  
     return;
+  }
 
   list = server_clist_selected_servers ();
 
@@ -1228,6 +1282,7 @@ static void stop_callback (GtkWidget *widget, gpointer data) {
     stat_stop (stat_process);
     stat_process = NULL;
   }
+  redialserver = 0;  // Reset redialserver so prompt comes up next time 
 }
 
 
@@ -1645,6 +1700,15 @@ static void properties_callback (GtkWidget *widget, gpointer data) {
   }
 }
 
+static void cancelredial_callback (GtkWidget *widget, gpointer data) {
+
+  if (stat_process)
+    return;
+
+  redialserver = 0;
+}
+
+
 
 static void rcon_callback (GtkWidget *widget, gpointer data) {
   struct server_props *sp;
@@ -2034,6 +2098,12 @@ static const struct menuitem srvopt_menu_items[] = {
     &record_menu_item
   },
 
+  { 
+    MENU_ITEM,		N_("Cancel Redial"),   	0,	0,
+    GTK_SIGNAL_FUNC (cancelredial_callback), NULL,
+    &properties_menu_item
+  },
+  
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
@@ -2262,6 +2332,12 @@ static const struct menuitem server_menu_items[] = {
     &server_record_menu_item
   },
 
+  { 
+    MENU_ITEM,		N_("Cancel Redial"),  	0,	0,
+    GTK_SIGNAL_FUNC (cancelredial_callback), NULL,
+    &server_properties_menu_item
+  },
+   
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
@@ -2950,6 +3026,8 @@ int main (int argc, char *argv[]) {
 
   xqf_start_time = time (NULL);
 
+  redialserver=0;
+
 #ifdef ENABLE_NLS
 #  ifdef HAVE_LC_MESSAGES
   setlocale(LC_CTYPE, "");
@@ -3019,8 +3097,6 @@ int main (int argc, char *argv[]) {
 
   client_init ();
   ignore_sigpipe ();
-  on_sig(SIGUSR1, sighandler_debug);
-  on_sig(SIGUSR2, sighandler_debug);
 
   add_server_init ();
   add_master_init ();

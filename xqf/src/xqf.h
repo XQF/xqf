@@ -229,5 +229,7 @@ int check_qstat_version( const char* version );
 
 int filter_start_index;
 
+int redialserver;
+
 #endif /* __XQF_H__ */
 
