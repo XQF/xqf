@@ -50,7 +50,7 @@ static struct clist_column server_columns[9] = {
   { "Players",  65,  GTK_JUSTIFY_RIGHT,  NULL },
   { "Map",      55,  GTK_JUSTIFY_LEFT,   NULL },
   { "Game",     55,  GTK_JUSTIFY_LEFT,   NULL },
-  { "MOD",      55,  GTK_JUSTIFY_LEFT,   NULL }
+  { "GameType",      55,  GTK_JUSTIFY_LEFT,   NULL }
 };
 
 struct clist_def server_clist_def = {

@@ -132,7 +132,7 @@ struct server {
 
   char	*name;
   char	*map;
-  char  *mod;
+  char  *gametype;
   unsigned short maxplayers;
   unsigned short curplayers;
   short	ping;

@@ -689,7 +689,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
     if (f) {
 
        temp_name = cur_server->name;
-       temp_mod = cur_server->mod;
+       temp_mod = cur_server->gametype;
        
        if (!temp_name)
           temp_name = "";

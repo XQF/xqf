@@ -49,7 +49,7 @@ struct server_filter_vars {
   int	  filter_no_cheats;
   int	  filter_no_password;
   char    *filter_name;
-  char    *mod_contains;
+  char    *game_contains;
   char    *version_contains;
 };
 

@@ -1,3 +1,22 @@
+Jan 7, 2001: Alex Burger <alex@fragit.net>
+-Renamed MOD column to GameType
+-Swapped Quake3 'Game' and 'Mod/GameType' columns
+-Swapped UT 'Game' and 'Mod/GameType' columns
+-Renamed all occurences of ->mod in source to ->gametype
+-Changed filter from 'the mod contains' to 'the game contains'
+-Changed all occurences of mod_contains to gametype_contains
+-Version changed to 0.9.6d-beta
+
+Jan 7, 2001: Ludwig Nussel <ludwig.nussel@web.de>
+-Added hl_analyze_serverinfo function to display gamedir and
+ gamename in columns for Half-Life servers.  For example:
+ cstrike and Counter Strike
+-Added un_analyze_serverinfo function to display gametype and
+ gamestyle in columns for Unreal Tournament servers.  For example:
+ game_unrealfortress and hardcore
+-Modified q2_analyze_serverinfo function to display gamename
+ in columns for Quake2 servers.  For example: Lithium II V1.23
+
 Jan 2, 2001: Alex Burger <alex@fragit.net>
 -Change g_gametype of 8 to ' mod ' instead of TeamTournament which 
  TeamArena uses in the in-game browser.
