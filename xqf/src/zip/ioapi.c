@@ -1,9 +1,9 @@
 /* ioapi.c -- IO base function header for compress/uncompress .zip 
    files using zlib + zip or unzip API
 
-   Version 0.20, September 01th, 2002
+   Version 0.21, March 10th, 2003
 
-   Copyright (C) 1998-2002 Gilles Vollant
+   Copyright (C) 1998-2003 Gilles Vollant
 */
 
 #include <stdio.h>

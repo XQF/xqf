@@ -1,9 +1,9 @@
 /* ioapi.h -- IO base function header for compress/uncompress .zip 
    files using zlib + zip or unzip API
 
-   Version 0.20, September 01th, 2002
+   Version 0.21, March 10th, 2003
 
-   Copyright (C) 1998-2002 Gilles Vollant
+   Copyright (C) 1998-2003 Gilles Vollant
 */
 
 #ifndef _ZLIBIOAPI_H
@@ -29,6 +29,10 @@
 #else
 #define ZCALLBACK
 #endif
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef voidpf (ZCALLBACK *open_file_func) OF((voidpf opaque, const char* filename, int mode));
@@ -61,4 +65,11 @@ void fill_fopen_filefunc OF((zlib_filefunc_def* pzlib_filefunc_def));
 #define ZSEEK(filefunc,filestream,pos,mode) ((*((filefunc).zseek_file))((filefunc).opaque,filestream,pos,mode))
 #define ZCLOSE(filefunc,filestream) ((*((filefunc).zclose_file))((filefunc).opaque,filestream))
 #define ZERROR(filefunc,filestream) ((*((filefunc).zerror_file))((filefunc).opaque,filestream))
+
+
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+

@@ -1,7 +1,7 @@
 /* unzip.c -- IO for uncompress .zip files using zlib 
-   Version 0.20, September 01th, 2002
+   Version 0.21, March 10th, 2003
 
-   Copyright (C) 1998-2002 Gilles Vollant
+   Copyright (C) 1998-2003 Gilles Vollant
 
    Read unzip.h for more info
 */
@@ -60,7 +60,7 @@
 
 
 const char unz_copyright[] =
-   " unzip 0.20 Copyright 1998-2002 Gilles Vollant - http://www.winimage.com/zLibDll";
+   " unzip 0.21 Copyright 1998-2003 Gilles Vollant - http://www.winimage.com/zLibDll";
 
 /* unz_file_info_interntal contain internal info about a file in zipfile*/
 typedef struct unz_file_info_internal_s
@@ -1080,6 +1080,8 @@ extern int ZEXPORT unzOpenCurrentFile2 (file, method, level, raw)
       err=inflateInit2(&pfile_in_zip_read_info->stream, -MAX_WBITS);
       if (err == Z_OK)
         pfile_in_zip_read_info->stream_initialised=1;
+      else
+        return err;
         /* windowBits is passed < 0 to tell that there is no zlib header.
          * Note that in this case inflate *requires* an extra "dummy" byte
          * after the compressed stream in order to complete decompression and
