@@ -389,136 +389,131 @@ static int server_pass_filter (struct server *s){
     }
   }/*end version check */
 
-  //printf("RULE!\n");
-
   /* Filter for custom rule */
   if( filter->rule && *filter->rule)
   {
-	//printf("RULE!!\n");	
-
-	char* rule_copy = g_strdup(filter->rule);
-	char* rule_part[3];
-	static const char delim[] = ",\n\r";
-	int match = 0;
-
-	char* rules[40];
-	int num = 0;
-	int i;
-	int found_rule;
-	int allow_flip;
-
-	rules[num++] = strtok(rule_copy, delim);
-	
-	while ((rules[num] = strtok (NULL, delim)) != NULL)
-		num++;
-
-	for (i=0;i<num;i++){
-		//printf("array rule: %s\n",rules[i]);
+    /* printf("RULE!!\n");	*/
+    
+    char* rule_copy = g_strdup(filter->rule);
+    char* rule_part[4];
+    static const char delim[] = ",\n\r";
+    int match = 0;
+    
+    char* rules[40];
+    int num = 0;
+    int i;
+    int found_rule;
+    int allow_flip;
+    
+    rules[num++] = strtok(rule_copy, delim);
+    
+    while ((rules[num] = strtok (NULL, delim)) != NULL)
+      num++;
+    
+    for (i=0;i<num;i++){
+      /* printf("array rule: %s\n",rules[i]); */
+    }
+    
+    for (i=0;i<num;){
+      rule_part[0] = rules[i++];		// Rule must be true / false:	true/false
+      rule_part[1] = rules[i++];		// rule name
+      rule_part[2] = rules[i++];		// operator - can be any of = == > >= <= <
+      rule_part[3] = rules[i++];		// value
+      rule_part[4] = rules[i++];		// rule name must exist - true / false
+      /* printf("working on: %s,%s,%s,%s,%s\n",rule_part[0],rule_part[1],rule_part[2],rule_part[3],rule_part[4]); */
+      
+      found_rule = 0;
+      match = 0;
+      allow_flip = 1;
+      
+      for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+	if (strcasecmp (*info_ptr, rule_part[1]) == 0) {
+	  /* printf("Rule for: %s=%s\n",info_ptr[0],info_ptr[1]); */
+	  found_rule = 1;
+	  if(strcmp( rule_part[2] ,"=") == 0){
+	    /* printf("Rule: =\n");
+	     * printf("!!!=: %s = %s\n",info_ptr[1] , rule_part[3]); */
+	    if(strcasecmp( info_ptr[1], rule_part[3] ) == 0){
+	      match = 1;		  // Found!
+	    }
+	  }
+	  else if(strcmp( rule_part[2] ,"==") == 0){
+	    /* printf("Rule: ==\n");
+	     * printf("!!!: %s == %s\n",info_ptr[1] , rule_part[3]); */
+	    if(lowcasestrstr( info_ptr[1], rule_part[3] )){
+	      match = 1;		  // Found!
+	    }
+	  }
+	  else if(strcmp( rule_part[2] ,">") == 0){
+	    /* printf("Rule: >\n");
+	     * printf("!!!: %f > %f\n",atof(info_ptr[1]) , atof(rule_part[3])); */
+	    if(atof(info_ptr[1]) > atof(rule_part[3])) {
+	      match = 1;		  // Found!
+	    }
+	  }
+	  else if(strcmp( rule_part[2] ,">=") == 0){
+	    /* printf("Rule: >=\n");
+	     * printf("!!!: %f >= %f\n",atof(info_ptr[1]) , atof(rule_part[3])); */
+	    if(atof(info_ptr[1]) >= atof(rule_part[3])) {
+	      match = 1;		  // Found!
+	    }
+	  }
+	  else if(strcmp( rule_part[2] ,"<") == 0){
+	    /* printf("Rule: <\n");
+	     * printf("!!!: %f < %f\n",atof(info_ptr[1]) , atof(rule_part[3])); */
+	    if(atof(info_ptr[1]) < atof(rule_part[3])) {
+	      match = 1;		  // Found!
+	    }
+	  }
+	  else if(strcmp( rule_part[2] ,"<=") == 0){
+	    /* printf("Rule: <=\n");
+	     * printf("!!!: %f < %f\n",atof(info_ptr[1]) , atof(rule_part[3])); */
+	    if(atof(info_ptr[1]) <= atof(rule_part[3])) {
+	      match = 1;		  // Found!
+	    }
+	  }
 	}
-
-	for (i=0;i<num;){
-		rule_part[0] = rules[i++];		// Rule must be true / false:	true/false
-		rule_part[1] = rules[i++];		// rule name
-		rule_part[2] = rules[i++];		// operator - can be any of = == > >= <= <
-		rule_part[3] = rules[i++];		// value
-		rule_part[4] = rules[i++];		// rule name must exist - true / false
-		//printf("working on: %s,%s,%s,%s,%s\n",rule_part[0],rule_part[1],rule_part[2],rule_part[3],rule_part[4]);
-
-		found_rule = 0;
-		match = 0;
-		allow_flip = 1;
-   
-		for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-			if (strcasecmp (*info_ptr, rule_part[1]) == 0) {
-				//printf("Rule for: %s=%s\n",info_ptr[0],info_ptr[1]);
-				found_rule = 1;
-				if(strcmp( rule_part[2] ,"=") == 0){
-					//printf("Rule: =\n");
-					//printf("!!!=: %s = %s\n",info_ptr[1] , rule_part[3]);
-					if(strcasecmp( info_ptr[1], rule_part[3] ) == 0){
-						match = 1;		  // Found!
-			  }
-				}
-				else if(strcmp( rule_part[2] ,"==") == 0){
-					//printf("Rule: ==\n");
-					//printf("!!!: %s == %s\n",info_ptr[1] , rule_part[3]);
-					if(lowcasestrstr( info_ptr[1], rule_part[3] )){
-						match = 1;		  // Found!
-			  }
-				}
-				else if(strcmp( rule_part[2] ,">") == 0){
-					//printf("Rule: >\n");
-					//printf("!!!: %f > %f\n",atof(info_ptr[1]) , atof(rule_part[3]));
-					if(atof(info_ptr[1]) > atof(rule_part[3])) {
-						match = 1;		  // Found!
-			  }
-				}
-				else if(strcmp( rule_part[2] ,">=") == 0){
-					//printf("Rule: >=\n");
-					//printf("!!!: %f >= %f\n",atof(info_ptr[1]) , atof(rule_part[3]));
-					if(atof(info_ptr[1]) >= atof(rule_part[3])) {
-						match = 1;		  // Found!
-			  }
-				}
-				else if(strcmp( rule_part[2] ,"<") == 0){
-					//printf("Rule: <\n");			  
-					//printf("!!!: %f < %f\n",atof(info_ptr[1]) , atof(rule_part[3]));
-					if(atof(info_ptr[1]) < atof(rule_part[3])) {
-						match = 1;		  // Found!
-			  }
-				}
-				else if(strcmp( rule_part[2] ,"<=") == 0){
-					//printf("Rule: <=\n");
-					//printf("!!!: %f < %f\n",atof(info_ptr[1]) , atof(rule_part[3]));
-					if(atof(info_ptr[1]) <= atof(rule_part[3])) {
-						match = 1;		  // Found!
-			  }
-				}
-
-			}
-		}
-		
-		// If the rule was not found in the list
-		if (!found_rule) {
-            // If the 'required' flag is set to true, return false.
-			if(lowcasestrstr( rule_part[4] ,"true")) {
-				//printf("rule not found, returning false\n");
-				if (rule_copy)
-					g_free (rule_copy);
-				return FALSE;
-			}				
-			// If the 'required' flag is set to false, then pretend we found a match and continue.
-			// This can be used when a variable does not show up in the rules becasue it is a default.
-			// For example, most quake2 servers do now show port if it's 27910.  If the user wants all
-			// 27910 servers, then setting required to false and port = 27910 would be correct.
-			if (lowcasestrstr( rule_part[4] ,"false")) {
-				match = 1;
-				allow_flip = 0; // Don't let the match be flipped - ignore true/false for rule
-				//printf("rule not found and not required, continuing\n");
-			}
-		}
-
-		// If the rule is a 'false' match, then flip the result unless allow_flip is 0
-		if (lowcasestrstr( rule_part[0] ,"false") && allow_flip)
-		{
-			//printf("false, so flipping. match was %d and is now ",match);
-			match = !match;
-			//printf("%d\n",match);
-		}
-		
-		// If the rule does not match, then we stop and return false
-		if(!match) {
-			//printf("No match!!\n");
-			if (rule_copy)
-				g_free (rule_copy);
-			return FALSE;
-		}
-		//printf("Match!!\n");
-	
+      }
+      
+      /* If the rule was not found in the list */
+      if (!found_rule) {
+	/* If the 'required' flag is set to true, return false. */
+	if(lowcasestrstr( rule_part[4] ,"true")) {
+	  /* printf("rule not found, returning false\n"); */
+	  if (rule_copy)
+	    g_free (rule_copy);
+	  return FALSE;
+	}				
+	/* If the 'required' flag is set to false, then pretend we found a match and continue.
+	 * This can be used when a variable does not show up in the rules becasue it is a default.
+	 * For example, most quake2 servers do now show port if it's 27910.  If the user wants all
+	 * 27910 servers, then setting required to false and port = 27910 would be correct. */
+	if (lowcasestrstr( rule_part[4] ,"false")) {
+	  match = 1;
+	  allow_flip = 0; // Don't let the match be flipped - ignore true/false for rule
+	  /* printf("rule not found and not required, continuing\n"); */
 	}
+      }
+      
+      /* If the rule is a 'false' match, then flip the result unless allow_flip is 0 */
+      if (lowcasestrstr( rule_part[0] ,"false") && allow_flip)
+      {
+	/* printf("false, so flipping. match was %d and is now ",match); */
+	match = !match;
+	/* printf("%d\n",match); */
+      }
+      
+      /* If the rule does not match, then we stop and return false */
+      if(!match) {
+	/* printf("No match!!\n"); */
 	if (rule_copy)
-		g_free (rule_copy);
-	
+	  g_free (rule_copy);
+	return FALSE;
+      }
+      /* printf("Match!!\n"); */
+    }
+    if (rule_copy)
+      g_free (rule_copy);
   }/* End Filter for custom rule */
 
 #ifdef USE_GEOIP
