@@ -1,4 +1,7 @@
 Sept 24,2001: Alex Burger <alex@fragit_dot_net>
+- Changed version to 0.9.7a
+
+Sept 24,2001: Alex Burger <alex@fragit_dot_net>
 - Added wo_exec function to properly launch Wolf.  Tested with
   Wolfmptest 0.7.16-1
 
