@@ -37,7 +37,7 @@ AM_GNU_GETTEXT
 AM_PATH_GLIB(1.2.0,,exit 1)
 AM_PATH_GTK(1.2.0,,exit 1)
 
-AM_PATH_GDK_PIXBUF
+AM_PATH_GDK_PIXBUF(,,[AC_MSG_ERROR([gdk-pixbuf not found, please install gdk-pixbuf-devel])])
 
 dnl check for qstat
 AC_ARG_WITH(qstat,[  --with-qstat=CMD        use CMD to run qstat])
