@@ -1,3 +1,9 @@
+Dec 27, 2000: Bill Adams <bill@evil.inetarena.com>
+-Adding a server with the Insert key now gives feedback on the status bar.
+-Fixed the core dump.  Perhaps?  So I hope. (added server_ref to 
+ server.c::server_add( )). This will require verification on the reference
+ count but it seemed to fix it for me.
+
 Dec 23, 2000: Alex Burger <alex@fragit.net>
 -Added new Quake3 game types to support Team Arena.  Note: g_gametype values
  of 5 to 8 are now defined by id for Team Arena.  Mod authors usually use 5.
