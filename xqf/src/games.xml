@@ -364,7 +364,10 @@
 	<type>AAO_SERVER</type>
 	<name>America's Army</name>
 	<flags>GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT</flags>
+	<default_port>1716</default_port>
 	<id>AMS</id>
+	<qstat_str>AMS</qstat_str>
+	<qstat_option>-ams</qstat_option>
 	<icon>aao_xpm</icon>
 	<suggest_commands>armyops</suggest_commands>
 	<pd>aao_private</pd>

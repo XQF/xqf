@@ -1,3 +1,7 @@
+Jun 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add support for Americas Army 2.1. Still no master, old version no longer
+  supported, requires recent qstat from cvs (gs2 protocol)
+
 May 29, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add AlienSwarm custom arguments for UT2004, also specify separate log file
   for each mod (patch by Andreas Schneider)
