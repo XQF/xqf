@@ -9,6 +9,13 @@ Oct 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 Oct 04, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - modified that ugly ut2 master hack a little
 
+Oct 04, 2002: Alex Burger <alex@fragit_dot_net>
+- Added support for UT 2003 http masters (not the same as the other
+  http formats) and added full and demo Epic masters
+- Fixed UT 2003 password column (servers use password=0/1 instead of
+  password=False/True)
+- Added sound enable/disable button
+
 Oct 03, 2002: Alex Burger <alex@fragit_dot_net>
 - Added sound support actions for: xqf start, xqf quit, update, refresh,
   stop, server connect, redial success.  Added Preferences / Sound Options.
