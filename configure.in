@@ -5,7 +5,7 @@
 
 AC_INIT(src/xqf.c)
 
-AM_INIT_AUTOMAKE(xqf, 0.9.6g-2408)
+AM_INIT_AUTOMAKE(xqf, 0.9.6g)
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
@@ -112,5 +112,5 @@ if test "$USE_INCLUDED_LIBINTL" = "yes"; then
 fi
 
 AC_OUTPUT([Makefile intl/Makefile po/Makefile.in \
-src/Makefile src/xpm/Makefile announce/Makefile \
+src/Makefile src/xpm/Makefile \
 debian/Makefile])
