@@ -1790,7 +1790,7 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
 
   case 0:
     gtk_editable_select_region (selection_manager, 0, 0);
-    return;
+    break;
 
   case 1:
     s = (struct server *) gtk_clist_get_row_data (
@@ -1798,7 +1798,7 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
     g_snprintf (buf, 256, "%s:%d", inet_ntoa (s->host->ip), s->port);
     gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
     gtk_editable_select_region (selection_manager, 0, -1);
-    return;
+    break;
 
   default:
     for (; selection; selection = selection->next) {
@@ -1811,6 +1811,7 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
     break;
 
   }
+  gtk_editable_copy_clipboard(selection_manager);
 }
 
 static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
@@ -1825,7 +1826,7 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
 
   case 0:
     gtk_editable_select_region (selection_manager, 0, 0);
-    return;
+    break;
 
   case 1:
     s = (struct server *) gtk_clist_get_row_data (
@@ -1834,7 +1835,7 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
        (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
     gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
     gtk_editable_select_region (selection_manager, 0, -1);
-    return;
+    break;
 
   default:
     for (; selection; selection = selection->next) {
@@ -1848,6 +1849,8 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
     break;
 
   }
+
+  gtk_editable_copy_clipboard(selection_manager);
 }
 
 static void update_master_builtin_callback (GtkWidget *widget, gpointer data) {

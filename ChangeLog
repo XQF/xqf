@@ -1,3 +1,7 @@
+Jun 28, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- make Copy and Copy+ menu items also copy to CLIPBOARD instead of only PRIMARY
+  to allow paste via Ctrl-v
+
 Jun 19, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - use separate types for ET and RTCW so update from master doesn't throw away
   all servers. Today's qstat cvs version required.
