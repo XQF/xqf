@@ -86,6 +86,14 @@ const char *arch_label = N_("OS/CPU");
 static struct server_stats *srv_stats;
 static struct arch_stats *srv_archs;
 
+struct players_s
+{
+  int on_os[OS_NUM];
+  int total;
+};
+
+static struct players_s* players;
+
 static int servers_count;
 static int players_count;
 
@@ -97,6 +105,7 @@ static void server_stats_create (void) {
 
   srv_stats = g_malloc0 (sizeof (struct server_stats) * GAMES_TOTAL);
   srv_archs  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
+  players  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
 
   servers_count = 0;
   players_count = 0;
@@ -241,6 +250,8 @@ static void collect_statistics (void) {
 	{
 	  srv_archs[s->type].oscpu[os][cpu]++;
 	  srv_archs[s->type].count++;
+	  players[s->type].on_os[os] += s->curplayers;
+	  players[s->type].total += s->curplayers;
 	}
       }
     }
@@ -379,7 +390,7 @@ static void arch_notebook_page (GtkWidget *notebook,
   int i, j;
   int cpu_total;
 
-  table = gtk_table_new (OS_NUM + 2, CPU_NUM + 2, FALSE);
+  table = gtk_table_new (OS_NUM + 2, CPU_NUM + 3, FALSE);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, 
                                                game_pixmap_with_label (type));
@@ -392,6 +403,7 @@ static void arch_notebook_page (GtkWidget *notebook,
   gtk_table_set_row_spacing (GTK_TABLE (table), 0, 12);
   gtk_table_set_col_spacing (GTK_TABLE (table), OS_NUM, 20);
   gtk_table_set_row_spacing (GTK_TABLE (table), CPU_NUM, 12);
+  gtk_table_set_row_spacing (GTK_TABLE (table), CPU_NUM+1, 12);
 
   put_label_to_table (table, _("CPU  \\  OS"), 0.5, 0, 0);
 
@@ -404,6 +416,7 @@ static void arch_notebook_page (GtkWidget *notebook,
     put_label_to_table (table, _(cpu_names[i]), 0.0, 0, i + 1);
   }
   put_label_to_table (table, _("Total"), 0.0, 0, CPU_NUM + 1);
+  put_label_to_table (table, _("Players"), 0.0, 0, CPU_NUM + 2);
 
   for (j = 0; j < CPU_NUM; j++) {
     cpu_total = 0;
@@ -420,8 +433,11 @@ static void arch_notebook_page (GtkWidget *notebook,
 
   for (i = 0; i < OS_NUM; i++) {
     put_arch_stats (table, arch->oscpu[i][0], arch->count, i + 1, CPU_NUM + 1);
+    put_arch_stats (table, players[type].on_os[i],
+	players[type].total, i + 1, CPU_NUM + 2);
   }
   put_arch_stats (table, arch->count, arch->count, OS_NUM + 1, CPU_NUM + 1);
+  put_arch_stats (table, srv_stats[type].players, players_count, OS_NUM + 1, CPU_NUM + 2);
 
   gtk_widget_show (table);
 }

@@ -30,7 +30,8 @@ extern	struct userver *userver_add (const char *name, unsigned short port,
                                                        enum server_type type);
 extern	void server_free_info (struct server *s);
 
-extern	void server_unref (struct server *s);
+// return NULL if refcount dropped to zero, s otherwise
+extern	struct server* server_unref (struct server *s);
 extern	void userver_unref (struct userver *s);
 
 extern	GSList *server_list_copy (GSList *list);

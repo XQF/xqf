@@ -1,3 +1,10 @@
+Mar 17, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- added navy seals gametype
+- added RTCW protocol 58 to preferences
+- added a server_unref so old servers no longer pile up in srvinfo.gz
+- added player statistics per OS
+- updated german translation
+
 Feb 28, 2002: Jordi Mallach <jordi@sindominio.net>
 - updated copyright notice in about dialog
 - updated Spanish translation.
