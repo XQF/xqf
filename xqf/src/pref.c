@@ -1955,7 +1955,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
     /* Custom Argments frame */
 
-    frame = gtk_frame_new (_("Custom Arguments (may not work with this game)"));
+    frame = gtk_frame_new (_("Custom Arguments"));
     gtk_table_attach_defaults (GTK_TABLE (table), frame, 0, 2, 3, 4);
 
     page_vbox2 = gtk_vbox_new (FALSE, 4);
