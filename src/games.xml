@@ -133,6 +133,9 @@
 	<type>WO_SERVER</type>
 	<name>Wolfenstein</name>
 	<id>WOS</id>
+	<qstat_str>RWS</qstat_str>
+	<qstat_option>-rws</qstat_option>
+	<qstat_master_option>-rwm</qstat_master_option>
 	<icon>wo_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<suggest_commands>wolf</suggest_commands>
@@ -146,6 +149,9 @@
 	<type>WOET_SERVER</type>
 	<name>Enemy Territory</name>
 	<id>WOETS</id>
+	<qstat_str>WOETS</qstat_str>
+	<qstat_option>-woets</qstat_option>
+	<qstat_master_option>-woetm</qstat_master_option>
 	<icon>et_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<suggest_commands>et</suggest_commands>
