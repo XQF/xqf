@@ -4100,8 +4100,6 @@ int prefs_load (void) {
 
   if (oldversion) {
     newversion = g_strcasecmp (oldversion, XQF_VERSION);
-    if (newversion)
-      user_fix_defaults ();
     g_free (oldversion);
   }
   else {

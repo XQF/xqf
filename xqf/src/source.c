@@ -1004,7 +1004,11 @@ static char *builtin_masters_update_info[] = {
   "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
   "ADD UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld",
 
-  "ADD T2S master://211.233.32.77:28002 Tribes2 Master",
+  "DELETE T2S master://211.233.32.77:28002 Tribes2 Master", // does no longer work
+
+  "ADD T2S master://198.74.32.54:27999 Master 1",
+  "ADD T2S master://198.74.32.55:27999 Master 2",
+  "ADD T2S master://211.233.86.203:28002 Master 3",
 
   "ADD WOS master://wolf.idsoftware.com:27950 id",
 
