@@ -1169,7 +1169,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   }
   else {
     
-    if (m->master_type!=MASTER_LAN && !master_qstat_option(m))
+    if (m->master_type!=MASTER_LAN && m->master_type != MASTER_GAMESPY && !master_qstat_option(m))
       return NULL;
 
     argv[argi++] = QSTAT_EXEC;
@@ -1193,7 +1193,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       debug (3, "stat_update_master_qstat() -- MASTER_LAN");
       arg_type = g_strdup_printf("%s,outfile", games[m->type].qstat_option);
     }
-    else if (m->master_type == MASTER_GAMESPY)
+    else if (m->master_type == MASTER_GAMESPY && !master_qstat_option(m))
     {
     	arg_type = g_strdup_printf("-gsm,%s,outfile", games[m->type].qstat_str);
     }

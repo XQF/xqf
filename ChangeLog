@@ -1,3 +1,7 @@
+Sep 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- Fix UT99 master server listing
+- Allow to completely overwrite the qstat master argument via config file
+
 Aug 22, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Set default master protocol version for COD to 5
 
