@@ -1,0 +1,33 @@
+/* XQF - Quake server browser and launcher
+ * Dummy functions for GeoIP
+ * Copyright (C) 2005 Ludwig Nussel <l-n@users.sourceforge.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ */
+
+#include <GeoIP.h>
+
+const char GeoIP_country_code[247][3];
+const char * GeoIP_country_name[247];
+
+GEOIP_API GeoIP* GeoIP_new(int flags)
+{
+	return 0;
+}
+
+GEOIP_API GeoIP* GeoIP_open(const char * filename, int flags)
+{
+	return 0;
+}
