@@ -1,3 +1,6 @@
+Feb 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- don't unset game if it's baseq3 to be able to filter for it
+
 Feb 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - also check GamePassword rule which is used by UT2004
 - add multiplay.co.uk server listing
