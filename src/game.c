@@ -1529,7 +1529,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   struct game *g = &games[con->s->type];
   int retval;
 
-
+  int is_so_mod = 0;
 
   cmd = strdup_strip (g->cmd);
   /*
@@ -1606,9 +1606,14 @@ static int q3_exec (const struct condef *con, int forkit) {
      put fs_game on the command line so that the mod is loaded when
      we connect. */
   if( fs_game =  find_server_setting_for_key ("fs_game", con->s->info)){
+    /* This will rarely (never?) be called. */
     argv[argi++] = "+set fs_game";
     argv[argi++] = fs_game;
+    if (strcmp( fs_game, "arena"))  is_so_mod = 1;
+
+    
   } else if( fs_game =  find_server_setting_for_key ("gamename", con->s->info)){
+    if (strcmp( fs_game, "arena"))  is_so_mod = 1;
     argv[argi++] = "+set fs_game";
     argv[argi++] = fs_game;
   }
@@ -1617,13 +1622,10 @@ static int q3_exec (const struct condef *con, int forkit) {
     BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
     to run properly.  This is for at least 1.27g.
   */
-  if (
-      (strcmp( find_server_setting_for_key ("gamename", con->s->info), "arena" ) == 0) ||
-      (strcmp( find_server_setting_for_key ("fs_game",  con->s->info), "arena" ) == 0)
-      ){
+
+  if (is_so_mod){
     argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
   }
-     
 
   argv[argi] = NULL;
 
