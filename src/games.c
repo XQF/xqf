@@ -221,6 +221,7 @@ struct game games[] = {
     arch_identifier     : "si_version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    cmd_or_dir_changed  : doom3_cmd_or_dir_changed,
     default_home        : "~/.doom3",
     pd                  : &doom3_private,
     main_mod            : stringlist012,

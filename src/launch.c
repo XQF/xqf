@@ -270,7 +270,7 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
 
       if (dir && dir[0] != '\0') {
 	if (chdir (dir) != 0) {
-	  g_snprintf (msg, CLIENT_ERROR_BUFFER, "chdir failed: %s", 
+	  g_snprintf (msg, CLIENT_ERROR_BUFFER, "%schdir failed: %s", 
                           CLIENT_ERROR_MSG_HEAD, g_strerror (errno));
 	  goto error_out;
 	}

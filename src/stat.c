@@ -1327,7 +1327,10 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     else if( games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL )
     {
       // TODO: master protocol should be server specific
-      char* masterprotocol = g_datalist_get_data(&games[m->type].games_data,"masterprotocol");
+      const char* masterprotocol = game_get_attribute(m->type,"masterprotocol");
+      
+      if(masterprotocol && !strcmp(masterprotocol, "auto"))
+	masterprotocol = game_get_attribute(m->type, "_masterprotocol");
 
       if(masterprotocol)
 	arg_type = g_strdup_printf("%s,%s,outfile", master_qstat_option(m),masterprotocol);

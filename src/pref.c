@@ -346,6 +346,8 @@ char* sof2_masterprotocols[] = {
 };
 
 char* doom3_masterprotocols[] = {
+	"auto",
+	"1.35 - 1.0.1282",
 	"1.33 - retail",
 	NULL
 };
@@ -1218,23 +1220,8 @@ static void dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
   g_free (prefs->real_dir);
   prefs->real_dir = expand_tilde (prefs->pref_dir);
 
-  switch (type) {
-
-  case Q1_SERVER:
-    update_q1_skin ();
-    break;
-
-  case QW_SERVER:
-    update_qw_skins (NULL);
-    break;
-
-  case Q2_SERVER:
-    update_q2_skins (NULL);
-    break;
-
-  default:
-    break;
-  }
+  if(games[type].cmd_or_dir_changed)
+      games[type].cmd_or_dir_changed(&games[type]);
 
   update_cfgs (type, prefs->real_dir, NULL);
 }
@@ -2068,6 +2055,9 @@ static void pref_suggest_command(enum server_type type)
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
 
     pref_guess_dir (type, suggested_file, TRUE);
+
+    if(games[type].cmd_or_dir_changed)
+      games[type].cmd_or_dir_changed(&games[type]);
     
     g_free(suggested_file);
     
@@ -3199,6 +3189,12 @@ static GtkWidget *woet_options_page (void) {
   return page_vbox;
 }
 
+
+static void doom3_proto_entry_activate_callback (GtkWidget *widget, gpointer data)
+{
+  games[DOOM3_SERVER].cmd_or_dir_changed(&games[DOOM3_SERVER]);
+}
+
 // additional options for doom3
 static GtkWidget *doom3_options_page (void) {
   GtkWidget *page_vbox;
@@ -3224,6 +3220,12 @@ static GtkWidget *doom3_options_page (void) {
 	  
 	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry),
 		game_get_attribute(DOOM3_SERVER,"masterprotocol"));
+
+	  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (doom3_proto_entry)->entry),
+	      "activate", GTK_SIGNAL_FUNC (doom3_proto_entry_activate_callback), NULL);
+	  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (doom3_proto_entry)->entry),
+	      "focus_out_event", GTK_SIGNAL_FUNC (doom3_proto_entry_activate_callback), NULL);
+
 
 	  gtk_box_pack_start (GTK_BOX (hbox), doom3_proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (doom3_proto_entry);
@@ -5055,7 +5057,7 @@ int prefs_load (void) {
   /* Doom 3 */
   config_push_prefix ("/" CONFIG_FILE "/Game: DOOM3");
   
-  tmp = config_get_string ("protocol=1.33");
+  tmp = config_get_string ("protocol=auto");
   if ( strlen( tmp ) == 0 )
   {
     g_free(tmp);
@@ -5203,6 +5205,9 @@ int prefs_load (void) {
     {
       games[i].init_maps(games[i].type);
     }
+   
+    if(games[i].cmd_or_dir_changed)
+      games[i].cmd_or_dir_changed(&games[i]);
 
     g_free(msg);
   }
@@ -5377,4 +5382,19 @@ static GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry)
 	 gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), text);
     }
     return filesel;
+}
+
+void q1_cmd_or_dir_changed(struct game* g)
+{
+    update_q1_skin();
+}
+
+void qw_cmd_or_dir_changed(struct game* g)
+{
+    update_qw_skins (NULL);
+}
+
+void q2_cmd_or_dir_changed(struct game* g)
+{
+    update_q2_skins (NULL);
 }

@@ -25,6 +25,7 @@
 	<identify_cpu/>
 	<identify_os/>
 	<command/>
+	<cmd_or_dir_changed/>
 	<default_home/>
 	<main_mod/>
 	<pd/>
@@ -187,6 +188,7 @@
 	<get_mapshot>doom3_get_mapshot</get_mapshot>
 	<arch_identifier>si_version</arch_identifier>
 	<command>doom3</command>
+	<cmd_or_dir_changed>doom3_cmd_or_dir_changed</cmd_or_dir_changed>
 	<default_home>~/.doom3</default_home>
 	<main_mod>base</main_mod>
 	<pd>doom3_private</pd>
