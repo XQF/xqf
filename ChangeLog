@@ -1,3 +1,9 @@
+Oct 01, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- major redesign of settings dialog
+- individually configurable nick for q1,qw,q2,t2
+- more translatabe strings
+- updated german translation
+
 Oct  1, 2001: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation
 - added some notes in BUGS

@@ -1355,8 +1355,8 @@ static int write_q1_vars (const char *filename, const struct condef *con) {
   if (!f)
     return FALSE;
 
-  if (default_name)
-    fprintf (f, "name \"%s\"\n", default_name);
+  if (default_q1_name)
+    fprintf (f, "name \"%s\"\n", default_q1_name);
 
   fprintf (f, "color %d %d\n", default_q1_top_color, default_q1_bottom_color);
 
@@ -1379,13 +1379,13 @@ static int write_qw_vars (const char *filename, const struct condef *con) {
   if (!f)
     return FALSE;
 
-  if (default_name)
-    fprintf (f, "name \"%s\"\n", default_name);
+  if (default_qw_name)
+    fprintf (f, "name \"%s\"\n", default_qw_name);
 
   if (default_qw_skin)
     fprintf (f, "skin \"%s\"\n", default_qw_skin);
 
-  fprintf (f, "team \"%s\"\n", (default_team)? default_team : "");
+  fprintf (f, "team \"%s\"\n", (default_qw_team)? default_qw_team : "");
   fprintf (f, "topcolor    \"%d\"\n", default_qw_top_color);
   fprintf (f, "bottomcolor \"%d\"\n", default_qw_bottom_color);
 
@@ -1412,11 +1412,11 @@ static int write_qw_vars (const char *filename, const struct condef *con) {
 
   }
 
-  fprintf (f, "rate        \"%d\"\n", default_rate);
-  fprintf (f, "cl_nodelta  \"%d\"\n", default_cl_nodelta);
-  fprintf (f, "cl_predict_players \"%d\"\n", default_cl_predict);
+  fprintf (f, "rate        \"%d\"\n", default_qw_rate);
+  fprintf (f, "cl_nodelta  \"%d\"\n", default_qw_cl_nodelta);
+  fprintf (f, "cl_predict_players \"%d\"\n", default_qw_cl_predict);
   fprintf (f, "noaim       \"%d\"\n", default_noaim);
-  fprintf (f, "noskins     \"%d\"\n", default_noskins);
+  fprintf (f, "noskins     \"%d\"\n", default_qw_noskins);
   if (default_w_switch >= 0)
     fprintf (f, "setinfo w_switch \"%d\"\n", default_w_switch);
   if (default_b_switch >= 0)
@@ -1440,16 +1440,16 @@ static int write_q2_vars (const char *filename, const struct condef *con) {
   if (!f)
     return FALSE;
 
-  if (default_name)
-    fprintf (f, "set name \"%s\"\n", default_name);
+  if (default_q2_name)
+    fprintf (f, "set name \"%s\"\n", default_q2_name);
 
   if (default_q2_skin)
     fprintf (f, "set skin \"%s\"\n", default_q2_skin);
 
-  fprintf (f, "set rate        \"%d\"\n", default_rate);
-  fprintf (f, "set cl_nodelta  \"%d\"\n", default_cl_nodelta);
-  fprintf (f, "set cl_predict  \"%d\"\n", default_cl_predict);
-  fprintf (f, "set cl_noskins  \"%d\"\n", default_noskins);
+  fprintf (f, "set rate        \"%d\"\n", default_q2_rate);
+  fprintf (f, "set cl_nodelta  \"%d\"\n", default_q2_cl_nodelta);
+  fprintf (f, "set cl_predict  \"%d\"\n", default_q2_cl_predict);
+  fprintf (f, "set cl_noskins  \"%d\"\n", default_q2_noskins);
 
   if (games[Q2_SERVER].game_cfg)
     fprintf (f, "exec \"%s\"\n", games[Q2_SERVER].game_cfg);
@@ -2085,9 +2085,9 @@ static int t2_exec (const struct condef *con, int forkit) {
 
   if (con->server) {
 
-    if(default_name) {   
+    if(default_t2_name) {   
       argv[argi++] = "-login";
-      argv[argi++] = default_name;
+      argv[argi++] = default_t2_name;
     }
 
     argv[argi++] = "-online";

@@ -33,18 +33,18 @@
 
 enum {
   PREF_PAGE_GENERAL = 0,
-  PREF_PAGE_PLAYER,
   PREF_PAGE_GAMES,
   PREF_PAGE_APPEARANCE,
   PREF_PAGE_QSTAT,
-  PREF_PAGE_QWQ2,
-  PREF_PAGE_Q3
 };
 
 extern	char *user_rcdir;
 
-extern  char 	*default_name;
-extern  char 	*default_team;
+extern  char 	*default_q1_name;
+extern  char 	*default_qw_name;
+extern  char 	*default_q2_name;
+extern  char 	*default_t2_name;
+extern  char 	*default_qw_team;
 extern  char 	*default_qw_skin;
 extern  char 	*default_q2_skin;
 extern  int 	default_q1_top_color;
@@ -52,11 +52,15 @@ extern  int 	default_q1_bottom_color;
 extern  int 	default_qw_top_color;
 extern  int 	default_qw_bottom_color;
 
-extern  int 	default_rate;
-extern  int 	default_cl_nodelta;
-extern  int 	default_cl_predict;
+extern  int 	default_qw_rate;
+extern  int 	default_q2_rate;
+extern  int 	default_qw_cl_nodelta;
+extern  int 	default_q2_cl_nodelta;
+extern  int 	default_qw_cl_predict;
+extern  int 	default_q2_cl_predict;
 extern  int 	default_noaim;
-extern  int 	default_noskins;
+extern  int 	default_qw_noskins;
+extern  int 	default_q2_noskins;
 extern  int 	default_b_switch;
 extern  int 	default_w_switch;
 
