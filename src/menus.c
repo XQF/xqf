@@ -96,7 +96,7 @@ static void create_menu_recursive (GtkWidget *menu,
 			      NULL);
 
       ac_key = gtk_label_parse_uline (GTK_LABEL (label), items->label);
-
+      
       if (accel_group && ac_key != GDK_VoidSymbol) {
 	if (GTK_IS_MENU_BAR (menu)) {
 	  gtk_widget_add_accelerator (menu_item, "activate_item", accel_group,

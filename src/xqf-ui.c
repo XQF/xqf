@@ -38,11 +38,15 @@ GtkWidget *pane1_widget;
 GtkWidget *pane2_widget;
 GtkWidget *pane3_widget;
 
-static struct clist_column server_columns[8] = {
+/* If you add a column here to appear in the server
+   list, you need to also add an entry in sort.h and sort.c 
+*/
+static struct clist_column server_columns[9] = {
   { "Name",    180,  GTK_JUSTIFY_LEFT,   NULL },
   { "Address", 140,  GTK_JUSTIFY_LEFT,   NULL },
   { "Ping",     45,  GTK_JUSTIFY_RIGHT,  NULL },
   { "TO",       35,  GTK_JUSTIFY_RIGHT,  NULL },
+  { "Priv",     20,  GTK_JUSTIFY_RIGHT,  NULL },
   { "Players",  65,  GTK_JUSTIFY_RIGHT,  NULL },
   { "Map",      55,  GTK_JUSTIFY_LEFT,   NULL },
   { "Game",     55,  GTK_JUSTIFY_LEFT,   NULL },
@@ -53,7 +57,7 @@ struct clist_def server_clist_def = {
   CWIDGET_CLIST,
   "Server List",
   server_columns,
-  8,
+  9,
   GTK_SELECTION_EXTENDED,
   630, 270,
   SORT_SERVER_PING, GTK_SORT_ASCENDING

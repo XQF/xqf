@@ -102,7 +102,18 @@ int compare_servers (const struct server *s1, const struct server *s2,
   case SORT_SERVER_MOD:
     res = compare_strings (s1->mod, s2->mod);
     break;
-
+    
+  case SORT_SERVER_PRIVATE:
+    if( (s1->flags & SERVER_PASSWORD ) && ( s2->flags & SERVER_PASSWORD ))
+      res = 0;
+    else if (s1->flags & SERVER_PASSWORD )
+      res = 1;
+    else if (s2->flags & SERVER_PASSWORD )
+      res = -1;
+    else
+      res = 0;
+    break;
+    
   case SORT_SERVER_PLAYERS:
     res = s1->curplayers - s2->curplayers;
     if (!res) {

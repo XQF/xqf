@@ -822,6 +822,11 @@ static void q3_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "cheats") == 0) {
       s->flags |= SERVER_CHEATS;
     }
+    else if (strcmp (*info_ptr, "sv_privateClients") == 0) {
+      s->private_client = strtol (info_ptr[1], NULL, 10);
+    }
+ 
+
   }
 }
 

@@ -54,6 +54,7 @@
 
 #include "xpm/man-black.xpm"
 #include "xpm/man-red.xpm"
+#include "xpm/man-yellow.xpm"
 
 #include "xpm/group-red.xpm"
 #include "xpm/group-green.xpm"
@@ -70,7 +71,7 @@
 #include "xpm/server-down.xpm"
 #include "xpm/server-to.xpm"
 #include "xpm/server-error.xpm"
-
+#include "xpm/locked.xpm"
 
 struct pixmap update_pix;
 struct pixmap refresh_pix;
@@ -102,6 +103,7 @@ struct pixmap rminus_pix;
 
 struct pixmap man_black_pix;
 struct pixmap man_red_pix;
+struct pixmap man_yellow_pix;
 
 struct pixmap group_pix[3];
 struct pixmap buddy_pix[9];
@@ -109,6 +111,7 @@ struct pixmap buddy_pix[9];
 struct pixmap error_pix;
 
 struct pixmap server_status[5];
+struct pixmap locked_pix;
 
 static GdkGC *pixmaps_gc;
 static GdkGC *masks_gc;
@@ -197,6 +200,7 @@ void free_pixmaps (void) {
 
   free_pixmap (&man_black_pix);
   free_pixmap (&man_red_pix);
+  free_pixmap (&man_yellow_pix);
 
   for (i = 0; i < 3; i++)
     free_pixmap (&group_pix[i]);
@@ -208,6 +212,8 @@ void free_pixmaps (void) {
 
   for (i = 0; i < 5; i++)
     free_pixmap (&server_status[i]);
+
+  free_pixmap (&locked_pix);
 
   if (pixmaps_gc) {
     gdk_gc_destroy (pixmaps_gc);
@@ -260,6 +266,7 @@ void init_pixmaps (GtkWidget *window) {
 
   create_pixmap (window, &man_black_pix, man_black_xpm);
   create_pixmap (window, &man_red_pix, man_red_xpm);
+  create_pixmap (window, &man_yellow_pix, man_yellow_xpm);
 
   create_pixmap (window, &group_pix[0], group_red_xpm);
   create_pixmap (window, &group_pix[1], group_green_xpm);
@@ -276,6 +283,7 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &server_status[4], server_error_xpm);
 
   create_pixmap (window, &error_pix, error_xpm);
+  create_pixmap (window, &locked_pix, locked_xpm);
 }
 
 
