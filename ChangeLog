@@ -1,3 +1,6 @@
+Jun 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix variable declaration to work with older gcc
+
 Jun 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Option to stop current song in XMMS when launching a game
 - Option to resolve hostnames on update. This way it is possible to display

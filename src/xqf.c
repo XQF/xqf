@@ -1063,6 +1063,7 @@ static gboolean check_launch (struct condef* con)
 static void stopxmms()
 {
   char* xmmssocket = NULL;
+  pid_t pid;
 
   if (!default_stopxmms)
     return;
@@ -1076,7 +1077,7 @@ static void stopxmms()
     return;
   }
 
-  pid_t pid = fork();
+  pid = fork();
   if ( pid == 0) {
     char *argv[3];
     argv[0] = "xmms";
