@@ -1130,6 +1130,7 @@ static void launch_close_handler_part2(struct condef *con)
 
   if (con->spectate) {
     if ((s->flags & SERVER_SP_PASSWORD) == 0) {
+	// XXX what's this good for? looks useless to me -- ln
       con->spectator_password = g_strdup ("1");
     }
     else {

@@ -681,7 +681,7 @@ struct game games[] = {
   },
   {
     UT2_SERVER,
-    GAME_CONNECT | GAME_PASSWORD,
+    GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD,
     "UT 2003",
     UT2_DEFAULT_PORT,
     0,
@@ -1388,6 +1388,9 @@ static void un_analyze_serverinfo (struct server *s) {
 
   /* Clear out the flags */
   s->flags = 0;
+
+  if ((games[s->type].flags & GAME_SPECTATE) != 0)
+    s->flags |= SERVER_SPECTATE;
   
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
@@ -1428,6 +1431,8 @@ static void un_analyze_serverinfo (struct server *s) {
     	( strcmp(info_ptr[1],"False") && strcmp(info_ptr[1],"0") ) )
     {
       s->flags |= SERVER_PASSWORD;
+      if (games[s->type].flags & GAME_SPECTATE)
+	s->flags |= SERVER_SP_PASSWORD;
     }
   }
 
@@ -3194,6 +3199,16 @@ static int ut_exec (const struct condef *con, int forkit) {
     }
     else
       real_server = strdup(con->server);
+
+    if (con->spectate) {
+      char* tmp = NULL;
+      if(real_password(con->spectator_password))
+	tmp = g_strdup_printf("%s?spectatoronly=true?password=%s",real_server,con->spectator_password);
+      else
+	tmp = g_strdup_printf("%s?spectatoronly=true",real_server);
+      g_free(real_server);
+      real_server=tmp;
+    }
 
     // Add password if exists
     if (con->password) {
