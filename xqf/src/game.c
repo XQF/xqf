@@ -2652,7 +2652,8 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = con->custom_cfg;
   }
 
-  if(g->type == Q3_SERVER)
+// useful for wolf too, ef doesn't have it
+//  if(g->type == Q3_SERVER)
   {
     /* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
     punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
@@ -2666,12 +2667,14 @@ static int q3_exec (const struct condef *con, int forkit) {
       }
       else
       {
+	char* option = g_strdup_printf("/" CONFIG_FILE "/Game: %s/punkbuster dialog shown",type2id(g->type));
 	debug( 1, "Got %s for punkbuster\n", punkbuster );
-	if(!config_get_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown"))
+	if(!config_get_bool (option))
 	{
 	  dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
-	  config_set_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown",TRUE);
+	  config_set_bool (option,TRUE);
 	}
+	g_free(option);
       }
     }
   }

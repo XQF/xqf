@@ -237,6 +237,7 @@ static GtkWidget *cg_precachedmodels_spinner;
 /* Wolfenstein */
 static GtkWidget *wo_proto_entry;
 static GtkWidget *wo_setfs_gamebutton;
+static GtkWidget *wo_set_punkbusterbutton;
 
 /* Voyager Elite Force */
 static GtkWidget *ef_proto_entry;
@@ -270,6 +271,7 @@ char* q3_masterprotocols[] = {
 	NULL
 };
 
+// change config_get_string below too!
 char* wo_masterprotocols[] = {
 	"60 - v1.4",
 	"59 - v1.32",
@@ -666,7 +668,6 @@ static void get_new_defaults (void) {
     game_set_attribute(Q3_SERVER,"setfs_game",g_strdup(bool2str(i)));
 
   i = GTK_TOGGLE_BUTTON (set_punkbusterbutton)->active;
-//  if (i != q3_opts.setfs_game)
     config_set_bool ("set_punkbuster", i);
     game_set_attribute(Q3_SERVER,"set_punkbuster",g_strdup(bool2str(i)));
   
@@ -711,6 +712,10 @@ static void get_new_defaults (void) {
   config_set_bool ("setfs_game", i);
   game_set_attribute(WO_SERVER,"setfs_game",g_strdup(bool2str(i)));
 
+  i = GTK_TOGGLE_BUTTON (wo_set_punkbusterbutton)->active;
+  config_set_bool ("set_punkbuster", i);
+  game_set_attribute(WO_SERVER,"set_punkbuster",g_strdup(bool2str(i)));
+  
   config_pop_prefix ();
 
   /* Voyager Elite Force */
@@ -3018,6 +3023,12 @@ static GtkWidget *wolf_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), wo_setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (wo_setfs_gamebutton);
 
+	wo_set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (wo_set_punkbusterbutton),
+		str2bool(game_get_attribute(WO_SERVER,"set_punkbuster")));
+	gtk_box_pack_start (GTK_BOX (page_vbox), wo_set_punkbusterbutton, FALSE, FALSE, 0);
+	gtk_widget_show (wo_set_punkbusterbutton);
+
   gtk_widget_show (page_vbox);
 
   return page_vbox;
@@ -4499,7 +4510,7 @@ int prefs_load (void) {
   /* Wolfenstein */
   config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
   
-  tmp = config_get_string ("protocol=59");
+  tmp = config_get_string ("protocol=60");
   if ( strlen( tmp ) == 0 )
   {
     g_free(tmp);
@@ -4529,7 +4540,6 @@ int prefs_load (void) {
 
   game_set_attribute(EF_SERVER,"masterprotocol",tmp);
   game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
-  game_set_attribute(EF_SERVER,"set_punkbuster",g_strdup(bool2str(config_get_bool ("set_punkbuster=true"))));
 
   config_pop_prefix ();
 
