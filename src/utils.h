@@ -64,5 +64,10 @@ extern	int hostname_is_valid (const char *hostname);
 extern char* find_server_setting_for_key (char*, char**);
 
 
+// return "false" if i == 0, "true" otherwise
+const char* bool2str(int i);
+
+// returns true if str is "true", false otherwise
+int str2bool(const char* str);
 
 #endif /* __UTILS_H__ */

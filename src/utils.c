@@ -482,4 +482,25 @@ char* find_server_setting_for_key (char *key, char **info_ptr){
   }
   return (NULL);
 }
-  
+
+// returns true if str is "true", false otherwise
+int str2bool(const char* str)
+{
+  if(!str) return FALSE;
+
+  if(!strcasecmp(str,"true"))
+  {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+// return "false" if i == 0, "true" otherwise
+const char* bool2str(int i)
+{
+  if(!i)
+  {
+    return "false";
+  }
+  return "true";
+}

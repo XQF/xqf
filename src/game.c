@@ -251,16 +251,16 @@ struct game games[] = {
   },
 
   {
-    STVEF_SERVER,
+    EF_SERVER,
     GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
     "Voyager Elite Force",
-    STVEF_DEFAULT_PORT,
+    EF_DEFAULT_PORT,
     Q3M_DEFAULT_PORT,
-    "STVEFS",
+    "EFS",
     "Q3S",
     "-q3s",
-    "-q3m",
-    &stvef_pix,
+    "-efm",
+    &ef_pix,
 
     q3_parse_player,
     quake_parse_server,
@@ -658,12 +658,29 @@ struct game games[] = {
 };
 
 
+void init_games()
+{
+  int i;
+
+  debug(3,"init_games");
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    g_datalist_init(&games[i].games_data);
+  }
+}
+
 enum server_type id2type (const char *id) {
   int i;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     if (g_strcasecmp (id, games[i].id) == 0)
       return games[i].type;
+  }
+  
+  // workaround for qstat beta
+  if (g_strcasecmp (id, "RWS" ) == 0)
+  {
+    return WO_SERVER;
   }
 
 #ifdef QSTAT23
@@ -1065,7 +1082,7 @@ static void un_analyze_serverinfo (struct server *s) {
   // adjust port if type has changed
   if(s->type != GPS_SERVER && hostport )
   {
-    s->port=hostport;
+    server_change_port(s,hostport);
   }
 
 }
@@ -1391,7 +1408,7 @@ struct q3a_gametype_s wolf_gametype_map[] =
 };
 
 // didn't find docu about this, so use q3a types
-struct q3a_gametype_s stvef_gametype_map[] =
+struct q3a_gametype_s ef_gametype_map[] =
 {
   {
     "baseEF",
@@ -1481,7 +1498,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       // voyager elite force
       else if(!strncmp(info_ptr[1],"ST:V HM",7))
       {
-	s->type=STVEF_SERVER;
+	s->type=EF_SERVER;
       }
     }
     
@@ -1525,9 +1542,9 @@ static void q3_analyze_serverinfo (struct server *s) {
     {
       q3_decode_gametype( s, wolf_gametype_map );
     }
-    else if ( s->type == STVEF_SERVER)
+    else if ( s->type == EF_SERVER)
     {
-      q3_decode_gametype( s, stvef_gametype_map );
+      q3_decode_gametype( s, ef_gametype_map );
     }
   }
 
@@ -1542,7 +1559,7 @@ static void q3_analyze_serverinfo (struct server *s) {
     {
       s->game=NULL;
     }
-    else if ( s->type == STVEF_SERVER && !strcasecmp (s->game, "baseEF"))
+    else if ( s->type == EF_SERVER && !strcasecmp (s->game, "baseEF"))
     {
       s->game=NULL;
     }
@@ -2144,8 +2161,6 @@ static int qw_exec (const struct condef *con, int forkit) {
 }
 
 
-#ifdef QSTAT23
-
 static int q3_exec (const struct condef *con, int forkit) {
   char *argv[64];
   int argi = 0;
@@ -2162,21 +2177,13 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   int is_so_mod = 0;
 
-  struct q3engineopts *opts=NULL;
-
-  switch (g->type)
-  {
-    case Q3_SERVER:
-      opts=&q3_opts;
-      break;
-    case WO_SERVER:
-      opts=&wo_opts;
-      break;
-    default:
-      opts=&generic_q3_opts;
-      break;
-  }
-
+  int rafix = str2bool(g_datalist_get_data(&games[g->type].games_data,"rafix"));
+  int vmfix = str2bool(g_datalist_get_data(&games[g->type].games_data,"vmfix"));
+  int setfs_game = str2bool(g_datalist_get_data(&games[g->type].games_data,"setfs_game"));
+  int pass_memory_options = str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"pass_memory_options"));
+  
+  char* memsettings = NULL;
+  
   cmd = strdup_strip (g->cmd);
   /*
     Figure out what protocal the server
@@ -2271,13 +2278,13 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = "+exec";
     argv[argi++] = con->custom_cfg;
   }
-  
+
   /*
     If the s->game is set, we want to put fs_game on the command
     line so that the mod is loaded when we connect.
   */
-  if((opts->setfs_game || opts->rafix) && con->s->game) {
-    if (opts->setfs_game) {
+  if((setfs_game || rafix) && con->s->game) {
+    if (setfs_game) {
       argv[argi++] = "+set fs_game";
       argv[argi++] = con->s->game;
     }
@@ -2290,15 +2297,28 @@ static int q3_exec (const struct condef *con, int forkit) {
      Hmm, this seems to break osp when set to 0 (for so only). But
      we actually want to set it a 2 to get vm compilation.
   */
- if ( opts->rafix && is_so_mod) {
+ if ( rafix && is_so_mod) {
     /* FIX ME
        BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
        to run properly.  This is for at least 1.27g.
     */
     argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
-  } else if( opts->vmfix ){
+  } else if( vmfix ){
       argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
   }
+
+  if(pass_memory_options == TRUE)
+  {
+    char* com_hunkmegs        = g_datalist_get_data(&games[Q3_SERVER].games_data,"com_hunkmegs");
+    char* com_zonemegs        = g_datalist_get_data(&games[Q3_SERVER].games_data,"com_zonemegs");
+    char* com_soundmegs       = g_datalist_get_data(&games[Q3_SERVER].games_data,"com_soundmegs");
+    char* cg_precachedmodels  = g_datalist_get_data(&games[Q3_SERVER].games_data,"cg_precachedmodels");
+
+    memsettings = g_strdup_printf("+set com_hunkmegs %s +set com_zonemegs %s +set com_soundmegs %s +set cg_precachedmodels %s",
+	com_hunkmegs, com_zonemegs, com_soundmegs, cg_precachedmodels);
+    argv[argi++] = memsettings;
+  }
+
    
   argv[argi] = NULL;
 
@@ -2319,13 +2339,11 @@ static int q3_exec (const struct condef *con, int forkit) {
   retval = 1;
 #endif
 
+  if (memsettings) g_free (memsettings);
   g_free (cmd);
   g_free (tmp_cmd);
   return retval;
 }
-
-#endif
-
 
 static int q2_exec_generic (const struct condef *con, int forkit) {
   char *argv[32];

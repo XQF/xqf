@@ -40,6 +40,8 @@
 #include "rc.h"
 #include "debug.h"
 
+static struct generic_prefs* new_generic_prefs (void);
+
 char 	*user_rcdir = NULL;
 
 char 	*default_q1_name = NULL;
@@ -94,7 +96,7 @@ int     maxretries;
 int     maxsimultaneous;
 
 /* Quake 3 settings */
-struct q3engineopts q3_opts={0}, wo_opts={0}, generic_q3_opts={0};
+//struct q3engineopts wo_opts={0}, generic_q3_opts={0};
 
 static	int pref_q1_top_color;
 static	int pref_q1_bottom_color;
@@ -169,10 +171,20 @@ static GtkWidget *vmfixbutton;
 static GtkWidget *rafixbutton;
 static GtkWidget *setfs_gamebutton;
 static GtkWidget *q3proto_entry;
+static GtkWidget *pass_memory_options_button;
+static GtkWidget *com_hunkmegs_spinner;
+static GtkWidget *com_soundmegs_spinner;
+static GtkWidget *com_zonemegs_spinner;
+static GtkWidget *cg_precachedmodels_spinner;
+
 
 /* Wolfenstein */
 static GtkWidget *wo_proto_entry;
 static GtkWidget *wo_setfs_gamebutton;
+
+/* Voyager Elite Force */
+static GtkWidget *ef_proto_entry;
+static GtkWidget *ef_setfs_gamebutton;
 
 struct generic_prefs {
   char *pref_dir;
@@ -183,9 +195,13 @@ struct generic_prefs {
   GtkWidget *game_button;
   // function for adding game specific tabs to notebook
   void (*add_options_to_notebook) (GtkWidget *notebook);
+
+  // game specific data
+  GData* games_data;
+
 } *genprefs = NULL;
 
-char* q3_masterprocols[] = {
+char* q3_masterprotocols[] = {
 	"67 - v1.31",
 	"66 - v1.30",
 	"48 - v1.27",
@@ -195,11 +211,16 @@ char* q3_masterprocols[] = {
 	NULL
 };
 
-char* wo_masterprocols[] = {
+char* wo_masterprotocols[] = {
 	"58 - v1.3",
 	"57 - retail",
 	"56 - test2",
 	"55 - test1",
+	NULL
+};
+
+char* ef_masterprotocols[] = {
+	"24",
 	NULL
 };
 
@@ -279,6 +300,26 @@ static void load_game_defaults (enum server_type type) {
   config_pop_prefix ();
 }
 
+// verify Quake3 settings, return false if something's not ok
+static int verify_q3_settings (void)
+{
+  int com_hunkmegs        = 0;
+  int com_zonemegs        = 0;
+  int com_soundmegs       = 0;
+  int cg_precachedmodels  = 0;
+
+  com_hunkmegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
+  com_soundmegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
+  com_zonemegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
+  cg_precachedmodels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
+
+  if( com_soundmegs + com_zonemegs >= com_hunkmegs )
+  {
+    dialog_ok (NULL, _("com_soundmegs and com_zonemegs must be lower than com_hunkmegs"));
+    return FALSE;
+  }
+  return TRUE;
+}
 
 static void get_new_defaults (void) {
   int i;
@@ -433,23 +474,48 @@ static void get_new_defaults (void) {
   // locate first space and mark it as str's end
   str1 = strchr(str,' ');
   if (str1) *str1='\0';
-  if (q3_opts.masterprotocol) g_free (q3_opts.masterprotocol);
-  q3_opts.masterprotocol = strdup_strip(str);
+
+  
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"masterprotocol",strdup_strip(str));
   config_set_string ("protocol", (str)? str : "");
   g_free(str);
   str=NULL;
 
   i = GTK_TOGGLE_BUTTON (vmfixbutton)->active;
-  if (i != q3_opts.vmfix)
-    config_set_bool ("vmfix", q3_opts.vmfix = i);
+//  if (i != q3_opts.vmfix)
+    config_set_bool ("vmfix", i);
+    g_datalist_set_data_free(&games[Q3_SERVER].games_data,"vmfix",g_strdup(bool2str(i)));
 
   i = GTK_TOGGLE_BUTTON (rafixbutton)->active;
-  if (i != q3_opts.rafix)
-    config_set_bool ("rafix", q3_opts.rafix = i);
+//  if (i != q3_opts.rafix)
+    config_set_bool ("rafix", i);
+    g_datalist_set_data_free(&games[Q3_SERVER].games_data,"rafix",g_strdup(bool2str(i)));
 
   i = GTK_TOGGLE_BUTTON (setfs_gamebutton)->active;
-  if (i != q3_opts.setfs_game)
-    config_set_bool ("setfs_game", q3_opts.setfs_game = i);
+//  if (i != q3_opts.setfs_game)
+    config_set_bool ("setfs_game", i);
+    g_datalist_set_data_free(&games[Q3_SERVER].games_data,"setfs_game",g_strdup(bool2str(i)));
+  
+  
+  i = GTK_TOGGLE_BUTTON (pass_memory_options_button)->active;
+  config_set_bool ("pass_memory_options", i);
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"pass_memory_options",g_strdup(bool2str(i)));
+
+  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
+  config_set_int ("com_hunkmegs", i);
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"com_hunkmegs",g_strdup_printf("%d",i));
+
+  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
+  config_set_int ("com_soundmegs", i);
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"com_soundmegs",g_strdup_printf("%d",i));
+
+  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
+  config_set_int ("com_zonemegs", i);
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"com_zonemegs",g_strdup_printf("%d",i));
+
+  i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
+  config_set_int ("cg_precachedmodels", i);
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"cg_precachedmodels",g_strdup_printf("%d",i));
 
   config_pop_prefix ();
 
@@ -461,15 +527,35 @@ static void get_new_defaults (void) {
   // locate first space and mark it as str's end
   str1 = strchr(str,' ');
   if (str1) *str1='\0';
-  if (wo_opts.masterprotocol) g_free (wo_opts.masterprotocol);
-  wo_opts.masterprotocol = strdup_strip(str);
+
+  g_datalist_set_data_free(&games[WO_SERVER].games_data,"masterprotocol",strdup_strip(str));
   config_set_string ("protocol", (str)? str : "");
   g_free(str);
   str=NULL;
 
   i = GTK_TOGGLE_BUTTON (wo_setfs_gamebutton)->active;
-  if (i != wo_opts.setfs_game)
-    config_set_bool ("setfs_game", wo_opts.setfs_game = i);
+  config_set_bool ("setfs_game", i);
+  g_datalist_set_data_free(&games[WO_SERVER].games_data,"setfs_game",g_strdup(bool2str(i)));
+
+  config_pop_prefix ();
+
+  /* Voyager Elite Force */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: EFS");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
+
+  g_datalist_set_data_free(&games[EF_SERVER].games_data,"masterprotocol",strdup_strip(str));
+  config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
+
+  i = GTK_TOGGLE_BUTTON (ef_setfs_gamebutton)->active;
+  config_set_bool ("setfs_game", i);
+  g_datalist_set_data_free(&games[EF_SERVER].games_data,"setfs_game",g_strdup(bool2str(i)));
 
   config_pop_prefix ();
 
@@ -604,7 +690,17 @@ static void get_new_defaults (void) {
   rc_save ();
 }
 
-
+// call various verification fuctions, store settings and destroy preferences
+// window if everything's fine
+static void ok_callback (GtkWidget *widget, GtkWidget* window)
+{
+  if(!verify_q3_settings())
+  {
+    return;
+  }
+  get_new_defaults();
+  gtk_widget_destroy(window);
+}
 
 static void update_q1_skin (void) {
 
@@ -1887,12 +1983,12 @@ static GtkWidget *q3_options_page (void) {
 //	  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry), 3);
 	  gtk_combo_set_use_arrows_always (GTK_COMBO (q3proto_entry), TRUE);
 	  gtk_combo_set_popdown_strings(GTK_COMBO (q3proto_entry),
-			  createGListfromchar(q3_masterprocols));
+			  createGListfromchar(q3_masterprotocols));
 	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (q3proto_entry)->list),
 			  GTK_SELECTION_BROWSE);
-	  if(q3_opts.masterprotocol)
-	    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry),
-			    q3_opts.masterprotocol);
+
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry),
+		g_datalist_get_data(&games[Q3_SERVER].games_data,"masterprotocol"));
 
 	  gtk_box_pack_start (GTK_BOX (hbox), q3proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (q3proto_entry);
@@ -1900,22 +1996,214 @@ static GtkWidget *q3_options_page (void) {
 	gtk_widget_show (hbox);
 
 	vmfixbutton = gtk_check_button_new_with_label (_("vm_cgame fix"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton), q3_opts.vmfix);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton),
+		str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"vmfix")));
 	gtk_box_pack_start (GTK_BOX (page_vbox), vmfixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (vmfixbutton);
 
 	rafixbutton = gtk_check_button_new_with_label (_("Rocketarena fix"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton), q3_opts.rafix);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton),
+		str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"rafix")));
 	gtk_box_pack_start (GTK_BOX (page_vbox), rafixbutton, FALSE, FALSE, 0);
 	gtk_widget_show (rafixbutton);
 
 	setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (setfs_gamebutton),
-							q3_opts.setfs_game);
+		str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"setfs_game")));
 	gtk_box_pack_start (GTK_BOX (page_vbox), setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (setfs_gamebutton);
 
   gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
+static void q3_set_memory_callback (GtkWidget *widget, int what)
+{
+  int com_hunkmegs        = 56;
+  int com_zonemegs        = 16;
+  int com_soundmegs       = 8;
+  int cg_precachedmodels  = 3;
+
+  if(what == 1)
+  {
+    com_hunkmegs        = 72;
+    com_zonemegs        = 24;
+    com_soundmegs       = 16;
+    cg_precachedmodels  = 6;
+  }
+  else if(what == 2)
+  {
+    com_hunkmegs        = 96;
+    com_zonemegs        = 24;
+    com_soundmegs       = 16;
+    cg_precachedmodels  = 15;
+  }
+
+  gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
+	GTK_SPIN_BUTTON(com_hunkmegs_spinner)),com_hunkmegs);
+  gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
+	GTK_SPIN_BUTTON(com_zonemegs_spinner)),com_zonemegs);
+  gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
+	GTK_SPIN_BUTTON(com_soundmegs_spinner)),com_soundmegs);
+  gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
+	GTK_SPIN_BUTTON(cg_precachedmodels_spinner)),cg_precachedmodels);
+}
+
+static GtkWidget *q3_mem_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *hbox2;
+  GtkWidget *label;
+  GtkWidget *frame;
+  GtkObject *adj;
+  GtkWidget *button;
+
+  int pass_memory_options = str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"pass_memory_options"));
+  int com_hunkmegs        = atoi(g_datalist_get_data(&games[Q3_SERVER].games_data,"com_hunkmegs"));
+  int com_zonemegs        = atoi(g_datalist_get_data(&games[Q3_SERVER].games_data,"com_zonemegs"));
+  int com_soundmegs       = atoi(g_datalist_get_data(&games[Q3_SERVER].games_data,"com_soundmegs"));
+  int cg_precachedmodels  = atoi(g_datalist_get_data(&games[Q3_SERVER].games_data,"cg_precachedmodels"));
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	pass_memory_options_button = gtk_check_button_new_with_label (_("Pass memory settings on command line"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pass_memory_options_button), pass_memory_options);
+	gtk_box_pack_start (GTK_BOX (page_vbox), pass_memory_options_button, FALSE, FALSE, 0);
+	gtk_widget_show (pass_memory_options_button);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  adj = gtk_adjustment_new (com_hunkmegs, 32, 1024, 8, 32, 0);
+	  com_hunkmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
+//	  g_datalist_set_data(&genprefs[Q3_SERVER].games_data,"com_hunkmegs_spinner",com_hunkmegs_spinner);
+	  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_hunkmegs_spinner), 
+                                                            GTK_UPDATE_ALWAYS);
+	  gtk_widget_set_usize (com_hunkmegs_spinner, 64, -1);
+
+	  gtk_box_pack_start (GTK_BOX (hbox), com_hunkmegs_spinner, FALSE, FALSE, 0);
+	  gtk_widget_show (com_hunkmegs_spinner);
+	 
+	  // Mega Byte
+	  label = gtk_label_new (_("MB"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  label = gtk_label_new (_("com_hunkmegs"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	gtk_widget_show (hbox);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  adj = gtk_adjustment_new (com_zonemegs, 16, 1024, 4, 8, 0);
+	  com_zonemegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
+//	  g_datalist_set_data(&genprefs[Q3_SERVER].games_data,"com_zonemegs_spinner",com_zonemegs_spinner);
+	  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_zonemegs_spinner), 
+                                                            GTK_UPDATE_ALWAYS);
+	  gtk_widget_set_usize (com_zonemegs_spinner, 64, -1);
+
+	  gtk_box_pack_start (GTK_BOX (hbox), com_zonemegs_spinner, FALSE, FALSE, 0);
+	  gtk_widget_show (com_zonemegs_spinner);
+	 
+	  // Mega Byte
+	  label = gtk_label_new (_("MB"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  label = gtk_label_new (_("com_zonemegs"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	gtk_widget_show (hbox);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  adj = gtk_adjustment_new (com_soundmegs, 16, 1024, 4, 8, 0);
+	  com_soundmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
+//	  g_datalist_set_data(&genprefs[Q3_SERVER].games_data,"com_soundmegs_spinner",com_soundmegs_spinner);
+	  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_soundmegs_spinner), 
+                                                            GTK_UPDATE_ALWAYS);
+	  gtk_widget_set_usize (com_soundmegs_spinner, 64, -1);
+
+	  gtk_box_pack_start (GTK_BOX (hbox), com_soundmegs_spinner, FALSE, FALSE, 0);
+	  gtk_widget_show (com_soundmegs_spinner);
+	 
+	  // Mega Byte
+	  label = gtk_label_new (_("MB"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  label = gtk_label_new (_("com_soundmegs"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	gtk_widget_show (hbox);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  // value, lower, upper, step_increment, page_increment, page_size 
+	  adj = gtk_adjustment_new (cg_precachedmodels, 2, 32, 1, 4, 0);
+	  cg_precachedmodels_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
+	  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (cg_precachedmodels_spinner), 
+                                                            GTK_UPDATE_ALWAYS);
+	  gtk_widget_set_usize (cg_precachedmodels_spinner, 64, -1);
+
+	  gtk_box_pack_start (GTK_BOX (hbox), cg_precachedmodels_spinner, FALSE, FALSE, 0);
+	  gtk_widget_show (cg_precachedmodels_spinner);
+	 
+	  // Mega Byte
+	  label = gtk_label_new (_("MB"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  label = gtk_label_new (_("cg_precachedmodels"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+	  
+	gtk_widget_show (hbox);
+
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 8);
+
+	  frame = gtk_frame_new (_("Preset values"));
+	  gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
+
+	    hbox2 = gtk_hbox_new (FALSE, 8);
+	    gtk_container_set_border_width(GTK_CONTAINER(hbox2),8);
+	    gtk_container_add (GTK_CONTAINER (frame), hbox2);
+	    
+	      button = gtk_button_new_with_label(_("Default"));
+	      gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
+	      gtk_signal_connect (GTK_OBJECT (button), "clicked",
+                       GTK_SIGNAL_FUNC (q3_set_memory_callback), (gpointer) 0);
+	      gtk_widget_show (button);
+	    
+	      button = gtk_button_new_with_label(_("128MB"));
+	      gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
+	      gtk_signal_connect (GTK_OBJECT (button), "clicked",
+                       GTK_SIGNAL_FUNC (q3_set_memory_callback), (gpointer) 1);
+	      gtk_widget_show (button);
+	    
+	      button = gtk_button_new_with_label(_(">256MB"));
+	      gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
+	      gtk_signal_connect (GTK_OBJECT (button), "clicked",
+                       GTK_SIGNAL_FUNC (q3_set_memory_callback), (gpointer) 2);
+	      gtk_widget_show (button);
+	    
+	    gtk_widget_show (hbox2);
+
+	  gtk_widget_show (frame);
+
+	gtk_widget_show (hbox);
+
+    gtk_widget_show (page_vbox);
 
   return page_vbox;
 }
@@ -1946,12 +2234,12 @@ static GtkWidget *wolf_options_page (void) {
 //	  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry), 3);
 	  gtk_combo_set_use_arrows_always (GTK_COMBO (wo_proto_entry), TRUE);
 	  gtk_combo_set_popdown_strings(GTK_COMBO (wo_proto_entry),
-			  createGListfromchar(wo_masterprocols));
+			  createGListfromchar(wo_masterprotocols));
 	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (wo_proto_entry)->list),
 			  GTK_SELECTION_BROWSE);
-	  if(wo_opts.masterprotocol)
-	    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry),
-			    wo_opts.masterprotocol);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry),
+		g_datalist_get_data(&games[WO_SERVER].games_data,"masterprotocol"));
 
 	  gtk_box_pack_start (GTK_BOX (hbox), wo_proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (wo_proto_entry);
@@ -1960,9 +2248,51 @@ static GtkWidget *wolf_options_page (void) {
 
 	wo_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (wo_setfs_gamebutton),
-							wo_opts.setfs_game);
+		str2bool(g_datalist_get_data(&games[WO_SERVER].games_data,"setfs_game")));
 	gtk_box_pack_start (GTK_BOX (page_vbox), wo_setfs_gamebutton, FALSE, FALSE, 0);
 	gtk_widget_show (wo_setfs_gamebutton);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
+// additional options for voyager elite force
+static GtkWidget *ef_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  ef_proto_entry = gtk_combo_new ();
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (ef_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (ef_proto_entry),
+			  createGListfromchar(ef_masterprotocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (ef_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry),
+		g_datalist_get_data(&games[EF_SERVER].games_data,"masterprotocol"));
+
+	  gtk_box_pack_start (GTK_BOX (hbox), ef_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (ef_proto_entry);
+
+	gtk_widget_show (hbox);
+
+	ef_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ef_setfs_gamebutton),
+		str2bool(g_datalist_get_data(&games[EF_SERVER].games_data,"setfs_game")));
+	gtk_box_pack_start (GTK_BOX (page_vbox), ef_setfs_gamebutton, FALSE, FALSE, 0);
+	gtk_widget_show (ef_setfs_gamebutton);
 
   gtk_widget_show (page_vbox);
 
@@ -1972,11 +2302,17 @@ static GtkWidget *wolf_options_page (void) {
 void add_q3_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_options_page(), gtk_label_new (_("Options")));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_mem_options_page(), gtk_label_new (_("Memory")));
 }
 
 void add_wolf_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), wolf_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_ef_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), ef_options_page(), gtk_label_new (_("Options")));
 }
 
 static GtkWidget *qw_options_page (void) {
@@ -2618,8 +2954,13 @@ static GtkWidget *qstat_options_page (void) {
   return page_vbox;
 }
 
-static void set_pref_defaults (void) {
+// constructor for generic_prefs
+static struct generic_prefs* new_generic_prefs (void) {
   int i;
+
+  struct generic_prefs* new_genprefs;
+
+  new_genprefs = g_malloc0 (sizeof (struct generic_prefs) * GAMES_TOTAL);
 
   pref_q1_top_color    = default_q1_top_color;
   pref_q1_bottom_color = default_q1_bottom_color;
@@ -2635,17 +2976,33 @@ static void set_pref_defaults (void) {
   pref_qw_skin      = g_strdup (default_qw_skin);
   pref_q2_skin      = g_strdup (default_q2_skin);
 
-  genprefs[Q1_SERVER].add_options_to_notebook = add_q1_options_to_notebook;
-  genprefs[QW_SERVER].add_options_to_notebook = add_qw_options_to_notebook;
-  genprefs[Q2_SERVER].add_options_to_notebook = add_q2_options_to_notebook;
-  genprefs[Q3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
-  genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
-  genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
+  new_genprefs[Q1_SERVER].add_options_to_notebook = add_q1_options_to_notebook;
+  new_genprefs[QW_SERVER].add_options_to_notebook = add_qw_options_to_notebook;
+  new_genprefs[Q2_SERVER].add_options_to_notebook = add_q2_options_to_notebook;
+  new_genprefs[Q3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
+  new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
+  new_genprefs[EF_SERVER].add_options_to_notebook = add_ef_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
-    genprefs[i].pref_dir = g_strdup (games[i].dir);
-    genprefs[i].real_dir = g_strdup (games[i].real_dir);
+    new_genprefs[i].pref_dir = g_strdup (games[i].dir);
+    new_genprefs[i].real_dir = g_strdup (games[i].real_dir);
+    g_datalist_init(&new_genprefs[i].games_data);
   }
+
+  return new_genprefs;
+}
+
+static void generic_prefs_free(struct generic_prefs* prefs)
+{
+  int i;
+  if(!prefs) return;
+  
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    g_datalist_clear(&prefs[i].games_data);
+  }
+  g_free(prefs);
 }
 
 void preferences_dialog (int page_num) {
@@ -2664,10 +3021,7 @@ void preferences_dialog (int page_num) {
   game_num = page_num / 256;
   page_num = page_num % 256;
 
-  if (!genprefs)
-    genprefs = g_malloc0 (sizeof (struct generic_prefs) * GAMES_TOTAL);
-
-  set_pref_defaults ();
+  genprefs = new_generic_prefs ();
 
   window = dialog_create_modal_transient_window (
                                     _("XQF: Preferences"), TRUE, FALSE, NULL);
@@ -2764,9 +3118,7 @@ void preferences_dialog (int page_num) {
   button = gtk_button_new_with_label (_("OK"));
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-		                     GTK_SIGNAL_FUNC (get_new_defaults), NULL);
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                    GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+		                     GTK_SIGNAL_FUNC (ok_callback), GTK_OBJECT(window));
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (button);
@@ -2783,6 +3135,9 @@ void preferences_dialog (int page_num) {
   unregister_window (window);
 
   /* clean up */
+
+  generic_prefs_free(genprefs);
+  genprefs=NULL;
 
   if (color_menu) {
     gtk_widget_destroy (color_menu);
@@ -2852,6 +3207,8 @@ int prefs_load (void) {
   int old_rc_loaded;
   int newversion = FALSE;
 
+  char* tmp;
+
   oldversion = config_get_string ("/" CONFIG_FILE "/Program/version");
 
   old_rc_loaded = rc_parse ();
@@ -2911,23 +3268,50 @@ int prefs_load (void) {
   /* Quake3 */
   config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
 
-  q3_opts.masterprotocol =   config_get_string ("protocol=67");
-  if ( strlen( q3_opts.masterprotocol ) == 0 )
-	  q3_opts.masterprotocol = NULL;
-  q3_opts.vmfix =            config_get_bool ("vmfix=true");
-  q3_opts.rafix =            config_get_bool ("rafix=true");
-  q3_opts.setfs_game =       config_get_bool ("setfs_game=true");
+  tmp = config_get_string ("protocol=67");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"masterprotocol",tmp);
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"vmfix",config_get_string ("vmfix=true"));
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"rafix",config_get_string ("rafix=true"));
+  g_datalist_set_data_free(&games[Q3_SERVER].games_data,"setfs_game",config_get_string ("setfs_game=true"));
+  
+  g_datalist_set_data(&games[Q3_SERVER].games_data,"pass_memory_options",config_get_string("pass_memory_options=false"));
+  g_datalist_set_data(&games[Q3_SERVER].games_data,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
+  g_datalist_set_data(&games[Q3_SERVER].games_data,"com_zonemegs",config_get_string("com_zonemegs=16"));
+  g_datalist_set_data(&games[Q3_SERVER].games_data,"com_soundmegs",config_get_string("com_soundmegs=8"));
+  g_datalist_set_data(&games[Q3_SERVER].games_data,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
 
   config_pop_prefix ();
 
   /* Wolfenstein */
   config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
+  
+  tmp = config_get_string ("protocol=58");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
 
-  wo_opts.masterprotocol =   config_get_string ("protocol=57");
-  if ( strlen( wo_opts.masterprotocol ) == 0 )
-	  wo_opts.masterprotocol = NULL;
-  wo_opts.vmfix =            config_get_bool ("vmfix=false");
-  wo_opts.setfs_game =       config_get_bool ("setfs_game=false");
+  g_datalist_set_data_free(&games[WO_SERVER].games_data,"masterprotocol",tmp);
+  g_datalist_set_data_free(&games[WO_SERVER].games_data,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
+
+  /* Voyager Elite Force */
+  config_push_prefix ("/" CONFIG_FILE "/Game: EFS");
+  
+  tmp = config_get_string ("protocol=24");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+
+  g_datalist_set_data_free(&games[EF_SERVER].games_data,"masterprotocol",tmp);
+  g_datalist_set_data_free(&games[EF_SERVER].games_data,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
 
   config_pop_prefix ();
 

@@ -103,11 +103,11 @@ struct q3engineopts
 };
 
 // Quake 3 Arena
-extern struct q3engineopts q3_opts;
+//extern struct q3engineopts q3_opts;
 // Return to Castle Wolfenstein
-extern struct q3engineopts wo_opts;
+//extern struct q3engineopts wo_opts;
 // Any other game with Q3 engine
-extern struct q3engineopts generic_q3_opts;
+//extern struct q3engineopts generic_q3_opts;
 
 extern	int set_working_dir (char *dir);
 extern  void preferences_dialog (int page_num);
@@ -118,6 +118,7 @@ extern	void free_user_info (void);
 
 extern	int prefs_load (void);
 
+#define g_datalist_set_data_free(a,b,c) g_datalist_set_data_full(a,b,c,g_free)
 
 #endif /* __PREF_H__ */
 
