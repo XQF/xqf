@@ -1,0 +1,1186 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2001-08-22 13:37+0200\n"
+"PO-Revision-Date: 2001-08-22 13:49+GMT\n"
+"Last-Translator: Ludwig Nussel <ludwig.nussel@web.de>\n"
+"Language-Team:  <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.8\n"
+
+#: src/addmaster.c:136
+msgid "Add Master"
+msgstr "Master hinzufügen"
+
+#. Master Name (Description)
+#: src/addmaster.c:149
+msgid "Master Name"
+msgstr "Master Name"
+
+#. Master Address
+#: src/addmaster.c:194
+msgid "Master Address"
+msgstr "Master Adresse"
+
+#. Cancel Button
+#: src/addmaster.c:237 src/addserver.c:165 src/dialogs.c:318 src/filter.c:694
+#: src/launch.c:333 src/pref.c:2285 src/psearch.c:228 src/psearch.c:401
+#: src/srv-prop.c:595 src/xqf.c:619 src/xqf.c:631 src/xqf.c:1236
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/addserver.c:103 src/addserver.c:201
+msgid "Add Server"
+msgstr "Server hinzufügen"
+
+#. Server Entry
+#: src/addserver.c:114
+msgid "Server:"
+msgstr "Server:"
+
+#: src/dialogs.c:117 src/dialogs.c:188
+msgid "XQF: Warning!"
+msgstr "XQF: Warnung!"
+
+#. OK Button
+#: src/dialogs.c:142 src/dialogs.c:307 src/filter.c:702 src/pref.c:2293
+#: src/psearch.c:217 src/psearch.c:401 src/srv-prop.c:603
+msgid "OK"
+msgstr "OK"
+
+#: src/dialogs.c:213
+msgid "Yes"
+msgstr "Ja"
+
+#: src/dialogs.c:225
+msgid "No"
+msgstr "Nein"
+
+#: src/filter.c:475
+msgid "Server Filter"
+msgstr "Server Filter"
+
+#: src/filter.c:480
+msgid "Server would pass filter if"
+msgstr "Server trifft zu wenn"
+
+#. max ping
+#: src/filter.c:495
+msgid "ping is less than"
+msgstr "Ping kleiner ist als"
+
+#. max timeouts
+#: src/filter.c:512
+msgid "the number of retires is fewer than"
+msgstr "Neuversuche weniger sind als"
+
+#: src/filter.c:532
+msgid "Filter Name (For Menu):"
+msgstr "Filer Name fürs Menü"
+
+#. GAMECONTAINS Filter -- baa
+#. http://developer.gnome.org/doc/API/gtk/gtktable.html
+#: src/filter.c:550
+msgid "the game contains the string"
+msgstr "das Spiel diese Zeichenkette enthält"
+
+#. GAMETYPE Filter -- baa
+#. http://developer.gnome.org/doc/API/gtk/gtktable.html
+#: src/filter.c:569
+msgid "The Game Type Contains the String:"
+msgstr "der Spiel Typ diese Zeichenkette enthält"
+
+#. Version Filter -- baa
+#: src/filter.c:588
+msgid "the version contains the string"
+msgstr "die Version diese Zeichenkette enthält:"
+
+#: src/filter.c:607
+msgid "it is not full"
+msgstr "nicht voll ist"
+
+#: src/filter.c:617
+msgid "it is not empty"
+msgstr "nicht leer ist"
+
+#: src/filter.c:627
+msgid "cheats are not allowed"
+msgstr "Cheats nicht erlaubt sind"
+
+#: src/filter.c:638
+msgid "no password required"
+msgstr "kein Passwort benötigt wird"
+
+#: src/filter.c:666
+msgid "XQF: Filters"
+msgstr "XQF: Filter"
+
+#: src/flt-player.c:73 src/flt-player.c:79
+msgid "string"
+msgstr "String"
+
+#: src/flt-player.c:74
+msgid "substr"
+msgstr "Substring"
+
+#: src/flt-player.c:75
+msgid "regexp"
+msgstr "Regulärer Ausdruck"
+
+#: src/flt-player.c:80
+msgid "substring"
+msgstr "Substring"
+
+#: src/flt-player.c:81
+msgid "regular expression"
+msgstr "Regulärer Ausdruck"
+
+#: src/flt-player.c:452 src/psearch.c:120
+msgid "XQF: Error"
+msgstr "XQF: Fehler"
+
+#: src/flt-player.c:452 src/psearch.c:121
+#, c-format
+msgid ""
+"Regular Expression Error!\n"
+"\n"
+"%s\n"
+"\n"
+"%s."
+msgstr ""
+"Fehler in Regulärem Ausdruck!\n"
+"\n"
+"%s\n"
+"\n"
+"%s."
+
+#. Pattern Entry
+#: src/flt-player.c:655 src/flt-player.c:743
+msgid "Pattern"
+msgstr "Muster"
+
+#. Comment
+#: src/flt-player.c:690
+msgid "Pattern Comment"
+msgstr "Kommentar"
+
+#: src/flt-player.c:743
+msgid "Mode"
+msgstr "Modus"
+
+#: src/flt-player.c:749
+msgid "Player Filter"
+msgstr "Spieler Filter"
+
+#: src/flt-player.c:806
+msgid "New"
+msgstr "Neu"
+
+#: src/flt-player.c:812 src/xqf.c:1236 src/xqf.c:1679 src/xqf.c:1878
+msgid "Delete"
+msgstr "Löschen"
+
+#: src/flt-player.c:824
+msgid "Up"
+msgstr "Hoch"
+
+#: src/flt-player.c:830
+msgid "Down"
+msgstr "Runter"
+
+#: src/launch.c:72 src/launch.c:191
+msgid "XQF: ERROR!"
+msgstr "XQF: Fehler!"
+
+#: src/launch.c:72
+#, c-format
+msgid ""
+"ERROR!\n"
+"\n"
+"%s(%s) failed: %s"
+msgstr ""
+"Fehler!\n"
+"\n"
+"%s(%s) fehlgeschlagen: %s"
+
+#: src/launch.c:191
+#, c-format
+msgid ""
+"ERROR!\n"
+"\n"
+"%s"
+msgstr ""
+"Fehler!\n"
+"\n"
+"%s"
+
+#: src/launch.c:333 src/xqf.c:619 src/xqf.c:631
+msgid "Launch"
+msgstr "Starten"
+
+#: src/launch.c:334
+#, c-format
+msgid ""
+"There is %s client running.\n"
+"\n"
+"Launch %s client?"
+msgstr ""
+"%s läuft bereits.\n"
+"\n"
+"%s starten?"
+
+#. Top (Shirt) Color
+#: src/pref.c:802 src/pref.c:901
+msgid "Top"
+msgstr "Oberteil"
+
+#. Bottom (Pants) Color
+#: src/pref.c:818 src/pref.c:917
+msgid "Bottom"
+msgstr "Unterteil"
+
+#: src/pref.c:1058 src/xqf-ui.c:71
+msgid "Colors"
+msgstr "Farben"
+
+#: src/pref.c:1090
+msgid "Skin/Colors"
+msgstr "Skin/Farben"
+
+#: src/pref.c:1105
+msgid "Team"
+msgstr "Team"
+
+#: src/pref.c:1138
+msgid "Model/Skin"
+msgstr "Model/Skin"
+
+#. Player Name
+#: src/pref.c:1171 src/xqf-ui.c:46 src/xqf-ui.c:69
+msgid "Name"
+msgstr "Name"
+
+#: src/pref.c:1224
+msgid "--- Anything ---"
+msgstr "--- Beliebig ---"
+
+#: src/pref.c:1225
+msgid "Axe"
+msgstr "Axe"
+
+#: src/pref.c:1226
+msgid "Shotgun"
+msgstr "Shotgun"
+
+#: src/pref.c:1227
+msgid "Super Shotgun"
+msgstr "Super Shotgun"
+
+#: src/pref.c:1228
+msgid "Nailgun"
+msgstr "Nailgun"
+
+#: src/pref.c:1229
+msgid "Super Nailgun"
+msgstr "Super Nailgun"
+
+#: src/pref.c:1230
+msgid "Grenade Launcher"
+msgstr "Grenade Launcher"
+
+#: src/pref.c:1231
+msgid "Rocket Launcher"
+msgstr "Rocket Launcher"
+
+#: src/pref.c:1232
+msgid "ThunderBolt"
+msgstr "ThunderBolt"
+
+#: src/pref.c:1276
+msgid "Use skins"
+msgstr "Skins benutzen"
+
+#: src/pref.c:1282
+msgid "Don't use skins"
+msgstr "Skins nicht benutzen"
+
+#: src/pref.c:1288
+msgid "Don't download new skins"
+msgstr "Keine neuen Skins runterladen"
+
+#: src/pref.c:1328
+msgid "Command Line"
+msgstr "Kommandozeile"
+
+#: src/pref.c:1343
+msgid "Working Directory"
+msgstr "Arbeitsverzeichnis"
+
+#: src/pref.c:1372
+msgid "Custom CFG"
+msgstr "Eigene Config"
+
+#. Common Options
+#: src/pref.c:1478
+msgid "Common Options"
+msgstr "Gemeinsame Optionen"
+
+#: src/pref.c:1489
+msgid "Disable CD Audio"
+msgstr "CD Audio deaktivieren"
+
+#. Disable Sound
+#: src/pref.c:1497
+msgid "Disable Sound"
+msgstr "Sound deaktivieren"
+
+#: src/pref.c:1519
+msgid "Do not set (use game default)"
+msgstr "Nicht setzen (Standard benutzen)"
+
+#: src/pref.c:1520
+msgid "Automatically calculate from server ping time"
+msgstr "Automatisch aus dem Ping des Servers berechnen"
+
+#: src/pref.c:1521
+msgid "Fixed value"
+msgstr "Fester Wert"
+
+#: src/pref.c:1575
+msgid "Masterserver Protocol Version"
+msgstr "Masterserver Protokoll Version"
+
+#: src/pref.c:1588
+msgid "vm_cgame fix"
+msgstr "vm_cgame fix"
+
+#: src/pref.c:1593
+msgid "Rocketarena fix"
+msgstr "Rocketarena fix"
+
+#: src/pref.c:1598
+msgid "set fs_game on connect"
+msgstr "fs_game beim Verbinden setzen"
+
+#. 'w_switch' & 'b_switch' control
+#: src/pref.c:1639
+msgid "The highest weapon that Quake should switch to..."
+msgstr "Die höchste Waffe zu der Quake wechseln soll..."
+
+#: src/pref.c:1652
+msgid "upon a weapon pickup"
+msgstr "beim Waffe aufheben"
+
+#: src/pref.c:1670
+msgid "upon a backpack pickup"
+msgstr "beim Rucksack aufheben"
+
+#. 'pushlatency'
+#: src/pref.c:1687
+msgid "pushlatency"
+msgstr "pushlatency"
+
+#: src/pref.c:1705
+msgid "Disable auto-aiming"
+msgstr "auto-aiming deaktivieren"
+
+#: src/pref.c:1736
+msgid "Skins"
+msgstr "Skins"
+
+#: src/pref.c:1755
+msgid "Rate"
+msgstr "Rate"
+
+#. Troubleshooting
+#: src/pref.c:1775
+msgid "Troubleshooting"
+msgstr "Fehlersuche"
+
+#: src/pref.c:1788
+msgid "Disable delta-compression (cl_nodelta)"
+msgstr "delta-Kompression deaktivieren (cl_nodelta)"
+
+#: src/pref.c:1802
+msgid "Disable player/entity prediction (cl_predict_players)"
+msgstr "Spieler/entity Vorhersage deaktivieren (cl_predict_players)"
+
+#: src/pref.c:1856
+msgid "Icons"
+msgstr "Icons"
+
+#: src/pref.c:1856
+msgid "Text"
+msgstr "Text"
+
+#: src/pref.c:1856
+msgid "Both"
+msgstr "Beides"
+
+#: src/pref.c:1875
+msgid "Show host names"
+msgstr "Hostnamen anzeigen"
+
+#: src/pref.c:1890
+msgid "Show default port"
+msgstr "Standart Port anzeigen"
+
+#: src/pref.c:1905
+msgid "Sort servers real-time during refresh"
+msgstr "Server in Echtzeit während der Auffrischung sortieren"
+
+#: src/pref.c:1920
+msgid "Refresh on update"
+msgstr "Beim Aktualisieren auffrischen"
+
+#. On Startup
+#: src/pref.c:1935
+msgid "On Startup"
+msgstr "Beim Starten"
+
+#: src/pref.c:1945
+msgid "Refresh Favorites"
+msgstr "Favoriten auffrischen"
+
+#. On Exit
+#: src/pref.c:1958
+msgid "On Exit"
+msgstr "Beim Beenden"
+
+#: src/pref.c:1971
+msgid "Save server lists"
+msgstr "Serverlisten speichen"
+
+#: src/pref.c:1986
+msgid "Save server information"
+msgstr "Serverinformationen speichern"
+
+#: src/pref.c:2003
+msgid "Save player information"
+msgstr "Spielerinformationen speichern"
+
+#. On Quake Launch
+#: src/pref.c:2019
+msgid "When launching a game..."
+msgstr "Beim Spielstart..."
+
+#: src/pref.c:2032
+msgid "Terminate XQF"
+msgstr "XQF beenden"
+
+#: src/pref.c:2045
+msgid "Iconify XQF window"
+msgstr "XQF minimieren"
+
+#: src/pref.c:2060
+msgid "Create LaunchInfo.txt"
+msgstr "LaunchInfo.txt anlegen"
+
+#: src/pref.c:2074
+msgid "Execute prelaunch"
+msgstr "'prelaunch' ausführen"
+
+#. Toolbar
+#: src/pref.c:2089
+msgid "Toolbar"
+msgstr "Werkzeugleiste"
+
+#. Toolbar Tips
+#: src/pref.c:2114
+msgid "Tooltips"
+msgstr "Werkzeugtips"
+
+#. QStat preferences -- maxsimultaneous & maxretries
+#: src/pref.c:2142
+msgid "QStat Options"
+msgstr "QStat Optionen"
+
+#. maxsimultaneous
+#: src/pref.c:2153
+msgid "Number of simultaneous servers to query"
+msgstr "Anzahl gleichzeitig abzufragender Server"
+
+#. maxretries
+#: src/pref.c:2170
+msgid "Number of retries"
+msgstr "Anzahl Versuche"
+
+#: src/pref.c:2211
+msgid "XQF: Preferences"
+msgstr "XQF: Einstellungen"
+
+#: src/pref.c:2231
+msgid "Player Profile"
+msgstr "Spieler Profil"
+
+#: src/pref.c:2236
+msgid "Games"
+msgstr "Spiele"
+
+#: src/pref.c:2241
+msgid "Appearance"
+msgstr "Erscheinungsbild"
+
+#: src/pref.c:2246
+msgid "QStat"
+msgstr "QStat"
+
+#: src/pref.c:2251
+msgid "QW/Q2"
+msgstr "QW/Q2"
+
+#: src/pref.c:2256
+msgid "Q3"
+msgstr "Q3"
+
+#: src/pref.c:2358
+msgid "Unable to get user name/home/tmpdir\n"
+msgstr "Konnte Benutzername,Heimatverzeichnis oder tmpdir nicht ermitteln\n"
+
+#: src/psearch.c:55
+msgid "Exact Match"
+msgstr "Genaue Übereinstimmung"
+
+#: src/psearch.c:56
+msgid "Substring"
+msgstr "Substring"
+
+#: src/psearch.c:57
+msgid "Regular Expression"
+msgstr "Regulärer Ausdruck"
+
+#: src/psearch.c:178
+msgid "Find Player"
+msgstr "Spieler suchen"
+
+#. Pattern Entry
+#: src/psearch.c:189
+msgid "Find Player:"
+msgstr "Spieler suchen:"
+
+#: src/psearch.c:398
+msgid "Player not found."
+msgstr "Spieler nicht gefunden"
+
+#: src/psearch.c:402
+msgid "End of server list reached.  Continue from beginning?"
+msgstr "Ende der Serverliste erreicht; Von vorne Anfangen?"
+
+#. Message
+#: src/rcon.c:351
+msgid "Cmd:"
+msgstr "Kommando:"
+
+#. Send Button
+#: src/rcon.c:378
+msgid "Send"
+msgstr "Senden"
+
+#. Status Button
+#: src/rcon.c:387
+msgid "Status"
+msgstr "Status"
+
+#. Clear Button
+#: src/rcon.c:396
+msgid "Clear"
+msgstr "Löschen"
+
+#: src/rcon.c:418 src/statistics.c:551
+msgid "Close"
+msgstr "Schließen"
+
+#: src/source.c:115
+msgid "Retry"
+msgstr "Wiederholen"
+
+#: src/source.c:115
+msgid "Skip"
+msgstr "Überspringen"
+
+#: src/source.c:116
+#, c-format
+msgid ""
+"Cannot write to file %s\n"
+"System Error: %s\n"
+msgstr ""
+"In Datei %s kann nicht geschrieben werden\n"
+"Fehler: %s\n"
+
+#: src/srv-prop.c:332
+msgid "IP Address:"
+msgstr "IP Adresse:"
+
+#: src/srv-prop.c:342
+msgid "Port:"
+msgstr "Port:"
+
+#: src/srv-prop.c:354
+msgid "Host Name:"
+msgstr "Hostname:"
+
+#: src/srv-prop.c:366
+msgid "Refreshed:"
+msgstr "Aufgefrischt:"
+
+#. Sources
+#: src/srv-prop.c:388
+msgid "Sources"
+msgstr "Quellen"
+
+#: src/srv-prop.c:440
+msgid "Custom CFG:"
+msgstr "Eigene Config:"
+
+#: src/srv-prop.c:489
+msgid "Server Password"
+msgstr "Server Passwort"
+
+#: src/srv-prop.c:496
+msgid "Spectator Password"
+msgstr "Zuschauer Passwort"
+
+#: src/srv-prop.c:503
+msgid "RCon Password"
+msgstr "RCon Passwort"
+
+#: src/srv-prop.c:530
+msgid "Properties"
+msgstr "Einstellungen"
+
+#: src/srv-prop.c:575
+msgid "Info"
+msgstr "Info"
+
+#: src/srv-prop.c:580
+msgid "Passwords"
+msgstr "Passwörter"
+
+#: src/stat.c:870
+#, c-format
+msgid "Failed to create a temporary file %s"
+msgstr "Temporäre Datei %s kann nicht erzeugt werden"
+
+#. The space behind up and down is to make the strings different from
+#. those in flt-player.c because their meaning is different in german
+#: src/statistics.c:77 src/statistics.c:88
+msgid "Servers"
+msgstr "Server"
+
+#: src/statistics.c:77
+msgid "Up "
+msgstr "Up "
+
+#: src/statistics.c:77
+msgid "T/O"
+msgstr "T/O"
+
+#: src/statistics.c:77
+msgid "Down "
+msgstr "Down "
+
+#: src/statistics.c:77
+msgid "Info n/a"
+msgstr "Unbekannt"
+
+#: src/statistics.c:77 src/xqf-ui.c:51
+msgid "Players"
+msgstr "Spieler"
+
+#: src/statistics.c:81 src/statistics.c:85
+msgid "unknown"
+msgstr "unbekannt"
+
+#: src/statistics.c:89
+msgid "OS/CPU"
+msgstr "OS/CPU"
+
+#: src/statistics.c:362 src/statistics.c:410 src/statistics.c:415
+msgid "Total"
+msgstr "Gesamt"
+
+#: src/statistics.c:405
+msgid "CPU  \\  OS"
+msgstr "CPU  \\  OS"
+
+#: src/statistics.c:511 src/statistics.c:517
+msgid "Statistics"
+msgstr "Statistiken"
+
+#: src/xqf-ui.c:47
+msgid "Address"
+msgstr "Adresse"
+
+#: src/xqf-ui.c:48 src/xqf-ui.c:73
+msgid "Ping"
+msgstr "Ping"
+
+#: src/xqf-ui.c:49
+msgid "TO"
+msgstr "TO"
+
+#: src/xqf-ui.c:50
+msgid "Priv"
+msgstr "Priv"
+
+#: src/xqf-ui.c:52
+msgid "Map"
+msgstr "Karte"
+
+#: src/xqf-ui.c:53
+msgid "Game"
+msgstr "Spiel"
+
+#: src/xqf-ui.c:54
+msgid "GameType"
+msgstr "Spiel Typ"
+
+#: src/xqf-ui.c:55
+msgid "OS"
+msgstr "BS"
+
+#: src/xqf-ui.c:70
+msgid "Frags"
+msgstr "Frags"
+
+#: src/xqf-ui.c:72
+msgid "Skin"
+msgstr "Skin"
+
+#: src/xqf-ui.c:74
+msgid "Time"
+msgstr "Zeit"
+
+#: src/xqf-ui.c:88
+msgid "Rule"
+msgstr "Regel"
+
+#: src/xqf-ui.c:89
+msgid "Value"
+msgstr "Wert"
+
+#: src/xqf-ui.c:434
+msgid "Source"
+msgstr "Quelle"
+
+#. server filter
+#: src/xqf.c:335
+msgid "None <--"
+msgstr "Keiner <--"
+
+#: src/xqf.c:337 src/xqf.c:2247
+msgid "None"
+msgstr "Keine"
+
+#: src/xqf.c:351
+#, c-format
+msgid "Filter %d <--"
+msgstr "Filter %d <--"
+
+#: src/xqf.c:353
+#, c-format
+msgid "Filter %d"
+msgstr "Filter %d"
+
+#: src/xqf.c:371
+msgid "No Server Filter Active"
+msgstr "Kein Server Filter aktiv"
+
+#: src/xqf.c:373
+#, c-format
+msgid "Server Filter: %s"
+msgstr "Server Filter: %s"
+
+#: src/xqf.c:375
+#, c-format
+msgid "Server Filter: %d"
+msgstr "Server Filter: %d"
+
+#: src/xqf.c:489
+msgid "Updating lists..."
+msgstr "Aktualisiere Listen ..."
+
+#: src/xqf.c:493
+#, c-format
+msgid "Resolving host names: %d/%d"
+msgstr "Löse Hostnamen auf: %d/%d"
+
+#: src/xqf.c:497
+#, c-format
+msgid "Refreshing: %d/%d"
+msgstr "Aktualisiere: %d/%d"
+
+#: src/xqf.c:501
+#, c-format
+msgid "Resolving host addresses: %d/%d"
+msgstr "Löse Hostnamen auf: %d/%d"
+
+#: src/xqf.c:526
+msgid "Done."
+msgstr "Fertig."
+
+#: src/xqf.c:620
+#, c-format
+msgid ""
+"Server %s:%d is %s.\n"
+"\n"
+"Launch client anyway?"
+msgstr ""
+"Server %s:%d ist %s.\n"
+"\n"
+"Spiel trotzdem starten?"
+
+#: src/xqf.c:632
+#, c-format
+msgid ""
+"Server %s:%d is full.\n"
+"\n"
+"Launch client anyway?"
+msgstr ""
+"Server %s:%d ist voll.\n"
+"\n"
+"Spiel trotzdem starten?"
+
+#: src/xqf.c:651 src/xqf.c:671 src/xqf.c:1360
+msgid "Save Password"
+msgstr "Passwort Speichern"
+
+#: src/xqf.c:651
+msgid "Spectator Password:"
+msgstr "Zuschauer Passwort:"
+
+#: src/xqf.c:671 src/xqf.c:1360
+msgid "Server Password:"
+msgstr "Server Passwort:"
+
+#: src/xqf.c:804
+msgid "Spectator"
+msgstr "Zuschauer"
+
+#: src/xqf.c:805 src/xqf.c:808
+msgid "Demo name:"
+msgstr "Demo Name:"
+
+#: src/xqf.c:1008
+#, c-format
+msgid "Host %s not found"
+msgstr "Host %s nicht gefunden"
+
+#: src/xqf.c:1032
+#, c-format
+msgid "\"%s\" is not valid host[:port] combination."
+msgstr "\"%s\" ist keine zulässige host[:port] Kombination"
+
+#: src/xqf.c:1193
+#, c-format
+msgid "Master address \"%s\" is not valid."
+msgstr "Master Adresse \"%s\" ist nicht zulässig"
+
+#: src/xqf.c:1237
+#, c-format
+msgid ""
+"Master%s to delete:\n"
+"\n"
+"%s"
+msgstr ""
+"Master%s löschen:\n"
+"\n"
+"%s"
+
+#: src/xqf.c:1260
+#, c-format
+msgid "Find Player: %s"
+msgstr "Spieler suchen: %s"
+
+#: src/xqf.c:1483
+#, c-format
+msgid "%d server"
+msgstr "%d Server"
+
+#: src/xqf.c:1483
+#, c-format
+msgid "%d servers"
+msgstr "%d Server"
+
+#: src/xqf.c:1626
+msgid "About XQF"
+msgstr "Über XQF"
+
+#: src/xqf.c:1627
+#, c-format
+msgid ""
+"X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
+"Version %s\n"
+"\n"
+"Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n"
+"\n"
+"Mod & server version filter: Bill Adams <webmaster@evil.inetarena.com>\n"
+"SoF & GameSpy master support: Alex Burger <alex@fragit.net>\n"
+"Internationalization (i18n): Jordi Mallach <jordi@sindominio.net>\n"
+"\n"
+"http://www.linuxgames.com/xqf/"
+msgstr ""
+"X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
+"Version %s\n"
+"\n"
+"Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n"
+"\n"
+"Mod & Server Version Filter: Bill Adams <webmaster@evil.inetarena.com>\n"
+"SoF & GameSpy Master unterstützung: Alex Burger <alex@fragit.net>\n"
+"Internationalisierung (i18n): Jordi Mallach <jordi@sindominio.net>\n"
+"\n"
+"http://www.linuxgames.com/xqf/"
+
+#: src/xqf.c:1651 src/xqf.c:2116
+msgid "Connect"
+msgstr "Verbinden"
+
+#: src/xqf.c:1656 src/xqf.c:2124
+msgid "Observe"
+msgstr "Beobachten"
+
+#: src/xqf.c:1661 src/xqf.c:2132
+msgid "Record Demo"
+msgstr "Demo aufnehmen"
+
+#: src/xqf.c:1669
+msgid "Add to Favorites"
+msgstr "Zu Favoriten hinzufügen"
+
+#: src/xqf.c:1674
+msgid "Add..."
+msgstr "Hinzufügen..."
+
+#: src/xqf.c:1684
+msgid "Copy"
+msgstr "Kopieren"
+
+#: src/xqf.c:1689
+msgid "Copy+"
+msgstr "Kopieren+"
+
+#: src/xqf.c:1697 src/xqf.c:2090
+msgid "Refresh"
+msgstr "Auffrischen"
+
+#: src/xqf.c:1702
+msgid "Refresh Selected"
+msgstr "Ausgewählten auffrischen"
+
+#: src/xqf.c:1710
+msgid "DNS Lookup"
+msgstr "DNS auflösen"
+
+#: src/xqf.c:1718
+msgid "RCon..."
+msgstr "RCon..."
+
+#: src/xqf.c:1723
+msgid "Properties..."
+msgstr "Eigenschaften..."
+
+#: src/xqf.c:1733
+msgid "_Statistics..."
+msgstr "_Statistiken..."
+
+#: src/xqf.c:1741
+msgid "_Exit"
+msgstr "Be_enden"
+
+#: src/xqf.c:1751
+msgid "_Add Server..."
+msgstr "Server _hinzufügen"
+
+#: src/xqf.c:1756
+msgid "_Delete"
+msgstr "_Löschen"
+
+#: src/xqf.c:1761
+msgid "_Copy"
+msgstr "_Kopieren"
+
+#: src/xqf.c:1766
+msgid "_Copy+"
+msgstr "Kopieren+"
+
+#: src/xqf.c:1774
+msgid "Add _Master..."
+msgstr "_Master hinzufügen ..."
+
+#: src/xqf.c:1779
+msgid "D_elete Master"
+msgstr "_Master löschen"
+
+#: src/xqf.c:1787
+msgid "_Find Player..."
+msgstr "S_pieler suchen"
+
+#: src/xqf.c:1792
+msgid "Find A_gain"
+msgstr "_Nochmal suchen"
+
+#: src/xqf.c:1802
+msgid "_Refresh"
+msgstr "_Auffrischen"
+
+#: src/xqf.c:1807
+msgid "Refresh _Selected"
+msgstr "A_usgewählte auffrischen"
+
+#: src/xqf.c:1812
+msgid "_Update From Master"
+msgstr "Vom Master a_ktualisieren"
+
+#: src/xqf.c:1820
+msgid "Show _Host Names"
+msgstr "_Hostnamen anzeigen"
+
+#: src/xqf.c:1825
+msgid "Show Default _Port"
+msgstr "Standart_port anzeigen"
+
+#: src/xqf.c:1847
+msgid "_Server Filters"
+msgstr "Server_filter"
+
+#: src/xqf.c:1855
+msgid "_Connect"
+msgstr "_Verbinden"
+
+#: src/xqf.c:1860
+msgid "_Observe"
+msgstr "_Beobachten"
+
+#: src/xqf.c:1865
+msgid "Record _Demo"
+msgstr "_Demo aufnehmen"
+
+#: src/xqf.c:1873
+msgid "Add to _Favorites"
+msgstr "Zu Favoriten hin_zufügen"
+
+#: src/xqf.c:1884
+msgid "DNS _Lookup"
+msgstr "DNS _auflösen"
+
+#: src/xqf.c:1892
+msgid "_RCon..."
+msgstr "_RCon..."
+
+#: src/xqf.c:1897
+msgid "_Properties..."
+msgstr "_Eigenschaften"
+
+#: src/xqf.c:1907
+msgid "_Player Profile..."
+msgstr "Spielerprofil ..."
+
+#: src/xqf.c:1913
+msgid "_Games..."
+msgstr "_Spiele ..."
+
+#: src/xqf.c:1919
+msgid "_Appearance..."
+msgstr "Erscheinungs_bild"
+
+#: src/xqf.c:1925
+msgid "_QStat Options..."
+msgstr "_QStat Optionen..."
+
+#: src/xqf.c:1931
+msgid "Q_W/Q2 Options..."
+msgstr "Q_W/Q2 Optionen..."
+
+#: src/xqf.c:1937
+msgid "Q_3 Options..."
+msgstr "Q_3 Optionen..."
+
+#: src/xqf.c:1946
+msgid "_Server Filter..."
+msgstr "_Server Filter..."
+
+#: src/xqf.c:1951
+msgid "Player _Filter..."
+msgstr "Spieler _Filter..."
+
+#: src/xqf.c:1961
+msgid "_About..."
+msgstr "_Über ..."
+
+#: src/xqf.c:1972
+msgid "_File"
+msgstr "_Datei"
+
+#: src/xqf.c:1977
+msgid "_Edit"
+msgstr "_Bearbeiten"
+
+#: src/xqf.c:1982
+msgid "_View"
+msgstr "_Ansicht"
+
+#: src/xqf.c:1987
+msgid "_Server"
+msgstr "_Server"
+
+#: src/xqf.c:1992
+msgid "_Preferences"
+msgstr "_Einstellungen"
+
+#: src/xqf.c:1997
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: src/xqf.c:2040
+msgid "Mark as Red"
+msgstr "Rot Markieren"
+
+#: src/xqf.c:2047
+msgid "Mark as Green"
+msgstr "Grün Markieren"
+
+#: src/xqf.c:2054
+msgid "Mark as Blue"
+msgstr "Blau Markieren"
+
+#: src/xqf.c:2061
+msgid "Add to Player Filter"
+msgstr "Zu Spielerfilter hinzufügen"
+
+#: src/xqf.c:2082
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: src/xqf.c:2082
+msgid "Update from master"
+msgstr "Vom Master aktualisieren"
+
+#: src/xqf.c:2090
+msgid "Refresh current list"
+msgstr "Aktuelle Liste auffrischen"
+
+#: src/xqf.c:2098
+msgid "Ref.Sel."
+msgstr "Ausg.Auffr."
+
+#: src/xqf.c:2098
+msgid "Refresh selected servers"
+msgstr "Ausgewählte Server auffrischen"
+
+#: src/xqf.c:2106
+msgid "Stop"
+msgstr "Stop"
+
+#: src/xqf.c:2132
+msgid "Record"
+msgstr "Aufnehmen"
+
+#: src/xqf.c:2227
+msgid "Filters"
+msgstr "Filter"
