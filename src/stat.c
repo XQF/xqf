@@ -404,7 +404,7 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
     first_used = 0;
 
     if (conn->pos >= conn->bufsize - 1) {
-      fprintf (stderr, "server address string is too long\n");
+      xqf_error ("server address string is too long\n");
       stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
       stat_update_masters (job);
       debug_decrease_indent();
@@ -436,6 +436,8 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
 
     while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
       *tmp++ = '\0';
+
+//      debug(0,"%s",conn->buf + first_used);
 
       if (!parse_master_output (conn->buf + first_used, conn)) {
 	stat_master_update_done (conn, job, conn->master, conn->master->state);

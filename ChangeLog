@@ -1,3 +1,8 @@
+Oct 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- added some server listings from multiplay.co.uk, especially MOHAA. Thanks
+  Steve Hartland of multiplay.co.uk for making this possible!
+- wget uses XQF/version as user-agent now
+
 Oct 13, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - savage support, finally
 
