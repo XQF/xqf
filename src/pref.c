@@ -2222,7 +2222,8 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   // translator: button for directory guess
   button = gtk_button_new_with_label (_("Guess"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                    GTK_SIGNAL_FUNC (pref_guess_dir), (gpointer)type);
+                    GTK_SIGNAL_FUNC (game_file_activate_callback), (gpointer)type);
+      //                    GTK_SIGNAL_FUNC (pref_guess_dir), (gpointer)type);
 
   gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, button, _("Tries to guess the working directory based on the command line"), NULL);
@@ -4551,7 +4552,22 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
 
 void game_file_activate_callback (enum server_type type)
 {
-    pref_guess_dir (type);
+  char *temp = NULL;
+  char *file = NULL;
+
+  temp = g_strdup(gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry)));
+
+  if (temp) {
+    file = find_file_in_path(temp);
+    if (file)
+      gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), file);
+  }
+
+  pref_guess_dir (type);
+  if (temp)
+    g_free (temp);
+  if (file)
+    g_free (file);
 }
 
 void game_dir_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)

@@ -1,3 +1,7 @@
+Oct 30, 2002: Alex Burger <alex_b@users.sourceforge.net>
+- Modify game command entry field to expand command line into full path if
+  command is in the path.  Also executes guess_dir
+
 Oct 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix some memleaks
 - update german translation

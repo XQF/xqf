@@ -594,21 +594,41 @@ tabs. &nbsp;<br>
                  
       <blockquote>Command to execute the game                            
                                          
-        <p><b>Example:</b> quake2<br>
+	<p><b>Example with game in your path:</b> quake2<br>
+	<p><b>Example with game not in your path:</b> /usr/bin/quake2<br>
         </p>
-                                                                        
                        
-        <p>The Suggest button will search for the game in the path and is
-found, will populate the command line. &nbsp;Does not work with all games.<br>
+	<p>
+	Note: If the command you enter is in your path, it will be expanded to the full path when you click <b>OK</b>, if you press <b>&ltenter&gt</b> inside the text box, or you click on the <b>Guess</b> button.
+	</p>
+	<p>The <b>Suggest</b> button will search for the game in the search path and if
+	found, will populate the command line.  This should work with Quake1, QuakeWorld, Quake2, Quake3, Return to Castle Wolfenstein, Soldier of Fortune, Descent3, Tribes 2, Unreal Tournament 1 / 2003 and Rune.<br>
         </p>
+
       </blockquote>
       <b>Working directory:</b>                                         
             
       <blockquote>Directory to run the game from                         
                                             
         <p><b>Example:</b> /games/quake2</p>
-      </blockquote>
+
+	<p>The <b>Guess</b> button will try to determine the correct directory for the game.  This is done by using the following rules: <br><br>
+	<blockquote>
+	  <li>If Command Line is a symbolic link, use path of the directory of the file it is linked to</li><br>
+	  <li>If Command Line is NOT a symbolic link, use path of the defined Command Line</li><br><br>
     </blockquote>
+    For example:
+    <blockquote>
+      <li><b>quake2</b> is in your path and is a sym link to <b>/games/quake2/quake2</b> would result in <b>/games/quake2/</b></li><br>
+      <li><b>/usr/bin/quake2</b> sym linked to <b>/games/quake2/quake2</b> would result in <b>/games/quake2/</b></li><br>
+      <li>à<b>/games/quake2/quake2</b> (not a sym link) would result in <b>/games/quake2/</b></li><br>
+    </blockquote>
+    
+    Note:  If the Command Line does not contain a path and is not in your search path, or a symbolic link contains any '..'s (such as <b>../../games/quake2</b>) then nothing is returned.<br><br>
+      </p>
+    
+    </blockquote>
+  </blockquote>
                                        
     <blockquote><b>Disable sound:</b></blockquote>
                                        
