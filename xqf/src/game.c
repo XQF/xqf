@@ -2442,86 +2442,100 @@ static int q2_exec_generic (const struct condef *con, int forkit) {
 static int q3_exec (const struct condef *con, int forkit) {
   char *argv[64];
   int argi = 0;
-  char *cmd;
+  int cmdi = 0;
 
+  char* cmd = NULL;
   char *protocol = NULL;
+  char** cmdtokens = NULL;
   char *punkbuster;
-  char *tmp_cmd = NULL;
-  FILE* tmp_fp;
-
+  char* protocmdtofree = NULL;
   char** additional_args = NULL;
+
+  char** memoryoptions = NULL;
   int i;
 
-  struct game *g = &games[con->s->type];
+  struct game *g = NULL;
   int retval;
   
   int game_match_result = 0;
   
   char *to_free = NULL;
 
-  //  int is_so_mod = 0;
-
-//  int rafix = str2bool(g_datalist_get_data(&games[g->type].games_data,"rafix"));
-  int vmfix = str2bool(g_datalist_get_data(&games[g->type].games_data,"vmfix"));
-  int setfs_game = str2bool(g_datalist_get_data(&games[g->type].games_data,"setfs_game"));
-
-  int set_punkbuster = str2bool(g_datalist_get_data(&games[g->type].games_data,"set_punkbuster"));
-
-  int pass_memory_options = str2bool(g_datalist_get_data(&games[Q3_SERVER].games_data,"pass_memory_options"));
-  
-  char* memsettings = NULL;
+  int vmfix = 0;
+  int setfs_game = 0;
+  int set_punkbuster = 0;
+  int pass_memory_options = 0;
   
   int vm_game_set = 0;
   int vm_cgame_set = 0;
   int vm_ui_set = 0;
+  
+  if(!con) return -1;
+  if(!con->s) return -1;
 
-  cmd = strdup_strip (g->cmd);
+  g = &games[con->s->type];
+  if(!g) return -1;
+
+  vmfix               = str2bool(game_get_attribute(g->type,"vmfix"));
+  setfs_game          = str2bool(game_get_attribute(g->type,"setfs_game"));
+  set_punkbuster      = str2bool(game_get_attribute(g->type,"set_punkbuster"));
+  pass_memory_options = str2bool(game_get_attribute(g->type,"pass_memory_options"));
+
+  cmdtokens = g_strsplit(g->cmd," ",0);
+
+  if(cmdtokens && *cmdtokens[cmdi])
+    cmd=cmdtokens[cmdi++];
+
   /*
-    Figure out what protocal the server
-    is running so we can try to connect
-    with a specialized quake3 script.
-    Please not that for this to work you
-    have to specify the full path to quake3
-    or have it in your cwd.  You need to name 
-    the scripts like quake3proto48. --baa
+    Figure out what protocal the server is running so we can try to connect
+    with a specialized quake3 script. You need to name the scripts like
+    quake3proto48.
   */
 
-  protocol = find_server_setting_for_key ("protocol", con->s->info);
-  if (protocol) {
-    debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
-    tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
+  protocol = strdup_strip(find_server_setting_for_key ("protocol", con->s->info));
+  if (cmd && protocol)
+  {
+    char* tmp = g_strdup_printf("%sproto%s",cmd,protocol);
+    char* tmp_cmd = expand_tilde(tmp);
+    g_free(tmp);
+    tmp = NULL;
 
-    // Strip of trailing space if it has one and copy to tmp_cmd
-    if( strcspn (cmd, " ")) {
-      strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
-    } else {
-      strcpy (tmp_cmd, cmd);
-    }
+    g_free(protocol);
+    protocol = NULL;
 
-    // Append protoxx to the temp command line
-    strcat (tmp_cmd, "proto" ); 
-    strcat (tmp_cmd, protocol);
-    strcat (tmp_cmd, "\0");
-    debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
+    debug (1, "Check for '%s' as a command", tmp_cmd);
   
     // Check to see if we can find that generated filename
-    if ((tmp_fp = fopen( tmp_cmd, "r" ))){
-      fclose (tmp_fp);
-      debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
-    
-      // Found it, so use generated filename.
-      argv[argi++] = tmp_cmd;
-      strtok (cmd, delim);
-    } else {
-      // Could not so use regular filename
-      argv[argi++] = strtok (cmd, delim);
+    // absolute path?
+    if(tmp_cmd[0]=='/')
+    {
+      if(!access(tmp_cmd,X_OK))
+      {
+	cmd = protocmdtofree = strdup(tmp_cmd);
+	debug(1,"absolute path %s",cmd);
+      }
     }
+    // no, check $PATH
+    else
+    {
+      char* file = find_file_in_path(tmp_cmd);
+      if(file)
+      {
+	cmd = protocmdtofree = file;
+	debug(1,"use file %s in path",cmd);
+      }
+    }
+    g_free(tmp_cmd);
   }
-  else
-    argv[argi++] = strtok (cmd, delim);
 
-  while ((argv[argi] = strtok (NULL, delim)) != NULL)
-    argi++;
+  while(cmd)
+  {
+    if(*cmd) // skip empty
+    {
+      argv[argi++] = cmd;
+    }
+    cmd = cmdtokens[cmdi++];
+  }
 
   if (default_nosound) {
     argv[argi++] = "+set";
@@ -2561,23 +2575,26 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = con->custom_cfg;
   }
 
-  /* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
-  punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
-  if( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 )
+  if(g->type == Q3_SERVER)
   {
-    if( set_punkbuster )
+    /* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
+    punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
+    if( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 )
     {
-      argv[argi++] = "+set";
-      argv[argi++] = "cl_punkbuster";
-      argv[argi++] = "1";
-    }
-    else
-    {
-      debug( 1, "Got %s for punkbuster\n", punkbuster );
-      if(!config_get_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown"))
+      if( set_punkbuster )
       {
-	dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
-	config_set_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown",TRUE);
+	argv[argi++] = "+set";
+	argv[argi++] = "cl_punkbuster";
+	argv[argi++] = "1";
+      }
+      else
+      {
+	debug( 1, "Got %s for punkbuster\n", punkbuster );
+	if(!config_get_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown"))
+	{
+	  dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
+	  config_set_bool ("/" CONFIG_FILE "/Game: Q3S/punkbuster dialog shown",TRUE);
+	}
       }
     }
   }
@@ -2586,14 +2603,18 @@ static int q3_exec (const struct condef *con, int forkit) {
     If the s->game is set, we want to put fs_game on the command
     line so that the mod is loaded when we connect.
   */
-//  if((setfs_game || rafix) && con->s->game) {
-  if((setfs_game) && con->s->game) {
+  if((setfs_game) && con->s->game && g->type == Q3_SERVER) {
     if (setfs_game) {
-      argv[argi++] = "+set fs_game";
+      char* expandedstr = NULL;
+      argv[argi++] = "+set";
+      argv[argi++] = "fs_game";
       //argv[argi++] = con->s->game;
       
       // Look in home directory /.q3a first
-      argv[argi] = to_free = find_game_dir(expand_tilde ("~/.q3a"), con->s->game, &game_match_result);
+      expandedstr = expand_tilde("~/.q3a");
+      argv[argi] = to_free = find_game_dir(expandedstr, con->s->game, &game_match_result);
+      g_free(expandedstr);
+      expandedstr=NULL;
       debug (1, "find_game_dir result: %d",game_match_result);
       
       if (game_match_result == 0) {  		// 0=not found, 1=exact, 2=differnet case match
@@ -2606,41 +2627,28 @@ static int q3_exec (const struct condef *con, int forkit) {
       
       argi++;
     }
-//    if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
   }
-
-  /* 
-     Apprenenly for q3a version 1.29 Linux users are supposed
-     to go back to vm_* = 2 because they fixed the vm compiler.
-     Hmm, this seems to break osp when set to 0 (for so only). But
-     we actually want to set it a 2 to get vm compilation.
-  */
-// if ( rafix && is_so_mod) {
-//    /* FIX ME
-//       BAD! special case for rocket arena 3 aka "arena", it needs sv_pure 0
-//       to run properly.  This is for at least 1.27g.
-//    */
-//    argv[argi++] = "+set sv_pure 0 +set vm_game 0 +set vm_cgame 0 +set vm_ui 0";
-//  } 
-//  else if( vmfix ){
-//      argv[argi++] = "+set vm_game 2 +set vm_cgame 2 +set vm_ui 2";
-//  }
 
   if(pass_memory_options == TRUE)
   {
-    char* com_hunkmegs        = g_datalist_get_data(&games[Q3_SERVER].games_data,"com_hunkmegs");
-    char* com_zonemegs        = g_datalist_get_data(&games[Q3_SERVER].games_data,"com_zonemegs");
-    char* com_soundmegs       = g_datalist_get_data(&games[Q3_SERVER].games_data,"com_soundmegs");
-    char* cg_precachedmodels  = g_datalist_get_data(&games[Q3_SERVER].games_data,"cg_precachedmodels");
-
-    memsettings = g_strdup_printf("+set com_hunkmegs %s +set com_zonemegs %s +set com_soundmegs %s +set cg_precachedmodels %s",
-	com_hunkmegs, com_zonemegs, com_soundmegs, cg_precachedmodels);
-    argv[argi++] = memsettings;
+    memoryoptions = g_new0(char*,5); // must be null terminated => max four entries
+    argv[argi++] = "+set";
+    argv[argi++] = "com_hunkmegs";
+    argv[argi++] = memoryoptions[0] = strdup(game_get_attribute(g->type,"com_hunkmegs"));
+    argv[argi++] = "+set";
+    argv[argi++] = "com_zonemegs";
+    argv[argi++] = memoryoptions[1] = strdup(game_get_attribute(g->type,"com_zonemegs"));
+    argv[argi++] = "+set";
+    argv[argi++] = "com_soundmegs";
+    argv[argi++] = memoryoptions[2] = strdup(game_get_attribute(g->type,"com_soundmegs"));
+    argv[argi++] = "+set";
+    argv[argi++] = "cg_precachedmodels";
+    argv[argi++] = memoryoptions[3] = strdup(game_get_attribute(g->type,"cg_precachedmodels"));
   }
 
   // Append additional args if needed
   i = 0;
-  additional_args = get_custom_arguments(Q3_SERVER, con->s->game);
+  additional_args = get_custom_arguments(g->type, con->s->game);
 
   while(additional_args && additional_args[i] )
   {
@@ -2659,38 +2667,36 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   if(vmfix) {
     if (!vm_game_set)
-      argv[argi++] = "+set vm_game 2";
+    {
+      argv[argi++] = "+set";
+      argv[argi++] = "vm_game";
+      argv[argi++] = "2";
+    }
     if (!vm_cgame_set)
-      argv[argi++] = "+set vm_cgame 2";
+    {
+      argv[argi++] = "+set";
+      argv[argi++] = "vm_cgame";
+      argv[argi++] = "2";
+    }
     if (!vm_ui_set)
-      argv[argi++] = "+set vm_ui 2";
+    {
+      argv[argi++] = "+set";
+      argv[argi++] = "vm_ui";
+      argv[argi++] = "2";
+    }
   }    
    
   argv[argi] = NULL;
 
-#if 1
-  /*
-    If you have the debug level set (e.g. -d 1) then this
-    will show you the command line being exicted.
-  */
-  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
-#else
-  if (get_debug_level()){
-    char **argptr = argv;
-    fprintf (stderr, "q3_exec() -- Would have EXEC> ");
-    while (*argptr)
-      fprintf (stderr, "%s ", *argptr++);
-    fprintf (stderr, "\n");
-  }
-  retval = 1;
-#endif
+  debug(1,"argument count %d", argi);
 
-  if (memsettings) g_free (memsettings);
-  g_free (cmd);
-  g_free (tmp_cmd);
-  if (to_free)
-    g_free (to_free);
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (to_free);
+  g_free (protocmdtofree);
   g_strfreev(additional_args);
+  g_strfreev(cmdtokens);
+  g_strfreev(memoryoptions);
   return retval;
 }
 
