@@ -224,7 +224,7 @@ static void client_attach (pid_t pid, int fd, struct server *s) {
 }
 
 
-int client_launch_exec (int forkit, char *dir, char *argv[], 
+int client_launch_exec (int forkit, char *dir, char* argv[], 
                                                            struct server *s) {
   int pid;
   int pipefds[2];
@@ -239,11 +239,9 @@ int client_launch_exec (int forkit, char *dir, char *argv[],
   }
 
   if (get_debug_level()){
-    char **argptr = argv;
-    fprintf (stderr, "client_launch_exec() -- EXEC> ");
-    while (*argptr)
-      fprintf (stderr, "%s ", *argptr++);
-    fprintf (stderr, "\n");
+    char* cmdline = g_strjoinv(" # ",argv);
+    debug(1,"%s",cmdline);
+    g_free(cmdline);
   }
 
   if (forkit) {

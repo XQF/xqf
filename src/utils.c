@@ -510,8 +510,8 @@ const char* bool2str(int i)
 }
 
 /** find executable file in $PATH. file is a colon seperated list of
- * executables to search for. return name of first found file, must be freed
- * manually
+ * executables to search for. return name of first found file, NULL otherwise
+ * must be freed manually
  */
 char* find_file_in_path(const char* files)
 {
