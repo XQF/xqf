@@ -541,6 +541,8 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers,
   if (stat_process || (!masters && !names && !servers && !hosts))
     return;
 
+  debug (7, "stat_lists() -- Server List %lx", servers);
+
   stat_process = stat_job_create (masters, names, servers, hosts);
 
   stat_process->delayed.refresh_handler = (GtkFunction) stat_lists_refresh;
@@ -560,11 +562,12 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers,
 }
 
 
-static void stat_one_server (struct server *s) {
+static void stat_one_server (struct server *server) {
   GSList *list;
 
-  if (!stat_process && s) {
-    list = server_list_prepend (NULL, s);
+  debug (6, "stat_one_server() -- Server %lx", server);
+  if (!stat_process && server) {
+    list = server_list_prepend (NULL, server);
     stat_lists (NULL, NULL, list, NULL);
   }
 }
@@ -756,6 +759,7 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
   char *demo = NULL;
   struct condef *con = NULL;
 
+  debug (6, "launc_callback() --");
   if (stat_process || !cur_server || 
                         (games[cur_server->type].flags & GAME_CONNECT) == 0) {
     return;
@@ -892,8 +896,12 @@ static void refresh_callback (GtkWidget *widget, gpointer data) {
   if (stat_process)
     return;
 
+  debug (7, "refresh_callback() -- Get Server List");
+
   servers = server_clist_all_servers ();
   uservers = userver_list_copy (cur_userver_list);
+
+  debug (7, "refresh_callback() -- server list %lx", servers);
 
   if (servers || uservers) {
     stat_lists (NULL, uservers, servers, NULL);
@@ -993,6 +1001,8 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
   struct userver *us = NULL;
   enum server_type type;
 
+  debug (6, "add_server_callback() -- ");
+  
   if (stat_process)
     return;
 

@@ -65,47 +65,61 @@ static int userver_hash_func (const char *hostname, unsigned short port) {
 }
 
 
+
+/*
+  server_new -- Create (malloc) a new server structure with
+  all of the values set at zero except the reference count which 
+  should be at one.
+*/
+
 static struct server *server_new (struct host *h, unsigned short port, 
-                                                      enum server_type type) {
-  struct server *s;
+				  enum server_type type) {
+  struct server *server;
 
   if (port == 0 || type == UNKNOWN_SERVER)
     return NULL;
 
-  s = g_malloc0 (sizeof (struct server));
+  server = g_malloc0 (sizeof (struct server));
+  debug (6, "server_new() -- Server %lx", server);
+  server_ref (server); 
 
-  s->host = h;
-  host_ref (h);
+  server->host = h;
+  host_ref (h); /* Increse the refernece count on the host struct */
 
-  s->port = port;
-  s->type = type;
-  s->ping = -1;
-  s->retries = -1;
+  server->port = port;
+  server->type = type;
+  server->ping = -1;
+  server->retries = -1;
 
-  return s;
+  return server;
 }
 
 
 static struct userver *userver_new (const char *hostname, unsigned short port, 
                                                       enum server_type type) {
-  struct userver *s;
+  struct userver *userver;
 
   if (port == 0 || type == UNKNOWN_SERVER)
     return NULL;
 
-  s = g_malloc0 (sizeof (struct userver));
+  userver = g_malloc0 (sizeof (struct userver));
+  userver_ref (userver);  /* baa -- Needed? FIX ME */
+  userver->hostname = g_strdup (hostname);
+  userver->port = port;
+  userver->type = type;
 
-  s->hostname = g_strdup (hostname);
-  s->port = port;
-  s->type = type;
-
-  return s;
+  return userver;
 }
 
 
+
+/*
+  server_add -- See if a host/port is in our list.  If it is not
+  then add one.  If it is then we increase the reference count.
+*/
 struct server *server_add (struct host *h, unsigned short port, 
-                                                      enum server_type type) {
-  struct server *s;
+			   enum server_type type) {
+  struct server *server;
   GSList *ptr;
   int node;
 
@@ -116,28 +130,33 @@ struct server *server_add (struct host *h, unsigned short port,
     port = games[type].default_port;
 
   node = server_hash_func (h, port);
+  
+  debug (6, "server_add() -- Add/Get a server");
 
   if (!servers.nodes) {
     servers.nodes = g_malloc0 (sizeof (GSList *) * servers.num);
   }
   else {
+    /* Go through each of the servers in the list (each node)
+       and see if we have a matching (by reference) entry.
+    */
     for (ptr = servers.nodes[node]; ptr; ptr = ptr->next) {
-      s = (struct server *) ptr->data;
-      if (s->host == h && s->port == port) {
-	server_ref (s); /* baa -- added Dec-27, 2000 CORE FIX? */
-	return s;
+      server = (struct server *) ptr->data;
+      if (server->host == h && server->port == port) {
+	server_ref (server);   /* baa -- added Dec-27, 2000 CORE FIX? */
+	return server;
       }
     }
   }
 
-  s = server_new (h, port, type);
-  if (s) {
-    servers.nodes[node] = g_slist_prepend (servers.nodes[node], s);
+  server = server_new (h, port, type);
+  if (server) {
+    servers.nodes[node] = g_slist_prepend (servers.nodes[node], server);
 
     if (games[type].analyze_serverinfo)
-      (*games[type].analyze_serverinfo) (s);
+      (*games[type].analyze_serverinfo) (server);
   }
-  return s;
+  return server;
 }
 
 
@@ -208,20 +227,28 @@ void server_free_info (struct server *s) {
 }
 
 
-void server_unref (struct server *s) {
+void server_unref (struct server *server) {
   int node;
 
-  if (!s)
+  if (!server)
     return;
 
-  s->ref_count--;
+  server->ref_count--;
 
-  if (s->ref_count <= 0) {
-    node = server_hash_func (s->host, s->port);
-    servers.nodes[node] = g_slist_remove (servers.nodes[node], s);
-    server_free_info (s);
-    host_unref (s->host);
-    g_free (s);
+  debug (6, "server_unref() -- Server %lx ref now at %d", 
+	 server, server->ref_count);
+
+  if (server->ref_count <= 0) {
+    node = server_hash_func (server->host, server->port);
+    servers.nodes[node] = g_slist_remove (servers.nodes[node], server);
+    /*
+      Oops, it seems that we were freeing the server info before
+      freeing the host info.  Bad. To free the host info w/o a memory
+      leak we need to do that before freeing the server info. --baa 
+    */
+    host_unref (server->host);
+    server_free_info (server);
+    g_free (server);
   }
 }
 
@@ -245,6 +272,7 @@ void userver_unref (struct userver *s) {
 
 
 GSList *server_list_copy (GSList *list) {
+  debug (3, "server_list_copy() -- list %ld copying all servers", list);
   g_slist_foreach (list, (GFunc) server_ref, NULL);
   return g_slist_copy (list);
 }
@@ -256,20 +284,20 @@ GSList *userver_list_copy (GSList *list) {
 }
 
 
-GSList *server_list_append_list (GSList *list, GSList *servers,
-                                                      enum server_type type) {
-  struct server *s;
+GSList *server_list_append_list (GSList *list, GSList *server_list,
+				 enum server_type type) {
+  struct server *server;
   GSList *add = NULL;
-
-  while (servers) {
-    s = (struct server *) servers->data;
-    if (type == UNKNOWN_SERVER || type == s->type) {
-      if (g_slist_find (list, s) == NULL) {
-        add = g_slist_prepend (add, s);
-        server_ref (s);
+  debug (6, "server_list_append_list() -- list %lx", list);
+  while (server_list) {
+    server = (struct server *) server_list->data;
+    if (type == UNKNOWN_SERVER || type == server->type) {
+      if (g_slist_find (list, server) == NULL) {
+        add = g_slist_prepend (add, server);
+        server_ref (server);
       }
     }
-    servers = g_slist_next (servers);
+    server_list = g_slist_next (server_list);
   }
   
   return g_slist_concat (list, g_slist_reverse (add));
@@ -324,20 +352,26 @@ int uservers_total (void) {
 }
 
 
+
+/*
+  all_servers -- Get a list of all servers.  This is called from 
+  two functions source.c:free_masters and statistics.c:collect_statistics
+  both of which call server_free_list afterwards.
+*/
 GSList *all_servers (void) {
   GSList *list = NULL;
   GSList *tmp;
-  struct server *s;
+  struct server *server;
   int i;
 
   if (!servers.nodes)
     return NULL;
-
+  debug (6, "all_servers() -- Get all servers");
   for (i = 0; i < servers.num; i++) {
     for (tmp = servers.nodes[i]; tmp; tmp = tmp->next) {
-      s = (struct server *) tmp->data;
-      list = g_slist_prepend (list, s);
-      server_ref (s);
+      server = (struct server *) tmp->data;
+      list = g_slist_prepend (list, server);
+      server_ref (server);
     }
   }
 
@@ -390,18 +424,19 @@ int parse_address (char *str, char **addr, unsigned short *port) {
 
 
 struct server *userver_set_host (struct userver *us, struct host *h) {
-  struct server *s;
+  struct server *server;
 
   if (!us || !h) return NULL;
   if (us->s) return us->s;
 
-  s = server_add (h, us->port, us->type);
-  if (s) {
-    us->s = s;
-    server_ref (s);
+  /* Since server_add increases the reference count for us,
+     we do not do it here. */
+  server = server_add (h, us->port, us->type);
+  if (server) {
+    us->s = server;
   }
 
-  return s;
+  return server;
 }
 
 
@@ -429,7 +464,8 @@ void server_lists_intersect (GSList **list1, GSList **list2) {
   GSList *list3 = NULL;
   GSList *tmp;
   struct server *s;
-
+  
+  debug (6, "server_lists_intersect() -- ");
   for (tmp = *list1; tmp; tmp = tmp->next) {
     s = (struct server *) tmp->data;
     if (g_slist_find (*list2, s)) {

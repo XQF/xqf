@@ -42,7 +42,7 @@
 #include "dialogs.h"
 #include "host.h"
 #include "dns.h"
-
+#include "debug.h"
 
 static void stat_next (struct stat_job *job);
 
@@ -50,6 +50,9 @@ static void stat_next (struct stat_job *job);
 static int failed (char *name, char *arg) {
   fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", 
                                                           g_strerror (errno));
+
+  debug (0, "%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
+  
   return TRUE;
 }
 
@@ -57,6 +60,7 @@ static int failed (char *name, char *arg) {
 static void stat_free_conn (struct stat_conn *conn) {
   struct stat_job *job;
 
+  debug (3, "stat_free_conn() -- Conn %lx", conn);
   if (!conn || !conn->job)
     return;
 
@@ -112,6 +116,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   struct host *h;
   int len;
 
+  debug (6, "parse_master_output() --");
+
   n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 
   if (n >= 3) {
@@ -164,7 +170,12 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	    s->type = conn->master->type;
 	    server_free_info (s);
 	  }
+	  
 
+	  /* 
+	     o When the "conn" is freed, it will call the function
+	     to free the list returned here
+	  */
 	  conn->servers = server_list_prepend (conn->servers, s);
 	}
 	host_unref (h);
@@ -283,7 +294,7 @@ static char **parse_serverinfo (char *token[], int n) {
 static struct server *parse_server (char *token[], int n, time_t refreshed,
                                                                   int saved) {
   struct host *h;
-  struct server *s;
+  struct server *server;
   enum server_type type;
   char *addr;
   unsigned short port;
@@ -304,55 +315,68 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
   if (!h)
     return NULL;
 
-  s = server_add (h, port, type);
+  server = server_add (h, port, type);
 
-  s->flt_mask &= ~FILTER_SERVER_MASK;
+  debug (6, "parse_server() -- server %lx retreived", server);
 
-  s->refreshed = refreshed;
+  server->flt_mask &= ~FILTER_SERVER_MASK;
+
+  server->refreshed = refreshed;
 
   if (n == 3) {
     if (strcmp (token[2], "DOWN") == 0) {
-      s->retries = MAX_RETRIES;
-      s->ping = MAX_PING + 1;	/* DOWN */
+      server->retries = MAX_RETRIES;
+      server->ping = MAX_PING + 1;	/* DOWN */
     }
     else {
-      s->retries = MAX_RETRIES;
-      s->ping = MAX_PING;	/* TIMEOUT */
+      server->retries = MAX_RETRIES;
+      server->ping = MAX_PING;	/* TIMEOUT */
     }
 
-    if (s->players) {
-      g_slist_foreach (s->players, (GFunc) g_free, NULL);
-      g_slist_free (s->players);
-      s->players = NULL;
-      s->flags &= ~PLAYER_GROUP_MASK;
-      s->flt_mask &= ~FILTER_PLAYER_MASK;
+    if (server->players) {
+      g_slist_foreach (server->players, (GFunc) g_free, NULL);
+      g_slist_free (server->players);
+      server->players = NULL;
+      server->flags &= ~PLAYER_GROUP_MASK;
+      server->flt_mask &= ~FILTER_PLAYER_MASK;
     }
-    s->curplayers = 0;
+    server->curplayers = 0;
 
   }
   else {
-    if (s->type == QW_SERVER || type == QW_SERVER)
-      s->type = type;	/* the real type of server (QW <-> Q2) */
+    /* We did get some information */
+    if (server->type == QW_SERVER || type == QW_SERVER)
+      server->type = type;	/* the real type of server (QW <-> Q2) */
 
-    if (games[s->type].parse_server) {
-      server_free_info (s);
+    if (games[server->type].parse_server) {
+      /* 
+	 We have a function to parse the server information,
+	 so first we free all of the data elements of this
+	 structure but not the structure its self.  This
+	 is because the *_analyse functions should assign values
+	 to each of the elemets.  
+      */
+      server_free_info (server);
 
-      s->retries = MAX_RETRIES;
-      s->ping = MAX_PING;	/* TIMEOUT */
+      server->retries = MAX_RETRIES;
+      server->ping = MAX_PING;	/* TIMEOUT */
 
-      (*games[s->type].parse_server) (token, n, s);
+      /* Actually parse the info with the given function.  The mapping
+	 and functions are in game.c  
+      */
+      (*games[server->type].parse_server) (token, n, server);
 
-      if (s->ping > MAX_PING) {
-	if (!saved || s->ping != MAX_PING + 1)
-	  s->ping = MAX_PING;
+      if (server->ping > MAX_PING) {
+	if (!saved || server->ping != MAX_PING + 1)
+	  server->ping = MAX_PING;
       }
 
-      if (s->retries > maxretries)
-	s->retries = maxretries;
+      if (server->retries > maxretries)
+	server->retries = maxretries;
     }
   }
 
-  return s;
+  return server;
 }
 
 
@@ -396,7 +420,7 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
 
 
 static void parse_qstat_record (struct stat_conn *conn) {
-  struct server *s;
+  struct server *server;
   char *token[16];
   int n;
   GSList *list;
@@ -407,27 +431,40 @@ static void parse_qstat_record (struct stat_conn *conn) {
 
   job = conn->job;
 
+  /* Debug before tokenizing. */
+  debug (4, "parse_qstat_record() -- Conn %lx: %s", conn, conn->strings->data);
+
   n = tokenize_bychar ((char *) conn->strings->data, token, 16, QSTAT_DELIM);
   if (n < 3)
     return;     /* error, try to recover */
 
-  s = parse_server (token, n, time (NULL), FALSE);
-  if (s) {
+  server = parse_server (token, n, time (NULL), FALSE);
+  if (server) {
     job->need_redraw = TRUE;
+
+    /*
+      o The list here is freed when the job is freed.
+      o The parse_server call above increments the ref
+      count as does the prepend below. So we need to decrement it
+      one just for fun.
+    */
+    server_unref (server);
     job->delayed.queued_servers = 
-                         server_list_prepend (job->delayed.queued_servers, s);
+      server_list_prepend (job->delayed.queued_servers, server);
     job->progress.done++;
 
-    parse_qstat_record_part2 (conn->strings->next, s);
+    debug (6, "parse_qstat_record() -- Server %lx in delayed list %lx.", server, job->delayed.queued_servers);
 
+    parse_qstat_record_part2 (conn->strings->next, server);
+    
     for (list = job->server_handlers; list; list = list->next)
-      (* (server_func) list->data) (job, s);
+      (* (server_func) list->data) (job, server);
   }
 }
 
 
 void parse_saved_server (GSList *strings) {
-  struct server *s;
+  struct server *server;
   char *token[16];
   int n;
   time_t refreshed;
@@ -442,17 +479,17 @@ void parse_saved_server (GSList *strings) {
     return;
 
   strings = strings->next;
-
+  debug (3, "parse_saved_server() -- ");
   n = tokenize_bychar ((char *) strings->data, token, 16, QSTAT_DELIM);
   if (n < 3)
     return;
 
-  s = parse_server (token, n, refreshed, TRUE);
+  server = parse_server (token, n, refreshed, TRUE);
 
-  if (s) {
-    server_ref (s);
-    parse_qstat_record_part2 (strings->next, s);
-    server_unref (s);
+  if (server) {
+    server_ref (server);
+    parse_qstat_record_part2 (strings->next, server);
+    server_unref (server);
   }
 }
 
@@ -466,12 +503,19 @@ static void adjust_pointers (GSList *list, gpointer new, gpointer old) {
 
 
 static void stat_servers_update_done (struct stat_conn *conn) {
+  debug (3, "stat_servers_update_done() -- Conn %lx  server list %lx", conn, conn->job->servers);
   server_list_free (conn->job->servers);
   conn->job->servers = NULL;
   stat_free_conn (conn);
 }
 
 
+
+/* 
+   stat_server_input_callback -- as data is returned from the qstat
+   process, this gets called.  Sometimes there are multiple lines
+   so the results have to be looped over.
+*/
 static void stat_servers_input_callback (struct stat_conn *conn, int fd, 
                                                 GdkInputCondition condition) {
   struct stat_job *job = conn->job;
@@ -479,7 +523,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
   int blocked = FALSE;
   char *tmp;
   int res;
-
+  /* debug (3, "stat_servers_input_callback() -- Conn %lx", conn); */
   while (1) {
     first_used = 0;
     blocked = FALSE;
@@ -507,6 +551,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
       return;
     }
     if (res == 0) {	/* EOF */
+      debug (3, "stat_servers_input_callback() -- Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
       stat_servers_update_done (conn);
       stat_next (job);
       return;
@@ -572,8 +617,14 @@ static void set_nonblock (int fd) {
 }
 
 
+
+/*
+  start_qstat -- Fork and run qstat with the given command line
+  options.  Returns a "conn?"
+*/
 static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], 
                           GdkInputFunction input_callback, struct master *m) {
+ 
   struct stat_conn *conn;
   pid_t pid;
   int pipefds[2];
@@ -581,14 +632,9 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
                            QSTAT_DELIM_STR 
                            "ERROR" QSTAT_DELIM_STR 
                            "command not found\n";
-#ifdef DEBUG
-  int i;
 
-  fprintf (stderr, "exec(): ");
-  for (i = 0; argv[i]; ++i)
-    fprintf (stderr, "%s ", argv[i]);
-  fprintf (stderr, "\n");
-#endif
+  debug (3, "start_qstat() -- Job %lx  Setting up/forking pipes to qstat", job);
+  debug_cmd (3, argv, "start_qstat() -- Job %lx", job);
 
   if (pipe (pipefds) < 0) {
     failed ("pipe", NULL);
@@ -651,7 +697,7 @@ static void stat_close (struct stat_job *job, int killed) {
 
   dns_set_callback (NULL, NULL);
   dns_cancel_requests ();
-
+  debug (3, "stat_close() -- Job %lx  Killed? %d", job, killed);
   while (job->cons)
     stat_free_conn ((struct stat_conn *) job->cons->data);
 
@@ -679,6 +725,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   struct stat_conn *conn;
   char *cmd = NULL;
 
+  debug (3, "stat_upate_master_qstat() -- Master %lx", m);
   if (!m)
     return NULL;
 
@@ -722,6 +769,15 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
   }	/*  if (m->url)  */
 
+  if (get_debug_level() > 3){
+    char **argptr = argv;
+    fprintf (stderr, "stat_update_master_qstat: EXEC> ");
+    while (*argptr)
+      fprintf (stderr, "%s ", *argptr++);
+    fprintf (stderr, "\n");
+  }
+
+
   conn = start_qstat (job, argv, 
                             (GdkInputFunction) stat_master_input_callback, m);
   if (cmd)
@@ -747,7 +803,14 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   if (!job->servers)
     return NULL;
 
+  /*
+    The g_slist_reverse does not allocate any new 
+    lists or memory.  However, it means that job->servers
+    will point to a different member.
+  */
+  debug (6, "stat_open_conn_qstat() -- server list was %lx", job->servers );
   job->servers = g_slist_reverse (job->servers);
+  debug (6, "stat_open_conn_qstat() -- server list now %lx", job->servers );
 
   argv[argi++] = QSTAT_EXEC;
 
@@ -871,7 +934,7 @@ static void stat_update_masters (struct stat_job *job) {
 #ifdef DEBUG
   fprintf (stderr, "stat_update_masters() -- freecons: %d\n", freecons);
 #endif
-
+  debug (3, "stat_update_masters() -- freecons: %d", freecons);
   tmp = job->masters;
 
   while (tmp && freecons > 0) {
@@ -970,7 +1033,7 @@ static void stat_name_resolved_callback (char *id, struct host *h,
     return;
 
   list = job->names;
-
+  debug (6, "stat_name_resolved_callback() --");
   while (list) {
     us = (struct userver *) list->data;
     if (strcmp (us->hostname, id) == 0) {
@@ -986,6 +1049,11 @@ static void stat_name_resolved_callback (char *id, struct host *h,
 	  server_free_info (us->s);
 	}
 
+	/* 
+	   o When the job is freed, the list will
+	   be freed as well. This will take care of
+	   the reference counting.
+	*/
 	job->servers = server_list_prepend (job->servers, us->s);
       }
 
@@ -1069,12 +1137,12 @@ static void stat_next (struct stat_job *job) {
   struct host *h;
 
 #ifdef DEBUG
-  fprintf (stderr, "stat_next\n");
+  fprintf (stderr, "stat_next() -- \n");
 #endif
-
   job->progress.done = 0;
 
   if (job->masters) {
+    debug (3, "stat_next() -- Job %lx  Have job->masters", job );
     job->state = STAT_UPDATE_SOURCE;
 
     move_q2masters_to_top (&job->masters);
@@ -1112,6 +1180,7 @@ static void stat_next (struct stat_job *job) {
   }
 
   if (job->names) {
+    debug (3, "stat_next() -- Job %lx  job->names", job );
     job->state = STAT_RESOLVE_NAMES;
 
     for (list = job->names; list; list = list->next) {
@@ -1140,6 +1209,7 @@ static void stat_next (struct stat_job *job) {
 
   if (job->servers) {
 
+    debug (3, "stat_next() -- Servers:  Job %lx  server list %lx", job, job->servers );
     if (!job->need_refresh) {
       stat_close (job, FALSE);
       return;
@@ -1156,13 +1226,16 @@ static void stat_next (struct stat_job *job) {
     if (!stat_open_conn_qstat (job)) {
 
       /* It's very bad, stop everything. */
-
+      debug (1, "job_next() -- Error! Could not stat_open_conn_qstat()");
       stat_close (job, TRUE);
     }
     return;
   }
 
   if (job->hosts) {
+
+    debug (3, "stat_next() -- Job %lx  job->hosts", job);
+
     job->state = STAT_RESOLVE_HOSTS;
 
     dns_set_callback (stat_host_resolved_callback, job);
@@ -1177,6 +1250,8 @@ static void stat_next (struct stat_job *job) {
     return;
   }
 
+  debug (3, "stat_next() -- Job %lx  Job Done, Closing the job...", job);
+
   stat_close (job, FALSE);
 }
 
@@ -1187,6 +1262,7 @@ void stat_start (struct stat_job *job) {
   fprintf (stderr, "stat_start()\n");
 #endif
 
+  debug (3, "stat_start() -- Job %lx", job);
   if (job->delayed.refresh_handler) {
     job->delayed.timeout_id = gtk_timeout_add (1000, 
                                            job->delayed.refresh_handler, job);
@@ -1201,7 +1277,7 @@ void stat_stop (struct stat_job *job) {
 #ifdef DEBUG
   fprintf (stderr, "stat_stop()\n");
 #endif
-
+  debug (3, "stat_stop() -- Job %lx", job);
   stat_close (job, TRUE);
 }
 
@@ -1211,6 +1287,7 @@ struct stat_job *stat_job_create (GSList *masters, GSList *names,
   struct stat_job *job;
 
   job = g_malloc (sizeof (struct stat_job));
+  debug (3, "stat_job_create() -- New Job %lx  Server List %lx", job, servers);
   job->masters = masters;
   job->hosts   = hosts;
   job->servers = servers;
@@ -1248,6 +1325,8 @@ struct stat_job *stat_job_create (GSList *masters, GSList *names,
 
 
 void stat_job_free (struct stat_job *job) {
+
+  debug (3, "stat_job_free() -- Job %lx  server list %lx", job, job->servers);
   if (job->masters) g_slist_free (job->masters);
   if (job->servers) server_list_free (job->servers);
   if (job->hosts)   host_list_free (job->hosts);

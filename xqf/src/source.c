@@ -356,6 +356,7 @@ static void master_add_server (struct master *m, char *str,
   struct server *s;
   struct userver *us;
 
+  debug (6, "master_add_server() -- Master %lx", m);
   if (parse_address (str, &addr, &port)) {
     h = host_add (addr);
     if (h) {						/* IP address */

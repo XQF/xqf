@@ -22,7 +22,7 @@
 #include <glib.h>
 
 #include "xqf.h"
-
+#include "debug.h"
 
 extern	struct server *server_add (struct host *h, unsigned short port, 
                                                        enum server_type type);
@@ -56,26 +56,31 @@ extern	void server_list_fprintf (FILE *f, GSList *servers);
 extern	void userver_list_fprintf (FILE *f, GSList *uservers);
 
 
-static inline void server_ref (struct server *s) {
-  if (s) s->ref_count++;
+static inline void server_ref (struct server *server) {
+  if (server){ 
+    server->ref_count++;
+    debug (6, "server_ref() -- Server %lx now at %d", server, server->ref_count);
+  }
 }
 
 static inline void userver_ref (struct userver *us) {
   if (us) us->ref_count++;
 }
 
-static inline GSList *server_list_prepend (GSList *list, struct server *s) {
-  if (g_slist_find (list, s) == NULL) {
-    list = g_slist_prepend (list, s);
-    server_ref (s);
+static inline GSList *server_list_prepend (GSList *list, struct server *server) {
+  if (g_slist_find (list, server) == NULL) {
+    debug (6, "server_list_prepend() -- Server %lx", server);
+     list = g_slist_prepend (list, server);
+    server_ref (server);
   }
   return list;
 }
 
-static inline GSList *server_list_append (GSList *list, struct server *s) {
-  if (g_slist_find (list, s) == NULL) {
-    list = g_slist_append (list, s);
-    server_ref (s);
+static inline GSList *server_list_append (GSList *list, struct server *server) {
+  if (g_slist_find (list, server) == NULL) {
+    debug (6, "server_list_append() -- Server %lx", server);
+    list = g_slist_append (list, server);
+    server_ref (server);
   }
   return list;
 }
@@ -106,6 +111,7 @@ static inline GSList *userver_list_remove (GSList *list, struct userver *us) {
 
 static inline void server_list_free (GSList *list) {
   if (list) {
+    debug (6, "server_list_free() -- list %lx", list );
     g_slist_foreach (list, (GFunc) server_unref, NULL);
     g_slist_free (list);
   }

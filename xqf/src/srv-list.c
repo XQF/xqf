@@ -395,6 +395,7 @@ GSList *server_clist_selected_servers (void) {
   GSList *list = NULL;
   struct server *s;
 
+  debug (6, "server_clist_selected_servers() --");
   while (rows) {
     s = (struct server *) gtk_clist_get_row_data (
                                               server_clist, (int) rows->data);
@@ -405,17 +406,22 @@ GSList *server_clist_selected_servers (void) {
   return list;
 }
 
-
+/*
+  server_clist_all_servers -- Return all servers that are in the server 
+  clist widget. It returns a new list.  Note that the prepend function
+  adds one to the reference count.
+*/
 GSList *server_clist_all_servers (void) {
   GSList *list = NULL;
-  struct server *s;
+  struct server *server;
   int row;
 
+  debug (6, "server_clist_all_servers() -- ");
   for (row = 0; row < server_clist->rows; row++) {
-    s = (struct server *) gtk_clist_get_row_data (server_clist, row);
-    list = server_list_prepend (list, s);
+    server = (struct server *) gtk_clist_get_row_data (server_clist, row);
+    list = server_list_prepend (list, server);
   }
-
+  debug (7, "server_clist_all_servers() -- Return list %lx", list);
   return g_slist_reverse (list);
 }
 
@@ -490,7 +496,7 @@ void server_clist_redraw (void) {
 
 void server_clist_set_list (GSList *servers) {
   GSList *list;
-  struct server *s;
+  struct server *server;
   int row;
   GSList *filtered;
 
@@ -502,11 +508,17 @@ void server_clist_set_list (GSList *servers) {
   if (filtered) {
 
     for (list = filtered; list; list = list->next) {
-      s = (struct server *) list->data;
-      row = server_clist_refresh_row (s, -1);
-      gtk_clist_set_row_data_full (server_clist, row, s, 
-                                             (GtkDestroyNotify) server_unref);
-      server_ref (s);
+      server = (struct server *) list->data;
+      row = server_clist_refresh_row (server, -1);
+      gtk_clist_set_row_data_full (server_clist, row, server, 
+				   (GtkDestroyNotify) server_unref);
+      /*
+	Because the build_filtered_list add a reference count
+	 to the server structure and because we are going
+	 to free that list, we DO NOT need to add a reference 
+	 count to the server structure.
+      */
+      /* server_ref (server); */
     }
 
     server_list_free (filtered);
@@ -522,48 +534,68 @@ void server_clist_set_list (GSList *servers) {
 }
 
 
-void server_clist_build_filtered (GSList *servers, int update) {
+void server_clist_build_filtered (GSList *server_list, int update) {
   /* This gets called whenever a user clicks the filter button */
 
   GSList *delete;
   GSList *add;
   GSList *tmp;
-  struct server *s;
+  struct server *server;
   int row;
 
-
+  debug (6, "server_clist_build_filterd() -- Update? %d", update);
   delete = server_clist_all_servers ();
-  add = build_filtered_list (cur_filter, servers); /* in filter.c */
+  add = build_filtered_list (cur_filter, server_list); /* in filter.c */
 
   server_lists_intersect (&delete, &add);
 
   gtk_clist_freeze (server_clist);
 
+  /*
+    If there are entries in the server clist, we want to first remove
+    them.  Be sure to decrement the reference count as we will
+    be adding them back in later.
+  */
   if (delete) {
+    debug (7, "server_clist_build_filtered() -- Got Delete %lx", delete);
     for (tmp = delete; tmp; tmp = tmp->next) {
-      s = (struct server *) tmp->data;
-      row = gtk_clist_find_row_from_data (server_clist, s);
+      server = (struct server *) tmp->data;
+      row = gtk_clist_find_row_from_data (server_clist, server);
       if (row >= 0) {
 	gtk_clist_remove (server_clist, row);
+	debug (3, "server_clist_build_filtered() -- Delete server %lx", server);
       }
+      /* 
+	 Allways unref the server because the list returned
+	 to us had the count incremented by prepend.
+      */
     }
     server_list_free (delete);
   }
 
+
   if (update) {
     for (row = 0; row < server_clist->rows; row++) {
-      s = (struct server *) gtk_clist_get_row_data (server_clist, row);
-      server_clist_refresh_row (s, row);
+      server = (struct server *) gtk_clist_get_row_data (server_clist, row);
+      server_clist_refresh_row (server, row);
     }
   }
 
+  /* 
+     Now we want to add all of the servers that we
+     got from the build_fiter_list function. Note that
+     the said function adds one to the reference count
+     for us and since we free that list after we put
+     the data in the clist, we do NOT need to 
+     do a reference count in this fuction. --baa
+  */
   if (add) {
     for (tmp = add; tmp; tmp = tmp->next) {
-      s = (struct server *) tmp->data;
-      row = server_clist_refresh_row (s, -1);
-      gtk_clist_set_row_data_full (server_clist, row, s, 
-                                             (GtkDestroyNotify) server_unref);
-      server_ref (s);
+      server = (struct server *) tmp->data;
+      row = server_clist_refresh_row (server, -1);
+      gtk_clist_set_row_data_full (server_clist, row, server, 
+				   (GtkDestroyNotify) server_unref);
+      /*server_ref (server);*/
     }
     server_list_free (add);
   }
