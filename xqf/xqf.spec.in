@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-,root,root)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO
 %doc docs/*html
-%{_prefix}/bin/xqf
+%{_prefix}/bin/*
 %{_mandir}/man?/xqf.*
 %{_prefix}/share/locale/*/LC_MESSAGES/xqf.mo
 

@@ -1,3 +1,11 @@
+Nov 21, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- store when a server was last up, display this date in red if it's more than
+  three days older than the last refresh. Necessary change to ~/.qf/srvinfo.gz
+  is backward and forward compatible.
+- util function timet2string, it has yet to be verified this one works on
+  none-linux system too.
+- use setlocale(LC_ALL, "");
+
 Nov 20, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix wrong pointer passed to userver_ref
 

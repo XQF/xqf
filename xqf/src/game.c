@@ -3228,7 +3228,7 @@ static void quake_save_info (FILE *f, struct server *s) {
   if (!s->name && !s->map && !s->players && !s->info && s->ping < 0)
     return;
 
-  fprintf (f, "%ld\n", s->refreshed);
+  fprintf (f, "%ld %ld\n", s->refreshed, s->last_answer);
 
   switch (s->type) {
 

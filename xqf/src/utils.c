@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>	/* getpwnam, readdir, dirent */
 #include <stdio.h>	/* FILE, putc */
 #include <string.h>	/* strlen, strncpy, strcmp, strspn, strcspn, strchr */
@@ -32,6 +34,7 @@
 
 #include "utils.h"
 #include "debug.h"
+#include "i18n.h"
 
 
 short strtosh (const char *str) {
@@ -750,3 +753,22 @@ char* resolve_path(const char* path)
   return dir;
 }
 
+// return locale's string representation of t. must be freed manually
+char* timet2string(const time_t* t)
+{
+    enum { timebuf_len = 128 };
+    char timebuf[timebuf_len] = {0};
+    struct tm tm_s;
+    char* str;
+
+    gmtime_r(t,&tm_s);
+    if(!strftime(timebuf,timebuf_len,"%c",&tm_s))
+    {
+	// error converting time to string representation, shouldn't happen
+	str=_("<error>");
+    }
+    else
+	str = timebuf;
+
+    return strdup(str);
+}
