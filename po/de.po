@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf\n"
-"POT-Creation-Date: 2002-10-13 18:44+0200\n"
-"PO-Revision-Date: 2002-05-04 13:51GMT\n"
+"POT-Creation-Date: 2002-10-14 01:00+0200\n"
+"PO-Revision-Date: 2002-10-14 11:32GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -48,8 +48,8 @@ msgstr "Master Adresse"
 #. Cancel Button
 #: src/addmaster.c:467 src/addserver.c:166 src/dialogs.c:410 src/filter.c:1184
 #: src/game.c:2027 src/game.c:2189 src/launch.c:334 src/pref.c:3484
-#: src/psearch.c:224 src/srv-prop.c:588 src/xqf.c:911 src/xqf.c:924
-#: src/xqf.c:1654
+#: src/psearch.c:224 src/redial.c:225 src/srv-prop.c:588 src/xqf.c:911
+#: src/xqf.c:924 src/xqf.c:1654
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -82,7 +82,7 @@ msgstr "Nein"
 
 #: src/dialogs.c:315 src/xqf.c:924
 msgid "Redial"
-msgstr "Wiederversuchen"
+msgstr "Wahlwiederholung"
 
 #: src/filter.c:67
 msgid "Server"
@@ -810,7 +810,7 @@ msgstr "Verbinden"
 #. Sound Redial Success Start
 #: src/pref.c:3298
 msgid "Redial Success"
-msgstr "Wiederversuch geglückt"
+msgstr "Wahlwiederholung geglückt"
 
 #: src/pref.c:3396
 msgid "XQF: Preferences"
@@ -894,7 +894,7 @@ msgstr "Status"
 msgid "Clear"
 msgstr "Löschen"
 
-#: src/rcon.c:550 src/statistics.c:556
+#: src/rcon.c:550 src/statistics.c:559
 msgid "Close"
 msgstr "Schließen"
 
@@ -915,6 +915,41 @@ msgstr "  Wenn kein Servertyp angegeben ist, wird Q3-Stil angenommen.\n"
 #: src/rcon.c:669
 msgid "Password: "
 msgstr "Passwort: "
+
+#: src/redial.c:120
+#, c-format
+msgid ""
+"Waiting for free slots on\n"
+"%s"
+msgstr ""
+"Warte auf freien Platz auf\n"
+"%s"
+
+#: src/redial.c:122
+#, c-format
+msgid ""
+"Refreshing\n"
+"%s"
+msgstr ""
+"Aktualisiere\n"
+"%d"
+
+#. * window code modified from glade
+#: src/redial.c:177 src/redial.c:182
+msgid "XQF: Redialing"
+msgstr "XQF: Wahlwiederholung"
+
+#: src/redial.c:194
+msgid ""
+"***\n"
+"***"
+msgstr ""
+"***\n"
+"***"
+
+#: src/redial.c:217
+msgid "Launch now"
+msgstr "Jetzt starten"
 
 #: src/source.c:61
 msgid "Standard"
@@ -1035,7 +1070,7 @@ msgstr "Down "
 msgid "Info n/a"
 msgstr "Unbekannt"
 
-#: src/statistics.c:70 src/statistics.c:423 src/xqf-ui.c:53
+#: src/statistics.c:70 src/statistics.c:426 src/xqf-ui.c:53
 msgid "Players"
 msgstr "Spieler"
 
@@ -1047,15 +1082,15 @@ msgstr "unbekannt"
 msgid "OS/CPU"
 msgstr "OS/CPU"
 
-#: src/statistics.c:368 src/statistics.c:417 src/statistics.c:422
+#: src/statistics.c:371 src/statistics.c:420 src/statistics.c:425
 msgid "Total"
 msgstr "Gesamt"
 
-#: src/statistics.c:412
+#: src/statistics.c:415
 msgid "CPU  \\  OS"
 msgstr "CPU  \\  OS"
 
-#: src/statistics.c:516 src/statistics.c:522
+#: src/statistics.c:519 src/statistics.c:525
 msgid "Statistics"
 msgstr "Statistiken"
 
@@ -1586,5 +1621,5 @@ msgstr "Filter"
 #: src/xqf.c:3245
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr ""
-"Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
+msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
+

@@ -289,6 +289,7 @@ struct server* server_change_port (struct server* s, int newport)
     servers.nodes[node] = g_slist_remove (servers.nodes[node], s);
     s->port = newport;
     node = server_hash_func (s->host, s->port);
+    // FIXME: there could be already a server with that port
     servers.nodes[node] = g_slist_prepend (servers.nodes[node], s);
     return s;
 }
