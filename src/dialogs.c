@@ -181,7 +181,7 @@ int dialog_yesno (char *title, int defbutton, char *yes, char *no,
 
   window = dialog_create_modal_transient_window (
                          (title)? title : _("XQF: Warning!"),
-                                          TRUE, FALSE, NULL);
+                                          TRUE, TRUE, NULL);
 
   main_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
