@@ -128,6 +128,8 @@ if test "x$USE_GEOIP" != "xno"; then
   		AC_DEFINE_UNQUOTED(USE_GEOIP,1,Define if we should use GeoIP)
 		if test "x$USE_GEOIP" = "xyes"; then
 			GEOIP_LIB="-lGeoIP"
+		elif test "x$USE_GEOIP" = "xstatic"; then
+			GEOIP_LIB="-static -lGeoIP"
 		else
 			GEOIP_LIB="$USE_GEOIP"
 		fi
