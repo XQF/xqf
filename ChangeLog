@@ -1,4 +1,6 @@
 Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Flipped locked_punkbuster icon
+- Increased default width of Priv column
 - Applied Ludwig's patch which reduces code needed to speed up
   startup of XQF
 - Added check to user_fix_defaults so that if 1 or more games are

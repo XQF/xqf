@@ -49,7 +49,7 @@ static struct clist_column server_columns[10] = {
   { N_("Address"), 140,  GTK_JUSTIFY_LEFT,   NULL },
   { N_("Ping"),     45,  GTK_JUSTIFY_RIGHT,  NULL },
   { N_("TO"),       35,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("Priv"),     20,  GTK_JUSTIFY_RIGHT,  NULL },
+  { N_("Priv"),     35,  GTK_JUSTIFY_RIGHT,  NULL },
   { N_("Players"),  65,  GTK_JUSTIFY_RIGHT,  NULL },
   { N_("Map"),      55,  GTK_JUSTIFY_LEFT,   NULL },
   { N_("Game"),     55,  GTK_JUSTIFY_LEFT,   NULL },
