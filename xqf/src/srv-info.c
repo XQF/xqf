@@ -335,6 +335,38 @@ static char *q3_dmflags[Q3_DMFLAGS] = {
   "Fixed FOV"		 	/*  32768 */
 };
 
+#define Q3_GENERATIONS_DMFLAGS	16
+
+static char *q3_generations_dmflags[Q3_GENERATIONS_DMFLAGS] = {
+  "No health",			// 1
+  "No powerups",		// 2
+  "No armor",			// 4
+  "No falling damage",		// 8
+  "Fully Loaded",		// 16
+  "Infinite Ammo",		// 32
+  "Quad Drop",			// 64
+  "Spawn Farthest",		// 128
+  "Force Respawn",		// 256
+  "Fixed FOV",			// 512
+  "No spectator",		// 1024
+  "No CTF techs",		// 2048
+  "Allow Grapple to sky",	// 4096
+  "Weapon Grapple",		// 8192
+  "Offhand Grapple",		// 16384
+  "No Footsteps Sound",		// 32768
+};
+
+#define Q3_GENERATIONS_GENFLAGS	7
+
+static char *q3_generations_genflags[Q3_GENERATIONS_GENFLAGS] = {
+  "",
+  "Disable Earth",		// 2 You cannot select the Earth Soldiers class.
+  "Disable Doom",		// 4 You cannot select the Doom Warriors class.
+  "Disable Slipgate",		// 8 You cannot select the Slipgaters class.
+  "Disable Strogg",		// 16 You cannot select the Strogg Troopers class.
+  "Disable Arena",		// 32 You cannot select the Arena Gladiators class.
+  "Class-Based Teams ",		// 64 In DM, each class is its own team.
+};
 
 static void show_extended_flags (const char *str, char *names[], int size,
                                           int showall, GtkCTreeNode *parent) {
@@ -470,13 +502,22 @@ void srvinf_ctree_set_server (struct server *s) {
       }
       break;
 
-#ifdef QSTAT23
     case Q3_SERVER:
       if (info[0] && !strcmp (info[0], "dmflags")) {
-	show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
+	if (s->game && !g_strcasecmp (s->game, "generations")) {
+	  show_extended_flags (info[1], q3_generations_dmflags, Q3_GENERATIONS_DMFLAGS, FALSE, node);
+	}
+	else
+	{
+	  show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
+	}
+      }
+      else if (info[0] && !strcmp (info[0], "genflags")) {
+	if (s->game && !g_strcasecmp (s->game, "generations")) {
+	  show_extended_flags (info[1], q3_generations_genflags, Q3_GENERATIONS_GENFLAGS, FALSE, node);
+	}
       }
       break;
-#endif
 
     default:
       break;

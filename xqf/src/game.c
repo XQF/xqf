@@ -1238,6 +1238,13 @@ static void q3_analyze_serverinfo (struct server *s) {
 
 	  s->gametype = q3a_gametypes[n];
 	}
+	else if (!strcasecmp(s->game,"generations"))
+	{
+	  if( n >= MAX_Q3A_TYPES )
+	    n = MAX_Q3A_TYPES - 1;
+
+	  s->gametype = q3a_gametypes[n];
+	}
 	if (!strcasecmp (s->game, "baseq3"))
 	{
 	  if( n >= MAX_Q3A_TYPES )
