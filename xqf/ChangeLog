@@ -1,3 +1,6 @@
+Oct 13, 2002: Alex Burger <alex@fragit_dot_net>
+- Minor fix to ut_exec if there are no custom arguments
+
 Oct 13, 2002: Jordi Mallach <jordi@sindominio.net>
 - add redial.c to POTFILES.
 - updated Catalan and Spanish translations.

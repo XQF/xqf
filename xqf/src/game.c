@@ -2559,6 +2559,10 @@ static int ut_exec (const struct condef *con, int forkit) {
     int i = 0;
     // Append additional args if needed
     additional_args = get_custom_arguments(UN_SERVER, con->s->game);
+    
+    if (!(additional_args && additional_args[i]))
+      argv[argi++] = real_server;
+    
     while(additional_args && additional_args[i] )
     {
       // append first argument to server address
