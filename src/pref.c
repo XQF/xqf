@@ -360,9 +360,12 @@ static void get_new_defaults_for_game (enum server_type type) {
   
   g->custom_args = g_slist_copy (custom_args_entry_list[type]);
   
+  if (custom_args_entry_list[type])
+    g_slist_free (custom_args_entry_list[type]);
+  
   g->custom_args = g_slist_sort (g->custom_args, compare_slist_strings);
   
-  temp = g_slist_nth(custom_args_entry_list[type], 0);
+  temp = g_slist_nth(g->custom_args, 0);
 
   if (temp) {
     j = 0;
