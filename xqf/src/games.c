@@ -194,7 +194,6 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    suggest_commands    : "q3:quake3",
     main_mods           : stringlist006,
   },
   {
@@ -324,7 +323,6 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    suggest_commands    : "q3:quake3",
     main_mods           : stringlist007,
   },
   {

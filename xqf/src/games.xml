@@ -165,9 +165,7 @@
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
-	<default_home>NULL</default_home>
 	<main_mods>BaseEF</main_mods>
-	<pd>NULL</pd>
     </game>
     <game>
 	<type>H2_SERVER</type>
@@ -269,9 +267,7 @@
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
-	<default_home>NULL</default_home>
 	<main_mods>main</main_mods>
-	<pd>NULL</pd>
     </game>
     <game>
 	<type>T2_SERVER</type>
@@ -439,7 +435,6 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<arch_identifier>NULL</arch_identifier>
 	<suggest_commands>codmp</suggest_commands>
-	<default_home>NULL</default_home>
 	<main_mods>main</main_mods>
 	<pd>cod_private</pd>
     </game>
