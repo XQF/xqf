@@ -1173,7 +1173,8 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
   GList *selected = server_clist->selection;
   GSList *list;
   GSList *tmp;
-  char   buf[256]; /* if you change this, change the statement below */
+  enum { buflen = 256 };
+  char   buf[buflen]; /* if you change this, change the statement below */
   int    server_list_size;
 
   debug (7, "add_to_favorites_callback() -- ");
@@ -1187,20 +1188,12 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
       favorites->servers = 
 	server_list_append (favorites->servers, (struct server *) tmp->data);
       if( server_list_size < g_slist_length (favorites->servers )){
-	sprintf( buf, "Added Server #%d: '%s'",
-		 g_slist_length (favorites->servers ),
-		 ( 
-		  strlen( ((struct server *)tmp->data)->name ) < 256 ?
-		  ((struct server *)tmp->data)->name : "[Name Too Long]"
-		  )
-		 );
+	snprintf( buf, buflen, "Added Server #%d: '%s'",
+	    g_slist_length (favorites->servers ),
+	    ((struct server *)tmp->data)->name);
       } else {
-	sprintf( buf, "Server '%s' Already In Favorites",
-		 ( 
-		  strlen( ((struct server *)tmp->data)->name ) < 256 ?
-		  ((struct server *)tmp->data)->name : "[Name Too Long]"
-		  )
-		 );
+	snprintf( buf, buflen, "Server '%s' Already In Favorites",
+	    ((struct server *)tmp->data)->name);
       }
       print_status (main_status_bar, buf );
       
