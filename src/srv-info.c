@@ -20,9 +20,7 @@
 #include <stdlib.h>	/* strtoul */
 #include <string.h>	/* strcmp */
 
-#include <gtk/gtk.h>
-
-#include "xqf.h"
+#include "xqf-ui.h"
 #include "sort.h"
 #include "pixmaps.h"
 #include "srv-info.h"

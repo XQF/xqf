@@ -28,10 +28,8 @@
 #include <netinet/in.h>	/* inet_ntoa */
 #include <arpa/inet.h>	/* inet_ntoa */
 
-#include <gtk/gtk.h>
-
 #include "i18n.h"
-#include "xqf.h"
+#include "xqf-ui.h"
 #include "game.h"
 #include "pref.h"
 #include "source.h"

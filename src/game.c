@@ -39,6 +39,7 @@
 #include "pixmaps.h"
 #include "game.h"
 #include "stat.h"
+#include "server.h"
 #include "statistics.h"
 #include "server.h"
 #include "debug.h"
@@ -1405,6 +1406,11 @@ struct q3a_gametype_s wolf_gametype_map[] =
 {
   {
     "main",
+    wolf_gametypes,
+    MAX_WOLF_TYPES
+  },
+  {
+    "wolfmp",
     wolf_gametypes,
     MAX_WOLF_TYPES
   },
