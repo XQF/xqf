@@ -23,5 +23,10 @@ Required for XQF 1.0:
   filtering
 - More general server filters so one can filter based on any server var.
 - Redial feature:  User configurable options
+- If you disable 'Show hostnames' and you select a server and do a DNS
+  Lookup, it shouldn't automatically enable Show hostnames.  Should make
+  'Show hostnames' simply enable / disable displaying of a host name if it
+  exists in the server record.  Add a 'Resolve hostnames on Update / Refresh'
+  option to set whether or not to do the resolving on update / refresh
 
 
