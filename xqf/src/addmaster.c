@@ -153,20 +153,23 @@ static void master_type_radio_callback (GtkWidget *widget, enum master_query_typ
 {
   char* master_name;
 
-  current_master_query_type = type;
-  master_check_master_addr_prefix();
+  // This gets called when a button is made inactive AND when it's made active
+  // so only do this if it's set to active
+  if (GTK_TOGGLE_BUTTON (master_query_type_radios[type])->active) {
+    current_master_query_type = type;
+    master_check_master_addr_prefix();
 
-  master_name = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO
+    master_name = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO
 		      (master_name_combo)->entry));
 
-  if(current_master_query_type==MASTER_LAN
-      && (!master_name || !strlen(master_name)))
-  {
-    gtk_entry_set_text(
-      GTK_ENTRY( GTK_COMBO( master_name_combo)->entry), _("LAN"));
+    if(current_master_query_type==MASTER_LAN
+        && (!master_name || !strlen(master_name)))
+    {
+      gtk_entry_set_text(
+        GTK_ENTRY( GTK_COMBO( master_name_combo)->entry), _("LAN"));
+    }
   }
 }
-
 static void master_activate_radio_for_type( enum master_query_type type )
 {
   if( type < MASTER_NATIVE || type >= MASTER_NUM_QUERY_TYPES )
