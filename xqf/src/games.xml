@@ -51,6 +51,7 @@
 	<command>nq-glx</command>
 	<command>nq-sgl</command>
 	<command>twilight-nq</command>
+	<cmd_or_dir_changed>q1_cmd_or_dir_changed</cmd_or_dir_changed>
 	<main_mod>id1</main_mod>
 	<pd>q1_private</pd>
     </game>
@@ -79,6 +80,7 @@
 	<command>qw-client-glx</command>
 	<command>qw-client-sgl</command>
 	<command>twilight-qw</command>
+	<cmd_or_dir_changed>qw_cmd_or_dir_changed</cmd_or_dir_changed>
 	<main_mod>qw</main_mod>
 	<main_mod>id1</main_mod>
 	<pd>qw_private</pd>
@@ -106,6 +108,7 @@
 	<identify_cpu>identify_cpu</identify_cpu>
 	<identify_os>identify_os</identify_os>
 	<command>quake2</command>
+	<cmd_or_dir_changed>q2_cmd_or_dir_changed</cmd_or_dir_changed>
 	<main_mod>baseq2</main_mod>
 	<pd>q2_private</pd>
     </game>

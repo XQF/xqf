@@ -1,3 +1,8 @@
+Jan 11, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- Fix crashes due to wrong return type of callbacks (#1098910, patch by Jochen
+  Baier)
+- fix q1/qw/q2 skin list update
+
 Dec 23, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - don't try to scan home directories for maps if the directory
   doesn't exist (reported by Steffen Pankratz)
