@@ -1,3 +1,8 @@
+Aug 13, 2004: Jordi Mallach <jordi@sindominio.net>
+- update Catalan and Spanish translations
+- fix Makevar so intltool works ok
+- remove updateonepo, use intltool-update instead.
+
 Aug 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - Doom 3 rcon support
 
