@@ -339,6 +339,9 @@ void player_clist_redraw (void) {
 void server_clist_sync_selection (void) {
   GList *selection;
 
+  if(!server_clist)
+      return;
+
   debug (7, "server_clist_sync_selection() --");
   if (!sync_selection_blocked) {
     selection = server_clist->selection;
@@ -450,12 +453,17 @@ GSList *server_clist_all_servers (void) {
 
 
 void server_clist_selection_visible (void) {
-  GList *rows = server_clist->selection;
+  GList *rows;
   GList *row;
   GtkVisibility vis;
   int min;
 
   debug (7, "server_clist_selection_visible() -- ");
+
+  if(!server_clist)
+      return;
+
+  rows = server_clist->selection;
 
   if (!rows)
     return;
