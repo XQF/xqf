@@ -72,9 +72,7 @@ static void dialog_failed (char *func, char *arg) {
 
 static void client_free (struct running_client *cl) {
 
-#ifdef DEBUG
-  fprintf (stderr, "client detached (pid:%d, fd:%d)\n", cl->pid, cl->fd);
-#endif
+  debug(3, "client detached (pid:%d, fd:%d)\n", cl->pid, cl->fd);
 
   if (cl->fd >= 0) {
     gdk_input_remove (cl->tag);
@@ -196,7 +194,7 @@ static void client_input_callback (struct running_client *cl, int fd,
 
       pid = cl->pid;  /* save PID value */
       client_detach (cl);
-      kill (pid, SIGTERM);
+      if(pid) kill (pid, SIGTERM); // kill(0) would kill this process too!
     }
     else {
       client_detach (cl);
@@ -277,10 +275,6 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
       g_snprintf (msg, CLIENT_ERROR_BUFFER, "%sexec(%s) failed: %s", 
                           CLIENT_ERROR_MSG_HEAD, argv[0], g_strerror (errno));
 
-#ifdef DEBUG
-      fprintf (stderr, "%s\n", msg);
-#endif
-
       write (pipefds[1], msg, strlen (msg) + 1);
       close (pipefds[1]);
 
@@ -294,7 +288,6 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
       on_sig (SIGALRM, _exit);
       on_sig (SIGCHLD, SIG_DFL);
 
-      sleep (15);
       _exit (1);
     }
     return pid;

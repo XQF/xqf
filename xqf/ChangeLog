@@ -4,6 +4,7 @@ Oct 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
   - do not check for valid mod dir for games other than q3a
   - do not check for punkbuster for games other than q3a
   - pass all options as separate arguments
+- fix xqf killing itself when exec failed
 
 Oct 25, 2002: Alex <alex_b@users.sourceforge.net>
 - Segfault fix - q3_exec - launch game even if it doesn't respond to refresh
