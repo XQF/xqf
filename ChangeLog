@@ -1,3 +1,7 @@
+Aug 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fixed some strings that where marked for translation but the gettext call was
+  missing
+
 Aug 09, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fixed player search to move the visible area to the server on which a player
   was found

@@ -393,7 +393,7 @@ static GtkWidget *server_info_page (struct server *s) {
   for (list = sources; list; list = list->next) {
     m = (struct master *) list->data;
 
-    label = gtk_label_new (m->name);
+    label = gtk_label_new (_(m->name));
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
     gtk_widget_show (label);
   }
