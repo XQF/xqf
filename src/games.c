@@ -199,7 +199,7 @@ struct game games[] = {
   },
   {
     type                : DOOM3_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
     name                : "Doom 3",
     default_port        : 27666,
     default_master_port : 27650,

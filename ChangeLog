@@ -1,3 +1,6 @@
+Aug 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- Doom 3 rcon support
+
 Aug 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - properly detect installed Doom 3 maps. No preview though since gdk-pixbuf
   doesn't support the TGA format used by id :-(
