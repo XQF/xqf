@@ -2,13 +2,19 @@ XQF 0.9.6g
 ~~~~~~~~~~
 Changes since 0.9.6f:
 
-o Tribes2 support! XQF now requires qstat 2.4c.
+o Internationalization (gettext) support, Spanish and German translations
+o Initial Return to Castle Wolfenstein support
+o Tribes2 support
 o Support for Q3A protocol v66.
-o Internationalization (gettext) support, Spanish and German translations.
-o Added "game type" filter.
+o Added "Quake3" preferences page which allows the protocol version
+  and other options to be changed
 o Added "General" preferences page, which hosts many of the options
-  which were in "Appearance" previously.
-o Initial Return to Castle Wolfenstein support.
+  which were in "Appearance" previously
+o Added "game type" filter
+o New man page
+o New documentation in html format (docs/xqfdocs.html)
+o XQF now requires qstat 2.4c
+
 
 XQF 0.9.6f
 ~~~~~~~~~~

@@ -5,7 +5,7 @@ Sept 24,2001: Alex Burger <alex@fragit_dot_net>
 Sept 19, 2001: Alex Burger <alex@fragit_dot_net>
 - Added Wolfenstein support.  Currently uses q3_exec to launch
   the game, but will change when Wolf client for Linux is released.
-  Uses qstat as if it's a Quake2 server
+  Uses qstat as if it is a Quake3 server
 
 Sept 14, 2001: Alex Burger <alex@fragit_dot_net>
 - Added docs/xqfdocs.html
