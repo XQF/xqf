@@ -115,6 +115,7 @@ struct game games[] = {
     q1_exec_generic,
     q1_custom_cfgs,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -143,6 +144,7 @@ struct game games[] = {
     qw_exec,
     qw_custom_cfgs,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -170,6 +172,7 @@ struct game games[] = {
     q2_exec,
     q2_custom_cfgs,
     quake_save_info,
+    NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
@@ -199,6 +202,7 @@ struct game games[] = {
     q3_exec,
     q3_custom_cfgs,
     quake_save_info,
+    NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
@@ -228,6 +232,7 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
@@ -257,6 +262,7 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
@@ -286,6 +292,7 @@ struct game games[] = {
     q1_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -314,6 +321,7 @@ struct game games[] = {
     NULL,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -342,6 +350,7 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -370,6 +379,7 @@ struct game games[] = {
     hl_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     "sv_os",		// arch_identifier
     NULL,		// identify_cpu
     identify_os,	// identify_os
@@ -398,6 +408,7 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
@@ -426,6 +437,7 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -454,6 +466,7 @@ struct game games[] = {
     q3_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     "version",		// arch_identifier
     identify_cpu,		// identify_cpu
     identify_os,		// identify_os
@@ -482,6 +495,7 @@ struct game games[] = {
     t2_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     "linux",		// arch_identifier
     NULL,		// identify_cpu
     t2_identify_os,		// identify_os
@@ -510,6 +524,7 @@ struct game games[] = {
     q2_exec_generic,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -539,6 +554,7 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -567,6 +583,7 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -596,6 +613,7 @@ struct game games[] = {
     ut_exec,
     NULL,
     quake_save_info,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -625,6 +643,7 @@ struct game games[] = {
     exec_generic,		// exec_client
     NULL,			// custom_cfgs
     quake_save_info,		// save_info
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -654,6 +673,7 @@ struct game games[] = {
     gamespy_exec,		// exec_client
     NULL,			// custom_cfgs
     quake_save_info,		// save_info
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -683,6 +703,7 @@ struct game games[] = {
     NULL,
     NULL,
     NULL,
+    NULL,		// Custom arguments
     NULL,		// arch_identifier
     NULL,		// identify_cpu
     NULL,		// identify_os
@@ -2443,6 +2464,9 @@ static int q3_exec (const struct condef *con, int forkit) {
   char *tmp_cmd;
   FILE* tmp_fp;
 
+  char** additional_args = NULL;
+  int i;
+
   struct game *g = &games[con->s->type];
   int retval;
   
@@ -2635,6 +2659,15 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = memsettings;
   }
 
+  // Append additional args if needed
+  i = 0;
+  additional_args = get_custom_arguments(Q3_SERVER, con->s->game);
+
+  while(additional_args && additional_args[i] )
+  {
+    argv[argi++] = additional_args[i];
+    i++;
+  }
    
   argv[argi] = NULL;
 
@@ -2711,6 +2744,8 @@ static int ut_exec (const struct condef *con, int forkit) {
   char* hostport=NULL;
   char* real_server=NULL;
   char** additional_args = NULL;
+  int i;
+  char *tmp;
 
   cmd = strdup_strip (g->cmd);
 
@@ -2744,10 +2779,11 @@ static int ut_exec (const struct condef *con, int forkit) {
 
   if(con->s)
   {
-    int i = 0;
     // Append additional args if needed
-    additional_args = get_custom_arguments(UN_SERVER, con->s->game);
-    
+    i = 0;
+
+    additional_args = get_custom_arguments(con->s->type, con->s->game);
+
     if (!(additional_args && additional_args[i]))
       argv[argi++] = real_server;
     
@@ -2756,7 +2792,7 @@ static int ut_exec (const struct condef *con, int forkit) {
       // append first argument to server address
       if(i == 0)
       {
-	char* tmp = g_strconcat(real_server,additional_args[i]);
+	tmp = g_strconcat(real_server,additional_args[i],NULL);
 	g_free(real_server);
 	real_server=tmp;
 	argv[argi++] = real_server;
@@ -2764,6 +2800,7 @@ static int ut_exec (const struct condef *con, int forkit) {
       else
       {
 	argv[argi++] = additional_args[i];
+
       }
       i++;
     }
@@ -3242,31 +3279,36 @@ static void quake_save_info (FILE *f, struct server *s) {
 // game matches 'gamestring'
 // returns a newly-allocated array of strings. Use g_strfreev() to free it. 
 // TODO use struct server instead of char* to be able to match any variable
+
 char **get_custom_arguments(enum server_type type, const char *gamestring)
 {
+  struct game *g = &games[type];
   char *arg = NULL;
-  int num_args;
   int j;
   char conf[15];
   char *token[2];
   int n;
+  char ** ret = NULL;
+  GSList *temp;
 
   if(!gamestring) return NULL;
   
-  num_args = atoi(game_get_attribute(type,"custom_arg_count"));
-  
-  for (j=0; j < num_args; j++) {
+  temp = g_slist_nth(g->custom_args, 0);
+
+  j = 0;
+  while (temp) {
     g_snprintf (conf, 15, "custom_arg%d", j);
-    arg = g_strdup(game_get_attribute(type,conf));
+    arg = g_strdup((char *) temp->data);
 
     n = tokenize (arg, token, 2, ",");
     
     if(!(strcasecmp(token[0],gamestring))) {
-      char** ret = g_strsplit(token[1]," ",0);
-      debug(1, "get_custom_arguments: found entry for:%s.  Returning argument:%s\n",gamestring,token[1]);
+      ret = g_strsplit(token[1]," ",0);
+      debug(1, "found entry for:%s.  Returning argument:%s\n",gamestring,token[1]);
       g_free(arg);
       return ret;
     }
+    temp = g_slist_next(temp);
   }
   debug(1, "get_custom_arguments: Didn't find an entry for %s",gamestring);
   g_free(arg);
