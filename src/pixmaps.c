@@ -63,7 +63,7 @@
 
 #include "xpm/man-black.xpm"
 #include "xpm/man-red.xpm"
-#include "xpm/man-yellow.xpm"
+#include "xpm/man-yellow.xpm" // He's actually green
 
 #include "xpm/group-red.xpm"
 #include "xpm/group-green.xpm"
@@ -124,7 +124,7 @@ struct pixmap rminus_pix;
 
 struct pixmap man_black_pix;
 struct pixmap man_red_pix;
-struct pixmap man_yellow_pix;
+struct pixmap man_yellow_pix; // He's actually green
 
 struct pixmap group_pix[3];
 struct pixmap buddy_pix[9];
@@ -231,7 +231,7 @@ void free_pixmaps (void) {
 
   free_pixmap (&man_black_pix);
   free_pixmap (&man_red_pix);
-  free_pixmap (&man_yellow_pix);
+  free_pixmap (&man_yellow_pix); // He's actually green
 
   for (i = 0; i < 3; i++)
     free_pixmap (&group_pix[i]);
@@ -308,7 +308,7 @@ void init_pixmaps (GtkWidget *window) {
 
   create_pixmap (window, &man_black_pix, man_black_xpm);
   create_pixmap (window, &man_red_pix, man_red_xpm);
-  create_pixmap (window, &man_yellow_pix, man_yellow_xpm);
+  create_pixmap (window, &man_yellow_pix, man_yellow_xpm); // He's actually green
 
   create_pixmap (window, &group_pix[0], group_red_xpm);
   create_pixmap (window, &group_pix[1], group_green_xpm);
