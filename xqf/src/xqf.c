@@ -1130,8 +1130,12 @@ static gboolean check_launch (struct condef* con)
     }
 
 
-    if (!launch && s->curplayers >= (s->maxplayers - reserved_slots)  && !con->spectate) {
-  //  if (!launch && s->curplayers != 99 && !con->spectate) {
+    if (!launch && !con->spectate
+	&& ( (s->curplayers >= (s->maxplayers - reserved_slots)) // really full
+	     || ((s->curplayers >= (s->maxplayers - s->private_client)) // private clients and no password set
+		     && !(props && props->server_password && *props->server_password))
+	     ))
+    {
       launch = dialog_yesnoredial (NULL, 1, _("Launch"), _("Cancel"), _("Redial"), 
   		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
   		     (s->host->name)? s->host->name : inet_ntoa (s->host->ip),
@@ -3992,6 +3996,8 @@ int main (int argc, char *argv[]) {
 #ifdef USE_GEOIP
   geoip_done();
 #endif
+
+  games_done();
 	
   debug( 6, "EXIT: Done.");
 

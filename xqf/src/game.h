@@ -64,7 +64,16 @@ struct game {
   int (*config_is_valid) (struct server *s);
   int (*write_config) (const struct condef *con);
   int (*exec_client) (const struct condef *con, int forkit);
-  GList * (*custom_cfgs) (char *dir, char *game);
+  /** \brief find a list of custom config files
+   *
+   * this->main_mods as well as mod directories inside
+   * this->real_home and dir will be scanned
+   * @param this pointer to game
+   * @param dir full path to game directory or NULL to use this->real_dir
+   * @param mod which mod
+   * @return list of found config files
+   */
+  GList * (*custom_cfgs) (struct game* this, const char *dir, const char *mod);
   void (*save_info) (FILE *f, struct server *s);
 
   /* map functions */
@@ -85,6 +94,15 @@ struct game {
   char *cmd;
   char *dir;
   char *real_dir;
+
+  /** built in default game specific home directory */
+  char *default_home;
+
+  /** tilde expanded game specific home directory */
+  char *real_home;
+
+  char** main_mods;
+
   char *game_cfg;
   GData *games_data;
   GSList *custom_args;
@@ -104,5 +122,6 @@ const char* game_get_attribute(enum server_type type, const char* key);
 const char* game_set_attribute(enum server_type type, const char* key, char* value);
 
 void init_games(void);
+void games_done(void);
 
 #endif /* __GAME_H__ */

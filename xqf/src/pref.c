@@ -253,6 +253,7 @@ static GtkWidget *wo_set_punkbusterbutton;
 
 /* Enemy Territory */
 static GtkWidget *woet_proto_entry;
+static GtkWidget *woet_setfs_gamebutton;
 
 /* Voyager Elite Force */
 static GtkWidget *ef_proto_entry;
@@ -770,6 +771,10 @@ static void get_new_defaults (void) {
   g_free(str);
   str=NULL;
 
+  i = GTK_TOGGLE_BUTTON (woet_setfs_gamebutton)->active;
+  config_set_bool ("setfs_game", i);
+  game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(i)));
+
   config_pop_prefix ();
 
   /* Voyager Elite Force */
@@ -1132,7 +1137,7 @@ static void update_cfgs (enum server_type type, char *dir, char *initstr) {
   if(!prefs->cfg_combo)
     return;
 
-  cfgs = (*games[type].custom_cfgs) (dir, NULL);
+  cfgs = (*games[type].custom_cfgs) (&games[type], dir, NULL);
 
   if (initstr) {
     combo_set_vals (prefs->cfg_combo, cfgs, initstr);
@@ -1166,7 +1171,7 @@ static void dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
   prefs->pref_dir = strdup_strip (gtk_entry_get_text (
                                                GTK_ENTRY (prefs->dir_entry)));
 
-  if (prefs->real_dir) g_free (prefs->real_dir);
+  g_free (prefs->real_dir);
   prefs->real_dir = expand_tilde (prefs->pref_dir);
 
   switch (type) {
@@ -3174,6 +3179,12 @@ static GtkWidget *woet_options_page (void) {
 	  gtk_box_pack_start (GTK_BOX (hbox), woet_proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (woet_proto_entry);
 
+	  woet_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (woet_setfs_gamebutton),
+		  str2bool(game_get_attribute(WO_SERVER,"setfs_game")));
+	  gtk_box_pack_start (GTK_BOX (page_vbox), woet_setfs_gamebutton, FALSE, FALSE, 0);
+	  gtk_widget_show (woet_setfs_gamebutton);
+
 	gtk_widget_show (hbox);
 
   gtk_widget_show (page_vbox);
@@ -4932,6 +4943,7 @@ int prefs_load (void) {
   }
 
   game_set_attribute(WOET_SERVER,"masterprotocol",tmp);
+  game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
 
   config_pop_prefix ();
 
@@ -5049,7 +5061,7 @@ int prefs_load (void) {
     char* msg = g_strdup_printf(_("Searching for %s maps"),games[i].name);
     guint per = 100/GAMES_TOTAL;
 
-    if (games[i].real_dir) g_free (games[i].real_dir);
+    g_free (games[i].real_dir);
     games[i].real_dir = expand_tilde (games[i].dir);
 
     splash_increase_progress(msg,per);

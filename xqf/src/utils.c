@@ -85,7 +85,7 @@ char *file_in_dir (const char *dir, const char *file) {
   char *res, *tmp;
   int need_slash = 0;
 
-  if (!dir || dir[0] == '\0')			/* dir "" is current dir */
+  if (!dir || dir[0] == '\0') /* dir "" is current dir */
     return (file)? g_strdup (file) : NULL;
 
   if (!file)
@@ -94,7 +94,7 @@ char *file_in_dir (const char *dir, const char *file) {
   if (dir[strlen (dir) - 1] != G_DIR_SEPARATOR)
     need_slash = 1;
 
-  tmp = res = g_malloc (strlen (dir) + strlen (file) + need_slash + 1);
+  tmp = res = g_malloc0 (strlen (dir) + strlen (file) + need_slash + 1);
 
   strcpy (tmp, dir);
   tmp += strlen (dir);
@@ -179,6 +179,9 @@ GList *dir_to_list (const char *dirname,
   struct dirent *dirent_ptr;
   GList *list = NULL;
   char *str;
+
+  if(!dirname)
+    return NULL;
 
   directory = opendir (dirname);
   if (directory == NULL)
@@ -560,72 +563,88 @@ char* find_file_in_path(const char* files)
     return found;
 }
 
-// find a directory inside another, prefer matching case otherwise search case
-// insensitive
-// returns name of found directory or duplicate of game, must be freed manually
+/** find a directory inside another, prefer matching case otherwise search case insensitive
+ * @param basegamedir where to search
+ * @param game directory to search for
+ * @param match_result output: 0 = not found, 1 = exact match, 2 = differnet case match
+ * @returns name of found directory or NULL, must be freed manually
+ */
 char *find_game_dir (const char *basegamedir, const char *game, int *match_result)
 {
-  DIR *dp;
-  struct dirent *ep;
-  struct stat buf;
-  char *path;
-  char *temp;
+  DIR *dp = NULL;
+  struct stat buf = {0};
+  char *path = NULL;
+  char* ret = NULL;
+  int result = 0;
 
-  *match_result = 0; // No match, unless changed below
-  
-  if(!game)
-    return g_strdup("");
+  if(!game || !basegamedir)
+    return NULL;
 
-  if(!basegamedir)
-    return g_strdup(game);  
-
-  debug( 1, "Looking for subdir/symlink %s in %s", game, basegamedir);
+  debug( 3, "Looking for subdir %s in %s", game, basegamedir);
   
   // Look for exact match
-  // Looks for file, not specifically a subdir or symlink - good enough
-  // FIXME: Should never be a symlink - lstat would give a symlink, not stat
   path = file_in_dir (basegamedir, game);
-  if (!stat (path, &buf)) {
-    if ( (S_ISDIR(buf.st_mode) == 1) || (S_ISLNK(buf.st_mode)) ) {
-      // directory found
-      g_free (path);
-      debug( 1, "Found exact match for subdir/symlink %s in %s", game, basegamedir);
-      *match_result = 1; // Exact match
-      return g_strdup (game);
-    }
+  if (!stat (path, &buf) && S_ISDIR(buf.st_mode))
+  {
+    debug( 3, "Found exact match for subdir %s in %s", game, basegamedir);
+    result = 1; // Exact match
+    ret = g_strdup(game);
   }
   g_free (path);
-  debug( 1, "Did not find exact match for subdir/symlink %s in %s", game, basegamedir);
 
   // Did not find exact match, perform search
-  debug( 1, "Searching for subdir/symlink %s in %s ignoring case", game, basegamedir);
-  dp = opendir (basegamedir);
-  if (dp != NULL)
+  if(!ret)
+  {
+    debug( 3, "Did not find exact match for subdir %s in %s", game, basegamedir);
+    debug( 3, "Searching for subdir %s in %s ignoring case", game, basegamedir);
+
+    dp = opendir (basegamedir);
+    if(!dp)
     {
-      while ((ep = readdir (dp))) {
-	stat(ep->d_name, &buf);
-        if ( (S_ISDIR(buf.st_mode) == 1) || (S_ISLNK(buf.st_mode)) )
-	  if (strcmp(ep->d_name,".") && strcmp(ep->d_name,".."))
-	  {
-	    if (!strcasecmp(ep->d_name,game)) {
-              debug( 1, "Found subdir/symlink %s in %s that matches %s", ep->d_name, basegamedir,
-                                                                    game);
-              *match_result = 2; // Different case match
-	      temp = g_strdup (ep->d_name);
-	      closedir (dp);
-	      return (temp);
-	      break;
-	    }
-  	  }
+      debug( 3, "Could not open base directory %s!", basegamedir);
+    }
+    else
+    {
+      struct dirent *ep;
+      while ((ep = readdir (dp)))
+      {
+	char* name = ep->d_name;
+
+	if (!strcmp(name, ".") || !strcmp(name,".."))
+	  continue;
+
+	path = file_in_dir(basegamedir, name);
+	
+	if(stat(path, &buf) == -1)
+	{
+	  g_free(path);
+	  continue;
+	}
+	
+	g_free(path);
+	
+	if (!S_ISDIR(buf.st_mode))
+	  continue;
+
+	if (!g_strcasecmp(name, game))
+	{
+	    debug( 3, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir, game);
+	    result = 2; // Different case match
+	    ret = g_strdup (name);
+	    break;
+	}
       }
       closedir (dp);
-      debug( 1, "Could not find any match for subdir/symlink %s in %s.  Returning %s",game, 
-                                                                basegamedir, game);
     }
-  else
-    debug( 1, "Could not open base directory %s!!", basegamedir);
+  }
 
-  return g_strdup (game);
+  if(!ret)
+    debug( 3, "Could not find any match for subdir %s in %s.",game, basegamedir);
+
+  if(match_result)
+    *match_result = result;
+
+  return ret;
 }
 
 /** sort list and remove duplicates

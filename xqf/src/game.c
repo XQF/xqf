@@ -82,7 +82,7 @@ static int q1_exec_generic (const struct condef *con, int forkit);
 static int qw_exec (const struct condef *con, int forkit);
 static int q2_exec (const struct condef *con, int forkit);
 static int q2_exec_generic (const struct condef *con, int forkit);
-static int q3_exec (const struct condef *con, int forkit);
+static int q3_exec (const struct condef *con, int forkit); // needs quake_private
 static int hl_exec(const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
@@ -92,10 +92,14 @@ static int exec_generic (const struct condef *con, int forkit);
 static int ssam_exec (const struct condef *con, int forkit);
 static int savage_exec (const struct condef *con, int forkit);
 
-static GList *q1_custom_cfgs (char *dir, char *game);
-static GList *qw_custom_cfgs (char *dir, char *game);
-static GList *q2_custom_cfgs (char *dir, char *game);
-static GList *q3_custom_cfgs (char *dir, char *game);
+/*
+static GList *q1_custom_cfgs (struct game* this, char *dir, char *game);
+static GList *qw_custom_cfgs (struct game* this, char *dir, char *game);
+static GList *q2_custom_cfgs (struct game* this, char *dir, char *game);
+static GList *q3_custom_cfgs (struct game* this, char *dir, char *game);
+*/
+
+static GList *quake_custom_cfgs (struct game* this, const char *path, const char *mod);
 
 static void quake_save_info (FILE *f, struct server *s);
 
@@ -113,7 +117,6 @@ static gboolean unreal_has_map(struct server* s);
 struct quake_private
 {
   GHashTable* maphash;
-  const char* home; // until we have something useful
 };
 
 struct unreal_private
@@ -130,11 +133,11 @@ static struct unreal_private postal2_private = { NULL, ".fuk" };
 static struct unreal_private aao_private = { NULL, ".aao" };
 
 static struct quake_private q1_private, qw_private, q2_private, hl_private;
-static struct quake_private q3_private = { NULL, "~/.q3a" };
-static struct quake_private wolf_private = { NULL, "~/.wolf" };
-static struct quake_private wolfet_private = { NULL, "~/.etwolf" };
-static struct quake_private mohaa_private = { NULL, "~/.mohaa" };
-static struct quake_private cod_private = { NULL, NULL }; // no home, wine only
+static struct quake_private q3_private;
+static struct quake_private wolf_private;
+static struct quake_private wolfet_private;
+static struct quake_private mohaa_private;
+static struct quake_private cod_private;
 
 #include "games.c"
 
@@ -168,6 +171,7 @@ void init_games()
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
+    games[i].real_home = expand_tilde (games[i].default_home);
     g_datalist_init(&games[i].games_data);
   }
 
@@ -195,6 +199,16 @@ void init_games()
   				   ("Note: You need to create a qstat config file for this game to work.\n"\
     				    "Please see the XQF documentation for more information."))); 
 
+}
+
+void games_done()
+{
+  int i;
+
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    g_free(games[i].real_home);
+  }
 }
 
 // retreive game specific value that belongs to key, do not free return value!
@@ -1505,29 +1519,34 @@ static int quake_config_is_valid (struct server *s) {
   return TRUE;
 }
 
-
-static char *quake3_data_dir (char *dir) {
+/** find the quake3 directory */
+static char *quake3_data_dir (struct game* this) {
   struct stat stat_buf;
-  char *rpath = NULL;
-  char *path;
+  char *path = NULL;
+  char *dir = NULL;
+  unsigned i = 0;
 
-  if (dir == NULL || *dir == '\0') {
-    dir = rpath = expand_tilde ("~/.q3a");
-    if (!rpath)
-      return NULL;
-  }
+  if(!this)
+    return NULL;
 
-  path = file_in_dir (dir, "baseq3");
-  if (stat (path, &stat_buf) || !S_ISDIR (stat_buf.st_mode)) {
-    g_free (path);
-    path = file_in_dir (dir, "demoq3");
-    if (stat (path, &stat_buf) || !S_ISDIR (stat_buf.st_mode)) {
+  dir = this->real_home?this->real_home:this->real_dir;
+
+  if (!dir)
+    return NULL;
+
+  for(i = 0; this->main_mods[i]; ++i)
+  {
+    path = file_in_dir (dir, this->main_mods[i]);
+    if (stat (path, &stat_buf) == 0 && S_ISDIR (stat_buf.st_mode))
+    {
+      break;
+    }
+    else
+    {
       g_free (path);
-      if (rpath) g_free (rpath);
-      return NULL;
+      path = NULL;
     }
   }
-  if (rpath) g_free (rpath);
   return path;
 }
 
@@ -1536,12 +1555,10 @@ static int quake3_config_is_valid (struct server *s) {
   struct game *g = &games[s->type];
   char *path;
 
-  if (g->cmd == NULL || g->cmd[0] == '\0') {
-    dialog_ok (NULL, "%s command line is empty.", g->name);
+  if(!config_is_valid_generic(s))
     return FALSE;
-  }
-
-  path = quake3_data_dir (g->real_dir);
+  
+  path = quake3_data_dir (g);
 
   if (path == NULL) {
     if (!g->real_dir || g->real_dir[0] == '\0') {
@@ -2178,7 +2195,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   
   int game_match_result = 0;
   
-  char *to_free = NULL;
+  char *real_game_dir = NULL;
 
   int vmfix = 0;
   int setfs_game = 0;
@@ -2188,12 +2205,16 @@ static int q3_exec (const struct condef *con, int forkit) {
   int vm_game_set = 0;
   int vm_cgame_set = 0;
   int vm_ui_set = 0;
+
+  struct quake_private* pd = NULL;
   
   if(!con) return -1;
   if(!con->s) return -1;
 
   g = &games[con->s->type];
   if(!g) return -1;
+
+  pd = (struct quake_private*)games[con->s->type].pd;
 
   vmfix               = str2bool(game_get_attribute(g->type,"vmfix"));
   setfs_game          = str2bool(game_get_attribute(g->type,"setfs_game"));
@@ -2325,30 +2346,23 @@ static int q3_exec (const struct condef *con, int forkit) {
     If the s->game is set, we want to put fs_game on the command
     line so that the mod is loaded when we connect.
   */
-  if((setfs_game) && con->s->game && g->type == Q3_SERVER) {
-    if (setfs_game) {
-      char* expandedstr = NULL;
-      argv[argi++] = "+set";
-      argv[argi++] = "fs_game";
-      //argv[argi++] = con->s->game;
-      
-      // Look in home directory /.q3a first
-      expandedstr = expand_tilde("~/.q3a");
-      argv[argi] = to_free = find_game_dir(expandedstr, con->s->game, &game_match_result);
-      g_free(expandedstr);
-      expandedstr=NULL;
-      debug (1, "find_game_dir result: %d",game_match_result);
-      
-      if (game_match_result == 0) {  		// 0=not found, 1=exact, 2=differnet case match
-        if (to_free) // Holding what was returned from find_game_dir above.  Get rid of it
-          g_free (to_free);
-
-        // Didn't find in home directory /.q3a so look in real directory if defined
-        argv[argi] = to_free = find_game_dir(g->real_dir, con->s->game, &game_match_result);
-      }
-      
-      argi++;
+  if (setfs_game && con->s->game)
+  {
+    // Look in (e.g.) ~/.q3a first
+    if(g->real_home)
+    {
+      real_game_dir = find_game_dir(g->real_home, con->s->game, &game_match_result);
     }
+    
+    if (!real_game_dir)
+    {
+      // Didn't find in home directory so look in real directory if defined
+      real_game_dir = find_game_dir(g->real_dir, con->s->game, &game_match_result);
+    }
+    
+    argv[argi++] = "+set";
+    argv[argi++] = "fs_game";
+    argv[argi++] = real_game_dir?real_game_dir:con->s->game;
   }
 
   if(pass_memory_options == TRUE)
@@ -2414,7 +2428,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
-  g_free (to_free);
+  g_free (real_game_dir);
   g_free (protocmdtofree);
   g_strfreev(additional_args);
   g_strfreev(cmdtokens);
@@ -2878,116 +2892,40 @@ static GList *custom_cfg_filter (GList *list) {
 }
 
 
-static GList *quake_custom_cfgs (const char *path, const char *mod_path) {
+static GList *quake_custom_cfgs (struct game* this, const char *path, const char *mod)
+{
   GList *cfgs = NULL;
-  GList *mod_cfgs = NULL;
+  const char* dirs[2] = {0};
+  unsigned d, i;
 
-  if (path) {
-    cfgs = dir_to_list (path, dir_custom_cfg_filter);
+  debug(4, "%s, %s", path, mod);
 
-    if (mod_path) {
-      mod_cfgs = dir_to_list (mod_path, dir_custom_cfg_filter);
-      cfgs = merge_sorted_string_lists (cfgs, mod_cfgs);
+  dirs[0] = path?path:this->real_dir;
+  dirs[1] = this->real_home;
+
+  for(d = 0; d < sizeof(dirs)/sizeof(dirs[0]); ++d)
+  {
+    if(!(dirs[d] && *dirs[d]))
+      continue;
+
+    for(i = 0; this->main_mods && this->main_mods[i]; ++i)
+    {
+      char* dir = file_in_dir (dirs[d], this->main_mods[i]);
+      GList* tmp = dir_to_list (dir, dir_custom_cfg_filter);
+      cfgs = merge_sorted_string_lists (cfgs, tmp);
+      g_free (dir);
     }
 
-    cfgs = custom_cfg_filter (cfgs);
+    if(mod)
+    {
+      char* dir = file_in_dir (dirs[d], mod);
+      GList* tmp = dir_to_list (dir, dir_custom_cfg_filter);
+      cfgs = merge_sorted_string_lists (cfgs, tmp);
+      g_free (dir);
+    }
   }
 
-  return cfgs;
-}
-
-
-static GList *q1_custom_cfgs (char *dir, char *game) {
-  GList *cfgs;
-  char *qdir;
-  char *path = NULL;
-  char *mod_path = NULL;
-
-  qdir = expand_tilde ((dir)? dir : games[Q1_SERVER].dir);
-
-  path = file_in_dir (qdir, "id1");
-  if (game)
-    mod_path = file_in_dir (qdir, game);
-
-  g_free (qdir);
-
-  cfgs = quake_custom_cfgs (path, mod_path);
-
-  g_free (path);
-  if (mod_path)
-    g_free (mod_path);
-
-  return cfgs;
-}
-
-
-static GList *qw_custom_cfgs (char *dir, char *game) {
-  GList *cfgs;
-  char *qdir;
-  char *path = NULL;
-  char *mod_path = NULL;
-
-  qdir = expand_tilde ((dir)? dir : games[QW_SERVER].dir);
-
-  path = file_in_dir (qdir, default_qw_is_quakeforge?"base":"id1");
-  mod_path = file_in_dir (qdir, (game)? game : "qw");
-
-  g_free (qdir);
-
-  cfgs = quake_custom_cfgs (path, mod_path);
-
-  g_free (path);
-  if (mod_path)
-    g_free (mod_path);
-
-  return cfgs;
-}
-
-
-static GList *q2_custom_cfgs (char *dir, char *game) {
-  GList *cfgs;
-  char *qdir;
-  char *path = NULL;
-  char *mod_path = NULL;
-
-  qdir = expand_tilde ((dir)? dir : games[Q2_SERVER].dir);
-
-  path = file_in_dir (qdir, "baseq2");
-  if (game)
-    mod_path = file_in_dir (qdir, game);
-
-  g_free (qdir);
-
-  cfgs = quake_custom_cfgs (path, mod_path);
-
-  g_free (path);
-  if (mod_path)
-    g_free (mod_path);
-
-  return cfgs;
-}
-
-static GList *q3_custom_cfgs (char *dir, char *game) {
-  GList *cfgs;
-  char *qdir;
-  char *path = NULL;
-  char *mod_path = NULL;
-
-  debug (5, "q3_custom_cfgs(%s,%s)",dir,game);
-
-  qdir = expand_tilde ((dir)? dir : games[Q3_SERVER].dir);
-
-  path = quake3_data_dir (qdir);
-  if (game)
-    mod_path = file_in_dir (qdir, game);
-
-  g_free (qdir);
-
-  cfgs = quake_custom_cfgs (path, mod_path);
-
-  g_free (path);
-  if (mod_path)
-    g_free (mod_path);
+  cfgs = custom_cfg_filter (cfgs);
 
   return cfgs;
 }
@@ -3252,9 +3190,9 @@ static void q3_init_maps(enum server_type type)
   pd->maphash = q3_init_maphash();
   findq3maps(pd->maphash,games[type].real_dir);
 
-  if(pd->home)
+  if(games[type].real_home)
   {
-    char* home = expand_tilde(pd->home);
+    char* home = expand_tilde(games[type].real_home);
     findq3maps(pd->maphash,home);
     g_free(home);
   }

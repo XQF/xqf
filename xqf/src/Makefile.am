@@ -110,6 +110,12 @@ i18n.h \
 loadpixmap.h \
 splash.h
 
+noinst_PROGRAMS = test_utils
+test_utils_SOURCES = test_utils.c \
+		     utils.c utils.h \
+		     debug.c debug.h
+test_utils_LDADD = $(xqf_LDADD)
+
 # it's only temporary, so ...
 gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
 gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
