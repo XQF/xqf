@@ -1,3 +1,7 @@
+April 20, 2001: Alex Burger <alex@fragit.net>
+-Added t2_analyze_serverinfo function to decode Game and
+ GameType columns for Tribes 2.
+
 April 19, 2001: Alex Burger <alex@fragit.net>
 -Changed version to 0.9.6g
 -Added Tribes 2 support.  Tribes 2 support requires at

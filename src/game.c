@@ -55,6 +55,7 @@ static void quake_parse_server (char *tokens[], int num, struct server *s);
 static void qw_analyze_serverinfo (struct server *s);
 static void q2_analyze_serverinfo (struct server *s);
 static void hl_analyze_serverinfo (struct server *s);
+static void t2_analyze_serverinfo (struct server *s);
 #ifdef QSTAT23
 static void q3_analyze_serverinfo (struct server *s);
 #endif
@@ -345,7 +346,7 @@ struct game games[] = {
 
     q2_parse_player,
     quake_parse_server,
-    q2_analyze_serverinfo,
+    t2_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
     q2_exec_generic,
@@ -835,6 +836,47 @@ static void q2_analyze_serverinfo (struct server *s) {
   {
 	  s->gametype=NULL;
   }
+}
+
+static void t2_analyze_serverinfo (struct server *s) {
+  char **info_ptr;
+  long n;
+
+  if ((games[s->type].flags & GAME_SPECTATE) != 0)
+    s->flags |= SERVER_SPECTATE;
+
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "game") == 0) {
+      if (strcmp(info_ptr[1],"base")) // If it's not 'base'
+        s->game = info_ptr[1];
+    }
+
+    //determine GameType column
+    else if (strcmp (*info_ptr, "mission") == 0) {
+      s->gametype = info_ptr[1];
+    }
+    else if (strcmp (*info_ptr, "cheats") == 0 && info_ptr[1][0] != '0') {
+      s->flags |= SERVER_CHEATS;
+    }
+    else if (strcmp (*info_ptr, "maxspectators") == 0) {
+      n = strtol (info_ptr[1], NULL, 10);
+      if (n <= 0)
+        s->flags &= ~SERVER_SPECTATE;
+    }
+    else if (strcmp (*info_ptr, "password") == 0) {
+      n = strtol (info_ptr[1], NULL, 10);
+      if ((n & 1) != 0)
+	s->flags |= SERVER_PASSWORD;
+      if ((n & 2) != 0)
+	s->flags |= SERVER_SP_PASSWORD;
+    }
+
+  }
+  // unset game if game is base
+//  if (!strcmp(s->game,"base"))
+//  {
+//  strcpy(s->gametype,"Alex");
+//  }
 }
 
 static void hl_analyze_serverinfo (struct server *s) {
