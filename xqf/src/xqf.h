@@ -38,8 +38,6 @@
 #define PASSWORD_CFG	"__passwd.cfg"
 #define LAUNCHINFO_FILE	"LaunchInfo.txt"
 
-#define MAX_SERVER_FILTERS 10
-
 #define MAX_PING	9999
 #define MAX_RETRIES	10
 

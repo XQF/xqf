@@ -1,3 +1,9 @@
+Jul 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- variable number of server filters
+- fix segfault when deleting last player filter entry
+- update german translation
+- better back up your config before trying this new versoin
+
 July 7, 2002: Alex Burger <alex@fragit_dot_net>
 - Changed version to 0.9.9.1
 

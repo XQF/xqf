@@ -45,7 +45,7 @@ struct player_pattern {
   int dirty;
 };
 
-extern  int player_filter (struct server *s, struct server_filter_vars *vars);
+extern  int player_filter (struct server *s);
 
 extern	void player_filter_page (GtkWidget *notebook);
 

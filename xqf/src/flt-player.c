@@ -78,7 +78,7 @@ static const char *mode_names[3] = {
 };
 
 
-int player_filter (struct server *s, struct server_filter_vars *vars) {
+int player_filter (struct server *s) {
   /* The 'vars' is ignored in this function, however, since we need it
      for applying the server filter, we will put it in the arguments. */
 
@@ -504,6 +504,11 @@ static int pattern_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 static void pattern_clist_select_row_callback (GtkWidget *widget, 
                                  int row, int column, GdkEventButton *event) {
   sync_pattern_data ();
+
+  // for some reason this function is called when a row gets deleted, would
+  // segfault later when row was the last one
+  if(row>=g_slist_length(curplrs)) return;
+
   current_row = row;
 
   pattern_clist_sync_selection ();
