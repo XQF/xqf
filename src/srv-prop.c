@@ -40,6 +40,13 @@
 #include "dialogs.h"
 #include "srv-prop.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
+
 
 static  GtkWidget *password_entry;
 static  GtkWidget *spectator_entry;
@@ -322,7 +329,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
   gtk_table_set_col_spacing (GTK_TABLE (table), 1, 16);
 
-  label = gtk_label_new ("IP Address:");
+  label = gtk_label_new (_("IP Address:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
   gtk_widget_show (label);
@@ -332,7 +339,7 @@ static GtkWidget *server_info_page (struct server *s) {
   gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, 0, 1);
   gtk_widget_show (label);
 
-  label = gtk_label_new ("Port:");
+  label = gtk_label_new (_("Port:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach_defaults (GTK_TABLE (table), label, 2, 3, 0, 1);
   gtk_widget_show (label);
@@ -344,7 +351,7 @@ static GtkWidget *server_info_page (struct server *s) {
   gtk_table_attach_defaults (GTK_TABLE (table), label, 3, 4, 0, 1);
   gtk_widget_show (label);
 
-  label = gtk_label_new ("Host Name:");
+  label = gtk_label_new (_("Host Name:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
   gtk_widget_show (label);
@@ -356,7 +363,7 @@ static GtkWidget *server_info_page (struct server *s) {
     gtk_widget_show (label);
   }
 
-  label = gtk_label_new ("Refreshed:");
+  label = gtk_label_new (_("Refreshed:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
   gtk_widget_show (label);
@@ -378,7 +385,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
   /* Sources */
 
-  frame = gtk_frame_new ("Sources");
+  frame = gtk_frame_new (_("Sources"));
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
   gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
@@ -430,7 +437,7 @@ static GtkWidget *server_info_page (struct server *s) {
   gtk_box_pack_end (GTK_BOX (hbox), customcfg_combo, FALSE, FALSE, 0);
   gtk_widget_show (customcfg_combo);
 
-  label = gtk_label_new ("Custom CFG:");
+  label = gtk_label_new (_("Custom CFG:"));
   gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
@@ -479,21 +486,21 @@ static GtkWidget *server_passwords_page (struct server *s) {
   gtk_table_set_col_spacings (GTK_TABLE (table), 8);
   gtk_box_pack_start (GTK_BOX (page_vbox), table, FALSE, FALSE, 0);
 
-  password_entry = passwd_entry ("Server Password",
+  password_entry = passwd_entry (_("Server Password"),
 				 (props)? props->server_password : NULL,
 				 table, 0);
 
   if ((games[s->type].flags & GAME_PASSWORD) == 0)
     gtk_widget_set_sensitive (password_entry, FALSE);
 
-  spectator_entry = passwd_entry ("Spectator Password",
+  spectator_entry = passwd_entry (_("Spectator Password"),
 				  (props)? props->spectator_password : NULL,
 				  table, 1);
 
   if ((games[s->type].flags & GAME_SPECTATE) == 0)
     gtk_widget_set_sensitive (spectator_entry, FALSE);
 
-  rcon_entry = passwd_entry ("RCon Password",
+  rcon_entry = passwd_entry (_("RCon Password"),
 			     (props)? props->rcon_password : NULL,
 			     table, 2);
 
@@ -520,7 +527,7 @@ void properties_dialog (struct server *s) {
   GtkWidget *label;
   char buf[256];
 
-  window = dialog_create_modal_transient_window ("Properties", 
+  window = dialog_create_modal_transient_window (_("Properties"), 
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
@@ -565,12 +572,12 @@ void properties_dialog (struct server *s) {
   gtk_box_pack_start (GTK_BOX (main_vbox), notebook, FALSE, FALSE, 0);
 
   page = server_info_page (s);
-  label = gtk_label_new (" Info ");
+  label = gtk_label_new (_("Info"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
   page = server_passwords_page (s);
-  label = gtk_label_new (" Passwords ");
+  label = gtk_label_new (_("Passwords"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
@@ -585,7 +592,7 @@ void properties_dialog (struct server *s) {
   hbox = gtk_hbox_new (FALSE, 8);
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label ("Cancel");
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_widget_set_usize (button, 80, -1);
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
@@ -593,7 +600,7 @@ void properties_dialog (struct server *s) {
   GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
   gtk_widget_show (button);
 
-  button = gtk_button_new_with_label ("OK");
+  button = gtk_button_new_with_label (_("OK"));
   gtk_widget_set_usize (button, 80, -1);
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",

@@ -45,6 +45,13 @@ extern	int errno;
 #include "zipped.h"
 #include "stat.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
+
 
 struct master *favorites = NULL;
 GSList *master_groups = NULL;
@@ -105,8 +112,8 @@ void save_favorites (void) {
     f = fopen (realname, "w");
 
     if (!f) {
-      if (dialog_yesno (NULL, 0, "Retry", "Skip", 
-			"Cannot write to file %s\nSystem Error: %s\n", 
+      if (dialog_yesno (NULL, 0, _("Retry"), _("Skip"), 
+			_("Cannot write to file %s\nSystem Error: %s\n"), 
 			realname, g_strerror (errno))) {
 	continue;
       }

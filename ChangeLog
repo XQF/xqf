@@ -1,3 +1,16 @@
+June 8, 2001, Jordi Mallach <jordi@sindominio.net>
+- Big internationalization patch for XQF.
+  Adds intl/ and po/ subdirs, and adds the gettext marks
+  to every .c that needs it. Modified configure.in and 
+  the Makefile.am's to support gettext. From now on,
+  every string in the code should be wrapped inside
+  gettext() calls, and .c's should add a <libintl.h>
+  if they don't have it already.
+  Some issues with the current code remain (untranslatable
+  strings), thats a work in progress.
+- Initial, incomplete Spanish translation (po/es.po).
+- changed configure.in so it barfs about qstat << 2.4c.
+
 June 5, 2001: Alex Burger <alex@fragit.net>
 -Tribes 2 games can now be launched.  Created a t2_exec
  function. If a name is specified in Player Profile, it 

@@ -3,19 +3,28 @@
 # Initially written by Markus Fischer <mfischer@josefine.ben.tuwien.ac.at>
 #
 
-AC_INIT( src/xqf.c)
+AC_INIT(src/xqf.c)
 
-AM_INIT_AUTOMAKE( xqf, 0.9.6g)
+AM_INIT_AUTOMAKE(xqf, 0.9.6g)
+dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
+AM_CONFIG_HEADER(src/gnuconfig.h)
 
+ALL_LINGUAS="es"
+
+dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
+
+dnl Checks for header files.
 AC_HEADER_STDC
 
 AM_SANITY_CHECK
 
+dnl Pick up the gettext, etc macros
+dnl AM_ACLOCAL_INCLUDE(macros)
+dnl AM_GNU_GETTEXT
 
 dnl check for qstat
-
 AC_ARG_WITH(qstat,[  --with-qstat=CMD        use CMD to run qstat])
 
 AC_MSG_CHECKING(qstat version)
@@ -36,7 +45,7 @@ if test "x$qstat_version" = "x" ; then
 	AC_MSG_RESULT(qstat not found)
 	echo
 	echo "*** QStat is *required* to run XQF"
-	echo "*** Get it from http://www.activesw.com/people/steve/qstat.html"
+	echo "*** Get it from http://qstat.org/"
 	echo "*** and put it in your path"
 	echo
 	exit 1
@@ -47,11 +56,11 @@ fi
 AC_SUBST(QSTATEXEC)
 
 case "$qstat_version" in
-	2.0*|2.1y|2.1z|2.3a|2.3b)
+	2.0*|2.1*|2.3*|2.4a|2.4b)
 	echo
 	echo "*** You have obsolete QStat beta version installed"
-	echo "*** QStat 2.3f is *required* to run XQF"
-	echo "*** Get it from http://www.activesw.com/people/steve/qstat.html"
+	echo "*** QStat 2.4c is *required* to run XQF"
+	echo "*** Get it from http://qstat.org/"
 	echo
 	exit 1
 	;;
@@ -79,7 +88,14 @@ AC_SUBST(DEBUG)
 
 AM_PATH_GTK(1.2.0,,exit 1)
 
-AC_SUBST( VERSION)
-AC_SUBST( QSTATEXEC)
+AC_SUBST(VERSION)
+AC_SUBST(QSTATEXEC)
 
-AC_OUTPUT( Makefile src/gnuconfig.h src/Makefile)
+dnl Pick up the gettext, etc macros
+dnl AM_ACLOCAL_INCLUDE(macros)
+AM_GNU_GETTEXT
+
+AC_DEFINE_UNQUOTED(XQF_VERSION, "$VERSION", XQF Version number)
+AC_DEFINE_UNQUOTED(QSTAT_EXEC, "$QSTATEXEC", QSTAT executable path)
+
+AC_OUTPUT([Makefile intl/Makefile po/Makefile.in src/Makefile])

@@ -44,6 +44,14 @@
 #include "dns.h"
 #include "debug.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
+
+
 static void stat_next (struct stat_job *job);
 
 
@@ -851,7 +859,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
     f = fopen (fn, "w");
     if (!f) {
-      dialog_ok (NULL, "Failed to create a temporary file %s", fn);
+      dialog_ok (NULL, _("Failed to create a temporary file %s"), fn);
       return NULL;
     }
 

@@ -31,7 +31,6 @@
 #include "skin.h"
 #include "skin_pcx.h"
 
-
 #define NOSKIN_BCOLOR	0x80
 #define NOSKIN_WCOLOR	0xC0
 

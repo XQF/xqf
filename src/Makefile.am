@@ -1,9 +1,10 @@
-INCLUDES = @GTK_CFLAGS@
+localedir = $(datadir)/locale
+INCLUDES = -Iintl -DLOCALEDIR=\"$(localedir)\" -I@includedir@ @GTK_CFLAGS@
 CFLAGS = @CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
 
 bin_PROGRAMS = xqf
 
-xqf_LDADD = @GTK_LIBS@
+xqf_LDADD = @INTLLIBS@ @GTK_LIBS@
 
 xqf_SOURCES =  \
 addmaster.c \

@@ -136,7 +136,7 @@ static struct keyword  keywords[] = {
 static void unexpected_char_error (char c) {
   fprintf (stderr, "Unexpected character: ");
   fprintf (stderr, (isprint (c))? "\'%c\'" : "\\%03o", c);
-  fprintf (stderr, " in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
+  fprintf (stderr, " in file %s[line:%d,pos:%d]\n"), rcfilename, line, pos;
 }
 
 

@@ -25,6 +25,13 @@
 #include "config.h"
 #include "addserver.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
+
 
 static struct history *server_history = NULL;
 
@@ -93,7 +100,7 @@ char *add_server_dialog (enum server_type *type) {
     *type = QW_SERVER;
   }
 
-  window = dialog_create_modal_transient_window ("Add Server", 
+  window = dialog_create_modal_transient_window (_("Add Server"), 
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), main_vbox);
@@ -104,7 +111,7 @@ char *add_server_dialog (enum server_type *type) {
 
   /* Server Entry */
 
-  label = gtk_label_new ("Server:");
+  label = gtk_label_new (_("Server:"));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
@@ -155,7 +162,7 @@ char *add_server_dialog (enum server_type *type) {
 
   /* Cancel Button */
 
-  button = gtk_button_new_with_label ("Cancel");
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
@@ -191,7 +198,7 @@ char *add_server_dialog (enum server_type *type) {
 
 
 void add_server_init (void) {
-  server_history = history_new ("Add Server");
+  server_history = history_new (_("Add Server"));
 }
 
 

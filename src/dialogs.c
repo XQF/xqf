@@ -28,6 +28,13 @@
 #include "xutils.h"
 #include "dialogs.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
+
 
 static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
 
@@ -107,7 +114,8 @@ void dialog_ok (char *title, char *fmt, ...) {
   va_end (ap);
 
   window = dialog_create_modal_transient_window (
-                         (title)? title : "XQF: Warning!", TRUE, FALSE, NULL);
+                         (title)? title : _("XQF: Warning!"),
+                                           TRUE, FALSE, NULL);
 
   main_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
@@ -131,7 +139,7 @@ void dialog_ok (char *title, char *fmt, ...) {
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
 
-  button = gtk_button_new_with_label ("OK");
+  button = gtk_button_new_with_label (_("OK"));
   gtk_widget_set_usize (button, 96, -1);
   gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
@@ -177,7 +185,8 @@ int dialog_yesno (char *title, int defbutton, char *yes, char *no,
   va_end (ap);
 
   window = dialog_create_modal_transient_window (
-                         (title)? title : "XQF: Warning!", TRUE, FALSE, NULL);
+                         (title)? title : _("XQF: Warning!"),
+                                          TRUE, FALSE, NULL);
 
   main_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
@@ -201,7 +210,7 @@ int dialog_yesno (char *title, int defbutton, char *yes, char *no,
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
 
-  button = gtk_button_new_with_label ((yes)? yes : "Yes");
+  button = gtk_button_new_with_label ((yes)? yes : _("Yes"));
   gtk_widget_set_usize (button, 96, -1);
   gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -213,7 +222,7 @@ int dialog_yesno (char *title, int defbutton, char *yes, char *no,
     gtk_widget_grab_default (button);
   gtk_widget_show (button);
 
-  button = gtk_button_new_with_label ((no)? no : "No");
+  button = gtk_button_new_with_label ((no)? no : _("No"));
   gtk_widget_set_usize (button, 96, -1);
   gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
@@ -295,7 +304,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval,
 
   /* OK Button */
 
-  button = gtk_button_new_with_label (" OK ");
+  button = gtk_button_new_with_label (_("OK"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
 		             GTK_SIGNAL_FUNC (enter_string_activate_callback),
 			     GTK_OBJECT (enter_string_entry));
@@ -306,7 +315,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval,
 
   /* Cancel Button */
 
-  button = gtk_button_new_with_label (" Cancel ");
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
                    GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));

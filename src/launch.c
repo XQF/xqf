@@ -41,6 +41,12 @@
 # define WAIT_ANY	-1
 #endif
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#else
+#define _(string) (string)
+#endif
 
 #define CLIENT_ERROR_BUFFER	256
 #define	CLIENT_ERROR_MSG_HEAD	"<XQF ERROR> "
@@ -63,7 +69,7 @@ static GSList *clients = NULL;
 
 
 static void dialog_failed (char *func, char *arg) {
-  dialog_ok ("XQF: ERROR!", "ERROR!\n\n%s(%s) failed: %s", 
+  dialog_ok (_("XQF: ERROR!"), _("ERROR!\n\n%s(%s) failed: %s"), 
                                    func, (arg)? arg : "", g_strerror (errno));
 }
 
@@ -182,7 +188,7 @@ static void client_input_callback (struct running_client *cl, int fd,
 
     if (!strncmp (cl->buffer, 
                      CLIENT_ERROR_MSG_HEAD, strlen (CLIENT_ERROR_MSG_HEAD))) {
-      dialog_ok ("XQF: ERROR!", "ERROR!\n\n%s", 
+      dialog_ok (_("XQF: ERROR!"), _("ERROR!\n\n%s"), 
 	                         cl->buffer + strlen (CLIENT_ERROR_MSG_HEAD));
 
       pid = cl->pid;  /* save PID value */
@@ -324,8 +330,8 @@ static int already_running (enum server_type type) {
 
   s = (struct server *) ((struct running_client *) clients->data) -> server;
 
-  res = dialog_yesno (NULL, 1, "Launch", "Cancel", 
-		      "There is %s client running.\n\nLaunch %s client?",
+  res = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
+		      _("There is %s client running.\n\nLaunch %s client?"),
 		      (another)? games[type].name : games[s->type].name,
 		      (another)? "another" : games[type].name);
 

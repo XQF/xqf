@@ -37,12 +37,20 @@
 #include "config.h"
 #include "statistics.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(string) gettext(string)
+#define N_(string) (string)
+#else
+#define _(string) (string)
+#endif
+
 
 #define PERCENTS(A,B)	((B)? (A)/((B)/100.0) : 0)
 
-
 #define	OS_NUM		5
 #define CPU_NUM		5
+
 
 enum OS { OS_WINDOWS = 0, OS_LINUX, OS_SOLARIS, OS_MACOS, OS_UNKNOWN };
 enum CPU { CPU_X86 = 0, CPU_SPARC, CPU_AXP, CPU_PPC, CPU_UNKNOWN };
@@ -64,19 +72,19 @@ struct arch_stats {
 
 
 static const char *srv_headers[6] = {
-  "Servers", "Up", "T/O", "Down", "Info n/a", "Players"
+  N_("Servers"), N_("Up"), N_("T/O"), N_("Down"), N_("Info n/a"), N_("Players")
 };
 
 static const char *os_names[OS_NUM] = {
-  "Windows", "Linux", "Solaris", "MacOS", "unknown"
+  "Windows", "Linux", "Solaris", "MacOS", N_("unknown")
 };
 
 static const char *cpu_names[CPU_NUM] = {
-  "Intel x86", "Sparc", "AXP", "PPC", "unknown"
+  "Intel x86", "Sparc", "AXP", "PPC", N_("unknown")
 };
 
-const char *srv_label = "Servers";
-const char *arch_label = "OS/CPU";
+const char *srv_label = N_("Servers");
+const char *arch_label = N_("OS/CPU");
 
 
 static struct server_stats *srv_stats;
@@ -329,7 +337,7 @@ static GtkWidget *server_stats_page (void) {
   gtk_table_set_row_spacing (GTK_TABLE (table), GAMES_TOTAL, 12);
 
   for (i = 0; i < 6; i++)
-    put_label_to_table (table, srv_headers[i], 1.0, i + 1, 0);
+    put_label_to_table (table, _(srv_headers[i]), 1.0, i + 1, 0);
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     game_label = game_pixmap_with_label (i);
@@ -349,7 +357,7 @@ static GtkWidget *server_stats_page (void) {
     }
   }
 
-  put_label_to_table (table, "Total", 0.0, 0, GAMES_TOTAL + 1);
+  put_label_to_table (table, _("Total"), 0.0, 0, GAMES_TOTAL + 1);
 
   put_server_stats (table, 0, GAMES_TOTAL + 1);
 
@@ -392,17 +400,17 @@ static void arch_notebook_page (GtkWidget *notebook,
   gtk_table_set_col_spacing (GTK_TABLE (table), OS_NUM, 20);
   gtk_table_set_row_spacing (GTK_TABLE (table), CPU_NUM, 12);
 
-  put_label_to_table (table, "CPU  \\  OS", 0.5, 0, 0);
+  put_label_to_table (table, _("CPU  \\  OS"), 0.5, 0, 0);
 
   for (i = 0; i < OS_NUM; i++) {
-    put_label_to_table (table, os_names[i], 1.0, i + 1, 0);
+    put_label_to_table (table, _(os_names[i]), 1.0, i + 1, 0);
   }
-  put_label_to_table (table, "Total", 1.0, OS_NUM + 1, 0);
+  put_label_to_table (table, _("Total"), 1.0, OS_NUM + 1, 0);
 
   for (i = 0; i < CPU_NUM; i++) {
-    put_label_to_table (table, cpu_names[i], 0.0, 0, i + 1);
+    put_label_to_table (table, _(cpu_names[i]), 0.0, 0, i + 1);
   }
-  put_label_to_table (table, "Total", 0.0, 0, CPU_NUM + 1);
+  put_label_to_table (table, _("Total"), 0.0, 0, CPU_NUM + 1);
 
   for (j = 0; j < CPU_NUM; j++) {
     cpu_total = 0;
@@ -498,13 +506,13 @@ void statistics_dialog (void) {
   server_stats_create ();
   collect_statistics ();
 
-  window = dialog_create_modal_transient_window ("Statistics", 
+  window = dialog_create_modal_transient_window (_("Statistics"), 
                                                            TRUE, FALSE, NULL);
   main_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
   gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-  label = gtk_label_new ("Statistics");
+  label = gtk_label_new (_("Statistics"));
   gtk_box_pack_start (GTK_BOX (main_vbox), label, FALSE, FALSE, 8);
   gtk_widget_show (label);
 
@@ -514,12 +522,12 @@ void statistics_dialog (void) {
   gtk_box_pack_start (GTK_BOX (main_vbox), stat_notebook, FALSE, FALSE, 0);
 
   page = server_stats_page ();
-  label = gtk_label_new (srv_label);
+  label = gtk_label_new (_(srv_label));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
 
   page = archs_stats_page ();
-  label = gtk_label_new (arch_label);
+  label = gtk_label_new (_(arch_label));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
 
@@ -538,7 +546,7 @@ void statistics_dialog (void) {
   hbox = gtk_hbox_new (FALSE, 8);
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label ("Close");
+  button = gtk_button_new_with_label (_("Close"));
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_widget_set_usize (button, 80, -1);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
