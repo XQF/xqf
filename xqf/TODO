@@ -1,37 +1,29 @@
-- Multiple Favorites
-- update game types for Q3 mods - move to external file
-- Ability to delete servers from non-Favorites
-- Game specific filters.  No use seeing a Lithium filter choice when looking
-  at UT2003 servers
-- Search for server like control f does for player
-- Option to treat bots as non-players.  Hate going to a server that has 6 
-  'players' to find them all bots
-- Ability to launch a game without connecting to a server - right click on
-  game in source list - Launch
-- get rid of the switch for saving player info, make seperate functions for
-  each game
-
-
-Required for XQF 0.9.11
-- Half-Life launch fix
-- Serious SAM support
-- Detection if map is installed (req. home dir option) for Q3 / UT based
-  games
-
-
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
-- Fix the server core dumps! (are there any left?)
-- improve performance with huge server lists (halflife), maybe by serverside
-  filtering
-- More general server filters so one can filter based on any server var.
-- Redial feature:  User configurable options
+- Fix the server core dumps! (are there any left? -- yes)
 - If you disable 'Show hostnames' and you select a server and do a DNS
   Lookup, it shouldn't automatically enable Show hostnames.  Should make
   'Show hostnames' simply enable / disable displaying of a host name if it
   exists in the server record.  Add a 'Resolve hostnames on Update / Refresh'
   option to set whether or not to do the resolving on update / refresh
-- Splash screen.  Should show current activities on startup such as loading 
-  server lists, searching map directories etc
 
+If there is nothing interesting on TV:
+- update game types for Q3 mods - move to external file
+- Ability to delete servers from non-Favorites (really? -- ln)
+- Game specific filters.  No use seeing a Lithium filter choice when looking
+  at UT2003 servers
+- More general server filters so one can filter based on any server var.
+- Search for server like control f does for player
+- Ability to launch a game without connecting to a server - right click on
+  game in source list - Launch
+- get rid of the switch for saving player info, make seperate functions for
+  each game
+- Redial feature:  User configurable options
+- improve performance with huge server lists (halflife), maybe by serverside
+  filtering
 
+Jobs you can do if your holidays are boring:
+- dynamic dialogs using libglade
+- GTK2
+- Multiple Favorites
+- parse text file(xml?) to fill struct games[]
