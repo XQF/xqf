@@ -61,8 +61,10 @@ static GtkWidget *create_server_type_menu (void) {
   for (i = 0; i < GAMES_TOTAL; i++) {
 
     // Skip a game if it's not configured and show only configured is enabled
-    if (!games[i].cmd && default_show_only_configured_games)
-      continue;
+    //if (!games[i].cmd && default_show_only_configured_games)
+    //  continue;
+    // Commented out for now.  Causes problems adding server to favorites - see
+    // BUGS
   
     menu_item = gtk_menu_item_new ();
     gtk_menu_append (GTK_MENU (menu), menu_item);

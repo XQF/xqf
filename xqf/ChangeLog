@@ -1,4 +1,6 @@
 Oct 14, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Modified create_server_type_menu to show all server types until bug
+  can be figured out
 - Updated help about and AUTHORS page with contributors
 - Updated reserved slots support to use integers (Jochen Baier)
 - Added reserved slots support for redial from Jochen Baier
