@@ -35,15 +35,8 @@
 #include "xutils.h"
 #include "config.h"
 #include "rc.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#define N_(string) (string)
-#else
-#define _(string) (string)
-#endif 
-
+#include "gnuconfig.h"
+#include "debug.h"
 
 char 	*user_rcdir = NULL;
 
@@ -112,14 +105,12 @@ static	int pref_q2_noskins;
 static	char *pref_qw_skin;
 static	char *pref_q2_skin;
 
-static  GtkWidget *profile_notebook;
 static  GtkWidget *games_notebook;
 
 static  GtkWidget *rate_spinner[2];
 static  GtkWidget *cl_nodelta_check_button[2];
 static  GtkWidget *cl_predict_check_button[2];
 static  GtkWidget *noaim_check_button;
-static  GtkWidget *pushlat_check_button;
 static  GtkWidget *nosound_check_button;
 static  GtkWidget *nocdaudio_check_button;
 static  GtkWidget *name_q1_entry;
@@ -1844,7 +1835,6 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 
 static GtkWidget *q3_options_page (void) {
   GtkWidget *page_vbox;
-  GtkWidget *frame;
   GtkWidget *hbox;
   GtkWidget *label;
 
@@ -1891,7 +1881,6 @@ static GtkWidget *q3_options_page (void) {
 
 static GtkWidget *wolf_options_page (void) {
   GtkWidget *page_vbox;
-  GtkWidget *frame;
   GtkWidget *hbox;
   GtkWidget *label;
 
@@ -1940,10 +1929,8 @@ static GtkWidget *qw_options_page (void) {
   GtkWidget *label;
   GtkWidget *frame2;
   GtkWidget *hbox;
-  GtkWidget *hbox2;
   GtkWidget *vbox2;
   GtkWidget *option_menu;
-  GtkObject *adj;
 
   debug (5, "qw_options_page()");
 

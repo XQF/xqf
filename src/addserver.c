@@ -24,6 +24,7 @@
 #include "utils.h"
 #include "config.h"
 #include "addserver.h"
+#include "srv-prop.h"
 
 #ifdef ENABLE_NLS
 #include <libintl.h>

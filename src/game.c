@@ -36,6 +36,7 @@
 #include "pixmaps.h"
 #include "game.h"
 #include "stat.h"
+#include "debug.h"
 
 
 static struct player *poqs_parse_player(char *tokens[], int num);
@@ -75,7 +76,6 @@ static int qw_exec (const struct condef *con, int forkit);
 #ifdef QSTAT23
 static int q3_exec (const struct condef *con, int forkit);
 #endif
-static int wo_exec (const struct condef *con, int forkit);
 static int q2_exec_generic (const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
@@ -861,7 +861,6 @@ static void qw_analyze_serverinfo (struct server *server) {
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
 static void un_analyze_serverinfo (struct server *s) {
   char **info_ptr;
-  long n;
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
@@ -882,7 +881,6 @@ static void un_analyze_serverinfo (struct server *s) {
 
 static void descent3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
-  long n;
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
@@ -995,7 +993,6 @@ static void t2_analyze_serverinfo (struct server *s) {
 
 static void hl_analyze_serverinfo (struct server *s) {
   char **info_ptr;
-  long n;
 
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
@@ -1030,7 +1027,8 @@ static void hl_analyze_serverinfo (struct server *s) {
 
 #ifdef QSTAT23
 
-static char *q3a_gametypes[9] = {
+#define MAX_Q3A_TYPES 9
+static char *q3a_gametypes[MAX_Q3A_TYPES] = {
   "FFA",		/* 0 = Free for All */
   "1v1",	 	/* 1 = Tournament */
   NULL,  		/* 2 = Single Player */
@@ -1066,7 +1064,7 @@ static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
   NULL,			/* 8+ ?? */
 };
 
-#define MAX_Q3A_THREEWAVE_TYPES 11
+#define MAX_Q3A_THREEWAVE_TYPES 12
 static char *q3a_threewave_gametypes[MAX_Q3A_THREEWAVE_TYPES] = {
   "FFA",		// 0  - Free For All
   "1v1",		// 1  - Tournament
@@ -1079,7 +1077,7 @@ static char *q3a_threewave_gametypes[MAX_Q3A_THREEWAVE_TYPES] = {
   "Portal", 	        // 8  - Portal        (invalid, don't use this)
   "CaptureStrike",	// 9  - CaptureStrike 
   "Classic CTF", 	// 10 - Classic CTF   
-  NULL
+  NULL			// 11+ ???
 };
 
 #define MAX_Q3A_TRIBALCTF_TYPES 10
@@ -1093,7 +1091,7 @@ static char *q3a_tribalctf_gametypes[MAX_Q3A_TRIBALCTF_TYPES] = {
   "Freestyle",		// 6 - Freestyle
   "Fixed",		// 7 - Fixed
   "Roulette",		// 8 - Roulette
-  NULL
+  NULL			// 9+ ???
 };
 
 static void q3_analyze_serverinfo (struct server *s) {
@@ -1101,6 +1099,9 @@ static void q3_analyze_serverinfo (struct server *s) {
   char *endptr;
   long n;
   int newtypes;
+  char *fs_game=NULL;
+  char *game=NULL;
+  char *gamename=NULL;
 
   int is_default=0;
 
@@ -1112,28 +1113,14 @@ static void q3_analyze_serverinfo (struct server *s) {
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
   if (strcmp (*info_ptr, "version") == 0) {
       if (info_ptr[1][3] >= '1')	// eg: 1 of 1.27
+      {
         if (info_ptr[1][5] >= '2')	// eg: 2 of 1.27
 	  newtypes=1;
+      }
       else
         newtypes=0;
     }
   }
-
-  /*
-    Next figure out if it is an OSP server, if it is
-    then the g_gametype has a different meaning
-  */
-  /*
-  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-    if (strcmp (*info_ptr, "gamename") == 0) {
-      if (strcmp (info_ptr[1], "osp") == 0) {
-	is_osp = 1;
-      } else {
-	is_osp = 0;
-      }
-    }
-  }
-*/
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
  
@@ -1141,12 +1128,26 @@ static void q3_analyze_serverinfo (struct server *s) {
       fs_game sets the active directory and is how one chooses
       a mod on the command line.  This should not show up in
       the server string but some times it does.  We will
-      take either fs_game or gamename as the "game" string.
+      take either fs_game, game or gamename as the "game" string.
       --baa
     */
     if (strcmp (*info_ptr, "fs_game") == 0) {
       if (strcmp (info_ptr[1], "baseq3")) {
-	s->game  = info_ptr[1];
+	fs_game  = info_ptr[1];
+      }
+      else is_default=1;
+    }
+    else if (strcmp (*info_ptr, "gamename") == 0) {
+      if (strcmp (info_ptr[1], "baseq3")) {
+	/* We only set the mod if the name is NOT baseq3. */
+	gamename  = info_ptr[1];
+      }
+      else is_default=1;
+    }
+    else if (strcmp (*info_ptr, "game") == 0) {
+      if (strcmp (info_ptr[1], "baseq3")) {
+	/* We only set the mod if the name is NOT baseq3. */
+	game  = info_ptr[1];
       }
       else is_default=1;
     }
@@ -1178,13 +1179,6 @@ static void q3_analyze_serverinfo (struct server *s) {
       }
     }
     
-    else if (strcmp (*info_ptr, "gamename") == 0) {
-      if (strcmp (info_ptr[1], "baseq3")) {
-	/* We only set the mod if the name is NOT baseq3. */
-	s->game  = info_ptr[1];
-      }
-      else is_default=1;
-    }
     else if (!s->gametype && strcmp (*info_ptr, "g_gametype") == 0) {
 	s->gametype = info_ptr[1];
     }
@@ -1203,6 +1197,18 @@ static void q3_analyze_serverinfo (struct server *s) {
     }
   }
 
+  if(fs_game)
+  {
+    s->game=fs_game;
+  }
+  else if(game)
+  {
+    s->game=game;
+  }
+  else if(gamename)
+  {
+    s->game=gamename;
+  }
 
   if(s->gametype) {
     n = strtol (s->gametype, &endptr, 10);
@@ -1239,11 +1245,20 @@ static void q3_analyze_serverinfo (struct server *s) {
 
 	  s->gametype = q3a_tribalctf_gametypes[n];
 	}
+	else if (!strcasecmp(s->game,"missionpack"))
+	{
+	  if( n >= MAX_Q3A_TYPES )
+	    n = MAX_Q3A_TYPES - 1;
+
+	  s->gametype = q3a_gametypes[n];
+	}
 
       }
       else if (is_default == 1)
       {
-	if (n < 10)
+	  if( n >= MAX_Q3A_TYPES )
+	    n = MAX_Q3A_TYPES - 1;
+
 	  s->gametype = q3a_gametypes[n];
       }
     }
@@ -1591,9 +1606,11 @@ static int write_q3_vars (const char *filename, const struct condef *con) {
 */
 
 static int write_quake_variables (const struct condef *con) {
+/*
 #ifdef QSTAT23
   char *path;
 #endif
+*/
   char *file = NULL;
   int res = TRUE;
 
@@ -1724,7 +1741,7 @@ static int qw_exec (const struct condef *con, int forkit) {
   char *cmd;
   char *file;
   struct game *g = &games[con->s->type];
-  int retval;
+  int retval=-1;
 
   switch (con->s->type) {
 
@@ -1740,7 +1757,7 @@ static int qw_exec (const struct condef *con, int forkit) {
     break;
 
   default:
-    return;
+    return retval;
   }
 
   cmd = strdup_strip (g->cmd);
@@ -1799,7 +1816,7 @@ static int qw_exec (const struct condef *con, int forkit) {
              _("Cannot write to file \"%s\".\n\nLaunch client anyway?"), file)) {
 	g_free (file);
 	g_free (cmd);
-	return;
+	return retval;
       }
     }
 
@@ -1851,13 +1868,12 @@ static int q3_exec (const struct condef *con, int forkit) {
   char *argv[64];
   int argi = 0;
   char *cmd;
-  char *game_dir;
-  char *file;
+//  char *game_dir;
+//  char *file;
 
   char *protocol;
   char *tmp_cmd;
   FILE* tmp_fp;
-  char *fs_game;
 
   struct game *g = &games[con->s->type];
   int retval;
@@ -1901,7 +1917,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   strcat (tmp_cmd, protocol);
   strcat (tmp_cmd, "\0");
   debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
-  if (tmp_fp = fopen( tmp_cmd, "r" )){
+  if ((tmp_fp = fopen( tmp_cmd, "r" ))){
     fclose (tmp_fp);
     debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
     argv[argi++] = tmp_cmd;
@@ -1974,26 +1990,16 @@ static int q3_exec (const struct condef *con, int forkit) {
     argv[argi++] = con->custom_cfg;
   }
   
-  /* If the fs_game or -- more likely -- gamename is set, we want to
-     put fs_game on the command line so that the mod is loaded when
-     we connect. */
-  if((opts->setfs_game || opts->rafix)
-     && (fs_game =  find_server_setting_for_key ("fs_game", con->s->info))){
-    /* This will rarely (never?) be called. */
+  /*
+    If the s->game is set, we want to put fs_game on the command
+    line so that the mod is loaded when we connect.
+  */
+  if((opts->setfs_game || opts->rafix) && con->s->game) {
     if (opts->setfs_game) {
       argv[argi++] = "+set fs_game";
-      argv[argi++] = fs_game;
+      argv[argi++] = con->s->game;
     }
-    if (strcmp( fs_game, "arena") == 0)  is_so_mod = 1;
-
-    
-  } else if((opts->setfs_game || opts->rafix)
-      && (fs_game =  find_server_setting_for_key ("gamename", con->s->info))){
-    if (strcmp( fs_game, "arena") == 0 )  is_so_mod = 1;
-    if (opts->setfs_game) {
-      argv[argi++] = "+set fs_game";
-      argv[argi++] = fs_game;
-    }
+    if (strcmp( con->s->game, "arena") == 0) is_so_mod = 1;
   }
 
   /* 

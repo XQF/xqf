@@ -29,6 +29,7 @@
 #include <gtk/gtk.h>
 
 #include "utils.h"
+#include "debug.h"
 
 
 short strtosh (const char *str) {

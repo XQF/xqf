@@ -33,14 +33,9 @@
 #include "utils.h"
 #include "flt-player.h"
 #include "filter.h"
+#include "debug.h"
+#include "gnuconfig.h"
 
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#define N_(string) (string)
-#else
-#define _(string) (string)
-#endif
 
 #define REGCOMP_FLAGS 	(REG_EXTENDED | REG_NOSUB | REG_ICASE)
 
@@ -543,7 +538,7 @@ static void delete_pattern_callback (GtkWidget *widget, gpointer data) {
   struct player_pattern *pp;
   int row;
 
-  debug(5,"delete_pattern_callback(widget=%x,data=%x)",row,data);
+  debug(5,"delete_pattern_callback(widget=%x,data=%x)",widget,data);
 
   if (current_row < 0)
     return;
@@ -578,8 +573,6 @@ static void pattern_clist_adjust_visibility (int row, int direction) {
 
 
 static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
-  GSList *link;
-  struct player_pattern *pp;
   int row = current_row;
 
   debug(5,"move_up_down_pattern_callback(widget=%x, dir=%d) row=%d",widget,dir,row);
