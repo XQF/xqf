@@ -3944,7 +3944,7 @@ int main (int argc, char *argv[]) {
 
   debug(1,"startup time %ds", time(NULL)-xqf_start_time);
 
-  tray_icon_set_tooltip(_("nothing yet..."));
+//  tray_icon_set_tooltip(_("nothing yet..."));
   
   gtk_main ();
 
