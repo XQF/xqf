@@ -1622,6 +1622,11 @@ static void hl_analyze_serverinfo (struct server *s) {
       s->flags |= SERVER_PASSWORD;
     }
 
+    //cheating death
+    else if (strcmp (*info_ptr, "cdrequired") == 0 && info_ptr[1][0] != '0') {
+      s->flags |= SERVER_PUNKBUSTER;
+    }
+
     // reserved slots
     else if (strcmp (*info_ptr, "reserve_slots") == 0) {
       s->private_client = strtol (info_ptr[1], NULL, 10);
