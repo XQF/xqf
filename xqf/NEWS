@@ -1,9 +1,31 @@
-XQF 0.9.12 -- ??????
+XQF 0.9.12 -- June 7, 2003
 ~~~~~~~~~~
 Changes since 0.9.11:
 
+o Added Enemy Territory Support support
+o Added Serious Sam: The Second Encounter support
+o Map scan function for q1, qw, q2 and hl to verify that you have the map installed before connecting to the server
+o Ability to see level screenshot when clicking on the map column for jpg shots inside of PK3 files for Quake3 and Wolfenstein
+o XQF startup splash screen support using gdk-pixbuf
+o Allow filtering for map and server name
+o Fix high cpu load when dialogs are shown during launch phase
+o If more than 100 servers are to be updated, the screen is not immediately refreshed.  This helps eliminate long delays with Half Life updates
+o Pass RCON password on command line when launching Half-Life
+o Minor memory leaks fixed
+o Added QuakeForge's HexenWorld master
+o Added Quake3 Western Q3 game type
+o Default custom args for Rocket Arena removed as 1.6 does not need them anymore
+o Now displays player team for Wolfenstein and Enemy Territory (skin column)
+o With Half Life, private clients now set based on reserve_slots variable
+o Display number of private clients in player column
+o Option to not count bots as players
+o Move server filter submenu to top level and remove rarely used buttons from toolbar
+o Added docs/PreLaunch.example
+o Hostname resolving now off by default
+o Automatically creates qstat config if required
+o gdk-pixbuf now required
 o New Danish translation
-o splash screen, logo in $datadir/xqf/pixmaps/xqflogo.png
+o New French translation
 
 XQF 0.9.11 -- December 19, 2002
 ~~~~~~~~~~
