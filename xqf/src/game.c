@@ -50,6 +50,11 @@
 #include "q3maps.h"
 #include "utmaps.h"
 
+/* in pref.c */
+extern void q1_cmd_or_dir_changed(struct game* g);
+extern void qw_cmd_or_dir_changed(struct game* g);
+extern void q2_cmd_or_dir_changed(struct game* g);
+
 static struct player *poqs_parse_player(char *tokens[], int num, struct server *s);
 static struct player *qw_parse_player(char *tokens[], int num, struct server *s);
 static struct player *q2_parse_player(char *tokens[], int num, struct server *s);
@@ -112,6 +117,7 @@ static gboolean quake_has_map(struct server* s);
 static void q3_init_maps(enum server_type);
 static size_t q3_get_mapshot(struct server* s, guchar** buf);
 
+static void doom3_cmd_or_dir_changed(struct game* g);
 static void doom3_init_maps(enum server_type);
 static size_t doom3_get_mapshot(struct server* s, guchar** buf);
 static gboolean doom3_has_map(struct server* s);
@@ -3424,6 +3430,37 @@ static gboolean unreal_has_map(struct server* s)
     return FALSE;
 
   return ut_lookup_map(hash,s->map);
+}
+
+static void doom3_cmd_or_dir_changed(struct game* g)
+{
+  FILE* f;
+  char* verinfo;
+  const char* attrproto;
+  char line[64];
+
+  debug(3, "cmd: %s, dir: %s", g->cmd, g->real_dir);
+
+  attrproto = game_get_attribute(g->type,"masterprotocol");
+
+  verinfo = file_in_dir (g->real_dir, "version.info");
+  f = fopen(verinfo, "r");
+  if(!f)
+    goto out;
+
+  if(!fgets(line, sizeof(line), f))
+    goto out;
+
+  if(!fgets(line, sizeof(line), f))
+    goto out;
+
+  debug(3, "detected doom3 protocol version %s", line);
+
+  game_set_attribute(g->type, "_masterprotocol", g_strdup(line));
+
+out:
+  fclose(f);
+  g_free(verinfo);
 }
 
 // vim: sw=2
