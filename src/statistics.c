@@ -568,7 +568,7 @@ void statistics_dialog (void) {
   collect_statistics ();
 
   window = dialog_create_modal_transient_window (_("Statistics"), 
-                                                           TRUE, TRUE, statistics_save_geometry);
+				   TRUE, TRUE, GTK_SIGNAL_FUNC(statistics_save_geometry));
 
   statistics_restore_geometry(window);
 

@@ -42,6 +42,7 @@ extern	GSList *master_groups;
 extern	struct master *add_master (char *path,
 				   char *name, 
 				   enum server_type type, 
+				   const char* qstat_query_arg,
 				   int user, 
 				   int lookup_only);
 

@@ -1,3 +1,7 @@
+May 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- support for Half-Life steam master. Nasty hack, hopefully doesn't break other stuff.
+- set anti-cheat flag for VAC (secure != 0)
+
 Mar 30, 2004: Jordi Mallach <jordi@sindominio.net>
 - add Russian translation by Dan Korostelev <dan@ats.energo.ru>.
 
