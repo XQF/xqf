@@ -59,20 +59,7 @@ static void master_check_master_addr_prefix()
   master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO
 	(master_addr_combo)->entry));
 
-  if(!master_addr|| !strlen(master_addr))
-  {
-	  if(current_master_query_type==MASTER_LAN)
-	  {
-		  char *txt =
-			  g_strdup_printf("%s%s",
-				master_prefixes[current_master_query_type],
-				"255.255.255.255");
-		  gtk_entry_set_text(
-		      GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
-	  }
-	  return;
-  }
-  
+  // Replace up to :// with master type selected from radio buttons  
   if (g_strncasecmp(master_addr, master_prefixes[current_master_query_type],
       strlen(master_prefixes[current_master_query_type])))
   {
@@ -86,9 +73,22 @@ static void master_check_master_addr_prefix()
       // +"://"
       pos+=3;
     }
-    master_addr =
-      g_strconcat(master_prefixes[current_master_query_type],pos,NULL);
-    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry),master_addr);
+
+    // Add lan://255.255.255.255 if user picks LAN and has not already entered an address
+    if(current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (pos - master_addr)))
+    {
+      char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type],
+						              "255.255.255.255");
+      gtk_entry_set_text(
+      GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
+    }
+
+    // Otherwise, just change the master type (xxx://)
+    else {
+      master_addr =
+        g_strconcat(master_prefixes[current_master_query_type],pos,NULL);
+      gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry),master_addr);
+    }
   }
 }
 
