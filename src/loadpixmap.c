@@ -30,10 +30,12 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "loadpixmap.h"
+#include "pixmaps.h"
 #include "i18n.h"
+#include "debug.h"
 
 /* This is an internally used function to check if a pixmap file exists. */
-static gchar* check_file_exists        (const gchar     *directory,
+gchar* check_file_exists        (const gchar     *directory,
                                         const gchar     *filename);
 
 /* This is an internally used function to create pixmaps. */
@@ -62,7 +64,7 @@ create_dummy_pixmap                    (GtkWidget       *widget)
   gdkpixmap = gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, &mask,
                                                      NULL, dummy_pixmap_xpm);
   if (gdkpixmap == NULL)
-    g_error ("Couldn't create replacement pixmap.");
+    xqf_error ("Couldn't create replacement pixmap.");
   pixmap = gtk_pixmap_new (gdkpixmap, mask);
   gdk_pixmap_unref (gdkpixmap);
   gdk_bitmap_unref (mask);
@@ -95,40 +97,62 @@ gchar* find_pixmap_directory(const gchar* filename)
   return found_filename;
 }
 
-/* This is an internally used function to create pixmaps. */
-GtkWidget*
-load_pixmap                          (GtkWidget       *widget,
-				      const gchar     *filename)
+GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename)
+{
+  GtkWidget *pixmap;
+  struct pixmap pix;
+  if(!load_pixmap_as_pixmap(widget, filename, &pix))
+  {
+    return create_dummy_pixmap(widget);
+  }
+
+  pixmap = gtk_pixmap_new (pix.pix, pix.mask);
+  gdk_pixmap_unref (pix.pix);
+  if(pix.mask) gdk_bitmap_unref (pix.mask);
+  return pixmap;
+}
+
+/** find a pixmap file either absolute or in the pixmap search path.
+ * @returns filename if file exists, NULL otherwise. must be freed
+ */
+static char* find_pixmap_file(const char* filename)
+{
+  char *found_filename = NULL;
+
+  g_return_val_if_fail(filename!=NULL,NULL);
+
+  if (!filename[0])
+    return NULL;
+
+  // load absolute paths directly
+  if(filename[0]=='/')
+    found_filename = check_file_exists(NULL, filename);
+  else
+    found_filename = find_pixmap_directory(filename);
+
+  return found_filename;
+}
+
+struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix)
 {
   gchar *found_filename = NULL;
-  GdkColormap *colormap;
-  GdkPixmap *gdkpixmap;
-  GdkBitmap *mask;
-  GtkWidget *pixmap;
+  GdkColormap *colormap = NULL;
 
-  if (!filename || !filename[0])
-    return create_dummy_pixmap (widget);
+  g_return_val_if_fail(widget!=NULL,NULL);
+  g_return_val_if_fail(pix!=NULL,NULL);
 
-  found_filename = find_pixmap_directory(filename);
+  found_filename = find_pixmap_file(filename);
 
-#if 0 //crap...
-  /* If we haven't found the pixmap, try the source directory. */
-  if (!found_filename)
+  if(!found_filename)
   {
-    found_filename = check_file_exists ("src/xpm", filename);
-  }
-#endif
-
-  if (!found_filename)
-  {
-    g_warning (_("Couldn't find pixmap file: %s"), filename);
-    return create_dummy_pixmap (widget);
+    xqf_warning (_("Error loading pixmap file: %s"), filename);
+    return NULL;
   }
 
   if(strlen(found_filename)>4 && !strcmp(found_filename+strlen(found_filename)-4,".xpm"))
   {
     colormap = gtk_widget_get_colormap (widget);
-    gdkpixmap = gdk_pixmap_colormap_create_from_xpm (NULL, colormap, &mask,
+    pix->pix = gdk_pixmap_colormap_create_from_xpm (NULL, colormap, &pix->mask,
 						   NULL, found_filename);
   }
   else
@@ -142,43 +166,67 @@ load_pixmap                          (GtkWidget       *widget,
 #endif
     if (pixbuf == NULL)
     {
-      g_warning (_("Error loading pixmap file: %s"), found_filename);
+      xqf_warning (_("Error loading pixmap file: %s"), found_filename);
       g_free (found_filename);
-      return create_dummy_pixmap (widget);
+      return NULL;
     }
 
-    gdk_pixbuf_render_pixmap_and_mask(pixbuf,&gdkpixmap,&mask,255);
+    gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
 
     gdk_pixbuf_unref(pixbuf);
   }
 
-  if (gdkpixmap == NULL)
+  if (pix->pix == NULL)
   {
-    g_warning (_("Error loading pixmap file: %s"), found_filename);
+    xqf_warning (_("Error loading pixmap file: %s"), found_filename);
     g_free (found_filename);
-    return create_dummy_pixmap (widget);
+    return NULL;
   }
   g_free (found_filename);
-  pixmap = gtk_pixmap_new (gdkpixmap, mask);
-  gdk_pixmap_unref (gdkpixmap);
-  if(mask) gdk_bitmap_unref (mask);
-  return pixmap;
+
+  return pix;
 }
 
-/* This is an internally used function to check if a pixmap file exists. */
-static gchar*
-check_file_exists                      (const gchar     *directory,
-                                        const gchar     *filename)
+void* load_pixmap_as_pixbuf (GtkWidget* widget, const gchar* filename)
+{
+  gchar *found_filename = NULL;
+  GdkPixbuf* pixbuf = NULL;
+  
+  g_return_val_if_fail(widget!=NULL,NULL);
+
+  found_filename = find_pixmap_file(filename);
+
+  if(!found_filename)
+  {
+    xqf_warning (_("Error loading pixmap file: %s"), filename);
+    return NULL;
+  }
+
+/*FIXME_GTK2: need GError*/
+#ifdef USE_GTK2
+  pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
+#else
+  pixbuf = gdk_pixbuf_new_from_file(found_filename);
+#endif
+  if (pixbuf == NULL)
+    xqf_warning (_("Error loading pixmap file: %s"), found_filename);
+
+  g_free (found_filename);
+
+  return pixbuf;
+}
+
+/** directory may be null */
+gchar* check_file_exists (const gchar* directory, const gchar* filename)
 {
   gchar *full_filename;
   struct stat s;
   gint status;
 
-  full_filename = (gchar*) g_malloc (strlen (directory) + 1
-                                     + strlen (filename) + 1);
-  strcpy (full_filename, directory);
-  strcat (full_filename, G_DIR_SEPARATOR_S);
-  strcat (full_filename, filename);
+  if(directory)
+    full_filename = g_strconcat(directory, G_DIR_SEPARATOR_S, filename, NULL);
+  else
+    full_filename = g_strdup(filename);
 
   status = stat (full_filename, &s);
   if (status == 0 && S_ISREG (s.st_mode))
@@ -186,4 +234,3 @@ check_file_exists                      (const gchar     *directory,
   g_free (full_filename);
   return NULL;
 }
-

@@ -753,6 +753,11 @@ char* resolve_path(const char* path)
   return dir;
 }
 
+/** workaround to prevent gcc from complaining about %c as suggested by "man strftime" */
+static inline size_t my_strftime(char *s, size_t max, const char *fmt, const struct tm *tm) {
+  return strftime(s, max, fmt, tm);
+}
+
 // return locale's string representation of t. must be freed manually
 char* timet2string(const time_t* t)
 {
@@ -762,7 +767,7 @@ char* timet2string(const time_t* t)
     char* str;
 
     gmtime_r(t,&tm_s);
-    if(!strftime(timebuf,timebuf_len,"%c",&tm_s))
+    if(!my_strftime(timebuf,timebuf_len,"%c",&tm_s))
     {
 	// error converting time to string representation, shouldn't happen
 	str=_("<error>");

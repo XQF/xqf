@@ -239,6 +239,8 @@ struct master {
 extern	time_t xqf_start_time;
 extern char* xqf_PACKAGE_DATA_DIR;
 extern char* xqf_LOCALEDIR;
+extern char* xqf_PIXMAPSDIR;
+
 extern char* qstat_configfile;
 
 extern	GSList *cur_source;		/*  GSList <struct master *>  */

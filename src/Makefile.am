@@ -4,6 +4,7 @@ localedir = $(datadir)/locale
 INCLUDES = -I$(top_srcdir)/intl \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \
+	-DPIXMAPSDIR=\"$(datadir)/pixmaps\" \
 	$(GTK_CFLAGS) \
 	$(QSTAT23) \
 	$(DEBUG) \
