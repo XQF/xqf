@@ -25,6 +25,7 @@
 #include "pixmaps.h"
 #include "srv-info.h"
 
+// TODO: put into external file
 
 #define	QW_TEAMPLAY_CTF 	11
 
@@ -340,14 +341,17 @@ static char *q3_generations_dmflags[Q3_GENERATIONS_DMFLAGS] = {
   "No powerups",		// 2
   "No armor",			// 4
   "No falling damage",		// 8
+  
   "Fully Loaded",		// 16
   "Infinite Ammo",		// 32
   "Quad Drop",			// 64
   "Spawn Farthest",		// 128
+  
   "Force Respawn",		// 256
   "Fixed FOV",			// 512
   "No spectator",		// 1024
   "No CTF techs",		// 2048
+  
   "Allow Grapple to sky",	// 4096
   "Weapon Grapple",		// 8192
   "Offhand Grapple",		// 16384
@@ -362,11 +366,12 @@ static char *q3_generations_genflags[Q3_GENERATIONS_GENFLAGS] = {
   "Disable Doom",		// 4 You cannot select the Doom Warriors class.
   "Disable Slipgate",		// 8 You cannot select the Slipgaters class.
   "Disable Strogg",		// 16 You cannot select the Strogg Troopers class.
+
   "Disable Arena",		// 32 You cannot select the Arena Gladiators class.
   "Class-Based Teams ",		// 64 In DM, each class is its own team.
 };
 
-#define Q3_FREEZE_DMFLAGS	15
+#define Q3_FREEZE_DMFLAGS	11
 
 static char *q3_freeze_dmflags[Q3_FREEZE_DMFLAGS] = {
   NULL, 	                /*      1 */
@@ -382,6 +387,20 @@ static char *q3_freeze_dmflags[Q3_FREEZE_DMFLAGS] = {
   "Weapons stay",		/*    256 */
   "No playerclip",		/*    512 */
   "Nightmare mode",		/*   1024 */
+};
+
+#define RTCW_VOTEFLAGS	8
+
+static char *rtcw_voteflags[RTCW_VOTEFLAGS] = {
+  "Restart Map",	/*      1 */
+  "Reset Match",	/*      2 */
+  "Start Match",	/*      4 */
+  "Next Map",		/*      8 */
+				            
+  "Swap Teams",		/*     16 */
+  "Game Type",		/*     32 */
+  "Kick Player",	/*     64 */
+  "Change Map",		/*    128 */
 };
 
 static void show_extended_flags (const char *str, char *names[], int size,
@@ -422,6 +441,7 @@ static void show_extended_flags (const char *str, char *names[], int size,
 }
 
 
+// TODO: get rid of switch, put game specific functions into game struct
 void srvinf_ctree_set_server (struct server *s) {
   char *text[2];
   char **info;
@@ -535,6 +555,13 @@ void srvinf_ctree_set_server (struct server *s) {
 	if (s->game && !g_strcasecmp (s->game, "generations")) {
 	  show_extended_flags (info[1], q3_generations_genflags, Q3_GENERATIONS_GENFLAGS, FALSE, node);
 	}
+      }
+      break;
+    
+    case WO_SERVER:
+      if (info[0] && !g_strcasecmp (info[0], "g_voteFlags"))
+      {
+	  show_extended_flags (info[1], rtcw_voteflags, RTCW_VOTEFLAGS, FALSE, node);
       }
       break;
 
