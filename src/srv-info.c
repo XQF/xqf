@@ -368,6 +368,24 @@ static char *q3_generations_genflags[Q3_GENERATIONS_GENFLAGS] = {
   "Class-Based Teams ",		// 64 In DM, each class is its own team.
 };
 
+#define Q3_FREEZE_DMFLAGS	15
+
+static char *q3_freeze_dmflags[Q3_FREEZE_DMFLAGS] = {
+  NULL, 	                /*      1 */
+  NULL,				/*      2 */
+  NULL,				/*      4 */
+  "No Falling Damage",		/*      8 */
+				            
+  "Fixed FOV",			/*     16 */
+  "No footsteps",		/*     32 */
+  "No item reset",		/*     64 */
+  "No team reset",		/*    128 */
+				            
+  "Weapons stay",		/*    256 */
+  "No playerclip",		/*    512 */
+  "Nightmare mode",		/*   1024 */
+};
+
 static void show_extended_flags (const char *str, char *names[], int size,
                                           int showall, GtkCTreeNode *parent) {
   unsigned long flags;
@@ -506,6 +524,9 @@ void srvinf_ctree_set_server (struct server *s) {
       if (info[0] && !strcmp (info[0], "dmflags")) {
 	if (s->game && !g_strcasecmp (s->game, "generations")) {
 	  show_extended_flags (info[1], q3_generations_dmflags, Q3_GENERATIONS_DMFLAGS, FALSE, node);
+	}
+	else if (s->game && !g_strcasecmp (s->game, "freeze")) {
+	  show_extended_flags (info[1], q3_freeze_dmflags, Q3_FREEZE_DMFLAGS, FALSE, node);
 	}
 	else
 	{

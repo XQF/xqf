@@ -1392,6 +1392,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     MAX_Q3A_TRUECOMBAT_TYPES
   },
   {
+    "freeze",
+    q3a_gametypes,
+    MAX_Q3A_TYPES
+  },
+  {
     NULL,
     NULL,
     0
