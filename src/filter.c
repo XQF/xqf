@@ -36,6 +36,15 @@
 #include "utils.h"
 #include "pref.h"
 
+#ifdef USE_GEOIP
+#include "country-filter.h"
+//#include "country_names.h"
+
+static void country_button_pressed(GtkWidget *widget, gpointer data);
+
+static GList *glist_country_selection=NULL;
+#endif
+
 static void server_filter_vars_free(struct server_filter_vars* v);
 
 static int server_pass_filter (struct server *s);
@@ -110,6 +119,10 @@ static  GtkWidget *filter_game_type_entry;
 static  GtkWidget *version_contains_entry;
 static  GtkWidget *map_contains_entry;
 static  GtkWidget *server_name_contains_entry;
+#ifdef USE_GEOIP
+static  GtkWidget *server_country_contains_entry;
+static  GtkWidget *country_selection;
+#endif
 
 static struct server_filter_vars* server_filter_vars_new()
 {
@@ -128,6 +141,10 @@ static struct server_filter_vars* server_filter_vars_new()
     f->game_type = NULL;
     f->map_contains = NULL;
     f->server_name_contains=NULL;
+#ifdef USE_GEOIP
+    f->server_country_contains=NULL;
+#endif
+		
     return f;
 }
 
@@ -141,6 +158,9 @@ static void server_filter_vars_free(struct server_filter_vars* v)
   g_free(v->map_contains);
   g_free(v->server_name_contains);
   g_free(v->game_type);
+#ifdef USE_GEOIP
+  g_free(v->server_country_contains);
+#endif
 }
 
 // deep copy of server_filter_vars
@@ -165,6 +185,9 @@ static struct server_filter_vars* server_filter_vars_copy(struct server_filter_v
   f->game_type          	= g_strdup(v->game_type);
   f->map_contains       	= g_strdup(v->map_contains);
   f->server_name_contains       = g_strdup(v->server_name_contains);
+#ifdef USE_GEOIP
+  f->server_country_contains    = g_strdup(v->server_country_contains);
+#endif
   return f;
 }
 
@@ -182,6 +205,9 @@ void server_filter_print(struct server_filter_vars* f)
   printf("  game type: %s\n",f->game_type);
   printf("  map: %s\n",f->map_contains);
   printf("  server name: %s\n",f->server_name_contains);
+#ifdef USE_GEOIP
+  printf("  country: %s\n",f->server_country_contains);
+#endif
 }
 
 void apply_filters (unsigned mask, struct server *s) {
@@ -331,6 +357,16 @@ static int server_pass_filter (struct server *s){
     }
   }/*end version check */
   
+#ifdef USE_GEOIP
+  if( filter->server_country_contains && *filter->server_country_contains )
+  {
+    const char* country = geoip_code_by_id(s->country_id);
+    if( !country )
+      return FALSE;
+    else if(!lowcasestrstr(filter->server_country_contains,country))
+      return FALSE;
+  }
+#endif
 
   if( filter->server_name_contains && *filter->server_name_contains )
   {
@@ -383,6 +419,9 @@ static void server_filter_init (void) {
     filter->game_type          		= config_get_string("game_type");
     filter->map_contains       		= config_get_string("map_contains");
     filter->server_name_contains        = config_get_string("server_name_contains");
+#ifdef USE_GEOIP
+    filter->server_country_contains     = config_get_string("server_country_contains");
+#endif
     g_array_append_val(server_filters,filter);
     
     config_pop_prefix ();
@@ -424,6 +463,11 @@ static void server_filter_on_cancel()
   server_filters = backup_server_filters;
 
   filters[FILTER_SERVER].changed = FILTER_CHANGED;
+  
+#ifdef USE_GEOIP
+  if (glist_country_selection)
+    g_list_free(glist_country_selection);
+#endif
 }
 
 // query widgets and put values in a new struct
@@ -443,6 +487,9 @@ static struct server_filter_vars* server_filter_new_from_widgets()
   filter->game_contains = gtk_editable_get_chars (GTK_EDITABLE (game_contains_entry), 0, -1 );
   filter->map_contains = gtk_editable_get_chars (GTK_EDITABLE (map_contains_entry), 0, -1 );
   filter->server_name_contains = gtk_editable_get_chars (GTK_EDITABLE (server_name_contains_entry), 0, -1 );
+#ifdef USE_GEOIP
+  filter->server_country_contains = gtk_editable_get_chars (GTK_EDITABLE (server_country_contains_entry), 0, -1 );
+#endif
   return filter;
 }
 
@@ -453,6 +500,11 @@ static void server_filter_on_ok ()
 
   int i;
   struct server_filter_vars* filter;
+			
+#ifdef USE_GEOIP
+  if (glist_country_selection)
+    g_list_free(glist_country_selection);
+#endif
 
   if( server_filter_dialog_current_filter == 0 && server_filter_deleted == FALSE ){ return; }
 /*
@@ -706,7 +758,35 @@ static void server_filter_save_settings (int number,
     oldfilter->server_name_contains = NULL;
   }  /* end of server filter */
 
-
+#ifdef USE_GEOIP
+		/* country string values */
+ 	 text_changed = 0;
+ 	 if( newfilter->server_country_contains && strlen( newfilter->server_country_contains )){
+ 	   /*
+ 	     First case, the user entered something.  See if the value
+ 	     is different
+	    */
+ 	   if (oldfilter->server_country_contains){
+  	    if( strcmp( newfilter->server_country_contains, oldfilter->server_country_contains )) text_changed = 1;
+ 	     g_free( oldfilter->server_country_contains);
+ 	   } else {
+ 	     text_changed = 1;
+ 	   }
+ 	   oldfilter->server_country_contains = g_strdup( newfilter->server_country_contains );
+  	  if (text_changed) {
+ 	     config_set_string ("server_country_contains", oldfilter->server_country_contains );
+ 	     filters[FILTER_SERVER].changed = FILTER_CHANGED;
+ 	   }
+ 	 } else {
+ 	   if (oldfilter->server_country_contains){
+  	    text_changed = 1; /* From something to nothing */
+  	    g_free( oldfilter->server_country_contains );
+  	    config_set_string ("server_country_contains", "" );
+   	   filters[FILTER_SERVER].changed = FILTER_CHANGED;
+   	 }
+  	  oldfilter->server_country_contains = NULL;
+  	}  /* end of country filter */
+#endif
 
 
   if (oldfilter->filter_not_full != newfilter->filter_not_full) {
@@ -920,6 +1000,9 @@ static void server_filter_set_widgets_sensitive(gboolean sensitive)
   gtk_widget_set_sensitive(filter_not_full_check_button,sensitive);
   gtk_widget_set_sensitive(filter_no_cheats_check_button,sensitive);
   gtk_widget_set_sensitive(filter_no_password_check_button,sensitive);
+#ifdef USE_GEOIP
+  gtk_widget_set_sensitive(server_country_contains_entry,sensitive);
+#endif
 }
 
 static void server_filter_fill_widgets(guint num)
@@ -951,6 +1034,9 @@ static void server_filter_fill_widgets(guint num)
   gtk_entry_set_text (GTK_ENTRY (game_contains_entry), filter->game_contains?filter->game_contains:"" );
   gtk_entry_set_text (GTK_ENTRY (map_contains_entry), filter->map_contains?filter->map_contains:"" );
   gtk_entry_set_text (GTK_ENTRY (server_name_contains_entry), filter->server_name_contains?filter->server_name_contains:"" );
+#ifdef USE_GEOIP
+  gtk_entry_set_text (GTK_ENTRY (server_country_contains_entry), filter->server_country_contains?filter->server_country_contains:"" );
+#endif
 
   gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
 	GTK_SPIN_BUTTON(filter_ping_spinner)),filter->filter_ping);
@@ -987,6 +1073,12 @@ static void server_filter_page (GtkWidget *notebook) {
   GtkWidget *hbox;
   GtkWidget *button;
   GtkObject *adj;
+
+#ifdef USE_GEOIP
+  GtkWidget *country_button;
+  int i;
+#endif
+  
 
 //  char label_buf[64];
   int row = 0; /* for auto inserting entry boxes */
@@ -1068,7 +1160,12 @@ static void server_filter_page (GtkWidget *notebook) {
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_container_add (GTK_CONTAINER (frame), alignment);
 
-  table = gtk_table_new (6, 5, FALSE);
+  #ifdef USE_GEOIP
+    table = gtk_table_new (10, 5, FALSE);
+  #else
+    table = gtk_table_new (6, 5, FALSE);
+  #endif
+	
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -1244,6 +1341,63 @@ static void server_filter_page (GtkWidget *notebook) {
                                                                    0, 2, 5, 6);
   gtk_widget_show (filter_no_password_check_button);
 
+  /*entry,button,combobox*/
+#ifdef USE_GEOIP 
+  row++;
+
+  label = gtk_label_new (_("Country filter:"));
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 6, 7);
+  gtk_misc_set_padding (GTK_MISC (label), 0, 15);
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_widget_show (label);
+   
+  label = gtk_label_new (_("Country:"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 7, 8);
+  gtk_widget_show (label);
+ 
+  label = gtk_label_new (_("Domain:"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 3, 4, 7, 8);
+  gtk_widget_show (label);
+  
+  row++;
+   
+  label = gtk_label_new (_("Example:Domain \"US CA\" ->Show only server from United States and Canada"));
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 4, 9, 10);
+  gtk_misc_set_padding (GTK_MISC (label), 0, 5);
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_widget_show (label);
+	
+  country_selection=gtk_combo_new();
+  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(country_selection)->entry),FALSE);
+  
+  glist_country_selection=NULL;
+	
+  // 0 = none
+  for(i=1;i<MaxCountries;++i) {
+      glist_country_selection = g_list_append(glist_country_selection,(gpointer)geoip_name_by_id(i));
+  }
+  
+  gtk_combo_set_popdown_strings( GTK_COMBO(country_selection), glist_country_selection);
+  gtk_table_attach_defaults (GTK_TABLE (table), country_selection,0, 2, 8, 9);
+  gtk_widget_show(country_selection);
+
+  country_button=gtk_button_new_with_label(">>>");
+  gtk_signal_connect (GTK_OBJECT (country_button), "clicked",
+                           GTK_SIGNAL_FUNC (country_button_pressed), NULL);
+  gtk_table_attach_defaults (GTK_TABLE (table), country_button,2, 3, 8, 9);
+  gtk_widget_show (country_button);
+  
+  server_country_contains_entry = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_usize (server_country_contains_entry, 64, -1);
+  gtk_entry_set_editable (GTK_ENTRY (server_country_contains_entry), TRUE);
+  gtk_signal_connect_object (GTK_OBJECT (server_country_contains_entry), "changed",
+                 GTK_SIGNAL_FUNC (server_filter_set_changed_callback), (gpointer) TRUE);
+  gtk_table_attach_defaults (GTK_TABLE (table),server_country_contains_entry , 3, 5, 8, 9);
+  gtk_widget_show (server_country_contains_entry);
+#endif
+
   gtk_widget_show (table);
   gtk_widget_show (alignment);
   gtk_widget_show (frame);
@@ -1275,6 +1429,27 @@ static void filters_on_cancel (void)
       (*filters[i].filter_on_cancel) ();
   }
 }
+
+/*move the country to the entry*/
+#ifdef USE_GEOIP
+static void country_button_pressed(GtkWidget *widget, gpointer data)
+{
+
+  const gchar *string;
+  int i = 0;
+
+  string = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(country_selection)->entry));
+
+  // 1 = none
+  for (i=1;i<MaxCountries;++i) {
+    if (strcmp(string,geoip_name_by_id(i))==0) 
+      break;
+  }
+ 
+  gtk_entry_append_text(GTK_ENTRY (server_country_contains_entry),geoip_code_by_id(i));
+  gtk_entry_append_text(GTK_ENTRY (server_country_contains_entry)," ");
+}
+#endif
 
 int filters_cfg_dialog (int page_num) {
   GtkWidget *vbox;
@@ -1392,4 +1567,3 @@ void filters_done (void) {
       (*filters[i].filter_done) ();
   }
 }
-

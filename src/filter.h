@@ -55,6 +55,10 @@ struct server_filter_vars {
   char    *game_type;
   char 	  *map_contains;
   char	  *server_name_contains;
+#ifdef USE_GEOIP
+  char	  *server_country_contains;
+#endif
+
 };
 
 
@@ -101,4 +105,3 @@ extern	void	filters_init (void);
 extern	void	filters_done (void);
 
 #endif /* __FILTER_H__ */
-

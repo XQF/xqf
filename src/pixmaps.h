@@ -91,6 +91,7 @@ extern	struct pixmap locked_punkbuster_pix;
 extern	int pixmap_height (GdkPixmap *pixmap);
 extern	int pixmap_width (GdkPixmap *pixmap);
 
+extern  void free_pixmap (struct pixmap *pixmap);
 extern	void free_pixmaps (void);
 extern	void init_pixmaps (GtkWidget *window);
 
