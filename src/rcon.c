@@ -618,12 +618,7 @@ int main(int argc, char* argv[])
   int res;
 
 #ifdef ENABLE_NLS
-#  ifdef HAVE_LC_MESSAGES
-  setlocale(LC_CTYPE, "");
-  setlocale(LC_MESSAGES, "");
-#  else
   setlocale(LC_ALL, "");
-#  endif
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
 #endif

@@ -1,3 +1,6 @@
+Nov 22, 2002: Jordi Mallach <jordi@sindominio.net>
+- port Ludwig's setlocale fix to rcon.c.
+
 Nov 21, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - store when a server was last up, display this date in red if it's more than
   three days older than the last refresh. Necessary change to ~/.qf/srvinfo.gz
