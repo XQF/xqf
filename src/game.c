@@ -68,6 +68,7 @@ static void hl_analyze_serverinfo (struct server *s);
 static void t2_analyze_serverinfo (struct server *s);
 static void q3_analyze_serverinfo (struct server *s);
 static void un_analyze_serverinfo (struct server *s);
+static void bf1942_analyze_serverinfo (struct server *s);
 static void descent3_analyze_serverinfo (struct server *s);
 static void savage_analyze_serverinfo (struct server *s);
 
@@ -86,6 +87,7 @@ static int hl_exec(const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
 static int gamespy_exec (const struct condef *con, int forkit);
+static int bf1942_exec (const struct condef *con, int forkit);
 static int exec_generic (const struct condef *con, int forkit);
 static int ssam_exec (const struct condef *con, int forkit);
 static int savage_exec (const struct condef *con, int forkit);
@@ -1002,6 +1004,7 @@ static struct gsname2type_s gsname2type[] =
 	{ "postal2", POSTAL2_SERVER },
 	{ "postal2d", POSTAL2_SERVER },
 	{ "armygame", AAO_SERVER },
+	{ "bfield1942", BF1942_SERVER },
 	{ NULL, UNKNOWN_SERVER }
 };
 
@@ -1158,6 +1161,11 @@ enum server_type id2type (const char *id) {
   for (i = 0; i < GAMES_TOTAL; i++) {
     g_return_val_if_fail(games[i].id != NULL, UNKNOWN_SERVER);
     if (g_strcasecmp (id, games[i].id) == 0)
+      return games[i].type;
+  }
+
+  for (i = 0; i < GAMES_TOTAL; i++) {
+    if (g_strcasecmp (id, games[i].qstat_str) == 0)
       return games[i].type;
   }
   
@@ -1582,6 +1590,34 @@ static void un_analyze_serverinfo (struct server *s) {
     }
   }
 }
+
+static void bf1942_analyze_serverinfo (struct server *s)
+{
+  char **info_ptr;
+
+  /* Clear out the flags */
+  s->flags = 0;
+  
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+  {
+    if (strcmp (*info_ptr, "gametype") == 0) {
+      s->gametype = info_ptr[1];
+    }
+    else if (strcmp (*info_ptr, "Game Id") == 0) {
+      s->game = info_ptr[1];
+    }
+    //password required?
+    // If not password=False or password=0, set SERVER_PASSWORD
+    else if (strcmp (*info_ptr, "_password") == 0
+	&& strcmp(info_ptr[1], "0"))
+    {
+      s->flags |= SERVER_PASSWORD;
+      if (games[s->type].flags & GAME_SPECTATE)
+	s->flags |= SERVER_SP_PASSWORD;
+    }
+  }
+}
+
 
 static void savage_analyze_serverinfo (struct server *s)
 {
@@ -3658,6 +3694,72 @@ static int t2_exec (const struct condef *con, int forkit) {
   return retval;
 }
 
+static int bf1942_exec (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = NULL;
+  int retval;
+  char **info_ptr;
+  char* gameid=NULL;
+
+  char* hostport=NULL;
+  char* real_server=NULL;
+  
+  if(!con || !con->s)
+    return 1;
+
+  g = &games[con->s->type];
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  argv[argi++] = "+restart";
+  argv[argi++] = "1";
+
+  // go through all server rules
+  for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (!strcmp (*info_ptr, "gameid")) {
+      gameid=info_ptr[1];
+    }
+    else if (!strcmp (*info_ptr, "hostport")) {
+      hostport=info_ptr[1];
+    }
+  }
+
+  if(gameid)
+  {
+    argv[argi++] = "+game";
+    argv[argi++] = gameid;
+  }
+
+//  argv[argi++] = strdup_strip (gameid);
+  
+  if (con->server) {
+    argv[argi++] = "+joinServer";
+    // gamespy port can be different from game port
+    if(hostport)
+    {
+      real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
+      argv[argi++] = real_server;
+    }
+    else
+    {
+      argv[argi++] = con->server;
+    }
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  g_free (real_server);
+  return retval;
+}
 
 static char *dir_custom_cfg_filter (const char *dir, const char *str) {
   static const char *cfgext[] = { ".cfg", ".scr", ".rc", NULL };

@@ -899,7 +899,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
       return;
     }
     if (res == 0) {	/* EOF */
-      debug (3, "stat_servers_input_callback() -- Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
+      debug (3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
       stat_servers_update_done (conn);
       stat_next (job);
       return;

@@ -74,7 +74,7 @@ static const xmlChar* tagstr[] =
     "qstat_str",
     "qstat_option",
     "qstat_master_option",
-    "pix",
+    "icon",
     "parse_player",
     "parse_server",
     "analyze_serverinfo",
@@ -244,9 +244,9 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
 	    case TAG_qstat_option:
 	    case TAG_qstat_master_option:
 	    case TAG_arch_identifier:
+	    case TAG_pix:
 		fprintf(f, "    %-20s: \"%s\",\n", tagstr[tag], val);
 		break;
-	    case TAG_pix:
 	    case TAG_pd:
 		fprintf(f, "    %-20s: &%s,\n", tagstr[tag], val);
 		break;

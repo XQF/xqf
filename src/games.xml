@@ -9,7 +9,7 @@
 	<qstat_str/>
 	<qstat_option/>
 	<qstat_master_option/>
-	<pix/>
+	<icon/>
 	<parse_player/>
 	<parse_server>quake_parse_server</parse_server>
 	<analyze_serverinfo/>
@@ -34,7 +34,7 @@
 	<id>QS</id>
 	<qstat_str>QS</qstat_str>
 	<qstat_option>-qs</qstat_option>
-	<pix>q1_pix</pix>
+	<icon>q1_xpm</icon>
 	<parse_player>poqs_parse_player</parse_player>
 	<config_is_valid>quake_config_is_valid</config_is_valid>
 	<write_config>write_quake_variables</write_config>
@@ -55,7 +55,7 @@
 	<qstat_str>QWS</qstat_str>
 	<qstat_option>-qws</qstat_option>
 	<qstat_master_option>-qwm</qstat_master_option>
-	<pix>q_pix</pix>
+	<icon>q_xpm</icon>
 	<parse_player>qw_parse_player</parse_player>
 	<analyze_serverinfo>qw_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>quake_config_is_valid</config_is_valid>
@@ -76,7 +76,7 @@
 	<qstat_str>Q2S</qstat_str>
 	<qstat_option>-q2s</qstat_option>
 	<qstat_master_option>-q2m</qstat_master_option>
-	<pix>q2_pix</pix>
+	<icon>q2_xpm</icon>
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>quake_config_is_valid</config_is_valid>
@@ -100,7 +100,7 @@
 	<qstat_str>Q3S</qstat_str>
 	<qstat_option>-q3s</qstat_option>
 	<qstat_master_option>-q3m</qstat_master_option>
-	<pix>q3_pix</pix>
+	<icon>q3_xpm</icon>
 	<parse_player>q3_parse_player</parse_player>
 	<analyze_serverinfo>q3_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>quake3_config_is_valid</config_is_valid>
@@ -119,7 +119,7 @@
 	<type>WO_SERVER</type>
 	<name>Wolfenstein</name>
 	<id>WOS</id>
-	<pix>wo_pix</pix>
+	<icon>wo_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<custom_cfgs>NULL</custom_cfgs>
 	<pd>wolf_private</pd>
@@ -129,8 +129,8 @@
 	<type>WOET_SERVER</type>
 	<name>Enemy Territory</name>
 	<id>WOETS</id>
-	<pix>et_pix</pix>
-	<config_is_valid>quake3_config_is_valid</config_is_valid>
+	<icon>et_xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<custom_cfgs>NULL</custom_cfgs>
 	<pd>wolfet_private</pd>
     </game>
@@ -140,7 +140,7 @@
 	<name>Voyager Elite Force</name>
 	<id>EFS</id>
 	<qstat_master_option>-efm</qstat_master_option>
-	<pix>ef_pix</pix>
+	<icon>ef_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 
 	<custom_cfgs>NULL</custom_cfgs>
@@ -157,7 +157,7 @@
 	<id>H2S</id>
 	<qstat_str>H2S</qstat_str>
 	<qstat_option>-h2s</qstat_option>
-	<pix>hex_pix</pix>
+	<icon>hex_xpm</icon>
 	<parse_player>poqs_parse_player</parse_player>
 	<exec_client>q1_exec_generic</exec_client>
     </game>
@@ -169,7 +169,7 @@
 	<id>HWS</id>
 	<qstat_str>HWS</qstat_str>
 	<qstat_option>-hws</qstat_option>
-	<pix>hw_pix</pix>
+	<icon>hw_xpm</icon>
 	<parse_player>qw_parse_player</parse_player>
 	<analyze_serverinfo>qw_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>q1_exec_generic</exec_client>
@@ -182,7 +182,7 @@
 	<id>SNS</id>
 	<qstat_str>SNS</qstat_str>
 	<qstat_option>-sns</qstat_option>
-	<pix>sn_pix</pix>
+	<icon>sn_xpm</icon>
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>q2_exec_generic</exec_client>
@@ -197,7 +197,7 @@
 	<qstat_str>HLS</qstat_str>
 	<qstat_option>-hls</qstat_option>
 	<qstat_master_option>-hlm</qstat_master_option>
-	<pix>hl_pix</pix>
+	<icon>hl_xpm</icon>
 	<parse_player>hl_parse_player</parse_player>
 	<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>hl_exec</exec_client>
@@ -215,7 +215,7 @@
 	<id>Q2S:KP</id>
 	<qstat_str>Q2S</qstat_str>
 	<qstat_option>-q2s</qstat_option>
-	<pix>kp_pix</pix>
+	<icon>kp_xpm</icon>
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>q2_exec_generic</exec_client>
@@ -231,7 +231,7 @@
 	<id>SFS</id>
 	<qstat_str>SFS</qstat_str>
 	<qstat_option>-sfs</qstat_option>
-	<pix>sfs_pix</pix>
+	<icon>sfs_xpm</icon>
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>q2_exec_generic</exec_client>
@@ -243,7 +243,7 @@
 	<default_port>20100</default_port>
 	<default_master_port>20110</default_master_port>
 	<id>SOF2S</id>
-	<pix>sof2s_pix</pix>
+	<icon>sof2s_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<custom_cfgs>NULL</custom_cfgs>
 	<init_maps>NULL</init_maps>
@@ -261,7 +261,7 @@
 	<qstat_str>T2S</qstat_str>
 	<qstat_option>-t2s</qstat_option>
 	<qstat_master_option>-t2m</qstat_master_option>
-	<pix>t2_pix</pix>
+	<icon>t2_xpm</icon>
 	<parse_player>t2_parse_player</parse_player>
 	<analyze_serverinfo>t2_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>t2_exec</exec_client>
@@ -270,13 +270,13 @@
     </game>
     <game>
 	<type>HR_SERVER</type>
-	<name>Heretic2 TODO</name>
+	<name>Heretic2</name>
 	<flags>GAME_CONNECT | GAME_RCON</flags>
 	<default_port>28910</default_port>
 	<id>Q2S:HR</id>
 	<qstat_str>Q2S</qstat_str>
 	<qstat_option>-q2s</qstat_option>
-	<pix>hr_pix</pix>
+	<icon>hr2_xpm</icon>
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>q2_exec_generic</exec_client>
@@ -289,7 +289,7 @@
 	<id>UNS</id>
 	<qstat_str>UNS</qstat_str>
 	<qstat_option>-uns</qstat_option>
-	<pix>un_pix</pix>
+	<icon>un_xpm</icon>
 	<parse_player>un_parse_player</parse_player>
 	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>ut_exec</exec_client>
@@ -305,7 +305,7 @@
 	<id>UT2S</id>
 	<qstat_str>UT2S</qstat_str>
 	<qstat_option>-ut2s</qstat_option>
-	<pix>ut2_pix</pix>
+	<icon>ut2_xpm</icon>
 	<pd>ut2_private</pd>
     </game>
     <game>
@@ -313,7 +313,7 @@
 	<type>RUNE_SERVER</type>
 	<name>Rune</name>
 	<id>RUNESRV</id>
-	<pix>rune_pix</pix>
+	<icon>rune_xpm</icon>
 	<pd>rune_private</pd>
     </game>
     <game>
@@ -321,7 +321,7 @@
 	<type>POSTAL2_SERVER</type>
 	<name>Postal 2</name>
 	<id>POSTAL2</id>
-	<pix>postal2_pix</pix>
+	<icon>postal2_xpm</icon>
 	<pd>postal2_private</pd>
     </game>
     <game>
@@ -330,7 +330,7 @@
 	<name>America's Army</name>
 	<flags>GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT</flags>
 	<id>AMS</id>
-	<pix>aao_pix</pix>
+	<icon>aao_xpm</icon>
 	<pd>aao_private</pd>
     </game>
     <game>
@@ -343,7 +343,7 @@
 	<qstat_str>D3P</qstat_str>
 	<qstat_option>-d3p</qstat_option>
 	<qstat_master_option>-d3m</qstat_master_option>
-	<pix>descent3_pix</pix>
+	<icon>descent3_xpm</icon>
 	<parse_player>descent3_parse_player</parse_player>
 	<analyze_serverinfo>descent3_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>exec_generic</exec_client>
@@ -356,7 +356,7 @@
 	<id>SMS</id>
 	<qstat_str>SMS</qstat_str>
 	<qstat_option>-sms</qstat_option>
-	<pix>ssam_pix</pix>
+	<icon>ssam_xpm</icon>
 	<parse_player>un_parse_player</parse_player>
 	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>ssam_exec</exec_client>
@@ -375,7 +375,7 @@
 	<id>MHS</id>
 	<qstat_str>MHS</qstat_str>
 	<qstat_option>-mhs</qstat_option>
-	<pix>mohaa_pix</pix>
+	<icon>mohaa_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<custom_cfgs>NULL</custom_cfgs>
 	<pd>mohaa_private</pd>
@@ -390,7 +390,7 @@
 	<qstat_str>CODS</qstat_str>
 	<qstat_option>-cods</qstat_option>
 	<qstat_master_option>-codm</qstat_master_option>
-	<pix>cod_pix</pix>
+	<icon>cod_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<custom_cfgs>NULL</custom_cfgs>
 	<arch_identifier>NULL</arch_identifier>
@@ -405,10 +405,23 @@
 	<id>SAS</id>
 	<qstat_str>SAS</qstat_str>
 	<qstat_option>-sas</qstat_option>
-	<pix>savage_pix</pix>
+	<icon>savage_xpm</icon>
 	<parse_player>savage_parse_player</parse_player>
 	<analyze_serverinfo>savage_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>savage_exec</exec_client>
+    </game>
+    <game>
+	<type>BF1942_SERVER</type>
+	<name>Battlefield 1942</name>
+	<flags>GAME_CONNECT</flags>
+	<default_port>14567</default_port>
+	<id>BF1942</id>
+	<qstat_str>EYE</qstat_str>
+	<qstat_option>-eye</qstat_option>
+	<icon>bf1942_xpm</icon>
+	<parse_player>un_parse_player</parse_player>
+	<analyze_serverinfo>bf1942_analyze_serverinfo</analyze_serverinfo>
+	<exec_client>bf1942_exec</exec_client>
     </game>
     <game>
 	<type>GPS_SERVER</type>
@@ -417,8 +430,8 @@
 	<default_port>27888</default_port>
 	<id>GPS</id>
 	<qstat_str>GPS</qstat_str>
-	<qstat_option>-sns</qstat_option>
-	<pix>gamespy3d_pix</pix>
+	<qstat_option>-gps</qstat_option>
+	<icon>gamespy3d_xpm</icon>
 	<parse_player>un_parse_player</parse_player>
 	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>gamespy_exec</exec_client>

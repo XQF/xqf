@@ -19,9 +19,11 @@
 #include "gnuconfig.h"
 
 #include <gtk/gtk.h>
+#include <dlfcn.h>
 
 #include "utils.h"
 #include "pixmaps.h"
+#include "game.h"
 
 
 #include "xpm/update.xpm"
@@ -38,6 +40,8 @@
 #include "xpm/pfilter.xpm"
 #include "xpm/pfilter-cfg.xpm"
 
+// hack to make dlsym work
+#define static
 #include "xpm/q.xpm"
 #include "xpm/q1.xpm"
 #include "xpm/q2.xpm"
@@ -66,6 +70,8 @@
 #include "xpm/mohaa.xpm"
 #include "xpm/savage.xpm"
 #include "xpm/cod.xpm"
+#include "xpm/bf1942.xpm"
+#undef static
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"
@@ -105,6 +111,7 @@ struct pixmap record_pix;
 struct pixmap filter_pix[2];
 struct pixmap filter_cfg_pix[2];
 
+#if 0
 struct pixmap q_pix;
 struct pixmap q1_pix;
 struct pixmap q2_pix;
@@ -132,6 +139,7 @@ struct pixmap ssam_pix;
 struct pixmap mohaa_pix;
 struct pixmap savage_pix;
 struct pixmap cod_pix;
+#endif
 
 struct pixmap gplus_pix;
 struct pixmap rminus_pix;
@@ -202,8 +210,9 @@ static void create_pixmap (GtkWidget *window, struct pixmap *pix,
 }
 
 
-void free_pixmaps (void) {
-  int i;
+void free_pixmaps (void)
+{
+  unsigned i;
 
   free_pixmap (&update_pix);
   free_pixmap (&refresh_pix);
@@ -218,34 +227,6 @@ void free_pixmaps (void) {
     free_pixmap (&filter_pix[i]);
     free_pixmap (&filter_cfg_pix[i]);
   }
-
-  free_pixmap (&q_pix);
-  free_pixmap (&q1_pix);
-  free_pixmap (&q2_pix);
-  free_pixmap (&q3_pix);
-  free_pixmap (&wo_pix);
-  free_pixmap (&et_pix);
-  free_pixmap (&ef_pix);
-  free_pixmap (&hex_pix);
-  free_pixmap (&hw_pix);
-  free_pixmap (&sn_pix);
-  free_pixmap (&hl_pix);
-  free_pixmap (&kp_pix);
-  free_pixmap (&sfs_pix);
-  free_pixmap (&sof2s_pix);
-  free_pixmap (&t2_pix);
-  free_pixmap (&hr_pix);
-  free_pixmap (&un_pix);
-  free_pixmap (&postal2_pix);
-  free_pixmap (&aao_pix);
-  free_pixmap (&ut2_pix);
-  free_pixmap (&rune_pix);
-  free_pixmap (&descent3_pix);
-  free_pixmap (&gamespy3d_pix);
-  free_pixmap (&ssam_pix);
-  free_pixmap (&mohaa_pix);
-  free_pixmap (&savage_pix);
-  free_pixmap (&cod_pix);
 
   free_pixmap (&gplus_pix);
   free_pixmap (&rminus_pix);
@@ -270,6 +251,13 @@ void free_pixmaps (void) {
   free_pixmap (&punkbuster_pix);
   free_pixmap (&locked_punkbuster_pix);
 
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    free_pixmap(games[i].pix);
+    g_free(games[i].pix);
+    games[i].pix = NULL;
+  }
+
   if (pixmaps_gc) {
     gdk_gc_destroy (pixmaps_gc);
     pixmaps_gc = NULL;
@@ -282,7 +270,10 @@ void free_pixmaps (void) {
 }
 
 
-void init_pixmaps (GtkWidget *window) {
+void init_pixmaps (GtkWidget *window)
+{
+  unsigned i = 0;
+
   free_pixmaps ();
 
   if (!GTK_WIDGET_REALIZED (window))
@@ -302,34 +293,6 @@ void init_pixmaps (GtkWidget *window) {
 
   create_pixmap (window, &filter_pix[1],     pfilter_xpm);
   create_pixmap (window, &filter_cfg_pix[1], pfilter_cfg_xpm);
-
-  create_pixmap (window, &q_pix, q_xpm);
-  create_pixmap (window, &q1_pix, q1_xpm);
-  create_pixmap (window, &q2_pix, q2_xpm);
-  create_pixmap (window, &q3_pix, q3_xpm);
-  create_pixmap (window, &wo_pix, wo_xpm);
-  create_pixmap (window, &et_pix, et_xpm);
-  create_pixmap (window, &ef_pix, ef_xpm);
-  create_pixmap (window, &hex_pix, hex_xpm);
-  create_pixmap (window, &hw_pix, hw_xpm);
-  create_pixmap (window, &sn_pix, sn_xpm);
-  create_pixmap (window, &hl_pix, hl_xpm);
-  create_pixmap (window, &kp_pix, kp_xpm);
-  create_pixmap (window, &sfs_pix, sfs_xpm);
-  create_pixmap (window, &sof2s_pix, sof2s_xpm);
-  create_pixmap (window, &t2_pix, t2_xpm);
-  create_pixmap (window, &hr_pix, hr2_xpm);
-  create_pixmap (window, &un_pix, un_xpm);
-  create_pixmap (window, &postal2_pix, postal2_xpm);
-  create_pixmap (window, &aao_pix, aao_xpm);
-  create_pixmap (window, &ut2_pix, ut2_xpm);
-  create_pixmap (window, &rune_pix, rune_xpm);
-  create_pixmap (window, &descent3_pix, descent3_xpm);
-  create_pixmap (window, &gamespy3d_pix, gamespy3d_xpm);
-  create_pixmap (window, &ssam_pix, ssam_xpm);
-  create_pixmap (window, &mohaa_pix, mohaa_xpm);
-  create_pixmap (window, &savage_pix, savage_xpm);
-  create_pixmap (window, &cod_pix, cod_xpm);
 
   create_pixmap (window, &gplus_pix, green_plus_xpm);
   create_pixmap (window, &rminus_pix, red_minus_xpm);
@@ -356,6 +319,30 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &locked_pix, locked_xpm);
   create_pixmap (window, &punkbuster_pix, punkbuster_xpm);
   create_pixmap (window, &locked_punkbuster_pix, locked_punkbuster_xpm);
+
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    struct pixmap* pix = NULL;
+
+    pix = g_malloc(sizeof(struct pixmap));
+
+    if(games[i].icon)
+    {
+      char** xpm = dlsym(NULL, games[i].icon);
+      if(xpm)
+	create_pixmap (window, pix, xpm);
+    }
+
+    if(!pix)
+    {
+      pix->pix = error_pix.pix;
+      pix->mask = error_pix.mask;
+      gdk_pixmap_ref(pix->pix);
+      gdk_bitmap_ref(pix->mask);
+    }
+
+    games[i].pix = pix;
+  }
 }
 
 

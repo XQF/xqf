@@ -3558,7 +3558,7 @@ void create_main_window (void) {
   gtk_widget_show (hpaned);
 
   gtk_widget_ensure_style (GTK_WIDGET (server_clist));
-  i = calculate_clist_row_height (GTK_WIDGET (server_clist), q_pix.pix);
+  i = calculate_clist_row_height (GTK_WIDGET (server_clist), games[Q1_SERVER].pix->pix);
   gtk_clist_set_row_height (server_clist, i);
   gtk_clist_set_row_height (player_clist, i);
   gtk_clist_set_row_height (GTK_CLIST (srvinf_ctree), i);
