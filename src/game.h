@@ -98,6 +98,6 @@ const char* game_get_attribute(enum server_type type, const char* key);
 // set game specific key/value pair, value is _not_ copied
 const char* game_set_attribute(enum server_type type, const char* key, char* value);
 
-void init_games();
+void init_games(void);
 
 #endif /* __GAME_H__ */

@@ -39,7 +39,7 @@ void debug_cmd(int, char *[], char *, ...);
 void set_debug_level (int);
 inline int get_debug_level (void);
 
-int debug_increase_indent();
-int debug_decrease_indent();
+int debug_increase_indent(void);
+int debug_decrease_indent(void);
 
 #endif
