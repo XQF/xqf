@@ -2795,9 +2795,7 @@ static int hl_exec (const struct condef *con, int forkit) {
 
   if (con->gamedir) {
     argv[argi++] = "-game";
-    // argv[argi++] = con->gamedir;
-
-    argv[argi++] = g->real_dir;
+    argv[argi++] = con->gamedir;
   }
 
   if (con->server) {
