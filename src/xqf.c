@@ -1089,7 +1089,7 @@ static gboolean check_launch (struct condef* con)
   s = con->s;
   props = properties (s);
 
-  if (props->sucks)
+  if (props && props->sucks)
   {
     launch = dialog_yesno (NULL, 1, _("Yes"), _("No"),
 	_("You said this servers sucks.\nDo you want to risk a game this time?"));
