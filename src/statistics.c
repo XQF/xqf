@@ -28,6 +28,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "game.h"
 #include "pref.h"

@@ -42,6 +42,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "game.h"

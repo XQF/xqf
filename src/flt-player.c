@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <regex.h>
 #include <stdio.h>	/* FILE, fopen, fclose, fprintf... */
@@ -26,6 +28,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "pref.h"
 #include "pixmaps.h"
@@ -34,8 +37,6 @@
 #include "flt-player.h"
 #include "filter.h"
 #include "debug.h"
-#include "gnuconfig.h"
-
 
 #define REGCOMP_FLAGS 	(REG_EXTENDED | REG_NOSUB | REG_ICASE)
 

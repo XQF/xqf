@@ -233,7 +233,7 @@ struct server* server_unref (struct server *server) {
   int node;
 
   if (!server)
-    return;
+    return NULL;
 
   server->ref_count--;
 

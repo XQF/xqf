@@ -16,12 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>	/* va_start, va_end */
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "srv-list.h"
@@ -29,8 +32,6 @@
 #include "game.h"
 #include "config.h"
 #include "sort.h"
-#include "gnuconfig.h"
-
 
 static GSList *xqf_windows = NULL;
 static GtkWidget *target_window = NULL;

@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>	/* va_start, va_end */
@@ -23,18 +25,11 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "utils.h"
 #include "xutils.h"
 #include "dialogs.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
 
 static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
 

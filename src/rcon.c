@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>	/* socket, send, bind, connect */
 #include <stdio.h>	/* fprintf */
 #include <stdarg.h>	/* va_start, va_end */
@@ -28,6 +30,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "srv-prop.h"
 #include "srv-list.h"
@@ -37,13 +40,6 @@
 #include "history.h"
 #include "config.h"
 #include "rcon.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
 
 #define PACKET_MAXSIZE	(64 * 1024)
 

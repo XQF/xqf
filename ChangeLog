@@ -1,3 +1,7 @@
+Apr 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- acconfig.h seems to be deprecated, moved it to i18n.h
+- removed explicit -I/usr/include as gcc3 doesn't like that
+
 Apr 20, 2002: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation
 

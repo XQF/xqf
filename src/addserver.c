@@ -16,8 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "game.h"
 #include "history.h"
 #include "dialogs.h"
@@ -25,14 +28,6 @@
 #include "config.h"
 #include "addserver.h"
 #include "srv-prop.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
 
 static struct history *server_history = NULL;
 

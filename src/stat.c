@@ -34,6 +34,7 @@
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "game.h"
 #include "pref.h"
@@ -112,7 +113,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   char *token[8];
   int n;
   char *endptr;
-  enum server_type type;
+  enum server_type type = UNKNOWN_SERVER;
   char *addr;
   unsigned short port;
   struct server *s;

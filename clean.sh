@@ -12,6 +12,7 @@ config.sub \
 install-sh \
 mkinstalldirs \
 missing \
+depcomp \
 */Makefile \
 src/Makefile.in \
 ltconfig \

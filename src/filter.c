@@ -16,12 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
+#include "gnuconfig.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
 
 #include <gtk/gtk.h>
 
+#include "i18n.h"
 #include "xqf.h"
 #include "dialogs.h"
 #include "server.h"
@@ -29,14 +32,6 @@
 #include "filter.h"
 #include "flt-player.h"
 #include "utils.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(string) gettext(string)
-#else
-#define _(string) (string)
-#endif
-
 
 static int server_pass_filter (struct server *s, struct server_filter_vars *vars);
 static void server_filter_init (void);
