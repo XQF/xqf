@@ -1,3 +1,8 @@
+Nov 5th 2000: Alex Burger <alex@fragit.net>
+-Add call to clear list to end of function server_clist_build_filtered
+ to prevent segfault on some computers due to server list that is emptied
+ after a player filter is applied
+
 Oct 27th 2000: xqf-0.9.4f2 - Alex Burger <alex@fragit.net>
 -Added Copy+ menu option - copies the following server info to the clipboard:
  ping,ip:port,name,map,curplayers,maxplayers
