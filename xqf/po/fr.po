@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
-"POT-Creation-Date: 2003-06-07 11:45-0400\n"
+"POT-Creation-Date: 2003-06-10 11:24-0400\n"
 "PO-Revision-Date: 2003-06-09 13:00GMT\n"
 "Last-Translator: Alex Burger <alex_b@users.sourceforge.net>\n"
 "Language-Team: French\n"
@@ -1146,7 +1146,8 @@ msgstr "  le type de serveur est ou --qws, --hws ou --hls.\n"
 
 #: src/rcon.c:651
 msgid "  If no server type is specified, Q3 style rcon is assumed.\n"
-msgstr "  I aucun type de serveur est spécifié, Q3 rcon de style est supposé.\n"
+msgstr ""
+"  I aucun type de serveur est spécifié, Q3 rcon de style est supposé.\n"
 
 #. translator: readline prompt
 #: src/rcon.c:678
@@ -1919,4 +1920,3 @@ msgstr "Chargement"
 
 #~ msgid "ok"
 #~ msgstr "D'Accord"
-
