@@ -3954,7 +3954,7 @@ static GtkWidget *general_options_page (void) {
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tray_icon_check_button), default_show_tray_icon);
   
   gtk_tooltips_set_tip (tooltips, tray_icon_check_button,
-  _("Enable xqf tray icon. You need to restart xqf to take effect !"), NULL);
+	  _("Enable xqf tray icon. You need to restart xqf for this to take effect."), NULL);
 
   gtk_box_pack_start (GTK_BOX (hbox), tray_icon_check_button, FALSE, FALSE, 0);
   gtk_widget_show (tray_icon_check_button);
