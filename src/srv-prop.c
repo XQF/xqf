@@ -47,6 +47,8 @@ static  GtkWidget *password_entry;
 static  GtkWidget *spectator_entry;
 static  GtkWidget *rcon_entry;
 static  GtkWidget *customcfg_combo;
+static  GtkWidget *sucks_check_button;
+static  GtkWidget *comment_text;
 
 /*pulp*/
 static  GtkWidget *spinner;
@@ -62,6 +64,8 @@ static void props_free (struct server_props *p) {
     if (p->server_password) g_free (p->server_password);
     if (p->spectator_password) g_free (p->spectator_password);
     if (p->rcon_password) g_free (p->rcon_password);
+    
+    g_free (p->comment);
 
     host_unref (p->host);
     g_free (p);
@@ -113,6 +117,8 @@ struct server_props *properties_new (struct host *host, unsigned short port) {
   p->spectator_password = NULL;
   p->rcon_password = NULL;
   p->reserved_slots =0;
+  p->sucks = 0;
+  p->comment = NULL;
 
   props_list = g_slist_append (props_list, p);
 
@@ -144,7 +150,8 @@ void props_save (void) {
   for (list = props_list; list; list = list->next) {
     p = (struct server_props *) list->data;
 
-    if (p->custom_cfg || p->server_password || p->spectator_password || p->rcon_password || p->reserved_slots) {
+    if (p->custom_cfg || p->server_password || p->spectator_password || p->rcon_password || p->reserved_slots
+	|| p->sucks || (p->comment && strlen(p->comment))) {
       fprintf (f, "[%s:%d]\n", inet_ntoa (p->host->ip), p->port);
 
       if (p->custom_cfg)
@@ -156,7 +163,37 @@ void props_save (void) {
       if (p->rcon_password)
 	fprintf (f, "rcon_password %s\n", p->rcon_password);
       if (p->reserved_slots)
-      fprintf (f, "reserved_slots %d\n", p->reserved_slots);
+	fprintf (f, "reserved_slots %d\n", p->reserved_slots);
+      if (p->sucks)
+	fprintf (f, "sucks %d\n", p->sucks);
+
+      if (p->comment && strlen(p->comment))
+      {
+	char* s = p->comment;
+	
+	// strip last \n, otherwise one is added each time the server is saved
+	if(s[strlen(s)] == '\n')
+	  s[strlen(s)] = '\0';
+	
+	fputs("comment ", f);
+	while(*s)
+	{
+	  switch(*s)
+	  {
+	    case '\n':
+	      fputs("\\n", f);
+	      break;
+	    case '\\':
+	      fputs("\\\\", f);
+	      break;
+	    default:
+	      fputc(*s, f);
+	      break;
+	  }
+	  ++s;
+	}
+	fputc('\n', f);
+      }
 
       fprintf (f, "\n");
     }
@@ -228,24 +265,56 @@ void props_load (void) {
       *ptr++ = '\0';
 
       if (strcmp (buf, "custom_cfg") == 0) {
-	if (p->custom_cfg) g_free (p->custom_cfg);
+	g_free (p->custom_cfg);
 	p->custom_cfg = strdup_strip (ptr);
       }
       else if (strcmp (buf, "password") == 0) {
-	if (p->server_password) g_free (p->server_password);
+	g_free (p->server_password);
 	p->server_password = strdup_strip (ptr);
       }
       else if (strcmp (buf, "spectator_password") == 0) {
-	if (p->spectator_password) g_free (p->spectator_password);
+	g_free (p->spectator_password);
 	p->spectator_password = strdup_strip (ptr);
       }
       else if (strcmp (buf, "rcon_password") == 0) {
-	if (p->rcon_password) g_free (p->rcon_password);
+	g_free (p->rcon_password);
 	p->rcon_password = strdup_strip (ptr);
       }
       else if (strcmp (buf, "reserved_slots") == 0) {
-
 	p->reserved_slots= atoi(ptr);
+      }
+      else if (strcmp (buf, "sucks") == 0) {
+	p->sucks = atoi(ptr);
+      }
+      else if (strcmp (buf, "comment") == 0)
+      {
+	unsigned di, si;
+	size_t slen = strlen(ptr);
+	int quote = 0;
+
+	g_free (p->comment);
+	p->comment = g_malloc0 (slen + 1);
+	for( si = 0, di = 0; si < slen; ++si )
+	{
+	  if(quote)
+	  {
+	    quote = 0;
+	    if(ptr[si] == 'n')
+	      p->comment[di++] = '\n';
+	    else if(ptr[si] == '\\')
+	      p->comment[di++] = '\\';
+	    else
+	      xqf_warning("unknown control sequence \\%c", ptr[si]);
+	  }
+	  else if(ptr[si] == '\\')
+	  {
+	    quote = 1;
+	  }
+	  else
+	  {
+	    p->comment[di++] = ptr[si];
+	  }
+	}
       }
     }
   }
@@ -261,36 +330,40 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
   char *spectpwd;
   char *rconpwd;
   int   reserved;
-
-
+  int   sucks;
+  char* comment = NULL;
 
   customcfg = strdup_strip ( gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry)));
 
   srvpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (password_entry)));
   spectpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (spectator_entry)));
   rconpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (rcon_entry)));
-	
-  /*pulp*/
-  reserved=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
-  
+  reserved = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
+  sucks = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (sucks_check_button));
+  comment = gtk_editable_get_chars (GTK_EDITABLE (comment_text), 0, -1);
 
   props = properties (s);
 
   if (props) {
-    if (customcfg || srvpwd || spectpwd || rconpwd || reserved) {
-      if (props->custom_cfg) g_free (props->custom_cfg);
+    if (customcfg || srvpwd || spectpwd || rconpwd || reserved || sucks || comment) {
+      g_free (props->custom_cfg);
       props->custom_cfg = customcfg;
 
-      if (props->server_password) g_free (props->server_password);
+      g_free (props->server_password);
       props->server_password = srvpwd;
 
-      if (props->spectator_password) g_free (props->spectator_password);
+      g_free (props->spectator_password);
       props->spectator_password = spectpwd;
 
-      if (props->rcon_password) g_free (props->rcon_password);
+      g_free (props->rcon_password);
       props->rcon_password = rconpwd;
       
       props->reserved_slots = reserved;
+
+      props->sucks = sucks;
+
+      g_free(props->comment);
+      props->comment = comment;
     }
     else {
       props_list = g_slist_remove (props_list, props);
@@ -298,13 +371,15 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
     }
   }
   else {
-    if (customcfg || srvpwd || spectpwd || rconpwd || reserved) {
+    if (customcfg || srvpwd || spectpwd || rconpwd || reserved || sucks || comment) {
       props = properties_new (s->host, s->port);
       props->custom_cfg = customcfg;
       props->server_password = srvpwd;
       props->spectator_password = spectpwd;
       props->rcon_password = rconpwd;
-      props->reserved_slots=reserved;
+      props->reserved_slots = reserved;
+      props->sucks = sucks;
+      props->comment = comment;
     }
   }
 
@@ -633,6 +708,53 @@ static GtkWidget *server_passwords_page (struct server *s) {
   return page_vbox;
 }
 
+static GtkWidget *server_comment_page (struct server *s) {
+  GtkWidget *page_vbox;
+  GtkWidget *scrollwin;
+  struct server_props *props;
+  int sucks = 0;
+  char* comment = NULL;
+
+  props = properties (s);
+  if (props)
+  {
+    sucks = props->sucks;
+    comment = props->comment;
+  }
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+  sucks_check_button = gtk_check_button_new_with_label (_("This server sucks"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sucks_check_button), sucks);
+  gtk_box_pack_start (GTK_BOX (page_vbox), sucks_check_button, FALSE, FALSE, 0);
+  gtk_widget_show (sucks_check_button);
+
+  scrollwin = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
+    
+  comment_text = gtk_text_new (NULL, NULL);
+//  gtk_widget_set_usize (comment_text, -1, 80);
+  gtk_container_add (GTK_CONTAINER (scrollwin), comment_text);
+  gtk_widget_show (comment_text);
+
+  gtk_text_freeze (GTK_TEXT (comment_text));
+  if (comment)
+  {
+      gtk_text_insert (GTK_TEXT (comment_text), NULL, NULL, NULL,
+	      comment, strlen (comment));
+      gtk_text_set_point (GTK_TEXT (comment_text), 0);
+  }
+  gtk_text_set_editable (GTK_TEXT (comment_text), TRUE);
+  gtk_text_thaw (GTK_TEXT (comment_text));
+
+  gtk_widget_show (scrollwin);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
 
 void properties_dialog (struct server *s) {
   GtkWidget *window;
@@ -697,6 +819,11 @@ void properties_dialog (struct server *s) {
 
   page = server_passwords_page (s);
   label = gtk_label_new (_("Passwords"));
+  gtk_widget_show (label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+
+  page = server_comment_page(s);
+  label = gtk_label_new (_("Comment"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
