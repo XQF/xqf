@@ -1097,6 +1097,7 @@ static char *builtin_masters_update_info[] = {
 
   "DELETE D3P master://gt.pxo.net:3445 PXO", // doesn't work
   "DELETE D3P http://www.gameaholic.com/servers/qspy-descent3 gameaholic.com", // no usable servers anymore
+  "ADD D3G http://d3.descent.cx/d3cxraw.d3?terse=y d3.descent.cx",
 
   "ADD SFS http://www.gameaholic.com/servers/qspy-soldieroffortune gameaholic.com",
 
