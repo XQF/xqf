@@ -501,14 +501,17 @@ void server_clist_set_list (GSList *servers) {
 
 
 void server_clist_build_filtered (GSList *servers, int update) {
+  /* This gets called whenever a user clicks the filter button */
+
   GSList *delete;
   GSList *add;
   GSList *tmp;
   struct server *s;
   int row;
 
+
   delete = server_clist_all_servers ();
-  add = build_filtered_list (cur_filter, servers);
+  add = build_filtered_list (cur_filter, servers); /* in filter.c */
 
   server_lists_intersect (&delete, &add);
 

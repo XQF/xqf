@@ -26,15 +26,43 @@
 
 
 static void create_menu_recursive (GtkWidget *menu, 
-			      const struct menuitem *items, 
-			      GtkAccelGroup *accel_group) {
+				   const struct menuitem *items, 
+				   GtkAccelGroup *accel_group) {
   GtkWidget *menu_item;
   GtkWidget *label;
   guint ac_key;
 
+  GtkWidget *button= NULL;
+  GSList    *group = NULL;
+
   while (items->type != MENU_END) {
 
     switch (items->type) {
+
+#if 0 
+      /* This does not work, I need to figure out how to       
+	 add some sort of indicator as to the active filter */
+    case MENU_RADIO_ITEM:
+      if( button == NULL ){
+	button = gtk_radio_button_new_with_label( NULL, items->label );
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+      } else {
+	group =  gtk_radio_button_group (GTK_RADIO_BUTTON ( button ));
+	button = gtk_radio_button_new_with_label(group, "button2");
+      }
+      
+      if (GTK_IS_MENU_BAR (menu))
+	gtk_menu_bar_append (GTK_MENU_BAR (menu), button);
+      else 
+	gtk_menu_append (GTK_MENU (menu), button);
+
+      gtk_widget_show (button);
+ 
+      if (items->widget)
+	*items->widget = button;
+      
+      break;
+#endif
 
     case MENU_ITEM:
     case MENU_CHECK_ITEM:
@@ -44,9 +72,9 @@ static void create_menu_recursive (GtkWidget *menu,
 
       switch (items->type) {
 
+
       case MENU_RADIO_ITEM:
 	menu_item = NULL;	/* Not Implemented */
-	break;
 
       case MENU_CHECK_ITEM:
 	menu_item = gtk_check_menu_item_new ();
