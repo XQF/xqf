@@ -2152,7 +2152,8 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (qw_is_quakeforge_button),
 						    default_qw_is_quakeforge);
     gtk_box_pack_start (GTK_BOX (page_vbox), qw_is_quakeforge_button, FALSE, FALSE, 5);
-    gtk_widget_show (qw_is_quakeforge_button);
+// no longer neccessary for quakeforge >= 0.5.0
+//    gtk_widget_show (qw_is_quakeforge_button);
   }
 
   gtk_widget_show (page_vbox);

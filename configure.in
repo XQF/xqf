@@ -111,6 +111,10 @@ if test "$USE_INCLUDED_LIBINTL" = "yes"; then
 	ln -s libgnuintl.h intl/libintl.h
 fi
 
+if test "x$GCC" = xyes; then
+	CFLAGS="$CFLAGS -Wall"
+fi
+
 AC_OUTPUT([Makefile intl/Makefile po/Makefile.in \
 src/Makefile src/xpm/Makefile \
 docs/Makefile \
