@@ -3782,7 +3782,7 @@ static gboolean quake_has_map(struct server* s)
   g_return_val_if_fail(pd!=NULL,TRUE);
   
   hash = (GHashTable*)pd->maphash;
-  g_return_val_if_fail(hash!=NULL,TRUE);
+  if(!hash) return TRUE;
 
   if(!s->map)
     return FALSE;
@@ -3801,7 +3801,7 @@ static size_t q3_get_mapshot(struct server* s, guchar** buf)
   g_return_val_if_fail(pd!=NULL,TRUE);
   
   hash = (GHashTable*)pd->maphash;
-  g_return_val_if_fail(hash!=NULL,TRUE);
+  if(!hash) return TRUE;
 
   if(!s->map)
     return FALSE;
@@ -3820,7 +3820,7 @@ static gboolean unreal_has_map(struct server* s)
   g_return_val_if_fail(pd!=NULL,TRUE);
   
   hash = (GHashTable*)pd->maphash;
-  g_return_val_if_fail(hash!=NULL,TRUE);
+  if(!hash) return TRUE;
 
   if(!s->map)
     return FALSE;
