@@ -72,6 +72,7 @@
 #include "xpm/savage.xpm"
 #include "xpm/cod.xpm"
 #include "xpm/bf1942.xpm"
+#include "xpm/jk3.xpm"
 #undef static
 
 #include "xpm/green-plus.xpm"
