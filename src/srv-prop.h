@@ -43,7 +43,7 @@ extern	void props_load (void);
 
 extern 	void properties_dialog (struct server *s);
 
-extern	void combo_set_vals (GtkWidget *combo, GList *strlist, char *str);
+extern	void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str);
 
 
 #endif /* __SRV_PROP_H__ */
