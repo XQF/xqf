@@ -49,6 +49,7 @@
 #include "splash.h"
 
 static struct generic_prefs* new_generic_prefs (void);
+static GtkWidget *custom_args_options_page (enum server_type type);
 
 char 	*user_rcdir = NULL;
 
@@ -228,7 +229,6 @@ static	GtkWidget *color_menu = NULL;
 static GtkWidget *custom_args_add_button[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_game[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_args[GAMES_TOTAL];
-static GSList *custom_args_entry_list[GAMES_TOTAL];
 static int current_row = -1;
 
 GtkWidget *file_selector;
@@ -278,6 +278,7 @@ struct generic_prefs {
   // game specific data
   GData* games_data;
 
+  GSList *custom_args;
 } *genprefs = NULL;
 
 
@@ -366,16 +367,8 @@ static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2)
 static void get_new_defaults_for_game (enum server_type type) {
   struct game *g = &games[type];
   struct generic_prefs *prefs = &genprefs[type];
-  char str[256];
+  char buf[256];
 
-  char conf[32];
-  int j = 0;
-
-  GSList *temp;
-  char *str2;
-  int isdefault = FALSE;
-
-  
   debug (5, "get_new_defaults_for_game(%d)",type);
 
   if (prefs->cmd_entry) {
@@ -403,8 +396,8 @@ static void get_new_defaults_for_game (enum server_type type) {
                             GTK_ENTRY (GTK_COMBO (prefs->cfg_combo)->entry)));
   }
 
-  g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
-  config_push_prefix (str);
+  g_snprintf (buf, sizeof(buf), "/" CONFIG_FILE "/Game: %s", type2id (type));
+  config_push_prefix (buf);
 
   if (g->cmd) 
     config_set_string ("cmd", g->cmd);
@@ -422,45 +415,37 @@ static void get_new_defaults_for_game (enum server_type type) {
     config_clean_key ("custom cfg");
 
 
-  // Clear existing custom arguments
-  j = 0;
-  g_snprintf (conf, sizeof(conf), "custom_arg%d", j);
-  str2 = config_get_string_with_default (conf,&isdefault);
-  while (!isdefault)
-  {
-    config_clean_key (conf);
-    
-    j++;
-    g_snprintf (conf, sizeof(conf), "custom_arg%d", j);
-    g_free(str2);
-    str2 = config_get_string_with_default (conf,&isdefault);
-  }
-
   // Set custom arguments
   if (g->custom_args)
     g_slist_free (g->custom_args);
   
-  g->custom_args = g_slist_copy (custom_args_entry_list[type]);
+  g->custom_args = g_slist_sort (prefs->custom_args, compare_slist_strings);
   
-  if (custom_args_entry_list[type])
-    g_slist_free (custom_args_entry_list[type]);
-  
-  g->custom_args = g_slist_sort (g->custom_args, compare_slist_strings);
-  
-  temp = g_slist_nth(g->custom_args, 0);
+  {
+    int i = 0;
+    char *str = NULL;
+    int isdefault = FALSE;
+    GSList *list = g->custom_args;
 
-  if (temp) {
-    j = 0;
-    while (1)
+    for (i = 0;list; list = g_slist_next(list), ++i)
     {
-      g_snprintf (conf, 15, "custom_arg%d", j++);
+      g_snprintf (buf, sizeof(buf), "custom_arg%d", i);
     
-      config_set_string (conf, (char *) temp->data);
+      config_set_string (buf, (char *) list->data);
+    }
 
-      if (g_slist_next(temp))
-        temp = g_slist_next(temp);
-      else
-        break;
+    // Clear remaining existing arguments
+    g_snprintf (buf, sizeof(buf), "custom_arg%d", i);
+
+    str = config_get_string_with_default (buf,&isdefault);
+    while (!isdefault)
+    {
+      config_clean_key (buf);
+      
+      ++i;
+      g_snprintf (buf, sizeof(buf), "custom_arg%d", i);
+      g_free(str);
+      str = config_get_string_with_default (buf,&isdefault);
     }
   }
   config_pop_prefix ();
@@ -500,8 +485,8 @@ static void load_game_defaults (enum server_type type) {
     g->custom_args = g_slist_append(g->custom_args, str2);
     debug(2,"game: %s: %s=%s",type2id (type), conf,str2);
     
-    j++;
-    g_snprintf (conf, 64, "custom_arg%d", j);
+    ++j;
+    g_snprintf (conf, sizeof(conf), "custom_arg%d", j);
     str2 = config_get_string_with_default (conf,&isdefault);
   }
 
@@ -2018,6 +2003,7 @@ static void pref_suggest_command(enum server_type type)
 }
 
 
+#warning FIXME: memleak, use strchr instead
 static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
  // ptr1 = entire string
  // ptr2 = game
@@ -2041,21 +2027,22 @@ static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type 
   temp2[1] = strdup_strip (str2);
   
   if (str1 && str2) {
-    if (g_slist_find_custom (custom_args_entry_list[type], str1, custom_args_compare_func) == NULL ) {
-      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], g_strdup(temp));
+    if (g_slist_find_custom (genprefs[type].custom_args, str1, custom_args_compare_func) == NULL ) {
+      genprefs[type].custom_args = g_slist_append(genprefs[type].custom_args, g_strdup(temp));
       gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp2);
     }
     else {
-      dialog_ok (NULL, _("An entry already exists for the game %s.\n\nA default entry for this game will not be added.\n" \
-      		"\nDelete the entry and try again."), str1);
+      dialog_ok (NULL, _("An entry already exists for the game %s.\n\n"
+	    "A default entry for this game will not be added.\n\n"
+	    "Delete the entry and try again."), str1);
     }
   }
-  if(temp)
-    g_free(temp);
+  g_free(temp);
 }
 
 
 // Add default custom arguments
+// TODO: implement a proper generic solution
 static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
   enum server_type type;
   struct game *g;
@@ -2075,6 +2062,10 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
 	      "-USERLOGO=dbsplash.bmp -INI=DeathBall.ini -USERINI=DBUser.ini",UT2_SERVER, data);
       add_custom_args_defaults2("FragOpsMission",
 	      "-INI=FragOps.ini -USERINI=FOUser.ini",UT2_SERVER, data);
+      break;
+
+    case UT2004_SERVER:
+      add_custom_args_defaults2("ROTeamGame", "-mod=RedOrchestra",UT2004_SERVER, data);
       break;
 
     default:
@@ -2117,17 +2108,17 @@ static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   if (current_row > -1) {
     row = current_row;
  
-    link = g_slist_nth (custom_args_entry_list[type], current_row);
+    link = g_slist_nth (genprefs[type].custom_args, current_row);
 
-    custom_args_entry_list[type] = g_slist_remove_link (custom_args_entry_list[type], link);
+    genprefs[type].custom_args = g_slist_remove_link (genprefs[type].custom_args, link);
     
     current_row = -1;
     gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
   }
 
   if (temp[0] && temp[1]) {
-    if (g_slist_find_custom (custom_args_entry_list[type], temp[0], custom_args_compare_func) == NULL ) {
-      custom_args_entry_list[type] = g_slist_append(custom_args_entry_list[type], g_strconcat(temp[0], ",",temp[1], NULL));
+    if (g_slist_find_custom (genprefs[type].custom_args, temp[0], custom_args_compare_func) == NULL ) {
+      genprefs[type].custom_args = g_slist_append(genprefs[type].custom_args, g_strconcat(temp[0], ",",temp[1], NULL));
 
       gtk_clist_append(GTK_CLIST ((GtkCList *) data), temp);
 
@@ -2164,9 +2155,9 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
 
   row = current_row;
 
-  link = g_slist_nth (custom_args_entry_list[type], current_row);
+  link = g_slist_nth (genprefs[type].custom_args, current_row);
 
-  custom_args_entry_list[type] = g_slist_remove_link (custom_args_entry_list[type], link);
+  genprefs[type].custom_args = g_slist_remove_link (genprefs[type].custom_args, link);
     
   current_row = -1;
   gtk_clist_remove (GTK_CLIST ((GtkCList *) data), row);
@@ -2194,7 +2185,7 @@ static void custom_args_clist_select_row_callback (GtkWidget *widget,
   
   if(row<0) return;
   
-  item = g_slist_nth(custom_args_entry_list[type], row);
+  item = g_slist_nth(genprefs[type].custom_args, row);
 
   if(!item) return; 
 
@@ -2259,6 +2250,9 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_widget_show (page_vbox);
     return page_vbox;
   }
+
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
+		  custom_args_options_page(type), gtk_label_new (_("Custom Args")));
 
   // call game specific function to add its options
   if(genprefs[type].add_options_to_notebook)
@@ -2415,16 +2409,13 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
   GtkWidget *delete_button;
   GtkWidget *defaults_button;
   GtkWidget *page_vbox;
-  GSList *temp;
-  int i;
   struct game *g;
-  char *temp2[2];
 
   //tooltips = gtk_tooltips_new ();
   
   g = &games[type];
   
-  custom_args_entry_list[type] = g_slist_copy (g->custom_args);
+  genprefs[type].custom_args = g_slist_copy (g->custom_args);
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -2577,28 +2568,26 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
                       (gpointer) arguments_clist);
 
   // Populate clist with custom_args from g_slist
-  temp = g_slist_nth(custom_args_entry_list[type], 0);  
-  if (temp) {
-    i = 0;
-    while (1) {
-      // temp2[0] = g_strdup((char *)temp->data);
-      tokenize (g_strdup((char *)temp->data), temp2, 2, ",");
-      gtk_clist_append(GTK_CLIST (arguments_clist), temp2);
-      g_free(temp2[0]);
+  {
+    GSList *list;
+    char *token[2];
 
-      if (g_slist_next(temp))
-        temp = g_slist_next(temp);
-      else
-        break;
+    list = genprefs[type].custom_args;  
+    while (list)
+    {
+      char* tmp = g_strdup((char *)list->data);
+      tokenize ( tmp, token, 2, ",");
+      gtk_clist_append(GTK_CLIST (arguments_clist), token);
+      g_free(tmp);
+
+      list = g_slist_next(list);
     }
   }
 
-  {
-      gint width = gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 0);
-      gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, width?width:60);
-      gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1,
-	      gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 1));
-  }
+  gint width = gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 0);
+  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 0, width?width:60);
+  gtk_clist_set_column_width (GTK_CLIST (arguments_clist), 1,
+	  gtk_clist_optimal_column_width (GTK_CLIST (arguments_clist), 1));
   
 
   gtk_widget_show (page_vbox);
@@ -2607,22 +2596,10 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 }
 
 
-//#define GAMES_RADIOS
-#define GAMES_LIST
-
-#ifdef GAMES_RADIOS
-static void game_radio_butto_toggled_callback (GtkWidget *widget, 
-					              enum server_type type) {
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
-    gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), type);
-}
-
-#elif defined GAMES_LIST
 static void game_listitem_selected_callback (GtkItem *item, 
 					              enum server_type type) {
     gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), type);
 }
-#endif
 
 
 #define	GAMES_COLS	3
@@ -2635,53 +2612,19 @@ static GtkWidget *games_config_page (int defgame) {
   GtkWidget *hbox;
   GtkWidget *page;
   GtkWidget *label;
-#ifdef GAMES_RADIOS
-  GtkWidget *table;
-  GtkWidget *game_label;
-  GSList *group = NULL;
-#elif defined GAMES_LIST
   GtkWidget *gtklist=NULL;
   GtkWidget *scrollwin=NULL;
   GtkWidget *games_hbox;
-#endif
   char *typestr;
   int i;
 
   page_vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-#ifdef GAMES_LIST
   games_hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
   gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
-#endif
 
-#ifdef GAMES_RADIOS
-  table = gtk_table_new (GAMES_COLS, GAMES_ROWS, FALSE);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 6);
-  gtk_box_pack_start (GTK_BOX (page_vbox), table, FALSE, FALSE, 20);
-
-  for (i = 0; i < GAMES_TOTAL; i++) {
-    genprefs[i].game_button = gtk_radio_button_new (group);
-
-    game_label = game_pixmap_with_label (i);
-    gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_label);
-
-    group = gtk_radio_button_group (GTK_RADIO_BUTTON (genprefs[i].game_button));
-    gtk_table_attach_defaults (GTK_TABLE (table), 
-			       genprefs[i].game_button,
-			       i % GAMES_COLS, i % GAMES_COLS + 1,
-			       i / GAMES_COLS, i / GAMES_COLS + 1); 
-
-    gtk_signal_connect (GTK_OBJECT (genprefs[i].game_button), "toggled",
-           GTK_SIGNAL_FUNC (game_radio_butto_toggled_callback), (gpointer) i);
-
-    gtk_widget_show (genprefs[i].game_button);
-  }
-  gtk_widget_show (table);
-
-#elif defined GAMES_LIST
   frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
 
@@ -2714,17 +2657,12 @@ static GtkWidget *games_config_page (int defgame) {
   gtk_widget_show(scrollwin);
   gtk_box_pack_start (GTK_BOX (games_hbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
-#endif
 
   games_notebook = gtk_notebook_new ();
   // the tabs are hidden, so nobody will notice its a notebook
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (games_notebook), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (games_notebook), FALSE);
-#if defined GAMES_RADIOS
-  gtk_box_pack_start (GTK_BOX (page_vbox), games_notebook, FALSE, FALSE, 0);
-#elif defined GAMES_LIST
   gtk_box_pack_start (GTK_BOX (games_hbox), games_notebook, FALSE, FALSE, 15);
-#endif
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     page = generic_game_frame (i);
@@ -2749,12 +2687,7 @@ static GtkWidget *games_config_page (int defgame) {
 
   gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), defgame);
 
-#ifdef GAMES_RADIOS
-  gtk_toggle_button_set_active (
-                     GTK_TOGGLE_BUTTON (genprefs[defgame].game_button), TRUE);
-#elif defined GAMES_LIST
   gtk_list_item_select(GTK_LIST_ITEM(genprefs[defgame].game_button));
-#endif
 
   gtk_widget_show (games_notebook);
 
@@ -2790,9 +2723,7 @@ static GtkWidget *games_config_page (int defgame) {
 
   gtk_widget_show (page_vbox);
 
-#ifdef GAMES_LIST
   gtk_widget_show (games_hbox);
-#endif
 
   return page_vbox;
 }
@@ -3307,19 +3238,16 @@ static GtkWidget *ef_options_page (void) {
 
 void add_q3_options_to_notebook(GtkWidget *notebook)
 {
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), custom_args_options_page(Q3_SERVER), gtk_label_new (_("Custom Args")));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_options_page(), gtk_label_new (_("Options")));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_mem_options_page(), gtk_label_new (_("Memory")));
 }
 
 void add_un_options_to_notebook(GtkWidget *notebook)
 {
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), custom_args_options_page(UN_SERVER), gtk_label_new (_("Custom Args")));
 }
 
 void add_ut2_options_to_notebook(GtkWidget *notebook)
 {
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), custom_args_options_page(UT2_SERVER), gtk_label_new (_("Custom Args")));
 }
 
 void add_wolf_options_to_notebook(GtkWidget *notebook)
