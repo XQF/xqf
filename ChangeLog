@@ -1,3 +1,7 @@
+Nov 23, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- remove the static option again, would link everything static *sigh*
+- update docu, use mozilla function for table of contents
+
 Nov 22, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - link GeoIP statically when using ./configure --enable-geoip=static
 - fix wrong function argument in rcon.c

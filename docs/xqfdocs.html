@@ -13,50 +13,111 @@ Alex Burger &lt;<a href="mailto:alex_b@users.sourceforge.net">alex_b@users.sourc
 <p>Documentation contributors:<br>
 Jordi Mallach &lt;<a href="mailto:jordi@debian.org">jordi@debian.org</a>&gt;<br>
 &nbsp;<br>
-&nbsp;</p>
-<p><b><u><font size="+2">Table of Contents</font></u></b></p>
+<br>
+</p>
 </center>
-<blockquote> <a href="#Overview">Overview</a>
-  <p><a href="#System_Requirements">System Requirements</a></p>
-  <p><a href="#Downloading">Downloading<br>
-  </a></p>
-  <p><a href="#ChangeLog">Change Log</a></p>
-  <p><a href="#Installation_/_Compiling">Installation / Compiling</a></p>
-  <blockquote> <a href="#RPM_Binary_package">RPM Binary package</a><br>
-    <a href="#DEB_Binary_package">DEB Binary package</a><br>
-    <a href="#TAR.GZ_source_code">TAR.GZ source code</a><br>
-    <a href="#CVS_source_code">CVS source code</a> </blockquote>
-  <a href="#Using_XQF">Using XQF</a>
-  <blockquote> <a href="#Launching_XQF">Launching XQF</a><br>
-    <a href="#Configuring_XQF">Configuring XQF</a><br>
-    <a href="#Toolbar">Toolbar</a><br>
-    <a href="#Window_Panes">Window Panes</a><br>
-    <a href="#Bottom_status_bar">Bottom Status bar</a><br>
-    <a href="#Menu_bar">Menu bar</a>
-    <blockquote> <a href="#File">File</a><br>
-      <a href="#Edit">Edit</a><br>
-      <a href="#View">View</a><br>
-      <a href="#Server">Server</a><br>
-      <a href="#Preferences">Preferences</a><br>
-      <a href="#Filters">Server Filters</a></blockquote>
-  </blockquote>
-  <p><a href="#Game_Specific_Information">Game Specific Information<br>
-  </a></p>
-  <blockquote> <a href="#Q3">Quake 3</a><br>
-    <a href="#SoF">Soldier of Fortune</a><br>
-    <a href="#SoF2">Soldier of Fortune 2</a><br>
-    <a href="#UT">Unreal Tournament</a><br>
-    <a href="#HL">Half Life</a><br>
-    <a href="#Descent3">Descent 3<br>
-    </a> <a href="#SeriousSam">Serious Sam</a><br>
-    <a href="#MOHAA">Medal of Honor</a><br>
-    <a href="#savage">Savage</a><br>
-  </blockquote>
-  <p><a href="#Troubleshooting">Troubleshooting / FAQ</a></p>
-  <p><a href="#XQF-Rcon">XQF-RCon</a><br>
-&nbsp;</p>
-</blockquote>
-<p><a name="Overview"></a><b><u><font size="+2">Overview</font></u></b></p>
+<h1><a class="mozTocH1" name="mozTocId724502"></a>Table of Contents<br>
+</h1>
+<ol id="mozToc">
+<!--mozToc h1 1 h2 2 h3 3 h4 4 h5 5 h6 6--><li><a href="#mozTocId724502">Table
+of Contents
+    </a></li>
+  <li><a href="#mozTocId239911">Overview</a></li>
+  <li><a href="#mozTocId289753">System
+Requirements</a></li>
+  <li><a href="#mozTocId65065">Downloading</a></li>
+  <li><a href="#mozTocId936428">Change
+Log&nbsp;
+    </a></li>
+  <li><a href="#mozTocId861671">Installation
+/ Compiling</a>
+    <ol>
+      <li><a href="#mozTocId790280">Loki-Setup
+installer</a></li>
+      <li><a href="#mozTocId297059">RPM
+Binary package</a></li>
+      <li><a href="#mozTocId688017">DEB Binary
+package</a></li>
+      <li><a href="#mozTocId497478">TAR.GZ source
+code</a></li>
+      <li><a href="#mozTocId355848">CVS source
+code</a></li>
+    </ol>
+  </li>
+  <li><a href="#mozTocId820362">Using
+XQF</a>
+    <ol>
+      <li><a href="#mozTocId575685">Launching XQF</a></li>
+      <li><a href="#mozTocId400409">Configuring XQF</a></li>
+      <li><a href="#mozTocId971220">Game
+Specific Information</a>
+        <ol>
+          <li><a href="#mozTocId628596">Quake3</a></li>
+          <li><a href="#mozTocId382213">Soldier
+of Fortune (1.06)</a></li>
+          <li><a href="#mozTocId251777">Soldier
+of Fortune 2</a></li>
+          <li><a href="#mozTocId76858">Unreal
+Tournament (436)</a></li>
+          <li><a href="#mozTocId148550">Half-Life</a></li>
+          <li><a href="#mozTocId111654">Descent
+3</a></li>
+          <li><a href="#mozTocId211612">Serious
+Sam</a></li>
+          <li><a href="#mozTocId790496">Medal
+of Honor</a></li>
+          <li><a href="#mozTocId755086">Call
+of Duty</a></li>
+          <li><a href="#mozTocId941470">Savage</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href="#mozTocId154111">&nbsp;Troubleshooting
+/ FAQ</a>
+    <ol>
+      <li><a href="#mozTocId611933">Q: Do you know of any good web
+sites with
+technical information
+on playing games on Linux?</a></li>
+      <li><a href="#mozTocId461064">Q: When I refresh or update a list,
+all servers
+come back
+with a ping of 'n/a'</a></li>
+      <li><a href="#mozTocId76764">Q: QStat is installed,
+but when I refresh or update a list, all servers
+come back with a ping of 'n/a'</a></li>
+      <li><a href="#mozTocId510587">Q:&nbsp; When I try to
+launch XQF, I get 'command not found'</a></li>
+      <li><a href="#mozTocId648222">Q:&nbsp; I have added
+master0.gamespy.com to XQF, but I can not
+retreive any servers from that master</a></li>
+      <li><a href="#mozTocId215275">Q:&nbsp; I deleted one of
+the default master servers.&nbsp; How
+do I get it back?</a></li>
+      <li><a href="#mozTocId727066">Q:&nbsp;Why do LAN searches
+not find any servers?</a></li>
+      <li><a href="#mozTocId477669">Q: I am behind a firewall /
+proxy server and can not retrieve http
+master lists</a></li>
+      <li><a href="#mozTocId546209">Q: My game is not launching
+properly. &nbsp;What do I do?</a></li>
+      <li><a href="#mozTocId112336">Q: XQF sounds are not
+playing when XMMS or another sound
+program is running. &nbsp;What do I do?</a></li>
+      <li><a href="#mozTocId212725">Q: When updating server
+lists for Quake3, Wolfenstein or
+Enemy Territory, XQF only shows servers for an old version or the
+demo. What's wrong?</a></li>
+      <li><a href="#mozTocId596914">Q: Can XQF integrate with
+any chat programs such as IRC or ICQ?</a></li>
+      <li><a href="#mozTocId185982">Q: Will XQF be availble for
+Windows?</a></li>
+    </ol>
+  </li>
+  <li><a href="#mozTocId383898">XQF-Rcon</a></li>
+</ol>
+<h1><a class="mozTocH1" name="mozTocId239911"></a><a name="Overview"></a>Overview</h1>
 <p><a href="http://www.linuxgames.com/xqf/">XQF</a> is a 3D action
 game (such as Quake, sequels and derivatives) server browser. It
 uses X and is written using the <a href="http://www.gtk.org/">GIMP
@@ -91,11 +152,12 @@ Medal of Honor: Allied Assault<br>
 Call of Duty (wine)<br>
 Savage<br>
 </blockquote>
-Searching for games involves communicating with 'master servers' on
+<p>Searching for games involves communicating with 'master servers' on
 the Internet which game servers advertise to on the Internet.&nbsp;
 XQF can spawn your client into a selected server with customized
 options.&nbsp; You can also apply filters while searching for
 servers, trimming full or empty servers, for example.
+</p>
 <p>The program has been translated to the following languages: English,
 Spanish, German, Catalan, Danish and French.<br>
 </p>
@@ -119,8 +181,9 @@ Sin, Kingpin, Heretic2 servers&nbsp;<br>
 &nbsp; - Busy server redial<br>
 </p>
 <p>&nbsp;</p>
-<p><a name="System_Requirements"></a><b><u><font size="+2">System
-Requirements</font></u></b></p>
+<h1><a class="mozTocH1" name="mozTocId289753"></a><a
+ name="System_Requirements"></a>System
+Requirements</h1>
 <p>The minimum system requirements are:</p>
 <p>A UNIX computer and C compiler (gcc)<br>
 <a href="http://www.qstat.org">QSTAT 2.5c</a> (latest version
@@ -137,8 +200,8 @@ server listings from the Web<br>
 <p>XQF has been tested as is known to run on Intel / AMD and PowerPC
 platforms.<br>
 &nbsp;</p>
-<p><a name="Downloading"></a><b><u><font size="+2">Downloading</font></u></b><br>
-&nbsp;</p>
+<p></p>
+<h1><a class="mozTocH1" name="mozTocId65065"></a><a name="Downloading"></a>Downloading</h1>
 <p>XQF can be downloaded as a pre-compiled binary for some
 distributions, or as source code. The source code can be downloaded
 as either a .tar.gz file, or via CVS.&nbsp; See the file section of <a
@@ -147,8 +210,9 @@ for
 downloading instructions.<br>
 <br>
 </p>
-<p><b><u><font size="+2"><a name="ChangeLog"></a>Change Log</font></u></b>&nbsp;<br>
-</p>
+<h1><a class="mozTocH1" name="mozTocId936428"></a><a name="ChangeLog"></a>Change
+Log&nbsp;<br>
+</h1>
 <blockquote> <u><b>XQF 0.9.12 -- June 10, 2003</b></u>
   <ul style="list-style-type: disc;">
     <li>Added Enemy Territory Support support</li>
@@ -305,13 +369,14 @@ vm_* settings are correct on the command line</li>
 stable now</li>
   </ul>
 </blockquote>
-<p><br>
-</p>
-<p><a name="Installation_/_Compiling"></a><b><u><font size="+2">Installation
-/ Compiling</font></u></b><br>
-&nbsp;</p>
-<blockquote> <a name="RPM_Binary_package"></a><b><u><font size="+1">Loki-Setup
-installer:</font></u></b>
+<p></p>
+<h1><a class="mozTocH1" name="mozTocId861671"></a><a
+ name="Installation_/_Compiling"></a>Installation
+/ Compiling</h1>
+<blockquote>
+  <h2><a class="mozTocH2" name="mozTocId790280"></a><a
+ name="RPM_Binary_package"></a>Loki-Setup
+installer</h2>
   <blockquote>Execute the commands
     <p><b><i>chmod 755 xqf-xxx.i386.run<br>
 ./</i></b><b><i>xqf-xxx.i386.run<br>
@@ -320,8 +385,9 @@ To enable the country filter, you need to copy the file GeoIP.dat (<a
  href="http://www.maxmind.com/download/geoip/database/">http://www.maxmind.com/download/geoip/database/)</a>
 into the directory /usr/share/GeoIP<br>
   </blockquote>
-  <a name="RPM_Binary_package"></a><b><u><font size="+1">RPM
-Binary package:</font></u></b>
+  <h2><a class="mozTocH2" name="mozTocId297059"></a><a
+ name="RPM_Binary_package"></a>RPM
+Binary package</h2>
   <blockquote>As root, execute the command:
     <p><b><i>rpm -Uvh xqf.xxx.i386.rpm<br>
     </i></b><br>
@@ -330,13 +396,15 @@ To enable the country filter, you need to copy the file GeoIP.dat (<a
 into the directory /usr/share/GeoIP<br>
     </p>
   </blockquote>
-  <a name="DEB_Binary_package"></a><b><u><font size="+1">DEB Binary
-package:</font></u></b>
+  <h2><a class="mozTocH2" name="mozTocId688017"></a><a
+ name="DEB_Binary_package"></a>DEB Binary
+package</h2>
   <blockquote>As root, execute the command:
     <p><b><i>dpkg -i xqf_xxx-v_arch.deb</i></b></p>
   </blockquote>
-  <a name="TAR.GZ_source_code"></a><b><u><font size="+1">TAR.GZ source
-code</font></u></b>
+  <h2><a class="mozTocH2" name="mozTocId497478"></a><a
+ name="TAR.GZ_source_code"></a>TAR.GZ source
+code</h2>
   <blockquote>Make sure you have the development packages of GTK,
 gdk-pixbuf, GLIB and X installed.<br>
     <br>
@@ -358,13 +426,15 @@ root):</p>
  href="http://www.maxmind.com/download/geoip/api/c/">http://www.maxmind.com/download/geoip/api/c/</a>).<br>
     </p>
   </blockquote>
-  <a name="CVS_source_code"></a><b><u><font size="+1">CVS source
-code<br>
-  </font></u></b>
-  <blockquote>Compiling CVS snapshots requires that you have recent
-versions of automake (at least 1.6), autoconf, libtool and&nbsp;<a
- href="http://www.gnu.org/software/gettext/"></a>gettext installed. You
+  <h2><a class="mozTocH2" name="mozTocId355848"></a><a
+ name="CVS_source_code"></a>CVS source
+code</h2>
+  <p>Compiling CVS snapshots requires that you have recent
+versions of automake (at least 1.6), autoconf, libtool and&nbsp;gettext
+installed. You
 also need to have both GTK1 and GTK2 development packages installed.<br>
+  </p>
+  <blockquote>
     <p>Create the 'configure' script:<br>
     </p>
     <p><b><i>./autogen.sh</i></b></p>
@@ -378,11 +448,10 @@ root):</p>
     <p>The default location for XQF is /usr/local/bin.</p>
   </blockquote>
 </blockquote>
-<p><br>
-<a name="Using_XQF"></a><b><u><font size="+2">Using XQF<br>
-</font></u></b><br>
-</p>
-<p><a name="Launching_XQF"></a><b><u><font size="+1">Launching XQF:</font></u></b></p>
+<h1><a class="mozTocH1" name="mozTocId820362"></a><a name="Using_XQF"></a>Using
+XQF</h1>
+<h2><a class="mozTocH2" name="mozTocId575685"></a><a
+ name="Launching_XQF"></a>Launching XQF</h2>
 <blockquote> <br>
 The first time you launch XQF, it will attempt to search for games in
 your path. &nbsp;If any are found, it will automatically
@@ -413,7 +482,8 @@ a symbolic link in /usr/bin.&nbsp; For example, as root:</p>
 /etc/gtkrc, $HOME/.gtkrc and $HOME/.qf/gtkrc.<br>
 &nbsp;</p>
 </blockquote>
-<p><a name="Configuring_XQF"></a><b><u><font size="+1">Configuring XQF:</font></u></b></p>
+<h2><a class="mozTocH2" name="mozTocId400409"></a><a
+ name="Configuring_XQF"></a>Configuring XQF</h2>
 <blockquote> <br>
 Please see the <a href="#Preferences">Menu Bar / Preferences</a>
 section for a description of the Preferences menu items.<br>
@@ -1387,13 +1457,15 @@ pane.<br>
     </p>
   </blockquote>
 </blockquote>
-<a name="Game_Specific_Information"></a><b><u><font size="+2">Game
-Specific Information</font></u></b><br>
+<h2><a class="mozTocH2" name="mozTocId971220"></a><a
+ name="Game_Specific_Information"></a>Game
+Specific Information</h2>
 &nbsp;<br>
 <blockquote> Following are notes on using specific games with
 XQF.&nbsp; Most games should work with basic setup in XQF, but some may
 require special configuration. </blockquote>
-<blockquote> <b><a name="Q3"></a>Quake3:</b>
+<blockquote>
+  <h3><a class="mozTocH3" name="mozTocId628596"></a><a name="Q3"></a>Quake3</h3>
   <blockquote> Under Preferences - Games, enter the 'command line' and
 'working directory'. Nothing special is <i>normally</i> needed.
     <p>XQF uses the 'game' server variable to determine how to launch
@@ -1468,7 +1540,8 @@ line.&nbsp; This will give you some hints as to that which it
 is looking.<br>
 &nbsp;</p>
   </blockquote>
-  <b><a name="SoF"></a>Soldier of Fortune (1.06):</b>
+  <h3><a class="mozTocH3" name="mozTocId382213"></a><a name="SoF"></a>Soldier
+of Fortune (1.06)</h3>
   <blockquote> Create a script in your sof directory called
 'startsof-xqf' that contains: ./sof +set console 1 +won_login
 username password "$@"
@@ -1482,7 +1555,8 @@ you will have to click 'OK' to the hopefully successful
 login screen.&nbsp; You should then be connected to the
 selected server</p>
   </blockquote>
-  <b><a name="SoF2"></a>Soldier of Fortune 2:</b><br>
+  <h3><a class="mozTocH3" name="mozTocId251777"></a><a name="SoF2"></a>Soldier
+of Fortune 2</h3>
   <blockquote> Qstat 2.5c supports Soldier of Fortune 2 by using a
 ,qstatrc configuration file (normally stored in your home directory or
 /etc/qstat.cfg). <b>&nbsp;You must properly install qstat with the
@@ -1491,7 +1565,8 @@ work with this game. &nbsp;See the qstat documentation for more
 information.</b><br>
   </blockquote>
   <br>
-  <b><a name="UT"></a>Unreal Tournament (436):</b>
+  <h3><a class="mozTocH3" name="mozTocId76858"></a><a name="UT"></a>Unreal
+Tournament (436)</h3>
   <blockquote> Inside of the directory where Unreal Tournament is
 installed, backup your ut file: cp ut ut.org (ut is a script
 that finds and launches ut-bin)
@@ -1504,7 +1579,7 @@ the directory UnrealTournament is installed in for
 'working directory'.<br>
     </p>
   </blockquote>
-  <b><a name="HL"></a>Half-Life:</b>
+  <h3><a class="mozTocH3" name="mozTocId148550"></a><a name="HL"></a>Half-Life</h3>
   <blockquote> Nothing special required anymore, just enter a command
 that launches a normal Half-Life such as:<br>
     <blockquote> wine hl.exe -- hl.exe -console<br>
@@ -1539,7 +1614,8 @@ To play Half-Life under Linux, see the following sites:<br>
             a <a href="http://lhl.linuxgames.com/hl">script</a> in the <a href="http://lhl.linuxgames.com/howto.shtml">How-To</a>
             section that can be easily modified to suite your configuration.
             -->
-  <b><a name="Descent3"></a>Descent 3:</b>
+  <h3><a class="mozTocH3" name="mozTocId111654"></a><a name="Descent3"></a>Descent
+3</h3>
   <blockquote> Descent 3 does not currently launch from XQF.&nbsp; This
 appears to be a problem with the Descent3 program, and not XQF.&nbsp;
 Descent3 for Linux does not accept connections to
@@ -1566,7 +1642,8 @@ servers from the command line.<br>
                 section that can be easily modified to suite your configuration.
                 -->
   </blockquote>
-  <b><a name="SeriousSam"></a>Serious Sam:</b>
+  <h3><a class="mozTocH3" name="mozTocId211612"></a><a name="SeriousSam"></a>Serious
+Sam</h3>
   <blockquote> For Serious Sam to query properly, a QStat configuration
 file is required. XQF since version 0.9.12 installs a working one for
 you.<br>
@@ -1575,20 +1652,22 @@ Note: &nbsp;At the time of this release, there are no known
 public Serious Sam master servers that work with QStat / XQF.<br>
     <br>
   </blockquote>
-  <b><a name="MOHAA"></a>Medal of Honor:</b>
+  <h3><a class="mozTocH3" name="mozTocId790496"></a><a name="MOHAA"></a>Medal
+of Honor</h3>
   <blockquote> For Medal of Honor to query properly, a QStat
 configuration
 file is required. XQF since version 0.9.13 installs a working one for
 you.<br>
     <br>
   </blockquote>
-  <b><a name="MOHAA"></a>Call of Duty:</b>
+  <h3><a class="mozTocH3" name="mozTocId755086"></a><a name="MOHAA"></a>Call
+of Duty</h3>
   <blockquote> There is currently no native client for Call of Duty,
 you need wine to run it. You can find an installer at <a
  href="http://www.kratz00.org/linux/installer.php?what=cod">http://www.kratz00.org/linux/installer.php?what=cod</a><br>
     <br>
   </blockquote>
-  <b><a name="savage"></a>Savage:</b>
+  <h3><a class="mozTocH3" name="mozTocId941470"></a><a name="savage"></a>Savage</h3>
   <blockquote>The shell script shipped with Savage is broken. You need
 to adjust it to pass command line parameters to the game itself. Change
 the line that looks like<br>
@@ -1601,8 +1680,9 @@ You also need a special qstat version with Savage support. You can
 download it from <a href="ftp://ftp.multiplay.co.uk/pub/apps/qstat/">ftp://ftp.multiplay.co.uk/pub/apps/qstat/</a><br>
   </blockquote>
 </blockquote>
-&nbsp;<a name="Troubleshooting"></a><b><u><font size="+2">Troubleshooting
-/ FAQ</font></u></b>
+<h1><a class="mozTocH1" name="mozTocId154111"></a>&nbsp;<a
+ name="Troubleshooting"></a>Troubleshooting
+/ FAQ</h1>
 <blockquote> Please report problems to the XQF home page Forum at <a
  href="http://www.linuxgames.com/xqf">http://www.linuxgames.com/xqf</a>or
 the user mail list at <a href="http://sourceforge.net/projects/xqf">http://sourceforge.net/projects/xqf</a>.
@@ -1610,23 +1690,32 @@ the user mail list at <a href="http://sourceforge.net/projects/xqf">http://sourc
 in your home directory.&nbsp; This directory contains the
 configuration of XQF including game preferences, server lists,
 player lists etc.</p>
-  <p><b>Q: Do you know of any good web sites with technical information
-on playing games on Linux?</b></p>
+  <h2><a class="mozTocH2" name="mozTocId611933"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId391520"></a><a class="mozTocH4"
+ name="mozTocId59533"></a>Q: Do you know of any good web sites with
+technical information
+on playing games on Linux?</font></h2>
   <p><b>A:&nbsp;</b><a href="http://www.icculus.org/lgfaq/">http://www.icculus.org/lgfaq/</a><br>
   </p>
-  <p><b><br>
-Q: When I refresh or update a list, all servers come back
-with a ping of 'n/a'</b></p>
+  <h2><a class="mozTocH2" name="mozTocId461064"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId873173"></a><a class="mozTocH4"
+ name="mozTocId707558"></a>Q: When I refresh or update a list, all
+servers
+come back
+with a ping of 'n/a'</font></h2>
   <p><b>A:&nbsp;</b> Make sure <b>qstat</b> is in your path.&nbsp;
 Go to a shell and type <b>qstat</b>.&nbsp; If a screen full of
 qstat command options does not appear, qstat is not installed, or
 it is not in your path.&nbsp; After compiling QStat, copy <b>qstat</b>
 to the <b>/usr/bin</b> directory.&nbsp; See the <a
  href="http://www.qstat.org/">QStat</a> home page for installation
-instructions.</p>
-  <p><b><br>
-Q: QStat is installed, but when I refresh or update a list, all servers
-come back with a ping of 'n/a'</b></p>
+instructions.<br>
+  <br>
+  </p>
+  <h2><a class="mozTocH2" name="mozTocId76764"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId393349"></a><b>Q: QStat is installed,
+but when I refresh or update a list, all servers
+come back with a ping of 'n/a'</b></font></h2>
   <p><b>A:</b>&nbsp; If you are behind a firewall such as a LinkSys or
 Dlink router, or are using filtering on your machine
 (iptables or ipchains) you are probably blocking the game's
@@ -1634,39 +1723,51 @@ traffic from entering your computer.&nbsp; Games generally use
 UDP, not TCP.&nbsp; Because of this, your firewall needs special
 configuration.&nbsp; Search the internet for '<i>gamename</i>
 firewall port' and you should find something helpful. &nbsp;</p>
-  <p><b><br>
-Q:&nbsp; When I try to launch XQF, I get 'command not found'</b></p>
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId510587"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId991111"></a>Q:&nbsp; When I try to
+launch XQF, I get 'command not found'</font></h2>
   <p><b>A:&nbsp;</b> XQF is not in your path.&nbsp; See the <a
  href="#Launching_XQF">Launching XQF</a> section</p>
-  <p><b><br>
-Q:&nbsp; I have added master0.gamespy.com to XQF, but I can not
-retreive any servers from that master</b></p>
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId648222"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId106474"></a>Q:&nbsp; I have added
+master0.gamespy.com to XQF, but I can not
+retreive any servers from that master</font></h2>
   <p><b>A:</b>&nbsp; Gamespy's master servers use an authentication
 sequence that is not supported by QStat.&nbsp; This means that you can
 not query a Gamespy master using QStat
 and XQF.&nbsp; Other games such as Unreal Tournament use the
 Gamespy style master server but do not require authentication
 which is why they work.</p>
-  <p><b>Q:&nbsp; I deleted one of the default master servers.&nbsp; How
-do I get it back?</b></p>
+  <h2><a class="mozTocH2" name="mozTocId215275"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId926692"></a>Q:&nbsp; I deleted one of
+the default master servers.&nbsp; How
+do I get it back?</font></h2>
   <p><b>A:</b>&nbsp; Edit - Add Default Masters to add ALL the default
 master servers back into the list.&nbsp; If you know the
 address, you can add a single master with Edit - Add Master.</p>
-  <p><b><br>
-Q:&nbsp;Why do LAN searches not find any servers?</b></p>
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId727066"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId85697"></a>Q:&nbsp;Why do LAN searches
+not find any servers?</font></h2>
   <p><b>A:</b> You either need a default route to your ethernet device
 or a host route for the broadcast address (try e.g. route
 add -host 255.255.255.255 eth0).</p>
-  <p><b><br>
-Q: I am behind a firewall / proxy server and can not retrieve http
-master lists</b></p>
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId477669"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId656914"></a>Q: I am behind a firewall /
+proxy server and can not retrieve http
+master lists</font></h2>
   <p><b>A:</b> XQF uses <b><a href="ftp://ftp.gnu.org/gnu/wget/">wget</a></b>
 to retreive http master lists.&nbsp; To configure <b>wget</b> to
 use a proxy server, set the environment variable '<b>http_proxy</b>'
 before launching XQF.&nbsp; For example:</p>
   <blockquote> export http_proxy=http://<i>address-of-proxy-server:port</i>/</blockquote>
-  <p><b><br>
-Q: My game is not launching properly. &nbsp;What do I do?</b></p>
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId546209"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId783004"></a>Q: My game is not launching
+properly. &nbsp;What do I do?</font></h2>
   <p><b>A:</b> The command line arguments passed by XQF may not be
 correct due to a configuration problem or maybe a bug. &nbsp;Launch XQF
 from a command prompt using:<br>
@@ -1678,9 +1779,11 @@ XQF to launch the game will be displayed in the console. &nbsp;Use that
 to figure out what is wrong. &nbsp;If you can determine it is a but,
 please fill out a bug report at <a
  href="http://sourceforge.net/projects/xqf">http://sourceforge.net/projects/xqf</a>.</p>
-  <p><b><br>
-Q: XQF sounds are not playing when XMMS or another sound
-program is running. &nbsp;What do I do?</b></p>
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId112336"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId269140"></a>Q: XQF sounds are not
+playing when XMMS or another sound
+program is running. &nbsp;What do I do?</font></h2>
   <b>A:</b> The Enlightened Sound Daemon (ESD or ESounD) allows
 multiple programs to play sounds at the same time. &nbsp;The software
 you are running may or may not be using ESD to play sounds.<br>
@@ -1700,10 +1803,12 @@ For more information on ESD, see <b>/usr/share/doc/esound*</b>.<br>
   <br>
 Under KDE you may want to use <b>arts</b> and <b>artsplay</b>
 instead<br>
-  <p><b><br>
-Q: When updating server lists for Quake3, Wolfenstein or
+  <br>
+  <h2><a class="mozTocH2" name="mozTocId212725"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId237616"></a>Q: When updating server
+lists for Quake3, Wolfenstein or
 Enemy Territory, XQF only shows servers for an old version or the
-demo. What's wrong?</b></p>
+demo. What's wrong?</font></h2>
   <p><span style="font-weight: bold;">A: </span>You need to choose a
 suitable Masterserver protcol version.
 If xqf doesn't know about the newest version yet, manually add a
@@ -1711,10 +1816,13 @@ server running the new version and enter the value of the server
 rule "protocol"<br>
   </p>
   <b><br>
-Q: Can XQF integrate with any chat programs such as IRC or ICQ?<br>
-  </b><span style="font-weight: bold;"><br>
-A: </span>To integrate XQF with XChat or LICQ, use <a
- href="http://doug.freeshell.org/xqf-xchat/">XQF -&gt; XChat</a>.&nbsp;
+  </b>
+  <h2><a class="mozTocH2" name="mozTocId596914"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId596350"></a>Q: Can XQF integrate with
+any chat programs such as IRC or ICQ?</font></h2>
+  <b> </b><span style="font-weight: bold;">A: </span>To integrate XQF
+with XChat or LICQ, use <a href="http://doug.freeshell.org/xqf-xchat/">XQF
+-&gt; XChat</a>.&nbsp;
 When you start a game with XQF, this script notifies other chat channel
 users that you are playing a game and (optionally) changes your nick to
 reflect your gaming status.&nbsp; Also, your Licq status can be changed
@@ -1722,18 +1830,19 @@ reflect your gaming status.&nbsp; Also, your Licq status can be changed
 the stats of the server you are using.<br>
   <br>
   <br>
-  <b>Q: Will XQF be availble for Windows?<br>
-  </b>
-  <p><span style="font-weight: bold;">A: </span>We have no plans to
+  <h2><a class="mozTocH2" name="mozTocId185982"></a><font size="+1"><a
+ class="mozTocH2" name="mozTocId541804"></a>Q: Will XQF be availble for
+Windows?</font></h2>
+  <span style="font-weight: bold;">A: </span>We have no plans to
 port XQF to Windows, however there are many Windows game browser
 applications available.&nbsp; We recommend <a
  href="http://www.agsm.net">aGSM</a> (alternative Game Server Monitor)
 which supports both LAN and Internet gaming for many popular online
 games and is freeware (but no free software unfortunately).<br>
-  </p>
   <br>
-  <a name="XQF-Rcon"></a><b><u><font size="+2">XQF-Rcon</font></u></b><br>
-  <br>
+</blockquote>
+<h1><a class="mozTocH1" name="mozTocId383898"></a><a name="XQF-Rcon"></a>XQF-Rcon</h1>
+<blockquote> <br>
 Included in the XQF source is a program called XQF-Rcon. &nbsp;XQF-Rcon
 is a text mode (does NOT require X) remote console
 program for Quake2 and other games. &nbsp;The program is
