@@ -645,7 +645,6 @@ static void country_notebook_page (GtkWidget *notebook,
 	PERCENTS(stats->country[c].n, numservers));
     put_label_to_table (table, buf , 1.0, 0, c);
 
-#ifdef USE_GEOIP
     {
       GtkWidget* label;
       GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
@@ -665,7 +664,6 @@ static void country_notebook_page (GtkWidget *notebook,
       gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, c, c+1);
       gtk_widget_show (hbox);
     }
-#endif
   }
 
   gtk_widget_show(table);
