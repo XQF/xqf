@@ -46,6 +46,7 @@
 #include "xpm/hl.xpm"
 #include "xpm/kp.xpm"
 #include "xpm/sfs.xpm"
+#include "xpm/t2.xpm"
 #include "xpm/hr2.xpm"
 #include "xpm/un.xpm"
 
@@ -95,6 +96,7 @@ struct pixmap sn_pix;
 struct pixmap hl_pix;
 struct pixmap kp_pix;
 struct pixmap sfs_pix;
+struct pixmap t2_pix;
 struct pixmap hr_pix;
 struct pixmap un_pix;
 
@@ -192,6 +194,7 @@ void free_pixmaps (void) {
   free_pixmap (&hl_pix);
   free_pixmap (&kp_pix);
   free_pixmap (&sfs_pix);
+  free_pixmap (&t2_pix);
   free_pixmap (&hr_pix);
   free_pixmap (&un_pix);
 
@@ -258,6 +261,7 @@ void init_pixmaps (GtkWidget *window) {
   create_pixmap (window, &hl_pix, hl_xpm);
   create_pixmap (window, &kp_pix, kp_xpm);
   create_pixmap (window, &sfs_pix, sfs_xpm);
+  create_pixmap (window, &t2_pix, t2_xpm);
   create_pixmap (window, &hr_pix, hr2_xpm);
   create_pixmap (window, &un_pix, un_xpm);
 

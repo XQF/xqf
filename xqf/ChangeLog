@@ -1,3 +1,12 @@
+April 19, 2001: Alex Burger <alex@fragit.net>
+-Changed version to 0.9.6g
+-Added Tribes 2 support.  Tribes 2 support requires at
+ least QSTAT 2.4b.  As I do not even have Tribes 2 I
+ can not test launching the game but it if it launches
+ the same as Quake2, then it should work.  More work
+ will be done to ensure the player and server info is
+ being decoded correctly etc.
+
 Feb 14, 2001: Bill Adams <bill@evil.inetarena.com>
 -Oh dear god, I think I fixed the core dumps related
  to the reference counting on the server structures.
