@@ -2152,7 +2152,7 @@ static void populate_main_toolbar (void) {
 
   for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
     // Translators: e.g. Server Filter
-    g_snprintf (buf, 128, _("%s Filter"), filters[i].name);
+    g_snprintf (buf, 128, _("%s Filter"), _(filters[i].name));
 
     pixmap = gtk_pixmap_new (filter_pix[i].pix, filter_pix[i].mask);
     gtk_widget_show (pixmap);
@@ -2160,7 +2160,7 @@ static void populate_main_toolbar (void) {
     filter_buttons[i] = gtk_toolbar_append_element (
 		   GTK_TOOLBAR (main_toolbar),
 		   GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL,
-                   filters[i].short_name, buf, NULL,
+                   _(filters[i].short_name), buf, NULL,
                    pixmap,
                    GTK_SIGNAL_FUNC (filter_toggle_callback), (gpointer) mask);
 
@@ -2173,13 +2173,13 @@ static void populate_main_toolbar (void) {
 
   for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
     // Translators: e.g. Server Filter Configuration
-    g_snprintf (buf, 128, _("%s Filter Configuration"), filters[i].name);
+    g_snprintf (buf, 128, _("%s Filter Configuration"), _(filters[i].name));
 
     pixmap = gtk_pixmap_new (filter_cfg_pix[i].pix, filter_cfg_pix[i].mask);
     gtk_widget_show (pixmap);
 
     gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar), 
-                   filters[i].short_cfg_name, buf, NULL,
+                   _(filters[i].short_cfg_name), buf, NULL,
                    pixmap,
                    GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) i);
   }

@@ -42,9 +42,9 @@ static void server_filter_init (void);
 
 struct filter filters[FILTERS_TOTAL] = {
   {
-    "Server",
-    "S Filter",
-    "SF Cfg",
+    N_("Server"),
+    N_("S Filter"),
+    N_("SF Cfg"),
     server_pass_filter,
     server_filter_init,
     NULL,
@@ -52,9 +52,9 @@ struct filter filters[FILTERS_TOTAL] = {
     FILTER_NOT_CHANGED
   },
   { 
-    "Player",
-    "P Filter",
-    "PF Cfg",
+    N_("Player"),
+    N_("P Filter"),
+    N_("PF Cfg"),
     player_filter,
     player_filter_init,
     player_filter_done,
