@@ -2033,6 +2033,8 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
     case UT2_SERVER:
       add_custom_args_defaults2("DB_DeathBall",
 	      "-USERLOGO=dbsplash.bmp -INI=DeathBall.ini -USERINI=DBUser.ini",UT2_SERVER, data);
+      add_custom_args_defaults2("FragOpsMission",
+	      "-INI=FragOps.ini -USERINI=FOUser.ini",UT2_SERVER, data);
       break;
 
     default:
