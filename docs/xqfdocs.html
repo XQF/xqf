@@ -2,13 +2,13 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.4.7-12.3mdk i686) [Netscape]">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en] (Windows NT 5.0; U) [Netscape]">
    <title>XQF Documentation</title>
 </head>
 <body>
 
-<center><b><u><font size=+3>XQF 0.9.6g</font></u></b>
-<p>September 25th, 2001
+<center><b><u><font size=+3>XQF 0.9.7c</font></u></b>
+<p>December 15th, 2001
 <br>Written by:&nbsp; Alex Burger &lt;<a href="mailto:alex@fragit.net">alex@fragit.net</a>>
 <p>Documentation contributors:
 <br>Jordi Mallach &lt;<a href="mailto:jordi@debian.org">jordi@debian.org</a>>
@@ -35,7 +35,7 @@
 <a href="#Toolbar">Toolbar</a>
 <br><a href="#Window Panes">Window Panes</a>
 <br><a href="#Bottom status bar">Bottom Status bar</a></blockquote>
-<a href="#Troubleshooting">Troubleshooting</a>
+<a href="#Troubleshooting">Troubleshooting / FAQ</a>
 <p><a href="#Launching games">Launching games</a>
 <br>&nbsp;</blockquote>
 
@@ -45,23 +45,46 @@
 GameSpy. It uses X and is written using the <a href="http://www.gimp.org/">GIMP
 Tool Kit</a>, and uses <a href="http://www.qstat.org/">QStat</a> in the
 back end to retrieve server info.
-<p>With&nbsp; XQF you can search for Quake, Quake World, Quake2, Quake3,
-Return to Castle Wolfenstein, Half-Life, Unreal Tournament, Kingpin, Heretic
-II, Sin and Tribes 2 games via master servers available on the Internet,
-and look at lots of information about the servers.&nbsp; XQF can spawn
-your client into a selected server with customized options.&nbsp; You can
-also apply filters while searching for servers, trimming full or empty
-servers, for example.
+<p>With&nbsp; XQF you can search for the following games:
+<blockquote>Quake
+<br>Quake World
+<br>Quake2
+<br>Quake3
+<br>Return to Castle Wolfenstein
+<br>Hexen22
+<br>HexenWorld
+<br>Sin
+<br>Half-Life
+<br>Kingpin
+<br>Soldier of Fortune
+<br>Tribes 2
+<br>Heretic 2
+<br>Unreal Tournament
+<br>Rune
+<br>Descent 3
+<p>Other games that use the 'Gamespy' type master protocol such as
+<br>&nbsp;&nbsp;&nbsp; No one Lives Forever
+<br>&nbsp;&nbsp;&nbsp; Rally Masters
+<br>&nbsp;&nbsp;&nbsp; Turok 2
+<br>&nbsp;&nbsp;&nbsp; Shogo</blockquote>
+Searching for games involves communicating with 'master servers' on the
+Internet which game servers advertise to on the Internet.&nbsp; XQF can
+spawn your client into a selected server with customized options.&nbsp;
+You can also apply filters while searching for servers, trimming full or
+empty servers, for example.
 <p>The program has been translated to the following languages: English,
 Spanish and German.
 <br>&nbsp;
 <p><a NAME="System Requirements"></a><b><u><font size=+2>System Requirements</font></u></b>
 <p>The minimum system requirements are:
-<p><a href="http://www.qstat.org">QSTAT 2.4c</a>
+<p>A recent Linux distribution running on an AMD/Intel or PowerPC platform
+<br><a href="http://www.qstat.org">QSTAT 2.4e</a> (latest version recommended
+to ensure full functionality)
 <br>glibc 2.1+
 <br>Xfree86 3.3.3+
 <br>GTK+ 1.2+
-<br><a href="http://www.gnu.org/software/gettext/">gettext</a> 0.10.35+
+<br><a href="http://www.gnu.org/software/gettext/">gettext</a> 0.10.36+
+(ONLY required when building directly from CVS)
 <br>&nbsp;
 <p><a NAME="Downloading"></a><b><u><font size=+2>Downloading</font></u></b>
 <br>&nbsp;
@@ -76,17 +99,17 @@ for downloading instructions.
 <br>&nbsp;
 <blockquote><a NAME="RPM Binary package"></a><b><u><font size=+1>RPM Binary
 package:</font></u></b>
-<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4c</a> or
+<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4e</a> or
 higher is already installed
 <p>As root, execute the command:
 <p><b><i>rpm -Uvh xqf-xxx-i386.rpm</i></b></blockquote>
 <a NAME="DEB Binary package"></a><b><u><font size=+1>DEB Binary package:</font></u></b>
-<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4c</a> or
+<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4e</a> or
 higher is already installed
 <p>As root, execute the command:
 <p><b><i>dpkg -i xqf_xxx-v_arch.deb</i></b></blockquote>
 <a NAME="TAR.GZ source code"></a><b><u><font size=+1>TAR.GZ source code</font></u></b>
-<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4c</a> or
+<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4e</a> or
 higher is already installed
 <p>Extract the source code:
 <p><b><i>tar xvfz xqf-xxx.tar.gz</i></b>
@@ -100,7 +123,7 @@ higher is already installed
 <p><b><i>make install</i></b>
 <br>&nbsp;</blockquote>
 <a NAME="CVS source code"></a><b><u><font size=+1>CVS source code</font></u></b>
-<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4c</a> or
+<blockquote>Make sure <a href="http://www.qstat.org">QSTAT 2.4e</a> or
 higher is already installed
 <p>Create the 'configure' script:
 <p><b><i>./autogen.sh</i></b>
@@ -119,7 +142,13 @@ higher is already installed
 except for debug setting.
 <blockquote><b><i>xqf -d </i>N</b>
 <p>Sets debug level to `N', where N is greater than 0. If N is greater
-than 5, XQF will output a lot of debug information.</blockquote>
+than 5, XQF will output a lot of debug information.
+<p>XQF is normally installed into /usr/local/bin.&nbsp; If /usr/local/bin
+is not in your path, launch xqf with:
+<p><b><i>/usr/local/bin/xqf -d </i>N</b>
+<p>You can also add the directory to your path, or simply make a symbolic
+link in /usr/bin.&nbsp; For example, as root:
+<p><b>ln -s /usr/local/bin/xqf /usr/bin/xqf</b></blockquote>
 </blockquote>
 <a NAME="Menu bar"></a><b><u><font size=+1>Menu bar:</font></u></b>
 <p>File, Edit, View, Server, Preferences
@@ -129,8 +158,8 @@ than 5, XQF will output a lot of debug information.</blockquote>
 <p>Display server statistics for all games such as number of servers, #
 up, times on, # down, # info not available, # of players
 <p><b>O/S tab:</b>
-<p>Quake2 and Quake3 server statistics based on CPU/architecture and operating
-system</blockquote>
+<p>Quake2, Quake3, WolfenStein, Kingpin and Half-Life server statistics
+based on CPU/architecture and operating system</blockquote>
 
 <p><br><b>Exit:</b>
 <blockquote>Exit / quit XQF</blockquote>
@@ -267,24 +296,186 @@ directory)/.qf directory before launching the game. This can be used by
 external programs such as IRC scripts that notify other people in IRC that
 you are playing a game.</blockquote>
 </blockquote>
-<b>Player Profile</b>
-<blockquote>Enter your player name for Quake1, QuakeWorld and Quake2. Can
-also define your player's colour, skin or model</blockquote>
 <b>Games</b>
-<blockquote>For each game supported by XQF, you can enter the following:
-<p><b>Command Line:</b>
+<blockquote>For each game supported by XQF there are one or more configuration
+tabs:
+<p><b>Invoking:</b>
+<blockquote><b>Command Line:</b>
 <blockquote>Command to execute the game
 <p><b>Example:</b> /games/quake2/startq2</blockquote>
 <b>Working directory:</b>
 <blockquote>Directory to run the game from
 <p><b>Example:</b> /games/quake2
-<p>Custom CFG: Custom config file to use</blockquote>
-<b>Disable sound:</b>
-<blockquote>Disable sound if the game supports the option on the command
-line. For example, Quake2 would be called with the +nosound switch</blockquote>
-<b>Disable CD audio:</b>
-<blockquote>Disable cd audio if the game supports the option on the command
-line. For example, Quake2 would be called with the +nocd switch</blockquote>
+<p>(Some games:) Custom CFG: Custom config file to use</blockquote>
+</blockquote>
+<b>Common Options (does not work with all games):</b>
+<blockquote><b>Disable sound:</b></blockquote>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable sound if the game supports the option on the command line. For
+example, Quake2 would be called with the
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++nosound switch
+<blockquote><b>Disable CD audio:</b></blockquote>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable cd audio if the game supports the option on the command line. For
+example, Quake2 would be called with the
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
++nocd switch
+<p><b>Quake - Player Profile:</b>
+<blockquote><b>Player Profile</b>
+<blockquote>Enter your player name. Can also define your player's colour,
+skin or model</blockquote>
+</blockquote>
+<b>QuakeWorld - Weapons</b>
+<blockquote><b>The highest weapon that Quake should switch to</b>
+<blockquote><b>upon a weapon pickup:</b>
+<blockquote>Choose the highest weapon that Quake should switch to when
+you pick up a new weapon. Passed to Quakeworld as the 'setinfo w_switch
+x' switch</blockquote>
+<b>upon a backpack pickup:</b>
+<blockquote>Choose the highest weapon that Quake should switch to when
+you pick up a backpack. Passed to Quakeworld as the 'setinfo b_switch x'
+switch</blockquote>
+<b>Disable auto-aiming:</b>
+<blockquote>Disable automatic aiming
+<p>This is passed to Quakeworld as the 'noaim' switch.</blockquote>
+</blockquote>
+</blockquote>
+<b>QuakeWorld - Options:</b>
+<blockquote><b>Skins:</b></blockquote>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Use skins:</b>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Allow skins to be used during the game.
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Don't use skins:</b>
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>&nbsp;
+Disable skins.&nbsp; This is passed to Quakeworld as the 'noskins' switch.
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Don't download new skins:</b>
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+QuakeWorld and Quake2 can automatically download skins from servers you
+play on if you do
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+not already have the skins on your computer.&nbsp; This options disables
+the downloading of skins.
+<blockquote><b>Rate:</b></blockquote>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This controls network packets so that your connection bandwidth does not
+get saturated.&nbsp; Lowering the
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+number reduces the number of packets sent / received.&nbsp; Slower connections
+should use a lower rate setting.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Default is 2500.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This is passed to Quakeworld/Quake2 as the 'noaim' switch.
+<blockquote><b>Pushlatency:</b>
+<blockquote><b>Do not set (use game default)</b>
+<blockquote>Use whatever the Quakeworld default is</blockquote>
+<b>Automatically calculate from server ping time</b>
+<blockquote>Use the following formula to determine pushlatency setting.
+<p>If ping is &lt;= 0, set to 10 (minimum)
+<p>If ping is >= 2000, set to 1000 (maximum)
+<p>Otherwise, set to (((ping / 2) +9 ) / 10 ) * 10
+<p>This is passed to Quakeworld as the 'pushlatency' switch.</blockquote>
+<b>Fixed value</b>
+<blockquote>Enter a value to be passed to Quakeworld</blockquote>
+</blockquote>
+<b>Troubleshooting:</b>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable delta-compression (cl_nodelta)
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+??
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable player/entity prediction (cl_predict_players)
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+??</blockquote>
+<b>QuakeWorld - Player Profile:</b>
+<blockquote><b>Name</b>
+<blockquote>Enter your player name. Can also define your player's team,
+skin and colors.</blockquote>
+</blockquote>
+<b>Quake2 - Options:</b>
+<blockquote><b>Skins:</b></blockquote>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Use skins:</b>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Allow skins to be used during the game.
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Don't use skins:</b>
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>&nbsp;
+Disable skins.&nbsp; This is passed to Quakeworld as the 'noskins' switch.
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Don't download new skins:</b>
+<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+QuakeWorld and Quake2 can automatically download skins from servers you
+play on if you do
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+not already have the skins on your computer.&nbsp; This options disables
+the downloading of skins.
+<blockquote><b>Rate:</b></blockquote>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This controls network packets so that your connection bandwidth does not
+get saturated.&nbsp; Lowering the
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+number reduces the number of packets sent / received.&nbsp; Slower connections
+should use a lower rate setting.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Default is 2500.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This is passed to Quakeworld/Quake2 as the 'noaim' switch.
+<blockquote><b>Troubleshooting:</b>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable delta-compression (cl_nodelta)
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+??
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Disable player/entity prediction (cl_predict_players)
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+??</blockquote>
+</blockquote>
+
+<blockquote><b>Quake2 - Player Profile:</b>
+<blockquote><b>Namee</b>
+<blockquote>Enter your player name</blockquote>
+
+<p><br><b>Model / Skin</b>
+<blockquote>Define your player's model and skin</blockquote>
+</blockquote>
+<b>Quake3: Arena - Options:</b>
+<blockquote><b>Master server protocol version:</b>
+<blockquote>The Quake3 protocol version passed to QSTAT when finding servers.&nbsp;
+Each patch for Quake3 changes this value.
+<p>This is passed to QSTAT as -q3s,## where ## is the protocol version.&nbsp;
+Defaults to 66.</blockquote>
+<b>vm_cgame_fix:</b>
+<blockquote>Sets command line options to make Quake3 prefer QVM to shared
+objects (.so).&nbsp; This should only be required if there are .so files
+from an older release floating around in baseq3/</blockquote>
+<b>Rocketarena fix:</b>
+<blockquote>Sets command line options to make Quake3 prefer shared objects
+(.so) to QVM.&nbsp; Rocket Arena uses shared objects.</blockquote>
+<b>set fs_game on connect:</b>
+<blockquote>XQF will pass the mod a server is using on the command line
+to ensure the game launches and connects properly</blockquote>
+</blockquote>
+<b>Wolfenstein - Options:</b>
+<blockquote><b>Master server protocol version:</b>
+<blockquote>The Wolfenstein protocol version passed to QSTAT when finding
+servers.&nbsp; Each patch for Wolfenstein changes this value.
+<p>This is passed to QSTAT as -q3s,## where ## is the protocol version.&nbsp;
+Defaults to 57.</blockquote>
+<b>set fs_game on connect:</b>
+<blockquote>XQF will pass the mod a server is using on the command line
+to ensure the game launches and connects properly</blockquote>
+</blockquote>
+<b>Tribes 2 - Player Profile:</b>
+<blockquote><b>Login Name:</b>
+<blockquote>Login name to use to log into Tribes 2.&nbsp; If present, it
+will be passed on the command line.&nbsp; To prevent a password prompt,
+you must save your password inside of Tribes 2.</blockquote>
+</blockquote>
 </blockquote>
 <b>Appearance</b>
 <blockquote><b>Server List:</b>
@@ -320,78 +511,6 @@ passed to QSTAT as the -maxsim switch</blockquote>
 <b>Number of retries</b>
 <blockquote>Number of times QSTAT should retry a server. This number is
 passed to QSTAT as the -retry switch</blockquote>
-</blockquote>
-</blockquote>
-<b>QW/Q2:</b>
-<blockquote><b>Quakeworld:</b>
-<blockquote><b>The highest weapon that Quake should switch to</b>
-<blockquote><b>upon a weapon pickup:</b>
-<blockquote>Choose the highest weapon that Quake should switch to when
-you pick up a new weapon. Passed to Quakeworld as the 'setinfo w_switch
-x' switch</blockquote>
-<b>upon a backpack pickup:</b>
-<blockquote>Choose the highest weapon that Quake should switch to when
-you pick up a backpack. Passed to Quakeworld as the 'setinfo b_switch x'
-switch</blockquote>
-</blockquote>
-<b>Pushlatency:</b>
-<blockquote><b>Do not set (use game default)</b>
-<blockquote>Use whatever the Quakeworld default is</blockquote>
-<b>Automatically calculate from server ping time</b>
-<blockquote>Use the following formula to determine pushlatency setting.
-<p>If ping is &lt;= 0, set to 10 (minimum)
-<p>If ping is >= 2000, set to 1000 (maximum)
-<p>Otherwise, set to (((ping / 2) +9 ) / 10 ) * 10
-<p>This is passed to Quakeworld as the 'pushlatency' switch.</blockquote>
-<b>Fixed value</b>
-<blockquote>Enter a value to be passed to Quakeworld</blockquote>
-</blockquote>
-</blockquote>
-
-<blockquote><b>Disable auto-aiming:</b>
-<blockquote>Disable automatic aiming
-<p>This is passed to Quakeworld as the 'noaim' switch.</blockquote>
-</blockquote>
-<b>QuakeWorld/Quake2:</b>
-<blockquote><b>Skins:</b>
-<blockquote>Use skins:
-<blockquote>Allow skins to be used during the game.</blockquote>
-Don't use skins:
-<blockquote>Disable skins.&nbsp; This is passed to Quakeworld as the 'noskins'
-switch.</blockquote>
-Don't download new skins:
-<blockquote>QuakeWorld and Quake2 can automatically download skins from
-servers you play on if you do not already have the skins on your computer.&nbsp;
-This options disables the downloading of skins.</blockquote>
-</blockquote>
-<b>Rate:</b>
-<blockquote>This controls network packets so that your connection bandwidth
-does not get saturated.&nbsp; Lowering the number reduces the number of
-packets sent / received.&nbsp; Slower connections should use a lower rate
-setting.
-<p>Default is 2500.
-<p>This is passed to Quakeworld/Quake2 as the 'noaim' switch.</blockquote>
-<b>Troubleshooting:</b>
-<blockquote><b>Disable delta-compression (cl_nodelta)</b>
-<blockquote>??</blockquote>
-<b>Disable player/entity prediction (cl_predict_players)</b>
-<blockquote>??</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-<b>Q3:</b>
-<blockquote><b>Quake3: Arena:</b>
-<blockquote><b>Master server protocol version:</b>
-<blockquote>The Quake3 protocol version passed to QSTAT when finding Quake3
-servers.&nbsp; Each patch for Quake3 changes this value.
-<p>This is passed to QSTAT as -q3s,## where ## is the protocol version.&nbsp;
-Defaults to 66.</blockquote>
-<b>vm_cgame_fix:</b>
-<blockquote>???</blockquote>
-<b>Rocketarena fix:</b>
-<blockquote>???</blockquote>
-<b>set fs_game on connect:</b>
-<blockquote>???</blockquote>
 </blockquote>
 </blockquote>
 <b>Server Filters:</b>
@@ -471,12 +590,45 @@ Record S Filter, P Filter, SF Cfg, PF Cfg
 <blockquote>Left bar: Current XQF activity
 <br>Middle bar: Filter information
 <br>Right bar: Moving activity bar</blockquote>
-<a NAME="Troubleshooting"></a><b><u><font size=+2>Troubleshooting</font></u></b>
+<a NAME="Troubleshooting"></a><b><u><font size=+2>Troubleshooting / FAQ</font></u></b>
 <blockquote>Please report problems to the XQF home page Forum at <a href="http://www.linuxgames.com/xqf">http://www.linuxgames.com/xqf</a>
 or the user mail list at <a href="http://sourceforge.net/projects/xqf">http://sourceforge.net/projects/xqf</a>.
 <p>Most problems can be solved by deleting the '.qf' directory in your
 home directory.&nbsp; This directory contains the configuration of XQF
-including game preferences, server lists, player lists etc.</blockquote>
+including game preferences, server lists, player lists etc.
+<p><b>Q:</b> When I refresh or update a list, all servers come back with
+a ping of 'n/a'
+<p><b>A:&nbsp; </b>Make sure <b>qstat</b> is in your path.&nbsp; Go to
+a shell and type <b>qstat</b>.&nbsp; If a screen full of qstat command
+options does not appear, qstat is not installed, or it is not in your path.&nbsp;
+After compiling QStat, copy <b>qstat</b> to the <b>/usr/bin</b> directory.&nbsp;
+See the <a href="http://www.qstat.org/">QStat</a> home page for installation
+instructions.
+<p><b>Q:</b> QStat is installed, but when I refresh or update a list, all
+servers come back with a ping of 'n/a'
+<p><b>A:</b>&nbsp; If you are behind a firewall such as a LinkSys or Dlink
+router, or are using filtering on your machine (iptables or ipchains) you
+are probably blocking the game's traffic from entering your computer.&nbsp;
+Games generally use UDP, not TCP.&nbsp; Because of this, your firewall
+needs special configuration.&nbsp; Search the internet for '<i>gamename</i>
+firewall port' and you should find something helpfull.
+<p><b>Q:</b>&nbsp; When I try to launch XQF, I get 'command not found'
+<p><b>A:&nbsp;</b> XQF is not in your path.&nbsp; See the <a href="#Launching XQF">Launching
+XQF</a> section
+<p><b>Q:</b>&nbsp; I just installed the latest version of XQF and I do
+not see any new master servers
+<p><b>A:&nbsp;</b> XQF will only re-populate the list of master servers
+the first time you run XQF.&nbsp; If you upgraded (or have ever run an
+old version of XQF) and already have a qf/config file in your home directory
+then you must delete the config file for it to add the new masters.&nbsp;
+You will of course lose all your configuration (game settings etc) if you
+do this.
+<p>Tip:&nbsp; Backup your existing config file, delete the config file,
+run XQF, close XQF, copy the [Master_List] section from the new config
+file to your old config file, restore your old config file and restart
+XQF.
+<p>This will hopefully be fixed / improved in a future version.
+<br>&nbsp;</blockquote>
 <a NAME="Launching games"></a><b><u><font size=+2>Launching games</font></u></b>
 <br>&nbsp;
 <blockquote>Following are notes on launching specific games.&nbsp; Most
@@ -512,8 +664,8 @@ directory UnrealTournament is installed in for 'working directory'.</blockquote>
 <blockquote>When connecting to a Half-Life server, XQF will pass the following
 on the command line after the command specified in Preferences - Games
 'command line': +set cd_nocd (0 or 1) +set game (gamename) +connect ipaddress:port
-<p>Depending on how you launch HalfLife using Wine (<a href="http://lhl.linuxgames.com">Linux
-Half-Life</a> or <a href="http://eg4l.sourceforge.net/ehl/index.html">Emulated
+<p>Depending on how you launch HalfLife using Wine (<a href="http://www.transgaming.com/">TransGaming</a>,
+<a href="http://lhl.linuxgames.com">Linux Half-Life</a> or <a href="http://eg4l.sourceforge.net/ehl/index.html">Emulated
 Half-Life</a> for example), you may only want to pass one of the above
 command line options to the Wine script. A simple way is to create a script
 called 'starthl-xqf' that contains: path-to-ehl/ehl $8 if you wanted to
@@ -526,9 +678,12 @@ enter the directory where the script is located for 'working directory'.
 <p>The <a href="http://lhl.linuxgames.com">Linux Half-Life</a> site contains
 a <a href="http://lhl.linuxgames.com/hl">script</a> in the <a href="http://lhl.linuxgames.com/howto.shtml">How-To</a>
 section that can be easily modified to suite your configuration.</blockquote>
+<b>Descent 3:</b>
+<blockquote>Descent 3 does not currently launch from XQF.&nbsp; This appears
+to be a problem with the Descent3 program, and not XQF.&nbsp; Descent3
+for Linux does not accept connections to servers from the command line.</blockquote>
 </blockquote>
 
-<p><br>.
 <br>&nbsp;
 <br>&nbsp;
 <br>&nbsp;
