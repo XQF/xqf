@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.9.6g\n"
-"POT-Creation-Date: 2001-09-21 16:49+0200\n"
+"POT-Creation-Date: 2001-09-24 13:09-0400\n"
 "PO-Revision-Date: 2001-09-21 16:45+0200\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -677,8 +677,6 @@ msgstr "Contraseñas"
 msgid "Failed to create a temporary file %s"
 msgstr "No se ha podido crear un fichero temporal %s"
 
-#. The space behind up and down is to make the strings different from
-#. those in flt-player.c because their meaning is different in german
 #: src/statistics.c:77 src/statistics.c:88
 msgid "Servers"
 msgstr "Servidores"
@@ -779,7 +777,6 @@ msgstr "Valor"
 msgid "Source"
 msgstr "Fuente"
 
-#. server filter
 #: src/xqf.c:335
 msgid "None <--"
 msgstr "Ninguno <--"
@@ -941,8 +938,8 @@ msgstr ""
 "Versión %s\n"
 "Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n"
 "\n"
-"Mod y filtro de versiones de servidores: Bill Adams <webmaster@evil."
-"inetarena.com>\n"
+"Mod y filtro de versiones de servidores: Bill Adams "
+"<webmaster@evil.inetarena.com>\n"
 "Soporte para SoF y maestros de GameSpy: Alex Burger <alex@fragit.net>\n"
 "Internacionalización (i18n): Jordi Mallach <jordi@sindominio.net>\n"
 "\n"
