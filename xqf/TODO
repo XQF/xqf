@@ -9,6 +9,8 @@
   'players' to find them all bots
 - Ability to launch a game without connecting to a server - right click on
   game in source list - Launch
+- get rid of the switch for saving player info, make seperate functions for
+  each game
 
 
 Required for XQF 0.9.10
