@@ -525,7 +525,7 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
 
   server = server_add (h, port, type);
 
-  debug (6, "parse_server() -- server %lx retreived", server);
+  debug (6, "server %lx retreived", server);
 
   server->flt_mask &= ~FILTER_SERVER_MASK;
 
@@ -583,6 +583,19 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
       if (server->retries > maxretries)
 	server->retries = maxretries;
     }
+
+#ifdef USE_GTK2
+    if(server->name && !g_utf8_validate(server->name,-1,NULL))
+    {
+      // don't care about conversion errors
+      char* convd = g_convert(server->name,-1,"UTF-8","iso-8859-1",NULL,NULL,NULL);
+      if(convd)
+      {
+	g_free(server->name);
+	server->name = convd;
+      }
+    }
+#endif
   }
 
   if(!saved && server->ping<MAX_PING)
@@ -757,7 +770,7 @@ static void parse_qstat_record (struct stat_conn *conn) {
     job->progress.done++;
     server_unref (server);
 
-    debug (6, "parse_qstat_record() -- Server %lx in delayed list %lx.", server, job->delayed.queued_servers);
+    debug (6, "Server %lx in delayed list %lx.", server, job->delayed.queued_servers);
 
     parse_qstat_record_part2 (conn->strings->next, server);
     
