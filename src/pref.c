@@ -1827,22 +1827,40 @@ static GtkWidget *create_noskins_menu (int qworq2) {
   return menu;
 }
 
+// fill working directory with result of the directory guess function for first
+// token of command line if working directory is empty
 static void pref_guess_dir(enum server_type type)
 {
-  char *temp = NULL;
-  char *guessed_dir = NULL;
+  const char *cmdline = NULL;
+  const char* dir_entry = NULL;
   
-  temp = g_strdup(gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry)));
-   
-  if (strcmp (temp, "")) {
-    guessed_dir = resolve_path(temp);
-    if(guessed_dir)
-      gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), guessed_dir);
+  dir_entry = gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry));
+
+  if(dir_entry && *dir_entry)
+    return;
+
+  cmdline = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
+  if (cmdline && *cmdline) // if not empty
+  {
+    char *guessed_dir = NULL;
+    char** cmds = NULL;
+
+    cmds = g_strsplit(cmdline," ",2);
+
+    if(cmds && *cmds && **cmds)
+    {
+      guessed_dir = resolve_path(*cmds);
+      if(guessed_dir)
+	gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), guessed_dir);
+      g_free(guessed_dir);
+
+      return;
+    }
+
+    g_strfreev(cmds);
   }
-  else
-    dialog_ok (NULL, _("You must configure a command line first"));
-  if (temp)
-    g_free (temp);
+
+  dialog_ok (NULL, _("You must configure a command line first"));
 }
 
 
@@ -1882,8 +1900,7 @@ static void pref_suggest_command(enum server_type type)
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), suggested_file);
     g_free(suggested_file);
 
-    if ( !strcmp ( gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry)), ""))
-      pref_guess_dir (type);
+    pref_guess_dir (type);
     
     return;
 }
@@ -4526,8 +4543,7 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
   
   if (temp) {
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), temp);
-    if ( !strcmp ( gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry)), ""))
-      pref_guess_dir (type);
+    pref_guess_dir (type);
   }
   if (temp)
     g_free (temp);
@@ -4535,7 +4551,6 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
 
 void game_file_activate_callback (enum server_type type)
 {
-  if ( !strcmp ( gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry)), ""))
     pref_guess_dir (type);
 }
 
