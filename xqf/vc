@@ -38,6 +38,11 @@ fi;
 EDITOR=${EDITOR:-vim}
 DATE=`date '+%b %d, %Y:'`
 
+if ! which mktemp > /dev/null 2>&1; then
+	echo "mktemp is required for this script to work"
+	exit 1
+fi
+
 if [ ! -e ChangeLog ]; then
 	echo "No ChangeLog file found"
 	exit 1
@@ -45,12 +50,12 @@ fi
 
 TMPFILE=`mktemp -q /tmp/xqf-ChangeLog.XXXXXX`
 if [ $? -ne 0 ]; then
-	echo "$0: Can't create temp file, exiting..." | $XMESSAGE -file -
+	echo "$0: Can't create temp file, exiting..."
 	exit 1
 fi
 TMPFILE2=`mktemp -q /tmp/xqf-ChangeLog.XXXXXX`
 if [ $? -ne 0 ]; then
-	echo "$0: Can't create temp file, exiting..." | $XMESSAGE -file -
+	echo "$0: Can't create temp file, exiting..."
 	exit 1
 fi
 trap "rm -f $TMPFILE $TMPFILE2" EXIT
