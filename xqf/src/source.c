@@ -659,12 +659,14 @@ struct master *add_master (char *path, char *name, enum server_type type,
 	  if( query_type == MASTER_LAN )
 	  {
 	    port = games[type].default_port;
+	    /* no longer necessary as of qstat 2.5c
 	    // unreal needs one port higher
 	    if(!strcmp(games[type].qstat_option,"-uns"))
 	    {
 	      port++;
 	      type=GPS_SERVER;
 	    }
+	    */
 	  }
 	  // do not use default for gamespy
 	  else if (query_type != MASTER_GAMESPY && games[type].default_master_port)
