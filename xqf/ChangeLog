@@ -1,3 +1,7 @@
+Feb 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- move suggest_commands into xml file
+- add support for UT2004. Someone please tell me a master server for it!
+
 Feb 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - introduce GAME_ADMIN which allows to enter an rcon password without actually
   supporting rcon

@@ -18,6 +18,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : quake_init_maps,
     has_map             : quake_has_map,
+    suggest_commands    : "twilight-nq:nq-sgl:nq-glx:nq-sdl:nq-x11",
     pd                  : &q1_private,
   },
   {
@@ -42,6 +43,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : quake_init_maps,
     has_map             : quake_has_map,
+    suggest_commands    : "twilight-qw:qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11",
     pd                  : &qw_private,
   },
   {
@@ -68,6 +70,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "quake2",
     pd                  : &q2_private,
   },
   {
@@ -94,6 +97,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "q3:quake3",
     pd                  : &q3_private,
   },
   {
@@ -119,6 +123,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "wolf",
     pd                  : &wolf_private,
   },
   {
@@ -144,6 +149,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "et",
     pd                  : &wolfet_private,
   },
   {
@@ -166,6 +172,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "q3:quake3",
   },
   {
     type                : H2_SERVER,
@@ -271,6 +278,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : q2_exec_generic,
     save_info           : quake_save_info,
+    suggest_commands    : "sof",
   },
   {
     type                : SOF2S_SERVER,
@@ -292,6 +300,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "q3:quake3",
   },
   {
     type                : T2_SERVER,
@@ -312,6 +321,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     arch_identifier     : "linux",
     identify_os         : t2_identify_os,
+    suggest_commands    : "tribes2",
   },
   {
     type                : HR_SERVER,
@@ -346,6 +356,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
+    suggest_commands    : "ut",
     pd                  : &ut_private,
   },
   {
@@ -365,7 +376,28 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
+    suggest_commands    : "ut2003:ut2003_demo",
     pd                  : &ut2_private,
+  },
+  {
+    type                : UT2004_SERVER,
+    flags               : GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT,
+    name                : "UT 2004",
+    default_port        : 7777,
+    id                  : "UT2004S",
+    qstat_str           : "UT2S",
+    qstat_option        : "-ut2s",
+    icon                : "ut2004_xpm",
+    parse_player        : un_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : un_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : ut_exec,
+    save_info           : quake_save_info,
+    init_maps           : unreal_init_maps,
+    has_map             : unreal_has_map,
+    suggest_commands    : "ut2004:ut2004demo",
+    pd                  : &ut2004_private,
   },
   {
     type                : RUNE_SERVER,
@@ -384,6 +416,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
+    suggest_commands    : "rune",
     pd                  : &rune_private,
   },
   {
@@ -403,6 +436,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
+    suggest_commands    : "postal2mp:postal2mpdemo",
     pd                  : &postal2_private,
   },
   {
@@ -422,6 +456,7 @@ struct game games[] = {
     save_info           : quake_save_info,
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
+    suggest_commands    : "armyops",
     pd                  : &aao_private,
   },
   {
@@ -441,6 +476,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : exec_generic,
     save_info           : quake_save_info,
+    suggest_commands    : "descent3",
   },
   {
     type                : SSAM_SERVER,
@@ -457,6 +493,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : ssam_exec,
     save_info           : quake_save_info,
+    suggest_commands    : "ssamtfe",
   },
   {
     type                : SSAMSE_SERVER,
@@ -473,6 +510,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : ssam_exec,
     save_info           : quake_save_info,
+    suggest_commands    : "ssamtse",
   },
   {
     type                : MOHAA_SERVER,
@@ -497,6 +535,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "mohaa",
     pd                  : &mohaa_private,
   },
   {
@@ -521,11 +560,12 @@ struct game games[] = {
     get_mapshot         : q3_get_mapshot,
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
+    suggest_commands    : "codmp",
     pd                  : &cod_private,
   },
   {
     type                : SAS_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_ADMIN,
     name                : "Savage",
     default_port        : 11235,
     id                  : "SAS",
@@ -538,6 +578,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : savage_exec,
     save_info           : quake_save_info,
+    suggest_commands    : "savage",
   },
   {
     type                : BF1942_SERVER,

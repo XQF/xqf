@@ -51,6 +51,7 @@ typedef enum
     TAG_arch_identifier,
     TAG_identify_cpu,
     TAG_identify_os,
+    TAG_suggest_commands,
     TAG_pd,
     TAG_end_basic = TAG_pd,
     
@@ -89,6 +90,7 @@ static const xmlChar* tagstr[] =
     "arch_identifier",
     "identify_cpu",
     "identify_os",
+    "suggest_commands",
     "pd",
     "data",
     "base",
@@ -245,6 +247,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
 	    case TAG_qstat_master_option:
 	    case TAG_arch_identifier:
 	    case TAG_pix:
+	    case TAG_suggest_commands:
 		fprintf(f, "    %-20s: \"%s\",\n", tagstr[tag], val);
 		break;
 	    case TAG_pd:
