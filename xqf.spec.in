@@ -34,9 +34,11 @@ rm -rf $RPM_BUILD_ROOT
 %setup
 
 %build
-
-%configure 
-./configure --prefix=%{_prefix} --mandir=%{_mandir}
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" \
+./configure \
+	--prefix=%{_prefix} \
+	--infodir=%{_infodir} \
+	--mandir=%{_mandir}
 make
 
 %install
@@ -49,7 +51,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-,root,root)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO
 %doc docs/*html
+%dir %{_datadir}/xqf
 %{_prefix}/bin/*
 %{_mandir}/man?/xqf.*
-%{_prefix}/share/locale/*/LC_MESSAGES/xqf.mo
+%{_datadir}/locale/*/LC_MESSAGES/xqf.mo
+%{_datadir}/xqf/*
+
 
