@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xqf 0.9.7c\n"
+"Project-Id-Version: xqf 0.9.9a\n"
 "POT-Creation-Date: 2001-12-15 22:26+0100\n"
-"PO-Revision-Date: 2001-11-21 12:00+0100\n"
+"PO-Revision-Date: 2001-12-23 18:00+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -560,7 +560,7 @@ msgstr "Ambos"
 # src/pref.c:
 #: src/pref.c:2215
 msgid "Server List"
-msgstr "La Lista del camarero"
+msgstr "Lista de servidores"
 
 #: src/pref.c:2228
 msgid "Show host names"
