@@ -1,10 +1,10 @@
 # Danish translation of XQF.
-# Copyright (C) 2002 Free Software Foundation, Inc.
-# Morten Brix Pedersen <morten@wtf.dk>, 2002.
+# Copyright (C) 2002-2004 Free Software Foundation, Inc.
+# Morten Brix Pedersen <morten@wtf.dk>, 2002-2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xqf 0.9.12\n"
+"Project-Id-Version: xqf 0.9.13\n"
 "POT-Creation-Date: 2003-11-26 19:19-0500\n"
 "PO-Revision-Date: 2002-12-28 21:34+0100\n"
 "Last-Translator: Morten Brix Pedersen <morten@wtf.dk>\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: src/addmaster.c:111
 msgid "You have to specify a name and an address."
-msgstr "Du skal specificere et navn og en adresse"
+msgstr "Du skal angive et navn og en adresse."
 
 #: src/addmaster.c:118
 #, c-format
@@ -29,30 +29,30 @@ msgstr "LAN"
 
 #: src/addmaster.c:351
 msgid "Rename Master"
-msgstr "Omdøb Master"
+msgstr "Omdøb master"
 
 #: src/addmaster.c:355
 msgid "Add Master"
-msgstr "Tilføj Master"
+msgstr "Tilføj master"
 
 #: src/addmaster.c:369
 msgid "Master Name"
-msgstr "Master Navn"
+msgstr "Master navn"
 
 #: src/addmaster.c:425
 msgid "Master Address"
-msgstr "Master Adresse"
+msgstr "Master adresse"
 
 #: src/addmaster.c:515 src/addserver.c:209 src/dialogs.c:415 src/filter.c:1588
 #: src/filter.c:2088 src/game.c:2684 src/game.c:2847 src/game.c:2938
 #: src/launch.c:329 src/pref.c:4580 src/psearch.c:224 src/redial.c:228
 #: src/srv-prop.c:714 src/xqf.c:1091 src/xqf.c:1115 src/xqf.c:1878
 msgid "Cancel"
-msgstr "Annuller"
+msgstr "Annullér"
 
 #: src/addserver.c:146 src/addserver.c:245
 msgid "Add Server"
-msgstr "Tilføj Server"
+msgstr "Tilføj server"
 
 #: src/addserver.c:157
 msgid "Server:"
@@ -118,7 +118,7 @@ msgstr "Vil du virkelig slette server filter \"%s\"?"
 
 #: src/filter.c:1226
 msgid "Server Filter"
-msgstr "Server Filter"
+msgstr "Server filter"
 
 #: src/filter.c:1240 src/flt-player.c:821 src/pref.c:2512
 msgid "New"
@@ -296,13 +296,12 @@ msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
 msgstr "Eksempel på kommandolinje: wine hl.exe -- hl.exe -console"
 
 #: src/game.c:1103
-#, fuzzy
 msgid ""
 "Note:  Savage will not launch correctly without\n"
 "modifications to the game's startup script. Please see the\n"
 "XQF documentation for more information."
 msgstr ""
-"Bemærk: Unreal Tournament vil ikke starte korrekt uden\n"
+"Bemærk: Savage Tournament vil ikke starte korrekt uden\n"
 "ændringer i spillets opstarts skript. Se XQF dokumentationen\n"
 "for flere oplysninger."
 
@@ -642,7 +641,7 @@ msgstr "Automatisk beregning fra server ping tid"
 
 #: src/pref.c:2783
 msgid "Fixed value"
-msgstr ""
+msgstr "Fastsat værdi"
 
 #: src/pref.c:2827 src/pref.c:3082 src/pref.c:3137 src/pref.c:3173
 #: src/pref.c:3211
@@ -748,15 +747,15 @@ msgstr ""
 
 #: src/pref.c:3447
 msgid "Troubleshooting"
-msgstr ""
+msgstr "Fejlfinding"
 
 #: src/pref.c:3460
 msgid "Disable delta-compression (cl_nodelta)"
-msgstr ""
+msgstr "Deaktivér delta-kompression (cl_nodelta)"
 
 #: src/pref.c:3474
 msgid "Disable player/entity prediction (cl_predict_players)"
-msgstr ""
+msgstr "Deaktivér spiller/enheds forudsigelse (cl_predict_players)"
 
 #: src/pref.c:3489
 msgid "QuakeForge workaround (uses base/ instead of id1/)"
@@ -768,7 +767,7 @@ msgstr "Våben"
 
 #: src/pref.c:3506 src/pref.c:3512 src/pref.c:3517 src/pref.c:3522
 msgid "Player Profile"
-msgstr "Spiller Profil"
+msgstr "Spiller profil"
 
 #: src/pref.c:3598
 msgid "Icons"
@@ -784,7 +783,7 @@ msgstr "Begge"
 
 #: src/pref.c:3604
 msgid "Server List"
-msgstr "Server Liste"
+msgstr "Serverliste"
 
 #: src/pref.c:3617
 msgid "Show host names"
@@ -1005,7 +1004,7 @@ msgstr "Lyde"
 
 #: src/pref.c:4691
 msgid "Unable to get user name/home/tmpdir"
-msgstr ""
+msgstr "Kunne ikke få bruger navn/hjemmemappe/tmpmappe"
 
 #: src/pref.c:4972
 #, c-format
@@ -1534,15 +1533,15 @@ msgstr ""
 
 #: src/xqf.c:2500
 msgid "Significant Contributors:"
-msgstr ""
+msgstr "Store bidragsydere:"
 
 #: src/xqf.c:2506
 msgid "Other Contributors:"
-msgstr ""
+msgstr "Andre bidragsydere:"
 
 #: src/xqf.c:2510
 msgid "Bug reports and feature requests:"
-msgstr ""
+msgstr "Fejlrapporter og feature forslag:"
 
 #: src/xqf.c:2517
 msgid "About XQF"
@@ -1558,39 +1557,39 @@ msgstr "Observer"
 
 #: src/xqf.c:2547 src/xqf.c:3079
 msgid "Record Demo"
-msgstr "Optag Demo"
+msgstr "Optag demo"
 
 #: src/xqf.c:2561
 msgid "Add new Server"
-msgstr "Tilføj ny Server"
+msgstr "Tilføj ny server"
 
 #: src/xqf.c:2566
 msgid "Add to Favorites"
-msgstr "Tilføj til Favoritter"
+msgstr "Tilføj til favoritter"
 
 #: src/xqf.c:2571
 msgid "Remove from Favorites"
-msgstr "Fjern fra Favoritter"
+msgstr "Fjern fra favoritter"
 
 #: src/xqf.c:2576
 msgid "Copy"
-msgstr "Kopier"
+msgstr "Kopiér"
 
 #: src/xqf.c:2581
 msgid "Copy+"
-msgstr "Kopier+"
+msgstr "Kopiér+"
 
 #: src/xqf.c:2589 src/xqf.c:3036
 msgid "Refresh"
-msgstr "Opdater"
+msgstr "Opdatér"
 
 #: src/xqf.c:2594
 msgid "Refresh Selected"
-msgstr "Opdater Valgte"
+msgstr "Opdatér valgte"
 
 #: src/xqf.c:2602
 msgid "DNS Lookup"
-msgstr "DNS Opslag"
+msgstr "DNS opslag"
 
 #: src/xqf.c:2610
 msgid "RCon"
@@ -1602,75 +1601,75 @@ msgstr "_Statistikker"
 
 #: src/xqf.c:2633
 msgid "_Exit"
-msgstr "Afslut"
+msgstr "_Afslut"
 
 #: src/xqf.c:2644 src/xqf.c:2698
 msgid "Add _Master"
-msgstr "Tilføj Master"
+msgstr "Tilføj master"
 
 #: src/xqf.c:2649 src/xqf.c:2703
 msgid "_Rename Master"
-msgstr "Omdøb Master"
+msgstr "Omdøb master"
 
 #: src/xqf.c:2654 src/xqf.c:2708
 msgid "D_elete Master"
-msgstr "Sl_et Master"
+msgstr "Sl_et master"
 
 #: src/xqf.c:2664 src/xqf.c:2813
 msgid "_Add new Server"
-msgstr "Tilføj ny Server"
+msgstr "Tilføj ny server"
 
 #: src/xqf.c:2669 src/xqf.c:2818
 msgid "Add to _Favorites"
-msgstr "Tilføj til _Favoritter"
+msgstr "Tilføj til _favoritter"
 
 #: src/xqf.c:2674 src/xqf.c:2823
 msgid "_Remove from Favorites"
-msgstr "Fjern fra Favoritter"
+msgstr "_Fjern fra favoritter"
 
 #: src/xqf.c:2679
 msgid "_Copy"
-msgstr "Kopier"
+msgstr "_Kopiér"
 
 #: src/xqf.c:2684
 msgid "_Copy+"
-msgstr "Kopier+"
+msgstr "_Kopiér+"
 
 #: src/xqf.c:2692
 msgid "Add Default Masters"
-msgstr "Tilføj Standard Masters"
+msgstr "Tilføj standard masters"
 
 #: src/xqf.c:2716
 msgid "_Find Player"
-msgstr "_Find Spiller"
+msgstr "_Find spiller"
 
 #: src/xqf.c:2721
 msgid "Find A_gain"
-msgstr "Find I_gen"
+msgstr "Find i_gen"
 
 #: src/xqf.c:2739
 msgid "_Refresh"
-msgstr "Opdater"
+msgstr "_Opdatér"
 
 #: src/xqf.c:2744
 msgid "Refresh _Selected"
-msgstr "Opdater Valgte"
+msgstr "Opdater _valgte"
 
 #: src/xqf.c:2749
 msgid "_Update From Master"
-msgstr "Opdater Fra Master"
+msgstr "_Opdatér fra master"
 
 #: src/xqf.c:2757
 msgid "Show _Host Names"
-msgstr "Vis Værtsnavne"
+msgstr "Vis værtsnavne"
 
 #: src/xqf.c:2762
 msgid "Show Default _Port"
-msgstr "Vis Standard _Port"
+msgstr "Vis standard _port"
 
 #: src/xqf.c:2788
 msgid "_Connect"
-msgstr "Forbind"
+msgstr "_Forbind"
 
 #: src/xqf.c:2793
 msgid "_Observe"
@@ -1678,11 +1677,11 @@ msgstr "_Observer"
 
 #: src/xqf.c:2798
 msgid "Record _Demo"
-msgstr "Optag _Demo"
+msgstr "Optag _demo"
 
 #: src/xqf.c:2829
 msgid "DNS _Lookup"
-msgstr "DNS opslag"
+msgstr "DNS _opslag"
 
 #: src/xqf.c:2837
 msgid "_RCon"
@@ -1690,7 +1689,7 @@ msgstr "_RCon"
 
 #: src/xqf.c:2842
 msgid "_Properties"
-msgstr "Egenskaber"
+msgstr "_Egenskaber"
 
 #: src/xqf.c:2852
 msgid "_General"
@@ -1698,31 +1697,31 @@ msgstr "_Generelt"
 
 #: src/xqf.c:2858
 msgid "_Games"
-msgstr "Spil"
+msgstr "_Spil"
 
 #: src/xqf.c:2864
 msgid "_Appearance"
-msgstr "Udseende"
+msgstr "_Udseende"
 
 #: src/xqf.c:2870
 msgid "_QStat Options"
-msgstr "_QStat Indstillinger"
+msgstr "_QStat indstillinger"
 
 #: src/xqf.c:2876
 msgid "_Sound Options"
-msgstr "Lyd Indstillinger"
+msgstr "Lyd indstillinger"
 
 #: src/xqf.c:2885
 msgid "_Server Filter"
-msgstr "_Server Filter"
+msgstr "_Server filter"
 
 #: src/xqf.c:2890
 msgid "Player _Filter"
-msgstr "Spiller _Filter"
+msgstr "Spiller _filter"
 
 #: src/xqf.c:2900
 msgid "_About"
-msgstr "Om"
+msgstr "_Om"
 
 #: src/xqf.c:2911
 msgid "_File"
@@ -1730,7 +1729,7 @@ msgstr "_Fil"
 
 #: src/xqf.c:2916
 msgid "_Edit"
-msgstr "Rediger"
+msgstr "_Redigér"
 
 #: src/xqf.c:2921
 msgid "_View"
@@ -1754,19 +1753,19 @@ msgstr "_Hjælp"
 
 #: src/xqf.c:2986
 msgid "Mark as Red"
-msgstr "Marker som Rød"
+msgstr "Markér som rød"
 
 #: src/xqf.c:2993
 msgid "Mark as Green"
-msgstr "Marker som Grøn"
+msgstr "Markér som grøn"
 
 #: src/xqf.c:3000
 msgid "Mark as Blue"
-msgstr "Marker som Blå"
+msgstr "Markér som blå"
 
 #: src/xqf.c:3007
 msgid "Add to Player Filter"
-msgstr "Tilføj til Spiller Filter"
+msgstr "Tilføj til spiller filter"
 
 #: src/xqf.c:3028
 msgid "Update"
@@ -1782,7 +1781,7 @@ msgstr "Opdater nuværende liste"
 
 #: src/xqf.c:3044
 msgid "Ref.Sel."
-msgstr "Opd. Valg."
+msgstr "Opd. valg."
 
 #: src/xqf.c:3044
 msgid "Refresh selected servers"
@@ -1800,7 +1799,7 @@ msgstr "%s Filter Aktiver / Deaktiver"
 #: src/xqf.c:3113
 #, c-format
 msgid "%s Filter Configuration"
-msgstr "%s Filter Konfiguration"
+msgstr "%s filter opsætning"
 
 #: src/xqf.c:3215
 msgid "Configure"
@@ -1832,7 +1831,7 @@ msgstr "Starter ..."
 #: src/xqf.c:3827
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr "Du skal have qstat version %s før at xqf virker ordentligt"
+msgstr "Du skal have mindst qstat version %s før at xqf virker ordentligt"
 
 #: src/splash.c:59
 msgid "XQF: Loading"
@@ -1841,60 +1840,3 @@ msgstr "XQF: Indlæser"
 #: src/splash.c:85
 msgid "Loading ..."
 msgstr "Indlæser ..."
-
-#~ msgid ""
-#~ "http://www.linuxgames.com/xqf\n"
-#~ "http://sourceforge.net/projects/xqf\n"
-#~ "\n"
-#~ msgstr ""
-#~ "http://www.linuxgames.com/xqf\n"
-#~ "http://sourceforge.net/projects/xqf\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Significant Contributors:\n"
-#~ "\n"
-#~ "Bill Adams <webmaster@evil.inetarena.com>\n"
-#~ "Alex Burger <alex_b@users.sourceforge.net>\n"
-#~ "Jordi Mallach <jordi@sindominio.net>\n"
-#~ "Ludwig Nussel <l-n@users.sourceforge.net>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Bemærkelsesværdige bidragsydere:\n"
-#~ "\n"
-#~ "Bill Adams <webmaster@evil.inetarena.com>\n"
-#~ "Alex Burger <alex_b@users.sourceforge.net>\n"
-#~ "Jordi Mallach <jordi@sindominio.net>\n"
-#~ "Ludwig Nussel <l-n@users.sourceforge.net>\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Other Contributors:\n"
-#~ "\n"
-#~ "Jochen Baier <email@jochen-baier.de>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Andre bidragsydere:\n"
-#~ "\n"
-#~ "Jochen Baier <email@jochen-baier.de>\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Bug reports:\n"
-#~ "\n"
-#~ "http://sourceforge.net/projects/xqf\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Fejlrapporter:\n"
-#~ "\n"
-#~ "http://sourceforge.net/projects/xqf\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Feature requests:\n"
-#~ "\n"
-#~ "http://www.linuxgames.com/xqf Forums section\n"
-#~ msgstr ""
-#~ "Ønsker om nye features:\n"
-#~ "\n"
-#~ "http://www.linuxgames.com/xqf Forums sektionen\n"
