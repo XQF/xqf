@@ -1060,7 +1060,7 @@ static void qw_analyze_serverinfo (struct server *server) {
   long n;
 
   /* Clear out the flags */
-  s->flags = 0;
+  server->flags = 0;
   
   /* debug( 6, "qw_analyze_serverinfo: Analyze %s", server->name ); */
   if ((games[server->type].flags & GAME_SPECTATE) != 0)
