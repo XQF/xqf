@@ -40,6 +40,7 @@
 #include "game.h"
 #include "stat.h"
 #include "statistics.h"
+#include "server.h"
 #include "debug.h"
 
 
@@ -458,7 +459,7 @@ struct game games[] = {
     GAME_CONNECT | GAME_RCON,
     "Tribes 2",
     T2_DEFAULT_PORT,
-    0,
+    T2M_DEFAULT_PORT,
     "T2S",
     "T2S",
     "-t2s",
@@ -986,10 +987,11 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
   /* debug (6, "quake_parse_server: Parse %s", server->name); */
   poqs = (server->type == Q1_SERVER || server->type == H2_SERVER);
 
-    if ((poqs && n != 10) || (!poqs && n != 8))
+  if (poqs && n < 10)
+      return;
+  else if(n < 8)
       return;
 
-#ifdef QSTAT23
   if (*(token[2])) {		/* if name is not empty */
     if (server->type != Q3_SERVER) {
       server->name = g_strdup (token[2]);
@@ -999,10 +1001,6 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
       q3_unescape (server->name, token[2]);
     }
   }
-#else
-  if (*(token[2]))		/* if name is not empty */
-    server->name = g_strdup (token[2]);
-#endif
 
   offs = (poqs)? 5 : 3;
 

@@ -1,3 +1,11 @@
+Aug 09, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fixed player search to move the visible area to the server on which a player
+  was found
+- changed some player search dialog a bit
+- fixed default tribes2 master port, it's possible to actually add tribes2
+  masters now
+- made quake_parse_server less picky about number of columns in qstat output
+
 Jul 26, 2002: Jordi Mallach <jordi@sindominio.net>
 - updated Catalan and Spanish translations
 

@@ -411,6 +411,7 @@ void server_clist_select_one (int row) {
   sync_selection_blocked = FALSE;
 
   gtk_clist_select_row (server_clist, row, -1);
+  server_clist_selection_visible();
 }
 
 

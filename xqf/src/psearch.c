@@ -393,8 +393,8 @@ void find_player (int find_next) {
     dialog_ok (NULL, _("Player not found."));
   }
   else {
-    if (dialog_yesno (NULL, 0, _("OK"), _("Cancel"),
-          _("End of server list reached.  Continue from beginning?"))) {
+    if (dialog_yesno (_("XQF: End of server list reached"), 0, _("Yes"), _("No"),
+          _("Continue search from beginning?"))) {
       find_player (FALSE);
     }
   }
