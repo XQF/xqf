@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-09-27 15:23+0200\n"
-"PO-Revision-Date: 2001-09-27 15:24+GMT\n"
+"POT-Creation-Date: 2001-09-27 23:37+0200\n"
+"PO-Revision-Date: 2001-09-27 23:38+GMT\n"
 "Last-Translator: Ludwig Nussel <ludwig.nussel@web.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -61,6 +61,30 @@ msgstr "Ja"
 #: src/dialogs.c:225
 msgid "No"
 msgstr "Nein"
+
+#: src/filter.c:45
+msgid "Server"
+msgstr "Server"
+
+#: src/filter.c:46
+msgid "S Filter"
+msgstr "S Filter"
+
+#: src/filter.c:47
+msgid "SF Cfg"
+msgstr "SF Konf."
+
+#: src/filter.c:55
+msgid "Player"
+msgstr "Spieler"
+
+#: src/filter.c:56
+msgid "P Filter"
+msgstr "Sp Filter"
+
+#: src/filter.c:57
+msgid "PF Cfg"
+msgstr "SpF Konf."
 
 #: src/filter.c:475
 msgid "Server Filter"
@@ -1236,8 +1260,9 @@ msgstr "%s Filter"
 #: src/xqf.c:2176
 #, c-format
 msgid "%s Filter Configuration"
-msgstr "%s Filter Configuration"
+msgstr "%s Filter Konfiguration"
 
 #: src/xqf.c:2240
 msgid "Filters"
 msgstr "Filter"
+

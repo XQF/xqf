@@ -1,3 +1,7 @@
+Sep 27, 2001: Ludwig Nussel <l-n@sourceforge.net>
+- more translatable strings marked
+- updated german translation
+
 Sep 27, 2001: Jordi Mallach <jordi@sindominio.net>
 - Updated Spanish translation
 - added gettext cruft to po/.cvsignore
