@@ -42,7 +42,7 @@
 	<icon>q1_xpm</icon>
 	<parse_player>poqs_parse_player</parse_player>
 	<config_is_valid>quake_config_is_valid</config_is_valid>
-	<write_config>write_quake_variables</write_config>
+	<write_config>write_q1_vars</write_config>
 	<exec_client>q1_exec_generic</exec_client>
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
@@ -72,7 +72,7 @@
 	<parse_player>qw_parse_player</parse_player>
 	<analyze_serverinfo>qw_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>quake_config_is_valid</config_is_valid>
-	<write_config>write_quake_variables</write_config>
+	<write_config>write_qw_vars</write_config>
 	<exec_client>qw_exec</exec_client>
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
@@ -102,7 +102,7 @@
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<config_is_valid>quake_config_is_valid</config_is_valid>
-	<write_config>write_quake_variables</write_config>
+	<write_config>write_q2_vars</write_config>
 	<exec_client>q2_exec</exec_client>
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
