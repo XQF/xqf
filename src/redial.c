@@ -67,13 +67,14 @@ static void on_cancelbutton_clicked (GtkButton *button, gpointer user_data)
 static gboolean redial_countdown (struct server* s)
 {
     void* blub = gtk_object_get_data(GTK_OBJECT(redial_window),"secondsprogress");
+    struct condef* con;
     countdown++;
     if(countdown>default_redial_wait)
     {
 	countdown=0;
 	gtk_progress_set_value (GTK_PROGRESS (blub), countdown);
 	debug(3,"countdown 0, querying server");
-	struct condef* con = condef_new (s);
+	con = condef_new (s);
 	stat_process = stat_job_create (NULL, NULL, 
 			server_list_prepend (NULL, con->s), NULL);
 	stat_process->data = con;
@@ -245,6 +246,8 @@ static GtkWidget* create_redialwindow (void)
 /** open redial dialog, return true if game should be launched, false otherwise */
 gboolean redial_dialog (struct server* s)
 {
+    GtkWidget* progress;
+
     if(!s)
 	return FALSE;
 
@@ -254,7 +257,7 @@ gboolean redial_dialog (struct server* s)
     countdown = 0;
 
     redial_window = create_redialwindow();
-    GtkWidget* progress = gtk_object_get_data(GTK_OBJECT(redial_window),"secondsprogress");
+    progress = gtk_object_get_data(GTK_OBJECT(redial_window),"secondsprogress");
     gtk_progress_configure (GTK_PROGRESS (progress), 0, 0, default_redial_wait);
     
     set_redial_label(s->name, TRUE);
