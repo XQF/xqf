@@ -495,6 +495,19 @@ GSList *server_clist_selected_servers (void) {
   return list;
 }
 
+GSList *server_clist_get_n_servers (int amount) {
+  GSList *list = NULL;
+  struct server *server;
+  int row;
+
+  for (row = 0; (row < server_clist->rows && row < amount) ; row++) {
+    server = (struct server *) gtk_clist_get_row_data (server_clist, row);
+    list = server_list_prepend (list, server);
+  }
+
+  return g_slist_reverse (list);
+}
+
 /*
   server_clist_all_servers -- Return all servers that are in the server 
   clist widget. It returns a new list.  Note that the prepend function

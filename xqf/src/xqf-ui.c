@@ -34,6 +34,7 @@
 #include "sort.h"
 #include "pref.h"
 #include "debug.h"
+#include "trayicon.h"
 
 static GSList *xqf_windows = NULL;
 static GtkWidget *target_window = NULL;
@@ -128,13 +129,22 @@ void print_status (GtkWidget *sbar, char *fmt, ...) {
 
     gtk_statusbar_pop (GTK_STATUSBAR (sbar), context_id);
     gtk_statusbar_push (GTK_STATUSBAR (sbar), context_id, buf);
+  
+   if (default_show_tray_icon)
+      tray_icon_set_tooltip(buf);
   }
 }
 
 
 int window_delete_event_callback (GtkWidget *widget, gpointer data) {
-  target_window = widget;
-  gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
+
+  if (default_show_tray_icon && tray_icon_work())  {
+    tray_delete_event_hook();
+  }
+  else {
+    target_window = widget;
+    gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
+  }
   return TRUE;
 }
 
@@ -844,5 +854,3 @@ GtkWidget *create_server_type_menu (enum server_type active_type,
 
   return option_menu;
 }
-
-

@@ -38,6 +38,7 @@ extern	int server_clist_refresh_server (struct server *s);
 extern	void server_clist_select_one (int row);
 extern	GSList *server_clist_selected_servers (void);
 extern	GSList *server_clist_all_servers (void);
+extern	GSList *server_clist_get_n_servers (int amount);
 
 extern	void server_clist_selection_visible (void);
 

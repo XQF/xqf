@@ -26,6 +26,7 @@
 #include <arpa/inet.h>	/* struct in_addr */
 #include <time.h>	/* time_t */
 
+#include <gtk/gtk.h>
 #include <glib.h>
 
 #define RC_DIR		".qf"
@@ -277,5 +278,8 @@ extern int event_type;
 extern int dontlaunch;
 
 extern	void refresh_source_list (void);
+extern void update_source_callback (GtkWidget *widget, gpointer data);
+extern void refresh_n_server(GtkWidget * button, gpointer *data);
+extern void stop_callback (GtkWidget *widget, gpointer data);
 
 #endif /* __XQF_H__ */

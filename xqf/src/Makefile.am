@@ -57,6 +57,7 @@ srv-list.c \
 srv-prop.c \
 stat.c \
 statistics.c \
+trayicon.c \
 utils.c \
 xqf.c \
 xqf-ui.c \
@@ -98,6 +99,7 @@ srv-list.h \
 srv-prop.h \
 stat.h \
 statistics.h \
+trayicon.h \
 utils.h \
 xqf-ui.h \
 xqf.h \
