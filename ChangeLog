@@ -1,3 +1,8 @@
+July 07, 2001, Bill Adams <bill@evilbill.org>
+- Added "Game Type" filter.  Now you can filter on 
+  CTF, TDM, etc. and the mod.
+- Merged Jordi's changes (see below).
+  
 June 8, 2001, Jordi Mallach <jordi@sindominio.net>
 - Big internationalization patch for XQF.
   Adds intl/ and po/ subdirs, and adds the gettext marks

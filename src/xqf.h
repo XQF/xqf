@@ -143,6 +143,8 @@ struct server {
   char 	*game;		/* a reference to `info' */
   GSList *players;	/* GSList<struct player *>  */
 
+  char sv_os;         /* L = Linux, W = windows, M = Mac */
+
   unsigned char type;	/* enum server_type type; */
   unsigned char flags;
 
