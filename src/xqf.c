@@ -42,6 +42,8 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk-pixbuf/gdk-pixbuf-loader.h>
 
 #include "i18n.h"
 #include "xqf.h"
@@ -1961,17 +1963,135 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
   return FALSE;
 }
 
+static void rendermemintogtkpixmap(const guchar* mem, size_t len,
+    GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height)
+{
+  GdkPixbufLoader* loader = NULL;
+  gboolean ok = FALSE;
+  GdkPixbuf* pixbuf = NULL;
+  GdkPixbuf* pixbuf2 = NULL;
 
-static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
+  *width=0;
+  *height=0;
+
+  if(!mem) return;
+  if(!len) return;
+
+  loader = gdk_pixbuf_loader_new();
+  g_return_if_fail(loader!=NULL);
+  
+  ok = gdk_pixbuf_loader_write(loader, mem, len);
+  gdk_pixbuf_loader_close(loader);
+
+  if(!ok)
+  {
+    g_free(loader);
+    return;
+  }
+
+  pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
+  if(pixbuf)
+  {
+    pixbuf2 = pixbuf;
+    pixbuf = gdk_pixbuf_scale_simple(pixbuf,320,240,GDK_INTERP_TILES);
+    gdk_pixbuf_render_pixmap_and_mask(pixbuf,pix,mask,0);
+    *height = gdk_pixbuf_get_height(pixbuf);
+    *width = gdk_pixbuf_get_width(pixbuf);
+    gdk_pixbuf_unref(pixbuf);
+    gdk_pixbuf_unref(pixbuf2);
+  }
+
+  g_free(loader);
+}
+
+static GtkWidget *server_mapshot_popup = NULL;
+static GtkWidget *server_mapshot_popup_pixmap = NULL;
+
+static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y)
+{
+  GtkWidget *frame;
+  int win_x, win_y, scr_w, scr_h;
+  guint w = 0, h = 0;
+  GdkPixmap *pix = NULL;
+  GdkBitmap *mask = NULL;
+
+  rendermemintogtkpixmap(imagedata,len,&pix,&mask,&w,&h);
+
+  if(!pix || !w || !h)
+  {
+    if(pix) gdk_pixmap_unref(pix);
+    if(mask) gdk_bitmap_unref(mask);
+    pix=stop_pix.pix;
+    mask=stop_pix.mask;
+  }
+
+  if (!server_mapshot_popup) {
+    server_mapshot_popup = gtk_window_new (GTK_WINDOW_POPUP);
+    gtk_window_set_policy (GTK_WINDOW (server_mapshot_popup), FALSE, FALSE, TRUE);
+  
+    frame = gtk_frame_new (NULL);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
+    gtk_container_add (GTK_CONTAINER (server_mapshot_popup), frame);
+    gtk_widget_show (frame);
+
+    server_mapshot_popup_pixmap = gtk_pixmap_new(pix,mask);
+    gtk_container_add (GTK_CONTAINER (frame), server_mapshot_popup_pixmap);
+//    gtk_preview_size (GTK_PREVIEW (pixmap), 320, 200);
+    gtk_widget_show (server_mapshot_popup_pixmap);
+  }
+  else {
+    gtk_widget_hide (server_mapshot_popup);
+    gtk_pixmap_set(GTK_PIXMAP(server_mapshot_popup_pixmap),pix,mask);
+  }
+
+  gdk_window_get_origin (server_clist->clist_window, &win_x, &win_y);
+  x += win_x;
+  y += win_y;
+  scr_w = gdk_screen_width ();
+  scr_h = gdk_screen_height ();
+  x = (x + w > scr_w)? scr_w - w : x;
+  y = (y + h > scr_h)? scr_h - h : y;
+
+//  debug(0,"%d %d %d %d %d %d",scr_w,scr_h,x,y,w,h);
+
+  gtk_widget_popup (server_mapshot_popup, x, y);
+}
+
+static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
+{
   GdkEventButton *bevent = (GdkEventButton *) event;
   GList *selection;
-  int row;
+  int row, column;
   
   /* debug (7, "server_clist_event_callback() -- "); */
   if (event->type == GDK_BUTTON_PRESS &&
                    bevent->window == server_clist->clist_window) {
 
     switch (bevent->button) {
+    case 1:
+      if (gtk_clist_get_selection_info (server_clist, 
+                                          bevent->x, bevent->y, &row, &column))
+      {
+	server_clist_select_one (row);
+	if ((column == 6) && cur_server && (games[cur_server->type].get_mapshot))
+	{
+	  size_t buflen;
+	  guchar* buf = NULL;
+
+	  buflen = games[cur_server->type].get_mapshot(cur_server,&buf);
+
+	  gdk_pointer_grab (server_clist->clist_window, FALSE,
+			      GDK_POINTER_MOTION_HINT_MASK |
+			      GDK_BUTTON1_MOTION_MASK |
+			      GDK_BUTTON_RELEASE_MASK,
+			      NULL, NULL, bevent->time);
+
+	  server_mapshot_preview_popup_show (buf, buflen, bevent->x, bevent->y);
+
+	  g_free (buf);
+	}
+      }
+      return TRUE;
 
     case 2:
       if (gtk_clist_get_selection_info (server_clist, 
@@ -1999,6 +2119,15 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
     }
 
   }
+
+  if (event->type == GDK_BUTTON_RELEASE &&
+                   bevent->window == server_clist->clist_window) {
+    if (server_mapshot_popup) {
+      gdk_pointer_ungrab (bevent->time);
+      gtk_widget_hide (server_mapshot_popup);
+    }
+  }
+
   return FALSE;
 }
 
@@ -3458,6 +3587,11 @@ int main (int argc, char *argv[]) {
   if (player_skin_popup) {
     gtk_widget_destroy (player_skin_popup);
     player_skin_popup = NULL;
+  }
+
+  if (server_mapshot_popup) {
+    gtk_widget_destroy (server_mapshot_popup);
+    server_mapshot_popup = NULL;
   }
 
   pixmap_cache_clear (&qw_colors_pixmap_cache, 0);

@@ -62,11 +62,12 @@ struct game {
 
   /* map functions */
   /** determine installed maps, destroys previous data */
-  void (*init_maps)();
+  void (*init_maps)(enum server_type);
   /** return true if s->map is installed, false otherwise */
   gboolean (*has_map)(struct server* s);
-
-  GSList *custom_args;
+  /** acquire image data, function allocates space in buf, returns size. buf
+   * must be freed by caller */
+  size_t (*get_mapshot)(struct server* s, guchar** buf);
 
   char *arch_identifier;
   enum CPU (*identify_cpu) (struct server *s, const char *versionstr);
@@ -77,6 +78,9 @@ struct game {
   char *real_dir;
   char *game_cfg;
   GData *games_data;
+  GSList *custom_args;
+ /** game specific private data */
+  void *pd;
 };
 
 extern struct game games[];

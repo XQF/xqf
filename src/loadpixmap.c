@@ -116,7 +116,7 @@ load_pixmap                          (GtkWidget       *widget,
     return create_dummy_pixmap (widget);
   }
 
-  if(!strcmp(found_filename+strlen(found_filename-4),".xpm"))
+  if(strlen(found_filename)>4 && !strcmp(found_filename+strlen(found_filename)-4,".xpm"))
   {
     colormap = gtk_widget_get_colormap (widget);
     gdkpixmap = gdk_pixmap_colormap_create_from_xpm (NULL, colormap, &mask,

@@ -42,6 +42,10 @@ GHashTable* q3_init_maphash();
 /** return true if mapname is contained in maphash, false otherwise */
 gboolean q3_lookup_map(GHashTable* maphash, const char* mapname);
 
+/** acquire image data, function allocates space in buf, returns size. buf must
+ * be freed by caller */
+size_t q3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf);
+
 /**
  * find all maps in .pk3 files one level under startdir
  */

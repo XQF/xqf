@@ -329,8 +329,7 @@ static void get_new_defaults_for_game (enum server_type type) {
   struct generic_prefs *prefs = &genprefs[type];
   char str[256];
 
-  char *arg = NULL;
-  char conf[15];
+  char conf[32];
   int j = 0;
 
   GSList *temp;
@@ -386,14 +385,14 @@ static void get_new_defaults_for_game (enum server_type type) {
 
   // Clear existing custom arguments
   j = 0;
-  g_snprintf (conf, 64, "custom_arg%d", j);
+  g_snprintf (conf, sizeof(conf), "custom_arg%d", j);
   str2 = config_get_string_with_default (conf,&isdefault);
   while (!isdefault)
   {
     config_clean_key (conf);
     
     j++;
-    g_snprintf (conf, 64, "custom_arg%d", j);
+    g_snprintf (conf, sizeof(conf), "custom_arg%d", j);
     g_free(str2);
     str2 = config_get_string_with_default (conf,&isdefault);
   }
@@ -416,12 +415,9 @@ static void get_new_defaults_for_game (enum server_type type) {
     while (1)
     {
       g_snprintf (conf, 15, "custom_arg%d", j++);
-      arg = g_strdup((char *) temp->data);
     
-      config_set_string (conf, arg);
+      config_set_string (conf, (char *) temp->data);
 
-      // printf("added: %s=%s\n",conf,arg);      
-    
       if (g_slist_next(temp))
         temp = g_slist_next(temp);
       else
@@ -1880,6 +1876,7 @@ static void pref_guess_dir(enum server_type type)
       if(guessed_dir)
 	gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), guessed_dir);
       g_free(guessed_dir);
+      g_strfreev(cmds);
 
       return;
     }
@@ -3579,7 +3576,7 @@ static void scan_maps_callback (GtkWidget *widget, gpointer data)
 	if(games[i].init_maps)
 	{
 	    debug(0,"Searching for %s maps",games[i].name);
-	    games[i].init_maps();
+	    games[i].init_maps(games[i].type);
 	}
     }
 }
@@ -4703,7 +4700,7 @@ int prefs_load (void) {
     splash_increase_progress(msg,per);
     if(default_auto_maps && games[i].init_maps)
     {
-      games[i].init_maps();
+      games[i].init_maps(games[i].type);
     }
 
     g_free(msg);

@@ -652,10 +652,13 @@ static void drop_section (struct config_file *file,
     key = (struct config_key *) kptr->data;
     g_free (key->name);
     g_free (key->value);
+    g_free (key);
   }
   g_list_free (section->keys);
   g_free (section->name);
   file->sections = g_list_remove (file->sections, section);
+
+  g_free(section);
 
   file->dirty = TRUE;
 }
