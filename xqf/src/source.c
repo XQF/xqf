@@ -843,6 +843,8 @@ static char *builtin_masters_update_info[] = {
   "ADD T2S master://209.67.28.144:28002 NA East1",
   "ADD T2S master://209.67.28..145:27999 NA East2",
 
+  "ADD WOS master://wolf.idsoftware.com:27950 id",
+
   NULL
 };
 
