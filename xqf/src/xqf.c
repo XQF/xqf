@@ -1934,7 +1934,8 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 static void about_dialog (GtkWidget *widget, gpointer data) {
   char *intro = _("X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n");
   char *version = g_strdup_printf(_("Version %s\n\n"),XQF_VERSION);
-  char *author = _("Copyright (C) 1998-2001 Roman Pozlevich <roma@botik.ru>\n\n");
+  /* 8859-1 translators can use the copyright symbol © instead of (C) */
+  char *author = _("Copyright (C) 1998-2002 Roman Pozlevich <roma@botik.ru>\n\n");
   char *contrib = _("Contributors:\n\n"
 	"Bill Adams <webmaster@evil.inetarena.com>: Mod & server version filter, fixes\n"
 	"Alex Burger <alex@fragit.net>: SoF, Tribes2, Wolfenstein, GameSpy master support\n"
