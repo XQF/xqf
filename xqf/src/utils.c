@@ -555,9 +555,7 @@ char* find_file_in_path(const char* files)
 // find a directory inside another, prefer matching case otherwise search case
 // insensitive
 // returns name of found directory or duplicate of game, must be freed manually
-// FIXME: use const
-// FIXME: do not check for directory, mods might be symlinked
-char *find_game_dir (char *basegamedir, char *game)
+char *find_game_dir (const char *basegamedir, const char *game)
 {
   DIR *dp;
   struct dirent *ep;
@@ -570,33 +568,34 @@ char *find_game_dir (char *basegamedir, char *game)
   if(!basegamedir)
     return g_strdup(game);  
 
-  debug( 1, "Looking for subdir %s in %s", game, basegamedir);
+  debug( 1, "Looking for subdir/symlink %s in %s", game, basegamedir);
   
   // Look for exact match
+  // Looks for file, not specifically a subdir or symlink - good enough
   path = file_in_dir (basegamedir, game);
   if (!stat (path, &buf)) {
-    if (S_ISDIR(buf.st_mode) == 1) {
+    if ( (S_ISDIR(buf.st_mode) == 1) || (S_ISLNK(buf.st_mode)) ) {
       // directory found
       g_free (path);
-      debug( 1, "Found exact match for subdir %s in %s", game, basegamedir);
+      debug( 1, "Found exact match for subdir/symlink %s in %s", game, basegamedir);
       return g_strdup (game);
     }
   }
   // FIXME: path must be freed
-  debug( 1, "Did not find exact match for subdir %s in %s", game, basegamedir);
+  debug( 1, "Did not find exact match for subdir/symlink %s in %s", game, basegamedir);
 
   // Did not find exact match, perform search
-  debug( 1, "Searching for subdir %s in %s ignoring case", game, basegamedir);
+  debug( 1, "Searching for subdir/symlink %s in %s ignoring case", game, basegamedir);
   dp = opendir (basegamedir);
   if (dp != NULL)
     {
       while ((ep = readdir (dp))) {
 	stat(ep->d_name, &buf);
-	if (S_ISDIR(buf.st_mode) == 1)
+        if ( (S_ISDIR(buf.st_mode) == 1) || (S_ISLNK(buf.st_mode)) )
 	  if (strcmp(ep->d_name,".") && strcmp(ep->d_name,".."))
 	  {
 	    if (!strcasecmp(ep->d_name,game)) {
-              debug( 1, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir,
+              debug( 1, "Found subdir/symlink %s in %s that matches %s", ep->d_name, basegamedir,
                                                                     game);
 	      return g_strdup (ep->d_name);
 	      // FIXME: bad, closedir will not happen
@@ -605,7 +604,7 @@ char *find_game_dir (char *basegamedir, char *game)
   	  }
       }
       (void) closedir (dp);
-      debug( 1, "Could not find any match for subdir %s in %s.  Using %s",game, 
+      debug( 1, "Could not find any match for subdir/symlink %s in %s.  Using %s",game, 
                                                                 basegamedir, game);
     }
   else

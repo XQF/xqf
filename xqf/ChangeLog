@@ -1,4 +1,5 @@
 Oct 13, 2002: Alex Burger <alex@fragit_dot_net>
+- find_game_dir fixes:  Allow symlinks, use const
 - Minor fix to ut_exec if there are no custom arguments
 
 Oct 13, 2002: Jordi Mallach <jordi@sindominio.net>
