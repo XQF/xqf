@@ -275,19 +275,19 @@ char* ef_masterprotocols[] = {
 	NULL
 };
 
-void game_file_dialog(enum server_type type);
-void game_dir_dialog(enum server_type type);
-void game_file_activate_callback(enum server_type type);
-void sound_player_file_dialog();
-void sound_xqf_start_file_dialog();
-void sound_xqf_quit_file_dialog();
-void sound_update_done_file_dialog();
-void sound_refresh_done_file_dialog();
-void sound_stop_file_dialog();
-void sound_server_connect_file_dialog();
-void sound_redial_success_file_dialog();
+static void game_file_dialog(enum server_type type);
+static void game_dir_dialog(enum server_type type);
+static void game_file_activate_callback(enum server_type type);
+static void sound_player_file_dialog();
+static void sound_xqf_start_file_dialog();
+static void sound_xqf_quit_file_dialog();
+static void sound_update_done_file_dialog();
+static void sound_refresh_done_file_dialog();
+static void sound_stop_file_dialog();
+static void sound_server_connect_file_dialog();
+static void sound_redial_success_file_dialog();
 
-void file_dialog(const char *title, int *ok_callback, enum server_type type);
+static void file_dialog(const char *title, GtkSignalFunc ok_callback, enum server_type type);
 
 static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2) {
   int res;
@@ -4782,46 +4782,46 @@ void file_dialog_destroy_callback (GtkWidget *widget, gpointer data)
 }
 
 void game_file_dialog(enum server_type type) {
-  file_dialog("Game Command Selection", (int *)game_file_dialog_ok_callback, type);
+  file_dialog(_("Game Command Selection"), game_file_dialog_ok_callback, type);
 }
 
 void game_dir_dialog(enum server_type type) {
-  file_dialog("Game Directory Selection", (int *)game_dir_dialog_ok_callback, type);
+  file_dialog(_("Game Directory Selection"), game_dir_dialog_ok_callback, type);
 }
 
 void sound_player_file_dialog() {
-  file_dialog("Sound Player Selection", (int *)sound_player_file_dialog_ok_callback, 0);
+  file_dialog(_("Sound Player Selection"), sound_player_file_dialog_ok_callback, 0);
 }
 
 void sound_xqf_start_file_dialog() {
-  file_dialog("XQF Start Sound Selection", (int *)sound_xqf_start_file_dialog_ok_callback, 0);
+  file_dialog(_("XQF Start Sound Selection"), sound_xqf_start_file_dialog_ok_callback, 0);
 }
 
 void sound_xqf_quit_file_dialog() {
-  file_dialog("XQF Quit Sound Selection", (int *)sound_xqf_quit_file_dialog_ok_callback, 0);
+  file_dialog(_("XQF Quit Sound Selection"), sound_xqf_quit_file_dialog_ok_callback, 0);
 }
 
 void sound_update_done_file_dialog() {
-  file_dialog("Update Done Sound Selection", (int *)sound_update_done_file_dialog_ok_callback, 0);
+  file_dialog(_("Update Done Sound Selection"), sound_update_done_file_dialog_ok_callback, 0);
 }
 
 void sound_refresh_done_file_dialog() {
-  file_dialog("Refresh Done Sound Selection", (int *)sound_refresh_done_file_dialog_ok_callback, 0);
+  file_dialog(_("Refresh Done Sound Selection"), sound_refresh_done_file_dialog_ok_callback, 0);
 }
 
 void sound_stop_file_dialog() {
-  file_dialog("Stop Sound Selection", (int *)sound_stop_file_dialog_ok_callback, 0);
+  file_dialog(_("Stop Sound Selection"), sound_stop_file_dialog_ok_callback, 0);
 }
 
 void sound_server_connect_file_dialog() {
-  file_dialog("Server Connect Sound Selection", (int *)sound_server_connect_file_dialog_ok_callback, 0);
+  file_dialog(_("Server Connect Sound Selection"), sound_server_connect_file_dialog_ok_callback, 0);
 }
 
 void sound_redial_success_file_dialog() {
-  file_dialog("Redial Success Sound Selection", (int *)sound_redial_success_file_dialog_ok_callback, 0);
+  file_dialog(_("Redial Success Sound Selection"), sound_redial_success_file_dialog_ok_callback, 0);
 }
 
-void file_dialog(const char *title, int *ok_callback, enum server_type type) {
+static void file_dialog(const char *title, GtkSignalFunc ok_callback, enum server_type type) {
 
     /* Create a new file selection widget */
     // file_selector = gtk_file_selection_new (_("Game selection"));
