@@ -1,4 +1,6 @@
 Oct 26, 2002: Alex <alex_b@users.sourceforge.net>
+- Set focus to Game Contains when adding new server filter
+- Set focus to Game when adding new custom arg
 - Added file dialog box (... button) to sound config page
 
 Oct 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
