@@ -31,6 +31,9 @@
 #include <sys/time.h>   // select
 
 #ifdef RCON_STANDALONE
+#  ifdef ENABLE_NLS
+#  include <locale.h>
+#  endif
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -613,6 +616,17 @@ int main(int argc, char* argv[])
 
   char* buf = NULL;
   int res;
+
+#ifdef ENABLE_NLS
+#  ifdef HAVE_LC_MESSAGES
+  setlocale(LC_CTYPE, "");
+  setlocale(LC_MESSAGES, "");
+#  else
+  setlocale(LC_ALL, "");
+#  endif
+  bindtextdomain(PACKAGE, LOCALEDIR);
+  textdomain(PACKAGE);
+#endif
 
   rcon_servertype = Q3_SERVER;
 

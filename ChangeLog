@@ -1,3 +1,6 @@
+Nov 17, 2002: Jordi Mallach <jordi@sindominio.net>
+- Initialize i18n for xqf-rcon.
+
 Nov 16, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Changed version to 0.9.10.1
 
