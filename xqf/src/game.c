@@ -1518,6 +1518,9 @@ static void q3_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "sv_privateClients") == 0) {
       s->private_client = strtol (info_ptr[1], NULL, 10);
     }
+    else if (!strcmp(*info_ptr, "sv_punkbuster") && info_ptr[1] && info_ptr[1][0] == '1') {
+      s->flags |= SERVER_PUNKBUSTER;
+    }
   }
 
   if(fs_game)

@@ -95,6 +95,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
   char *retries;
   struct pixmap *retries_pix = NULL;
   int col;
+  char* private_col_text = "";
 
   text[0] = NULL;
 
@@ -184,12 +185,17 @@ static int server_clist_refresh_row (struct server *s, int row) {
   
     
 
+  if (s->flags & SERVER_PUNKBUSTER )
+  {
+    private_col_text = "Pb";
+  }
+  
   /* Show if the server is private or not */
   if (s->flags & SERVER_PASSWORD ) {
-    gtk_clist_set_pixtext (server_clist, row, 4, "", 0,
+    gtk_clist_set_pixtext (server_clist, row, 4, private_col_text, 0,
                            locked_pix.pix, locked_pix.mask );
   } else {
-    gtk_clist_set_text (server_clist, row, 4, "" );
+    gtk_clist_set_text (server_clist, row, 4, private_col_text );
   }
 
   get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap, 
