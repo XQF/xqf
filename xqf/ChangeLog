@@ -1,3 +1,8 @@
+May 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- switch hostname resolving off by default
+- do not update single rows if more than 100 servers are to be updated.
+  elimitates too large delay with hl master
+
 May 17, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - abort configure if gdk-pixbuf is not installed
 - adapt spec file

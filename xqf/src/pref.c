@@ -4594,7 +4594,7 @@ int prefs_load (void) {
     char* coresize = NULL;
     
     if(getrlimit(RLIMIT_CORE, &rlim)) break;
-    
+
     coresize = config_get_string_with_default ("/" CONFIG_FILE "/Program/coresize=0",&def);
     if(def || !coresize) break;
 
@@ -4747,7 +4747,7 @@ int prefs_load (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Appearance");
 
-  show_hostnames =            config_get_bool ("show hostnames=true");
+  show_hostnames =            config_get_bool ("show hostnames=false");
   show_default_port =         config_get_bool ("show default port=true");
   default_toolbar_style =     config_get_int  ("toolbar style=2");
   default_toolbar_tips =      config_get_bool ("toolbar tips=true");
