@@ -1,3 +1,12 @@
+Oct 17, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Modified server_clist_refresh_server by removing code that
+  applies filters.  This results in a 2 * speed increase in
+  doing Updates on large server lists (pause after the server
+  list is retreived, before the servers are actually refreshed
+  via qstat).  Filters are being applied after Updates,
+  Refreshes and Refresh Selected via server_clist_build_filter
+  elsewhere so this hopefull is redundant code.
+
 Oct 17, 2002: Bill Adams <nospam-200201@evilbill.org>
 - Clear s->flags when analyzing server info.
 
