@@ -18,6 +18,7 @@
 
 #include <sys/types.h>
 #include <stdio.h>
+#include <stdlib.h>	/* atoi */
 #include <sys/socket.h>	/* inet_ntoa */
 #include <netinet/in.h>	/* inet_ntoa */
 #include <arpa/inet.h>	/* inet_ntoa */
@@ -55,16 +56,7 @@
 #include "sort.h"
 #include "menus.h"
 #include "config.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#include <locale.h>
-#define _(string) gettext(string)
-#define N_(string) (string)
-#else
-#define _(string) (string)
-#endif
-
+#include "gnuconfig.h"
 #include "debug.h"
 
 time_t xqf_start_time;
@@ -91,7 +83,7 @@ static GtkWidget *main_progress_bar = NULL;
 
 static char *progress_bar_str = NULL;
 
-static GtkWidget *server_filter_menu = NULL; /* baa */
+//static GtkWidget *server_filter_menu = NULL; /* baa */
 
 static GtkWidget *server_menu = NULL;
 static GtkWidget *player_menu = NULL;
@@ -148,11 +140,11 @@ static GtkWidget *filter_buttons[FILTERS_TOTAL];
 
 static GtkWidget *player_skin_popup = NULL;
 static GtkWidget *player_skin_popup_preview = NULL;
-
+/*
 static GtkWidget *server_filter_1_widget = NULL;
 static GtkWidget *server_filter_2_widget = NULL;
 static GtkWidget *server_filter_3_widget = NULL;
-
+*/
 
 
 void set_widgets_sensitivity (void) {
@@ -332,9 +324,9 @@ void set_server_filter_menu_list_text( void ){
     if( i == 0 ){
       if( current_server_filter == i )
 	//server filter
-	snprintf( buf, 64, _("None <--"), i );
+	snprintf( buf, 64, _("None <--"));
       else 
-	snprintf( buf, 64, _("None"), i );
+	snprintf( buf, 64, _("None"));
       
     } else {
       if( server_filters[i].filter_name                 &&
@@ -384,7 +376,7 @@ static void server_filter_select_callback (GtkWidget *widget, int mode) {
 
   current_server_filter = mode;
 
-  filters[FILTER_SERVER].changed == FILTER_CHANGED;
+  filters[FILTER_SERVER].changed = FILTER_CHANGED;
   filters[FILTER_SERVER].last_changed = ++filter_current_time;
 
   set_server_filter_menu_list_text ();
@@ -2229,7 +2221,7 @@ void create_main_window (void) {
      you need to change the server_filter_widget line in xqf.h.
   */
 
-  if (server_filter_menu_items = g_malloc( sizeof( struct menuitem ) *  ( MAX_SERVER_FILTERS + 4 ))) { 
+  if ((server_filter_menu_items = g_malloc( sizeof( struct menuitem ) *  ( MAX_SERVER_FILTERS + 4 )))) { 
     i = 0;
     j = 0;
     server_filter_menu_items[i].type       = MENU_ITEM;

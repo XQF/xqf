@@ -32,8 +32,8 @@ static void create_menu_recursive (GtkWidget *menu,
   GtkWidget *label;
   guint ac_key;
 
-  GtkWidget *button= NULL;
-  GSList    *group = NULL;
+//  GtkWidget *button= NULL;
+//  GSList    *group = NULL;
 
   while (items->type != MENU_END) {
 

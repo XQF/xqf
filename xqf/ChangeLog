@@ -1,3 +1,11 @@
+Oct 18, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- fixed compiler warnings
+- replaced some strange sprintf's with g_strdup
+- made server_pass_filter return FALSE if ping==-1
+- fixed #define's for gametypes
+- set s->game to either fs_game, game or gamename rule in that order (game will
+  be supported by next qstat)
+
 Oct 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added gametype strings for TribalCTF and Threewave.
   Unfortunately TribalCTF servers modify their gamename variable,

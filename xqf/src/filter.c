@@ -18,6 +18,7 @@
 
 #include <sys/types.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 
@@ -27,6 +28,7 @@
 #include "config.h"
 #include "filter.h"
 #include "flt-player.h"
+#include "utils.h"
 
 #ifdef ENABLE_NLS
 #include <libintl.h>
@@ -131,9 +133,6 @@ GSList *build_filtered_list (unsigned mask, GSList *server_list) {
   struct server *server;
   GSList *list = NULL;
 
-  unsigned i;
-  int n;
-
   while (server_list) {
     server = (struct server *) server_list->data;
     apply_filters (mask | FILTER_PLAYER_MASK, server); /* in filter.c */
@@ -151,20 +150,19 @@ GSList *build_filtered_list (unsigned mask, GSList *server_list) {
   return list;
 }
 
-
-static int server_pass_filter (struct server *s, struct server_filter_vars *vars){
-  /* 
-     This applies a filter's attributes to a server entry
-     and returns true/false depending on if it passes the
-     filter or not.
-  */
+/* 
+  This applies a filter's attributes to a server entry and returns true if it
+  passes the filter or false if not.
+*/
+static int server_pass_filter (struct server *s, struct server_filter_vars
+    *vars){
 
   char **info_ptr;
-  if (s->ping == -1)	/* no information */
-    return TRUE;
-
   /* Filter Zero is No Filter */
   if( current_server_filter == 0 ){ return TRUE; }
+
+  if (s->ping == -1)	/* no information */
+    return FALSE;
 
   /* So that we do not get a core dump in the check below we 
      will first check that if we are filtering on a string that
@@ -213,8 +211,6 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
 
 
 static void server_filter_init (void) {
-  GtkWidget *new_label;
-
   int i;
   char config_section[64];
 
@@ -249,7 +245,6 @@ static void server_filter_init (void) {
 
 static void server_filter_new_defaults (void) {
   int i;
-  char *cptr;
   gchar *gcptr;
   int text_changed;
   char config_section[64];
@@ -288,8 +283,7 @@ static void server_filter_new_defaults (void) {
     } else {
       text_changed = 1;
     }
-    server_filters[current_server_filter].filter_name = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( server_filters[current_server_filter].filter_name, "%s\0",  gcptr );
+    server_filters[current_server_filter].filter_name = g_strdup( gcptr );
     if (text_changed) {
       config_set_string ("filter_name", server_filters[current_server_filter].filter_name );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
@@ -320,8 +314,7 @@ static void server_filter_new_defaults (void) {
     } else {
       text_changed = 1;
     }
-    server_filters[current_server_filter].game_contains = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( server_filters[current_server_filter].game_contains, "%s\0",  gcptr );
+    server_filters[current_server_filter].game_contains = g_strdup( gcptr );
     if (text_changed) {
       config_set_string ("game_contains", server_filters[current_server_filter].game_contains );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
@@ -352,9 +345,7 @@ static void server_filter_new_defaults (void) {
     } else {
       text_changed = 1;
     }
-    server_filters[current_server_filter].version_contains =
-      g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( server_filters[current_server_filter].version_contains, "%s\0",  gcptr );
+    server_filters[current_server_filter].version_contains = g_strdup( gcptr );
     if (text_changed) {
       config_set_string ("version_contains", server_filters[current_server_filter].version_contains );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
@@ -385,8 +376,7 @@ static void server_filter_new_defaults (void) {
     } else {
       text_changed = 1;
     }
-    server_filters[current_server_filter].game_type = g_malloc( sizeof( char ) * ( strlen( gcptr ) + 1 ));
-    sprintf( server_filters[current_server_filter].game_type, "%s\0",  gcptr );
+    server_filters[current_server_filter].game_type = g_strdup( gcptr );
     if (text_changed) {
       config_set_string ("game_type", server_filters[current_server_filter].game_type );
       filters[FILTER_SERVER].changed = FILTER_CHANGED;

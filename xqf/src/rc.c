@@ -136,7 +136,7 @@ static struct keyword  keywords[] = {
 static void unexpected_char_error (char c) {
   fprintf (stderr, "Unexpected character: ");
   fprintf (stderr, (isprint (c))? "\'%c\'" : "\\%03o", c);
-  fprintf (stderr, " in file %s[line:%d,pos:%d]\n"), rcfilename, line, pos;
+  fprintf (stderr, " in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
 }
 
 
@@ -402,8 +402,6 @@ static int rc_expect_token (int need_token) {
 int rc_parse (void) {
   char *fn;
   struct keyword *kw;
-  char **str_val;
-  int i;
 
   fn = file_in_dir (user_rcdir, RC_FILE);
   rc_open (fn);

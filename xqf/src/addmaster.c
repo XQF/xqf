@@ -28,6 +28,7 @@
 #include "config.h"
 #include "source.h"
 #include "addmaster.h"
+#include "srv-prop.h"
 
 static struct history *master_history_addr = NULL;
 static struct history *master_history_name = NULL;
