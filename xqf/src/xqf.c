@@ -35,6 +35,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#ifdef ENABLE_NLS
+#  include <locale.h>
+#endif
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -769,8 +772,8 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers,
                                                               GSList *hosts) {
   if (stat_process || (!masters && !names && !servers && !hosts))
     return;
-
-  debug (7, "stat_lists() -- Server List %lx", servers);
+  debug_increase_indent();
+  debug (7, "stat_lists() -- Server List %p", servers);
 
   stat_process = stat_job_create (masters, names, servers, hosts);
 
@@ -788,6 +791,7 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers,
 
   stat_start (stat_process);
   set_widgets_sensitivity ();
+  debug_decrease_indent();
 }
 
 
@@ -1110,6 +1114,7 @@ static void update_source_callback (GtkWidget *widget, gpointer data) {
   GSList *servers = NULL;
   GSList *uservers = NULL;
 
+  debug_increase_indent();
   debug (6, "update_source_callback() -- ");
   if (stat_process || !cur_source)
     return;
@@ -1118,6 +1123,7 @@ static void update_source_callback (GtkWidget *widget, gpointer data) {
   if (masters || servers || uservers) {
     stat_lists (masters, uservers, servers, NULL);
   }
+  debug_decrease_indent();
 }
 
 

@@ -134,6 +134,8 @@ static void master_sigchld_handler (int signum) {
   int pid;
   int status;
 
+  debug(3,"master_sigchld_handler(%d)",signum);
+
   while ((pid = waitpid (WAIT_ANY, &status, WNOHANG)) > 0);
 }
 
@@ -782,6 +784,8 @@ void dns_cancel_requests (void) {
 void dns_lookup (const char *str) {
   char host[MAXHOSTNAMELEN + 1];
   int len;
+
+  debug(8,"dns_lookup(%s)",str);
 
   len = strlen (str);
   if (len <= MAXHOSTNAMELEN) {

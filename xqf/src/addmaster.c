@@ -56,7 +56,19 @@ static void master_check_master_addr_prefix()
   master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO
 	(master_addr_combo)->entry));
 
-  if(!master_addr|| !strlen(master_addr)) return;
+  if(!master_addr|| !strlen(master_addr))
+  {
+	  if(current_master_query_type==MASTER_LAN)
+	  {
+		  char *txt =
+			  g_strdup_printf("%s%s",
+				master_prefixes[current_master_query_type],
+				"255.255.255.255");
+		  gtk_entry_set_text(
+		      GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
+	  }
+	  return;
+  }
   
   if (g_strncasecmp(master_addr, master_prefixes[current_master_query_type],
       strlen(master_prefixes[current_master_query_type])))
@@ -136,8 +148,20 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 
 static void master_type_radio_callback (GtkWidget *widget, enum master_query_type type)
 {
+  char* master_name;
+
   current_master_query_type = type;
   master_check_master_addr_prefix();
+
+  master_name = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO
+		      (master_name_combo)->entry));
+
+  if(current_master_query_type==MASTER_LAN
+      && (!master_name || !strlen(master_name)))
+  {
+    gtk_entry_set_text(
+      GTK_ENTRY( GTK_COMBO( master_name_combo)->entry), _("LAN"));
+  }
 }
 
 static void master_activate_radio_for_type( enum master_query_type type )

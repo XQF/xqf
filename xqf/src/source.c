@@ -51,13 +51,15 @@ GSList *master_groups = NULL;
 char* master_prefixes[MASTER_NUM_QUERY_TYPES] = {
 	"master://",
 	"gmaster://",
-	"http://"
+	"http://",
+	"lan://"
 };
 
 char* master_designation[MASTER_NUM_QUERY_TYPES] = {
 	N_("Standard"),
 	N_("Gamespy"),
-	N_("http")
+	N_("http"),
+	N_("LAN")
 };
 
 static GSList *all_masters = NULL;
@@ -608,7 +610,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
     return NULL;
   }
 
-  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY )
+  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY  || query_type == MASTER_LAN)
   {
     // check for valid hostname/ip
     if (parse_address (path + strlen(master_prefixes[query_type]), &addr, &port))
@@ -616,8 +618,19 @@ struct master *add_master (char *path, char *name, enum server_type type,
       // if no port was specified, add default master port if available or fail
       if (!port)
       {
+	// use default_port instead of default_master_port for lan broadcasts
+	if( query_type == MASTER_LAN )
+	{
+	  port = games[type].default_port;
+	  // unreal needs one port higher
+	  if(!strcmp(games[type].qstat_option,"-uns"))
+	  {
+	    port++;
+	    type=GPS_SERVER;
+	  }
+	}
 	// do not use default for gamespy
-	if (query_type != MASTER_GAMESPY && games[type].default_master_port)
+	else if (query_type != MASTER_GAMESPY && games[type].default_master_port)
 	{
 	  port = games[type].default_master_port;
 	}
@@ -665,7 +678,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
   }
   
   // master was not known already, create new
-  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY )
+  if( query_type == MASTER_NATIVE || query_type == MASTER_GAMESPY || query_type == MASTER_LAN)
   {
     m = create_master (name, type, FALSE);
 
@@ -686,6 +699,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
     m = create_master (name, type, FALSE);
     m->url = g_strdup (path);
   }
+  else return NULL;
   
   m->master_type = query_type;
 
@@ -1106,12 +1120,7 @@ static void save_master_list (void) {
       confstr = g_strjoin (" ", typeid, m->url, m->name, NULL);
     }
     else {
-
-      if (m->master_type == MASTER_GAMESPY)
-	      addr = g_strdup_printf ("%s%s:%d", master_prefixes[MASTER_GAMESPY],
-        	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
-      else
-      	      addr = g_strdup_printf ("%s%s:%d", master_prefixes[MASTER_NATIVE],
+      addr = g_strdup_printf ("%s%s:%d", master_prefixes[m->master_type],
         	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
 
       confstr = g_strjoin (" ", typeid, addr, m->name, NULL);

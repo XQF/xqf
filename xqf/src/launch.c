@@ -130,7 +130,14 @@ static void client_sigchild_handler (int signum) {
   GSList *list;
   struct running_client *cl;
 
+  debug(3,"client_sigchild_handler(%d)",signum);
+
   while ((pid = waitpid (WAIT_ANY, &status, WNOHANG)) > 0) {
+    debug(4,"client_sigchild_handler() -- pid %d, status %d",pid,WEXITSTATUS(status));
+    if(WIFSIGNALED(status)&& WTERMSIG(status)==SIGSEGV)
+    {
+      debug(0,"*** SEGFAULT pid %d ***",pid);
+    }
     for (list = clients; list; list = list->next) {
       cl = (struct running_client *) list->data;
       if (cl->pid == pid) {
@@ -215,9 +222,7 @@ static void client_attach (pid_t pid, int fd, struct server *s) {
   cl->server = s;
   server_ref (s);
 
-#ifdef DEBUG
-  fprintf (stderr, "client attached (pid:%d)\n", cl->pid);
-#endif
+  debug (3, "client attached (pid:%d)", cl->pid);
 
   clients = g_slist_append (clients, cl);
 }

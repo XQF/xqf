@@ -1028,9 +1028,9 @@ static void qw_analyze_serverinfo (struct server *server) {
 }
 
 
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
 static void un_analyze_serverinfo (struct server *s) {
   char **info_ptr;
+  unsigned short hostport=0;
 
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "gametype") == 0) {
@@ -1039,6 +1039,19 @@ static void un_analyze_serverinfo (struct server *s) {
     else if (strcmp (*info_ptr, "gamestyle") == 0) {
       s->gametype = info_ptr[1];
     }
+    else if (strcmp (*info_ptr, "hostport") == 0) {
+      hostport = atoi(info_ptr[1]);
+    }
+    else if (strcmp (*info_ptr, "gamename") == 0) {
+      if(!strcmp(info_ptr[1],"rune"))
+      {
+	s->type = RUNE_SERVER;
+      }
+      else if(!strcmp(info_ptr[1],"ut"))
+      {
+	s->type = UN_SERVER;
+      }
+    }
 
     //password required?
     else if (strcmp (*info_ptr, "password") == 0 && strcmp(info_ptr[1],"False")) {
@@ -1046,8 +1059,13 @@ static void un_analyze_serverinfo (struct server *s) {
     }
   }
 
+  // adjust port if type has changed
+  if(s->type != GPS_SERVER && hostport )
+  {
+    s->port=hostport;
+  }
+
 }
-#endif //QSTAT_HAS_UNREAL_SUPPORT
 
 static void descent3_analyze_serverinfo (struct server *s) {
   char **info_ptr;

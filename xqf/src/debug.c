@@ -21,10 +21,17 @@
 #include <stdarg.h>
 #include "debug.h"
 
+static int indent_level;
+
 void debug(int level, char *fmt, ...)
 {
   va_list argp;
+  int i;
   if( level > debug_level ) return;
+  for (i=0;i<indent_level;i++)
+  {
+    fprintf(stderr, " ");
+  }
   fprintf(stderr, "debug(%d): ", level);
   va_start(argp, fmt);
   vfprintf(stderr, fmt, argp);
@@ -59,3 +66,14 @@ int get_debug_level (void)
   return (debug_level);
 }
 
+int debug_increase_indent()
+{
+	indent_level++;
+	return indent_level;
+}
+
+int debug_decrease_indent()
+{
+	if(indent_level>0)indent_level--;
+	return indent_level;
+}
