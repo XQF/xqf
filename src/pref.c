@@ -500,17 +500,19 @@ static void load_game_defaults (enum server_type type) {
   g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
   config_push_prefix (str);
 
-  if (g->cmd) g_free (g->cmd);
+  g_free (g->cmd);
   g->cmd = config_get_string ("cmd");
 
-  if (g->dir) g_free (g->dir);
+  g_free (g->dir);
   g->dir = config_get_string ("dir");
 
-  if (g->real_dir) g_free (g->real_dir);
+  g_free (g->real_dir);
   g->real_dir = expand_tilde (g->dir);
 
-  if (g->game_cfg) g_free (g->game_cfg);
+  g_free (g->game_cfg);
   g->game_cfg = config_get_string ("custom cfg");
+
+  g->real_home = expand_tilde (g->default_home);
 
   // Load custom arguments
   j = 0;
@@ -5413,9 +5415,6 @@ int prefs_load (void) {
 
   config_pop_prefix ();
 
-  for (i = 0; i < GAMES_TOTAL; i++)
-    load_game_defaults (i);
-
   config_set_string ("/" CONFIG_FILE "/Program/version", XQF_VERSION);
   config_sync ();
 
@@ -5430,8 +5429,7 @@ int prefs_load (void) {
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
-    g_free (games[i].real_dir);
-    games[i].real_dir = expand_tilde (games[i].dir);
+    load_game_defaults (i);
 
     if(default_auto_maps)
       scan_maps_for(i);

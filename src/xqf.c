@@ -226,7 +226,7 @@ static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to a
 
 static int redialserver = 0;
 
-void sighandler_debug(int signum)
+static void sighandler_debug(int signum)
 {
     if( signum == SIGUSR1)
 	set_debug_level(get_debug_level()+1);
@@ -3956,11 +3956,6 @@ int main (int argc, char *argv[]) {
     return 1;
   }
 
-  if (dns_spawn_helper () < 0) {
-    xqf_error ("Unable to start DNS helper");
-    return 1;
-  }
-
   gtk_config = file_in_dir (user_rcdir, "gtkrc");
   gtk_rc_add_default_file (gtk_config);
   g_free (gtk_config);
@@ -3968,6 +3963,11 @@ int main (int argc, char *argv[]) {
   gtk_init (&argc, &argv);
 
   parse_commandline(argc,argv);
+
+  if (dns_spawn_helper () < 0) {
+    xqf_error ("Unable to start DNS helper");
+    return 1;
+  }
 
   {
     char* defaultpixmapdir = g_strconcat(xqf_PACKAGE_DATA_DIR, "/default", NULL);
