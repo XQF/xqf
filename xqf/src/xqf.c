@@ -981,7 +981,7 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
   case 1:
     s = (struct server *) gtk_clist_get_row_data (
                                          server_clist, (int) selection->data);
-    g_snprintf (buf, 256, "%i,%s:%d,%s,%s,%i,%i", s->ping, inet_ntoa
+    g_snprintf (buf, 256, "%i  %s:%d  %s  %s  %i of %i", s->ping, inet_ntoa
        (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
     gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
     gtk_editable_select_region (selection_manager, 0, -1);
@@ -991,7 +991,7 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
     for (; selection; selection = selection->next) {
       s = (struct server *) gtk_clist_get_row_data (
                                          server_clist, (int) selection->data);
-      g_snprintf (buf, 256, "%i,%s:%d,%s,%s,%i,%i\n", s->ping, inet_ntoa
+      g_snprintf (buf, 256, "%i  %s:%d  %s  %s  %i of %i\n", s->ping, inet_ntoa
        (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
       gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
     }

@@ -1,3 +1,7 @@
+Nov 12th 2000: Alex Burger <alex@fragit.net>
+-Changed Copy+ menu to use double spaces instead of commas to separate
+ fields.  Added 'of' for current players / max players. Eg: 5 of 10
+
 Nov 5th 2000: Alex Burger <alex@fragit.net>
 -Add call to clear list to end of function server_clist_build_filtered
  to prevent segfault on some computers due to server list that is emptied
