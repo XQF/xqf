@@ -8,6 +8,8 @@ o You can now select Quake3 and Wolfenstein's protocol.
 o Added 20sec timeout for wget (nice if Gameaholic is down).
 o Added Tribes2 server statistics.
 o Fixed Tribes2 and Quake3 masters.
+o Added support for LAN broadcast queries.
+o Improved master support handling.
 
 XQF 0.9.8 -- December 17, 2001
 ~~~~~~~~~
