@@ -258,6 +258,9 @@ static GtkWidget *woet_proto_entry;
 static GtkWidget *ef_proto_entry;
 static GtkWidget *ef_setfs_gamebutton;
 
+/* Call of Duty */
+static GtkWidget *cod_proto_entry;
+
 struct generic_prefs {
   char *pref_dir;
   char *real_dir;
@@ -307,6 +310,11 @@ char* woet_masterprotocols[] = {
 
 char* ef_masterprotocols[] = {
 	"24",
+	NULL
+};
+
+char* cod_masterprotocols[] = {
+	"1",
 	NULL
 };
 
@@ -773,6 +781,23 @@ static void get_new_defaults (void) {
   game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(i)));
 
   config_pop_prefix ();
+
+  /* Call of Duty */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: CODS");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (cod_proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
+
+  game_set_attribute(COD_SERVER,"masterprotocol",strdup_strip(str));
+  config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
+
+  config_pop_prefix ();
+
 
   /* Tribes 2 */
 
@@ -3133,6 +3158,43 @@ static GtkWidget *woet_options_page (void) {
   return page_vbox;
 }
 
+// additional options for call of duty
+static GtkWidget *cod_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  cod_proto_entry = gtk_combo_new ();
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (cod_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (cod_proto_entry),
+			  createGListfromchar(cod_masterprotocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (cod_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (cod_proto_entry)->entry),
+		game_get_attribute(COD_SERVER,"masterprotocol"));
+
+	  gtk_box_pack_start (GTK_BOX (hbox), cod_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (cod_proto_entry);
+
+	gtk_widget_show (hbox);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
+
 
 // additional options for voyager elite force
 static GtkWidget *ef_options_page (void) {
@@ -3201,6 +3263,11 @@ void add_wolf_options_to_notebook(GtkWidget *notebook)
 void add_woet_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), woet_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_cod_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), cod_options_page(), gtk_label_new (_("Options")));
 }
 
 void add_ef_options_to_notebook(GtkWidget *notebook)
@@ -4375,6 +4442,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[UT2_SERVER].add_options_to_notebook = add_ut2_options_to_notebook;
   new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
   new_genprefs[WOET_SERVER].add_options_to_notebook = add_woet_options_to_notebook;
+  new_genprefs[COD_SERVER].add_options_to_notebook = add_cod_options_to_notebook;
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
   new_genprefs[EF_SERVER].add_options_to_notebook = add_ef_options_to_notebook;
 
@@ -4801,6 +4869,20 @@ int prefs_load (void) {
   }
 
   game_set_attribute(WOET_SERVER,"masterprotocol",tmp);
+
+  config_pop_prefix ();
+
+  /* Call of Duty */
+  config_push_prefix ("/" CONFIG_FILE "/Game: CODS");
+  
+  tmp = config_get_string ("protocol=1");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+
+  game_set_attribute(COD_SERVER,"masterprotocol",tmp);
 
   config_pop_prefix ();
 
