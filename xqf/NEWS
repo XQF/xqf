@@ -22,6 +22,7 @@ o Unreal Tournament 2003 support
 o Fixed Half-Life rcon support 
 o Player search visible improvements 
 o Fixed Tribes2 master support and added additional masters
+o Updated QuakeWorld master list
 o Unlimited number of server filters instead of ten
 o Changed default Wolf protocol to 59  
 o Standalone rcon program that doesn't need X
