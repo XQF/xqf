@@ -37,7 +37,10 @@
 
 #ifndef USE_GTK2
 /*dummy functions for gtk 1.x, this avoid a lot ifdef´s*/
-void tray_init (GtkWidget * window) {/**/};
+void tray_init (GtkWidget* window)
+{
+  gtk_widget_show(window);
+};
 void tray_delete_event_hook (void) {/**/};
 void tray_icon_set_tooltip (gchar *tip) {/**/};
 void tray_icon_stop_animation (void) {/**/};
