@@ -393,6 +393,11 @@ int check_qstat_version( const char* version )
   return ret;
 }
 
+void reset_main_status_bar() {
+  // Reset bottom left status bar to show number of servers
+  print_status (main_status_bar, (server_clist->rows == 1) ?
+                        _("%d server") : _("%d servers"), server_clist->rows);
+}
 
 void set_widgets_sensitivity (void) {
   GList *selected = server_clist->selection;
@@ -571,8 +576,7 @@ static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
   if (!forced_filters_flag) {
     cur_filter ^= mask;
     server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
-    print_status (main_status_bar, (server_clist->rows == 1) ?
-                        _("%d server") : _("%d servers"), server_clist->rows);
+    reset_main_status_bar();
   }
 }
 
@@ -2006,9 +2010,7 @@ static void source_selection_changed (void) {
   update_server_lists_from_selected_source ();
   server_clist_set_list (cur_server_list);
   
-  // FIXME: plural form
-  print_status (main_status_bar, (server_clist->rows == 1) ?
-                        _("%d server") : _("%d servers"), server_clist->rows);
+  reset_main_status_bar();
 }
 
 
