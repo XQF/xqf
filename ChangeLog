@@ -1,3 +1,6 @@
+Feb 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix display of gametypes > MAX_Q3A_TYPES
+
 Jan 17, 2002: Jordi Mallach <jordi@sindominio.net>
 - updated NEWS for 0.9.9.
 
