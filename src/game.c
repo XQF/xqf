@@ -1460,6 +1460,15 @@ static void q3_analyze_serverinfo (struct server *s) {
     else if (!strcmp(*info_ptr, "sv_punkbuster") && info_ptr[1] && info_ptr[1][0] == '1') {
       s->flags |= SERVER_PUNKBUSTER;
     }
+    else if (!strcmp(*info_ptr, "protocol")) {
+      const char* masterprotocol = game_get_attribute(s->type,"masterprotocol");
+      
+      if(masterprotocol && !strcmp(masterprotocol, "auto"))
+	masterprotocol = game_get_attribute(s->type, "_masterprotocol");
+
+      if(masterprotocol && strcmp(masterprotocol, info_ptr[1]))
+	s->flags |= SERVER_INCOMPATIBLE;
+    }
   }
 
   if(fs_game)

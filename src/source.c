@@ -1091,7 +1091,8 @@ static char *builtin_masters_update_info[] = {
   "ADD T2S master://198.74.35.18:27999 Master 3",
 
 
-  "ADD WOS master://wolf.idsoftware.com:27950 id",
+  "DELETE WOS master://wolf.idsoftware.com:27950 id", // does no longer work
+  "ADD WOS master://wolfmaster.idsoftware.com:27950 id",
   "ADD WOETS master://etmaster.idsoftware.com:27950 id",
 
   "ADD DM3S master://idnet.ua-corp.com:27650 id",
@@ -1167,6 +1168,7 @@ static char *builtin_gslist_masters_update_info[] = {
   "ADD Q2S gslist://master.gamespy.com;gsmtype=quake2 Gslist",
   "ADD Q3S gslist://master.gamespy.com;gsmtype=quake3 Gslist",
   "ADD WOS gslist://master.gamespy.com;gsmtype=rtcw Gslist",
+  "ADD WOETS gslist://master.gamespy.com;gsmtype=rtcwet Gslist",
   "ADD DM3S gslist://master.gamespy.com;gsmtype=doom3 Gslist",
   "ADD RUNESRV gslist://master.gamespy.com;portadjust=-1;gsmtype=rune Gslist",
   "ADD UNS gslist://master.gamespy.com;portadjust=-1;gsmtype=ut Gslist",
