@@ -1,3 +1,13 @@
+XQF 0.9.8 -- December 17, 2001
+~~~~~~~~~
+Changes since 0.9.7:
+
+o Repackaged with libtool 1.4, so it builds on all
+  Linux architectures.
+o Fixed trasparency of Gamespy's pixmap.
+o Don't distribute debian stuff.
+
+
 XQF 0.9.7 -- December 16, 2001
 ~~~~~~~~~
 Changes since 0.9.6g:
