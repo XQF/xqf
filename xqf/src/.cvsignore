@@ -1,3 +1,8 @@
 gnuconfig.h
 Makefile
 Makefile.in
+stamp-h.in
+stamp-h
+.libs
+.deps
+xqf
