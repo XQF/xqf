@@ -1413,33 +1413,56 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   return frame;
 }
 
+//#define GAMES_RADIOS
+#define GAMES_LIST
 
+#ifdef GAMES_RADIOS
 static void game_radio_butto_toggled_callback (GtkWidget *widget, 
 					              enum server_type type) {
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
     gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), type);
 }
 
+#elif defined GAMES_LIST
+static void game_listitem_selected_callback (GtkItem *item, 
+					              enum server_type type) {
+    gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), type);
+}
+#endif
+
 
 #define	GAMES_COLS	3
 #define GAMES_ROWS	((GAMES_TOTAL + GAMES_COLS - 1) / GAMES_COLS)
 
-
+// create dialog where commandline and working dir for all games are configured
 static GtkWidget *games_config_page (int defgame) {
   GtkWidget *page_vbox;
-  GtkWidget *table;
   GtkWidget *frame;
   GtkWidget *hbox;
   GtkWidget *page;
   GtkWidget *label;
+#ifdef GAMES_RADIOS
+  GtkWidget *table;
   GtkWidget *game_label;
   GSList *group = NULL;
+#elif defined GAMES_LIST
+  GtkWidget *gtklist=NULL;
+  GtkWidget *page_hbox;
+#endif
   char *typestr;
   int i;
 
+#ifdef GAMES_LIST
+  page_hbox = gtk_hbox_new (FALSE, 0);
   page_vbox = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
+  gtk_box_pack_end (GTK_BOX (page_hbox), page_vbox, TRUE, TRUE, 20);
+#else
+  page_vbox = gtk_vbox_new (FALSE, 0);
+#endif
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
+#ifdef GAMES_RADIOS
   table = gtk_table_new (GAMES_COLS, GAMES_ROWS, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table), 6);
@@ -1462,8 +1485,30 @@ static GtkWidget *games_config_page (int defgame) {
 
     gtk_widget_show (genprefs[i].game_button);
   }
-
   gtk_widget_show (table);
+
+#elif defined GAMES_LIST
+  frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
+
+  gtklist=gtk_list_new ();
+  for (i = 0; i < GAMES_TOTAL; i++) {
+    genprefs[i].game_button = gtk_list_item_new();
+    
+    gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
+
+    gtk_signal_connect (GTK_OBJECT (genprefs[i].game_button), "select",
+	   GTK_SIGNAL_FUNC (game_listitem_selected_callback), (gpointer) i);
+
+    gtk_widget_show(genprefs[i].game_button);
+    gtk_container_add (GTK_CONTAINER (gtklist), genprefs[i].game_button);
+  }
+
+  gtk_widget_show(gtklist);
+  gtk_container_add (GTK_CONTAINER (frame), gtklist);
+  gtk_box_pack_start (GTK_BOX (page_hbox), frame, FALSE, FALSE, 0);
+  gtk_widget_show (frame);
+#endif
 
   games_notebook = gtk_notebook_new ();
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (games_notebook), FALSE);
@@ -1490,8 +1535,12 @@ static GtkWidget *games_config_page (int defgame) {
 
   gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), defgame);
 
+#ifdef GAMES_RADIOS
   gtk_toggle_button_set_active (
                      GTK_TOGGLE_BUTTON (genprefs[defgame].game_button), TRUE);
+#elif defined GAMES_LIST
+  gtk_list_item_select(GTK_LIST_ITEM(genprefs[defgame].game_button));
+#endif
 
   gtk_widget_show (games_notebook);
 
@@ -1527,7 +1576,13 @@ static GtkWidget *games_config_page (int defgame) {
 
   gtk_widget_show (page_vbox);
 
+#ifdef GAMES_LIST
+  gtk_widget_show (page_hbox);
+
+  return page_hbox;
+#else
   return page_vbox;
+#endif
 }
 
 
@@ -2032,9 +2087,6 @@ static GtkWidget *general_options_page (void) {
   GtkWidget *frame;
   GtkWidget *hbox;
   GtkWidget *vbox;
-  GSList *group = NULL;
-  static const char *toolbar_styles[] = { N_("Icons"), N_("Text"), N_("Both") };
-  int i;
 
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);

@@ -423,6 +423,27 @@ struct game games[] = {
     NULL,
     quake_save_info
   },
+  {
+    RUNE_SERVER,
+    GAME_CONNECT,
+    "Rune",
+    UN_DEFAULT_PORT,
+    0,
+    "RUNESRV",
+    "UNS",
+    "-uns",
+    "uns",
+    &rune_pix,
+
+    un_parse_player,
+    quake_parse_server,
+    un_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    ut_exec,
+    NULL,
+    quake_save_info
+  },
 #endif
   // any game using the gamespy protocol
   {

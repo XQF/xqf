@@ -99,6 +99,7 @@ enum server_type {
   HR_SERVER,
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
   UN_SERVER,
+  RUNE_SERVER,
 #endif
   GPS_SERVER,
   UNKNOWN_SERVER
