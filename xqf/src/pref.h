@@ -93,6 +93,7 @@ extern	int	default_refresh_on_update;
 extern	int	maxretries;
 extern	int	maxsimultaneous;
 
+extern	int	sound_enable;
 extern	char	*sound_player;
 extern	char	*sound_xqf_start;
 extern	char	*sound_xqf_quit;

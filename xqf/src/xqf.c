@@ -975,7 +975,7 @@ static gboolean launch_redial(struct condef *con)
   debug (1, "launch redial server ping: s->ping:%d",s->ping);  
   
   if (s->curplayers < s->maxplayers)
-  //if (s->curplayers == 99)
+ // if (s->curplayers == 99)
   {
     // server not busy!
 
@@ -3088,6 +3088,10 @@ void play_sound (char *sound)
   char c[2];
   int pid;
 
+  if(!sound_enable) {
+    debug(1,"sound disabled - not playing");
+    return;
+  }
 
   if(!sound || !sound_player) {
     debug(1,"sound player or sound file not defined - not playing anything");
@@ -3107,7 +3111,7 @@ void play_sound (char *sound)
     if(strcmp(c,"/")){
       // Does not start with a / so prepend user_rcdir
       debug(1,"Prepending user_rcdir to sound file");
-      launchargv[1] = g_malloc(strlen(sound)+strlen(user_rcdir)+1); // maybe should be the filename only?
+      launchargv[1] = g_malloc(strlen(sound)+strlen(user_rcdir)+2); // maybe should be the filename only?
       strcpy(launchargv[1],user_rcdir);
       strcat(launchargv[1],"/");
       strcat(launchargv[1],sound);
@@ -3243,6 +3247,8 @@ int main (int argc, char *argv[]) {
 
   gtk_main ();
 
+  play_sound(sound_xqf_quit);
+
   unregister_window (main_window);
   main_window = NULL;
 
@@ -3316,7 +3322,6 @@ int main (int argc, char *argv[]) {
   config_drop_all ();
   debug( 6, "EXIT: Done.");
 
-  play_sound(sound_xqf_quit);
 
   return 0;
 }

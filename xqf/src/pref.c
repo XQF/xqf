@@ -96,6 +96,7 @@ int	default_refresh_on_update;
 int     maxretries;
 int     maxsimultaneous;
 
+int	sound_enable;
 char	*sound_player = NULL;
 char	*sound_xqf_start = NULL;
 char	*sound_xqf_quit = NULL;
@@ -165,6 +166,7 @@ static  GtkWidget *pushlatency_value_spinner;
 static  GtkWidget *maxretries_spinner;
 static  GtkWidget *maxsimultaneous_spinner;
 
+static  GtkWidget *sound_enable_check_button;
 static  GtkWidget *sound_player_entry;
 static  GtkWidget *sound_xqf_start_entry;
 static  GtkWidget *sound_xqf_quit_entry;
@@ -693,7 +695,11 @@ static void get_new_defaults (void) {
   /* Sounds */
   
   config_push_prefix ("/" CONFIG_FILE "/Sounds");
-  
+
+  i = GTK_TOGGLE_BUTTON (sound_enable_check_button)->active;
+  if (i != sound_enable)
+    config_set_bool ("sound_enable", sound_enable = i);
+
   sound_player = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_player_entry)));
   config_set_string ("sound_player", (sound_player)? sound_player : "");
 
@@ -2631,6 +2637,12 @@ static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
   val = GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
 }
 
+static void sound_enable_toggled_callback (GtkWidget *widget, gpointer data) {
+  int val;
+
+  val = GTK_TOGGLE_BUTTON (sound_enable_check_button)->active;
+}
+
 
 static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
   int val;
@@ -3013,9 +3025,10 @@ static GtkWidget *sound_options_page (void) {
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-  /* Sounds preferences -- player and various sounds */
+  /* Sound Enable / Disable frame */
+  /* Sounds Enable / Disable */
 
-  frame = gtk_frame_new (_("Sound Options"));
+  frame = gtk_frame_new (_("Sound Enable / Disable"));
   gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
   table = gtk_table_new (2, 2, FALSE);
@@ -3024,11 +3037,25 @@ static GtkWidget *sound_options_page (void) {
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_container_add (GTK_CONTAINER (frame), table);
 
+  gtk_widget_show (table);
+
+  /* Sound Enable */
+
+  sound_enable_check_button = gtk_check_button_new_with_label 
+      (_("Enable Sound"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_enable_check_button),
+                                                           sound_enable);
+  gtk_signal_connect (GTK_OBJECT (sound_enable_check_button), "toggled",
+                          GTK_SIGNAL_FUNC (sound_enable_toggled_callback), NULL);
+  gtk_table_attach (GTK_TABLE (table), sound_enable_check_button, 0, 1, 0, 1, 
+                                                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show (sound_enable_check_button);
+
   /* Sound Player */
 
   label = gtk_label_new (_("Player"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
                                                       GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3039,14 +3066,30 @@ static GtkWidget *sound_options_page (void) {
     gtk_entry_set_position (GTK_ENTRY (sound_player_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_player_entry,
-                                                                  1, 2, 0, 1);
+                                                                  1, 2, 1, 2);
   gtk_widget_show (sound_player_entry);
+
+  gtk_widget_show (frame);
+
+  /* Sound Files frame */
+  /* Sounds preferences -- player and various sounds */
+
+  frame = gtk_frame_new (_("Sound Files"));
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+
+  table = gtk_table_new (2, 2, FALSE);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+  gtk_container_add (GTK_CONTAINER (frame), table);
+
+
 
   /* Sound XQF Start */
 
   label = gtk_label_new (_("XQF Start"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3057,14 +3100,14 @@ static GtkWidget *sound_options_page (void) {
     gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_xqf_start_entry,
-                                                        	          1, 2, 1, 2);
+                                                        	          1, 2, 0, 1);
   gtk_widget_show (sound_xqf_start_entry);
 
   /* Sound XQF Quit */
 
   label = gtk_label_new (_("XQF Quit"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3072,17 +3115,17 @@ static GtkWidget *sound_options_page (void) {
 
   if(sound_xqf_quit) {
     gtk_entry_set_text (GTK_ENTRY (sound_xqf_quit_entry), sound_xqf_quit);
-    gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
+    gtk_entry_set_position (GTK_ENTRY (sound_xqf_quit_entry), 0);
   }
     gtk_table_attach_defaults (GTK_TABLE (table), sound_xqf_quit_entry,
-                                                                  1, 2, 2, 3);
+                                                                  1, 2, 1, 2);
   gtk_widget_show (sound_xqf_quit_entry);
 
   /* Sound Update Done */
 
   label = gtk_label_new (_("Update Done"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3090,17 +3133,17 @@ static GtkWidget *sound_options_page (void) {
 
   if(sound_update_done) {
     gtk_entry_set_text (GTK_ENTRY (sound_update_done_entry), sound_update_done);
-    gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
+    gtk_entry_set_position (GTK_ENTRY (sound_update_done_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_update_done_entry,
-                                                                  1, 2, 3, 4);
+                                                                  1, 2, 2, 3);
   gtk_widget_show (sound_update_done_entry);
 
   /* Sound Refresh Done */
 
   label = gtk_label_new (_("Refresh Done"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3108,17 +3151,17 @@ static GtkWidget *sound_options_page (void) {
 
   if(sound_refresh_done) {
     gtk_entry_set_text (GTK_ENTRY (sound_refresh_done_entry), sound_refresh_done);
-    gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
+    gtk_entry_set_position (GTK_ENTRY (sound_refresh_done_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_refresh_done_entry,
-                                                                  1, 2, 4, 5);
+                                                                  1, 2, 3, 4);
   gtk_widget_show (sound_refresh_done_entry);
 
   /* Sound Stop */
 
   label = gtk_label_new (_("Stop"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6,
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3126,17 +3169,17 @@ static GtkWidget *sound_options_page (void) {
 
   if(sound_stop) {
     gtk_entry_set_text (GTK_ENTRY (sound_stop_entry), sound_stop);
-    gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
+    gtk_entry_set_position (GTK_ENTRY (sound_stop_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_stop_entry,
-                                                                  1, 2, 5, 6);
+                                                                  1, 2, 4, 5);
   gtk_widget_show (sound_stop_entry);
 
   /* Sound Server Connect */
 
   label = gtk_label_new (_("Server Connect"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 6, 7, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3144,18 +3187,17 @@ static GtkWidget *sound_options_page (void) {
 
   if(sound_server_connect) {
     gtk_entry_set_text (GTK_ENTRY (sound_server_connect_entry), sound_server_connect);
-    gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
+    gtk_entry_set_position (GTK_ENTRY (sound_server_connect_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_server_connect_entry,
-                                                                  1, 2, 6, 7);
+                                                                  1, 2, 5, 6);
   gtk_widget_show (sound_server_connect_entry);
 
   /* Sound Redial Success Start */
 
   label = gtk_label_new (_("Redial Success"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 7, 8, 
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 6, 7, 
                                                     GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
@@ -3163,10 +3205,10 @@ static GtkWidget *sound_options_page (void) {
 
   if(sound_redial_success) {
     gtk_entry_set_text (GTK_ENTRY (sound_redial_success_entry), sound_redial_success);
-    gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
+    gtk_entry_set_position (GTK_ENTRY (sound_redial_success_entry), 0);
   }
   gtk_table_attach_defaults (GTK_TABLE (table), sound_redial_success_entry,
-                                                                  1, 2, 7, 8);
+                                                                  1, 2, 6, 7);
   gtk_widget_show (sound_redial_success_entry);
 
   /*  */
@@ -3592,6 +3634,7 @@ int prefs_load (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Sounds");
 
+  sound_enable =              config_get_bool ("sound_enable=false");
   sound_player =              config_get_string ("sound_player");
   sound_xqf_start =           config_get_string ("sound_xqf_start");
   sound_xqf_quit =            config_get_string ("sound_xqf_quit");

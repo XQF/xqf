@@ -577,9 +577,9 @@ struct game games[] = {
     7787,
     0,
     "UT2S",
-    "GPS",
-    "-gps",
-    "gps",
+    "UT2S",
+    "-ut2s",
+    "-ut2m",
     &ut2_pix,
 
     un_parse_player,
@@ -744,7 +744,7 @@ enum server_type id2type (const char *id) {
   }
 
   // for those who used the cvs version before, can be removed after some time
-  if (g_strcasecmp (id, "UT2DS" ) == 0)
+  if (g_strcasecmp (id, "UT2S" ) == 0)
   {
     return UT2_SERVER;
   }
@@ -1142,7 +1142,10 @@ static void un_analyze_serverinfo (struct server *s) {
     }
 
     //password required?
-    else if (strcmp (*info_ptr, "password") == 0 && strcmp(info_ptr[1],"False")) {
+    // If not password=False or password=0, set SERVER_PASSWORD
+    else if (strcmp (*info_ptr, "password") == 0 && 
+    	( strcmp(info_ptr[1],"False") && strcmp(info_ptr[1],"0") ) )
+    {
       s->flags |= SERVER_PASSWORD;
     }
   }
