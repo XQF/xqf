@@ -81,6 +81,7 @@ static void master_check_master_addr_prefix()
 						              "255.255.255.255");
       gtk_entry_set_text(
       GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
+      g_free(txt);
     }
 
     // Otherwise, just change the master type (xxx://)
@@ -88,6 +89,7 @@ static void master_check_master_addr_prefix()
       master_addr =
         g_strconcat(master_prefixes[current_master_query_type],pos,NULL);
       gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry),master_addr);
+      g_free(master_addr);
     }
   }
 }
@@ -396,7 +398,7 @@ struct master *add_master_dialog (struct master *m) {
   if(master_to_edit)
   {
     gtk_entry_set_text(GTK_ENTRY (GTK_COMBO
-	  (master_name_combo)->entry),strdup(master_to_edit->name));
+	  (master_name_combo)->entry),master_to_edit->name);
   }
 
 
@@ -452,10 +454,11 @@ struct master *add_master_dialog (struct master *m) {
 
   if(master_to_edit)
   {
-    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO
-	  (master_addr_combo)->entry),master2url(master_to_edit));
+    char* url = master2url(master_to_edit);
+    gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry), url);
     gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
     gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);
+    g_free(url);
   }
   
   gtk_widget_show (table);
