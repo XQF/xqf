@@ -124,25 +124,11 @@ struct game games[] = {
     "QuakeWorld",
     QW_DEFAULT_PORT,
     QWM_DEFAULT_PORT,
-
-#ifdef QSTAT23
     "QWS",
     "QWS",
-#else
-    "QW",
-    "QW",
-#endif
-
     "-qws",
-
-#ifdef QSTAT23
     "-qwm",
-#else
-    "-qw",
-#endif
-
     &q_pix,
-
     qw_parse_player,
     quake_parse_server,
     qw_analyze_serverinfo,
@@ -165,19 +151,11 @@ struct game games[] = {
     "Quake2",
     Q2_DEFAULT_PORT,
     Q2M_DEFAULT_PORT,
-
-#ifdef QSTAT23
     "Q2S",
     "Q2S",
-#else
-    "Q2",
-    "Q2",
-#endif
-
     "-q2s",
     "-q2m",
     &q2_pix,
-
     q2_parse_player,
     quake_parse_server,
     q2_analyze_serverinfo,
@@ -375,13 +353,7 @@ struct game games[] = {
     "HLS",
     "HLS",
     "-hls",
-
-#ifdef QSTAT23
     "-hlm",
-#else
-    NULL,
-#endif
-
     &hl_pix,
 
     hl_parse_player,
@@ -541,7 +513,6 @@ struct game games[] = {
     NULL		// game_cfg
   },
 
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
   {
     UN_SERVER,
     GAME_CONNECT,
@@ -627,7 +598,6 @@ struct game games[] = {
     NULL,		// real_dir
     NULL		// game_cfg
   },
-#endif
   // Descent 3
   {
     DESCENT3_SERVER,		// server_type
@@ -765,21 +735,10 @@ enum server_type id2type (const char *id) {
   }
 
 
-#ifdef QSTAT23
-
   if (g_strcasecmp (id, "QW") == 0)
     return QW_SERVER;
   if (g_strcasecmp (id, "Q2") == 0)
     return Q2_SERVER;
-
-#else
-
-  if (g_strcasecmp (id, "QWS") == 0)
-    return QW_SERVER;
-  if (g_strcasecmp (id, "Q2S") == 0)
-    return Q2_SERVER;
-
-#endif
 
   return UNKNOWN_SERVER;
 }
@@ -792,9 +751,6 @@ enum server_type id2type (const char *id) {
  */
 
 const char *type2id (enum server_type type) {
-#ifdef QSTAT23
-  return games[type].id;
-#else
   switch (type) {
 
   case QW_SERVER:
@@ -806,7 +762,6 @@ const char *type2id (enum server_type type) {
   default:
     return games[type].id;
   }
-#endif
 }
 
 
@@ -833,7 +788,6 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 }
 
 
-#ifdef QSTAT23
 static void q3_unescape (char *dst, char *src) {
 
   while (*src) {
@@ -844,7 +798,6 @@ static void q3_unescape (char *dst, char *src) {
   }
   *dst = '\0';
 }
-#endif
 
 
 static const char delim[] = " \t\n\r";
@@ -1012,8 +965,6 @@ static struct player *hl_parse_player (char *token[], int n) {
 }
 
 
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
-
 static struct player *un_parse_player (char *token[], int n) {
   struct player *player = NULL;
   char *ptr;
@@ -1054,9 +1005,6 @@ static struct player *un_parse_player (char *token[], int n) {
 
   return player;
 }
-
-#endif
-
 
 static void quake_parse_server (char *token[], int n, struct server *server) {
   /*
@@ -1751,8 +1699,6 @@ static int quake_config_is_valid (struct server *s) {
 }
 
 
-#ifdef QSTAT23
-
 static char *quake3_data_dir (char *dir) {
   struct stat stat_buf;
   char *rpath = NULL;
@@ -1815,9 +1761,6 @@ static int quake3_config_is_valid (struct server *s) {
   g_free (path);
   return TRUE;
 }
-
-#endif
-
 
 static int config_is_valid_generic (struct server *s) {
   struct stat stat_buf;
@@ -2871,8 +2814,6 @@ static GList *q2_custom_cfgs (char *dir, char *game) {
   return cfgs;
 }
 
-#ifdef QSTAT23
-
 static GList *q3_custom_cfgs (char *dir, char *game) {
   GList *cfgs;
   char *qdir;
@@ -2897,8 +2838,6 @@ static GList *q3_custom_cfgs (char *dir, char *game) {
 
   return cfgs;
 }
-
-#endif
 
 static void quake_save_server_rules (FILE *f, struct server *s) {
   char **info;
@@ -3036,8 +2975,6 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 (p->skin)? p->skin : "");
 	break;
 
-#ifdef QSTAT_HAS_UNREAL_SUPPORT
-
       case UN_SERVER:
 	fprintf (f, 
 		 "%s" QSTAT_DELIM_STR 
@@ -3054,8 +2991,6 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 (p->skin)? p->skin : "",
 		 (p->model)? p->model : "");
 	break;
-
-#endif
 
 	/* Q2, etc... */
 
