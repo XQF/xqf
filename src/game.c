@@ -126,6 +126,7 @@ static struct quake_private q1_private, qw_private, q2_private, hl_private;
 static struct quake_private q3_private = { NULL, "~/.q3a" };
 static struct quake_private wolf_private = { NULL, "~/.wolf" };
 static struct quake_private wolfet_private = { NULL, "~/.etwolf" };
+static struct quake_private mohaa_private = { NULL, "~/.mohaa" };
 
 struct game games[] = {
   {
@@ -854,6 +855,10 @@ struct game games[] = {
     NULL,		// pd
   },
 
+  {
+    MOHAA_SERVER,
+  },
+
   // any game using the gamespy protocol
   {
     GPS_SERVER,			// server_type
@@ -992,6 +997,15 @@ void init_games()
   games[AAO_SERVER].pd=&aao_private;
   games[AAO_SERVER].pix=&aao_pix;
 
+  game_copy_static_options(MOHAA_SERVER,Q3_SERVER);
+  games[MOHAA_SERVER].name="Medal of Honor: Allied Assault";
+  games[MOHAA_SERVER].default_port=12204;
+  games[MOHAA_SERVER].id="MHS";
+  games[MOHAA_SERVER].qstat_str="MHS";
+  games[MOHAA_SERVER].qstat_option="-mhs";
+  games[MOHAA_SERVER].pd=&mohaa_private;
+  games[MOHAA_SERVER].pix=&mohaa_pix;
+
   for (i = 0; i < GAMES_TOTAL; i++)
   {
     g_datalist_init(&games[i].games_data);
@@ -1012,6 +1026,7 @@ void init_games()
   game_set_attribute(AAO_SERVER,"suggest_commands",strdup("armyops"));
   game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
   game_set_attribute(SSAMSE_SERVER,"suggest_commands",strdup("ssamtse"));
+  game_set_attribute(MOHAA_SERVER,"suggest_commands",strdup("mohaa"));
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
    				   ("Note:  Soldier of Fortune will not connect to a server correctly\n"\

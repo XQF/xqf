@@ -1,5 +1,6 @@
 Aug 21, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - replace strings by ints in country filter (Jochen Baier)
+- add support for Medal of Honor
 
 Aug 17, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - patch from Jochen Baier
