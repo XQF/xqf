@@ -2403,21 +2403,34 @@ static int q3_exec (const struct condef *con, int forkit) {
   */
   if (setfs_game && con->s->game)
   {
-    // Look in (e.g.) ~/.q3a first
-    if(g->real_home)
+    gboolean is_mainmod = FALSE;
+    for(i = 0; g->main_mod && g->main_mod[i]; ++i)
     {
-      real_game_dir = find_game_dir(g->real_home, con->s->game, &game_match_result);
+      if(!g_strcasecmp(con->s->game, g->main_mod[i]))
+      {
+	is_mainmod = TRUE;
+	break;
+      }
     }
-    
-    if (!real_game_dir)
+
+    if(!is_mainmod)
     {
-      // Didn't find in home directory so look in real directory if defined
-      real_game_dir = find_game_dir(g->real_dir, con->s->game, &game_match_result);
+      // Look in (e.g.) ~/.q3a first
+      if(g->real_home)
+      {
+	real_game_dir = find_game_dir(g->real_home, con->s->game, &game_match_result);
+      }
+      
+      if (!real_game_dir)
+      {
+	// Didn't find in home directory so look in real directory if defined
+	real_game_dir = find_game_dir(g->real_dir, con->s->game, &game_match_result);
+      }
+      
+      argv[argi++] = "+set";
+      argv[argi++] = "fs_game";
+      argv[argi++] = real_game_dir?real_game_dir:con->s->game;
     }
-    
-    argv[argi++] = "+set";
-    argv[argi++] = "fs_game";
-    argv[argi++] = real_game_dir?real_game_dir:con->s->game;
   }
 
   if(pass_memory_options == TRUE)

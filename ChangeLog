@@ -1,3 +1,6 @@
+Jul 18, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- do not set fs_game if mod is a 'main mod'
+
 Jul 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix NULL pointer dereference when sorting rule/value columns with subtress
   (#990692)
