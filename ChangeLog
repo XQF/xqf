@@ -1,3 +1,7 @@
+Apr 22, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- don't display warnings about NULL if scanning for maps is disabled. Thanks
+  Jochen Baier for reporting.
+
 Mar 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - popup window with levelshot when clicking on map column, currently supports
   jpg shots inside pk3 files for q3 and wolf.
