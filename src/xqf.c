@@ -571,6 +571,8 @@ static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
   if (!forced_filters_flag) {
     cur_filter ^= mask;
     server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
+    print_status (main_status_bar, (server_clist->rows == 1) ?
+                        _("%d server") : _("%d servers"), server_clist->rows);
   }
 }
 

@@ -1,3 +1,7 @@
+Oct 27, 2002: Alex <alex_b@users.sourceforge.net>
+- Number of servers in status bar now updated when enabling / disabling a
+  filter
+
 Oct 26, 2002: Alex <alex_b@users.sourceforge.net>
 - Set focus to Game Contains when adding new server filter
 - Set focus to Game when adding new custom arg
