@@ -93,7 +93,9 @@ fi
 
 AC_OUTPUT([Makefile intl/Makefile po/Makefile.in \
 src/Makefile src/xpm/Makefile \
-docs/Makefile])
+docs/Makefile
+xqf.spec
+])
 
 if test "x$qstat_is" = "xnotfound" ; then
 	AC_MSG_RESULT([
