@@ -1306,14 +1306,14 @@ static void update_cfgs (enum server_type type, char *dir, char *initstr) {
 }
 
 
-static void dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
+static gboolean dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
   struct generic_prefs *prefs;
   enum server_type type;
 
   type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
   prefs = &genprefs[type];
 
-  debug (5, "dir_entry_activate_callback() type=%d",type);
+  debug (3, "type=%d",type);
 
   if (prefs->pref_dir) g_free (prefs->pref_dir);
   prefs->pref_dir = strdup_strip (gtk_entry_get_text (
@@ -1326,6 +1326,8 @@ static void dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
       games[type].cmd_or_dir_changed(&games[type]);
 
   update_cfgs (type, prefs->real_dir, NULL);
+  
+  return FALSE;
 }
 
 
@@ -3293,9 +3295,11 @@ static GtkWidget *woet_options_page (void) {
 }
 
 
-static void doom3_proto_entry_activate_callback (GtkWidget *widget, gpointer data)
+static gboolean doom3_proto_entry_activate_callback (GtkWidget *widget, gpointer data)
 {
   games[DOOM3_SERVER].cmd_or_dir_changed(&games[DOOM3_SERVER]);
+  
+  return FALSE;
 }
 
 // additional options for doom3

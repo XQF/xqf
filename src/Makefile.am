@@ -126,6 +126,6 @@ gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
 gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
 
 gamelist: gamesxml2c
-	./gamesxml2c games.xml > games.c
+	$(top_builddir)/src/gamesxml2c $(top_srcdir)/src/games.xml > $(top_srcdir)/src/games.c
 
 .PHONY: gamelist
