@@ -1,3 +1,7 @@
+Oct 07, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- changed default commandline for qs & qws for quakeforge
+- added default commandlines for rune,tribes2,wolf and ut
+
 Oct 05, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - removed quakeforge workaround
 - added -Wall to CFLAGS
