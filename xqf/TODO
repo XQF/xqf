@@ -5,3 +5,4 @@
 - Detection if map is installed (req. home dir option)
 - improve performance with huge server lists (halflife), maybe by serverside
   filtering
+- more sophisticated UT launch function, currently not usable with mods like tacops or strikeforce

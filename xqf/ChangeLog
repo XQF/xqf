@@ -1,3 +1,7 @@
+Oct 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- update NEWS and TODO
+- added script 'vc' to automate editing this file
+
 Oct 05, 2002: Alex Burger <alex@fragit_dot_net>
 - Added password support to Unreal based games (games that use
   un_exec - Unreal, UT 2003, Rune)

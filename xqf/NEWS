@@ -1,5 +1,5 @@
 XQF 0.9.10 -- ???? ?, ????
-~~~~~~~~~
+~~~~~~~~~~
 Changes since 0.9.9:
 
 o Various segfault fixes
@@ -8,15 +8,16 @@ o Can now hide games that are not configured
 o Changed default Quake3 protocol to 68
 o Sound support for XQF events 
 o Busy server redial
-o Soldier of Fortune 2 support  (requires QSTAT sof2s gametype via ~/.qstatrc)
-o Half-Life launch improvements (what exactly?)
+o Soldier of Fortune 2 support  (requires qstat sof2s gametype via ~/.qstatrc)
+o Use correct parameters (-game,+connect,+password) when launching Half-Life
 o New master type of "file" to read IP addresses from a file
-o Unreal Tournament 2003 support (requires QSTAT ut2s gametype via ~/.qstatrc)
+o Unreal Tournament 2003 support (requires qstat ut2s gametype via ~/.qstatrc or qstat >2.5b)
 o Fixed Half-Life rcon support 
 o Player search visible improvements 
 o Fixed Tribes2 master support
-o Variable number of server filters (?)
+o Unlimited number of server filters instead of ten
 o Changed default Wolf protocol to 59  
+o Standalone rcon program that doesn't need X
 
 
 XQF 0.9.9 -- July 3, 2002

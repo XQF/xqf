@@ -1,0 +1,70 @@
+#!/bin/bash
+# use this script to edit ChangeLog
+#
+# if you don't want your sf mail address, put yours into a file with name
+# "mail"
+#
+# Copyright (C) 2002 Ludwig Nussel
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+
+#
+# $Id$
+#
+
+export LANG=C
+
+if [ -r mail ]; then
+	mailaddr=`cat mail`
+else
+	SFLOGIN=`cat CVS/Root |sed 's/.*:\(.*\)@.*/\1/'`
+	REALNAME=`getent passwd|awk -F : "\\$3==$UID{print \\$5}"`
+	mailaddr="$REALNAME <$SFLOGIN@users.sourceforge.net>"
+fi;
+
+EDITOR=${EDITOR:-vim}
+DATE=`date '+%b %d, %Y:'`
+
+if [ ! -e ChangeLog ]; then
+	echo "No ChangeLog file found"
+	exit 1
+fi
+
+TMPFILE=`mktemp -q /tmp/xqf-ChangeLog.XXXXXX`
+if [ $? -ne 0 ]; then
+	echo "$0: Can't create temp file, exiting..." | $XMESSAGE -file -
+	exit 1
+fi
+TMPFILE2=`mktemp -q /tmp/xqf-ChangeLog.XXXXXX`
+if [ $? -ne 0 ]; then
+	echo "$0: Can't create temp file, exiting..." | $XMESSAGE -file -
+	exit 1
+fi
+trap "rm -f $TMPFILE $TMPFILE2" EXIT
+
+set +e
+
+echo $DATE $mailaddr >> $TMPFILE
+echo "- " >> $TMPFILE
+echo >> $TMPFILE
+cat ChangeLog >> $TMPFILE
+cat $TMPFILE >> $TMPFILE2
+$EDITOR $TMPFILE
+
+if ! diff -q $TMPFILE $TMPFILE2; then
+	cp $TMPFILE ChangeLog
+else
+	echo "no changes made"
+fi
