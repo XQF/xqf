@@ -73,6 +73,7 @@
 #include "xpm/cod.xpm"
 #include "xpm/bf1942.xpm"
 #include "xpm/jk3.xpm"
+#include "xpm/doom3.xpm"
 #undef static
 
 #include "xpm/green-plus.xpm"

@@ -884,6 +884,8 @@ static char *builtin_masters_update_info[] = {
   "ADD WOS master://wolf.idsoftware.com:27950 id",
   "ADD WOETS master://etmaster.idsoftware.com:27950 id",
 
+  "ADD DM3S master://idnet.ua-corp.com:27650 id",
+
   "ADD EFS http://www.gameaholic.com/servers/qspy-startrekeliteforce Gameaholic.com",
   "ADD EFS master://master.stef1.ravensoft.com:27953  Ravensoft",
 
