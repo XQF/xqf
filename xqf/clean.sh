@@ -18,6 +18,7 @@ src/Makefile.in \
 ltconfig \
 ltmain.sh \
 libtool \
+compile \
 config.h \
 intl/libintl.h \
 src/gnuconfig.h \
