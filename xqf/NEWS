@@ -1,3 +1,20 @@
+XQF 1.0 -- August 15, 2004
+~~~~~~~
+Changes since 0.9.14:
+
+o New games: Doom3, Jedi Academy (wine), Americas Army 2.1
+o Redial also when only private slots are free and no password is set
+o Support for the Half-Life steam master
+o Support for Americas Army 2.1
+o Export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
+  XQF_SERVER_GAME when launching a game
+o Custom arguments for RedOrchestra, Troopers, AlienSwarm UT2004 mods
+o Animated tray icon for the GTK2 version
+o Quake 3 gametypes for World of Padman
+o Also copy to CLIPBOARD instead of only PRIMARY to allow paste via CTRL-v
+o Quick Filter
+o Requires qstat 2.6
+
 XQF 0.9.14 -- March 21, 2004
 ~~~~~~~~~~
 Changes since 0.9.13:
