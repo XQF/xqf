@@ -1,3 +1,7 @@
+Feb 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- also check GamePassword rule which is used by UT2004
+- add multiplay.co.uk server listing
+
 Feb 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - move suggest_commands into xml file
 - add support for UT2004. Someone please tell me a master server for it!
