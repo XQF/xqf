@@ -694,11 +694,11 @@ static GtkWidget *server_passwords_page (struct server *s) {
   if ((games[s->type].flags & GAME_SPECTATE) == 0)
     gtk_widget_set_sensitive (spectator_entry, FALSE);
 
-  rcon_entry = passwd_entry (_("RCon Password"),
+  rcon_entry = passwd_entry (_("RCon/Admin Password"),
 			     (props)? props->rcon_password : NULL,
 			     table, 2);
 
-  if ((games[s->type].flags & GAME_RCON) == 0)
+  if (!games[s->type].flags & GAME_RCON && !games[s->type].flags & GAME_ADMIN)
     gtk_widget_set_sensitive (rcon_entry, FALSE);
 
   gtk_widget_show (table);
