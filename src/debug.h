@@ -20,11 +20,12 @@
 #define _DEBUG_H_
 
 #define DEFAULT_DEBUG_LEVEL 0
-void debug(int, char *, ...);
+
+#define debug(level,fmt,rest...) debug_int(__FILE__,__LINE__,__FUNCTION__,level,fmt,##rest)
+void debug_int(const char* file, int line, const char* function, int level, const char* fmt, ...);
 void debug_cmd(int, char *[], char *, ...);
 void set_debug_level (int);
 int get_debug_level (void);
-int debug_level;
 
 int debug_increase_indent();
 int debug_decrease_indent();

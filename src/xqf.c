@@ -34,6 +34,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>	/* kill, ... */
 
 #ifdef ENABLE_NLS
 #  include <locale.h>
@@ -178,7 +179,17 @@ static GtkWidget *server_filter_3_widget = NULL;
 static GtkWidget* create_filter_menu();
 //static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
 static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
-  
+
+void sighandler_debug(int signum)
+{
+    if( signum == SIGUSR1)
+	set_debug_level(get_debug_level()+1);
+    else if( signum == SIGUSR2)
+	set_debug_level(get_debug_level()-1);
+
+    debug(0,"debug level now at %d", get_debug_level());
+}
+
 // returns 0 if equal, -1 if too old, 1 if have > expected
 int compare_qstat_version ( const char* have, const char* expected )
 {
@@ -3008,6 +3019,8 @@ int main (int argc, char *argv[]) {
 
   client_init ();
   ignore_sigpipe ();
+  on_sig(SIGUSR1, sighandler_debug);
+  on_sig(SIGUSR2, sighandler_debug);
 
   add_server_init ();
   add_master_init ();

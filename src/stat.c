@@ -799,7 +799,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   char buf2[64];
   char buf3[64];
   char buf_rawarg[] = { QSTAT_DELIM, '\0' };
-  struct stat_conn *conn;
+  struct stat_conn *conn = NULL;
   char *cmd = NULL;
   char *file = NULL;
 

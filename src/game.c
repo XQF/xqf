@@ -74,6 +74,7 @@ static int q1_exec_generic (const struct condef *con, int forkit);
 static int qw_exec (const struct condef *con, int forkit);
 static int q3_exec (const struct condef *con, int forkit);
 static int q2_exec_generic (const struct condef *con, int forkit);
+static int hl_exec(const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
 static int gamespy_exec (const struct condef *con, int forkit);
@@ -367,7 +368,7 @@ struct game games[] = {
   },
   {
     HL_SERVER,
-    GAME_CONNECT | GAME_RCON,
+    GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
     "Half-Life",
     HL_DEFAULT_PORT,
     HLM_DEFAULT_PORT,
@@ -388,7 +389,7 @@ struct game games[] = {
     hl_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
-    q2_exec_generic,
+    hl_exec,
     NULL,
     quake_save_info,
     "sv_os",		// arch_identifier
@@ -2391,6 +2392,42 @@ static int q3_exec (const struct condef *con, int forkit) {
   if (memsettings) g_free (memsettings);
   g_free (cmd);
   g_free (tmp_cmd);
+  return retval;
+}
+
+static int hl_exec (const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->gamedir) {
+    argv[argi++] = "-game";
+    argv[argi++] = con->gamedir;
+  }
+
+  if (con->server) {
+    argv[argi++] = "+connect";
+    argv[argi++] = con->server;
+  }
+
+  if (con->password) {
+    argv[argi++] = "+password";
+    argv[argi++] = con->password;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
   return retval;
 }
 
