@@ -3766,7 +3766,7 @@ int prefs_load (void) {
   default_toolbar_tips =      config_get_bool ("toolbar tips=true");
   default_refresh_sorts =     config_get_bool ("sort on refresh=true");
   default_refresh_on_update = config_get_bool ("refresh on update=true");
-  default_show_only_configured_games =    config_get_bool ("show only configured games=true");
+  default_show_only_configured_games =    config_get_bool ("show only configured games=false");
 
   config_pop_prefix ();
 
