@@ -6,7 +6,7 @@ Mandrake 8
 libtool 1.4
 gettext 0.10.40
 
-Steps:
+tar.gz:
 
 -fresh cvs checkout
 -update version in NEWS, configure.in, docs/xqfdocs.html, ChangeLog
@@ -14,5 +14,53 @@ Steps:
 -./autogen.sh
 -./configure
 -./make dist
+
+Packages:
+
+*****
+RedHat RPM:
+
+xqf-0.9.8-1.i386.rpm:
+
+/usr/bin/xqf
+/usr/doc/xqf-0.9.8
+/usr/doc/xqf-0.9.8/AUTHORS
+/usr/doc/xqf-0.9.8/BUGS
+/usr/doc/xqf-0.9.8/COPYING
+/usr/doc/xqf-0.9.8/ChangeLog
+/usr/doc/xqf-0.9.8/INSTALL
+/usr/doc/xqf-0.9.8/NEWS
+/usr/doc/xqf-0.9.8/README
+/usr/doc/xqf-0.9.8/TODO
+/usr/man/man6/xqf.6.gz
+/usr/share/locale/de/LC_MESSAGES/xqf.mo
+/usr/share/locale/es/LC_MESSAGES/xqf.mo
+
+******
+SuSE 7.1:
+
+xqf-0.9.8-0.suse71.i386.rpm:
+xqf-0.9.8-0.suse71.ppc.rpm:
+
+/usr/bin/xqf
+/usr/share/doc/packages/xqf
+/usr/share/doc/packages/xqf/AUTHORS
+/usr/share/doc/packages/xqf/BUGS
+/usr/share/doc/packages/xqf/COPYING
+/usr/share/doc/packages/xqf/ChangeLog
+/usr/share/doc/packages/xqf/INSTALL
+/usr/share/doc/packages/xqf/NEWS
+/usr/share/doc/packages/xqf/README
+/usr/share/doc/packages/xqf/TODO
+/usr/share/doc/packages/xqf/xqfdocs.html
+/usr/share/locale/de/LC_MESSAGES/xqf.mo
+/usr/share/locale/es/LC_MESSAGES/xqf.mo
+/usr/share/man/man6/xqf.6.gz
+
+
+
+
+
+
 
 
