@@ -32,6 +32,10 @@
 #include "utils.h"
 #include "server.h"
 
+#ifdef USE_GEOIP
+#include "country-filter.h"
+#endif
+
 
 struct server_hash {
   int num;
@@ -75,6 +79,10 @@ static int userver_hash_func (const char *hostname, unsigned short port) {
 static struct server *server_new (struct host *h, unsigned short port, 
 				  enum server_type type) {
   struct server *server;
+			
+#ifdef USE_GEOIP
+  int *country_id;
+#endif
 
   if (port == 0 || type == UNKNOWN_SERVER)
     return NULL;
@@ -91,7 +99,11 @@ static struct server *server_new (struct host *h, unsigned short port,
   server->type = type;
   server->ping = -1;
   server->retries = -1;
-
+	
+#ifdef USE_GEOIP
+  server->country_id = geoip_id_by_ip(h->ip);
+#endif
+		 	
   return server;
 }
 
@@ -556,5 +568,3 @@ void userver_list_fprintf (FILE *f, GSList *uservers) {
     uservers = uservers->next;
   }
 }
-
-

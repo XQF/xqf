@@ -185,6 +185,10 @@ struct server {
   GSList *players;	/** GSList<struct player *>  */
 
   char sv_os;         /** L = Linux, W = windows, M = Mac */
+	
+#ifdef USE_GEOIP
+  int country_id;
+#endif
 
   unsigned char flags;
 
@@ -255,4 +259,3 @@ int event_type;
 extern	void refresh_source_list (void);
 
 #endif /* __XQF_H__ */
-

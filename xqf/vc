@@ -37,14 +37,26 @@ fi;
 
 EDITOR=${EDITOR:-vim}
 DATE=`date '+%b %d, %Y:'`
+changelog=ChangeLog
 
 if ! which mktemp > /dev/null 2>&1; then
 	echo "mktemp is required for this script to work"
 	exit 1
 fi
 
-if [ ! -e ChangeLog ]; then
-	echo "No ChangeLog file found"
+case "$1" in
+	--help)
+		echo "Usage: $0 [Changelog filename]"
+		echo
+		echo "Will use '$mailaddr' for ChangeLog entries"
+		exit 0
+	;;
+esac
+
+[ -n "$1" ] && changelog="$1"
+
+if [ ! -e "$changelog" ]; then
+	echo "No "$changelog" file found"
 	exit 1
 fi
 
@@ -66,16 +78,17 @@ echo $DATE $mailaddr >> $TMPFILE
 echo "- " >> $TMPFILE
 echo >> $TMPFILE
 
-if [ "`head -n1 ChangeLog`" = "`head -n1 $TMPFILE`" ]; then
-	cat ChangeLog > $TMPFILE
+if [ "`head -n1 $changelog`" = "`head -n1 $TMPFILE`" ]; then
+	cat $changelog > $TMPFILE
 else
-	cat ChangeLog >> $TMPFILE
+	cat $changelog >> $TMPFILE
 fi
+
 cat $TMPFILE >> $TMPFILE2
 $EDITOR $TMPFILE
 
 if ! diff -q $TMPFILE $TMPFILE2; then
-	cp $TMPFILE ChangeLog
+	cp $TMPFILE "$changelog"
 else
 	echo "no changes made"
 fi

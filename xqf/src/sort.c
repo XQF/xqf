@@ -28,6 +28,7 @@
 #include "server.h"
 #include "host.h"
 #include "sort.h"
+#include "country-filter.h"
 
 
 static inline int compare_strings (const char *str1, const char *str2) {
@@ -153,6 +154,12 @@ int compare_servers (const struct server *s1, const struct server *s2,
     }
     break;
 
+#ifdef USE_GEOIP
+  case SORT_SERVER_COUNTRY:
+    res = compare_strings (geoip_code_by_id(s1->country_id), geoip_code_by_id(s2->country_id));
+  break;
+#endif
+		
   default:
     res = 0;
     break;
@@ -224,5 +231,3 @@ int compare_srvinfo (const char **i1, const char **i2, enum isort_mode mode) {
 
   return res;
 }
-
-

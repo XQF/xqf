@@ -81,6 +81,10 @@
 #include "splash.h"
 #include "loadpixmap.h"
 
+#ifdef USE_GEOIP
+#include "country-filter.h"
+#endif
+
 time_t xqf_start_time;
 
 GtkWidget *main_window = NULL;
@@ -3557,6 +3561,10 @@ int main (int argc, char *argv[]) {
 
   config_set_base_dir (user_rcdir);
   newversion = prefs_load ();
+  
+#ifdef USE_GEOIP
+  geoip_init();
+#endif
 
   gtk_preview_set_gamma (1.5);
 
@@ -3682,9 +3690,13 @@ int main (int argc, char *argv[]) {
 
   config_sync ();
   config_drop_all ();
+
+#ifdef USE_GEOIP
+  geoip_done();
+#endif
+	
   debug( 6, "EXIT: Done.");
 
 
   return 0;
 }
-

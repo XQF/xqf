@@ -42,6 +42,7 @@
 #include "srv-info.h"
 #include "srv-list.h"
 #include "srv-prop.h" /*pulp*/
+#include "country-filter.h"
 
 
 GSList *qw_colors_pixmap_cache = NULL;
@@ -92,7 +93,11 @@ void assemble_server_address (char *buf, int size, const struct server *s) {
 static int server_clist_refresh_row (struct server *s, int row) {
   GdkPixmap *server_pixmap;
   GdkBitmap *server_pixmask;
-  char *text[10];
+  const char *text[9];
+#ifdef USE_GEOIP
+  struct pixmap* countrypix = NULL;
+#endif
+  
   char buf1[256], buf2[32], buf3[32], buf4[32], buf5[4];
   char *retries;
   struct pixmap *retries_pix = NULL;
@@ -162,13 +167,14 @@ static int server_clist_refresh_row (struct server *s, int row) {
   text[6] = (s->map) ?  s->map : NULL;
   text[7] = (s->game)? s->game : NULL;
   text[8] = (s->gametype) ? s->gametype : NULL; 
-  
+	  
   /*
     baa- Change xqf-ui.c such that the server_clist_def calls out
     10 columns if you want this shown.
-  */
+  
   sprintf (buf5, "[%c]", ( s->sv_os ? s->sv_os : ' '));
   text[9] = buf5;
+	*/
 
   if (row < 0) {
     row = gtk_clist_append (server_clist, text);
@@ -243,6 +249,13 @@ static int server_clist_refresh_row (struct server *s, int row) {
                                                              &server_pixmask);
   gtk_clist_set_pixtext (server_clist, row, 0, 
                    (s->name)? s->name : "", 2, server_pixmap, server_pixmask);
+
+#ifdef USE_GEOIP
+  countrypix = get_pixmap_for_country(s->country_id);
+  if(countrypix)
+	  gtk_clist_set_pixtext (server_clist, row, 1, 
+                   text[1], 2, countrypix->pix, countrypix->mask);
+#endif
 
   // if map not available
   if(games[s->type].has_map && games[s->type].has_map(s) == FALSE)
@@ -739,4 +752,3 @@ void server_clist_build_filtered (GSList *server_list, int update) {
 
   gtk_clist_thaw (server_clist);
 }
-

@@ -167,7 +167,7 @@ int pixmap_width (GdkPixmap *pixmap) {
 }
 
 
-static void free_pixmap (struct pixmap *pixmap) {
+void free_pixmap (struct pixmap *pixmap) {
   if (!pixmap)
     return;
 

@@ -31,7 +31,10 @@ enum ssort_mode {
   SORT_SERVER_PLAYERS,
   SORT_SERVER_MAP,
   SORT_SERVER_GAME,
-  SORT_SERVER_GAMETYPE
+  SORT_SERVER_GAMETYPE,
+#ifdef USE_GEOIP
+  SORT_SERVER_COUNTRY,
+#endif
 };
 
 enum psort_mode {
@@ -58,4 +61,3 @@ extern	int compare_srvinfo (const char **i1, const char **i2,
 
 
 #endif /* __SORT_H__ */
-

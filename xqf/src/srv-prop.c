@@ -41,6 +41,7 @@
 #include "xutils.h"
 #include "dialogs.h"
 #include "srv-prop.h"
+#include "country-filter.h"
 
 static  GtkWidget *password_entry;
 static  GtkWidget *spectator_entry;
@@ -337,7 +338,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
   /* Address */
 
-  table = gtk_table_new (5, 4, FALSE);
+  table = gtk_table_new (6, 4, FALSE);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table), 8);
   gtk_box_pack_start (GTK_BOX (page_vbox), table, FALSE, FALSE, 0);
@@ -379,6 +380,34 @@ static GtkWidget *server_info_page (struct server *s) {
     gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
     gtk_widget_show (label);
   }
+
+  row++;
+
+  label = gtk_label_new (_("Country:"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+  gtk_widget_show (label);
+
+#ifdef USE_GEOIP
+  if (geoip_name_by_id(s->country_id)) {
+    GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
+    struct pixmap* pix = get_pixmap_for_country(s->country_id);
+    if(pix)
+    {
+      GtkWidget *pixmap = gtk_pixmap_new(pix->pix,pix->mask);
+      gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
+      gtk_widget_show (pixmap);
+    }
+
+    label = gtk_label_new (geoip_name_by_id(s->country_id));
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+    gtk_widget_show (label);
+
+    gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 4, row, row+1);
+    gtk_widget_show (hbox);
+  }
+#endif
 
   row++;
 

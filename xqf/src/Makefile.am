@@ -11,7 +11,7 @@ EXTRA_DIST = qstat.cfg
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
 
-xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz
+xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB)
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS)
 xqf_rcon_SOURCES = rcon.c debug.c
@@ -21,6 +21,7 @@ xqf_SOURCES =  \
 addmaster.c \
 addserver.c \
 config.c \
+country-filter.c \
 debug.c \
 dialogs.c \
 dns.c \
@@ -59,6 +60,7 @@ splash.c \
 addmaster.h \
 addserver.h \
 config.h \
+country-filter.h \
 debug.h \
 dialogs.h \
 dns.h \
