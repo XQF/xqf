@@ -1,3 +1,6 @@
+Sept 10, 2001: Alex Burger <alex@fragit_dot_net>
+- Added Jordi Mallach's man page - xqf.6 and modified Makefile.am
+
 Sept 5, 2001: Alex Burger <alex@fragit_dot_net>
 - Patch by  Ludwig Nussel ludwig.nussel@gmx.de to add German
   translation and some code fixes.

@@ -1,0 +1,46 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" xqf.1 is copyright 1999-2001 by Jordi Mallach <jordi@debian.org>
+.\" 
+.\" This is free documentation, see the latest version of the GNU
+.\" General Public License for copying conditions. There is NO warranty.
+.TH XQF 6 "August 21, 2001"
+.SH NAME
+xqf \- Quake/Quake2/Quake3/etc server browser and game launcher for X.
+.SH SYNOPSIS
+.B xqf
+.RI [ options ] " files" ...
+.SH DESCRIPTION
+This manual page documents briefly the
+.B xqf
+command.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+.PP
+\fBXQF\fP is a 3D action game (such as Quake, sequels and derivatives)
+server browser, similar to Window's GameSpy. It uses X and is written using
+the GIMP Tool Kit, and uses QStat in the backend to retrieve server info.
+.PP
+With XQF you can search for Quake, Quake World, Quake2, Quake3, Half-Life,
+Unreal Tournament, Kingpin, Heretic II, Sin and Tribes 2 games, and look at
+lots of information about the servers. XQF can spawn your client into a
+selected server with customized options. You can also apply filters while
+searching for servers, trimming full or empty servers, for example.
+.SH OPTIONS
+XQF doesn't accept any command line option at the moment, except for debug
+setting.
+.TP
+.B \-d N
+Sets debug level to `N', where N is greater than 0. If N is greater than 5,
+XQF will output a lot of debug information.
+.SH SEE ALSO
+.BR qstat(1).
+.TP
+.I /usr/share/doc/xqf
+.SH HOMEPAGE
+http://linuxgames.com/xqf/
+.SH AUTHOR
+This manual page was written by Jordi Mallach <jordi@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).
+.br
+XQF was written by Roman Pozlevich <roma@botik.ru>, and is now maintained
+by Bill Adams <bill@evilbill.org> and Alex Burger <alex@fragit.net>.
