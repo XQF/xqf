@@ -9,6 +9,7 @@ gettext 0.10.40
 Steps:
 
 -fresh cvs checkout
+-update version in NEWS, configure.in, docs/xqfdocs.html, ChangeLog
 -touch xqf/ltconfig
 -./autogen.sh
 -./configure
