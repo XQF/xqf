@@ -184,9 +184,6 @@ else
 	AC_MSG_RESULT([no])
 fi
 
-xqf_pkgdata=`eval echo ${datadir}/${PACKAGE}`
-AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, ["${xqf_pkgdata}"], Architecture independent data files)
-
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
