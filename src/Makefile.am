@@ -1,7 +1,7 @@
 SUBDIRS = xpm
 
 localedir = $(datadir)/locale
-INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" @QSTAT23@ @DEBUG@ @COMPRESSION@
+INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" @GTK_CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
 
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
