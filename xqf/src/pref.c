@@ -1829,91 +1829,20 @@ static GtkWidget *create_noskins_menu (int qworq2) {
 
 static void pref_guess_dir(enum server_type type)
 {
-  // Tries to guess the game / working directory using the following rules:
-  // - If cmd_entry is a symlink:
-  //   - If pointed to file contains '..', just stop, otherwise strip filename and
-  //     store as directory
-  //   - If there is no /'s in the pointed to file, use the original cmd_entry instead and
-  //     strip filename and store as directory
-  // 
-  // - If cmd_entry is not a symlink:
-  //   - strip filename and store as directory
-  //
-  // Examples:
-  //
-  // cmd_entry:		/usr/bin/quake2 symlink to /games/quake2/quake2
-  // result dir:	/games/quake2/
-  //
-  // cmd_entry:		/usr/bin/quake symlink to ../../games/quake2/quake2
-  // result dir:	(stops - leaves as-is)
-  //
-  // cmd_entry:		/games/quake2/quake2
-  // result dir:	/games/quake2/
-  //
-  // cmd_entry:		quake2
-  // result dir:	(stops - leaves as-is)
-  //
-  
   char *temp = NULL;
-  struct stat buf;
-  int length = 0;
-  char buf2[256];
-  char *ptr = NULL;
-  char *dir = NULL;
+  char *guessed_dir = NULL;
   
   temp = g_strdup(gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry)));
- 
+   
   if (strcmp (temp, "")) {
-    lstat(temp, &buf);
-    if ( S_ISLNK(buf.st_mode) == 1) {
-      // Grab directory from sym link of cmd_entry
-      
-      debug(1, "cmd_entry is a sym link");    
-
-      length = readlink (temp, buf2, 255);
-
-      if (length){
-        buf2[length]='\0';
-
-        if(buf2[length-1] == '/')
-          buf2[length-1] = '\0';
-        
-        ptr = strrchr(buf2, '/');
-        
-        if (ptr) {	    			// contains a / so pull from symlink
-          if (!strstr(buf2,"..")) {		// don't bother if it's got any ..'s in it
-            dir = g_strndup(buf2, ptr-buf2+1);
-            gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
-          }
-        }
-        else {        				// no / so pull from cmd_entry instead
-          ptr = strrchr(temp, '/');
-          if (ptr) {      			// contains a /
-            dir = g_strndup(temp, ptr-temp+1);
-            gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
-          }
-        }        
-      }
-    }
-    else {
-      // Grab directory from cmd_entry
-      
-      debug(1,"cmd_entry is NOT a sym link");
-    
-      ptr = strrchr(temp, '/');
-  
-      if (ptr) {      				// contains a /
-        dir = g_strndup(temp, ptr-temp+1);
-        gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), dir);
-      }
-    }  
+    guessed_dir = resolve_path(temp);
+    if(guessed_dir)
+      gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), guessed_dir);
   }
   else
     dialog_ok (NULL, _("You must configure a command line first"));
   if (temp)
     g_free (temp);
-  if (dir)
-    g_free (dir);
 }
 
 
@@ -4308,15 +4237,11 @@ static void user_fix_defaults (void)
 {
   const char* files = NULL;
   char* suggested_file = NULL;
+  char* guessed_dir = NULL;
   char str[256];
   int i;
   int j = 0;
-  struct stat buf;
-  int length = 0;
-  char buf2[256];
-  char *ptr = NULL;
-  char *dir = NULL;
-    
+   
   debug(1, "Setting defaults");
     
   for (i = 0; i < GAMES_TOTAL; i++)
@@ -4332,61 +4257,14 @@ static void user_fix_defaults (void)
     config_set_string (str, suggested_file);
     debug(1,"set command %s for %s",suggested_file,games[i].name);
 
-    // Working dir start
+    guessed_dir = resolve_path(suggested_file);
+    if(!guessed_dir) continue;
 
-    lstat(suggested_file, &buf);
-    if ( S_ISLNK(buf.st_mode) == 1) {
-      // Grab directory from sym link of suggested_file
-      
-      debug(1, "suggested_file is a sym link");    
-
-      length = readlink (suggested_file, buf2, 255);
-
-      if (length){
-        buf2[length]='\0';
-
-        if(buf2[length-1] == '/')
-           buf2[length-1] = '\0';
-        
-        ptr = strrchr(buf2, '/');
-        
-        if (ptr) {	    			// contains a / so pull from symlink
-          if (!strstr(buf2,"..")) {		// don't bother if it's got any ..'s in it
-            dir = g_strndup(buf2, ptr-buf2+1);
-            g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
-            config_set_string (str, dir);
-          }
-        }
-        else {        				// no / so pull from suggest_file instead
-          ptr = strrchr(suggested_file, '/');
-          if (ptr) {      			// contains a /
-            dir = g_strndup(suggested_file, ptr-suggested_file+1);
-            g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
-            config_set_string (str, dir);
-          }
-        }        
-      }
-    }
-    else {
-      // Grab directory from suggested_file
-
-      debug(1,"suggested_file is NOT a sym link");
-      ptr = strrchr(suggested_file, '/');
-      if (ptr) {      				// contains a /
-        dir = g_strndup(suggested_file, ptr-suggested_file+1);
-        g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
-        config_set_string (str, dir);
-      }
-    }  
-    // Working dir end
-
-    if (dir)
-    g_free (dir);
-
-    g_free(suggested_file);
-    suggested_file=NULL;
+    g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/dir", type2id (games[i].type));
+    config_set_string (str, guessed_dir);
+    debug(1,"set command %s for %s",guessed_dir,games[i].name);
   }
-  
+    
   if (j) {
     config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
     debug(2,"%d games found, set 'show only configured games' to true", j);

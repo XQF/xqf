@@ -666,3 +666,83 @@ GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*u
   return list;
 }
 
+char* resolve_path(const char* path)
+{
+  // Extracts the path from path using the following rules:
+  // - If path is a symlink:
+  //   - If pointed to file contains '..', just stop, otherwise strip filename and
+  //     store as directory
+  //   - If there is no /'s in the pointed to file, use the original cmd_entry instead and
+  //     strip filename and store as directory
+  // 
+  // - If path is not a symlink:
+  //   - strip filename and store as directory
+  //
+  // Path can be either a file or a directory
+  //
+  // Examples:
+  //
+  // cmd_entry:		/usr/bin/quake2 symlink to /games/quake2/quake2
+  // result dir:	/games/quake2/
+  //
+  // cmd_entry:		/usr/bin/quake symlink to ../../games/quake2/quake2
+  // result dir:	(stops - leaves as-is)
+  //
+  // cmd_entry:		/games/quake2/quake2
+  // result dir:	/games/quake2/
+  //
+  // cmd_entry:		quake2
+  // result dir:	(stops - leaves as-is)
+  //
+  
+  struct stat buf;
+  int length = 0;
+  char buf2[256];
+  char *ptr = NULL;
+  char *dir = NULL;
+  
+  if (strcmp (path, "")) {
+    lstat(path, &buf);
+    if ( S_ISLNK(buf.st_mode) == 1) {
+      // Grab directory from sym link of cmd_entry
+      
+      debug(2, "path is a sym link");    
+
+      length = readlink (path, buf2, 255);
+
+      if (length){
+        buf2[length]='\0';
+
+        if(buf2[length-1] == '/')
+          buf2[length-1] = '\0';
+        
+        ptr = strrchr(buf2, '/');
+        
+        if (ptr) {	    			// contains a / so pull from symlink
+          if (!strstr(buf2,"..")) {		// don't bother if it's got any ..'s in it
+            dir = g_strndup(buf2, ptr-buf2+1);
+          }
+        }
+        else {        				// no / so pull from cmd_entry instead
+          ptr = strrchr(path, '/');
+          if (ptr) {      			// contains a /
+            dir = g_strndup(path, ptr-path+1);
+          }
+        }        
+      }
+    }
+    else {
+      // Grab directory from cmd_entry
+      
+      debug(2,"path is NOT a sym link");
+    
+      ptr = strrchr(path, '/');
+  
+      if (ptr) {      				// contains a /
+        dir = g_strndup(path, ptr-path+1);
+      }
+    }  
+  }
+  return dir;
+}
+

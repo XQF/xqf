@@ -1,3 +1,6 @@
+Oct 29, 2002: Alex Burger <alex_b@users.sourceforge.net>
+- Create resolve_path function for use with guess_dir, user_fix_defaults etc
+
 Oct 29, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - add some missing gettext calls
 - fix function casting to int*
