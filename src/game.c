@@ -1575,7 +1575,7 @@ static char *q3a_cpma_gametypes[MAX_Q3A_CPMA_TYPES] = {
   "Clan Arena",		/* 5 = Clan Arena */
 };
 
-#define MAX_Q3A_Q3F_TYPES 9
+#define MAX_Q3A_Q3F_TYPES 6
 static char *q3a_q3f_gametypes[MAX_Q3A_Q3F_TYPES] = {
   "q3f",		/* 0 = Arena */
   "q3f",		/* 1 = Arena */
@@ -1583,6 +1583,16 @@ static char *q3a_q3f_gametypes[MAX_Q3A_Q3F_TYPES] = {
   "q3f",		/* 3 = Arena */
   "q3f",		/* 4 = Arena */
   "q3f",		/* 5 = Arena */
+};
+
+#define MAX_Q3A_WQ3_TYPES 6
+static char *q3a_wq3_gametypes[MAX_Q3A_WQ3_TYPES] = {
+  "FFA",
+  "Duel",
+  NULL,
+  "TDM",
+  "Round Teamplay",
+  "Bank Robbery"
 };
 
 #define MAX_WOLF_TYPES 9
@@ -1597,6 +1607,7 @@ static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   "WolfCP",		// 7 - Checkpoint mode
   NULL			// 8+ ???
 };
+
 
 struct q3a_gametype_s {
   char* mod;
@@ -1700,6 +1711,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     "q3f2",
     q3a_q3f_gametypes,
     MAX_Q3A_Q3F_TYPES
+  },
+  {
+    "westernq3",
+    q3a_wq3_gametypes,
+    MAX_Q3A_WQ3_TYPES
   },
   {
     NULL,
