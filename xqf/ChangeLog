@@ -1,3 +1,6 @@
+Mar 22, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- change default ET protocol to 84, fix qstat.cfg
+
 Mar 06, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - update NEWS file for 1.0.3
 
