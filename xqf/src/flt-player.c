@@ -543,6 +543,8 @@ static void delete_pattern_callback (GtkWidget *widget, gpointer data) {
   struct player_pattern *pp;
   int row;
 
+  debug(5,"delete_pattern_callback(widget=%x,data=%x)",row,data);
+
   if (current_row < 0)
     return;
 
@@ -565,6 +567,8 @@ static void delete_pattern_callback (GtkWidget *widget, gpointer data) {
 static void pattern_clist_adjust_visibility (int row, int direction) {
   GtkVisibility vis;
 
+  debug(5,"pattern_clist_adjust_visibility(row=%d,direction=%d)",row,direction);
+
   vis = gtk_clist_row_is_visible (GTK_CLIST (pattern_clist), row);
   if (vis != GTK_VISIBILITY_FULL) {
     gtk_clist_moveto (GTK_CLIST (pattern_clist), row, 0, 
@@ -578,28 +582,36 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
   struct player_pattern *pp;
   int row = current_row;
 
+  debug(5,"move_up_down_pattern_callback(widget=%x, dir=%d) row=%d",widget,dir,row);
+
   if ((dir != -1 || row <= 0) &&
       (dir != 1  || row < 0 || row == g_slist_length (curplrs) - 1)) {
     return;
   }
-
+/*
   link = g_slist_nth (curplrs, row + dir);
   pp = (struct player_pattern *) link->data;
   curplrs = g_slist_remove_link (curplrs, link);
   curplrs = g_slist_insert (curplrs, pp, row);
-
+*/
+  debug(5,"gtk_clist_swap_rows(..., %d,%d)",row,row+dir);
   gtk_clist_swap_rows (GTK_CLIST (pattern_clist), row, row + dir);
-  current_row += dir;
+
+  // adjust current_row because pattern_clist_row_move_callback
+  // does not know about the direction
+  current_row = row+dir;
 
   pattern_clist_adjust_visibility (current_row, dir);
 }
 
 
 static void pattern_clist_row_move_callback (GtkWidget *widget, 
-                                                       int source, int dest) {
+                                                       int source, int dest, gpointer data) {
   GtkCList *clist = GTK_CLIST (widget);
   GSList *link;
   struct player_pattern *pp;
+
+  debug(5,"pattern_clist_row_move_callback(widget=%d,source=%d,dest=%d)",widget,source,dest);
 
   if (source < 0 || dest < 0 || source == dest || 
                                  source > clist->rows || dest > clist->rows) {
