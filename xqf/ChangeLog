@@ -2,6 +2,12 @@ Oct 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - added some server listings from multiplay.co.uk, especially MOHAA. Thanks
   Steve Hartland of multiplay.co.uk for making this possible!
 - wget uses XQF/version as user-agent now
+- for savage support, you need Steve Hartland's qstat from
+  ftp://ftp.multiplay.co.uk/pub/apps/qstat/. Please note that the 'savage'
+  script of the savage demo is broken, you need to append "$@" in line five if
+  you want to join any game.
+- show g_gametypestring for Medal of Honor
+- increase version number to make new masters show up
 
 Oct 13, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - savage support, finally

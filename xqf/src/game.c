@@ -2175,6 +2175,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=EF_SERVER;
       }
+      else if(!strncmp(info_ptr[1],"Medal",5))
+      {
+	s->type=MOHAA_SERVER;
+      }
       else if(!strncmp(info_ptr[1],"SOF2MP",6))
       {
 	s->type=SOF2S_SERVER;
@@ -2182,6 +2186,10 @@ static void q3_analyze_serverinfo (struct server *s) {
     }
     
     else if (!s->gametype && strcmp (*info_ptr, "g_gametype") == 0) {
+	s->gametype = info_ptr[1];
+    }
+    else if (s->type == MOHAA_SERVER &&
+	strcmp (*info_ptr, "g_gametypestring") == 0) {
 	s->gametype = info_ptr[1];
     }
     else if (strcmp (*info_ptr, "g_needpass") == 0) {
