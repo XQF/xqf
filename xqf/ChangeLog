@@ -1,3 +1,7 @@
+Dec 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- Added support for Serious Sam, appropriate qstat config with "SMS" game type
+  required
+
 Dec 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - display RTCW voteflags like dmflags
 

@@ -114,6 +114,7 @@ enum server_type {
   RUNE_SERVER,
 #endif
   DESCENT3_SERVER,
+  SSAM_SERVER,
   GPS_SERVER,
   UNKNOWN_SERVER
 };

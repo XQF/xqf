@@ -917,7 +917,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     
     char* masterprotocol;
 
-    if (!games[m->type].qstat_master_option)
+    if (m->master_type!=MASTER_LAN && !games[m->type].qstat_master_option)
       return NULL;
 
     argv[argi++] = QSTAT_EXEC;

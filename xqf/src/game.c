@@ -84,6 +84,7 @@ static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
 static int gamespy_exec (const struct condef *con, int forkit);
 static int exec_generic (const struct condef *con, int forkit);
+static int ssam_exec (const struct condef *con, int forkit);
 
 static GList *q1_custom_cfgs (char *dir, char *game);
 static GList *qw_custom_cfgs (char *dir, char *game);
@@ -652,6 +653,37 @@ struct game games[] = {
     NULL,		// real_dir
     NULL		// game_cfg
   },
+
+  {
+    SSAM_SERVER,
+    GAME_CONNECT,
+    "Serious Sam",
+    25600,
+    0,
+    "SMS",
+    "SMS",
+    "-sms",
+    NULL,
+    &ssam_pix,
+
+    un_parse_player,
+    quake_parse_server,
+    un_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    ssam_exec,
+    NULL,
+    quake_save_info,
+    NULL,		// Custom arguments
+    NULL,		// arch_identifier
+    NULL,		// identify_cpu
+    NULL,		// identify_os
+    NULL,		// cmd
+    NULL,		// dir
+    NULL,		// real_dir
+    NULL		// game_cfg
+  },
+
   // any game using the gamespy protocol
   {
     GPS_SERVER,			// server_type
@@ -736,6 +768,7 @@ void init_games()
   game_set_attribute(UN_SERVER,"suggest_commands",strdup("ut"));
   game_set_attribute(UT2_SERVER,"suggest_commands",strdup("ut2003:ut2003_demo"));
   game_set_attribute(RUNE_SERVER,"suggest_commands",strdup("rune"));
+  game_set_attribute(SSAM_SERVER,"suggest_commands",strdup("ssamtfe"));
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
    				   ("Note:  Soldier of Fortune not will connect to a server correctly\n"\
@@ -748,6 +781,8 @@ void init_games()
   game_set_attribute(HL_SERVER,"game_notes",strdup(_
   				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));
 
+  game_set_attribute(SSAM_SERVER,"game_notes",strdup(_
+  				   ("Note: You need to create a qstat config file for this game to work")));
 }
 
 // retreive game specific value that belongs to key, do not free return value!
@@ -2930,6 +2965,33 @@ static int exec_generic (const struct condef *con, int forkit) {
     argi++;
 
   if (con->server) {
+    argv[argi++] = con->server;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  return retval;
+}
+
+// Serious Sam: only supports +connect
+static int ssam_exec(const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->server) {
+    argv[argi++] = "+connect";
     argv[argi++] = con->server;
   }
 
