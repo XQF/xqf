@@ -314,7 +314,6 @@ static void put_server_stats (GtkWidget *table, int num, int row) {
 static GtkWidget *server_stats_page (void) {
   GtkWidget *page_vbox;
   GtkWidget *alignment;
-  GtkWidget *frame = NULL;
   GtkWidget *table;
   GtkWidget *game_label;
   GtkWidget *scrollwin;
@@ -329,9 +328,6 @@ static GtkWidget *server_stats_page (void) {
 
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
-
-//  frame = gtk_frame_new (NULL);
-//  gtk_container_add (GTK_CONTAINER (alignment), frame);
 
   table = gtk_table_new (GAMES_TOTAL + 2, 7, FALSE);
   gtk_container_add (GTK_CONTAINER (alignment), table);
@@ -380,7 +376,6 @@ static GtkWidget *server_stats_page (void) {
 
   gtk_widget_show (table);
   gtk_widget_show (scrollwin);
-//  gtk_widget_show (frame);
 
   gtk_widget_show (alignment);
   gtk_widget_show (page_vbox);
@@ -492,7 +487,7 @@ static GtkWidget *archs_stats_page (void) {
   gtk_notebook_set_show_border(GTK_NOTEBOOK(arch_notebook), FALSE);
   gtk_container_add (GTK_CONTAINER (alignment), arch_notebook);
 
-  to_activate = config_get_int_with_default ("/" CONFIG_FILE "/Statistics/game", 0);
+  to_activate = config_get_int("/" CONFIG_FILE "/Statistics/game");
 
   for (type = 0; type < GAMES_TOTAL; ++type)
   {
@@ -537,6 +532,27 @@ static void grab_defaults (GtkWidget *w, gpointer data)
                                                       srv_label : arch_label);
 }
 
+static void statistics_save_geometry (GtkWidget *window, gpointer data) {
+  config_push_prefix ("/" CONFIG_FILE "/Statistics Window Geometry/");
+  config_set_int ("height", window->allocation.height);
+  config_set_int ("width", window->allocation.width);
+  config_pop_prefix ();
+}
+
+static void statistics_restore_geometry (GtkWidget *window) {
+  int height, width;
+
+  config_push_prefix ("/" CONFIG_FILE "/Statistics Window Geometry/");
+
+  height = config_get_int ("height");
+  width = config_get_int ("width");
+  if(!width || !height)
+    return;
+
+  gtk_window_set_default_size (GTK_WINDOW (window), width, height);
+
+  config_pop_prefix ();
+}
 
 void statistics_dialog (void) {
   GtkWidget *window;
@@ -552,7 +568,10 @@ void statistics_dialog (void) {
   collect_statistics ();
 
   window = dialog_create_modal_transient_window (_("Statistics"), 
-                                                           TRUE, TRUE, NULL);
+                                                           TRUE, TRUE, statistics_save_geometry);
+
+  statistics_restore_geometry(window);
+
   main_vbox = gtk_vbox_new (FALSE, 8);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
   gtk_container_add (GTK_CONTAINER (window), main_vbox);
@@ -612,4 +631,3 @@ void statistics_dialog (void) {
 
   server_stats_destroy ();
 }
-
