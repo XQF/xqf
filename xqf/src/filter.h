@@ -72,7 +72,7 @@ struct filter {
 extern  struct filter filters[];
 extern	unsigned char cur_filter;
 
-struct server_filter_vars server_filters[MAX_SERVER_FILTERS];
+struct server_filter_vars server_filters[MAX_SERVER_FILTERS+1];
 unsigned int  current_server_filter;
 extern unsigned int current_server_filter;
 
