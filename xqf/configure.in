@@ -11,6 +11,14 @@ AM_INIT_AUTOMAKE
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
+AC_DEFINE(GETTEXT_PACKAGE, "xqf", [Gettext domain name])
+GETTEXT_PACKAGE=xqf
+AC_SUBST(GETTEXT_PACKAGE)
+
+AC_PROG_INTLTOOL([0.25])
+ALL_LINGUAS="ca da de es fr"
+AM_GLIB_GNU_GETTEXT
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
@@ -27,11 +35,6 @@ if test "x$with_rpm_release" != "x" ; then
 	RELEASE="$with_rpm_release"
 fi
 AC_SUBST(RELEASE)
-
-
-dnl Pick up the gettext, etc macros
-dnl AM_ACLOCAL_INCLUDE(macros)
-AM_GNU_GETTEXT
 
 dnl compile with gtk 1.2 or gtk 2 ?
 AC_MSG_CHECKING([whether GTK 2 should be used])
@@ -193,7 +196,6 @@ AC_CONFIG_FILES([
 	pixmaps/Makefile
 	pixmaps/flags/Makefile
 	xqf.spec
-	intl/Makefile
 	po/Makefile.in
 ])
 AC_OUTPUT

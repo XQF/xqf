@@ -1,3 +1,8 @@
+Feb 02, 2004: Jordi Mallach <jordi@sindominio.net>
+- switch to intltoolize
+- add desktop file for GNOME and KDE
+- update Catalan translation
+
 Jan 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add g_gear flags of Urban Terror 3.2
 

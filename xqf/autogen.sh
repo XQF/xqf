@@ -31,7 +31,7 @@ if test $gettext_ver -lt 01038; then
   exit 1
 fi
 
-echo "Running $GETTEXTIZE..."
+echo "Running $GETTEXTIZE and intltoolize..."
 rm -rf intl
 if test $gettext_ver -ge 01100; then
   if test $gettext_ver -ge 01104; then
@@ -42,7 +42,9 @@ if test $gettext_ver -ge 01100; then
 	GETTEXTIZE=$GETTEXTIZE_FIXED
   fi
 
-  $GETTEXTIZE --copy --force --intl --no-changelog >tmpout || exit 1
+#  $GETTEXTIZE --copy --force --intl --no-changelog >tmpout || exit 1
+  glib-gettextize --copy --force || exit 1
+  intltoolize --copy --force --automake || exit 1
 
   if test -f Makefile.am~; then
      rm -rf Makefile.am
