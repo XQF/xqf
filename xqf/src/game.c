@@ -2515,7 +2515,7 @@ static int ut_exec (const struct condef *con, int forkit) {
   char* hostport=NULL;
   char* real_server=NULL;
   char *game_temp;
-  char temp[200];
+  char temp[320];
 
   cmd = strdup_strip (g->cmd);
 
@@ -3073,14 +3073,14 @@ char *get_custom_arguments(enum server_type type, char *gamestring)
   char *arg;
   int num_args;
   int j;
-  char conf[64];
+  char conf[15];
   char *token[2];
   int n;
   
   num_args = atoi(game_get_attribute(type,"custom_arg_count"));
   
   for (j=0; j < num_args; j++) {
-    g_snprintf (conf, 64, "custom_arg%d", j);
+    g_snprintf (conf, 15, "custom_arg%d", j);
     arg = g_strdup(game_get_attribute(type,conf));
 
     n = tokenize (arg, token, 2, ",");
