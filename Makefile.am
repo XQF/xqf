@@ -20,6 +20,7 @@ EXTRA_DIST =			\
 	$(man_MANS)		\
 	xqf.spec		\
 	$(DESKTOP_IN_FILES)	\
+	$(gtkrc_DATA)		\
 	intltool-merge.in	\
 	intltool-update.in	\
 	intltool-extract.in
