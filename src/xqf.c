@@ -2371,6 +2371,14 @@ static const struct menuitem edit_menu_items[] = {
     &edit_find_again_menu_item
   },
 
+  { MENU_SEPARATOR,    NULL,                   0, 0, NULL, NULL, NULL },
+
+  { 
+    MENU_ITEM,		N_("Properties"),   	0,	0,
+    GTK_SIGNAL_FUNC (properties_callback), NULL,
+    &properties_menu_item
+  },
+
   { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
 };
 
