@@ -1,3 +1,6 @@
+July 7, 2002: Alex Burger <alex@fragit_dot_net>
+- Added Soldier of Fortune 2 support and master
+
 Sep 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - q3a gametypes for afterwards. that stuff should really be stored in a runtime
   parsed, external file

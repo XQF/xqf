@@ -1011,6 +1011,8 @@ static char *builtin_masters_update_info[] = {
   "ADD GPS http://www.gameaholic.com/servers/qspy-shogo Shogo - gameaholic.com",
 
   "ADD RUNESRV http://www.gameaholic.com/servers/qspy-rune gameaholic.com",
+
+  "ADD SOF2S master://master.sof2.ravensoft.com:20110 Raven",
   
   NULL
 };
