@@ -2,10 +2,10 @@ November 15, 2002
 
 xqf-0.9.10.tar.gz created using:
 
-Mandrake 9
-libtool 1.4.2-9mdk
-gettext-0.11.2-8mdk
-automake-1.4-21.p6.mdk
+Mandrake 8.2
+libtool 1.4.2-3mdk
+gettext-0.10.40-4mdk
+automake1.6-1.6.3-1mdk
 
 tar.gz:
 
