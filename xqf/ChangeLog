@@ -1,3 +1,6 @@
+Nov 09, 2002: Jordi Mallach <jordi@sindominio.net>
+- Fix typos in Catalan translation.
+
 Nov 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - make cl_punkbuster method usable for any game, make it configurable for wolf
 - use protocol 60 by default for RTCW
