@@ -2,7 +2,8 @@
 - Detection if map is installed (req. home dir option)
 - update game types for Q3 mods - move to external file
 - Ability to delete servers from non-Favorites
-
+- Game specific filters.  No use seeing a Lithium filter choice when looking
+  at UT2003 servers
 
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
