@@ -1,3 +1,10 @@
+Dec 23, 2000: Alex Burger <alex@fragit.net>
+-Added new Quake3 game types to support Team Arena.  Note: g_gametype values
+ of 5 to 8 are now defined by id for Team Arena.  Mod authors usually use 5.
+ XQF will only show the new values if the game version is 1.27 until we find
+ out what the mod authors are doing.
+-Changed game types to not use < > around the type in the Game column
+
 Dec 22, 2000: Bill Adams <bill@evil.inetarena.com>
 -New column in the server list to show if you need a password or not. If
  you do a lock icon appears.
@@ -12,7 +19,6 @@ Dec 22, 2000: Bill Adams <bill@evil.inetarena.com>
  with the server lists.  If you want to watch it happen, set up a
  "mod contains wfa" filter, update the Q3A ID list, apply the filter, and
  press refresh repeatedly.
-
 
 Dec 20th 2000: Bill Adams <bill@evil.inetarena.com>
 --The filter name now appears in the status bar.
