@@ -228,7 +228,7 @@ int compare_qstat_version ( const char* have, const char* expected )
   return 1;
 }
 
-int start_prog_and_return_fd(const char *file, char *const argv[], pid_t *pid)
+int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 {
   int pipefds[2];
 
@@ -255,11 +255,11 @@ int start_prog_and_return_fd(const char *file, char *const argv[], pid_t *pid)
 //    dup2 (pipefds[1], 2);
     close (pipefds[1]);
     
-    debug(3,"start_prog_and_return_fd -- child created");
+    debug(3,"start_prog_and_return_fd -- child about to exec %s", argv[0]);
 
-    execvp (file, argv);
+    execvp (argv[0], argv);
 
-    debug(0,"start_prog_and_return_fd -- failed to exec %s: %s",file,strerror(errno));
+    debug(0,"start_prog_and_return_fd -- failed to exec %s: %s",argv[0],strerror(errno));
 
     _exit (1);
   }
@@ -279,7 +279,7 @@ int check_qstat_version( const char* version )
   int fd;
   pid_t pid;
 
-  char* cmd = "qstat";
+  char* cmd[] = {"qstat",NULL};
 
   int ret = FALSE;
 
@@ -289,7 +289,7 @@ int check_qstat_version( const char* version )
 
   int flags;
 
-  fd = start_prog_and_return_fd(cmd,NULL,&pid);
+  fd = start_prog_and_return_fd(cmd,&pid);
 
   if (fd<0||pid<=0)
     return FALSE;

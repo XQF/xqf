@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xqf\n"
-"POT-Creation-Date: 2002-02-12 21:33+0100\n"
+"POT-Creation-Date: 2002-02-12 23:17+0100\n"
 "PO-Revision-Date: 2002-02-12 21:33GMT\n"
 "Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
@@ -1399,5 +1399,5 @@ msgstr "Filter"
 #: src/xqf.c:2901
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
-msgstr "Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
-
+msgstr ""
+"Sie benötigen mindestens qstat Version %s damit xqf richtig funktioniert"
