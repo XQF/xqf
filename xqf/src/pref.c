@@ -3975,36 +3975,44 @@ void preferences_dialog (int page_num) {
 static void add_custom_args_defaults (char *str, enum server_type type) {
   int isdefault = FALSE;
   char *str2;
+  char *tempstr[2];
   char str3[256];
   char conf[64];
   int j;
+  GSList *templist = NULL;
 
   g_snprintf (str3, 256, "/" CONFIG_FILE "/Game: %s", type2id (type));
   config_push_prefix (str3);
 
-  // Look for existing custom arguments
+  // Load up existing custom arguments in temp.  Used to ensure we don't add duplicates
   j = 0;
   g_snprintf (conf, 64, "custom_arg%d", j);
   str2 = config_get_string_with_default (conf,&isdefault);
   while (!isdefault)
   {
+    templist = g_slist_append(templist, str2);
+    
     j++;
     g_snprintf (conf, 64, "custom_arg%d", j);
     str2 = config_get_string_with_default (conf,&isdefault);
   }
-
-  // j = next one in line
   
-  g_snprintf (conf, 15, "custom_arg%d", j);
-  config_set_string (conf, str);
+  // Tokenize so we can check the 'game'
+  tokenize (g_strdup(str), tempstr, 2, ",");
 
+  // Make sure we don't already have that game in the config before adding
+  if (tempstr[0] && tempstr[1]) {
+    if (g_slist_find_custom (templist, tempstr[0], custom_args_compare_func) == NULL ) {
+      g_snprintf (conf, 15, "custom_arg%d", j);
+      config_set_string (conf, str);
+      debug(2, "adding: %s=%s for server type: %d\n",conf, str, type);
+    }
+  }
   config_pop_prefix ();
 
-  printf("adding: %s=%s for server type: %d\n",conf,str, type);
-
+  if (templist)
+    g_slist_free(templist);
 }
-
-
 
 // set some defaults when xqf is called the first time
 static void user_fix_defaults (void)
@@ -4014,6 +4022,8 @@ static void user_fix_defaults (void)
     char str[256];
     int i;
     int j = 0;
+    
+    debug(1, "Setting defaults");
     
     for (i = 0; i < GAMES_TOTAL; i++)
     {
@@ -4039,7 +4049,7 @@ static void user_fix_defaults (void)
 
     if (j) {
       config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
-      debug(0,"%d games found, set 'show only configured games' to true", j);
+      debug(2,"%d games found, set 'show only configured games' to true", j);
     }
 
     config_set_string ("/" CONFIG_FILE "/Games Config/player name", 
@@ -4090,6 +4100,8 @@ int prefs_load (void) {
 
   if (oldversion) {
     newversion = g_strcasecmp (oldversion, XQF_VERSION);
+    if (newversion)
+      user_fix_defaults ();
     g_free (oldversion);
   }
   else {
