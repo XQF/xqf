@@ -1,3 +1,7 @@
+Sep 14, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- support for Unreal Tournament 2003 Demo. No master yet. If you know one, tell
+  me
+
 Sep 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix Half-Life rcon
 - primitive external rcon program that is not linked against X (xqf-rcon)

@@ -104,6 +104,7 @@ enum server_type {
   HR_SERVER,
 #ifdef QSTAT_HAS_UNREAL_SUPPORT
   UN_SERVER,
+  UT2D_SERVER,
   RUNE_SERVER,
 #endif
   DESCENT3_SERVER,
