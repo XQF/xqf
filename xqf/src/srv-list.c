@@ -56,7 +56,7 @@ static void get_server_pixmap (GtkWidget *window, struct server *s,
                           GSList **cache, GdkPixmap **pix, GdkBitmap **mask) {
   unsigned key;
 
-  if (!s || !window || !buddy_pix[1].pix || !q_pix.pix) {
+  if (!s || !window || !buddy_pix[1].pix) {
     *pix = NULL;
     *mask = NULL;
     return;

@@ -46,34 +46,6 @@ extern	struct pixmap record_pix;
 extern	struct pixmap filter_pix[];
 extern  struct pixmap filter_cfg_pix[];
 
-extern	struct pixmap q_pix;
-extern	struct pixmap q1_pix;
-extern	struct pixmap q2_pix;
-extern	struct pixmap q3_pix;
-extern	struct pixmap wo_pix;
-extern	struct pixmap et_pix;
-extern	struct pixmap ef_pix;
-extern	struct pixmap hex_pix;
-extern	struct pixmap hw_pix;
-extern	struct pixmap sn_pix;
-extern	struct pixmap hl_pix;
-extern	struct pixmap kp_pix;
-extern	struct pixmap sfs_pix;
-extern	struct pixmap sof2s_pix;
-extern	struct pixmap t2_pix;
-extern	struct pixmap hr_pix;
-extern	struct pixmap un_pix;
-extern	struct pixmap postal2_pix;
-extern	struct pixmap aao_pix;
-extern	struct pixmap ut2_pix;
-extern	struct pixmap rune_pix;
-extern	struct pixmap descent3_pix;
-extern	struct pixmap gamespy3d_pix;
-extern	struct pixmap ssam_pix;
-extern	struct pixmap mohaa_pix;
-extern	struct pixmap savage_pix;
-extern	struct pixmap cod_pix;
-
 extern	struct pixmap gplus_pix;
 extern	struct pixmap rminus_pix;
 

@@ -1040,6 +1040,8 @@ static char *builtin_masters_update_info[] = {
   "ADD CODS master://cod01.activision.com Activision",
   "ADD CODS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=COD multiplay.co.uk - Call of Duty",
 
+  "ADD BF1942 http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=BF1942&hostport=1 multiplay.co.uk - BF1942",
+
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
   "ADD Q2S lan://255.255.255.255 LAN",

@@ -1,3 +1,11 @@
+Jan 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- add support for BF1942 (wine game). Uses EYE protocol, no official master,
+  LAN browsing doesn't work.
+- load game icons by name via dlsym to reduce number of c&p operations when
+  adding new games
+- renamed "pix" tag in xml to "icon"
+- use config_is_valid_generic for ET
+
 Jan 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - move struct games into games.c which is now generated from games.xml by
   gamesxml2c

@@ -114,7 +114,7 @@ splash.h
 gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
 gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
 
-gamelist:
+gamelist: gamesxml2c
 	./gamesxml2c games.xml > games.c
 
 .PHONY: gamelist
