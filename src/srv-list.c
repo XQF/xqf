@@ -209,17 +209,20 @@ static int server_clist_refresh_row (struct server *s, int row) {
   
     
 
-  if (s->flags & SERVER_PUNKBUSTER )
+  /* Show if the server is punkbuster and private or not */
+  if ( (s->flags & SERVER_PUNKBUSTER) && (s->flags & SERVER_PASSWORD) )
   {
-    private_col_text = "Pb";
+    gtk_clist_set_pixmap (server_clist, row, 4, 
+                           locked_punkbuster_pix.pix, locked_punkbuster_pix.mask );
   }
   
-  /* Show if the server is private or not */
-  if (s->flags & SERVER_PASSWORD ) {
-    gtk_clist_set_pixtext (server_clist, row, 4, private_col_text, 0,
+  else if (s->flags & SERVER_PASSWORD ) {
+    gtk_clist_set_pixmap (server_clist, row, 4, 
                            locked_pix.pix, locked_pix.mask );
-  } else {
-    gtk_clist_set_text (server_clist, row, 4, private_col_text );
+  } 
+  else if (s->flags & SERVER_PUNKBUSTER) {
+    gtk_clist_set_pixmap (server_clist, row, 4, 
+                           punkbuster_pix.pix, punkbuster_pix.mask );
   }
 
   get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap, 
