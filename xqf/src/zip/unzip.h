@@ -55,6 +55,11 @@ extern "C" {
 #include "ioapi.h"
 #endif
 
+//khorben
+#ifndef ZEXPORT
+#define ZEXPORT
+#endif
+
 #if defined(STRICTUNZIP) || defined(STRICTZIPUNZIP)
 /* like the STRICT of WIN32, we define a pointer that cannot be converted
     from (void*) without cast */
