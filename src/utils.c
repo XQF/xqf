@@ -727,7 +727,6 @@ char* resolve_path(const char* path)
           ptr = strrchr(path, '/');
           if (ptr) {      			// contains a /
             dir = g_strndup(path, ptr-path+1);
-	    printf("blah\n");
           }
         }        
       }
