@@ -2627,6 +2627,7 @@ static GtkWidget *games_config_page (int defgame) {
   GSList *group = NULL;
 #elif defined GAMES_LIST
   GtkWidget *gtklist=NULL;
+  GtkWidget *scrollwin=NULL;
   GtkWidget *games_hbox;
 #endif
   char *typestr;
@@ -2670,7 +2671,18 @@ static GtkWidget *games_config_page (int defgame) {
   frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
 
-  gtklist=gtk_list_new ();
+  scrollwin = gtk_scrolled_window_new (NULL, NULL);
+
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin),
+		  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  gtklist = gtk_list_new ();
+
+  gtk_widget_set_usize (gtklist, 136, -1);
+  
+//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
+
   for (i = 0; i < GAMES_TOTAL; i++) {
     genprefs[i].game_button = gtk_list_item_new();
     
@@ -2684,7 +2696,8 @@ static GtkWidget *games_config_page (int defgame) {
   }
 
   gtk_widget_show(gtklist);
-  gtk_container_add (GTK_CONTAINER (frame), gtklist);
+  gtk_container_add (GTK_CONTAINER (frame), scrollwin);
+  gtk_widget_show(scrollwin);
   gtk_box_pack_start (GTK_BOX (games_hbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 #endif
