@@ -195,7 +195,7 @@ static int server_pass_filter (struct server *s, struct server_filter_vars *vars
 
       ( !server_filters[current_server_filter].game_contains || 
 	!strlen( server_filters[current_server_filter].game_contains ) || 
-	( s->game && strstr( s->game, server_filters[current_server_filter].game_contains ))) &&
+	( s->game && lowcasestrstr( s->game, server_filters[current_server_filter].game_contains ))) &&
 
       ( !server_filters[current_server_filter].game_type || 
 	!strlen( server_filters[current_server_filter].game_type ) || 

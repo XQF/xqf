@@ -122,7 +122,6 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   struct server *s;
   struct userver *us;
   struct host *h;
-  int len;
 
   debug (6, "parse_master_output() --");
 
@@ -768,7 +767,16 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     if (m->master_type == 1)
     	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
     else
+    {
+      if(m->type==Q3_SERVER && default_q3proto)
+      {
+    	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,default_q3proto);
+      }
+      else
+      {
     	g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
+      }
+    }
 
     argv[argi++] = buf3;
     g_snprintf (buf3, 64, "%s:%d,-", inet_ntoa (m->host->ip), m->port);

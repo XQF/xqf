@@ -89,6 +89,12 @@ int	default_refresh_on_update;
 int     maxretries;
 int     maxsimultaneous;
 
+/* Quake 3 settings */
+char *default_q3proto = NULL;
+int default_q3vmfix;
+int default_q3rafix;
+int default_q3setfs_game;
+
 static	int pref_q1_top_color;
 static	int pref_q1_bottom_color;
 static	int pref_qw_top_color;
@@ -152,6 +158,12 @@ static 	guchar *q2_skin_data = NULL;
 static  int q2_skin_is_valid = TRUE;
 
 static	GtkWidget *color_menu = NULL;
+
+/* Quake 3 settings */
+static GtkWidget *vmfixbutton;
+static GtkWidget *rafixbutton;
+static GtkWidget *setfs_gamebutton;
+static GtkWidget *q3proto_entry;
 
 struct generic_prefs {
   char *pref_dir;
@@ -330,6 +342,29 @@ static void get_new_defaults (void) {
     config_set_string ("skin", (pref_q2_skin)? pref_q2_skin : "");
   }
   pref_q2_skin = NULL;
+
+  config_pop_prefix ();
+
+  /* Quake 3 */
+
+  config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (q3proto_entry)));
+  if (default_q3proto) g_free (default_q3proto);
+  default_q3proto = str;
+  config_set_string ("protocol", (str)? str : "");
+
+  i = GTK_TOGGLE_BUTTON (vmfixbutton)->active;
+  if (i != default_q3vmfix)
+    config_set_bool ("vmfix", default_q3vmfix = i);
+
+  i = GTK_TOGGLE_BUTTON (rafixbutton)->active;
+  if (i != default_q3rafix)
+    config_set_bool ("rafix", default_q3rafix = i);
+
+  i = GTK_TOGGLE_BUTTON (setfs_gamebutton)->active;
+  if (i != default_q3setfs_game)
+    config_set_bool ("setfs_game", default_q3setfs_game = i);
 
   config_pop_prefix ();
 
@@ -1516,6 +1551,62 @@ static void add_pushlatency_options (GtkWidget *vbox) {
   gtk_widget_show (pushlatency_value_spinner);
 }
 
+static GtkWidget *q3_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *frame;
+  GtkWidget *vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+    frame = gtk_frame_new (games[Q3_SERVER].name);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+    gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+
+      vbox = gtk_vbox_new (FALSE, 4);
+      gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+      gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  q3proto_entry = gtk_entry_new ();
+	  gtk_entry_set_max_length(GTK_ENTRY (q3proto_entry),3);
+	  if(default_q3proto)
+	    gtk_entry_set_text (GTK_ENTRY (q3proto_entry), default_q3proto);
+	  gtk_box_pack_start (GTK_BOX (hbox), q3proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (q3proto_entry);
+
+	gtk_widget_show (hbox);
+
+	vmfixbutton = gtk_check_button_new_with_label (_("vm_cgame fix"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton), default_q3vmfix);
+	gtk_box_pack_start (GTK_BOX (vbox), vmfixbutton, FALSE, FALSE, 0);
+	gtk_widget_show (vmfixbutton);
+
+	rafixbutton = gtk_check_button_new_with_label (_("Rocketarena fix"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton), default_q3rafix);
+	gtk_box_pack_start (GTK_BOX (vbox), rafixbutton, FALSE, FALSE, 0);
+	gtk_widget_show (rafixbutton);
+
+	setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (setfs_gamebutton),
+							default_q3setfs_game);
+	gtk_box_pack_start (GTK_BOX (vbox), setfs_gamebutton, FALSE, FALSE, 0);
+	gtk_widget_show (setfs_gamebutton);
+
+      gtk_widget_show (vbox);
+    gtk_widget_show (frame);
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
 
 static GtkWidget *qw_q2_options_page (void) {
   GtkWidget *page_vbox;
@@ -2161,6 +2252,11 @@ void preferences_dialog (int page_num) {
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
+  page = q3_options_page ();
+  label = gtk_label_new (_("Q3"));
+  gtk_widget_show (label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
+
   gtk_notebook_set_page (GTK_NOTEBOOK (notebook), page_num);
 
   /* Initialize skins and custom cfgs */
@@ -2326,6 +2422,17 @@ int prefs_load (void) {
   config_push_prefix ("/" CONFIG_FILE "/Game: Q2S");
 
   default_q2_skin =           config_get_string ("skin");
+
+  config_pop_prefix ();
+
+  /* Quake3 */
+  config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
+
+  default_q3proto =           config_get_string ("protocol=66");
+  if(strlen(default_q3proto)==0) default_q3proto=NULL;
+  default_q3vmfix =           config_get_bool ("vmfix=true");
+  default_q3rafix =           config_get_bool ("rafix=true");
+  default_q3setfs_game =           config_get_bool ("setfs_game=true");
 
   config_pop_prefix ();
 

@@ -36,7 +36,8 @@ enum {
   PREF_PAGE_GAMES,
   PREF_PAGE_APPEARANCE,
   PREF_PAGE_QSTAT,
-  PREF_PAGE_QWQ2
+  PREF_PAGE_QWQ2,
+  PREF_PAGE_Q3
 };
 
 extern	char *user_rcdir;
@@ -83,6 +84,13 @@ extern	int	default_refresh_on_update;
 
 extern	int	maxretries;
 extern	int	maxsimultaneous;
+
+/* Quake 3 settings */
+extern char *default_q3proto;
+extern int default_q3vmfix;
+extern int default_q3rafix;
+extern int default_q3setfs_game;
+
 
 extern	int set_working_dir (char *dir);
 extern  void preferences_dialog (int page_num);
