@@ -811,7 +811,6 @@ msgid "Up "
 msgstr "Up "
 
 #: src/statistics.c:81
-#, fuzzy
 msgid "Timeout"
 msgstr "Timeout"
 
