@@ -1574,7 +1574,7 @@ static void stat_next (struct stat_job *job) {
 
     job->state = STAT_REFRESH_SERVERS;
 
-    if (show_hostnames)
+    if (default_resolve_on_update)
       job->hosts = merge_hosts_to_resolve (job->hosts, job->servers);
 
     job->progress.tasks = g_slist_length (job->servers);

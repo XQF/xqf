@@ -1,5 +1,8 @@
 Jun 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Option to stop current song in XMMS when launching a game
+- Option to resolve hostnames on update. This way it is possible to display
+  hostnames even if they are not automatically resolved. Show hostnames is now
+  default on, resolve hostnames off.
 - Merge GeoIP branch
 - Ability to directly join ut2k3 servers as spectator, even with password
 
