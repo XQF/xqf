@@ -1,0 +1,17 @@
+Dec 16, 2001
+
+xqf-0.9.8.tar.gz created using:
+
+Mandrake 8
+libtool 1.4
+gettext 0.10.40
+
+Steps:
+
+-fresh cvs checkout
+-touch xqf/ltconfig
+-./autogen.sh
+-./configure
+-./make dist
+
+
