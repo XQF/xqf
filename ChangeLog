@@ -1,3 +1,6 @@
+Nov 19, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
+- workaround for ppc compiler bug
+
 Oct 23, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - changed wording and my email in about dialog
 - removed gnuconfig.h.in from cvs
