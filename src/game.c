@@ -1066,6 +1066,36 @@ static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
   NULL,			/* 8+ ?? */
 };
 
+#define MAX_Q3A_THREEWAVE_TYPES 11
+static char *q3a_threewave_gametypes[MAX_Q3A_THREEWAVE_TYPES] = {
+  "FFA",		// 0  - Free For All
+  "1v1",		// 1  - Tournament
+  NULL,			// 2  - Single Player (invalid, don't use this)
+  "TDM",		// 3  - Team Deathmatch
+  "ThreeWave CTF",	// 4  - ThreeWave CTF
+  "One flag CTF",	// 5  - One flag CTF  (invalid, don't use this)
+  "Obelisk",		// 6  - Obelisk       (invalid, don't use this)
+  "Harvester",		// 7  - Harvester     (invalid, don't use this)
+  "Portal", 	        // 8  - Portal        (invalid, don't use this)
+  "CaptureStrike",	// 9  - CaptureStrike 
+  "Classic CTF", 	// 10 - Classic CTF   
+  NULL
+};
+
+#define MAX_Q3A_TRIBALCTF_TYPES 10
+static char *q3a_tribalctf_gametypes[MAX_Q3A_TRIBALCTF_TYPES] = {
+  NULL,			// 0 - Unknown
+  NULL,			// 1 - Unknown
+  NULL,			// 2 - Unknown
+  NULL,			// 3 - Unknown
+  NULL,			// 4 - Unknown
+  NULL,			// 5 - Unknown
+  "Freestyle",		// 6 - Freestyle
+  "Fixed",		// 7 - Fixed
+  "Roulette",		// 8 - Roulette
+  NULL
+};
+
 static void q3_analyze_serverinfo (struct server *s) {
   char **info_ptr;
   char *endptr;
@@ -1187,7 +1217,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 	  s->gametype = q3a_osp_gametypes[n];
 	  
 	} 
-	if (!strcasecmp(s->game,"q3ut2"))
+	else if (!strcasecmp(s->game,"q3ut2"))
 	{
 	  if( n >= MAX_Q3A_UT2_TYPES )
 	    n = MAX_Q3A_UT2_TYPES - 1;
@@ -1195,6 +1225,21 @@ static void q3_analyze_serverinfo (struct server *s) {
 	  s->gametype = q3a_ut2_gametypes[n];
 	  
 	} 
+	else if (!strcasecmp(s->game,"threewave"))
+	{
+	  if( n >= MAX_Q3A_THREEWAVE_TYPES )
+	    n = MAX_Q3A_THREEWAVE_TYPES - 1;
+
+	  s->gametype = q3a_threewave_gametypes[n];
+	}
+	else if (!strcasecmp(s->game,"TribalCTF"))
+	{
+	  if( n >= MAX_Q3A_TRIBALCTF_TYPES )
+	    n = MAX_Q3A_TRIBALCTF_TYPES - 1;
+
+	  s->gametype = q3a_tribalctf_gametypes[n];
+	}
+
       }
       else if (is_default == 1)
       {
