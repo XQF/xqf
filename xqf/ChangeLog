@@ -1,3 +1,7 @@
+Oct  1, 2001: Jordi Mallach <jordi@sindominio.net>
+- updated Spanish translation
+- added some notes in BUGS
+
 Sep 30, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - disabled write_quake_variables function for q3
 - added ability to use custom configs for q3
