@@ -53,6 +53,8 @@ struct server_filter_vars {
   char    *game_contains;
   char    *version_contains;
   char    *game_type;
+  char 	  *map_contains;
+  char	  *server_name_contains;
 };
 
 
