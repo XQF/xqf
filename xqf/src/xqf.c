@@ -82,6 +82,7 @@
 #include "splash.h"
 #include "loadpixmap.h"
 #include "trayicon.h"
+#include "tga/memtopixmap.h"
 
 #ifdef USE_GEOIP
 #include "country-filter.h"
@@ -2186,75 +2187,6 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
   return FALSE;
 }
 
-static void rendermemintogtkpixmap(const guchar* mem, size_t len,
-    GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height)
-{
-  GdkPixbufLoader* loader = NULL;
-  gboolean ok = FALSE;
-  GdkPixbuf* pixbuf = NULL;
-  GdkPixbuf* pixbuf2 = NULL;
-
-#ifdef USE_GTK2
-  GError *err=NULL;
-#endif
-
-  *width=0;
-  *height=0;
-
-  if(!mem) return;
-  if(!len) return;
-
-  loader = gdk_pixbuf_loader_new();
-  g_return_if_fail(loader!=NULL);
-  
-/*FIXME_GTK2: gdk_pixbuf_loader_write, gdk_pixbuf_loader_close need GError*/
-#ifdef USE_GTK2
-  ok = gdk_pixbuf_loader_write(loader, mem, len,&err);
-  if(err != NULL)
-  {
-    xqf_error("%s", err->message);
-    g_error_free(err);
-  }
-  err = NULL;
-  gdk_pixbuf_loader_close(loader,&err);
-  if(err != NULL)
-  {
-    xqf_error("%s", err->message);
-    g_error_free(err);
-  }
-#else
-  ok = gdk_pixbuf_loader_write(loader, mem, len);
-  gdk_pixbuf_loader_close(loader);
-#endif
-
-  if(!ok)
-  {
-#if 0
-    {
-      int fd = open("mapshot", O_WRONLY|O_CREAT|O_TRUNC, 0644 );
-      write(fd, mem, len);
-      close(fd);
-    }
-#endif
-    g_free(loader);
-    return;
-  }
-
-  pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-  if(pixbuf)
-  {
-    pixbuf2 = pixbuf;
-    pixbuf = gdk_pixbuf_scale_simple(pixbuf,320,240,GDK_INTERP_TILES);
-    gdk_pixbuf_render_pixmap_and_mask(pixbuf,pix,mask,0);
-    *height = gdk_pixbuf_get_height(pixbuf);
-    *width = gdk_pixbuf_get_width(pixbuf);
-    gdk_pixbuf_unref(pixbuf);
-    gdk_pixbuf_unref(pixbuf2);
-  }
-
-  g_free(loader);
-}
-
 static GtkWidget *server_mapshot_popup = NULL;
 static GtkWidget *server_mapshot_popup_pixmap = NULL;
 
@@ -2266,7 +2198,7 @@ static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, in
   GdkPixmap *pix = NULL;
   GdkBitmap *mask = NULL;
 
-  rendermemintogtkpixmap(imagedata,len,&pix,&mask,&w,&h);
+  renderMemToGtkPixmap(imagedata,len,&pix,&mask,&w,&h);
 
   if(!pix || !w || !h)
   {

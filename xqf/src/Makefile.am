@@ -1,4 +1,4 @@
-SUBDIRS = xpm zip
+SUBDIRS = xpm zip tga
 
 localedir = $(datadir)/locale
 INCLUDES = -I$(top_srcdir)/intl \
@@ -21,7 +21,7 @@ EXTRA_DIST = qstat.cfg games.xml games.c
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon gamesxml2c
 
-xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB) @PACKAGE_LIBS@
+xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(top_builddir)/src/tga/libtga.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB) @PACKAGE_LIBS@
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS) @PACKAGE_LIBS@
 xqf_rcon_SOURCES = rcon.c debug.c
