@@ -33,6 +33,7 @@
 #ifdef RCON_STANDALONE
 #include <stdlib.h>
 #include <readline/readline.h>
+#include <readline/history.h>
 #endif
 
 #include "i18n.h"

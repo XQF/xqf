@@ -2637,10 +2637,25 @@ static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
   val = GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
 }
 
+/** make entries editable if yes == TRUE */
+static void sound_set_widgets_sensitive(gboolean yes)
+{
+  gtk_widget_set_sensitive (sound_player_entry, yes);
+  gtk_widget_set_sensitive (sound_xqf_start_entry, yes);
+  gtk_widget_set_sensitive (sound_xqf_quit_entry, yes);
+  gtk_widget_set_sensitive (sound_update_done_entry, yes);
+  gtk_widget_set_sensitive (sound_refresh_done_entry, yes);
+  gtk_widget_set_sensitive (sound_stop_entry, yes);
+  gtk_widget_set_sensitive (sound_redial_success_entry, yes);
+  gtk_widget_set_sensitive (sound_server_connect_entry, yes);
+}
+
 static void sound_enable_toggled_callback (GtkWidget *widget, gpointer data) {
-  int val;
+  gboolean val;
 
   val = GTK_TOGGLE_BUTTON (sound_enable_check_button)->active;
+  
+  sound_set_widgets_sensitive(val);
 }
 
 
@@ -3053,7 +3068,7 @@ static GtkWidget *sound_options_page (void) {
 
   /* Sound Player */
 
-  label = gtk_label_new (_("Player"));
+  label = gtk_label_new (_("Player program"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
                                                       GTK_FILL, GTK_FILL, 0, 0);
@@ -3212,6 +3227,8 @@ static GtkWidget *sound_options_page (void) {
   gtk_widget_show (sound_redial_success_entry);
 
   /*  */
+
+  sound_set_widgets_sensitive(sound_enable);
 
   gtk_widget_show (table);
   gtk_widget_show (frame);
