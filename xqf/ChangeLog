@@ -1,3 +1,7 @@
+Aug 9, 2001: Alex Burger <alex@fragit.net>
+-Changed Quake3 protocol version to 66 to support
+ latest Quake3 patch.  Change located in game.c
+
 July 07, 2001, Bill Adams <bill@evilbill.org>
 - Added "Game Type" filter.  Now you can filter on 
   CTF, TDM, etc. and the mod.
