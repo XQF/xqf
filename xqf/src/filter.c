@@ -82,7 +82,9 @@ static gboolean cleaned_up = FALSE;
 
 /* QUICK FILTER */
 
+static char* quick_filter_token[8];
 static char quick_filter_str[512] = {0};
+
 static int quick_filter (struct server *s);
 void filter_quick_set (const char* str);
 const char* filter_quick_get(void);
@@ -120,9 +122,9 @@ struct filter filters[FILTERS_TOTAL] = {
     &filter_cfg_pix[0],
   },
   { 
-    N_("Quick"),
-    N_("Q Filter"),
-    N_("QCFG"),
+    "not visible",
+    "not visible",
+    "not visible",
     quick_filter,
     NULL,
     NULL,
@@ -2152,46 +2154,68 @@ unsigned filter_time_inc()
 
 static int quick_filter (struct server *s)
 {
-  if(!s || !quick_filter_str) return TRUE;
+  unsigned i;
+  size_t max = sizeof(quick_filter_token)/sizeof(quick_filter_token[0]);
 
-  if(s->map && strstr(s->map, quick_filter_str))
-    return TRUE;
+  if(!s || !*quick_filter_str) return TRUE;
 
-  if(s->game && lowcasestrstr(s->game, quick_filter_str))
-    return TRUE;
-
-  if(s->gametype && lowcasestrstr(s->gametype, quick_filter_str))
-    return TRUE;
-
-  if(s->name && lowcasestrstr(s->name, quick_filter_str))
-    return TRUE;
-
-  if(s->host && s->host->name && lowcasestrstr(s->host->name, quick_filter_str))
-    return TRUE;
-
+  for(i = 0; i < max && quick_filter_token[i]; ++i)
   {
-    char **info_ptr;
-    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+    if(s->map && strstr(s->map, quick_filter_token[i]))
+      continue;
+
+    if(s->game && lowcasestrstr(s->game, quick_filter_token[i]))
+      continue;
+
+    if(s->gametype && lowcasestrstr(s->gametype, quick_filter_token[i]))
+      continue;
+
+    if(s->name && lowcasestrstr(s->name, quick_filter_token[i]))
+      continue;
+
+    if(s->host && s->host->name && lowcasestrstr(s->host->name, quick_filter_token[i]))
+      continue;
+
     {
-      if(lowcasestrstr(info_ptr[1], quick_filter_str))
-	return TRUE;
+      gboolean match = FALSE;
+      char **info_ptr;
+      for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+      {
+	if(lowcasestrstr(info_ptr[1], quick_filter_token[i]))
+	{
+	  match = TRUE;
+	  break;
+	}
+      }
+      if(!match)
+	return FALSE;
     }
   }
 
-  return FALSE;
+  return TRUE;
 }
 
 void filter_quick_set (const char* str)
 {
   if(str)
+  {
+    unsigned num;
+    size_t max = sizeof(quick_filter_token)/sizeof(quick_filter_token[0]);
     strncpy(quick_filter_str, str, sizeof(quick_filter_str));
+    num = tokenize(quick_filter_str, quick_filter_token, max, " ");
+    if(num < max)
+      quick_filter_token[num] = NULL;
+  }
   else
+  {
     quick_filter_str[0] = '\0';
+    quick_filter_token[0] = NULL;
+  }
 }
 
 const char* filter_quick_get(void)
 {
-  if(!*quick_filter_str)
+  if(!*quick_filter_token)
     return NULL;
   return quick_filter_str;
 }
@@ -2199,5 +2223,6 @@ const char* filter_quick_get(void)
 void filter_quick_unset (void)
 {
   quick_filter_str[0] = '\0';
+  quick_filter_token[0] = NULL;
 }
 
