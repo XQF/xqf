@@ -1,4 +1,4 @@
-SUBDIRS = xpm
+SUBDIRS = xpm zip
 
 localedir = $(datadir)/locale
 INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" @GTK_CFLAGS@ @QSTAT23@ @DEBUG@ @COMPRESSION@
@@ -6,7 +6,7 @@ INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" @GTK_CFLAGS@ @QSTAT
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
 
-xqf_LDADD = @INTLLIBS@ $(GTK_LIBS)
+xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) -lz
 xqf_CFLAGS = $(GTK_CFLAGS)
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS)
@@ -48,6 +48,8 @@ xqf-ui.c \
 xutils.c \
 zipped.c \
 redial.c \
+q3maps.c \
+utmaps.c \
 addmaster.h \
 addserver.h \
 config.h \
@@ -84,4 +86,6 @@ xqf.h \
 xutils.h \
 zipped.h \
 redial.h \
+q3maps.h \
+utmaps.h \
 i18n.h

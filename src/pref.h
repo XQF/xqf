@@ -104,16 +104,6 @@ extern	char	*sound_stop;
 extern	char	*sound_server_connect;
 extern	char	*sound_redial_success;
 
-/* Quake 3 settings */
-struct q3engineopts
-{
-  char *masterprotocol;
-  struct game *game;
-  int vmfix;
-  int rafix;
-  int setfs_game;
-};
-
 // Quake 3 Arena
 //extern struct q3engineopts q3_opts;
 // Return to Castle Wolfenstein

@@ -1,3 +1,7 @@
+Dec 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- Scan for installed q3, wolfenstein, ut, ut2 and rune maps. Mark not installed
+  ones in serverlist
+
 Dec 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - Added support for Serious Sam, appropriate qstat config with "SMS" game type
   required
