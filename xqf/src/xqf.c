@@ -90,6 +90,10 @@ static const char required_qstat_version[]="2.4e";
 
 time_t xqf_start_time;
 
+int dontlaunch = 0;
+
+int event_type = 0;
+
 char* xqf_PACKAGE_DATA_DIR = PACKAGE_DATA_DIR;
 char* xqf_LOCALEDIR = LOCALEDIR;
 char* xqf_PIXMAPSDIR = PIXMAPSDIR;
@@ -211,6 +215,8 @@ static GtkWidget* create_filter_menu();
 //static GtkWidget* create_filter_menu_toolbar();
 //static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
 static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
+
+static int redialserver = 0;
 
 void sighandler_debug(int signum)
 {
@@ -3756,6 +3762,7 @@ static struct option long_options[] =
     {"launch", 1, 0, 'l'},
     {"add", 1, 0, 'a'},
     {"debug", 1, 0, 'd'},
+    {"dontlaunch", 0, 0, 128},
     {"version", 0, 0, 'v'},
     {"help", 0, 0, 'h'},
     {0, 0, 0, 0}
@@ -3765,7 +3772,7 @@ static void parse_commandline(int argc, char* argv[])
 {
     while (1)
     {
-	char c;
+	int c;
 	int option_index = 0;
 
 	c = getopt_long (argc, argv, "d:l:h", long_options, &option_index);
@@ -3792,6 +3799,9 @@ static void parse_commandline(int argc, char* argv[])
 	    case 'v':
 		puts("XQF Version " PACKAGE_VERSION);
 		exit(0);
+		break;
+	    case 128:
+		dontlaunch = TRUE;
 		break;
 	    case '?':
 	    case ':':

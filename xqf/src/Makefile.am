@@ -16,10 +16,10 @@ INCLUDES = -I$(top_srcdir)/intl \
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
 
-EXTRA_DIST = qstat.cfg
+EXTRA_DIST = qstat.cfg games.xml games.c
 
 bin_PROGRAMS = xqf @XQFRCON@
-EXTRA_PROGRAMS = xqf-rcon
+EXTRA_PROGRAMS = xqf-rcon gamesxml2c
 
 xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB) @PACKAGE_LIBS@
 
@@ -109,3 +109,12 @@ utmaps.h \
 i18n.h \
 loadpixmap.h \
 splash.h
+
+# it's only temporary, so ...
+gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
+gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
+
+gamelist:
+	./gamesxml2c games.xml > games.c
+
+.PHONY: gamelist

@@ -261,11 +261,11 @@ extern	void play_sound (const char *sound, const int override);
 
 extern	void reset_main_status_bar(void);
 
-int filter_start_index;
+//extern int filter_start_index;
 
-int redialserver;
+extern int event_type;
 
-int event_type;
+extern int dontlaunch;
 
 extern	void refresh_source_list (void);
 

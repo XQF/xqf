@@ -237,11 +237,15 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
     }
   }
 
-  if (get_debug_level()){
+  if (get_debug_level() || dontlaunch)
+  {
     char* cmdline = g_strjoinv(" # ",argv);
-    debug(1,"%s",cmdline);
+    debug(0,"%s",cmdline);
     g_free(cmdline);
   }
+
+  if (dontlaunch)
+    return -1;
 
   if (forkit) {
 
