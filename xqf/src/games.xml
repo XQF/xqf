@@ -513,19 +513,6 @@
 	<exec_client>bf1942_exec</exec_client>
     </game>
     <game>
-	<type>GPS_SERVER</type>
-	<name>Generic Gamespy</name>
-	<flags>GAME_CONNECT</flags>
-	<default_port>27888</default_port>
-	<id>GPS</id>
-	<qstat_str>GPS</qstat_str>
-	<qstat_option>-gps</qstat_option>
-	<icon>gamespy3d_xpm</icon>
-	<parse_player>un_parse_player</parse_player>
-	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
-	<exec_client>gamespy_exec</exec_client>
-    </game>
-    <game>
 	<base>Q3_SERVER</base>
 	<type>JK3_SERVER</type>
 	<name>Jedi Academy</name>
@@ -541,6 +528,34 @@
 	<command>jamp</command>
 	<main_mod>base</main_mod>
 	<pd>jk3_private</pd>
+    </game>
+    <game>
+        <type>NETP_SERVER</type>
+        <base>GPS_SERVER</base>
+        <name>NetPanzer</name>
+        <default_port>3030</default_port>
+        <default_master_port>28900</default_master_port>
+        <id>NETP</id>
+        <qstat_option>-netp</qstat_option>
+        <qstat_master_option>-netpm,netpanzer</qstat_master_option>
+        <icon>netp_xpm</icon>
+        <config_is_valid>config_is_valid_generic</config_is_valid>
+        <arch_identifier>NULL</arch_identifier>
+        <command>netpanzer</command>
+	<exec_client>netpanzer_exec</exec_client>
+    </game>
+    <game>
+	<type>GPS_SERVER</type>
+	<name>Generic Gamespy</name>
+	<flags>GAME_CONNECT</flags>
+	<default_port>27888</default_port>
+	<id>GPS</id>
+	<qstat_str>GPS</qstat_str>
+	<qstat_option>-gps</qstat_option>
+	<icon>gamespy3d_xpm</icon>
+	<parse_player>un_parse_player</parse_player>
+	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
+	<exec_client>gamespy_exec</exec_client>
     </game>
     <game>
 	<type>UNKNOWN_SERVER</type>

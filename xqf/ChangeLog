@@ -1,8 +1,10 @@
 Oct 02, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - automatically detect the doom3 network protocol version
+- add support for Netpanzer (> 0.1.6). Thanks Matze Braun for the patch.
 
 Sep 26, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add support for gslist
+- add support for gslist. Thanks to Luigi Auriemma for making this
+  possible!
 - drop broken master servers, add some new ones for quake2
 - update German translation
 - version 1.0.0.2

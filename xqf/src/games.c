@@ -33,6 +33,7 @@ static char* stringlist030[] = { "codmp", NULL };
 static char* stringlist031[] = { "savage", NULL };
 static char* stringlist032[] = { "base", NULL };
 static char* stringlist033[] = { "jamp", NULL };
+static char* stringlist034[] = { "netpanzer", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -679,22 +680,6 @@ struct game games[] = {
     save_info           : quake_save_info,
   },
   {
-    type                : GPS_SERVER,
-    flags               : GAME_CONNECT,
-    name                : "Generic Gamespy",
-    default_port        : 27888,
-    id                  : "GPS",
-    qstat_str           : "GPS",
-    qstat_option        : "-gps",
-    icon                : "gamespy3d_xpm",
-    parse_player        : un_parse_player,
-    parse_server        : quake_parse_server,
-    analyze_serverinfo  : un_analyze_serverinfo,
-    config_is_valid     : config_is_valid_generic,
-    exec_client         : gamespy_exec,
-    save_info           : quake_save_info,
-  },
-  {
     type                : JK3_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
     name                : "Jedi Academy",
@@ -720,6 +705,41 @@ struct game games[] = {
     pd                  : &jk3_private,
     main_mod            : stringlist032,
     command             : stringlist033,
+  },
+  {
+    type                : NETP_SERVER,
+    flags               : GAME_CONNECT,
+    name                : "NetPanzer",
+    default_port        : 3030,
+    default_master_port : 28900,
+    id                  : "NETP",
+    qstat_str           : "GPS",
+    qstat_option        : "-netp",
+    qstat_master_option : "-netpm,netpanzer",
+    icon                : "netp_xpm",
+    parse_player        : un_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : un_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : netpanzer_exec,
+    save_info           : quake_save_info,
+    command             : stringlist034,
+  },
+  {
+    type                : GPS_SERVER,
+    flags               : GAME_CONNECT,
+    name                : "Generic Gamespy",
+    default_port        : 27888,
+    id                  : "GPS",
+    qstat_str           : "GPS",
+    qstat_option        : "-gps",
+    icon                : "gamespy3d_xpm",
+    parse_player        : un_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : un_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : gamespy_exec,
+    save_info           : quake_save_info,
   },
   {
     type                : UNKNOWN_SERVER,
