@@ -1,3 +1,6 @@
+Oct 28, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix source menu
+
 Oct 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - speed improvements for host and server lists
 - fix plural form in reset_main_status_bar
