@@ -1,5 +1,5 @@
-/* XQF - Quake server browser and launcher
- * Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>
+/* XQF - Quake server browser and launcher Copyright (C) 1998-2000 Roman
+ * Pozlevich <roma@botik.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,18 +68,25 @@ static void save_list (FILE *f, struct master *m) {
   }
   else {
     if (m->url) {
-      fprintf (f, "[%s]\n", m->url);
+      fprintf (f, "[%s %s]\n", games[m->type].id, m->url);
     }
     else {
-      fprintf (f, "[%s%s:%d]\n", PREFIX_MASTER,
-               (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+      if (m->master_type == 1)
+	{
+	fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, PREFIX_GMASTER,
+        	(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+        }
+      else
+        {
+      	fprintf (f, "[%s %s%s:%d]\n", games[m->type].id, PREFIX_MASTER,
+		(m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+	}
     }
   }
 
   for (srv = m->servers; srv; srv = srv->next) {
     s = (struct server *) srv->data;
-    fprintf (f, "%s %s:%d\n", games[s->type].id, 
-                                            inet_ntoa (s->host->ip), s->port);
+    fprintf (f, "%s %s:%d\n", games[s->type].id, inet_ntoa (s->host->ip), s->port);
   }
 
   fprintf (f, "\n");
@@ -171,7 +178,7 @@ static void save_server_info (const char *filename, GSList *servers) {
 }
 
 
-static struct master *find_master_server (char *addr, unsigned short port) {
+static struct master *find_master_server (char *addr, unsigned short port, char *str) {
   GSList *list;
   struct master *m;
   struct in_addr ip;
@@ -181,15 +188,25 @@ static struct master *find_master_server (char *addr, unsigned short port) {
 
   for (list = all_masters; list; list = list->next) {
     m = (struct master *) list->data;
-    if (m->port && m->port == port) {
-      if (m->hostname) {
+    if (m->port && m->port == port) 
+    {
+      if (m->hostname) 
+      {
 	if (!g_strcasecmp (m->hostname, addr))
-	  return m;
+	{
+          if (!str) // pre 0.9.4e list file
+            return m;
+	  if (!g_strcasecmp (games[m->type].id, str)) // list file in new format
+	    return m;
+	}
       }
-      else {
-	if (m->host && inet_aton (addr, &ip) && 
-	                                    ip.s_addr == m->host->ip.s_addr) {
-	  return m;
+      else 
+      {
+	if (m->host && inet_aton (addr, &ip) && ip.s_addr == m->host->ip.s_addr) {
+          if (!str) // pre 0.9.4e list file
+            return m;
+	  if (!g_strcasecmp (games[m->type].id, str))
+  	    return m;
 	}
       }
     }
@@ -298,7 +315,7 @@ static struct master *find_master_url (char *url) {
 }
 
 
-static struct master *read_list_parse_master (char *str) {
+static struct master *read_list_parse_master (char *str, char *str2) {
   char *addr;
   unsigned short port;
   struct master *m;
@@ -308,7 +325,15 @@ static struct master *read_list_parse_master (char *str) {
 
   if (g_strncasecmp (str, PREFIX_MASTER, sizeof (PREFIX_MASTER) - 1) == 0) {
     if (parse_address (str + sizeof (PREFIX_MASTER) - 1, &addr, &port)) {
-      m = find_master_server (addr, port);
+      m = find_master_server (addr, port, str2);
+      g_free (addr);
+      return m;
+    }
+  }
+
+  if (g_strncasecmp (str, PREFIX_GMASTER, sizeof (PREFIX_GMASTER) - 1) == 0) {
+    if (parse_address (str + sizeof (PREFIX_GMASTER) - 1, &addr, &port)) {
+      m = find_master_server (addr, port, str2);
       g_free (addr);
       return m;
     }
@@ -373,16 +398,28 @@ static void read_lists (const char *filename) {
     if (n < 1)
       continue;
 
-    if (token[0][0] == '[') {
-      ch = strchr (token[0] + 1, ']');
+    if (token[0][0] == '[') {  // line is a master
+      ch = strchr (token[0] + 1, ']'); // does token 0 have a ]?
+      if (ch) {	// it's a favorites or pre 0.9.4e lists file
+       *ch = '\0';
+
+      if (m && m->servers)
+        m->servers = g_slist_reverse (m->servers);
+
+      m = read_list_parse_master (token[0] + 1, NULL);
+    }
+    else {
+      ch = strchr (token[1], ']'); // does token 1 have a ]?
       if (ch) {
-	*ch = '\0';
 
-	if (m && m->servers)
-	  m->servers = g_slist_reverse (m->servers);
+      *ch = '\0';
 
-	m = read_list_parse_master (token[0] + 1);
+      if (m && m->servers)
+      m->servers = g_slist_reverse (m->servers);
+
+      m = read_list_parse_master (token[1], token[0] + 1); // master, type
       }
+     }
     }
     else {
       if (!m || n < 2)
@@ -555,7 +592,7 @@ struct master *add_master (char *path, char *name, enum server_type type,
 	}
       }
 
-      m = find_master_server (addr, port);
+      m = find_master_server (addr, port, games[type].id);
 
       if (lookup_only) {
 	g_free (addr);
@@ -579,8 +616,12 @@ struct master *add_master (char *path, char *name, enum server_type type,
 	g_free (addr);
 	return m;
       }
-      else {
+      else
+       {
 	m = create_master (name, type, FALSE);
+
+        m->master_type = 0; // Regular master
+
 	h = host_add (addr);
 	if (h) {
 	  m->host = h;
@@ -595,6 +636,65 @@ struct master *add_master (char *path, char *name, enum server_type type,
 
     }
   }
+
+  else if (g_strncasecmp (path, PREFIX_GMASTER, sizeof (PREFIX_GMASTER) - 1) == 0) {
+    if (parse_address (path + sizeof (PREFIX_GMASTER) - 1, &addr, &port)) {
+
+      if (!port) {
+	if (games[type].default_master_port) {
+	  port = games[type].default_master_port;
+	}
+	else {
+	  g_free (addr);
+	  return NULL;
+	}
+      }
+
+      m = find_master_server (addr, port, games[type].id);
+
+      if (lookup_only) {
+	g_free (addr);
+	return m;
+      }
+
+      if (m) {
+	if (user) {
+	  /* Master renaming is forced by user */
+	  g_free (m->name);
+	  m->name = g_strdup (name);
+	  m->user = TRUE;
+	}
+	else {
+	  /* Automatically rename masters that are not edited by user */
+	  if (!m->user) {
+	    g_free (m->name);
+	    m->name = g_strdup (name);
+	  }
+	}
+	g_free (addr);
+	return m;
+      }
+      else 
+      {
+	m = create_master (name, type, FALSE);
+
+        m->master_type = 1; // Gamespy master
+
+	h = host_add (addr);
+	if (h) {
+	  m->host = h;
+	  host_ref (h);
+	  g_free (addr);
+	}
+	else {
+	  m->hostname = addr;
+	}
+	m->port = port;
+      }
+
+    }
+  }
+
   else {
     if (g_strncasecmp (path, PREFIX_URL_HTTP, sizeof (PREFIX_URL_HTTP) - 1) 
                                                                        == 0) {
@@ -715,6 +815,11 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S:KP http://www.ogn.org:6666 OGN",
 
   "ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 Gameaholic.Com",
+
+#ifdef QSTAT_HAS_UNREAL_SUPPORT
+  "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
+#endif
+
 
   NULL
 };
@@ -857,8 +962,14 @@ static void save_master_list (void) {
       confstr = g_strjoin (" ", typeid, m->url, m->name, NULL);
     }
     else {
-      addr = g_strdup_printf (PREFIX_MASTER "%s:%d", 
-               (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+
+      if (m->master_type == 1)
+	      addr = g_strdup_printf (PREFIX_GMASTER "%s:%d", 
+        	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+      else
+      	      addr = g_strdup_printf (PREFIX_MASTER "%s:%d", 
+        	       (m->hostname)? m->hostname : inet_ntoa (m->host->ip), m->port);
+
       confstr = g_strjoin (" ", typeid, addr, m->name, NULL);
       g_free (addr);
     }

@@ -709,7 +709,11 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     g_snprintf (buf1, 64, "%d", maxretries + 2);
 
     argv[argi++] = buf2;
-    g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
+
+    if (m->master_type == 1)
+    	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
+    else
+    	g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
 
     argv[argi++] = buf3;
     g_snprintf (buf3, 64, "%s:%d,-", inet_ntoa (m->host->ip), m->port);

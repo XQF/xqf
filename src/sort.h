@@ -29,7 +29,8 @@ enum ssort_mode {
   SORT_SERVER_TO,
   SORT_SERVER_PLAYERS,
   SORT_SERVER_MAP,
-  SORT_SERVER_GAME
+  SORT_SERVER_GAME,
+  SORT_SERVER_MOD
 };
 
 enum psort_mode {

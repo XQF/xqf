@@ -99,6 +99,10 @@ int compare_servers (const struct server *s1, const struct server *s2,
     res = compare_strings (s1->game, s2->game);
     break;
 
+  case SORT_SERVER_MOD:
+    res = compare_strings (s1->mod, s2->mod);
+    break;
+
   case SORT_SERVER_PLAYERS:
     res = s1->curplayers - s2->curplayers;
     if (!res) {

@@ -1,6 +1,6 @@
 
-                                  XQF 0.9.4
-                               (March 18 2000)
+                                  XQF 0.9.4f
+                               (October 4th 2000)
 
 DESCRIPTION
 -----------
@@ -13,8 +13,10 @@ Development platform: Debian/Linux (glibc2.1), XFree86 3.3.6, GTK+ 1.2.7.
 
 Features:
   - Supports Quake, QuakeWorld, Quake2, Quake3: Arena, Hexen2, HexenWorld, 
-      Sin, Half-Life, Kingpin, Heretic2, Unreal Tournament
+      Sin, Half-Life, Kingpin, Heretic2, Unreal Tournament,
+      Soldier of Fortune
   - Uses QStat to communicate with masters/servers
+  - Support (unauthenticated) Gamespy style master servers using QStat 2.4a
   - Displays server rules and player info
   - Players and servers sorting
   - Favorite servers list
@@ -35,7 +37,7 @@ REQUIREMENTS
  - A UNIX computer and C compiler (gcc)
  - X11 (X Window System)
  - GTK+ 1.2.5+ http://www.gtk.org
- - QStat 2.3g http://www.activesw.com/people/steve/qstat.html
+ - QStat 2.4 http://www.activesw.com/people/steve/qstat.html
  - [Optionally] wget ftp://ftp.gnu.org/gnu/wget/ to retrieve server 
    listings from the Web
  - [Optionally] gzip http://www.gnu.org/software/gzip/gzip.html 
@@ -56,8 +58,22 @@ To install the binary become root if necessary and run "make install".
 USAGE
 -----
 
-QStat 2.2b or 2.3[cdefg] is required.  QStat 2.3g is *HIGHLY* recommended.  
+QStat 2.2b or 2.3[cdefg] is required.  QStat 2.4 is *HIGHLY* recommended.  
 It must be in your $PATH.
+
+Gamespy style master and Soldier of Fortune support is only available with 
+QStat 2.4a.
+
+Note: Gamespy's master servers use an authentication sequence that is not
+supported by QStat 2.4a.  This means that you can not query a Gamespy master
+using QStat and XQF.  The Unreal Tournament master server at Epic also
+uses a Gamespy style master server but does not require authentication.
+This means that you can query Epic's UT master server using:
+
+gmaster://unreal.epicgames.com:28900
+
+Please see the QStat documentation for more information on the types of
+master servers.
 
 QStat home page is http://www.activesw.com/people/steve/qstat.html
 
@@ -68,6 +84,14 @@ Server list navigation:
 
 XQF can be customized via GTK's rc files.  XQF parses files
 /etc/gtkrc, $HOME/.gtkrc, $HOME/.qf/gtkrc.
+
+When adding a master server, the following prefixes are support:
+
+master://	(regular master server)
+gmaster://	(Gamespy style master server)
+http://		(html page containing list)
+
+Not specifying a prefix will default to master://
 
 Please send bug reports or suggestions to roma@botik.ru
 

@@ -1367,6 +1367,9 @@ static void about_dialog (GtkWidget *widget, gpointer data) {
 	     "X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
 	     "Version " XQF_VERSION "\n\n"
 	     "Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>\n\n"
+	     "Mod & server version filter: Bill Adams <webmaster@evil.inetarena.com>\n"
+	     "SoF & GameSpy support: Alex Burger <alex@fragit.net>\n\n"
+
 	     "http://www.linuxgames.com/xqf/");
 }
 
