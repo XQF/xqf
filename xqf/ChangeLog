@@ -1,3 +1,7 @@
+Dec 28, 2000: Alex Burger <alex@fragit.net>
+-Modified game.c to query for protocol 48 Quake3 servers instead of the
+ qstat default by using "-q3m,48"
+
 Dec 27, 2000: Bill Adams <bill@evil.inetarena.com>
 -Adding a server with the Insert key now gives feedback on the status bar.
 -Fixed the core dump.  Perhaps?  So I hope. (added server_ref to 
