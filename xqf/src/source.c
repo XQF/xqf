@@ -395,26 +395,6 @@ static int server_sorting_helper (const struct server *s1,
     return 1;
 }
 
-static int userver_sorting_helper (const struct userver *us1, 
-				      const struct userver *us2) {
-// Not fully tested!
-
-  int res = 0;
-  
-  if  (strcmp (us1->hostname, us2->hostname) == 0) {
-    if (us1->port == us2->port)
-      res = 0;
-    else
-      res = us1->port > us2->port ? 1 : -1;
-  }
-  else
-    res = ( strcmp (us1->hostname, us2->hostname) > 0 )? 1 : -1;
- 
-  //printf("res: %d\n",res);
-
-  return res;
-}
-
 static void master_add_server (struct master *m, char *str, 
                                                       enum server_type type) {
   char *addr;
@@ -1288,7 +1268,7 @@ static GSList* server_list_remove_dups(GSList* list)
     }
     i++;
   }
-  debug(1,"number of servers %d",i);
+  debug(2,"number of servers %d",i);
 
   return list;
 }
@@ -1316,23 +1296,23 @@ void init_masters (int update) {
   compat_convert_favorites ();
 
   read_lists (FILENAME_FAVORITES);
-  debug (1, "starting to read server list");
+  debug (2, "starting to read server list");
   read_lists (FILENAME_LISTS);
-  debug (1, "finished reading server list");
+  debug (2, "finished reading server list");
 
   // Go through all servers, sort them and then remove duplicates
   // master_add_server now uses server_list_prepend_ndp which does not
   // search for duplicates while adding servers.  This is much faster.
   // Because of this, duplicate checking must be done here.
   // Only working on servers, not uservers.  Lists file only contains IPs.
-  debug (1, "Searching for duplicate server entries");
+  debug (2, "Searching for duplicate server entries");
 
   // for each master
   for (list = all_masters; list; list = list->next) {
     m2 = (struct master *) list->data;
     if(!m2)
       continue;
-    debug (1, "  Working on master: %s",m2->name);
+    debug (2, "  Working on master: %s",m2->name);
 
     m2->servers = server_list_remove_dups(m2->servers);
     

@@ -393,7 +393,7 @@ static void load_game_defaults (enum server_type type) {
   while (!isdefault)
   {
     g->custom_args = g_slist_append(g->custom_args, str2);
-    debug(1,"game: %s: %s=%s",type2id (type), conf,str2);
+    debug(2,"game: %s: %s=%s",type2id (type), conf,str2);
     
     j++;
     g_snprintf (conf, 64, "custom_arg%d", j);
@@ -1810,7 +1810,6 @@ static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
  
  tokenize (g_strdup((char *)ptr1), temp, 2, ",");
 
- printf("ptr1 = %s\nptr2 = %s\n",(char *)ptr1, (char *)ptr2);
  if (strcmp (temp[0], ptr2) == 0)
   return (0);
  else
@@ -1825,11 +1824,8 @@ static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
   g = &games[type];
   
-  printf("type:%d\n",type);
-  
   temp[0] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_game[type])));
   temp[1] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_args[type])));
-  printf("inserting %s,%s\n", temp[0],temp[1]);
 
   if (temp[0] && temp[1]) {
     if (g_slist_find_custom (custom_args_entry_list[type], temp[0], custom_args_compare_func) == NULL ) {
@@ -1874,8 +1870,6 @@ static void custom_args_clist_select_row_callback (GtkWidget *widget,
   g = &games[type];
 
   current_row = row;
-  
-  printf("row %d\n",row);
   
   if (gtk_clist_get_text(clist, row, 0, temp))
     gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), temp[0]);
