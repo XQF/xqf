@@ -12,6 +12,14 @@ Oct 15, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - switch fix conversion when adding ut2s as gps
 - update german translation
 
+Oct 15, 2002: Bill Adams <nospam-200201@evilbill.org>
+- Added some support for punkbuster and setting cl_punkbuster
+  on the command line. It is an option in the q3a game config.
+- Fixed the autogen.sh to better work with autoconf 2.5 in the case
+  that both 2.5 and an earlier version are installed.
+- Added --with-rpm-release to configure, properly sets the release
+  when generating the xqf.spec file.
+
 Oct 15, 2002: Alex Burger <alex@users.sourceforge dot net>
 - Few minor changes to make it compile on gcc <3
 - Properly fixed create_server_type_menu and create_master_type_menu
