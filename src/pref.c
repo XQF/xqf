@@ -275,8 +275,9 @@ char* ef_masterprotocols[] = {
 	NULL
 };
 
-void game_file_dialog();
-void game_dir_dialog();
+void game_file_dialog(enum server_type type);
+void game_dir_dialog(enum server_type type);
+void game_file_activate_callback(enum server_type type);
 void sound_player_file_dialog();
 void sound_xqf_start_file_dialog();
 void sound_xqf_quit_file_dialog();
@@ -1901,7 +1902,7 @@ static void pref_guess_dir(enum server_type type)
   
   temp = g_strdup(gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry)));
  
-  if (temp) {
+  if (strcmp (temp, "")) {
     lstat(temp, &buf);
     if ( S_ISLNK(buf.st_mode) == 1) {
       // Grab directory from sym link of cmd_entry
@@ -1946,6 +1947,8 @@ static void pref_guess_dir(enum server_type type)
       }
     }  
   }
+  else
+    dialog_ok (NULL, _("You must configure a command line first"));
   if (temp)
     g_free (temp);
   if (dir)
@@ -2217,7 +2220,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_entry_set_position (GTK_ENTRY (genprefs[type].cmd_entry), 0);
   }
   gtk_signal_connect_object (GTK_OBJECT (genprefs[type].cmd_entry), "activate",
-                    GTK_SIGNAL_FUNC (pref_guess_dir), (gpointer)type);
+                    GTK_SIGNAL_FUNC (game_file_activate_callback), (gpointer)type);
   gtk_box_pack_start (GTK_BOX (hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
   gtk_widget_show (genprefs[type].cmd_entry);
 
@@ -4590,6 +4593,12 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
   }
   if (temp)
     g_free (temp);
+}
+
+void game_file_activate_callback (enum server_type type)
+{
+  if ( !strcmp ( gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry)), ""))
+    pref_guess_dir (type);
 }
 
 void game_dir_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
