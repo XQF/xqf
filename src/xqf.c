@@ -481,6 +481,11 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   struct server *s;
   struct condef *con;
 
+  FILE *f;
+  char *fn;
+  char *temp_name;
+  char *temp_mod;
+
   con = (struct condef *) job->data;
   job->data = NULL;
 
@@ -577,13 +582,37 @@ static void launch_close_handler (struct stat_job *job, int killed) {
   if (!launch)
     return;
 
+  // Save address etc to LaunchInfo.txt
+  if (default_launchinfo) {
+    fn = file_in_dir (user_rcdir, LAUNCHINFO_FILE);
+
+    f = fopen (fn, "w");
+    if (f) {
+
+       temp_name = cur_server->name;
+       temp_mod = cur_server->mod;
+       
+       if (!temp_name)
+          temp_name = "";
+       if (!temp_mod)
+          temp_mod = "";
+
+       fprintf (f, "GameType %s\n", games[cur_server->type].name);
+       fprintf (f, "ServerName %s\n", temp_name);
+       fprintf (f, "ServerAddr %s:%d\n", inet_ntoa (cur_server->host->ip), 
+           cur_server->port);
+       fprintf (f, "ServerMod %s\n", temp_mod);  
+
+       fclose (f);
+    }
+    g_free (fn);
+  }
   if (main_window && default_iconify && !default_terminate)
     iconify_window (main_window->window);
 
   if (main_window && default_terminate)
     gtk_widget_destroy (main_window);
 }
-
 
 static void launch_server_handler (struct stat_job *job, struct server *s) {
 
@@ -649,6 +678,7 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
     break;
 
   }
+
 
   con = condef_new (cur_server);
   con->demo = demo;
@@ -934,6 +964,42 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
   }
 }
 
+static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
+  GList *selection = server_clist->selection;
+  struct server *s;
+  char buf[256];
+  int pos = 0;
+
+  gtk_editable_delete_text (selection_manager, 0, -1);
+
+  switch (g_list_length (selection)) {
+
+  case 0:
+    gtk_editable_select_region (selection_manager, 0, 0);
+    return;
+
+  case 1:
+    s = (struct server *) gtk_clist_get_row_data (
+                                         server_clist, (int) selection->data);
+    g_snprintf (buf, 256, "%i,%s:%d,%s,%s,%i,%i", s->ping, inet_ntoa
+       (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
+    gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
+    gtk_editable_select_region (selection_manager, 0, -1);
+    return;
+
+  default:
+    for (; selection; selection = selection->next) {
+      s = (struct server *) gtk_clist_get_row_data (
+                                         server_clist, (int) selection->data);
+      g_snprintf (buf, 256, "%i,%s:%d,%s,%s,%i,%i\n", s->ping, inet_ntoa
+       (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
+      gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
+    }
+    gtk_editable_select_region (selection_manager, 0, -1);
+    break;
+
+  }
+}
 
 static void add_master_callback (GtkWidget *widget, gpointer data) {
   char *str;
@@ -1422,6 +1488,11 @@ static const struct menuitem srvopt_menu_items[] = {
     GTK_SIGNAL_FUNC (copy_server_callback), NULL,
     NULL
   },
+  { 
+    MENU_ITEM,		"Copy+",			0,   	0,
+    GTK_SIGNAL_FUNC (copy_server_callback_plus), NULL,
+    NULL
+  },
 
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
@@ -1492,6 +1563,11 @@ static const struct menuitem edit_menu_items[] = {
   { 
     MENU_ITEM,		"_Copy",		'C',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (copy_server_callback), NULL,
+    NULL
+  },
+  { 
+    MENU_ITEM,		"_Copy+",		'O',   	GDK_CONTROL_MASK,
+    GTK_SIGNAL_FUNC (copy_server_callback_plus), NULL,
     NULL
   },
 

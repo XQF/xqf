@@ -36,6 +36,7 @@
 #define HOSTCACHE_FILE	"hostcache"
 #define EXEC_CFG	"frontend.cfg"
 #define PASSWORD_CFG	"__passwd.cfg"
+#define LAUNCHINFO_FILE	"LaunchInfo.txt"
 
 #define MAX_PING	9999
 #define MAX_RETRIES	10
