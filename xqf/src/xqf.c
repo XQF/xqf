@@ -3082,10 +3082,9 @@ void create_main_window (void) {
   gtk_accel_group_unref (accel_group);
 }
 
-void play_sound (char *sound)
+void play_sound (const char *sound)
 {
   char *launchargv[3];
-  char c[2];
   int pid;
 
   if(!sound_enable) {
@@ -3098,17 +3097,18 @@ void play_sound (char *sound)
     return;
   }
 
+  if(!strlen(sound) || !strlen(sound_player))
+  {
+      return;
+  }
+
 
   pid = fork();
   if (pid == 0)
   {
-    launchargv[0] = g_malloc(strlen(sound_player)+1);
-    strcpy(launchargv[0],sound_player);
+    launchargv[0] = sound_player;
 
-    strncpy(c,sound,1); // Copy first character of player to c
-    c[1] = 0;
-    
-    if(strcmp(c,"/")){
+    if(sound[0] != '/'){
       // Does not start with a / so prepend user_rcdir
       debug(1,"Prepending user_rcdir to sound file");
       launchargv[1] = g_malloc(strlen(sound)+strlen(user_rcdir)+2); // maybe should be the filename only?
@@ -3126,9 +3126,8 @@ void play_sound (char *sound)
 
     debug(1,"sound player (program): %s",launchargv[0]);
     debug(1,"sound to play: %s",launchargv[1]);
-    execv(launchargv[0],launchargv);
+    execvp(launchargv[0],launchargv);
 
-    g_free (launchargv[0]);
     g_free (launchargv[1]);
     
     _exit (1);
