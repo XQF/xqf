@@ -99,6 +99,9 @@ extern	int	default_show_only_configured_games;
 
 extern	int	maxretries;
 extern	int	maxsimultaneous;
+extern  char*   qstat_srcip;
+extern  unsigned short qstat_srcport_low;
+extern  unsigned short qstat_srcport_high;
 
 extern	int	sound_enable;
 extern	char	*sound_player;

@@ -1143,6 +1143,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   struct stat_conn *conn = NULL;
   char *cmd = NULL;
   char *file = NULL;
+  char srcport[12] = {0};
 
   short startprog = 1;
 
@@ -1305,6 +1306,19 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     {
 	argv[argi++] = "-cfg";
 	argv[argi++] = qstat_configfile;
+    }
+
+    if(qstat_srcport_low)
+    {
+      snprintf(srcport, sizeof(srcport), "%hu-%hu", qstat_srcport_low, qstat_srcport_high);
+      argv[argi++] = "-srcport";
+      argv[argi++] = srcport;
+    }
+    
+    if(qstat_srcip)
+    {
+      argv[argi++] = "-srcip";
+      argv[argi++] = qstat_srcip;
     }
 
     argv[argi++] = "-raw";
@@ -1472,6 +1486,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   char *fn = NULL;
   GSList *tmp;
   struct stat_conn *conn;
+  char srcport[12] = {0};
 
   if (!job->servers)
     return NULL;
@@ -1494,6 +1509,18 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
     argv[argi++] = qstat_configfile;
   }
 
+  if(qstat_srcport_low)
+  {
+    snprintf(srcport, sizeof(srcport), "%hu-%hu", qstat_srcport_low, qstat_srcport_high);
+    argv[argi++] = "-srcport";
+    argv[argi++] = srcport;
+  }
+  
+  if(qstat_srcip)
+  {
+    argv[argi++] = "-srcip";
+    argv[argi++] = qstat_srcip;
+  }
 
   argv[argi++] = "-maxsimultaneous";
   argv[argi++] = &buf[bufi];
