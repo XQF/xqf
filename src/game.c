@@ -202,6 +202,29 @@ struct game games[] = {
 #endif
 
   {
+    WO_SERVER,
+    GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
+    "Wolfenstein",
+    WO_DEFAULT_PORT,
+    WOM_DEFAULT_PORT,
+    "WOS",
+    "Q3S",
+    "-q3s",
+    "-q3m,55",
+    &wo_pix,
+
+    q3_parse_player,
+    quake_parse_server,
+    q3_analyze_serverinfo,
+    config_is_valid_generic,
+    NULL,
+    q3_exec,
+    NULL,
+    quake_save_info
+  },
+
+
+  {
     H2_SERVER,
     GAME_CONNECT | GAME_QUAKE1_PLAYER_COLORS,
     "Hexen2",
