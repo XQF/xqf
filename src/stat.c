@@ -984,7 +984,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
   char *argv[16];
   int argi = 0;
   char buf1[64];
-  char buf2[64];
+  char* arg_type = NULL;
   char buf3[64];
   char buf_rawarg[] = { QSTAT_DELIM, '\0' };
   struct stat_conn *conn = NULL;
@@ -1036,17 +1036,14 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     argv[argi++] = buf1;
     g_snprintf (buf1, 64, "%d", maxretries + 2);
 
-    argv[argi++] = buf2;
-
-
     if(m->master_type==MASTER_LAN)
     {
       debug (3, "stat_update_master_qstat() -- MASTER_LAN");
-      g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_option);
+      arg_type = g_strdup_printf("%s,outfile", games[m->type].qstat_option);
     }
     else if (m->master_type == MASTER_GAMESPY)
     {
-    	g_snprintf (buf2, 64, "-gsm,%s,outfile", games[m->type].qstat_str);
+    	arg_type = g_strdup_printf("-gsm,%s,outfile", games[m->type].qstat_str);
     }
     // add master arguments
     else if( games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL )
@@ -1055,17 +1052,44 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       char* masterprotocol = g_datalist_get_data(&games[m->type].games_data,"masterprotocol");
 
       if(masterprotocol)
-	g_snprintf (buf2, 64, "%s,%s,outfile", games[m->type].qstat_master_option,masterprotocol);
+	arg_type = g_strdup_printf("%s,%s,outfile", games[m->type].qstat_master_option,masterprotocol);
       else
       {
 	xqf_warning("GAME_QUAKE3_MASTERPROTOCOL flag set, but no protocol specified");
-	g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
+	arg_type = g_strdup_printf("%s,outfile", games[m->type].qstat_master_option);
       }
+    }
+    else if( m->type == HL_SERVER && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
+    {
+      struct server_filter_vars* filter =
+	g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
+
+      if(!filter)
+      {
+	xqf_error("filter is NULL");
+	return NULL;
+      }
+
+      arg_type = g_strconcat(
+	  games[m->type].qstat_master_option,
+	  ",outfile",
+	  (filter->game_contains&&*filter->game_contains)?",game=":"",
+	  (filter->game_contains&&*filter->game_contains)?filter->game_contains:"",
+	  (filter->map_contains&&*filter->map_contains)?",map=":"",
+	  (filter->map_contains&&*filter->map_contains)?filter->map_contains:"",
+	  (filter->filter_not_empty||filter->filter_not_full)?",status=":"",
+	  filter->filter_not_empty?"notempty":"",
+	  (filter->filter_not_empty&&filter->filter_not_full)?":":"",
+	  filter->filter_not_full?"notfull":"",
+	  NULL);
     }
     else
     {
-      g_snprintf (buf2, 64, "%s,outfile", games[m->type].qstat_master_option);
+      arg_type = g_strdup_printf ("%s,outfile", games[m->type].qstat_master_option);
     }
+
+    
+    argv[argi++] = arg_type;
 
     argv[argi++] = buf3;
     g_snprintf (buf3, 64, "%s%s:%d,-", m->master_type==MASTER_LAN?"+":"" ,inet_ntoa (m->host->ip), m->port);
@@ -1096,8 +1120,8 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
     g_free (file);
   }
   
-  if (cmd)
-    g_free (cmd);
+  g_free (cmd);
+  g_free (arg_type);
 
   return conn;
 }

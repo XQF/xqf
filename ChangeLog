@@ -5,6 +5,9 @@ Jun 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
   default on, resolve hostnames off.
 - Merge GeoIP branch
 - Ability to directly join ut2k3 servers as spectator, even with password
+- Server side filtering for Half-Life will be used if you have a server filter
+  enabled when clicking update. Currently filtering for game, map, not full and
+  not empty will be requested from the server.
 
 Jun 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - Display team of player for Q3 mods that provide the necessary information
