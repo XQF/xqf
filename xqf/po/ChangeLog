@@ -1,3 +1,9 @@
+2004-08-13  Jordi Mallach  <jordi@sindominio.net>
+
+	* Makevars: Fix DOMAIN so intltool actually works.
+	* ca.po: Updated Catalan translation.
+	* es.po: Updated Spanish translation.
+
 2004-07-12  Jordi Mallach  <jordi@sindominio.net>
 
 	* ca.po: Updated Catalan translation.
