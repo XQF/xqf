@@ -11,8 +11,6 @@ AM_INIT_AUTOMAKE
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
-ALL_LINGUAS="ca da de es fr"
-
 dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
