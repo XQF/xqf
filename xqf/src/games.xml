@@ -24,9 +24,9 @@
 	<arch_identifier/>
 	<identify_cpu/>
 	<identify_os/>
-	<suggest_commands/>
+	<command/>
 	<default_home/>
-	<main_mods/>
+	<main_mod/>
 	<pd/>
     </game>
     <game>
@@ -45,8 +45,12 @@
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
 	<has_map>quake_has_map</has_map>
-	<suggest_commands>twilight-nq:nq-sgl:nq-glx:nq-sdl:nq-x11</suggest_commands>
-	<main_mods>id1</main_mods>
+	<command>nq-x11</command>
+	<command>nq-sdl</command>
+	<command>nq-glx</command>
+	<command>nq-sgl</command>
+	<command>twilight-nq</command>
+	<main_mod>id1</main_mod>
 	<pd>q1_private</pd>
     </game>
     <game>
@@ -69,9 +73,13 @@
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>quake_init_maps</init_maps>
 	<has_map>quake_has_map</has_map>
-	<suggest_commands>twilight-qw:qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11</suggest_commands>
-	<main_mods>qw</main_mods>
-	<main_mods>id1</main_mods>
+	<command>qw-client-x11</command>
+	<command>qw-client-sdl</command>
+	<command>qw-client-glx</command>
+	<command>qw-client-sgl</command>
+	<command>twilight-qw</command>
+	<main_mod>qw</main_mod>
+	<main_mod>id1</main_mod>
 	<pd>qw_private</pd>
     </game>
     <game>
@@ -96,8 +104,8 @@
 	<arch_identifier>version</arch_identifier>
 	<identify_cpu>identify_cpu</identify_cpu>
 	<identify_os>identify_os</identify_os>
-	<suggest_commands>quake2</suggest_commands>
-	<main_mods>baseq2</main_mods>
+	<command>quake2</command>
+	<main_mod>baseq2</main_mod>
 	<pd>q2_private</pd>
     </game>
     <game>
@@ -122,10 +130,11 @@
 	<arch_identifier>version</arch_identifier>
 	<identify_cpu>identify_cpu</identify_cpu>
 	<identify_os>identify_os</identify_os>
-	<suggest_commands>q3:quake3</suggest_commands>
+	<command>quake3</command>
+	<command>q3</command>
 	<default_home>~/.q3a</default_home>
-	<main_mods>demoq3</main_mods>
-	<main_mods>baseq3</main_mods>
+	<main_mod>demoq3</main_mod>
+	<main_mod>baseq3</main_mod>
 	<pd>q3_private</pd>
     </game>
     <game>
@@ -138,10 +147,10 @@
 	<qstat_master_option>-rwm</qstat_master_option>
 	<icon>wo_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<suggest_commands>wolf</suggest_commands>
+	<command>wolf</command>
 	<default_home>~/.wolf</default_home>
-	<main_mods>demomain</main_mods>
-	<main_mods>main</main_mods>
+	<main_mod>demomain</main_mod>
+	<main_mod>main</main_mod>
 	<pd>wolf_private</pd>
     </game>
     <game>
@@ -154,9 +163,9 @@
 	<qstat_master_option>-woetm</qstat_master_option>
 	<icon>et_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<suggest_commands>et</suggest_commands>
+	<command>et</command>
 	<default_home>~/.etwolf</default_home>
-	<main_mods>etmain</main_mods>
+	<main_mod>etmain</main_mod>
 	<pd>wolfet_private</pd>
     </game>
     <game>
@@ -171,7 +180,7 @@
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
-	<main_mods>BaseEF</main_mods>
+	<main_mod>BaseEF</main_mod>
     </game>
     <game>
 	<type>H2_SERVER</type>
@@ -259,7 +268,7 @@
 	<parse_player>q2_parse_player</parse_player>
 	<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>q2_exec_generic</exec_client>
-	<suggest_commands>sof</suggest_commands>
+	<command>sof</command>
     </game>
     <game>
 	<base>Q3_SERVER</base>
@@ -273,7 +282,7 @@
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
-	<main_mods>main</main_mods>
+	<main_mod>main</main_mod>
     </game>
     <game>
 	<type>T2_SERVER</type>
@@ -291,7 +300,7 @@
 	<exec_client>t2_exec</exec_client>
 	<arch_identifier>linux</arch_identifier>
 	<identify_os>t2_identify_os</identify_os>
-	<suggest_commands>tribes2</suggest_commands>
+	<command>tribes2</command>
     </game>
     <game>
 	<type>HR_SERVER</type>
@@ -320,7 +329,7 @@
 	<exec_client>ut_exec</exec_client>
 	<init_maps>unreal_init_maps</init_maps>
 	<has_map>unreal_has_map</has_map>
-	<suggest_commands>ut</suggest_commands>
+	<command>ut</command>
 	<pd>ut_private</pd>
     </game>
     <game>
@@ -332,7 +341,8 @@
 	<qstat_str>UT2S</qstat_str>
 	<qstat_option>-ut2s</qstat_option>
 	<icon>ut2_xpm</icon>
-	<suggest_commands>ut2003:ut2003_demo</suggest_commands>
+	<command>ut2003_demo</command>
+	<command>ut2003</command>
 	<pd>ut2_private</pd>
     </game>
     <game>
@@ -344,7 +354,8 @@
 	<qstat_str>UT2S</qstat_str>
 	<qstat_option>-ut2s</qstat_option>
 	<icon>ut2004_xpm</icon>
-	<suggest_commands>ut2004:ut2004demo</suggest_commands>
+	<command>ut2004demo</command>
+	<command>ut2004</command>
 	<pd>ut2004_private</pd>
     </game>
     <game>
@@ -353,7 +364,7 @@
 	<name>Rune</name>
 	<id>RUNESRV</id>
 	<icon>rune_xpm</icon>
-	<suggest_commands>rune</suggest_commands>
+	<command>rune</command>
 	<pd>rune_private</pd>
     </game>
     <game>
@@ -362,7 +373,8 @@
 	<name>Postal 2</name>
 	<id>POSTAL2</id>
 	<icon>postal2_xpm</icon>
-	<suggest_commands>postal2mp:postal2mpdemo</suggest_commands>
+	<command>postal2mpdemo</command>
+	<command>postal2mp</command>
 	<pd>postal2_private</pd>
     </game>
     <game>
@@ -375,7 +387,7 @@
 	<qstat_str>AMS</qstat_str>
 	<qstat_option>-ams</qstat_option>
 	<icon>aao_xpm</icon>
-	<suggest_commands>armyops</suggest_commands>
+	<command>armyops</command>
 	<pd>aao_private</pd>
     </game>
     <game>
@@ -392,7 +404,7 @@
 	<parse_player>descent3_parse_player</parse_player>
 	<analyze_serverinfo>descent3_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>exec_generic</exec_client>
-	<suggest_commands>descent3</suggest_commands>
+	<command>descent3</command>
     </game>
     <game>
 	<type>SSAM_SERVER</type>
@@ -406,14 +418,14 @@
 	<parse_player>un_parse_player</parse_player>
 	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>ssam_exec</exec_client>
-	<suggest_commands>ssamtfe</suggest_commands>
+	<command>ssamtfe</command>
     </game>
     <game>
 	<base>SSAM_SERVER</base>
 	<type>SSAMSE_SERVER</type>
 	<name>Serious Sam TSE</name>
 	<id>SMSSE</id>
-	<suggest_commands>ssamtse</suggest_commands>
+	<command>ssamtse</command>
     </game>
     <game>
 	<base>Q3_SERVER</base>
@@ -425,9 +437,9 @@
 	<qstat_option>-mhs</qstat_option>
 	<icon>mohaa_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<suggest_commands>mohaa</suggest_commands>
+	<command>mohaa</command>
 	<default_home>~/.mohaa</default_home>
-	<main_mods>main</main_mods>
+	<main_mod>main</main_mod>
 	<pd>mohaa_private</pd>
     </game>
     <game>
@@ -443,8 +455,8 @@
 	<icon>cod_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<arch_identifier>NULL</arch_identifier>
-	<suggest_commands>codmp</suggest_commands>
-	<main_mods>main</main_mods>
+	<command>codmp</command>
+	<main_mod>main</main_mod>
 	<pd>cod_private</pd>
     </game>
     <game>
@@ -459,7 +471,7 @@
 	<parse_player>savage_parse_player</parse_player>
 	<analyze_serverinfo>savage_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>savage_exec</exec_client>
-	<suggest_commands>savage</suggest_commands>
+	<command>savage</command>
     </game>
     <game>
 	<type>BF1942_SERVER</type>
@@ -500,8 +512,8 @@
 	<icon>jk3_xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<arch_identifier>NULL</arch_identifier>
-	<suggest_commands>jamp</suggest_commands>
-	<main_mods>base</main_mods>
+	<command>jamp</command>
+	<main_mod>base</main_mod>
 	<pd>jk3_private</pd>
     </game>
     <game>

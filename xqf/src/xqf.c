@@ -3621,53 +3621,57 @@ void create_main_window (void) {
     gtk_tooltips_disable(tooltips);
 }
 
-void play_sound (const char *sound, const int override)
+void play_sound (const char *sound, gboolean override)
 {
-  char *launchargv[3];
+    play_sound_with(sound_player, sound, override);
+}
+
+void play_sound_with (const char* player, const char *sound, gboolean override)
+{
   int pid;
 
-  if(!sound_enable && !override) {
-    debug(2,"sound disabled - not playing");
-    return;
-  }
-
-  if(!sound || !sound_player) {
-    debug(2,"sound player or sound file not defined - not playing anything");
-    return;
-  }
-
-  if(!strlen(sound) || !strlen(sound_player))
+  if(!sound || !*sound)
   {
       return;
   }
 
+  if(!sound_enable && !override)
+  {
+    debug(2,"sound disabled - not playing");
+    return;
+  }
+
+  if(!player || !*player)
+  {
+    xqf_warning(_("no sound player configured"));
+    return;
+  }
 
   pid = fork();
   if (pid == 0)
   {
-    launchargv[0] = sound_player;
+    char *argv[3];
 
-    if(sound[0] != '/'){
+    argv[0] = g_strdup(player);
+
+    if(sound[0] != '/')
+    {
       // Does not start with a / so prepend user_rcdir
       debug(1,"Prepending user_rcdir to sound file");
-      launchargv[1] = g_malloc(strlen(sound)+strlen(user_rcdir)+2); // maybe should be the filename only?
-      strcpy(launchargv[1],user_rcdir);
-      strcat(launchargv[1],"/");
-      strcat(launchargv[1],sound);
+      argv[1] = file_in_dir(user_rcdir, sound);
     }
     else
     {
-      launchargv[1] = g_malloc(strlen(sound)+1); // maybe should be the filename only?
-      strcpy(launchargv[1],sound);
+      argv[1] = g_strdup(sound);
     }    
 
-    launchargv[2]=0;
+    argv[2] = NULL;
 
-    debug(1,"sound player (program): %s",launchargv[0]);
-    debug(1,"sound to play: %s",launchargv[1]);
-    execvp(launchargv[0],launchargv);
+    debug(1,"sound player (program): %s",argv[0]);
+    debug(1,"sound to play: %s",argv[1]);
+    execvp(argv[0],argv);
 
-    g_free (launchargv[1]);
+    g_free (argv[1]);
     
     _exit (1);
   }

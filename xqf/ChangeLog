@@ -1,3 +1,9 @@
+Jul 04, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- rename xml tags suggest_commands -> command, main_mods -> main_mod
+- make command a NULL terminated string list
+- clean up some file dialog handling
+- fix sound test button not playing sound before pressing ok
+
 Jun 28, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - make Copy and Copy+ menu items also copy to CLIPBOARD instead of only PRIMARY
   to allow paste via Ctrl-v

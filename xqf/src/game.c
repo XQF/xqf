@@ -1589,9 +1589,9 @@ static char *quake3_data_dir (struct game* this) {
   if (!dir)
     return NULL;
 
-  for(i = 0; this->main_mods[i]; ++i)
+  for(i = 0; this->main_mod[i]; ++i)
   {
-    path = file_in_dir (dir, this->main_mods[i]);
+    path = file_in_dir (dir, this->main_mod[i]);
     if (stat (path, &stat_buf) == 0 && S_ISDIR (stat_buf.st_mode))
     {
       break;
@@ -2963,9 +2963,9 @@ static GList *quake_custom_cfgs (struct game* this, const char *path, const char
     if(!(dirs[d] && *dirs[d]))
       continue;
 
-    for(i = 0; this->main_mods && this->main_mods[i]; ++i)
+    for(i = 0; this->main_mod && this->main_mod[i]; ++i)
     {
-      char* dir = file_in_dir (dirs[d], this->main_mods[i]);
+      char* dir = file_in_dir (dirs[d], this->main_mod[i]);
       GList* tmp = dir_to_list (dir, dir_custom_cfg_filter);
       cfgs = merge_sorted_string_lists (cfgs, tmp);
       g_free (dir);

@@ -171,7 +171,9 @@ static  GtkWidget *save_plrinfo_check_button;
 static  GtkWidget *auto_favorites_check_button;
 static  GtkWidget *show_splash_button;
 static  GtkWidget *auto_maps_check_button;
+#ifdef USE_GTK2
 static  GtkWidget *tray_icon_check_button;
+#endif
 static  GtkWidget *show_hostnames_check_button;
 static  GtkWidget *show_defport_check_button;
 static  GtkWidget *toolbar_style_radio_buttons[3];
@@ -232,8 +234,6 @@ static GtkWidget *custom_args_add_button[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_game[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_args[GAMES_TOTAL];
 static int current_row = -1;
-
-GtkWidget *file_selector;
 
 /* Quake 3 settings */
 static GtkWidget *vmfixbutton;
@@ -353,7 +353,8 @@ static void sound_stop_file_dialog();
 static void sound_server_connect_file_dialog();
 static void sound_redial_success_file_dialog();
 
-static void file_dialog(const char *title, GtkSignalFunc ok_callback, enum server_type type);
+static GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer type);
+static GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry);
 
 static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2) {
   int res;
@@ -1963,7 +1964,7 @@ static void pref_guess_dir(enum server_type type, const char* cmdline, gboolean 
   
   dir_entry = gtk_entry_get_text (GTK_ENTRY (genprefs[type].dir_entry));
 
-  if(dir_entry && *dir_entry)
+  if(dir_entry && *dir_entry && !interactive)
     return;
 
   if (cmdline && *cmdline) // if not empty
@@ -1993,11 +1994,11 @@ static void pref_guess_dir(enum server_type type, const char* cmdline, gboolean 
 
 
 /**
-  * return true if game 'type' has suggest_commands
+  * return true if game 'type' has commands to suggest
   */
 static gboolean pref_can_suggest(enum server_type type)
 {
-    return (games[type].suggest_commands != NULL);
+    return (games[type].command != NULL);
 }
 
 /**
@@ -2005,16 +2006,29 @@ static gboolean pref_can_suggest(enum server_type type)
   */
 static void pref_suggest_command(enum server_type type)
 {
-    const char* files = NULL;
+    char** files = NULL;
     char* suggested_file = NULL;
+    char* prevcmd = NULL;
+    unsigned i = 0;
 
-    files = games[type].suggest_commands;
-    if(!files)
+    files = games[type].command;
+    if(!files || !files[0])
     {
 	return;
     }
 
-    suggested_file = find_file_in_path_relative(files);
+    // start suggestion based on last found binary
+    prevcmd = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
+    for(i = 0; prevcmd && files[i]; ++i )
+    {
+	if(files[i+1] && !strcmp(files[i], prevcmd))
+	{
+	    files = files+i+1;
+	    break;
+	}
+    }
+
+    suggested_file = find_file_in_path_list_relative(files);
     if(!suggested_file)
     {
 	dialog_ok(_("Game not found"),
@@ -2317,20 +2331,20 @@ static GtkWidget *generic_game_frame (enum server_type type) {
     gtk_entry_set_position (GTK_ENTRY (genprefs[type].cmd_entry), 0);
   }
   gtk_signal_connect_object (GTK_OBJECT (genprefs[type].cmd_entry), "activate",
-                    GTK_SIGNAL_FUNC (game_file_activate_callback), (gpointer)type);
+                    GTK_SIGNAL_FUNC (game_file_activate_callback), GINT_TO_POINTER(type));
   gtk_box_pack_start (GTK_BOX (hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
   gtk_widget_show (genprefs[type].cmd_entry);
 
   button = gtk_button_new_with_label ("...");
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                    GTK_SIGNAL_FUNC (game_file_dialog), (gpointer)type);
+                    GTK_SIGNAL_FUNC (game_file_dialog), GINT_TO_POINTER(type));
   gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 3);
   gtk_widget_show (button);
 
   // translator: button for command suggestion
   button = gtk_button_new_with_label (_("Suggest"));
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                    GTK_SIGNAL_FUNC (pref_suggest_command), (gpointer)type);
+                    GTK_SIGNAL_FUNC (pref_suggest_command), GINT_TO_POINTER(type));
   gtk_widget_set_sensitive (button, pref_can_suggest(type));
 
   gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
@@ -4173,17 +4187,15 @@ static GtkWidget *qstat_options_page (void) {
   return page_vbox;
 }
 
-void play_sound_pref (GtkWidget *sound_entry) {
-  char *temp;
-
-  temp = g_strdup (gtk_entry_get_text (GTK_ENTRY (sound_entry)));
-  play_sound (temp, 1);
-  if (temp)
-    g_free(temp);
+static void play_sound_pref (GtkWidget *sound_entry)
+{
+  char* file = gtk_entry_get_text (GTK_ENTRY (sound_entry));
+  char* player = gtk_entry_get_text (GTK_ENTRY (sound_player_entry));
+  play_sound_with (player, file, 1);
 }
 
 // create a button with label "Test", set padding to make it look nice
-inline GtkWidget* sound_test_button_new()
+static inline GtkWidget* sound_test_button_new()
 {
   // Translator: sound test button
   GtkWidget* button = gtk_button_new_with_label (_("Test"));
@@ -4737,7 +4749,7 @@ void preferences_dialog (int page_num) {
 // set some defaults when xqf is called the first time
 static void user_fix_defaults (void)
 {
-  const char* files = NULL;
+  char** files = NULL;
   char* suggested_file = NULL;
   char* guessed_dir = NULL;
   char str[256];
@@ -4748,9 +4760,9 @@ static void user_fix_defaults (void)
     
   for (i = 0; i < GAMES_TOTAL; i++)
   {
-    files = games[i].suggest_commands;
+    files = games[i].command;
     if(!files) continue;
-    suggested_file = find_file_in_path_relative(files);
+    suggested_file = find_file_in_path_list_relative(files);
     if(!suggested_file) continue;
 
     j++;
@@ -5126,19 +5138,30 @@ void prefs_save (void) {
 }
 */
 
-void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+static inline GtkWidget* topmost_parent(GtkWidget* widget)
+{
+  for(; widget && widget->parent; widget = widget->parent);
+  return widget;
+}
+
+void game_file_dialog_ok_callback (GtkWidget *ok_button, gpointer data)
 {
   enum server_type type;
   char *filename = NULL;
+  GtkWidget* filesel = topmost_parent(ok_button);
 
-  type = (enum server_type) gtk_object_get_user_data (GTK_OBJECT (widget));
+  if(!filesel)
+      return;
+
+  type = (enum server_type) GPOINTER_TO_INT(data);
 
   if(type >= UNKNOWN_SERVER)
     return;
   
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs));
+  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
   
-  if (filename) {
+  if (filename)
+  {
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), filename);
     pref_guess_dir (type, filename, TRUE);
   }
@@ -5146,202 +5169,130 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
 
 void game_file_activate_callback (enum server_type type)
 {
-  char *temp = NULL;
-  char *file = NULL;
+  char* file = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
 
-  temp = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
-
-  pref_guess_dir (type, temp, TRUE);
-
-  g_free (file);
+  pref_guess_dir (type, file, TRUE);
 }
 
-void game_dir_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+/** ok callback for file_dialog that sets the selected filename in the
+ * textentry that was passed as user data to file_dialog()
+ */
+void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry)
 {
-  enum server_type type;
-  char *temp = NULL;
+    char *filename = NULL;
+    GtkWidget* filesel = topmost_parent(widget);
 
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+    filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
   
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (!temp)     // no path, not likely
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), "");
-  else
-    gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), temp);
+    if (!filename)
+	return;
 
-  if (temp)
-    g_free (temp);
+    gtk_entry_set_text (GTK_ENTRY (textentry), filename);
 }
 
-
-void sound_player_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void game_file_dialog(enum server_type type)
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_player_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+    file_dialog(_("Game Command Selection"),
+	    GTK_SIGNAL_FUNC(game_file_dialog_ok_callback), GINT_TO_POINTER(type));
 }
 
-
-void sound_xqf_start_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void game_dir_dialog(enum server_type type)
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_xqf_start_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  if(type >= UNKNOWN_SERVER)
+    return;
+
+  file_dialog_textentry(_("Game Directory Selection"), genprefs[type].dir_entry);
 }
 
-void sound_xqf_quit_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void sound_player_file_dialog()
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_xqf_quit_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  file_dialog_textentry(_("Sound Player Selection"), sound_player_entry);
 }
 
-void sound_update_done_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void sound_xqf_start_file_dialog()
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_update_done_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  file_dialog_textentry(_("XQF Start Sound Selection"), sound_xqf_start_entry);
 }
 
-void sound_refresh_done_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void sound_xqf_quit_file_dialog()
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_refresh_done_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  file_dialog_textentry(_("XQF Quit Sound Selection"), sound_xqf_quit_entry);
 }
 
-void sound_stop_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void sound_update_done_file_dialog()
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_stop_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  file_dialog_textentry(_("Update Done Sound Selection"), sound_update_done_entry);
 }
 
-void sound_server_connect_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void sound_refresh_done_file_dialog()
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_server_connect_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  file_dialog_textentry(_("Refresh Done Sound Selection"), sound_refresh_done_entry);
 }
 
-void sound_redial_success_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
+void sound_stop_file_dialog()
 {
-  char *temp = NULL;
-  temp = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-  
-  if (temp) {
-    gtk_entry_set_text (GTK_ENTRY (sound_redial_success_entry), temp);
-  }
-  if (temp)
-    g_free (temp);
+  file_dialog_textentry(_("Stop Sound Selection"), sound_stop_entry);
 }
 
+void sound_server_connect_file_dialog()
+{
+  file_dialog_textentry(_("Server Connect Sound Selection"), sound_server_connect_entry);
+}
+
+void sound_redial_success_file_dialog()
+{
+  file_dialog_textentry(_("Redial Success Sound Selection"), sound_redial_success_entry);
+}
+
+/*
 void file_dialog_destroy_callback (GtkWidget *widget, gpointer data)
 {
 }
+*/
 
-void game_file_dialog(enum server_type type) {
-  file_dialog(_("Game Command Selection"), (GtkSignalFunc) game_file_dialog_ok_callback, type);
-}
+/** Create a new file selection widget
+ */
+static GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer data)
+{
+    GtkFileSelection* file_selector;
 
-void game_dir_dialog(enum server_type type) {
-  file_dialog(_("Game Directory Selection"), (GtkSignalFunc) game_dir_dialog_ok_callback, type);
-}
+    file_selector = GTK_FILE_SELECTION(gtk_file_selection_new (title));
 
-void sound_player_file_dialog() {
-  file_dialog(_("Sound Player Selection"), (GtkSignalFunc) sound_player_file_dialog_ok_callback, 0);
-}
-
-void sound_xqf_start_file_dialog() {
-  file_dialog(_("XQF Start Sound Selection"), (GtkSignalFunc) sound_xqf_start_file_dialog_ok_callback, 0);
-}
-
-void sound_xqf_quit_file_dialog() {
-  file_dialog(_("XQF Quit Sound Selection"), (GtkSignalFunc) sound_xqf_quit_file_dialog_ok_callback, 0);
-}
-
-void sound_update_done_file_dialog() {
-  file_dialog(_("Update Done Sound Selection"), (GtkSignalFunc) sound_update_done_file_dialog_ok_callback, 0);
-}
-
-void sound_refresh_done_file_dialog() {
-  file_dialog(_("Refresh Done Sound Selection"), (GtkSignalFunc) sound_refresh_done_file_dialog_ok_callback, 0);
-}
-
-void sound_stop_file_dialog() {
-  file_dialog(_("Stop Sound Selection"), (GtkSignalFunc) sound_stop_file_dialog_ok_callback, 0);
-}
-
-void sound_server_connect_file_dialog() {
-  file_dialog(_("Server Connect Sound Selection"), (GtkSignalFunc) sound_server_connect_file_dialog_ok_callback, 0);
-}
-
-void sound_redial_success_file_dialog() {
-  file_dialog(_("Redial Success Sound Selection"), (GtkSignalFunc) sound_redial_success_file_dialog_ok_callback, 0);
-}
-
-static void file_dialog(const char *title, GtkSignalFunc ok_callback, enum server_type type) {
-
-    /* Create a new file selection widget */
-    // file_selector = gtk_file_selection_new (_("Game selection"));
-    file_selector = gtk_file_selection_new (title);
+    if(!file_selector)
+	return NULL;
     
     gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
     
+    /*
     gtk_signal_connect (GTK_OBJECT (file_selector), "destroy",
                         (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
+			*/
 
-    /* Connect the ok_button to xxx_file_dialog_ok_callback function */
-    if (type)
-      gtk_object_set_user_data (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button), (gpointer) type);
-    gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
-                        "clicked", (GtkSignalFunc) ok_callback, file_selector );
-    gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
-                                            (file_selector)->ok_button),
+    gtk_signal_connect (GTK_OBJECT (file_selector->ok_button),
+                        "clicked", ok_callback, data );
+
+    gtk_signal_connect_object (GTK_OBJECT (file_selector->ok_button),
                                "clicked", (GtkSignalFunc) gtk_widget_destroy,
                                GTK_OBJECT (file_selector));
     
     /* Connect the cancel_button to destroy the widget */
-    gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION
-                                            (file_selector)->cancel_button),
+    gtk_signal_connect_object (GTK_OBJECT (file_selector->cancel_button),
                                "clicked", (GtkSignalFunc) gtk_widget_destroy,
                                GTK_OBJECT (file_selector));
     
-    gtk_widget_show(file_selector);
+    gtk_widget_show(GTK_WIDGET(file_selector));
+
+    return GTK_WIDGET(file_selector);
+}
+
+/** create new file_dialog and connect the ok button to the textentry */
+static GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry)
+{
+    GtkWidget* filesel = file_dialog(title, file_dialog_ok_set_textentry, entry);
+    const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
+    if(text && *text)
+    {
+	 gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), text);
+    }
+    return filesel;
 }
