@@ -100,6 +100,10 @@ static void create_menu_recursive (GtkWidget *menu,
       ac_key = gtk_label_parse_uline (GTK_LABEL (label), _(items->label));
       
       if (accel_group && ac_key != GDK_VoidSymbol) {
+
+/*FIXME_GTK2: this do not work with GTK2*/
+
+#ifndef USE_GTK2
 	if (GTK_IS_MENU_BAR (menu)) {
 	  gtk_widget_add_accelerator (menu_item, "activate_item", accel_group,
 				      ac_key, GDK_MOD1_MASK, GTK_ACCEL_LOCKED);
@@ -108,7 +112,8 @@ static void create_menu_recursive (GtkWidget *menu,
 	  gtk_widget_add_accelerator (menu_item, "activate_item",
                           gtk_menu_ensure_uline_accel_group (GTK_MENU (menu)),
                                                  ac_key, 0, GTK_ACCEL_LOCKED);
-	}	
+	}
+#endif
       }
 
       if (items->type != MENU_BRANCH && items->type != MENU_LAST_BRANCH) {

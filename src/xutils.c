@@ -27,7 +27,11 @@ void iconify_window (GdkWindow *window) {
   if (!window)
     return;
 
-  xwindow = ((GdkWindowPrivate*) window)->xwindow;
+
+
+  xwindow = GDK_WINDOW_XWINDOW(window);
+
+
   XIconifyWindow (GDK_DISPLAY (), xwindow, DefaultScreen (GDK_DISPLAY ()));
 }
 

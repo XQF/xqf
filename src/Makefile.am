@@ -1,7 +1,7 @@
 SUBDIRS = xpm zip
 
 localedir = $(datadir)/locale
-INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS) @QSTAT23@ @DEBUG@ @COMPRESSION@ $(GDK_PIXBUF_CFLAGS)
+INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS) @QSTAT23@ @DEBUG@ @COMPRESSION@ $(GDK_PIXBUF_CFLAGS) @PACKAGE_CFLAGS@ $(OLD_GTK_SUPPORT)
 
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
@@ -11,11 +11,11 @@ EXTRA_DIST = qstat.cfg
 bin_PROGRAMS = xqf @XQFRCON@
 EXTRA_PROGRAMS = xqf-rcon
 
-xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB)
+xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB) @PACKAGE_LIBS@
 
-xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS)
+xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS) @PACKAGE_LIBS@
 xqf_rcon_SOURCES = rcon.c debug.c
-xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS)
+xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS) $(OLD_GTK_SUPPORT)
 
 xqf_SOURCES =  \
 addmaster.c \
