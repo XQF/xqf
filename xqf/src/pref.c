@@ -299,6 +299,7 @@ char* wo_masterprotocols[] = {
 
 // change config_get_string below too!
 char* woet_masterprotocols[] = {
+	"83 - v2.56",
 	"82 - v2.55 (Release)",
 	"71 - v2.32 (test)",
 	NULL
@@ -4790,7 +4791,7 @@ int prefs_load (void) {
   /* Enemy Territory */
   config_push_prefix ("/" CONFIG_FILE "/Game: WOETS");
   
-  tmp = config_get_string ("protocol=82");
+  tmp = config_get_string ("protocol=83");
   if ( strlen( tmp ) == 0 )
   {
     g_free(tmp);
