@@ -1,3 +1,7 @@
+Dec 17, 2001: Jordi Mallach <jordi@sindominio.net>
+- configure.in: remove debian/Makefile creation, too.
+- Attempt to fix Gamespy pixmap.
+
 Dec 16, 2001: Jordi Mallach <jordi@sindominio.net>
 - Makefile.am: remove debian from SUBDIRS. What a pain in the ass!
   The whole directory should be removed, but this is the bare minimum.
