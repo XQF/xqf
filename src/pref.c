@@ -4346,8 +4346,6 @@ void game_file_dialog_ok_callback (GtkWidget *widget, GtkFileSelection *fs)
   
   ptr = strrchr(temp, '/');
   
-  printf("path:%s\n",temp);
-  
   if (!ptr) {    // no path, not likely
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), temp);
     gtk_entry_set_text (GTK_ENTRY (genprefs[type].dir_entry), "");
