@@ -1,3 +1,6 @@
+Oct 26, 2002: Alex <alex_b@users.sourceforge.net>
+- Added file dialog box (... button) to sound config page
+
 Oct 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - cleanup q3_exec:
   - protocol dependant launching no longer requires full path, will search $PATH
