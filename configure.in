@@ -143,11 +143,20 @@ fi
 
 dnl check if user wants bzip2 compression instead of gzip
 COMPRESSION="-DCOMPRESSOR_GZIP"
-AC_ARG_ENABLE(bzip2,[  --enable-bzip2          use bzip2 for data compression],COMPRESSION="-DCOMPRESSOR_BZIP2")
+AC_ARG_ENABLE(bzip2,[  --enable-bzip2          use bzip2 for data compression])
+if test x$enable_bzip2 = xyes; then
+	COMPRESSION="-DCOMPRESSOR_BZIP2"
+fi
 AC_SUBST(COMPRESSION)
 
 dnl check if user wants debug
-AC_ARG_ENABLE(debug,[  --enable-debug          turn on debugging ],DEBUG="-DDEBUG" CFLAGS="-g -O0", DEBUG="")
+AC_ARG_ENABLE(debug,[  --enable-debug          turn on debugging ])
+if test x$enable_debug = xyes; then
+	DEBUG="-DDEBUG"
+	CFLAGS="-g -O0"
+else
+	DEBUG=""
+fi
 AC_SUBST(DEBUG)
 
 AC_SUBST(VERSION)
@@ -178,9 +187,9 @@ if test "x$GCC" = "xyes"; then
 fi
 changequote([,])dnl
 
-AC_ARG_ENABLE(profiling,[  --enable-profiling   compile with profiling (default=no)], enable_profile=yes, )
+AC_ARG_ENABLE(profiling,[  --enable-profiling   compile with profiling (default=no)])
 AC_MSG_CHECKING(whether profiling is requested)
-if test x$enable_profile = xyes; then
+if test x$enable_profiling = xyes; then
 	CFLAGS="$CFLAGS -pg"
 	AC_MSG_RESULT([yes])
 else
