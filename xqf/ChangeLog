@@ -5,6 +5,8 @@ Oct 10, 2002: Alex Burger <alex@fragit_dot_net>
 Oct 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - update NEWS and TODO
 - added script 'vc' to automate editing this file
+- remove instructions for Half-Life hack from docu
+- access functions for game specific attributes
 
 Oct 09, 2002: Alex Burger <alex@fragit_dot_net>
 - Added password support to Unreal based games (games that use
