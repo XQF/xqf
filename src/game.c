@@ -130,6 +130,7 @@ static struct quake_private q3_private = { NULL, "~/.q3a" };
 static struct quake_private wolf_private = { NULL, "~/.wolf" };
 static struct quake_private wolfet_private = { NULL, "~/.etwolf" };
 static struct quake_private mohaa_private = { NULL, "~/.mohaa" };
+static struct quake_private cod_private = { NULL, NULL }; // no home, wine only
 
 struct game games[] = {
   {
@@ -863,6 +864,10 @@ struct game games[] = {
   },
 
   {
+    COD_SERVER,
+  },
+
+  {
     SAS_SERVER,			// server_type
     GAME_CONNECT,		// flags
     "Savage",	// name
@@ -1046,6 +1051,16 @@ void init_games()
   games[MOHAA_SERVER].pix=&mohaa_pix;
   games[MOHAA_SERVER].config_is_valid=config_is_valid_generic;
 
+  game_copy_static_options(COD_SERVER,Q3_SERVER);
+  games[COD_SERVER].name="Call of Duty";
+  games[COD_SERVER].default_port=27201;
+  games[COD_SERVER].id="CODS";
+  games[COD_SERVER].default_master_port=0;
+  games[COD_SERVER].qstat_master_option=NULL;
+  games[COD_SERVER].pd=&cod_private;
+  games[COD_SERVER].pix=&cod_pix;
+  games[COD_SERVER].config_is_valid=config_is_valid_generic;
+
   for (i = 0; i < GAMES_TOTAL; i++)
   {
     g_datalist_init(&games[i].games_data);
@@ -1068,6 +1083,7 @@ void init_games()
   game_set_attribute(SSAMSE_SERVER,"suggest_commands",strdup("ssamtse"));
   game_set_attribute(MOHAA_SERVER,"suggest_commands",strdup("mohaa"));
   game_set_attribute(SAS_SERVER,"suggest_commands",strdup("savage"));
+  game_set_attribute(COD_SERVER,"suggest_commands",strdup("codmp"));
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
    				   ("Note:  Soldier of Fortune will not connect to a server correctly\n"\
@@ -1076,10 +1092,14 @@ void init_games()
   game_set_attribute(UN_SERVER,"game_notes",strdup(_
   				   ("Note:  Unreal Tournament will not launch correctly without\n"\
     				    "modifications to the game's startup script.  Please see the\n"\
-			  	    "XQF documentation for more information."))); 
+			  	    "XQF documentation for more information.")));
   game_set_attribute(HL_SERVER,"game_notes",strdup(_
   				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));
 
+  game_set_attribute(SAS_SERVER,"game_notes",strdup(_
+  				   ("Note:  Savage will not launch correctly without\n"\
+    				    "modifications to the game's startup script. Please see the\n"\
+			  	    "XQF documentation for more information.")));
 
   game_set_attribute(SSAM_SERVER,"game_notes",strdup(_
   				   ("Note: You need to create a qstat config file for this game to work.\n"\
