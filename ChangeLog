@@ -1,6 +1,7 @@
 Feb 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add LAN master for ut2004
 - detect whether a server is ut2003 or ut2004
+- update ut2004 icon
 
 Feb 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - don't unset game if it's baseq3 to be able to filter for it
