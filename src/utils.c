@@ -540,8 +540,9 @@ char* find_file_in_path(const char* files)
 	   
 	    if(!access(file,X_OK))
 	    {
-		found = g_strdup(binaries[i]);
-		debug(3,"found %s",binaries[i]);
+		found = g_strconcat(directories[j],"/",binaries[i],NULL);
+		// found = g_strdup(binaries[i]);
+		debug(3,"found %s in %s",binaries[i],directories[j]);
 	    }
 	    g_free(file);
 	}

@@ -1,4 +1,6 @@
 Oct 28, 2002: Alex <alex_b@users.sourceforge.net>
+- Add guess_dir functionality to Suggest button and user_fix_defaults
+- Change find_file_in_path to return entire filename including path
 - Add (...) button to game directory
 - Add Guess button to game directory - follows symlinks
 - Changed UT2003 default port to 7777
