@@ -197,7 +197,7 @@ struct pixmap* get_pixmap_for_country(int id)
     return NULL;
   }
 
-  gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,0);
+  gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
 
   gdk_pixbuf_unref(pixbuf);
   g_free(code);

@@ -81,7 +81,7 @@ add_pixmap_directory                   (const gchar     *directory)
 
 gchar* find_pixmap_directory(const gchar* filename)
 {
-  const gchar* found_filename = NULL;
+  gchar* found_filename = NULL;
   GList *elem;
 
   elem = pixmaps_directories;
@@ -141,7 +141,7 @@ load_pixmap                          (GtkWidget       *widget,
       return create_dummy_pixmap (widget);
     }
 
-    gdk_pixbuf_render_pixmap_and_mask(pixbuf,&gdkpixmap,&mask,0);
+    gdk_pixbuf_render_pixmap_and_mask(pixbuf,&gdkpixmap,&mask,255);
 
     gdk_pixbuf_unref(pixbuf);
   }
