@@ -2081,7 +2081,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   button = gtk_button_new_with_label ("...");
   gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
                     GTK_SIGNAL_FUNC (game_file_dialog), (gpointer)type);
-  gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox),button , FALSE, FALSE, 3);
   gtk_widget_show (button);
 
   // translator: button for command suggestion
