@@ -170,6 +170,7 @@ struct server {
   char	*map;
   unsigned short maxplayers;
   unsigned short curplayers;
+  unsigned short curbots;
   unsigned short private_client; /** number of private clients */
   short	ping;
   short retries;

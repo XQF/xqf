@@ -50,15 +50,15 @@
 #include "q3maps.h"
 #include "utmaps.h"
 
-static struct player *poqs_parse_player(char *tokens[], int num);
-static struct player *qw_parse_player(char *tokens[], int num);
-static struct player *q2_parse_player(char *tokens[], int num);
-static struct player *q3_parse_player(char *tokens[], int num);
-static struct player *t2_parse_player(char *tokens[], int num);
-static struct player *hl_parse_player(char *tokens[], int num);
-static struct player *un_parse_player(char *tokens[], int num);
+static struct player *poqs_parse_player(char *tokens[], int num, struct server *s);
+static struct player *qw_parse_player(char *tokens[], int num, struct server *s);
+static struct player *q2_parse_player(char *tokens[], int num, struct server *s);
+static struct player *q3_parse_player(char *tokens[], int num, struct server *s);
+static struct player *t2_parse_player(char *tokens[], int num, struct server *s);
+static struct player *hl_parse_player(char *tokens[], int num, struct server *s);
+static struct player *un_parse_player(char *tokens[], int num, struct server *s);
 static void un_analyze_serverinfo (struct server *s);
-static struct player *descent3_parse_player(char *tokens[], int num);
+static struct player *descent3_parse_player(char *tokens[], int num, struct server *s);
 static void descent3_analyze_serverinfo (struct server *s);
 
 static void quake_parse_server (char *tokens[], int num, struct server *s);
@@ -1101,7 +1101,7 @@ static void q3_unescape (char *dst, char *src) {
 static const char delim[] = " \t\n\r";
 
 
-static struct player *poqs_parse_player (char *token[], int n) {
+static struct player *poqs_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
   long tmp;
 
@@ -1126,7 +1126,7 @@ static struct player *poqs_parse_player (char *token[], int n) {
 }
 
 
-static struct player *qw_parse_player (char *token[], int n) {
+static struct player *qw_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
   char *ptr;
   long tmp;
@@ -1162,7 +1162,7 @@ static struct player *qw_parse_player (char *token[], int n) {
 // Parse Tribes2 player info, abuse player->model to show when a Player is only
 // a Teamname or a Bot
 // player name, frags, team number, team name, player type, tribe tag
-static struct player *t2_parse_player (char *token[], int n) {
+static struct player *t2_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
   char* name=token[0];
   char* frags=token[1];
@@ -1188,11 +1188,12 @@ static struct player *t2_parse_player (char *token[], int n) {
 
   player->model = (char *) player + sizeof (struct player) + strlen(name)+1;
   strcpy (player->model, player_type);
+  if( player_type[0] == 'B' ) ++s->curbots;
 
   return player;
 }
 
-static struct player *q2_parse_player (char *token[], int n) {
+static struct player *q2_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
 
   if (n < 3)
@@ -1210,7 +1211,7 @@ static struct player *q2_parse_player (char *token[], int n) {
 }
 
 // Descent 3: player name, frags, deaths, ping time, team
-static struct player *descent3_parse_player (char *token[], int n) {
+static struct player *descent3_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
 
   if (n < 5)
@@ -1227,7 +1228,7 @@ static struct player *descent3_parse_player (char *token[], int n) {
   return player;
 }
 
-static struct player *q3_parse_player (char *token[], int n) {
+static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
 
   if (n < 3)
@@ -1237,6 +1238,8 @@ static struct player *q3_parse_player (char *token[], int n) {
   player->time  = -1;
   player->frags = strtosh (token[1]);
   player->ping  = strtosh (token[2]);
+   /* FIXME if ( dedicated == 0 ) s->curbots-- */
+  if ( player->ping == 0 ) ++s->curbots;
 
   player->name = (char *) player + sizeof (struct player);
   q3_unescape (player->name, token[0]);
@@ -1245,7 +1248,7 @@ static struct player *q3_parse_player (char *token[], int n) {
 }
 
 
-static struct player *hl_parse_player (char *token[], int n) {
+static struct player *hl_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
 
   if (n < 3)
@@ -1263,7 +1266,7 @@ static struct player *hl_parse_player (char *token[], int n) {
 }
 
 
-static struct player *un_parse_player (char *token[], int n) {
+static struct player *un_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
   char *ptr;
   int name_strlen;

@@ -76,6 +76,8 @@ extern  int 	default_nocdaudio;
 extern	int	show_hostnames;
 extern	int	show_default_port;
 
+extern	int	serverlist_countbots;
+
 extern	int	default_terminate;
 extern	int	default_iconify;
 extern	int	default_launchinfo;
