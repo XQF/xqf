@@ -223,6 +223,7 @@ struct generic_prefs {
 } *genprefs = NULL;
 
 char* q3_masterprotocols[] = {
+	"68 - v1.32",
 	"67 - v1.31",
 	"66 - v1.30",
 	"48 - v1.27",
