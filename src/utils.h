@@ -54,5 +54,12 @@ extern	int tokenize_bychar (char *str, char *token[], int max, char dlm);
 
 extern	int hostname_is_valid (const char *hostname);
 
+/* 
+   Find a server setting from the info list in 
+   the server struct.  The key passed will be converted to lower case.
+*/
+extern char* find_server_setting_for_key (char*, char**);
+
+
 
 #endif /* __UTILS_H__ */

@@ -56,6 +56,7 @@
 #include "menus.h"
 #include "config.h"
 
+#include "debug.h"
 
 time_t xqf_start_time;
 
@@ -1368,11 +1369,15 @@ static void server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *even
 
 {
   
-  /* printf( "CLIST Key %x\n", event->keyval ); */
+  debug (3, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval ); 
   if (event->keyval == GDK_Delete) {
     del_server_callback( widget, event );
   } else if (event->keyval == GDK_Insert ) {
-    add_to_favorites_callback( widget, event );
+    if (event->state & GDK_SHIFT_MASK ){
+      add_to_favorites_callback( widget, event );
+    } else {
+      add_server_callback (widget, event);
+    }
   } else if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ) {
     launch_callback( widget, LAUNCH_NORMAL );
   }
@@ -2432,6 +2437,11 @@ int main (int argc, char *argv[]) {
   char *gtk_config;
   int newversion = FALSE;
 
+  int i,j; /* For parsing the command line. */
+
+  set_debug_level (DEFAULT_DEBUG_LEVEL);
+  debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);
+
   if (!init_user_info ()) {
     return 1;
   }
@@ -2448,6 +2458,27 @@ int main (int argc, char *argv[]) {
   g_free (gtk_config);
 
   gtk_init (&argc, &argv);
+
+  /* Parse the command line.  Really should use getops lib
+     but we only have one option right now.  Start
+     at pos. 1 since location 0 has the program name. */
+  for (i = 1; i < argc; i++ ) {
+    if (strcmp (argv[i], "-d") == 0){
+      if ((i+1) < argc ) {
+	j = atoi (argv[i+1]);
+	if (j) i++;
+	else  j = 1; /* In case it was not a number. */
+
+      } else {
+	j = 1;
+      }
+      set_debug_level (j);
+      debug( 1, "main() -- Debug level set to %d", get_debug_level());
+    } else {
+      fprintf (stderr, "main() -- Unknown Option '%s' (only -d N is valid, N>5 == Lots of output)\n", argv[i]);
+    }
+  }
+      
 
   dns_gtk_init ();
 
