@@ -90,6 +90,7 @@ static GList *q3_custom_cfgs (char *dir, char *game);
 
 static void quake_save_info (FILE *f, struct server *s);
 
+char *get_custom_arguments(enum server_type type, char *gamestring);
 
 struct game games[] = {
   {
@@ -2513,6 +2514,8 @@ static int ut_exec (const struct condef *con, int forkit) {
   char **info_ptr;
   char* hostport=NULL;
   char* real_server=NULL;
+  char *game_temp;
+  char temp[200];
 
   cmd = strdup_strip (g->cmd);
 
@@ -2536,6 +2539,7 @@ static int ut_exec (const struct condef *con, int forkit) {
     }
   }
 
+#if 0
   if (con->server)
   {
     // gamespy port can be different from game port
@@ -2558,10 +2562,45 @@ static int ut_exec (const struct condef *con, int forkit) {
         argv[argi++] = con->server;
     }
   }
+#endif
+
+
+  if (con->server)
+  {
+    // gamespy port can be different from game port
+    if(hostport)
+    {
+      real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
+      strcpy(temp,real_server);
+    }
+    else
+      strcpy(temp,con->server);
+
+    // Add password if exists
+    if (con->password) {
+      strcat(temp, "?password=");
+      strcat(temp, con->password);
+    }
+
+    // Append additional args if needed
+    game_temp = get_custom_arguments(UN_SERVER, con->s->game);
+    if(game_temp) {
+      // printf("game_temp:%s\n",game_temp);
+      strcat(temp, game_temp);
+      // printf("temp:%s\n",temp);
+
+    }
+    // printf("temp is now:%s\n",temp);
+    argv[argi++] = g_strdup(temp);
+  }
 
   if (default_nosound) {
     argv[argi++] = "-nosound";
   }
+
+  // Alex
+  
+  
 
   argv[argi] = NULL;
 
@@ -3026,3 +3065,36 @@ static void quake_save_info (FILE *f, struct server *s) {
 }
 
 // vim: sw=2
+
+
+
+char *get_custom_arguments(enum server_type type, char *gamestring)
+{
+  char *arg;
+  int num_args;
+  int j;
+  char conf[64];
+  char *token[2];
+  int n;
+  
+  num_args = atoi(game_get_attribute(type,"custom_arg_count"));
+  
+  for (j=0; j < num_args; j++) {
+    g_snprintf (conf, 64, "custom_arg%d", j);
+    arg = g_strdup(game_get_attribute(type,conf));
+
+    n = tokenize (arg, token, 2, ",");
+    
+    if(!(strcasecmp(token[0],gamestring))) {
+      debug(1, "get_custom_arguments: found entry for:%s.  Returning argument:%s\n",gamestring,token[1]);
+      return g_strdup(token[1]);        
+    }
+  }
+  debug(1, "get_custom_arguments: Didn't find an entry for %s",gamestring);
+  return 0;
+}
+
+
+
+
+

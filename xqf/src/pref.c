@@ -3531,6 +3531,10 @@ int prefs_load (void) {
 
   char* tmp;
 
+  int j = 0;
+  char *str;
+  char conf[64];
+
   oldversion = config_get_string ("/" CONFIG_FILE "/Program/version");
 
   old_rc_loaded = rc_parse ();
@@ -3621,6 +3625,32 @@ int prefs_load (void) {
 
   game_set_attribute(WO_SERVER,"masterprotocol",tmp);
   game_set_attribute(WO_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
+
+  config_pop_prefix ();
+
+  /* Unreal (Tournament) */
+  config_push_prefix ("/" CONFIG_FILE "/Game: UNS");
+  
+  while (1)
+  {
+    //printf("looking\n");
+
+    g_snprintf (conf, 64, "custom_arg%d", j);
+    str = config_get_string (conf);
+   
+    if (!str)
+      break;
+
+    game_set_attribute(UN_SERVER, conf, str);
+    //printf("alex-%s,%s\n",conf,str);
+     
+    j++;
+       
+  }
+
+  game_set_attribute(UN_SERVER,"custom_arg_count",config_get_string("custom_arg_count=0"));
+  
+  config_pop_prefix ();
 
   /* Voyager Elite Force */
   config_push_prefix ("/" CONFIG_FILE "/Game: EFS");

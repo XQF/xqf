@@ -1,4 +1,21 @@
 Oct 11, 2002: Alex Burger <alex@fragit_dot_net>
+- Added function get_custom_arguments.  Used by ut_exec to pass user
+  defined command line arguments to UT when launching.  Currently does 
+  not have a GUI front end. To use, add something like the following
+  to the [Game: UN] section in ~/.qf/config:
+
+  custom_arg0=TacticalOps, -ini=TacticalOps.ini
+  custom_arg1=SFTeamDM, -ini=StrikeForce.ini -userini=SFUser.ini
+  custom_arg_count=2
+
+  For UT, the 'gametype' server variable is compared with the entries
+  in the config file above.  If there is a match, the arguments are 
+  appended.
+
+  For UT, the argument is appended to the IP address so you could 
+  specify additional options such as ?Name=Alex etc.  If you want to
+  pass - options, make sure you put a space after the comma like above.  
+
 - Added function find_game_dir which searches for the game dir regardless
   of case.  Called by qw_exec, q2_exec_generic, q3_exec and hl_exec to set
   the game, or fs_game argument.  For example, if server has a game of 
