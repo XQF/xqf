@@ -1675,6 +1675,20 @@ static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
   NULL,			/* 8+ ?? */
 };
 
+#define MAX_Q3A_UT3_TYPES 9
+static char *q3a_ut3_gametypes[MAX_Q3A_UT3_TYPES] = {
+  "FFA",		/* 0 = Free for All */
+  "FFA",		/* 1 = Free for All */
+  "FFA",		/* 2 = Free for All */
+  "TDM",		/* 3 = Team Deathmatch */
+  "Team Survivor",	/* 4 = Team Survivor */
+  "Follow the Leader",	/* 5 = Follow the Leader */
+  "Capture & Hold",     /* 6 = Capture & Hold */
+  "CTF",		/* 7 = Capture the Flag */
+  "Bomb Mode",		/* 8 = Bomb Mode */
+};
+
+
 #define MAX_Q3A_Q3TC045_TYPES 11
 static char *q3a_q3tc045_gametypes[MAX_Q3A_Q3TC045_TYPES] = {
   "FFA",		// 0 = Free for All
@@ -1690,7 +1704,7 @@ static char *q3a_q3tc045_gametypes[MAX_Q3A_Q3TC045_TYPES] = {
   NULL,			// 10+ ??
 };
 
-#define MAX_Q3A_TRUECOMBAT_TYPES 9
+#define MAX_Q3A_TRUECOMBAT_TYPES 8
 static char *q3a_truecombat_gametypes[MAX_Q3A_TRUECOMBAT_TYPES] = {
   "FFA",		// 0 = Free for All
   "Survivor",		// 1 = Survivor/Last Man Standing
@@ -1839,6 +1853,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     "q3ut2",
     q3a_ut2_gametypes,
     MAX_Q3A_UT2_TYPES
+  },
+  {
+    "q3ut3",
+    q3a_ut3_gametypes,
+    MAX_Q3A_UT3_TYPES
   },
   {
     "threewave",

@@ -371,6 +371,16 @@ static char *q3_generations_genflags[Q3_GENERATIONS_GENFLAGS] = {
   "Class-Based Teams ",		// 64 In DM, each class is its own team.
 };
 
+#define Q3_Q3UT3_VOTEFLAGS	5
+
+static char *q3_q3ut3_voteflags[Q3_Q3UT3_VOTEFLAGS] = {
+  "Map, Team, Friendlyfire",    // 1
+  "Gametype, Wave Respawn",	// 2
+  "Time-, Capture-, Fraglimit",	// 4
+  "Various delays and times",	// 8
+  "Matchmode, exec",		// 16
+};
+
 #define Q3_FREEZE_DMFLAGS	11
 
 static char *q3_freeze_dmflags[Q3_FREEZE_DMFLAGS] = {
@@ -575,6 +585,11 @@ void srvinf_ctree_set_server (struct server *s) {
 	else
 	{
 	  show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
+	}
+      }
+      else if (info[0] && !g_strcasecmp (info[0], "g_allowvote")) {
+	if (s->game && !g_strcasecmp (s->game, "q3ut3")) {
+	  show_extended_flags (info[1], q3_q3ut3_voteflags, Q3_Q3UT3_VOTEFLAGS, FALSE, node);
 	}
       }
       else if (info[0] && !strcmp (info[0], "genflags")) {
