@@ -1,3 +1,7 @@
+Oct 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix some memleaks
+- update german translation
+
 Oct 29, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Fixup master_check_master_addr_prefix
 - Create resolve_path function for use with guess_dir, user_fix_defaults etc
