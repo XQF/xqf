@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr (-,root,root)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO
-%doc docs/*html
+%doc docs/*html docs/PreLaunch.example
 %dir %{_datadir}/xqf
 %{_prefix}/bin/*
 %{_mandir}/man?/xqf.*
