@@ -110,6 +110,7 @@ static GtkWidget *file_statistics_menu_item = NULL;
 
 static GtkWidget *edit_add_menu_item = NULL;
 static GtkWidget *edit_delete_menu_item = NULL;
+static GtkWidget *edit_update_master_builtin_menu_item = NULL;
 static GtkWidget *edit_add_master_menu_item = NULL;
 static GtkWidget *edit_delete_master_menu_item = NULL;
 static GtkWidget *edit_find_player_menu_item = NULL;
@@ -233,6 +234,7 @@ void set_widgets_sensitivity (void) {
   gtk_widget_set_sensitive (file_statistics_menu_item, sens);
   gtk_widget_set_sensitive (add_menu_item, sens);
   gtk_widget_set_sensitive (edit_add_menu_item, sens);
+  gtk_widget_set_sensitive (edit_update_master_builtin_menu_item, sens);
   gtk_widget_set_sensitive (edit_add_master_menu_item, sens);
   gtk_widget_set_sensitive (edit_find_player_menu_item, sens);
   gtk_widget_set_sensitive (edit_find_again_menu_item, sens);
@@ -1181,6 +1183,12 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
   }
 }
 
+static void update_master_builtin_callback (GtkWidget *widget, gpointer data) {
+
+  update_master_list_builtin();
+
+}
+
 static void add_master_callback (GtkWidget *widget, gpointer data) {
   char *str;
   char *desc;
@@ -1785,6 +1793,12 @@ static const struct menuitem edit_menu_items[] = {
   },
 
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
+
+  {
+    MENU_ITEM,          N_("Add Default Masters" ),        0,	GDK_CONTROL_MASK,
+    GTK_SIGNAL_FUNC (update_master_builtin_callback), NULL,
+    &edit_update_master_builtin_menu_item
+  },
 
   {
     MENU_ITEM,          N_("Add _Master..."),        'M',	GDK_CONTROL_MASK,
