@@ -1,4 +1,11 @@
 Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Updated ca.po, de.po, es.po for 'Add new Server' and removal of
+  ...'s.  Had to remove duplicate 'Properties' because of this.
+  Note:  Translation still needs to be done for 'Add new Server' as 
+  the translated version is still just 'Add'
+- Add 'Add to Fav' to Edit menu, add 'Add new server' to Server menu
+- Change menu items to not end in ...
+- Make menus look similar (Add new Server instead of Add) etc.
 - Only Q3A uses find_game_dir now
 
 Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>

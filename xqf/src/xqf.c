@@ -2208,7 +2208,7 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		N_("Add..."),		0,   	0,
+    MENU_ITEM,		N_("Add new Server"),		0,   	0,
     GTK_SIGNAL_FUNC (add_server_callback), NULL,
     &add_menu_item
   },
@@ -2257,12 +2257,12 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		N_("RCon..."),   	0,	0,
+    MENU_ITEM,		N_("RCon"),   	0,	0,
     GTK_SIGNAL_FUNC (rcon_callback), NULL,
     &rcon_menu_item
   },
   { 
-    MENU_ITEM,		N_("Properties..."),   	0,	0,
+    MENU_ITEM,		N_("Properties"),   	0,	0,
     GTK_SIGNAL_FUNC (properties_callback), NULL,
     &properties_menu_item
   },
@@ -2272,7 +2272,7 @@ static const struct menuitem srvopt_menu_items[] = {
 
 static const struct menuitem file_menu_items[] = {
   { 
-    MENU_ITEM,		N_("_Statistics..."),	0,	0,
+    MENU_ITEM,		N_("_Statistics"),	0,	0,
     GTK_SIGNAL_FUNC (statistics_callback), NULL,
     &file_statistics_menu_item
   },
@@ -2291,12 +2291,12 @@ static const struct menuitem file_menu_items[] = {
 // appears on right click on a master server
 static const struct menuitem source_ctree_popup_menu[] = {
   {
-    MENU_ITEM,          N_("Add _Master..."),        'M',	GDK_CONTROL_MASK,
+    MENU_ITEM,          N_("Add _Master"),        'M',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (add_master_callback), NULL,
     &source_add_master_menu_item
   },
   {
-    MENU_ITEM,          N_("_Rename Master..."),        0, 0,
+    MENU_ITEM,          N_("_Rename Master"),        0, 0,
     GTK_SIGNAL_FUNC (edit_master_callback), NULL,
     &source_edit_master_menu_item
   },
@@ -2309,9 +2309,14 @@ static const struct menuitem source_ctree_popup_menu[] = {
 
 static const struct menuitem edit_menu_items[] = {
   { 
-    MENU_ITEM,		N_("_Add Server..."),	'N',	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Add new Server"),	'N',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (add_server_callback), NULL,
     &edit_add_menu_item
+  },
+  { 
+    MENU_ITEM,		N_("Add to _Favorites"),	0, 0,
+    GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
+    &server_favadd_menu_item
   },
   { 
     MENU_ITEM,		N_("_Remove from Favorites"),		'D',   	GDK_CONTROL_MASK,
@@ -2338,12 +2343,12 @@ static const struct menuitem edit_menu_items[] = {
   },
 
   {
-    MENU_ITEM,          N_("Add _Master..."),        'M',	GDK_CONTROL_MASK,
+    MENU_ITEM,          N_("Add _Master"),        'M',	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (add_master_callback), NULL,
     &edit_add_master_menu_item
   },
   {
-    MENU_ITEM,          N_("_Rename Master..."),        0, 0,
+    MENU_ITEM,          N_("_Rename Master"),        0, 0,
     GTK_SIGNAL_FUNC (edit_master_callback), NULL,
     &edit_edit_master_menu_item
   },
@@ -2356,7 +2361,7 @@ static const struct menuitem edit_menu_items[] = {
   { MENU_SEPARATOR,    NULL,                   0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		N_("_Find Player..."),	'F',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Find Player"),	'F',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (find_player_callback), (gpointer) FALSE,
     &edit_find_player_menu_item
   },
@@ -2443,6 +2448,11 @@ static const struct menuitem server_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
+    MENU_ITEM,		N_("_Add new Server"),	0, 0,
+    GTK_SIGNAL_FUNC (add_server_callback), NULL,
+    &edit_add_menu_item
+  },
+  { 
     MENU_ITEM,		N_("Add to _Favorites"),	0, 0,
     GTK_SIGNAL_FUNC (add_to_favorites_callback), NULL,
     &server_favadd_menu_item
@@ -2462,12 +2472,12 @@ static const struct menuitem server_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		N_("_RCon..."),   		0,	0,
+    MENU_ITEM,		N_("_RCon"),   		0,	0,
     GTK_SIGNAL_FUNC (rcon_callback), NULL,
     &server_rcon_menu_item
   },
   { 
-    MENU_ITEM,		N_("_Properties..."),  	0,	0,
+    MENU_ITEM,		N_("_Properties"),  	0,	0,
     GTK_SIGNAL_FUNC (properties_callback), NULL,
     &server_properties_menu_item
   },
@@ -2477,31 +2487,31 @@ static const struct menuitem server_menu_items[] = {
 
 static const struct menuitem preferences_menu_items[] = {
   { 
-    MENU_ITEM,		N_("_General..."),	0,	0,
+    MENU_ITEM,		N_("_General"),	0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_GENERAL + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		N_("_Games..."),		0,	0,
+    MENU_ITEM,		N_("_Games"),		0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog), 
     (gpointer) (PREF_PAGE_GAMES + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		N_("_Appearance..."),	0,	0,
+    MENU_ITEM,		N_("_Appearance"),	0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_APPEARANCE + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		N_("_QStat Options..."),	0,	0, 
+    MENU_ITEM,		N_("_QStat Options"),	0,	0, 
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		N_("_Sound Options..."),	0,	0, 
+    MENU_ITEM,		N_("_Sound Options"),	0,	0, 
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_SOUNDS + UNKNOWN_SERVER * 256),
     NULL
@@ -2510,12 +2520,12 @@ static const struct menuitem preferences_menu_items[] = {
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
   { 
-    MENU_ITEM,		N_("_Server Filter..."),	0,	0,
+    MENU_ITEM,		N_("_Server Filter"),	0,	0,
     GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) FILTER_SERVER,
     NULL
   },
   { 
-    MENU_ITEM,		N_("Player _Filter..."),	0,	0,
+    MENU_ITEM,		N_("Player _Filter"),	0,	0,
     GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) FILTER_PLAYER,
     NULL
   },
@@ -2525,7 +2535,7 @@ static const struct menuitem preferences_menu_items[] = {
 
 static const struct menuitem help_menu_items[] = {
   { 
-    MENU_ITEM,		N_("_About..."),		0,	0,
+    MENU_ITEM,		N_("_About"),		0,	0,
     GTK_SIGNAL_FUNC (about_dialog), NULL,
     NULL
   },

@@ -1366,8 +1366,8 @@ msgid "Record Demo"
 msgstr "Demo aufnehmen"
 
 #: src/xqf.c:2173
-msgid "Add..."
-msgstr "Hinzufügen..."
+msgid "Add new Server"
+msgstr "Hinzufügen"
 
 #: src/xqf.c:2178
 msgid "Add to Favorites"
@@ -1398,35 +1398,31 @@ msgid "DNS Lookup"
 msgstr "DNS auflösen"
 
 #: src/xqf.c:2222
-msgid "RCon..."
-msgstr "RCon..."
-
-#: src/xqf.c:2227
-msgid "Properties..."
-msgstr "Eigenschaften..."
+msgid "RCon"
+msgstr "RCon"
 
 #: src/xqf.c:2237
-msgid "_Statistics..."
-msgstr "_Statistiken..."
+msgid "_Statistics"
+msgstr "_Statistiken"
 
 #: src/xqf.c:2245
 msgid "_Exit"
 msgstr "Be_enden"
 
 #: src/xqf.c:2256 src/xqf.c:2303
-msgid "Add _Master..."
-msgstr "_Master hinzufügen ..."
+msgid "Add _Master"
+msgstr "_Master hinzufügen "
 
 #: src/xqf.c:2261 src/xqf.c:2308
-msgid "_Rename Master..."
-msgstr "Master _umbenennen ..."
+msgid "_Rename Master"
+msgstr "Master _umbenennen "
 
 #: src/xqf.c:2266 src/xqf.c:2313
 msgid "D_elete Master"
 msgstr "_Master löschen"
 
 #: src/xqf.c:2274
-msgid "_Add Server..."
+msgid "_Add Server"
 msgstr "Server _hinzufügen"
 
 #: src/xqf.c:2279 src/xqf.c:2413
@@ -1446,7 +1442,7 @@ msgid "Add Default Masters"
 msgstr "Standard Master hinzufügen"
 
 #: src/xqf.c:2321
-msgid "_Find Player..."
+msgid "_Find Player"
 msgstr "S_pieler suchen"
 
 #: src/xqf.c:2326
@@ -1498,45 +1494,45 @@ msgid "DNS _Lookup"
 msgstr "DNS _auflösen"
 
 #: src/xqf.c:2427
-msgid "_RCon..."
-msgstr "_RCon..."
+msgid "_RCon"
+msgstr "_RCon"
 
 #: src/xqf.c:2432
-msgid "_Properties..."
+msgid "_Properties"
 msgstr "_Eigenschaften"
 
 # src/xqf.c
 #: src/xqf.c:2442
-msgid "_General..."
-msgstr "_Allgemein..."
+msgid "_General"
+msgstr "_Allgemein"
 
 #: src/xqf.c:2448
-msgid "_Games..."
-msgstr "_Spiele ..."
+msgid "_Games"
+msgstr "_Spiele "
 
 #: src/xqf.c:2454
-msgid "_Appearance..."
+msgid "_Appearance"
 msgstr "Erscheinungs_bild"
 
 #: src/xqf.c:2460
-msgid "_QStat Options..."
-msgstr "_QStat Optionen..."
+msgid "_QStat Options"
+msgstr "_QStat Optionen"
 
 #: src/xqf.c:2466
-msgid "_Sound Options..."
-msgstr "_Sound Optionen..."
+msgid "_Sound Options"
+msgstr "_Sound Optionen"
 
 #: src/xqf.c:2475
-msgid "_Server Filter..."
-msgstr "_Server Filter..."
+msgid "_Server Filter"
+msgstr "_Server Filter"
 
 #: src/xqf.c:2480
-msgid "Player _Filter..."
-msgstr "Spieler _Filter..."
+msgid "Player _Filter"
+msgstr "Spieler _Filter"
 
 #: src/xqf.c:2490
-msgid "_About..."
-msgstr "_Über ..."
+msgid "_About"
+msgstr "_Über "
 
 #: src/xqf.c:2501
 msgid "_File"
