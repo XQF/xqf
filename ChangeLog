@@ -1,3 +1,6 @@
+Jan 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix GTK2 application icon
+
 Jan 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add support for BF1942 (wine game). Uses EYE protocol, no official master,
   LAN browsing doesn't work.
