@@ -154,6 +154,8 @@ static struct quake_private cod_private;
 static struct quake_private jk3_private;
 static struct quake_private doom3_private;
 
+static void ut2004_cmd_or_dir_changed(struct game* g);
+
 #include "games.c"
 
 struct gsname2type_s
@@ -3566,6 +3568,45 @@ static void doom3_cmd_or_dir_changed(struct game* g)
 out:
   if(f) fclose(f);
   g_free(verinfo);
+}
+
+static void ut2004_cmd_or_dir_changed(struct game* g)
+{
+  FILE* f;
+  char* keyfile = NULL;
+
+  debug(2, "cmd: %s, dir: %s, home: %s", g->cmd, g->real_dir, g->real_home);
+
+  keyfile = file_in_dir (g->real_home, "System/cdkey");
+  if(keyfile)
+  {
+    f = fopen(keyfile, "r");
+    if(!f)
+    {
+      g_free(keyfile);
+      keyfile = NULL;
+    }
+  }
+
+  if(!keyfile)
+  {
+    if(f) fclose(f);
+    keyfile = file_in_dir (g->real_dir, "System/cdkey");
+    if(keyfile)
+    {
+      f = fopen(keyfile, "r");
+      if(!f)
+      {
+	g_free(keyfile);
+	keyfile = NULL;
+      }
+    }
+  }
+
+  if(keyfile || (!keyfile && game_get_attribute(g->type,"cdkey")))
+    game_set_attribute(g->type, "cdkey", keyfile);
+
+  if(f) fclose(f);
 }
 
 // vim: sw=2

@@ -41,6 +41,7 @@ enum {
   GAME_QUAKE1_SKIN		= 0x0200,
   GAME_QUAKE3_MASTERPROTOCOL	= 0x0400, // master server protocol version is in games_data["masterprotocol"]
   GAME_LAUNCH_HOSTPORT		= 0x0800, // use hostport rule as port when launching
+  GAME_MASTER_CDKEY		= 0x1000, // master server requires CD key
 };
 
 struct game {

@@ -369,19 +369,24 @@
 	<icon>ut2_xpm</icon>
 	<command>ut2003_demo</command>
 	<command>ut2003</command>
+	<default_home>~/.ut2003</default_home>
 	<pd>ut2_private</pd>
     </game>
     <game>
 	<base>UN_SERVER</base>
 	<type>UT2004_SERVER</type>
 	<name>UT 2004</name>
-	<flags>GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT</flags>
+	<flags>GAME_CONNECT | GAME_SPECTATE | GAME_PASSWORD | GAME_LAUNCH_HOSTPORT | GAME_MASTER_CDKEY</flags>
+	<default_master_port>28902</default_master_port>
 	<id>UT2004S</id>
 	<qstat_str>UT2S</qstat_str>
 	<qstat_option>-ut2s</qstat_option>
+	<qstat_master_option>-ut2004m</qstat_master_option>
 	<icon>ut2004_xpm</icon>
 	<command>ut2004demo</command>
 	<command>ut2004</command>
+	<cmd_or_dir_changed>ut2004_cmd_or_dir_changed</cmd_or_dir_changed>
+	<default_home>~/.ut2004</default_home>
 	<pd>ut2004_private</pd>
     </game>
     <game>
