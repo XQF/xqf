@@ -1938,6 +1938,8 @@ static void new_custom_args_callback (GtkWidget *widget, gpointer data) {
 
   gtk_entry_set_text (GTK_ENTRY (custom_args_entry_game[type]), "");
   gtk_entry_set_text (GTK_ENTRY (custom_args_entry_args[type]), "");
+  
+  gtk_widget_grab_focus (GTK_WIDGET (custom_args_entry_game[type]));
 }
 
 static void add_custom_args_callback (GtkWidget *widget, gpointer data) {

@@ -755,6 +755,7 @@ static void filter_new_rename_callback (int number)
       filter->filter_name = str;
       g_array_append_val(server_filters,filter);
       server_filter_dialog_current_filter = server_filters->len;
+      gtk_widget_grab_focus (GTK_WIDGET (game_contains_entry));
     }
     else
     {
