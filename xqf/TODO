@@ -7,6 +7,8 @@
 - Search for server like control f does for player
 - Option to treat bots as non-players.  Hate going to a server that has 6 
   'players' to find them all bots
+- Ability to launch a game without connecting to a server - right click on
+  game in source list - Launch
 
 Required for XQF 1.0:
 - Configure option for home directory as well as global directory
