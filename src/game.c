@@ -50,6 +50,7 @@
 #include "q3maps.h"
 #include "utmaps.h"
 
+#include "srv-prop.h" // TODO: merge properties and server struct
 
 static struct player *poqs_parse_player(char *tokens[], int num);
 static struct player *qw_parse_player(char *tokens[], int num);
@@ -3096,6 +3097,7 @@ static int hl_exec (const struct condef *con, int forkit) {
   char *cmd;
   struct game *g = &games[con->s->type];
   int retval;
+  struct server_props *props = NULL;
 
   cmd = strdup_strip (g->cmd);
 
@@ -3116,6 +3118,13 @@ static int hl_exec (const struct condef *con, int forkit) {
   if (con->password) {
     argv[argi++] = "+password";
     argv[argi++] = con->password;
+  }
+
+  props = properties (con->s);
+  if(props && props->rcon_password)
+  {
+    argv[argi++] = "+rcon_password";
+    argv[argi++] = props->rcon_password;
   }
 
   argv[argi] = NULL;
