@@ -171,7 +171,7 @@ struct server {
 
   char sv_os;         /* L = Linux, W = windows, M = Mac */
 
-  unsigned char type;	/* enum server_type type; */
+  enum server_type type;	/* enum server_type type; */
   unsigned char flags;
 
   unsigned char filters;

@@ -1,3 +1,10 @@
+Oct 13, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
+- use server_clist_set_list in server_clist_build_filtered. It's actually
+  faster to rebuild the displayed server list from scratch than to determine
+  which servers have to be deleted or added.
+- when deleting last server from favorites, do not display it any longer
+- replace unsigned char type by enum server_type type
+
 Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - cleaned up get_custom_arguments
 - custom_arg_count no longer neccessary

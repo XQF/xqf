@@ -1496,6 +1496,7 @@ static void del_server_callback (GtkWidget *widget, gpointer data) {
     save_favorites ();
     server_list_free (list);
 
+
     update_server_lists_from_selected_source ();
     server_clist_build_filtered (cur_server_list, FALSE);
   }
