@@ -1012,9 +1012,9 @@ void init_games()
     g_datalist_init(&games[i].games_data);
   }
 
-  game_set_attribute(Q1_SERVER,"suggest_commands",strdup("nq-sgl:nq-glx:nq-sdl:nq-x11"));
+  game_set_attribute(Q1_SERVER,"suggest_commands",strdup("twilight-nq:nq-sgl:nq-glx:nq-sdl:nq-x11"));
   game_set_attribute(Q2_SERVER,"suggest_commands",strdup("quake2"));
-  game_set_attribute(QW_SERVER,"suggest_commands",strdup("qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11"));
+  game_set_attribute(QW_SERVER,"suggest_commands",strdup("twilight-qw:qw-client-sgl:qw-client-glx:qw-client-sdl:qw-client-x11"));
   game_set_attribute(Q3_SERVER,"suggest_commands",strdup("q3:quake3"));
   game_set_attribute(WO_SERVER,"suggest_commands",strdup("wolf"));
   game_set_attribute(WOET_SERVER,"suggest_commands",strdup("et"));
