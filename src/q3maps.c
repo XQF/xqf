@@ -114,6 +114,7 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash)
 	{
 	    // s#maps/(.*)\.bsp#\1#
 	    char* mapname=g_strndup(info.name+5,strlen(info.name)-4-5);
+	    g_strdown(mapname);
 	    if(g_hash_table_lookup(maphash,mapname))
 	    {
 		g_free(mapname);
@@ -158,6 +159,7 @@ static void findq3maps_zip(const char* path, GHashTable* maphash)
 	    {
 		// s#maps/(.*)\.bsp#\1#
 		char* mapname=g_strndup(buf+5,strlen(buf)-4-5);
+		g_strdown(mapname);
 		if(g_hash_table_lookup(maphash,mapname))
 		{
 		    g_free(mapname);
@@ -202,6 +204,7 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash)
     {
 	char* basename = g_basename(name);
 	char* mapname=g_strndup(basename,strlen(basename)-4);
+	g_strdown(mapname);
 	if(g_hash_table_lookup(maphash,mapname))
 	{
 	    g_free(mapname);
@@ -229,6 +232,7 @@ void q3_contains_file(const char* name, int level, GHashTable* maphash)
     {
 	char* basename = g_basename(name);
 	char* mapname=g_strndup(basename,strlen(basename)-4);
+	g_strdown(mapname);
 	if(g_hash_table_lookup(maphash,mapname))
 	{
 	    g_free(mapname);
@@ -326,12 +330,6 @@ void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFu
     }
 }
 
-// case insensitive compare for hash
-static gint maphashmapsequal(gconstpointer m1, gconstpointer m2)
-{
-    return (g_strcasecmp(m1,m2)==0);
-}
-
 static void maphashforeachfunc(char* key, gpointer value, gpointer user_data)
 {
     printf("%s ",key);
@@ -355,7 +353,7 @@ void q3_clear_maps(GHashTable* maphash)
 /** create map hash */
 GHashTable* q3_init_maphash()
 {
-    return g_hash_table_new(g_str_hash,maphashmapsequal);
+    return g_hash_table_new(g_str_hash,g_str_equal);
 }
 
 /** return true if mapname is contained in maphash, false otherwise */
