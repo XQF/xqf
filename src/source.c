@@ -830,6 +830,11 @@ static char *builtin_masters_update_info[] = {
   "ADD UNS gmaster://unreal.epicgames.com:28900 Epic",
 #endif
 
+  "ADD T2S master://198.74.33.29:28002 NA West1",
+  "ADD T2S master://64.94.105.141:27999 NA West2",
+  "ADD T2S master://64.94.105.145:28000 NA West3",
+  "ADD T2S master://209.67.28.144:28002 NA East1",
+  "ADD T2S master://209.67.28..145:27999 NA East2",
 
   NULL
 };
