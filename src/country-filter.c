@@ -31,8 +31,8 @@
 
 #include <GeoIP.h>
 
-const int MaxCountries = sizeof(GeoIP_country_code)/3;
-static const int LAN_GeoIPid = sizeof(GeoIP_country_code)/3; // MaxCountries doesn't work in C
+const unsigned MaxCountries = sizeof(GeoIP_country_code)/3;
+static const unsigned LAN_GeoIPid = sizeof(GeoIP_country_code)/3; // MaxCountries doesn't work in C
 
 static GeoIP* gi;
 

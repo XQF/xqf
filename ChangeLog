@@ -1,3 +1,7 @@
+Oct 05, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- add twilight to q1 and qw command suggestion
+- add checkbox to be able to also filter countries without icon
+
 Sep 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - load flag icons from /usr/(local/)share/flags/default
 - scripts docs/copykdeflags and docs/convertmaxmindflags for copying kde or
