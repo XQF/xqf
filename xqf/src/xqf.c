@@ -3415,12 +3415,14 @@ void create_main_window (void) {
   main_toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR(main_toolbar),GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR(main_toolbar),GTK_TOOLBAR_BOTH);
+  gtk_box_pack_start (GTK_BOX (main_vbox), main_toolbar, FALSE, FALSE, 0);
+  // FIXME
+  gtk_box_reorder_child(GTK_BOX (main_vbox), main_toolbar, 2);
 #else
   main_toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
                                                             GTK_TOOLBAR_BOTH);
-#endif
-
   gtk_box_pack_start (GTK_BOX (vbox), main_toolbar, FALSE, FALSE, 0);
+#endif
   populate_main_toolbar ();
   gtk_widget_show (main_toolbar);
 
