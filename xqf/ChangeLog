@@ -1,3 +1,7 @@
+Oct 05, 2001: Jordi Mallach <jordi@sindominio.net>
+- fixed a variable type in es.po which was making it segfault directly.
+  Thanks, Ludwig.
+
 Oct 03, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - initial descent3 support (requires qstat 2.4e)
 - changed version to 0.9.7c (new master for descent3)
@@ -5,7 +9,7 @@ Oct 03, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - updated german translation
 - fixed player filter dialog bug
 
-Oct  1, 2001: Jordi Mallach <jordi@sindominio.net>
+Oct 01, 2001: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation, again :)
 
 Oct 01, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -14,7 +18,7 @@ Oct 01, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - more translatabe strings
 - updated german translation
 
-Oct  1, 2001: Jordi Mallach <jordi@sindominio.net>
+Oct 01, 2001: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation
 - added some notes in BUGS
 
