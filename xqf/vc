@@ -24,7 +24,7 @@
 # $Id$
 #
 
-export LANG=C
+export LANG=en_US.UTF-8
 export TZ=UTC
 
 if [ -r mail ]; then
