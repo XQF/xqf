@@ -1,3 +1,6 @@
+Nov 28, 2002: Jordi Mallach <jordi@sindominio.net>
+- Updated Catalan and Spanish translations.
+
 Nov 22, 2002: Jordi Mallach <jordi@sindominio.net>
 - port Ludwig's setlocale fix to rcon.c.
 
