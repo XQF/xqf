@@ -409,7 +409,7 @@ static void server_filter_init (void) {
 
     filter->filter_name        		= filtername;
     filter->filter_retries    		= config_get_int  ("retries=2");
-    filter->filter_ping       		= config_get_int  ("ping=1000");
+    filter->filter_ping       		= config_get_int  ("ping=9999");
     filter->filter_not_full   		= config_get_bool ("not full=false");
     filter->filter_not_empty   		= config_get_bool ("not empty=false");
     filter->filter_no_cheats   		= config_get_bool ("no cheats=false");
@@ -637,7 +637,7 @@ static void server_filter_save_settings (int number,
       filters[FILTER_SERVER].changed = FILTER_CHANGED;
     }
     oldfilter->game_contains = NULL;
-  } 
+  }
 
 
   /* Version string values -- baa */
