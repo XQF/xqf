@@ -73,6 +73,7 @@ static int qw_exec (const struct condef *con, int forkit);
 #ifdef QSTAT23
 static int q3_exec (const struct condef *con, int forkit);
 #endif
+static int wo_exec (const struct condef *con, int forkit);
 static int q2_exec_generic (const struct condef *con, int forkit);
 static int ut_exec (const struct condef *con, int forkit);
 static int t2_exec (const struct condef *con, int forkit);
@@ -210,7 +211,7 @@ struct game games[] = {
     "WOS",
     "Q3S",
     "-q3s",
-    "-q3m,55",
+    "-q3m",
     &wo_pix,
 
     q3_parse_player,
@@ -218,7 +219,7 @@ struct game games[] = {
     q3_analyze_serverinfo,
     config_is_valid_generic,
     NULL,
-    q3_exec,
+    wo_exec,
     NULL,
     quake_save_info
   },
@@ -1819,6 +1820,119 @@ static int q3_exec (const struct condef *con, int forkit) {
 }
 
 #endif
+
+static int wo_exec (const struct condef *con, int forkit) {
+  char *argv[64];
+  int argi = 0;
+  char *cmd;
+  char *game_dir;
+  char *file;
+
+  char *protocol;
+  char *tmp_cmd;
+  FILE* tmp_fp;
+  char *fs_game;
+
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  int is_so_mod = 0;
+
+  cmd = strdup_strip (g->cmd);
+  /*
+    Figure out what protocal the server
+    is running so we can try to connect
+    with a specialized quake3 script.
+    Please not that for this to work you
+    have to specify the full path to quake3
+    or have it in your cwd.  You need to name 
+    the scripts like quake3proto48. --baa
+  */
+  protocol = find_server_setting_for_key ("protocol", con->s->info);
+  debug (5, "q3_exec() -- Command: '%s', protocol '%s'", cmd, protocol);
+  tmp_cmd = g_malloc0 (sizeof (char) * (strlen (cmd) + 10 ));
+  if( strcspn (cmd, " ")) {
+    strncpy (tmp_cmd, cmd, strcspn (cmd, " "));
+  } else {
+    strcpy (tmp_cmd, cmd);
+  }
+  strcat (tmp_cmd, "proto" ); 
+  strcat (tmp_cmd, protocol);
+  strcat (tmp_cmd, "\0");
+  debug (5, "q3_exec() -- Check for '%s' as a command", tmp_cmd);
+  if (tmp_fp = fopen( tmp_cmd, "r" )){
+    fclose (tmp_fp);
+    debug (5, "q3_exec() -- Could open %s, use it to run q3a.", tmp_cmd);
+    argv[argi++] = tmp_cmd;
+    strtok (cmd, delim);
+  } else {
+    argv[argi++] = strtok (cmd, delim);
+  }
+
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (default_nosound) {
+    argv[argi++] = "+set";
+    argv[argi++] = "s_initsound";
+    argv[argi++] = "0";
+  }
+
+  if (con->password || con->rcon_password) {
+    game_dir = quake3_data_dir (g->real_dir);
+
+    if (game_dir) {
+      file = file_in_dir (game_dir, PASSWORD_CFG);
+      if (!write_passwords (file, con)) {
+	if (!dialog_yesno (NULL, 1, "Launch", "Cancel", 
+             "Cannot write to file \"%s\".\n\nLaunch client anyway?", file)) {
+	  g_free (file);
+	  g_free (cmd);
+	  return;
+	}
+      }
+      g_free (file);
+      g_free (game_dir);
+    }
+
+    argv[argi++] = "+exec";
+    argv[argi++] = PASSWORD_CFG;
+  }
+
+  if (con->server) {
+    argv[argi++] = "+connect";
+    argv[argi++] = con->server;
+  }
+
+  if (con->demo) {
+    argv[argi++] = "+record";
+    argv[argi++] = con->demo;
+  }
+
+  argv[argi] = NULL;
+
+#if 1
+  /*
+    If you have the debug level set (e.g. -d 1) then this
+    will show you the command line being exicted.
+  */
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+#else
+  if (get_debug_level()){
+    char **argptr = argv;
+    fprintf (stderr, "wo_exec() -- Would have EXEC> ");
+    while (*argptr)
+      fprintf (stderr, "%s ", *argptr++);
+    fprintf (stderr, "\n");
+  }
+  retval = 1;
+#endif
+
+  g_free (cmd);
+  g_free (tmp_cmd);
+  return retval;
+}
+
 
 
 static int q2_exec_generic (const struct condef *con, int forkit) {
