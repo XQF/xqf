@@ -1,3 +1,9 @@
+Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
+- Applied Ludwig's patch which reduces code needed to speed up
+  startup of XQF
+- Added check to user_fix_defaults so that if 1 or more games are
+  found it defaults to 'show only configured games'
+
 Oct 18, 2002: Jordi Mallach <jordi@sindominio.net>
 - Update Catalan and Spanish translations.
 

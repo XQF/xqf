@@ -3553,6 +3553,7 @@ static void user_fix_defaults (void)
     char* suggested_file = NULL;
     char str[256];
     int i;
+    int j = 0;
     
     for (i = 0; i < GAMES_TOTAL; i++)
     {
@@ -3561,12 +3562,19 @@ static void user_fix_defaults (void)
 	suggested_file = find_file_in_path(files);
 	if(!suggested_file) continue;
 
+        j++;
+
 	g_snprintf (str, 256, "/" CONFIG_FILE "/Game: %s/cmd", type2id (games[i].type));
 	config_set_string (str, suggested_file);
 	debug(0,"set command %s for %s",suggested_file,games[i].name);
 
 	g_free(suggested_file);
 	suggested_file=NULL;
+    }
+
+    if (j) {
+      config_set_string ("/" CONFIG_FILE "/Appearance/show only configured games","true");
+      debug(0,"%d games found, set 'show only configured games' to true", j);
     }
 
     config_set_string ("/" CONFIG_FILE "/Games Config/player name", 

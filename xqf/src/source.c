@@ -385,26 +385,17 @@ static struct master *read_list_parse_master (char *str, char *str2) {
   return m;
 }
 
-int server_sorting_helper (const struct server *s1, 
+static int server_sorting_helper (const struct server *s1, 
 				      const struct server *s2) {
-
-  int res = 0;
-  
-  if  (s1->host->ip.s_addr == s2->host->ip.s_addr) {
-    if (s1->port == s2->port)
-      res = 0;
-    else
-      res = s1->port > s2->port ? 1 : -1;
-  }
+  if(s1==s2)
+    return 0;
+  else if(s1<s2)
+    return -1;
   else
-    res = ( g_ntohl (s1->host->ip.s_addr) > g_ntohl (s2->host->ip.s_addr) )? 1 : -1;
- 
-  //printf("res: %d\n",res);
-
-  return res;
+    return 1;
 }
 
-int userver_sorting_helper (const struct userver *us1, 
+static int userver_sorting_helper (const struct userver *us1, 
 				      const struct userver *us2) {
 // Not fully tested!
 
@@ -1262,17 +1253,51 @@ static void save_master_list (void) {
   config_pop_prefix ();
 }
 
+// sort server list and remove duplicates
+static GSList* server_list_remove_dups(GSList* list)
+{
+  int i;
+  GSList* serverlist = NULL;
+  GSList* serverlistnext = NULL;
+
+  if(!list)
+    return NULL;
+
+  list = serverlist = g_slist_sort (list, (GCompareFunc) server_sorting_helper);
+
+  i = 0;
+  while(serverlist)
+  {
+    serverlistnext=serverlist->next;
+    if(!serverlistnext)
+    {
+      // last element, quit loop
+      serverlist = serverlistnext;
+    }
+    else if(!server_sorting_helper(serverlist->data,serverlistnext->data))
+    {
+      struct server* s= serverlistnext->data;
+      debug(1,"removing duplicate server %s",s->name);
+      serverlistnext = g_slist_remove_link(serverlistnext, serverlistnext);
+      serverlist->next = serverlistnext;
+      server_unref(s);
+    }
+    else
+    {
+      serverlist= serverlistnext;
+    }
+    i++;
+  }
+  debug(1,"number of servers %d",i);
+
+  return list;
+}
+
 void init_masters (int update) {
   struct master *m;
+  struct master *m2;
   int i;
   GSList *list;
-  GSList *list2;
-  GSList *list3 = NULL;
-  struct master *m2 = NULL;
-  struct server *s1 = NULL;
-  struct server *s2 = NULL;
-  char *temp1 = NULL;
-  char *temp2 = NULL;
 
   favorites = create_master (N_("Favorites"), UNKNOWN_SERVER, FALSE);
 
@@ -1302,58 +1327,16 @@ void init_masters (int update) {
   // Only working on servers, not uservers.  Lists file only contains IPs.
   debug (1, "Searching for duplicate server entries");
 
+  // for each master
   for (list = all_masters; list; list = list->next) {
     m2 = (struct master *) list->data;
+    if(!m2)
+      continue;
     debug (1, "  Working on master: %s",m2->name);
+
+    m2->servers = server_list_remove_dups(m2->servers);
     
-    if (m2 && m2->servers)
-      m2->servers = g_slist_sort (m2->servers, (GCompareFunc) server_sorting_helper);
-
-    if (list3)
-      list3 = NULL;
-    
-    s1 = NULL;
-    s2 = NULL;
-
-    list2 = m2->servers;   
-
-    while (list2) {
-      s1 = (struct server *) list2->data;
-      if (list2->next)
-        s2 = (struct server *) list2->next->data;
-      else
-        s2 = NULL;
-        
-      if (s1 && s2) {
-        temp1 = g_strdup_printf("%s:%d",inet_ntoa (s1->host->ip), s1->port);
-        temp2 = g_strdup_printf("%s:%d",inet_ntoa (s2->host->ip), s2->port);
-        
-        if (strcmp (temp1, temp2) == 0) {
-          g_free (temp1);
-          g_free (temp2);
-          debug (1, "  Skipping duplicate server entry");
-          server_unref (s1);
-          list2 = list2->next;
-          continue;
-        }
-        list3 = g_slist_prepend (list3, s1);
-	
-        g_free (temp1);
-        g_free (temp2);
-      }
-      else if (s1) {
-        temp1 = g_strdup(inet_ntoa (s1->host->ip));
-        list3 = g_slist_prepend (list3, s1);
-        g_free (temp1);
-      }
-      list2 = list2->next;
-    }
-        
-    if (list3) {
-      g_slist_free (m2->servers);
-      m2->servers = list3;
-    }
-  } 
+  }
 
   read_server_info (FILENAME_SRVINFO);
 }
