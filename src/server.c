@@ -81,7 +81,8 @@ static struct server *server_new (struct host *h, unsigned short port,
 
   server = g_malloc0 (sizeof (struct server));
   debug (6, "server_new() -- Server %lx", server);
-  server_ref (server); 
+
+  server_ref (server);
 
   server->host = h;
   host_ref (h); /* Increse the refernece count on the host struct */
@@ -258,8 +259,11 @@ void userver_unref (struct userver *s) {
 
   if (!s)
     return;
-
+  
   s->ref_count--;
+
+  debug (6, "userver_unref() -- UServer %lx ref now at %d", 
+	 s, s->ref_count);
 
   if (s->ref_count <= 0) {
     node = userver_hash_func (s->hostname, s->port);
@@ -444,9 +448,12 @@ void uservers_to_servers (GSList **uservers, GSList **servers) {
   struct userver *us;
   GSList *tmp = *uservers;
 
+  debug (6, "uservers_to_servers() -- uservers %lx  tmp %lx", uservers, tmp);
   while (tmp) {
     us = (struct userver *) tmp->data;
+    debug (7, "uservers_to_servers() -- Check userver %lx", us);
     if (us->s) {
+      debug (7, "uservers_to_servers() -- server %lx  userver %lx", us->s, us);
       *servers = server_list_append (*servers, us->s);
 
       *uservers = g_slist_remove (*uservers, us);
@@ -457,8 +464,16 @@ void uservers_to_servers (GSList **uservers, GSList **servers) {
     }
     tmp = tmp->next;
   }
+  debug (6, "uservers_to_servers() -- Done.");
 }
 
+
+/*
+  server_lists_intersect() -- Find servers that are
+  in two lists (by reference).  The first arg gets a list 
+  of servers not in both lists.  The second list gets servers
+  removed that are in both lists.
+*/
 
 void server_lists_intersect (GSList **list1, GSList **list2) {
   GSList *list3 = NULL;

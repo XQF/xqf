@@ -101,6 +101,8 @@ static int server_clist_refresh_row (struct server *s, int row) {
   assemble_server_address (buf1, 256, s);
   text[1] = buf1;
 
+  debug (7, "server_clist_refresh_row() -- Row %d", row);
+
   if (s->ping >= 0) {
     g_snprintf (buf2, 32, "%d", (s->ping > MAX_PING)? MAX_PING : s->ping);
     text[2] = buf2;
@@ -326,10 +328,12 @@ void player_clist_redraw (void) {
 void server_clist_sync_selection (void) {
   GList *selection;
 
+  debug (7, "server_clist_sync_selection() --");
   if (!sync_selection_blocked) {
     selection = server_clist->selection;
 
     if (cur_server) {
+      debug (7, "server_clist_sync_selection() -- unref server %lx", cur_server);
       server_unref (cur_server);
       cur_server = NULL;
     }
@@ -372,9 +376,10 @@ int server_clist_refresh_server (struct server *s) {
   }
   else {
     if ((s->filters & cur_filter) == cur_filter) {
+      debug (6, "server_clist_refresh_server() -- Server %lx needs to be added.");
       row = server_clist_refresh_row (s, -1);
       gtk_clist_set_row_data_full (server_clist, row, s, 
-                                             (GtkDestroyNotify) server_unref);
+				   (GtkDestroyNotify) server_unref);
       server_ref (s);
       return TRUE;
     }
@@ -385,6 +390,9 @@ int server_clist_refresh_server (struct server *s) {
 
 
 void server_clist_select_one (int row) {
+
+  debug (7, "server_clist_select_one() -- Row %d", row);
+
   sync_selection_blocked = TRUE;
   gtk_clist_unselect_all (server_clist);
   sync_selection_blocked = FALSE;
@@ -435,6 +443,8 @@ void server_clist_selection_visible (void) {
   GtkVisibility vis;
   int min;
 
+  debug (7, "server_clist_selection_visible() -- ");
+
   if (!rows)
     return;
 
@@ -482,6 +492,7 @@ void server_clist_redraw (void) {
   char buf[256];
   int row;
 
+  debug (7, "server_clist_redraw() --");
   gtk_clist_freeze (server_clist);
 
   for (row = 0; row < server_clist->rows; row++) {
@@ -503,6 +514,8 @@ void server_clist_set_list (GSList *servers) {
   int row;
   GSList *filtered;
 
+  debug (7, "server_clist_set_list() -- list %lx", servers);
+
   filtered = build_filtered_list (cur_filter, servers);
 
   gtk_clist_freeze (server_clist);
@@ -516,12 +529,13 @@ void server_clist_set_list (GSList *servers) {
       gtk_clist_set_row_data_full (server_clist, row, server, 
 				   (GtkDestroyNotify) server_unref);
       /*
-	Because the build_filtered_list add a reference count
-	 to the server structure and because we are going
-	 to free that list, we DO NOT need to add a reference 
-	 count to the server structure.
+	Because the a destroy event on the server_clist will
+	call server_unref, we want to add a reference to
+	count to the server. Note if we comment out both 
+	the ref line and the list_free line we have a net sum
+	of zero.  But just for clarity...
       */
-      /* server_ref (server); */
+      server_ref (server);
     }
 
     server_list_free (filtered);
@@ -534,6 +548,7 @@ void server_clist_set_list (GSList *servers) {
   pixmap_cache_clear (&server_pixmap_cache, 8);
 
   server_clist_sync_selection ();
+  debug (7, "server_clist_set_list() -- Done.");
 }
 
 
@@ -565,14 +580,17 @@ void server_clist_build_filtered (GSList *server_list, int update) {
       server = (struct server *) tmp->data;
       row = gtk_clist_find_row_from_data (server_clist, server);
       if (row >= 0) {
+	debug (3, "server_clist_build_filtered() -- Delete server %lx, call gtk_clist_remove()", server);
+
+	/* 
+	   Note: Each server clist item gets a server_unref call on 
+	   a GtkDestroyNotify event.
+	*/
 	gtk_clist_remove (server_clist, row);
-	debug (3, "server_clist_build_filtered() -- Delete server %lx", server);
       }
-      /* 
-	 Allways unref the server because the list returned
-	 to us had the count incremented by prepend.
-      */
     }
+    /* Free the list of severs in this loop. */
+    debug (7, "server_clist_build_filtered() -- Call server_list_free on [delete] list %lx", delete);
     server_list_free (delete);
   }
 
@@ -596,9 +614,11 @@ void server_clist_build_filtered (GSList *server_list, int update) {
     for (tmp = add; tmp; tmp = tmp->next) {
       server = (struct server *) tmp->data;
       row = server_clist_refresh_row (server, -1);
+      debug (7, "server_clist_build_filtered() -- add server %lx to row %d", server, row);
       gtk_clist_set_row_data_full (server_clist, row, server, 
 				   (GtkDestroyNotify) server_unref);
-      /*server_ref (server);*/
+      
+      server_ref (server); /* See nots above about GtkDestroyNotify */
     }
     server_list_free (add);
   }

@@ -409,7 +409,9 @@ static void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
 static void update_server_lists_from_selected_source (void) {
   GSList *cur_masters = NULL;
 
+  debug (6, "update_server_lists_from_selected_source() --");
   if (cur_server_list) {
+    debug (6, "update_server_lists_from_selected_source() -- Free cur_server_list %lx", cur_server_list);
     server_list_free (cur_server_list);
     cur_server_list = NULL;
   }
@@ -429,7 +431,7 @@ static int stat_lists_refresh (struct stat_job *job) {
   int items;
   int freeze;
 
-  debug (6, "sta_lists_refresh() -- Job %lx", job);
+  debug (6, "stat_lists_refresh() -- Job %lx", job);
   items = g_slist_length (job->delayed.queued_servers) + 
                                    g_slist_length (job->delayed.queued_hosts);
   if (items) {
@@ -835,6 +837,7 @@ static int server_clist_compare_func (GtkCList *clist,
   GtkCListRow *row2 = (GtkCListRow *) ptr2;
   struct server *s1 = (struct server *) row1->data;
   struct server *s2 = (struct server *) row2->data;
+  debug (7, "server_clist_compare_func() --");
 
   return compare_servers (s1, s2, clist->sort_column);
 }
@@ -867,6 +870,7 @@ static void update_source_callback (GtkWidget *widget, gpointer data) {
   GSList *servers = NULL;
   GSList *uservers = NULL;
 
+  debug (6, "update_source_callback() -- ");
   if (stat_process || !cur_source)
     return;
 
@@ -925,6 +929,7 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
   char   buf[256]; /* if you change this, change the statement below */
   int    server_list_size;
 
+  debug (7, "add_to_favorites_callback() -- ");
   if (stat_process || !selected)
     return;
 
@@ -953,6 +958,7 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
       print_status (main_status_bar, buf );
       
     }
+    debug (7, "add_to_favorites_callback() -- Saving To Favorites");
     save_favorites ();
     server_list_free (list);
   }
@@ -962,6 +968,7 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 static void add_server_real (struct stat_job *job, struct server *s) {
   int row;
 
+  debug (6, "add_server_real() -- Server %lx", s);
   favorites->servers = server_list_append (favorites->servers, s);
   save_favorites ();
 
@@ -1060,6 +1067,7 @@ static void del_server_callback (GtkWidget *widget, gpointer data) {
   GSList *list;
   GSList *tmp;
 
+  debug (7, "del_server_callback() -- ");
   if (stat_process || !cur_source || 
                             (struct master *) cur_source->data != favorites) {
     return;
@@ -1282,6 +1290,7 @@ static void resolve_callback (GtkWidget *widget, gpointer data) {
   GSList *hosts;
   struct server *s;
 
+  debug (7, "resolve_callback() --");
   if (stat_process)
     return;
 
@@ -1361,7 +1370,7 @@ static void rcon_callback (GtkWidget *widget, gpointer data) {
 static void server_clist_select_callback (GtkWidget *widget, int row,
                             int column, GdkEvent *event, GtkWidget *button) {
   GdkEventButton *bevent = (GdkEventButton *) event;
-
+  debug (7, "server_clist_select_callback() -- Row %d", row);
   server_clist_sync_selection ();
 
   if (bevent && bevent->type == GDK_2BUTTON_PRESS && bevent->button == 1)
@@ -1371,6 +1380,7 @@ static void server_clist_select_callback (GtkWidget *widget, int row,
 
 static void server_clist_unselect_callback (GtkWidget *widget, int row,
                             int column, GdkEvent *event, GtkWidget *button) {
+  debug (7, "server_clist_uselect_callback() -- Row %d", row);
   server_clist_sync_selection ();
 }
 
@@ -1400,6 +1410,7 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
   GList *selection;
   int row;
   
+  /* debug (7, "server_clist_event_callback() -- "); */
   if (event->type == GDK_BUTTON_PRESS &&
                    bevent->window == server_clist->clist_window) {
 
@@ -1440,6 +1451,7 @@ static void source_selection_changed (void) {
   GtkCTreeNode *node;
   struct master *m;
 
+  debug (6, "souce_selection_changed() --");
   if (cur_source) {
     g_slist_free (cur_source);
     cur_source = NULL;
@@ -2532,11 +2544,13 @@ int main (int argc, char *argv[]) {
     stop_callback (NULL, NULL);
 
   if (server_menu) {
+    debug( 6, "EXIT: destroy server_menu");
     gtk_widget_destroy (server_menu);
     server_menu = NULL;
   }
 
   if (player_menu) {
+    debug( 6, "EXIT: destroy player_menu");
     gtk_widget_destroy (player_menu);
     player_menu = NULL;
   }
@@ -2553,6 +2567,7 @@ int main (int argc, char *argv[]) {
   filters_done ();
   props_free_all ();
 
+  debug( 6, "EXIT: Free Server Lists");
   g_slist_free (cur_source);
   server_list_free (cur_server_list);
   userver_list_free (cur_userver_list);
@@ -2565,7 +2580,10 @@ int main (int argc, char *argv[]) {
   host_cache_save ();
   host_cache_clear ();
 
+  debug( 6, "EXIT: Free Master Lists");
   free_masters ();
+
+  debug( 6, "EXIT: Call rcon_done.");
   rcon_done ();
   psearch_done ();
   add_server_done ();
@@ -2578,7 +2596,7 @@ int main (int argc, char *argv[]) {
   fprintf (stderr, "total uservers: %d\n", uservers_total ());
   fprintf (stderr, "total hosts: %d\n", hosts_total ());
   if (servers_total () > 0) {
-    GSList *list = all_servers ();
+    GSList *list = all_servers (); /* Debug code, free done in two lines */
     
     server_list_fprintf (stderr, list);
     server_list_free (list);
@@ -2589,6 +2607,7 @@ int main (int argc, char *argv[]) {
 
   config_sync ();
   config_drop_all ();
+  debug( 6, "EXIT: Done.");
 
   return 0;
 }

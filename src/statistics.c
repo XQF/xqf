@@ -165,7 +165,7 @@ static void collect_statistics (void) {
   enum OS os;
   enum CPU cpu;
 
-  servers = all_servers ();
+  servers = all_servers (); /* Free at end of this function */
 
   if (servers) {
     for (tmp = servers; tmp; tmp = tmp->next) {

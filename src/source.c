@@ -58,6 +58,7 @@ static void save_list (FILE *f, struct master *m) {
 
   if (!m->servers)
     return;
+  debug (6, "save_list() -- Saving Server List \"%s\"", m->name );
 
 #ifdef DEBUG
   fprintf (stderr, "Saving server list \"%s\"...\n", m->name);
@@ -97,6 +98,7 @@ void save_favorites (void) {
   FILE *f;
   char *realname;
 
+  debug (6, "save_favorites() --");
   realname = file_in_dir (user_rcdir, FILENAME_FAVORITES);
 
   while (1) {
@@ -125,6 +127,7 @@ static void save_lists (GSList *list, const char *filename) {
   char *realname;
   struct zstream z;
 
+  debug (6, "save_lists() -- %s", filename);
   realname = file_in_dir (user_rcdir, filename);
 
   if (!list) {
@@ -363,6 +366,12 @@ static void master_add_server (struct master *m, char *str,
       host_ref (h);
       if ((s = server_add (h, port, type)) != NULL) {
 	m->servers = server_list_prepend (m->servers, s);
+	/* Since the server_add increments the ref count, and 
+	   server_list_prepend ups the ref_count, we should
+	   unref it once because we are only keeping it in
+	   one list after this function.
+	*/
+	server_unref (s);
       }
       host_unref (h);
     }
@@ -1014,6 +1023,7 @@ void init_masters (int update) {
 void free_masters (void) {
   GSList *tmp;
 
+  debug (6, "free_masters() --");
   save_favorites ();
 
   if (default_save_lists) {
@@ -1023,7 +1033,7 @@ void free_masters (void) {
     g_slist_free (tmp);
 
     if (default_save_srvinfo) {
-      tmp = all_servers ();
+      tmp = all_servers (); /* free done in two lines */
       save_server_info (FILENAME_SRVINFO, tmp);
       server_list_free (tmp);
     }
@@ -1057,6 +1067,7 @@ static void master_list_add (GSList **masters, GSList **servers,
                                         GSList **uservers, struct master *m) {
   GSList *tmp;
 
+  debug (6, "master_list_add() -- master '%s'", m->name);
   if (m->isgroup || m == favorites) {
     if (servers) {
       *servers = server_list_append_list (*servers, favorites->servers, 
@@ -1105,7 +1116,7 @@ void master_selection_to_lists (GSList *list, GSList **masters,
                                         GSList **servers, GSList **uservers) {
   struct master *m;
   GSList *tmp;
-
+  debug (6, "master_selection_to_lists() --");
   for (tmp = list; tmp; tmp = tmp->next) {
     m = (struct master *) tmp->data;
     uservers_to_servers (&m->uservers, &m->servers);
