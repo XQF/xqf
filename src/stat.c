@@ -460,6 +460,83 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
   return server;
 }
 
+/** teamnames must be static storage, pointers to it will not be freed */
+static void q3parseteams(struct server* s,
+    const unsigned numteams,
+    char** playerteamrules,// which rule holds the numbers that indicate which player is in what team
+    char** teamnames,      // default names for team
+    char** teamnamesrules) // which rules hold the team names
+{
+    // bitmask of players for each team
+    long* teams = NULL;
+    char **info_ptr = NULL;
+    unsigned i = 0, n = 0;
+    unsigned team = numteams;
+    GSList *plist = NULL;
+    struct player *p  = NULL;
+    char** teamnames_fromrules = NULL;
+
+    if(!s || !playerteamrules || numteams<2) return;
+
+    teams = g_malloc0(sizeof(long)*numteams);
+    if(!teams) return;
+
+    teamnames_fromrules = g_malloc0(sizeof(char*)*numteams);
+    if(!teamnames_fromrules) return;
+
+    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
+    {
+      for(i = 0; i < numteams; ++i)
+      {
+	if (strcmp (*info_ptr, playerteamrules[i]) == 0)
+	{
+	  team = i;
+	  break;
+	}
+	if (teamnamesrules && teamnamesrules[i] &&strcmp (*info_ptr, teamnamesrules[i]) == 0)
+	{
+	  teamnames_fromrules[i]=info_ptr[1];
+	}
+      }
+
+      if(team != numteams )
+      {
+	char* e = NULL;
+	char* p = info_ptr[1];
+	for(;; p = e, e = NULL)
+	{
+	  long pnr = strtol(p,&e,10);
+	  if(p == e || (e && !*e))
+	    break;
+	  if(pnr != LONG_MIN && pnr != LONG_MAX
+	      && pnr <= (long)(sizeof(teams[team])*8)
+	      && pnr > 0)
+	  {
+	    teams[team] |= 2<<(pnr-1);
+	  }
+	}
+	team = numteams;
+      }
+    }
+    for(plist = s->players, n = 0 ; plist ; plist=plist->next, ++n)
+    {
+      for(team=0;team != numteams; ++team)
+      {
+	if(teams[team]&(2<<n))
+	{
+	  p = plist->data;
+	  if(teamnames_fromrules[team])
+	    p->model = teamnames_fromrules[team];
+	  else
+	    p->model = teamnames[team];
+	}
+      }
+    }
+
+    g_free(teams);
+    g_free(teamnames_fromrules);
+}
+
 static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
   int n;
   char *token[256];
@@ -497,54 +574,21 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
     s->players = g_slist_reverse (plist);
   }
 
-  // TODO make separate function
   if(s->type == WO_SERVER || s->type == WOET_SERVER)
   {
-    enum { Allies, Axis, Numteams } team = Numteams;
-    static char* teamnames[Numteams] = { N_("Allies"), N_("Axis") };
-    // bitmask of players for each team
-    long teams[Numteams] = {0};
-    char **info_ptr;
-    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
-    {
-      if (strcmp (*info_ptr, "Players_Allies") == 0)
-	team = Allies;
-      if (strcmp (*info_ptr, "Players_Axis") == 0)
-	team = Axis;
-
-      if(team != Numteams )
-      {
-	char* e = NULL;
-	char* p = info_ptr[1];
-	for(;; p = e, e = NULL)
-	{
-	  long pnr = strtol(p,&e,10);
-	  if(p == e || (e && !*e))
-	    break;
-	  if(pnr != LONG_MIN && pnr != LONG_MAX
-	      && pnr <= (long)(sizeof(teams[team])*8)
-	      && pnr > 0)
-	  {
-	    teams[team] |= 2<<(pnr-1);
-	  }
-	}
-	team = Numteams;
-      }
-    }
-    for(plist = s->players, n = 0 ; plist ; plist=plist->next, ++n)
-    {
-      for(team=Allies;team != Numteams; ++team)
-      {
-      if(teams[team]&(2<<n))
-	{
-	  p = plist->data;
-	  p->model = teamnames[team];
-	}
-      }
-    }
+    static char* teamnames[2] = { N_("Allies"), N_("Axis") };
+    static char* playerteamrules[2] = { "Players_Allies", "Players_Axis" };
+    q3parseteams(s,2,playerteamrules,teamnames,NULL);
   }
-}
+  else if(s->type == Q3_SERVER)
+  {
+    static char* teamnames[2] = { N_("Red"), N_("Blue") };
+    static char* playerteamrules[2] = { "Players_Red", "Players_Blue" };
+    static char* teamnamesrules[2] = { "g_TeamRed", "g_TeamBlue" };
+    q3parseteams(s,2,playerteamrules,teamnames,teamnamesrules);
+  }
 
+}
 
 static void parse_qstat_record (struct stat_conn *conn) {
   struct server *server;

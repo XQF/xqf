@@ -138,6 +138,11 @@ enum master_query_type {
 	MASTER_INVALID_TYPE
 };
 
+
+/**
+ * A player. There is no destructor for this struct. Alloc as many data as you
+ * need at once and have the pointers point inside.
+ */
 struct player {
   char	*name;
   int	time;

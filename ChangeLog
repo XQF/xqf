@@ -1,3 +1,7 @@
+Jun 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
+- Display team of player for Q3 mods that provide the necessary information
+  (currently osp, truecombat)
+
 Jun 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - add gametypes for Truecombat 1.0
 - compare private_clients case insensitive in q3
