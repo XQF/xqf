@@ -1,7 +1,16 @@
 SUBDIRS = xpm zip
 
 localedir = $(datadir)/locale
-INCLUDES = -I$(top_srcdir)/intl -DLOCALEDIR=\"$(localedir)\" $(GTK_CFLAGS) @QSTAT23@ @DEBUG@ @COMPRESSION@ $(GDK_PIXBUF_CFLAGS) @PACKAGE_CFLAGS@ $(OLD_GTK_SUPPORT)
+INCLUDES = -I$(top_srcdir)/intl \
+	-DLOCALEDIR=\"$(localedir)\" \
+	-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \
+	$(GTK_CFLAGS) \
+	$(QSTAT23) \
+	$(DEBUG) \
+	$(COMPRESSION) \
+	$(GDK_PIXBUF_CFLAGS) \
+	$(PACKAGE_CFLAGS) \
+	$(OLD_GTK_SUPPORT)
 
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
