@@ -4,11 +4,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xqf 0.9.11\n"
+"Project-Id-Version: xqf 0.9.12\n"
 "POT-Creation-Date: 2003-06-10 11:24-0400\n"
 "PO-Revision-Date: 2002-12-28 21:34+0100\n"
 "Last-Translator: Morten Brix Pedersen <morten@wtf.dk>\n"
-"Language-Team: n/a\n"
+"Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -170,15 +170,13 @@ msgstr "versions nummeret indeholder strengen"
 
 #. Map filter
 #: src/filter.c:1173
-#, fuzzy
 msgid "the map contains the string"
-msgstr "spillet indeholder strengen"
+msgstr "banen indeholder strengen"
 
 #. Server name filter
 #: src/filter.c:1191
-#, fuzzy
 msgid "the server name contains the string"
-msgstr "spillet indeholder strengen"
+msgstr "server navnet indeholder strengen"
 
 #: src/filter.c:1210
 msgid "it is not full"
@@ -251,7 +249,7 @@ msgstr "Mønster Kommentar"
 
 #: src/flt-player.c:754
 msgid "Mode"
-msgstr ""
+msgstr "Mode"
 
 #: src/flt-player.c:760
 msgid "Player Filter"
@@ -269,7 +267,7 @@ msgstr "Ned"
 #. flags
 #: src/game.c:855
 msgid "Generic Gamespy"
-msgstr ""
+msgstr "Generisk Gamespy"
 
 #: src/game.c:985
 msgid ""
@@ -277,6 +275,9 @@ msgid ""
 "without creating a startup script for the game.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
+"Bemærk: Soldier of Fortune vil ikke forbinde til en server korrekt\n"
+"før du opretter et opstarts skript til spillet. Se XQF dokumentationen\n"
+"for flere oplysninger."
 
 #: src/game.c:989
 msgid ""
@@ -284,16 +285,21 @@ msgid ""
 "modifications to the game's startup script.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
+"Bemærk: Unreal Tournament vil ikke starte korrekt uden\n"
+"ændringer i spillets opstarts skript. Se XQF dokumentationen\n"
+"for flere oplysninger."
 
 #: src/game.c:993
 msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
-msgstr ""
+msgstr "Eksempel på kommandolinje: wine hl.exe -- hl.exe -console"
 
 #: src/game.c:997 src/game.c:1001
 msgid ""
 "Note: You need to create a qstat config file for this game to work.\n"
 "Please see the XQF documentation for more information."
 msgstr ""
+"Bemærk: Du skal oprette en qstat opsætningsfil for at få dette spil \n"
+"til at virke. Se XQF dokumentationen for flere oplysninger."
 
 #. %s = game name e.g. QuakeWorld
 #: src/game.c:2141
@@ -336,6 +342,10 @@ msgid ""
 "Please run %s client at least once before running XQF\n"
 "or specify correct %s working directory."
 msgstr ""
+"~/.q3a mappen eksisterer ikke eller indeholder ikke\n"
+"\"baseq3\" (\"demoq3\") undermappen.\n"
+"Kør %s klient mindst en gang før du kører XQF\n"
+"eller angiv en korrekt %s arbejdsmappe"
 
 #. %s directory, Quake3
 #: src/game.c:2229
@@ -346,6 +356,10 @@ msgid ""
 "Please specify correct %s working directory\n"
 "or leave it empty (~/.q3a is used by default)"
 msgstr ""
+"\"%s\" eksisterer ikke, eller indeholder ikke \"baseq3\" (\"demoq3\") "
+"undermappen.\n"
+"Angiv en korrekt %s arbejdsmappe\n"
+"eller lad den være tom (~/.q3a) er brugt som standard)"
 
 #. passwords file could not be written
 #: src/game.c:2482 src/game.c:2645 src/game.c:2736 src/launch.c:325
@@ -372,6 +386,9 @@ msgid ""
 "You may have problems connecting.\n"
 "You can fix this in the game preferences."
 msgstr ""
+"Serveren har Punkbuster sat til, men det bliver ikke sat på kommandolinjen\n"
+"Du vil måske opleve problemer.\n"
+"Du kan rette dette i spillets præferencer."
 
 #: src/launch.c:68 src/launch.c:192
 msgid "XQF: ERROR!"
@@ -412,7 +429,7 @@ msgstr ""
 
 #: src/pref.c:502
 msgid "com_soundmegs and com_zonemegs must be lower than com_hunkmegs"
-msgstr ""
+msgstr "com_soundmegs og com_zonemegs skal være lavere end com_hunkmegs"
 
 #. Top (Shirt) Color
 #: src/pref.c:1272 src/pref.c:1371
@@ -488,19 +505,19 @@ msgstr ""
 
 #: src/pref.c:1867
 msgid "Use skins"
-msgstr ""
+msgstr "Brug skins"
 
 #: src/pref.c:1873
 msgid "Don't use skins"
-msgstr ""
+msgstr "Brug ikke skins"
 
 #: src/pref.c:1879
 msgid "Don't download new skins"
-msgstr ""
+msgstr "Hent ikke nye skins"
 
 #: src/pref.c:1922
 msgid "You must configure a command line first"
-msgstr ""
+msgstr "Du skal sætte en kommandolinje op først"
 
 #: src/pref.c:1951
 msgid "Game not found"
@@ -557,7 +574,7 @@ msgstr "Foreslå"
 
 #: src/pref.c:2251
 msgid "Searches the path for the game executable"
-msgstr ""
+msgstr "Søger stien for spillets eksekverbare fil"
 
 #. ///
 #: src/pref.c:2258
@@ -633,52 +650,52 @@ msgstr ""
 
 #: src/pref.c:2787 src/pref.c:3042 src/pref.c:3097 src/pref.c:3134
 msgid "Masterserver Protocol Version"
-msgstr ""
+msgstr "Masterserver Protokol Version"
 
 #: src/pref.c:2812
 msgid "vm_cgame fix"
-msgstr ""
+msgstr "vm_cgame fix"
 
 #: src/pref.c:2819
 msgid "Rocketarena fix"
-msgstr ""
+msgstr "Rocketarena fix"
 
 #: src/pref.c:2825 src/pref.c:3068 src/pref.c:3153
 msgid "set fs_game on connect"
-msgstr ""
+msgstr "sæt fs_game når der forbindes"
 
 #: src/pref.c:2832 src/pref.c:3074
 msgid "set cl_punkbuster on connect"
-msgstr ""
+msgstr "sæt cl_punkbuster når der forbindes"
 
 #: src/pref.c:2893
 msgid "Pass memory settings on command line"
-msgstr ""
+msgstr "Angiv hukommelsesindstillinger på kommandolinjen"
 
 #. Mega Byte
 #: src/pref.c:2911 src/pref.c:2934 src/pref.c:2957 src/pref.c:2981
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: src/pref.c:2915
 msgid "com_hunkmegs"
-msgstr ""
+msgstr "com_hunkmegs"
 
 #: src/pref.c:2938
 msgid "com_zonemegs"
-msgstr ""
+msgstr "com_zonemegs"
 
 #: src/pref.c:2961
 msgid "com_soundmegs"
-msgstr ""
+msgstr "com_soundmegs"
 
 #: src/pref.c:2985
 msgid "cg_precachedmodels"
-msgstr ""
+msgstr "cg_precachedmodels"
 
 #: src/pref.c:2994
 msgid "Preset values"
-msgstr ""
+msgstr "Forudsatte værdier"
 
 #: src/pref.c:3001
 msgid "Default"
@@ -686,11 +703,11 @@ msgstr "Standard Værdi"
 
 #: src/pref.c:3007
 msgid "128MB"
-msgstr ""
+msgstr "128MB"
 
 #: src/pref.c:3013
 msgid ">256MB"
-msgstr ""
+msgstr ">256MB"
 
 #: src/pref.c:3166 src/pref.c:3173 src/pref.c:3178
 msgid "Custom Args"
@@ -709,7 +726,7 @@ msgstr "Hukommelse"
 #. 'w_switch' & 'b_switch' control
 #: src/pref.c:3214
 msgid "The highest weapon that Quake should switch to..."
-msgstr ""
+msgstr "Det højeste våben som Quake skal skifte til..."
 
 #: src/pref.c:3227
 msgid "upon a weapon pickup"
@@ -791,7 +808,7 @@ msgstr "Vis standard port"
 
 #: src/pref.c:3566
 msgid "Do not count bots as players"
-msgstr ""
+msgstr "Tæl ikke bots som spillere"
 
 #: src/pref.c:3582
 msgid "Sort servers real-time during refresh"
@@ -813,7 +830,7 @@ msgstr "Værktøjslinje"
 #. Toolbar Tips
 #: src/pref.c:3653
 msgid "Tooltips"
-msgstr ""
+msgstr "Værktøjstips"
 
 #. On Startup
 #: src/pref.c:3693
@@ -826,7 +843,7 @@ msgstr "Opdater Favoritter"
 
 #: src/pref.c:3719
 msgid "Show splash screen"
-msgstr ""
+msgstr "Vis opstartsskærm"
 
 #: src/pref.c:3733
 msgid "Scan for maps"
@@ -841,9 +858,8 @@ msgstr ""
 "om at starte op, når denne er slået til"
 
 #: src/pref.c:3745
-#, fuzzy
 msgid "scan now"
-msgstr "Kør nu"
+msgstr "skan nu"
 
 #. On Exit
 #: src/pref.c:3761
@@ -947,7 +963,7 @@ msgstr "XQF Afslut"
 #. Sound Update Done
 #: src/pref.c:4124
 msgid "Update Done"
-msgstr ""
+msgstr "Opdatering færdig"
 
 #. Sound Refresh Done
 #: src/pref.c:4157
@@ -999,9 +1015,9 @@ msgstr ""
 
 #. translator: %s = game name, e.g. Quake 3 Arena
 #: src/pref.c:4839
-#, fuzzy, c-format
+#, c-format
 msgid "Searching for %s maps"
-msgstr "Skan efter kort/baner"
+msgstr "Skan efter %s baner"
 
 #: src/pref.c:5025
 msgid "Game Command Selection"
@@ -1574,7 +1590,6 @@ msgstr ""
 "\n"
 
 #: src/xqf.c:2326
-#, fuzzy
 msgid ""
 "Feature requests:\n"
 "\n"
@@ -1846,21 +1861,19 @@ msgstr "%s Filter Konfiguration"
 
 #: src/xqf.c:3027
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurér"
 
 #: src/xqf.c:3126
 msgid "Filters"
 msgstr "Filtre"
 
 #: src/xqf.c:3523
-#, fuzzy
 msgid "Reading server lists"
-msgstr "Gem server lister"
+msgstr "Læser server lister"
 
 #: src/xqf.c:3525
-#, fuzzy
 msgid "Starting ..."
-msgstr "Opdaterer lister..."
+msgstr "Starter ..."
 
 #: src/xqf.c:3553
 #, c-format
@@ -1868,10 +1881,9 @@ msgid "You need at least qstat version %s for xqf to function properly"
 msgstr "Du skal have qstat version %s før at xqf virker ordentligt"
 
 #: src/splash.c:59
-#, fuzzy
 msgid "XQF: Loading"
-msgstr "XQF: Advarsel!"
+msgstr "XQF: Indlæser"
 
 #: src/splash.c:85
 msgid "Loading ..."
-msgstr ""
+msgstr "Indlæser ..."
