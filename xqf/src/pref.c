@@ -130,6 +130,8 @@ char	*sound_stop = NULL;
 char	*sound_server_connect = NULL;
 char	*sound_redial_success = NULL;
 
+gboolean use_custom_gtkrc;
+
 GtkTooltips *tooltips;
 
 static	int pref_q1_top_color;
@@ -190,6 +192,7 @@ static  GtkWidget *refresh_sorts_check_button;
 static  GtkWidget *refresh_on_update_check_button;
 static  GtkWidget *resolve_on_update_check_button;
 static  GtkWidget *show_only_configured_games_check_button;
+static  GtkWidget *use_custom_gtkrc_check_button;
 
 static  GtkWidget *pushlatency_mode_radio_buttons[3];
 static  GtkWidget *pushlatency_value_spinner;
@@ -950,7 +953,6 @@ void ut2004_update_prefs (struct game* g)
 
 static void get_new_defaults (void) {
   int i;
-  static const char form[] = "/" CONFIG_FILE "/Game: %s";
   
   debug (5, "get_new_defaults()");
 
@@ -1006,6 +1008,10 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (show_only_configured_games_check_button)->active;
   if (i != default_show_only_configured_games)
     config_set_bool ("show only configured games", default_show_only_configured_games = i);
+
+  i = GTK_TOGGLE_BUTTON (use_custom_gtkrc_check_button)->active;
+  if (i != use_custom_gtkrc)
+    config_set_bool ("use custom gtkrc", use_custom_gtkrc = i);
 
   config_pop_prefix ();
 
@@ -4033,10 +4039,32 @@ static GtkWidget *appearance_options_page (void) {
                                                              FALSE, FALSE, 0);
   gtk_widget_show (show_only_configured_games_check_button);
 
+  /* gtkrc */
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  use_custom_gtkrc_check_button = 
+                     gtk_check_button_new_with_label (_("Use custom color settings"));
+
+  gtk_tooltips_set_tip (tooltips, use_custom_gtkrc_check_button, _("Use XQF's"
+	" color settings instead of the system ones. You need to restart XQF"
+	" for this setting to take effect. Note that you may need to install"
+	" the gtk-engines package."), NULL);
+
+  gtk_toggle_button_set_active (
+			   GTK_TOGGLE_BUTTON (use_custom_gtkrc_check_button), 
+			   use_custom_gtkrc);
+  gtk_box_pack_start (GTK_BOX (hbox), use_custom_gtkrc_check_button, 
+                                                             FALSE, FALSE, 0);
+  gtk_widget_show (use_custom_gtkrc_check_button);
+
+
   gtk_widget_show (hbox);
 
   gtk_widget_show (vbox);
   gtk_widget_show (frame);
+
 
   /* Toolbar */
 
@@ -5121,6 +5149,65 @@ void free_user_info (void) {
   }
 }
 
+#ifdef USE_GTK2
+#define XQF_GTKRCNAME "gtkrc-2.0"
+#else
+#define XQF_GTKRCNAME "gtkrc"
+#endif
+
+static void set_style()
+{
+  char path[PATH_MAX];
+  int deflt = 0;
+
+  use_custom_gtkrc = config_get_bool_with_default("use custom gtkrc=true", &deflt);
+
+#ifndef USE_GTK2
+  if(use_custom_gtkrc)
+  {
+    GtkStyle* style;
+    GtkWidget* w;
+
+    w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_widget_realize(w);
+
+    style = gtk_widget_get_style(w);
+
+    if(!style->engine)
+    {
+      gtk_rc_parse_string("style \"default\" { engine \"raleigh\" { } }");
+    }
+    /* user did not specify whether he wants custom colors but since there is
+     * an engine connected he probably already has a custom gtkrc. Don't apply
+     * custom colors in this case */
+    else if(deflt)
+    {
+      use_custom_gtkrc = FALSE;
+    }
+
+    gtk_widget_destroy(w);
+  }
+#else
+
+  /** do not apply custom colors in GTK2 by default */
+  if(deflt)
+    use_custom_gtkrc = FALSE;
+#endif
+
+  if(use_custom_gtkrc)
+  {
+    if(default_icontheme)
+    {
+      snprintf(path, sizeof(path), "%s/%s/" XQF_GTKRCNAME, default_icontheme, xqf_PACKAGE_DATA_DIR);
+
+      if(access(path, R_OK) != 0)
+	snprintf(path, sizeof(path), "%s/default/" XQF_GTKRCNAME, xqf_PACKAGE_DATA_DIR);
+
+      if(access(path, R_OK) == 0)
+	gtk_rc_parse(path);
+    }
+  }
+}
 
 int prefs_load (void) {
   char *oldversion;
@@ -5372,6 +5459,8 @@ int prefs_load (void) {
   default_resolve_on_update = config_get_bool ("resolve on update=false");
   default_show_only_configured_games =    config_get_bool ("show only configured games=false");
   default_icontheme =         config_get_string ("icontheme");
+
+  set_style();
 
   config_pop_prefix ();
 

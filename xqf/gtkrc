@@ -1,0 +1,30 @@
+# this is a modified version of the gtk2 default color scheme so xqf doesn't
+# look that ugly in gtk1
+
+style "default"
+{
+  fg[NORMAL] = "#000000000000"
+  fg[ACTIVE] = "#000000000000"
+  fg[PRELIGHT] = "#000000000000"
+  fg[SELECTED] = "#FFFFFFFFFFFF"
+  fg[INSENSITIVE] = "#753075307530"
+  bg[NORMAL] = "#DCDCDADAD5D5"
+  bg[ACTIVE] = "#BABAB5B5ABAB"
+  bg[PRELIGHT] = "#EEEEEBEBE7E7"
+  bg[SELECTED] = "#4B4B69698383"
+  bg[INSENSITIVE] = "#DCDCDADAD5D5"
+  text[NORMAL] = "#000000000000"
+  text[ACTIVE] = "#000000000000"
+  text[PRELIGHT] = "#000000000000"
+  text[SELECTED] = "#FFFFFFFFFFFF"
+  text[INSENSITIVE] = "#753075307530"
+  base[NORMAL] = "#FFFFFFFFFFFF"
+  base[ACTIVE] = "#FFFFFFFFFFFF"
+  base[PRELIGHT] = "#FFFFFFFFFFFF"
+  base[SELECTED] = "#4B4B69698383"
+  base[INSENSITIVE] = "#EEEEEBEBE7E7"
+}
+
+class "GtkWidget" style "default"
+
+# vim: syntax=gtkrc

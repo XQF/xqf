@@ -10,6 +10,9 @@ DESKTOP_FILES = $(DESKTOP_IN_FILES:.desktop.in=.desktop)
 desktopdir= $(datadir)/applications
 desktop_DATA = $(DESKTOP_FILES)
 
+gtkrcdir = $(pkgdatadir)/default
+gtkrc_DATA = gtkrc
+
 EXTRA_DIST =			\
 	BUGS			\
 	autogen.sh		\
