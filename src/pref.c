@@ -222,6 +222,8 @@ struct generic_prefs {
 
 } *genprefs = NULL;
 
+
+// change config_get_string below too!
 char* q3_masterprotocols[] = {
 	"68 - v1.32",
 	"67 - v1.31",
@@ -3559,7 +3561,7 @@ int prefs_load (void) {
   /* Quake3 */
   config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
 
-  tmp = config_get_string ("protocol=67");
+  tmp = config_get_string ("protocol=68");
   if ( strlen( tmp ) == 0 )
   {
     g_free(tmp);
@@ -3581,7 +3583,7 @@ int prefs_load (void) {
   /* Wolfenstein */
   config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
   
-  tmp = config_get_string ("protocol=58");
+  tmp = config_get_string ("protocol=59");
   if ( strlen( tmp ) == 0 )
   {
     g_free(tmp);
