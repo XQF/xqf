@@ -1,4 +1,7 @@
 Nov 1, 2002: Alex Burger <alex_b@users.sourceforge.net>
+- Add gametype decode for arena and cpma
+- Change q3_decode_gametype to use the game's first set of game types if
+  an exact mod match is not found.  Will apply to Q3, EF and Wolf.
 - Fix for find_file_in_path to not append / if directory is blank.  Caused
   more and more beginning /'s in game command line each time you pressed 
   enter in the field.

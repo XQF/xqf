@@ -1365,6 +1365,31 @@ static char *q3a_osp_gametypes[MAX_Q3A_OSP_TYPES] = {
   "Custom OSP",         /* 6+ is usually a custom OSP setting */
 };
 
+#define MAX_Q3A_ARENA_TYPES 9
+// Not sure what the proper types are, but 99% of them are a game
+// type of 8.  Just call them all "arena"
+static char *q3a_arena_gametypes[MAX_Q3A_ARENA_TYPES] = {
+  "arena",		/* 0 = Arena */
+  "arena",		/* 1 = Arena */
+  "arena",		/* 2 = Arena */
+  "arena",		/* 3 = Arena */
+  "arena",		/* 4 = Arena */
+  "arena",		/* 5 = Arena */
+  "arena",		/* 6 = Arena */
+  "arena",		/* 7 = Arena */
+  "arena",		/* 8 = Arena */
+};
+
+#define MAX_Q3A_CPMA_TYPES 6
+static char *q3a_cpma_gametypes[MAX_Q3A_CPMA_TYPES] = {
+  "FFA",		/* 0 = Free for All */
+  "1v1",	 	/* 1 = Tournament */
+  NULL,  		/* 2 = Single Player */
+  "TDM",		/* 3 = Team Deathmatch */
+  "CTF",		/* 4 = Capture the Flag */
+  "Clan Arena",		/* 5 = Clan Arena */
+};
+
 #define MAX_Q3A_UT2_TYPES 9
 static char *q3a_ut2_gametypes[MAX_Q3A_UT2_TYPES] = {
   "FFA",		/* 0 = Free for All */
@@ -1516,6 +1541,16 @@ struct q3a_gametype_s q3a_gametype_map[] =
     MAX_Q3A_AFTERWARDS_TYPES
   },
   {
+    "cpma",
+    q3a_cpma_gametypes,
+    MAX_Q3A_CPMA_TYPES
+  },
+  {
+    "arena",
+    q3a_arena_gametypes,
+    MAX_Q3A_ARENA_TYPES
+  },
+  {
     NULL,
     NULL,
     0
@@ -1572,6 +1607,10 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
       	s->gametype = ptr->gametypes[n];
 	found=1;
     }
+    else
+      // Exact match not found - use the first one in the list
+      // which should be the game's original game types
+      s->gametype = map->gametypes[n];
   }
 }
 
