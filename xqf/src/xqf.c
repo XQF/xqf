@@ -156,6 +156,7 @@ static GtkWidget *edit_update_master_gslist_menu_item = NULL;
 static GtkWidget *edit_add_master_menu_item = NULL;
 static GtkWidget *edit_edit_master_menu_item = NULL;
 static GtkWidget *edit_delete_master_menu_item = NULL;
+static GtkWidget *edit_clear_master_servers_menu_item = NULL;
 static GtkWidget *edit_find_player_menu_item = NULL;
 static GtkWidget *edit_find_again_menu_item = NULL;
 
@@ -163,6 +164,7 @@ static GtkWidget *edit_find_again_menu_item = NULL;
 static GtkWidget *source_add_master_menu_item = NULL;
 static GtkWidget *source_edit_master_menu_item = NULL;
 static GtkWidget *source_delete_master_menu_item = NULL;
+static GtkWidget *source_clear_master_servers_menu_item = NULL;
 
 static GtkWidget *view_refresh_menu_item = NULL;
 static GtkWidget *view_refrsel_menu_item = NULL;
@@ -616,7 +618,9 @@ void set_widgets_sensitivity (void) {
   sens = (!stat_process && masters_to_delete);
 
   gtk_widget_set_sensitive (edit_delete_master_menu_item, sens);
+  gtk_widget_set_sensitive (edit_clear_master_servers_menu_item, sens);
   gtk_widget_set_sensitive (source_delete_master_menu_item, sens);
+  gtk_widget_set_sensitive (source_clear_master_servers_menu_item, sens);
 
   // you can only edit one server a time, no groups and no favorites
   sens = (cur_source && cur_source->next == NULL
@@ -2385,6 +2389,30 @@ static void source_ctree_selection_changed_callback (GtkWidget *widget,
   source_selection_changed ();
 }
 
+static void source_selection_clear_master_servers (void) {
+  struct master *m;
+  GSList* source = NULL;
+
+  for (source = cur_source; source; source=source->next) {
+    m = (struct master *) source->data;
+
+    if (m == favorites || m->isgroup)
+      continue;
+
+    server_list_free(m->servers);
+    m->servers = NULL;
+  }
+
+  update_server_lists_from_selected_source ();
+  server_clist_set_list (cur_server_list);
+  
+  reset_main_status_bar();
+}
+
+static void clear_master_servers_callback (GtkWidget *widget, 
+                    int row, int column, GdkEvent *event, GtkWidget *button) {
+  source_selection_clear_master_servers ();
+}
 
 static void add_to_player_filter_callback (GtkWidget *widget, unsigned mask) {
   GList *selection = player_clist->selection;
@@ -2660,6 +2688,11 @@ static const struct menuitem source_ctree_popup_menu[] = {
     GTK_SIGNAL_FUNC (del_master_callback), NULL,
     &source_delete_master_menu_item
   },
+  {
+    MENU_ITEM,          N_("_Clear Servers"),        0,	0,
+    GTK_SIGNAL_FUNC (clear_master_servers_callback), NULL,
+    &source_clear_master_servers_menu_item
+  },
 
   { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
 };
@@ -2719,6 +2752,11 @@ static const struct menuitem edit_menu_items[] = {
     MENU_ITEM,          N_("D_elete Master"),        0,	0,
     GTK_SIGNAL_FUNC (del_master_callback), NULL,
     &edit_delete_master_menu_item
+  },
+  {
+    MENU_ITEM,          N_("_Clear Servers"),        0,	0,
+    GTK_SIGNAL_FUNC (clear_master_servers_callback), NULL,
+    &edit_clear_master_servers_menu_item
   },
 
   { MENU_SEPARATOR,    NULL,                   0, 0, NULL, NULL, NULL },
