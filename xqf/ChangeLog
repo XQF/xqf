@@ -1,3 +1,6 @@
+Sep 26, 2002: Jordi Mallach <jordi@sindominio.net>
+- updated Catalan & Spanish translations
+
 Sep 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - improved debug functions, debug level can be in- and decreased with SIGUSR1
   and SIGUSR2
