@@ -1,4 +1,5 @@
 # List of source files containing translatable strings.
+xqf.desktop.in
 
 # Package source files
 src/addmaster.c

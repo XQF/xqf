@@ -1,3 +1,9 @@
+2004-02-02  Jordi Mallach  <jordi@sindominio.net>
+
+	* LINGUAS: Removed, not supported by glib-gettextize.
+	* POTFILES.in: Added xqf.desktop.in.
+	* ca.po: Updated Catalan translation.
+
 2003-10-28  Jordi Mallach  <jordi@sindominio.net>
 
 	* ca.po: Updated Catalan translation, recoded as UTF-8.
