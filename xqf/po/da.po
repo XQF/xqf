@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xqf 0.9.13\n"
+"Project-Id-Version: xqf 0.9.14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-03-20 21:48+0100\n"
-"PO-Revision-Date: 2002-12-28 21:34+0100\n"
+"PO-Revision-Date: 2004-03-29 21:11+0200\n"
 "Last-Translator: Morten Brix Pedersen <morten@wtf.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,15 @@ msgstr ""
 
 #: xqf.desktop.in.h:1
 msgid "Locate and connect to game servers"
-msgstr ""
+msgstr "Find og forbind til spilservere"
 
 #: xqf.desktop.in.h:2
 msgid "XQF"
-msgstr ""
+msgstr "XQF"
 
 #: xqf.desktop.in.h:3 src/dialogs.c:492
 msgid "XQF Game Server Browser"
-msgstr ""
+msgstr "XQF spilserver browser"
 
 #: src/addmaster.c:111
 msgid "You have to specify a name and an address."
@@ -99,28 +99,22 @@ msgid "Redial"
 msgstr "Ring op igen"
 
 #: src/dialogs.c:493
-#, fuzzy, c-format
+#, c-format
 msgid "Version %s"
-msgstr ""
-"Version %s\n"
-"\n"
+msgstr "Version %s"
 
 #. translators can use the copyright symbol instead of (C)
 #: src/dialogs.c:496
-#, fuzzy
 msgid "Copyright (C) 1998-2002 Roman Pozlevich"
-msgstr ""
-"Ophavsret (C) 1998-2002 Roman Pozlevich <roma@botik.ru>\n"
-"\n"
+msgstr "Ophavsret (C) 1998-2002 Roman Pozlevich"
 
 #: src/dialogs.c:499
 msgid "Maintainers:"
-msgstr ""
+msgstr "Vedligeholdere:"
 
 #: src/dialogs.c:505
-#, fuzzy
 msgid "Contributors:"
-msgstr "Andre bidragsydere:"
+msgstr "Bidragsydere:"
 
 #: src/dialogs.c:509
 msgid "Bug reports and feature requests:"
@@ -559,7 +553,7 @@ msgstr "--- Hvad som helst ---"
 
 #: src/pref.c:1860
 msgid "Axe"
-msgstr ""
+msgstr "Økse"
 
 #: src/pref.c:1861
 msgid "Shotgun"
@@ -624,6 +618,11 @@ msgid ""
 "\n"
 "Delete the entry and try again."
 msgstr ""
+"En post eksisterer allerede for spillet %s.\n"
+"\n"
+"En standard post kunne ikke blive tilføjet.\n"
+"\n"
+"Slet posten og prøv igen."
 
 #: src/pref.c:2076
 msgid "There are no defaults for this game"
@@ -636,6 +635,10 @@ msgid ""
 "To modify it, select it from the list, modify it\n"
 "and then click Add/Update."
 msgstr ""
+"Der er allerede en post for dette spil.\n"
+"\n"
+"For at redigere det, så vælg det fra listen, rediger det<n"
+"og klik så på Tilføj/Opdater."
 
 #: src/pref.c:2141
 msgid "You must enter both a game and at least one argument."
@@ -817,11 +820,11 @@ msgstr "Det højeste våben som Quake skal skifte til..."
 
 #: src/pref.c:3371
 msgid "upon a weapon pickup"
-msgstr ""
+msgstr "ved våbenopsamling"
 
 #: src/pref.c:3389
 msgid "upon a backpack pickup"
-msgstr ""
+msgstr "ved rygtaskeopsamling"
 
 #: src/pref.c:3410
 msgid "Disable auto-aiming"
@@ -855,7 +858,7 @@ msgstr "Deaktivér spiller/enheds forudsigelse (cl_predict_players)"
 
 #: src/pref.c:3551
 msgid "QuakeForge workaround (uses base/ instead of id1/)"
-msgstr ""
+msgstr "QuakeForge \"workaround\" (bruger base/ istedet for id1/)"
 
 #: src/pref.c:3566
 msgid "Weapons"
@@ -899,11 +902,11 @@ msgstr "Tæl ikke bots som spillere"
 
 #: src/pref.c:3726
 msgid "Sort servers real-time during refresh"
-msgstr ""
+msgstr "Sortér servere i reel-tid når der opdateres"
 
 #: src/pref.c:3741
 msgid "Refresh on update"
-msgstr ""
+msgstr "Genopfrisk ved opdatering"
 
 #: src/pref.c:3757
 msgid "Resolve hostnames on update"
@@ -1093,7 +1096,7 @@ msgstr "Server forbindelse"
 #. Sound Redial Success Start
 #: src/pref.c:4434
 msgid "Redial Success"
-msgstr ""
+msgstr "Genopkald succes"
 
 #: src/pref.c:4555
 msgid "XQF: Preferences"
@@ -1131,43 +1134,43 @@ msgstr "Skan efter %s baner"
 
 #: src/pref.c:5235
 msgid "Game Command Selection"
-msgstr ""
+msgstr "Spil kommandovalg"
 
 #: src/pref.c:5239
 msgid "Game Directory Selection"
-msgstr ""
+msgstr "Spil mappevalg"
 
 #: src/pref.c:5243
 msgid "Sound Player Selection"
-msgstr ""
+msgstr "Lyd spillervalg"
 
 #: src/pref.c:5247
 msgid "XQF Start Sound Selection"
-msgstr ""
+msgstr "XQF startlyd valg"
 
 #: src/pref.c:5251
 msgid "XQF Quit Sound Selection"
-msgstr ""
+msgstr "XQF afslutningslyd valg"
 
 #: src/pref.c:5255
 msgid "Update Done Sound Selection"
-msgstr ""
+msgstr "Opdatering færdig lydvalg"
 
 #: src/pref.c:5259
 msgid "Refresh Done Sound Selection"
-msgstr ""
+msgstr "Opdatering færdig lydvalg"
 
 #: src/pref.c:5263
 msgid "Stop Sound Selection"
-msgstr ""
+msgstr "Stop lydvalg"
 
 #: src/pref.c:5267
 msgid "Server Connect Sound Selection"
-msgstr ""
+msgstr "Serverforbindelse lydvalg"
 
 #: src/pref.c:5271
 msgid "Redial Success Sound Selection"
-msgstr ""
+msgstr "Genopkald succes lydvalg"
 
 #: src/psearch.c:51
 msgid "Exact Match"
@@ -1175,11 +1178,11 @@ msgstr ""
 
 #: src/psearch.c:52
 msgid "Substring"
-msgstr ""
+msgstr "Delstreng"
 
 #: src/psearch.c:53
 msgid "Regular Expression"
-msgstr ""
+msgstr "Regulært udtryk"
 
 #: src/psearch.c:174
 msgid "Find Player"
@@ -1265,7 +1268,7 @@ msgstr ""
 #. * window code modified from glade
 #: src/redial.c:180 src/redial.c:185
 msgid "XQF: Redialing"
-msgstr ""
+msgstr "XQF: Ringer op igen"
 
 #: src/redial.c:197
 msgid ""
@@ -1369,13 +1372,12 @@ msgid "Spectator Password"
 msgstr "Tilskuer adgangskode"
 
 #: src/srv-prop.c:697
-#, fuzzy
 msgid "RCon/Admin Password"
-msgstr "RCon adgangskode"
+msgstr "RCon/Admin adgangskode"
 
 #: src/srv-prop.c:728
 msgid "This server sucks"
-msgstr ""
+msgstr "Denne server stinker"
 
 #: src/srv-prop.c:771 src/xqf.c:2607 src/xqf.c:2721
 msgid "Properties"
@@ -1390,9 +1392,8 @@ msgid "Passwords"
 msgstr "Adgangskoder"
 
 #: src/srv-prop.c:826
-#, fuzzy
 msgid "Comment"
-msgstr "Mønster Kommentar"
+msgstr "Kommentar"
 
 #: src/stat.c:726
 msgid "Allies"
@@ -1411,9 +1412,9 @@ msgid "Blue"
 msgstr "Blå"
 
 #: src/stat.c:1357
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create a temporary file %s: %s"
-msgstr "Fejlede ved oprettelse af midlertidig fil %s"
+msgstr "Fejlede ved oprettelse af midlertidig fil %s: %s"
 
 #. The space behind up and down is to make the strings different from
 #. those in flt-player.c because their meaning is different in german
@@ -1427,7 +1428,7 @@ msgstr "Op "
 
 #: src/statistics.c:71
 msgid "Timeout"
-msgstr ""
+msgstr "Tidsudløb"
 
 #: src/statistics.c:71
 msgid "Down "
@@ -1467,15 +1468,15 @@ msgstr "Adresse"
 
 #: src/xqf-ui.c:52 src/xqf-ui.c:78
 msgid "Ping"
-msgstr ""
+msgstr "Ping"
 
 #: src/xqf-ui.c:53
 msgid "TO"
-msgstr ""
+msgstr "Til"
 
 #: src/xqf-ui.c:54
 msgid "Priv"
-msgstr ""
+msgstr "Priv"
 
 #: src/xqf-ui.c:56
 msgid "Map"
@@ -1483,7 +1484,7 @@ msgstr "Bane"
 
 #: src/xqf-ui.c:58
 msgid "GameType"
-msgstr "Spil Type"
+msgstr "Spiltype"
 
 #: src/xqf-ui.c:59
 msgid "OS"
@@ -1589,6 +1590,8 @@ msgid ""
 "You said this servers sucks.\n"
 "Do you want to risk a game this time?"
 msgstr ""
+"Du sagde at denne server stinker.\n"
+"Vil du risikere et spil nu?"
 
 #: src/xqf.c:1112
 #, c-format
@@ -1937,6 +1940,14 @@ msgid ""
 "\t--debug <level>\t\t\tset debug level\n"
 "\t--version\t\t\tprint version and exit\n"
 msgstr ""
+"Brug:\n"
+"\txqf [TILVALG]\n"
+"\n"
+"TILVALG:\n"
+"\t--launch \"[SERVERTYPE] IP\"\tstart spil på angivet server\n"
+"\t--add    \"[SERVERTYPE] IP\"\ttilføj angivet server til favoritter\n"
+"\t--debug <level>\t\t\tsæt fejlsøgnings niveau\n"
+"\t--version\t\t\tudskriv version og afslut\n"
 
 #: src/xqf.c:3866
 msgid "Reading server lists"
@@ -1958,9 +1969,3 @@ msgstr "XQF: Indlæser"
 #: src/splash.c:86
 msgid "Loading ..."
 msgstr "Indlæser ..."
-
-#~ msgid "X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
-#~ msgstr "X11 Quake/QuakeWorld/Quake2/Quake3 Front-End\n"
-
-#~ msgid "Significant Contributors:"
-#~ msgstr "Store bidragsydere:"
