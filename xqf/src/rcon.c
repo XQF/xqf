@@ -42,13 +42,13 @@
 
 #include "i18n.h"
 #include "xqf.h"
+#include "utils.h"
 #ifndef RCON_STANDALONE
 #include "xqf-ui.h"
 #include "srv-prop.h"
 #include "srv-list.h"
 #include "game.h"
 #include "dialogs.h"
-#include "utils.h"
 #include "history.h"
 #include "config.h"
 #endif
@@ -99,6 +99,20 @@ static void rcon_print (char *fmt, ...) {
 #endif
 }
 
+
+static int wait_read_timeout(int fd, long sec, long usec)
+{
+    fd_set rfds;
+    struct timeval tv;
+
+    FD_ZERO(&rfds);
+    FD_SET(fd, &rfds);
+
+    tv.tv_sec = sec;
+    tv.tv_usec = usec;
+
+    return select(rcon_fd+1, &rfds, NULL, NULL, &tv);
+}
 
 static int open_connection (struct in_addr *ip, unsigned short port) {
   struct sockaddr_in addr;
@@ -159,25 +173,11 @@ static int rcon_send(const char* cmd)
     bufsize = strlen(buf)+1;
     send (rcon_fd, buf, bufsize, 0);
 
+    if (wait_read_timeout(rcon_fd, 5, 0) <= 0)
     {
-	fd_set rfds;
-	struct timeval tv;
-	int retval;
-
-	FD_ZERO(&rfds);
-	FD_SET(rcon_fd, &rfds);
-	/* Wait up to five seconds. */
-	tv.tv_sec = 5;
-	tv.tv_usec = 0;
-
-	retval = select(rcon_fd+1, &rfds, NULL, NULL, &tv);
-
-	if (!retval)
-	{
-	  rcon_print ("*** timeout waiting for challenge\n");
-	  errno = ETIMEDOUT;
-	  return -1;
-	}
+      rcon_print ("*** timeout waiting for challenge\n");
+      errno = ETIMEDOUT;
+      return -1;
     }
 
     size = recv (rcon_fd, cbuf, cbufsize, 0);
@@ -315,16 +315,18 @@ static char* msg_terminate (char *msg, int size)
 static char* rcon_receive()
 {
   char *msg = "\n";
-  int size;
+  ssize_t size;
 
   if (!packet)
     packet = g_malloc (PACKET_MAXSIZE);
 
   size = recv (rcon_fd, packet, PACKET_MAXSIZE, 0);
-  if (size < 0) {
-    failed("recv");
+  if (size < 0)
+  {
+    if(errno != EWOULDBLOCK) failed("recv");
   }
-  else {
+  else
+  {
     switch (rcon_servertype) {
 
     case QW_SERVER:
@@ -459,6 +461,9 @@ void rcon_dialog (const struct server *s, const char *passwd) {
   rcon_fd = open_connection (&s->host->ip, s->port);
   if (rcon_fd < 0)
     return;
+
+  if(set_nonblock(rcon_fd) == -1)
+    failed("fcntl");
 
   assemble_server_address (srv, 256, s);
   g_snprintf (buf, 256, "Remote Console [%s]", srv);
@@ -713,12 +718,23 @@ int main(int argc, char* argv[])
   {
     return 1;
   }
-  while(!buf || !*buf)
+
+  if(set_nonblock(rcon_fd) == -1)
+    failed("fcntl");
+
+  if(getenv("XQF_RCON_PASSWORD"))
   {
-    // translator: readline prompt
-    buf = readline(_("Password: "));
+    rcon_password = g_strdup(getenv("XQF_RCON_PASSWORD"));
   }
-  rcon_password = g_strdup(buf);
+  else
+  {
+    while(!buf || !*buf)
+    {
+      // translator: readline prompt
+      buf = readline(_("Password: "));
+    }
+    rcon_password = g_strdup(buf);
+  }
   
   buf = readline(prompt);
   while(buf)
@@ -729,26 +745,17 @@ int main(int argc, char* argv[])
     }
     else
     {
+      if (wait_read_timeout(rcon_fd, 5, 0) <= 0)
       {
-	fd_set rfds;
-	struct timeval tv;
-	int retval;
-
-	FD_ZERO(&rfds);
-	FD_SET(rcon_fd, &rfds);
-	/* Wait up to five seconds. */
-	tv.tv_sec = 5;
-	tv.tv_usec = 0;
-
-	retval = select(rcon_fd+1, &rfds, NULL, NULL, &tv);
-
-	if (!retval)
+	printf ("*** timeout waiting for reply\n");
+      }
+      else
+      {
+	char* msg;
+	/* see if more packets arrive within a short interval */
+	while(wait_read_timeout(rcon_fd, 0, 50000) > 0)
 	{
-	  printf ("*** timeout waiting for reply\n");
-	}
-	else
-	{
-	  char* msg = rcon_receive();
+	  msg = rcon_receive();
 	  printf("%s", msg);
 	  g_free(msg);
 	}

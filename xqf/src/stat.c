@@ -24,8 +24,8 @@
 #include <stdlib.h>	/* strtol */
 #include <unistd.h>	/* read, close, fork, pipe, exec, fcntl, _exit */
                         /* getpid, unlink, write */
-#include <errno.h>      /* errno */
 #include <fcntl.h>	/* fcntl */
+#include <errno.h>      /* errno */
 #include <signal.h>	/* kill, signal... */
 #include <time.h>	/* time */
 #include <sys/socket.h>	/* inet_ntoa */
@@ -955,18 +955,6 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
   }
 }
 
-
-static void set_nonblock (int fd) {
-  int flags;
-
-  flags = fcntl (fd, F_GETFL, 0);
-  if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0) {
-    failed ("fcntl", NULL);
-    return;
-  }
-}
-
-
 /**
   return connection to local file
  */
@@ -1052,7 +1040,8 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
   if (pid) {	/* parent */
     close (pipefds[1]);
 
-    set_nonblock (pipefds[0]);
+    if(set_nonblock (pipefds[0]) == -1)
+      failed("fcntl", NULL);
 
     conn = g_malloc (sizeof (struct stat_conn));
     conn->buf = g_malloc (BUFFER_MINSIZE);

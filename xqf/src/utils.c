@@ -29,6 +29,7 @@
 #include <ctype.h>	/* tolower */
 #include <sys/stat.h>	/* stat */
 #include <unistd.h>	/* access */
+#include <fcntl.h>	/* fcntl */
 
 #include <gtk/gtk.h>
 
@@ -901,4 +902,16 @@ char* timet2string(const time_t* t)
 	str = timebuf;
 
     return strdup(str);
+}
+
+int set_nonblock (int fd)
+{
+    int flags;
+
+    flags = fcntl (fd, F_GETFL, 0);
+    if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0)
+    {
+	return -1;
+    }
+    return 0;
 }

@@ -34,7 +34,6 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <signal.h>	/* kill, ... */
 #include <sys/wait.h>
 
@@ -476,15 +475,12 @@ int check_qstat_version()
 
   char* cmd[] = {QSTAT_EXEC,NULL};
 
-  int flags;
-
   conn.fd = start_prog_and_return_fd(cmd,&conn.pid);
 
   if (conn.fd<0||conn.pid<=0)
     return FALSE;
 
-  flags = fcntl (conn.fd, F_GETFL, 0);
-  if (flags < 0 || fcntl (conn.fd, F_SETFL, flags | O_NONBLOCK) < 0)
+  if (set_nonblock(conn.fd) == -1)
   {
     xqf_error("fcntl failed: %s", strerror(errno));
     return -1;

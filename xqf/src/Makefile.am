@@ -24,7 +24,10 @@ EXTRA_PROGRAMS = xqf-rcon gamesxml2c
 xqf_LDADD = @INTLLIBS@ $(top_builddir)/src/zip/libunzip.a $(top_builddir)/src/tga/libtga.a $(GTK_LIBS) $(GDK_PIXBUF_LIBS) -lz $(GEOIP_LIB) @PACKAGE_LIBS@
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS) @PACKAGE_LIBS@
-xqf_rcon_SOURCES = rcon.c debug.c
+xqf_rcon_SOURCES = \
+    rcon.c rcon.h \
+    debug.c debug.h \
+    utils.c utils.h
 xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS) $(OLD_GTK_SUPPORT)
 
 xqf_SOURCES =  \

@@ -116,4 +116,10 @@ GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*u
  */
 char* timet2string(const time_t* t);
 
+/** set fd non blocking
+  @param fd the file descriptor
+  @return zero on success, -1 on failure
+ */
+int set_nonblock (int fd);
+
 #endif /* __UTILS_H__ */
