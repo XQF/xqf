@@ -49,8 +49,6 @@
 #include "dns.h"
 #include "debug.h"
 
-static char* qstatcfg = PACKAGE_DATA_DIR "/qstat.cfg";
-
 static const char savage_master_header[5] = { 0x7E, 0x41, 0x03, 0x00, 0x00 };
 
 static void stat_next (struct stat_job *job);
@@ -1162,10 +1160,10 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 
     argv[argi++] = QSTAT_EXEC;
 
-    if( access(qstatcfg, R_OK) == 0 )
+    if( access(qstat_configfile, R_OK) == 0 )
     {
 	argv[argi++] = "-cfg";
-	argv[argi++] = qstatcfg;
+	argv[argi++] = qstat_configfile;
     }
 
     argv[argi++] = "-raw";
@@ -1293,10 +1291,10 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
   argv[argi++] = QSTAT_EXEC;
   
-  if( access(qstatcfg, R_OK) == 0 )
+  if( access(qstat_configfile, R_OK) == 0 )
   {
     argv[argi++] = "-cfg";
-    argv[argi++] = qstatcfg;
+    argv[argi++] = qstat_configfile;
   }
 
 
