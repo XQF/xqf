@@ -396,6 +396,32 @@ static void get_new_defaults (void) {
 
   config_push_prefix ("/" CONFIG_FILE "/Appearance");
 
+  for (i = 0; i < 3; i++) {
+    if (GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[i])->active) {
+      if (i != default_toolbar_style)
+	config_set_int  ("toolbar style", default_toolbar_style = i);
+      break;
+    }
+  }
+
+  i = GTK_TOGGLE_BUTTON (toolbar_tips_check_button)->active;
+  if (i != default_toolbar_tips)
+    config_set_bool ("toolbar tips", default_toolbar_tips = i);
+
+  i = GTK_TOGGLE_BUTTON (refresh_sorts_check_button)->active;
+  if (i != default_refresh_sorts)
+    config_set_bool ("sort on refresh", default_refresh_sorts = i);
+
+  i = GTK_TOGGLE_BUTTON (refresh_on_update_check_button)->active;
+  if (i != default_refresh_on_update)
+    config_set_bool ("refresh on update", default_refresh_on_update = i);
+
+  config_pop_prefix ();
+
+  /* General */
+
+  config_push_prefix ("/" CONFIG_FILE "/General");
+
   i = GTK_TOGGLE_BUTTON (terminate_check_button)->active;
   if (i != default_terminate)
     config_set_bool ("terminate", default_terminate = i);
@@ -427,26 +453,6 @@ static void get_new_defaults (void) {
   i = GTK_TOGGLE_BUTTON (auto_favorites_check_button)->active;
   if (i != default_auto_favorites)
     config_set_bool ("refresh favorites", default_auto_favorites = i);
-
-  for (i = 0; i < 3; i++) {
-    if (GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[i])->active) {
-      if (i != default_toolbar_style)
-	config_set_int  ("toolbar style", default_toolbar_style = i);
-      break;
-    }
-  }
-
-  i = GTK_TOGGLE_BUTTON (toolbar_tips_check_button)->active;
-  if (i != default_toolbar_tips)
-    config_set_bool ("toolbar tips", default_toolbar_tips = i);
-
-  i = GTK_TOGGLE_BUTTON (refresh_sorts_check_button)->active;
-  if (i != default_refresh_sorts)
-    config_set_bool ("sort on refresh", default_refresh_sorts = i);
-
-  i = GTK_TOGGLE_BUTTON (refresh_on_update_check_button)->active;
-  if (i != default_refresh_on_update)
-    config_set_bool ("refresh on update", default_refresh_on_update = i);
 
   config_pop_prefix ();
 
@@ -1859,7 +1865,7 @@ static GtkWidget *appearance_options_page (void) {
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-  frame = gtk_frame_new (NULL);
+  frame = gtk_frame_new (_("Server List"));
   gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
   vbox = gtk_vbox_new (FALSE, 2);
@@ -1929,6 +1935,67 @@ static GtkWidget *appearance_options_page (void) {
 
   gtk_widget_show (vbox);
   gtk_widget_show (frame);
+
+  /* Toolbar */
+
+  frame = gtk_frame_new (_("Toolbar"));
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+
+  hbox = gtk_hbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
+  gtk_container_add (GTK_CONTAINER (frame), hbox);
+
+  /* Toolbar Style */
+
+  for (i = 0; i < 3; i++) {
+    toolbar_style_radio_buttons[i] = 
+                gtk_radio_button_new_with_label (group, _(toolbar_styles[i]));
+    group = gtk_radio_button_group (
+                           GTK_RADIO_BUTTON (toolbar_style_radio_buttons[i]));
+    gtk_box_pack_start (GTK_BOX (hbox), toolbar_style_radio_buttons[i], 
+                                                             FALSE, FALSE, 0);
+    gtk_widget_show (toolbar_style_radio_buttons[i]);
+  }
+
+  gtk_toggle_button_set_active (
+       GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[default_toolbar_style]),
+       TRUE);
+
+  /* Toolbar Tips */
+
+  toolbar_tips_check_button = gtk_check_button_new_with_label (_("Tooltips"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_tips_check_button),
+                                                        default_toolbar_tips);
+  gtk_box_pack_end (GTK_BOX (hbox), toolbar_tips_check_button, 
+                                                             FALSE, FALSE, 0);
+  gtk_widget_show (toolbar_tips_check_button);
+
+  gtk_widget_show (hbox);
+  gtk_widget_show (frame);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
+static GtkWidget *general_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *frame;
+  GtkWidget *hbox;
+  GtkWidget *vbox;
+  GSList *group = NULL;
+  static const char *toolbar_styles[] = { N_("Icons"), N_("Text"), N_("Both") };
+  int i;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+  frame = gtk_frame_new (NULL);
+  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+
+  vbox = gtk_vbox_new (FALSE, 2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
 
   /* On Startup */
 
@@ -2067,7 +2134,6 @@ static GtkWidget *appearance_options_page (void) {
 
 //  gtk_widget_show (hbox);
 
-
   /* Prelaunchinfo */
 
   prelaunchexec_check_button = gtk_check_button_new_with_label 
@@ -2083,40 +2149,6 @@ static GtkWidget *appearance_options_page (void) {
 
   gtk_widget_show (vbox); 
   gtk_widget_show (frame);
-
-  /* Toolbar */
-
-  frame = gtk_frame_new (_("Toolbar"));
-  gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-
-  hbox = gtk_hbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
-
-  /* Toolbar Style */
-
-  for (i = 0; i < 3; i++) {
-    toolbar_style_radio_buttons[i] = 
-                gtk_radio_button_new_with_label (group, _(toolbar_styles[i]));
-    group = gtk_radio_button_group (
-                           GTK_RADIO_BUTTON (toolbar_style_radio_buttons[i]));
-    gtk_box_pack_start (GTK_BOX (hbox), toolbar_style_radio_buttons[i], 
-                                                             FALSE, FALSE, 0);
-    gtk_widget_show (toolbar_style_radio_buttons[i]);
-  }
-
-  gtk_toggle_button_set_active (
-       GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[default_toolbar_style]),
-       TRUE);
-
-  /* Toolbar Tips */
-
-  toolbar_tips_check_button = gtk_check_button_new_with_label (_("Tooltips"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_tips_check_button),
-                                                        default_toolbar_tips);
-  gtk_box_pack_end (GTK_BOX (hbox), toolbar_tips_check_button, 
-                                                             FALSE, FALSE, 0);
-  gtk_widget_show (toolbar_tips_check_button);
 
   gtk_widget_show (hbox);
   gtk_widget_show (frame);
@@ -2226,6 +2258,11 @@ void preferences_dialog (int page_num) {
   gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
   gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (notebook), 4);
   gtk_box_pack_start (GTK_BOX (vbox), notebook, FALSE, FALSE, 0);
+
+  page = general_options_page ();
+  label = gtk_label_new (_("General"));
+  gtk_widget_show (label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
   page = player_profile_page ();
   label = gtk_label_new (_("Player Profile"));
@@ -2448,6 +2485,15 @@ int prefs_load (void) {
 
   show_hostnames =            config_get_bool ("show hostnames=true");
   show_default_port =         config_get_bool ("show default port=true");
+  default_toolbar_style =     config_get_int  ("toolbar style=2");
+  default_toolbar_tips =      config_get_bool ("toolbar tips=true");
+  default_refresh_sorts =     config_get_bool ("sort on refresh=true");
+  default_refresh_on_update = config_get_bool ("refresh on update=true");
+
+  config_pop_prefix ();
+
+  config_push_prefix ("/" CONFIG_FILE "/General");
+
   default_terminate =         config_get_bool ("terminate=false");
   default_iconify =           config_get_bool ("iconify=false");
   default_launchinfo =        config_get_bool ("launchinfo=false");
@@ -2456,10 +2502,6 @@ int prefs_load (void) {
   default_save_srvinfo =      config_get_bool ("save srvinfo=true");
   default_save_plrinfo =      config_get_bool ("save players=false");
   default_auto_favorites =    config_get_bool ("refresh favorites=false");
-  default_toolbar_style =     config_get_int  ("toolbar style=2");
-  default_toolbar_tips =      config_get_bool ("toolbar tips=true");
-  default_refresh_sorts =     config_get_bool ("sort on refresh=true");
-  default_refresh_on_update = config_get_bool ("refresh on update=true");
 
   config_pop_prefix ();
 

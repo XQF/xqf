@@ -1904,6 +1904,12 @@ static struct menuitem server_menu_items[] = {
 
 static const struct menuitem preferences_menu_items[] = {
   { 
+    MENU_ITEM,		N_("_General..."),	0,	0,
+    GTK_SIGNAL_FUNC (start_preferences_dialog),
+    (gpointer) (PREF_PAGE_GENERAL + UNKNOWN_SERVER * 256),
+    NULL
+  },
+  { 
     MENU_ITEM,		N_("_Player Profile..."),	0,	0,
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_PLAYER + UNKNOWN_SERVER * 256),

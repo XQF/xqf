@@ -501,6 +501,11 @@ msgstr "Werkzeugtips"
 msgid "QStat Options"
 msgstr "QStat Optionen"
 
+#. Appearance preferences - Server List
+#: src/pref.c:
+msgid "Server List"
+msgstr "Server Liste"
+
 #. maxsimultaneous
 #: src/pref.c:2153
 msgid "Number of simultaneous servers to query"
@@ -526,6 +531,10 @@ msgstr "Spiele"
 #: src/pref.c:2241
 msgid "Appearance"
 msgstr "Erscheinungsbild"
+
+#: src/pref.c
+msgid "General"
+msgstr "Allgemein"
 
 #: src/pref.c:2246
 msgid "QStat"
@@ -1088,6 +1097,10 @@ msgstr "_Spiele ..."
 #: src/xqf.c:1919
 msgid "_Appearance..."
 msgstr "Erscheinungs_bild"
+
+#: src/xqf.c
+msgid "_General..."
+msgstr "_Allgemein..."
 
 #: src/xqf.c:1925
 msgid "_QStat Options..."

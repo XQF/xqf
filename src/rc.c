@@ -74,14 +74,14 @@ static struct keyword  keywords[] = {
   { "nocheats",  KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no cheats" },
   { "nopasswd",  KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no password" },
 
-  { "terminate",  KEYWORD_BOOL, "/" CONFIG_FILE "/Appearance/terminate" },
-  { "iconify",    KEYWORD_BOOL, "/" CONFIG_FILE "/Appearance/iconify" },
-  { "savelists",  KEYWORD_BOOL, "/" CONFIG_FILE "/Appearance/save lists" },
-  { "saveservers",KEYWORD_BOOL, "/" CONFIG_FILE "/Appearance/save srvinfo" },
-  { "saveplayers",KEYWORD_BOOL, "/" CONFIG_FILE "/Appearance/save players" },
+  { "terminate",  KEYWORD_BOOL, "/" CONFIG_FILE "/General/terminate" },
+  { "iconify",    KEYWORD_BOOL, "/" CONFIG_FILE "/General/iconify" },
+  { "savelists",  KEYWORD_BOOL, "/" CONFIG_FILE "/General/save lists" },
+  { "saveservers",KEYWORD_BOOL, "/" CONFIG_FILE "/General/save srvinfo" },
+  { "saveplayers",KEYWORD_BOOL, "/" CONFIG_FILE "/General/save players" },
 
   { "autofavorites", KEYWORD_BOOL,
-    "/" CONFIG_FILE "/Appearance/refresh favorites" },
+    "/" CONFIG_FILE "/General/refresh favorites" },
 
   { "tb_style",	 KEYWORD_INT,	"/" CONFIG_FILE "/Appearance/toolbar style" },
   { "tb_tips",	 KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/toolbar tips" },
