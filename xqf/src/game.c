@@ -1076,6 +1076,20 @@ static char *q3a_wop_gametypes[MAX_Q3A_WOP_TYPES] = {
   "BigBalloon (BB)" // 8
 };
 
+#define MAX_Q3A_EXCESSIVEPLUS_TYPES 10
+static char *q3a_excessiveplus_gametypes[MAX_Q3A_EXCESSIVEPLUS_TYPES] = {
+  "FFA",               /* 0 = Free for All */
+  "1v1",               /* 1 = Tournament */
+  NULL,                /* 2 = Single Player */
+  "TDM",               /* 3 = Team Deathmatch */
+  "CTF",               /* 4 = Capture the Flag */
+  "RTF",               /* 5 = Return the Flag */
+  "One Flag CTF",      /* 6 = One Flag Capture the Flag */
+  "Clan Arena",        /* 7 = Clan Arena */
+  "Freeze Tag",        /* 8 = Freeze Tag */
+  "Protect the Leader" /* 9 = Protect the Leader */
+};
+
 #define MAX_WOLF_TYPES 9
 static char *wolf_gametypes[MAX_WOLF_TYPES] = {
   NULL,			// 0 - Unknown
@@ -1235,6 +1249,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     "wop",
     q3a_wop_gametypes,
     MAX_Q3A_WOP_TYPES
+  },
+  {
+    "excessiveplus",
+    q3a_excessiveplus_gametypes,
+    MAX_Q3A_EXCESSIVEPLUS_TYPES
   },
   {
     NULL,
