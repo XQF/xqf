@@ -1813,19 +1813,11 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
     gtk_editable_select_region (selection_manager, 0, 0);
     break;
 
-  case 1:
-    s = (struct server *) gtk_clist_get_row_data (
-                                         server_clist, (int) selection->data);
-    g_snprintf (buf, 256, "%s:%d", inet_ntoa (s->host->ip), s->port);
-    gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
-    gtk_editable_select_region (selection_manager, 0, -1);
-    break;
-
   default:
     for (; selection; selection = selection->next) {
       s = (struct server *) gtk_clist_get_row_data (
-                                         server_clist, (int) selection->data);
-      g_snprintf (buf, 256, "%s:%d\n", inet_ntoa (s->host->ip), s->port);
+                                         server_clist, GPOINTER_TO_INT(selection->data));
+      g_snprintf (buf, 256, "%s:%d%s", inet_ntoa (s->host->ip), s->port, selection->next?"\n":"");
       gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
     }
     gtk_editable_select_region (selection_manager, 0, -1);
@@ -1852,6 +1844,7 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
   struct server *s;
   char buf[256];
   int pos = 0;
+  unsigned players;
 
   gtk_editable_delete_text (selection_manager, 0, -1);
 
@@ -1861,21 +1854,16 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
     gtk_editable_select_region (selection_manager, 0, 0);
     break;
 
-  case 1:
-    s = (struct server *) gtk_clist_get_row_data (
-                                         server_clist, (int) selection->data);
-    g_snprintf (buf, 256, "%i  %s:%d  %s  %s  %i of %i", s->ping, inet_ntoa
-       (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
-    gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
-    gtk_editable_select_region (selection_manager, 0, -1);
-    break;
-
   default:
     for (; selection; selection = selection->next) {
       s = (struct server *) gtk_clist_get_row_data (
-                                         server_clist, (int) selection->data);
-      g_snprintf (buf, 256, "%i  %s:%d  %s  %s  %i of %i\n", s->ping, inet_ntoa
-       (s->host->ip), s->port, s->name, s->map, s->curplayers, s->maxplayers);
+                                         server_clist, GPOINTER_TO_INT(selection->data));
+      players = s->curplayers;
+      if(serverlist_countbots && s->curbots <= players)
+	players-=s->curbots;
+
+      g_snprintf (buf, 256, "%i  %s:%d  %s  %s  %i of %i%s", s->ping, inet_ntoa
+       (s->host->ip), s->port, s->name, s->map, players, s->maxplayers, selection->next?"\n":"");
       gtk_editable_insert_text (selection_manager, buf, strlen (buf), &pos);
     }
     gtk_editable_select_region (selection_manager, 0, -1);
