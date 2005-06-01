@@ -361,7 +361,8 @@ char* sof2_masterprotocols[] = {
 
 char* doom3_masterprotocols[] = {
 	"auto",
-	"1.35 - 1.0.1282",
+	"1.40 - 1.3.1302",
+	"1.35 - 1.1.1282",
 	"1.33 - retail",
 	NULL
 };
