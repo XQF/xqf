@@ -586,6 +586,23 @@
 	<exec_client>netpanzer_exec</exec_client>
     </game>
     <game>
+	<base>Q3_SERVER</base>
+	<type>NEXUIZ_SERVER</type>
+	<name>Nexuiz</name>
+	<id>NEXUIZS</id>
+	<qstat_str>NEXUIZS</qstat_str>
+	<qstat_option>-nexuizs</qstat_option>
+	<qstat_master_option>-nexuizm</qstat_master_option>
+	<icon>nexuiz.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<init_maps>NULL</init_maps>
+	<has_map>NULL</has_map>
+	<get_mapshot>NULL</get_mapshot>
+	<command>nexuiz</command>
+	<default_home>~/.nexuiz</default_home>
+	<main_mod>data</main_mod>
+    </game>
+    <game>
 	<type>GPS_SERVER</type>
 	<name>Generic Gamespy</name>
 	<flags>GAME_CONNECT</flags>

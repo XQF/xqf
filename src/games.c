@@ -34,6 +34,8 @@ static char* stringlist031[] = { "savage", NULL };
 static char* stringlist032[] = { "base", NULL };
 static char* stringlist033[] = { "jamp", NULL };
 static char* stringlist034[] = { "netpanzer", NULL };
+static char* stringlist035[] = { "data", NULL };
+static char* stringlist036[] = { "nexuiz", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -762,6 +764,31 @@ struct game games[] = {
     exec_client         : netpanzer_exec,
     save_info           : quake_save_info,
     command             : stringlist034,
+  },
+  {
+    type                : NEXUIZ_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    name                : "Nexuiz",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "NEXUIZS",
+    qstat_str           : "NEXUIZS",
+    qstat_option        : "-nexuizs",
+    qstat_master_option : "-nexuizm",
+    icon                : "nexuiz.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    default_home        : "~/.nexuiz",
+    main_mod            : stringlist035,
+    command             : stringlist036,
   },
   {
     type                : GPS_SERVER,
