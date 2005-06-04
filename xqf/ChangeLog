@@ -1,3 +1,6 @@
+Jun 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- move generic code for running a program into util.c
+
 Jun 01, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - add doom3 protocol 1.40 to menu (Steffen Pankratz)
 
