@@ -1138,6 +1138,9 @@ static char *builtin_masters_update_info[] = {
   "ADD UT2004S master://ut2004master2.epicgames.com:28902 Epic 2",
   
   "ADD NETP master://netpanzer.dyndns.org netpanzer.dyndns.org",
+  
+  "ADD NEXUIZS master://ghdigital.com ghdigital.com",
+  "ADD NEXUIZS master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
