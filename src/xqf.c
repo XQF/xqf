@@ -297,72 +297,7 @@ int compare_qstat_version ( const char* have, const char* expected )
   return 1;
 }
 
-// TODO: code is generic enough to move into separate file
-
-int start_prog_and_return_fd(char *const argv[], pid_t *pid)
-{
-  int pipefds[2];
-
-  *pid = -1;
-
-  if (pipe (pipefds) < 0)
-  {
-    xqf_error("error creating pipe: %s",strerror(errno));
-    return -1;
-  }
-  *pid = fork();
-  if (*pid < (pid_t) 0)
-  {
-    xqf_error("fork failed: %s",strerror(errno));
-    return -1;
-  }
-  
-  if (*pid == 0)	// child
-  {
-    close(1);
-//    close(2);
-    close (pipefds[0]);
-    dup2 (pipefds[1], 1);
-//    dup2 (pipefds[1], 2);
-    close (pipefds[1]);
-    
-    debug(3,"child about to exec %s", argv[0]);
-
-    execvp (argv[0], argv);
-
-    xqf_error("failed to exec %s: %s",argv[0],strerror(errno));
-
-    _exit (1);
-  }
-
-  close (pipefds[1]);
-
-  return pipefds[0];
-}
-
-struct qstat_conn
-{
-    pid_t pid;
-    int fd;
-    gint tag; // for gdkinput
-    char* buf;
-    size_t bufsize;
-    size_t pos;
-    unsigned linenr;
-
-    // contains the \0 terminated line without \n when linefunc is called
-    const char* current_line;
-
-    // function to be called when a complete line was received
-    void (*linefunc)(struct qstat_conn* conn);
-
-    // call gtk_main_quit
-    gboolean do_quit;
-
-    int result;
-};
-
-void qstat_version_string(struct qstat_conn* conn)
+void qstat_version_string(struct external_program_connection* conn)
 {
     static const char search_for[] = "qstat version";
     const char *ptr, *version_end;
@@ -399,107 +334,11 @@ void qstat_version_string(struct qstat_conn* conn)
     }
 }
 
-void qstat_close_input(struct qstat_conn* conn)
-{
-    if(!conn) return;
-    gdk_input_remove(conn->tag);
-    close(conn->fd);
-    if(conn->pid > 0) kill(conn->pid,SIGTERM);
-    if(conn->do_quit) gtk_main_quit();
-}
-
-void qstat_input_callback(struct qstat_conn* conn, int fd, GdkInputCondition condition)
-{
-    int bytes;
-    char* sol; // start of line pointer
-    char* eol; // end of line pointer
-
-    if(!conn) return;
-    
-    if(conn->pos >= conn->bufsize )
-    {
-	xqf_error("line %d too long",conn->linenr+1);
-	qstat_close_input(conn);
-	return;
-    }
-
-    bytes = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
-
-    if (bytes < 0)
-    {
-	if (errno == EAGAIN || errno == EWOULDBLOCK)
-	{
-	    return;
-	}
-
-	xqf_error("Error reading from child: %s",g_strerror(errno));
-	qstat_close_input(conn);
-	return;
-    }
-    if (bytes == 0) {	/* EOF */
-      qstat_close_input(conn);
-      return;
-    }
-
-
-    sol = conn->buf;
-    eol = conn->buf + conn->pos;
-    conn->pos += bytes;
-    bytes = conn->pos;
-    
-    // buffer can contain multiple lines
-    for(;(eol = memchr(eol,'\n',bytes-(eol-sol))) != NULL;bytes-=eol-sol+1,sol= ++eol)
-    {
-	*eol = '\0';
-//	debug(0,"%4d, line(%4d,%4d-%4d)>%s<",bytes, eol-sol,sol-conn->buf,eol-conn->buf,sol);
-	++conn->linenr;
-	conn->current_line = sol;
-	if(conn->linefunc) (conn->linefunc)(conn);
-    }
-    // sol now points to begin of next line, if any
-
-    if(sol-conn->buf)
-    {
-	if(bytes)
-	{
-	    memmove(conn->buf,sol,bytes);
-	}
-	conn->pos = bytes;
-    }
-}
-
 int check_qstat_version()
 {
-  struct qstat_conn conn = {0};
-
   char* cmd[] = {QSTAT_EXEC,NULL};
 
-  conn.fd = start_prog_and_return_fd(cmd,&conn.pid);
-
-  if (conn.fd<0||conn.pid<=0)
-    return FALSE;
-
-  if (set_nonblock(conn.fd) == -1)
-  {
-    xqf_error("fcntl failed: %s", strerror(errno));
-    return -1;
-  }
-
-  conn.bufsize = 512;
-  conn.buf = g_new0(char,conn.bufsize);
-  conn.result = FALSE;
-  conn.do_quit = TRUE;
-  conn.linenr = 0;
-  conn.linefunc = qstat_version_string;
-
-  conn.tag = gdk_input_add (conn.fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
-                                (GdkInputFunction) qstat_input_callback, &conn);
-
-  gtk_main();
-
-  g_free(conn.buf);
-
-  return conn.result;
+  return external_program_foreach_line(cmd, qstat_version_string, NULL);
 }
 
 void reset_main_status_bar() {

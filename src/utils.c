@@ -30,6 +30,10 @@
 #include <sys/stat.h>	/* stat */
 #include <unistd.h>	/* access */
 #include <fcntl.h>	/* fcntl */
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 
 #include <gtk/gtk.h>
 
@@ -914,4 +918,184 @@ int set_nonblock (int fd)
 	return -1;
     }
     return 0;
+}
+
+// TODO: code is generic enough to move into separate file
+
+int start_prog_and_return_fd(char *const argv[], pid_t *pid)
+{
+    int pipefds[2];
+
+    *pid = -1;
+
+    if (pipe (pipefds) < 0)
+    {
+	xqf_error("error creating pipe: %s",strerror(errno));
+	return -1;
+    }
+    *pid = fork();
+    if (*pid < (pid_t) 0)
+    {
+	xqf_error("fork failed: %s",strerror(errno));
+	return -1;
+    }
+
+    if (*pid == 0)	// child
+    {
+	close(1);
+	//    close(2);
+	close (pipefds[0]);
+	dup2 (pipefds[1], 1);
+	//    dup2 (pipefds[1], 2);
+	close (pipefds[1]);
+
+	debug(3,"child about to exec %s", argv[0]);
+
+	execvp (argv[0], argv);
+
+	xqf_error("failed to exec %s: %s",argv[0],strerror(errno));
+
+	_exit (1);
+    }
+
+    close (pipefds[1]);
+
+    if (set_nonblock(pipefds[0]) == -1)
+    {
+	close (pipefds[1]);
+	if(*pid > 0)
+	    kill(*pid,SIGTERM);
+	xqf_error("fcntl failed: %s", strerror(errno));
+	return -1;
+    }
+
+    return pipefds[0];
+}
+
+void external_program_close_input(struct external_program_connection* conn)
+{
+    if(!conn) return;
+    gdk_input_remove(conn->tag);
+    close(conn->fd);
+    if(conn->pid > 0) kill(conn->pid,SIGTERM);
+    if(conn->do_quit) gtk_main_quit();
+}
+
+void external_program_input_callback(struct external_program_connection* conn, int fd, GIOCondition condition)
+{
+    int bytes;
+    char* sol; // start of line pointer
+    char* eol; // end of line pointer
+
+    if(!conn) return;
+
+    if(conn->pos >= conn->bufsize )
+    {
+	xqf_error("line %d too long",conn->linenr+1);
+	external_program_close_input(conn);
+	return;
+    }
+
+    bytes = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
+
+    if (bytes < 0)
+    {
+	if (errno == EAGAIN || errno == EWOULDBLOCK)
+	{
+	    return;
+	}
+
+	xqf_error("Error reading from child: %s",g_strerror(errno));
+	external_program_close_input(conn);
+	return;
+    }
+    if (bytes == 0) {	/* EOF */
+	external_program_close_input(conn);
+	return;
+    }
+
+
+    sol = conn->buf;
+    eol = conn->buf + conn->pos;
+    conn->pos += bytes;
+    bytes = conn->pos;
+
+    // buffer can contain multiple lines
+    for(;(eol = memchr(eol,'\n',bytes-(eol-sol))) != NULL;bytes-=eol-sol+1,sol= ++eol)
+    {
+	*eol = '\0';
+	//	debug(0,"%4d, line(%4d,%4d-%4d)>%s<",bytes, eol-sol,sol-conn->buf,eol-conn->buf,sol);
+	++conn->linenr;
+	conn->current_line = sol;
+	if(conn->linefunc) (conn->linefunc)(conn);
+    }
+    // sol now points to begin of next line, if any
+
+    if(sol-conn->buf)
+    {
+	if(bytes)
+	{
+	    memmove(conn->buf,sol,bytes);
+	}
+	conn->pos = bytes;
+    }
+}
+
+int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data)
+{
+  struct external_program_connection conn = {0};
+
+  conn.fd = start_prog_and_return_fd(argv,&conn.pid);
+
+  if (conn.fd<0||conn.pid<=0)
+    return FALSE;
+
+  conn.bufsize = 512;
+  conn.buf = g_new0(char,conn.bufsize);
+  conn.result = FALSE;
+  conn.do_quit = TRUE;
+  conn.linenr = 0;
+  conn.linefunc = linefunc;
+  conn.data = data;
+
+  conn.tag = gdk_input_add (conn.fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
+                                (GdkInputFunction) external_program_input_callback, &conn);
+
+  gtk_main();
+
+  g_free(conn.buf);
+
+  return conn.result;
+}
+
+int run_program_sync(const char* argv[])
+{
+    int status = -1;
+    pid_t pid;
+
+    pid = fork();
+    if ( pid == 0) {
+	execvp(argv[0],argv);
+	_exit(EXIT_FAILURE);
+    }     
+    else if(pid > 0)
+    {
+	waitpid(pid,&status,0);
+
+	if(WIFEXITED(status))
+	{
+	    debug(3,"%s exited normally", argv[0]);
+	}
+	else
+	{
+	    debug(3,"%s exited with status %d", argv[0], WEXITSTATUS(status));
+	}
+
+	if(WIFSIGNALED(status))
+	{
+	    debug(3,"%s was killed by signal %d", argv[0], WTERMSIG(status));
+	}
+    }
+
+    return status;
 }

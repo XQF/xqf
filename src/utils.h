@@ -122,4 +122,37 @@ char* timet2string(const time_t* t);
  */
 int set_nonblock (int fd);
 
+struct external_program_connection
+{
+    pid_t pid;
+    int fd;
+    gint tag; // for gdkinput
+    char* buf;
+    size_t bufsize;
+    size_t pos;
+    unsigned linenr;
+
+    // contains the \0 terminated line without \n when linefunc is called
+    const char* current_line;
+
+    // function to be called when a complete line was received
+    void (*linefunc)(struct external_program_connection* conn);
+
+    // call gtk_main_quit
+    gboolean do_quit;
+
+    gpointer data;
+
+    int result;
+};
+
+int start_prog_and_return_fd(char *const argv[], pid_t *pid);
+void external_program_input_callback(struct external_program_connection* conn,
+		int fd, GIOCondition condition);
+
+/** enters gtk main loop */
+int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data);
+
+int run_program_sync(const char* argv[]);
+
 #endif /* __UTILS_H__ */
