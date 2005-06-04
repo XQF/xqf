@@ -1,6 +1,7 @@
 Jun 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - move generic code for running a program into util.c
 - Nexuiz support
+- check for q3 based gametypes before parsing the server info
 
 Jun 01, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - add doom3 protocol 1.40 to menu (Steffen Pankratz)

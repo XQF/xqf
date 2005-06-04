@@ -1400,6 +1400,40 @@ static void q3_analyze_serverinfo (struct server *s) {
   if ((games[s->type].flags & GAME_SPECTATE) != 0)
     s->flags |= SERVER_SPECTATE;
 
+  // check if it's really a q3 server. We need to do that first to determine
+  // whether the server protcol for that game is compatible
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (strcmp (*info_ptr, "version" ) == 0) {
+      if(!strncmp(info_ptr[1],"Q3",2))
+      {
+	s->type=Q3_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"Wolf",4))
+      {
+	s->type=WO_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5))
+      {
+	s->type=WOET_SERVER;
+      }
+      // voyager elite force
+      else if(!strncmp(info_ptr[1],"ST:V HM",7))
+      {
+	s->type=EF_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"Medal",5))
+      {
+	s->type=MOHAA_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"SOF2MP",6))
+      {
+	s->type=SOF2S_SERVER;
+      }
+
+      break;
+    }
+  }
+
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
  
     /*
@@ -1428,33 +1462,6 @@ static void q3_analyze_serverinfo (struct server *s) {
 	s->sv_os = 'M';
       } else {
 	s->sv_os = '?';
-      }
-
-      // check if it's really a q3 server
-      if(!strncmp(info_ptr[1],"Q3",2))
-      {
-	s->type=Q3_SERVER;
-      }
-      else if(!strncmp(info_ptr[1],"Wolf",4))
-      {
-	s->type=WO_SERVER;
-      }
-      else if(!strncmp(info_ptr[1],"ET 2",4))
-      {
-	s->type=WOET_SERVER;
-      }
-      // voyager elite force
-      else if(!strncmp(info_ptr[1],"ST:V HM",7))
-      {
-	s->type=EF_SERVER;
-      }
-      else if(!strncmp(info_ptr[1],"Medal",5))
-      {
-	s->type=MOHAA_SERVER;
-      }
-      else if(!strncmp(info_ptr[1],"SOF2MP",6))
-      {
-	s->type=SOF2S_SERVER;
       }
     }
     
