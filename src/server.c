@@ -564,3 +564,42 @@ void userver_list_fprintf (FILE *f, GSList *uservers) {
     uservers = uservers->next;
   }
 }
+
+void server_set_env(const struct server* s)
+{
+  char buf[256];
+
+  if(!s) return;
+
+  if(s->flags & SERVER_PUNKBUSTER)
+    setenv("XQF_SERVER_ANTICHEAT", "1", 1);
+
+  if(s->name)
+    setenv("XQF_SERVER_NAME", s->name, 1);
+
+  if(s->map)
+    setenv("XQF_SERVER_MAP", s->map, 1);
+
+  if(s->host->name)
+    setenv("XQF_SERVER_HOSTNAME", s->host->name, 1);
+
+  if(s->game)
+    setenv("XQF_SERVER_GAME", s->game, 1);
+
+  setenv("XQF_SERVER_IP", inet_ntoa (s->host->ip), 1);
+
+  snprintf(buf, sizeof(buf), "%d", s->port);
+  setenv("XQF_SERVER_PORT", buf, 1);
+
+  setenv("XQF_GAME_TYPE", games[s->type].id, 1);
+
+  if(games[s->type].flags & GAME_LAUNCH_HOSTPORT) {
+    char **info_ptr;
+    // go through all server rules
+    for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+      if (!strcmp (*info_ptr, "hostport")) {
+	setenv("XQF_SERVER_HOSTPORT", info_ptr[1], 1);
+      }
+    }
+  }
+}

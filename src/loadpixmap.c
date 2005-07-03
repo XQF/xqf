@@ -102,14 +102,14 @@ gchar* find_pixmap_directory(const gchar* filename)
 GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename)
 {
   GtkWidget *pixmap;
-  struct pixmap pix;
+  struct pixmap pix = { 0, 0 };
   if(!load_pixmap_as_pixmap(widget, filename, &pix))
   {
     return create_dummy_pixmap(widget);
   }
 
   pixmap = gtk_pixmap_new (pix.pix, pix.mask);
-  gdk_pixmap_unref (pix.pix);
+  if(pix.pix) gdk_pixmap_unref (pix.pix);
   if(pix.mask) gdk_bitmap_unref (pix.mask);
   return pixmap;
 }

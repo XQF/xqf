@@ -38,6 +38,7 @@
 #include "dialogs.h"
 #include "server.h"
 #include "launch.h"
+#include "scripts.h"
 
 #include "debug.h"
 
@@ -91,6 +92,7 @@ static void client_free (struct running_client *cl) {
 
 
 static void client_detach (struct running_client *cl) {
+  script_action_gamequit(NULL, cl->server);
   client_free (cl);
   clients = g_slist_remove (clients, cl);
 }
@@ -240,6 +242,8 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
   if (dontlaunch)
     return -1;
 
+  script_action_gamestart(NULL, s);
+
   if (forkit) {
 
     if (pipe (pipefds) < 0) {
@@ -277,20 +281,7 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
       }
 
 
-      if(s->flags & SERVER_PUNKBUSTER)
-	  setenv("XQF_SERVER_ANTICHEAT", "1", 1);
-
-      if(s->name)
-	  setenv("XQF_SERVER_NAME", s->name, 1);
-
-      if(s->map)
-	  setenv("XQF_SERVER_MAP", s->map, 1);
-
-      if(s->host->name)
-	  setenv("XQF_SERVER_HOSTNAME", s->host->name, 1);
-
-      if(s->game)
-	  setenv("XQF_SERVER_GAME", s->game, 1);
+      server_set_env(s);
 
       execvp (argv[0], argv);
   
