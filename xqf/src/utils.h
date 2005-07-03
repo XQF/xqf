@@ -155,4 +155,6 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
 
 int run_program_sync(const char* argv[]);
 
+int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), gpointer data);
+
 #endif /* __UTILS_H__ */

@@ -81,6 +81,7 @@
 #include "splash.h"
 #include "loadpixmap.h"
 #include "trayicon.h"
+#include "scripts.h"
 #include "tga/memtopixmap.h"
 
 #ifdef USE_GEOIP
@@ -2751,17 +2752,24 @@ static const struct menuitem preferences_menu_items[] = {
     NULL
   },
   { 
-    MENU_ITEM,		N_("_QStat Options"),	0,	0, 
+    MENU_ITEM,		N_("_QStat"),	0,	0, 
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
     NULL
   },
   { 
-    MENU_ITEM,		N_("_Sound Options"),	0,	0, 
+    MENU_ITEM,		N_("_Sounds"),	0,	0, 
     GTK_SIGNAL_FUNC (start_preferences_dialog),
     (gpointer) (PREF_PAGE_SOUNDS + UNKNOWN_SERVER * 256),
     NULL
   },
+  { 
+    MENU_ITEM,		N_("S_cripts"),	0,	0, 
+    GTK_SIGNAL_FUNC (start_preferences_dialog),
+    (gpointer) (PREF_PAGE_SCRIPTS + UNKNOWN_SERVER * 256),
+    NULL
+  },
+
 
   { MENU_SEPARATOR,	NULL,			0, 0, NULL, NULL, NULL },
 
@@ -3761,6 +3769,26 @@ void add_pixmap_path_for_theme(const char* theme)
   add_pixmap_directory (dir);
 }
 
+static void init_config_path()
+{
+  char dir[PATH_MAX];
+  config_add_dir (xqf_PACKAGE_DATA_DIR);
+  snprintf(dir, sizeof(dir), "%s/.local/share/xqf", g_get_home_dir());
+  config_add_dir (dir);
+  config_add_dir (user_rcdir);
+}
+
+static void init_scripts_path()
+{
+  char dir[PATH_MAX];
+  snprintf(dir, sizeof(dir), "%s/scripts", xqf_PACKAGE_DATA_DIR);
+  scripts_add_dir (dir);
+  snprintf(dir, sizeof(dir), "%s/.local/share/xqf/scripts", g_get_home_dir());
+  scripts_add_dir (dir);
+  snprintf(dir, sizeof(dir), "%s/scripts", user_rcdir);
+  scripts_add_dir (dir);
+}
+
 int main (int argc, char *argv[]) {
   char *gtk_config;
   char* var = NULL;
@@ -3817,11 +3845,15 @@ int main (int argc, char *argv[]) {
 
   init_games();
 
-  config_set_base_dir (user_rcdir);
+  init_config_path();
+
   newversion = prefs_load () | cmdline_newversion;
 
   if(default_icontheme)
     add_pixmap_path_for_theme(default_icontheme);
+  
+  init_scripts_path();
+  scripts_load();
   
 #ifdef USE_GEOIP
   geoip_init();
@@ -3864,6 +3896,8 @@ int main (int argc, char *argv[]) {
 
   play_sound(sound_xqf_start, 0);
 
+  script_action_start();
+
   populate_main_window();
 
   if (default_show_tray_icon) 
@@ -3890,6 +3924,7 @@ int main (int argc, char *argv[]) {
   gtk_main ();
 
   play_sound(sound_xqf_quit, 0);
+  script_action_quit();
 
   if (default_show_tray_icon)
     tray_done();

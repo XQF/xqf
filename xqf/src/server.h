@@ -139,5 +139,7 @@ static inline void userver_list_free (GSList *list) {
   }
 }
 
+/** \brief put server properties into environment */
+void server_set_env(const struct server* s);
 
 #endif /* __SERVER_H__ */

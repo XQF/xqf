@@ -34,10 +34,26 @@
 #include "config.h"
 
 
-static char *basedir = NULL;
+static GSList* directories = NULL;
 static GList *files = NULL;
 static GList *prefix_stack = NULL;
 
+struct config_file {
+  char *filename;
+  GList *sections;
+  unsigned dirty : 1;
+  unsigned read_only : 1;
+};
+
+struct config_section {
+  char *name;
+  GList *keys;
+};
+
+struct config_key {
+  char *name;
+  char *value;
+};
 
 #ifdef DEBUG
 static void dump_base (void) {
@@ -183,82 +199,135 @@ static struct config_key *key_in_section (struct config_section *section,
 
 #define BUF_SIZE	(1024*8)
 
-static void load_file (const char *filename) {
-  char *secname = NULL;
-  struct config_section *section = NULL;
+struct state_s
+{
+  const char* filename;
+  char *secname;
+  struct config_section *section;
+  void* data;
+};
+
+static gboolean parse_line_file(char* buf, struct state_s* state)
+{
   struct config_key *key = NULL;
-  FILE *f;
-  char buf[BUF_SIZE];
-  int len;
   char *p;
+  unsigned len;
+
+  len = strlen(buf);
+
+  if (len <= 1)
+      return TRUE;
+
+  if (buf[len - 1] == '\n') {
+    buf[len - 1] = '\0';
+    len--;
+  }
+
+  if (buf[len - 1] == '\r') {
+    buf[len - 1] = '\0';
+    len--;
+  }
+
+  if (*buf == '[') {
+    p = strchr (buf + 1, ']');
+    if (p) {
+      *p = '\0';
+
+      if (state->secname)
+	g_free (state->secname);
+
+      state->secname = g_strdup (buf + 1);
+      state->section = NULL;
+    }
+  }
+  else {
+    p = strchr (buf, '=');
+    if (p) {
+      *p++ = '\0';
+
+      if (!state->section && !state->secname)
+	return TRUE;
+
+      if (!state->section)
+	find_key (state->filename, state->secname, buf, TRUE, NULL, &state->section, &key);
+      else
+	key = key_in_section (state->section, buf);
+
+      if (key->value)
+	g_free (key->value);
+
+      key->value = g_strdup (p);
+    }
+  }
+
+  return TRUE;
+}
+
+#define BEGIN_XQF_INFO  "### BEGIN XQF INFO"
+#define END_XQF_INFO    "### END XQF INFO"
+static gboolean parse_line_script(char* buf, struct state_s* state)
+{
+  switch(GPOINTER_TO_INT(state->data))
+  {
+    case 0:
+      if(!strncmp(buf, BEGIN_XQF_INFO, strlen(BEGIN_XQF_INFO)))
+	state->data = GINT_TO_POINTER(1);
+      return TRUE;
+
+    case 1:
+      if(!strncmp(buf, "# ", 2))
+	return parse_line_file(buf+2, state);
+      else if(!strncmp(buf, END_XQF_INFO, strlen(END_XQF_INFO)))
+	return FALSE;
+  }
+  return FALSE;
+}
+#undef BEGIN_XQF_INFO
+#undef END_XQF_INFO
+
+static void load_file (const char *filename) {
+  FILE *f = NULL;
+  char buf[BUF_SIZE];
   char *fn;
+  struct state_s state = {0};
+  GSList* l;
+  gboolean (*parse_line)(char* buf, struct state_s* state);
+  struct config_file* file = NULL;
 
-  fn = file_in_dir (basedir, filename);
-#ifdef DEBUG
-  debug (0, "%s", fn);
-#endif
-  f = fopen (fn, "r");
-  g_free (fn);
+  debug (0, "%s", filename);
 
-  if (!f) {
+  for(l = directories; l && !f; l = g_slist_next(l))
+  {
+    fn = file_in_dir (l->data, filename);
+    f = fopen (fn, "r");
+    if(f) debug(0, "loaded %s", fn);
+    g_free (fn);
+  }
 
-    /* Create empty file record and thus cache lookups of non-existent files.
-     * Don't mark it 'dirty' -- nothing was changed really.
-     */
+  /* Create empty file record and thus cache lookups of non-existent files.
+   * Don't mark it 'dirty' -- nothing was changed really.
+   */
 
-    find_key (filename, NULL, NULL, TRUE, NULL, NULL, NULL);
+  find_key (filename, NULL, NULL, TRUE, &file, NULL, NULL);
+
+  if (!f)
     return;
+
+  state.filename = filename;
+
+  // XXX
+  if(!strncmp(filename, "scripts/", strlen("scripts/")))
+  {
+    parse_line = parse_line_script;
+    file->read_only = 1;
   }
+  else
+    parse_line = parse_line_file;
 
-  while (fgets (buf, BUF_SIZE, f)) {
-    len = strlen (buf);
+  while (fgets (buf, BUF_SIZE, f))
+    parse_line(buf, &state);
 
-    if (len <= 1)
-    	continue;
-    	
-    if (buf[len - 1] == '\n') {
-      buf[len - 1] = '\0';
-      len--;
-    }
-
-    if (buf[len - 1] == '\r') {
-      buf[len - 1] = '\0';
-      len--;
-    }
-
-    if (*buf == '[') {
-      p = strchr (buf + 1, ']');
-      if (p) {
-	*p = '\0';
-
-	if (secname)
-	  g_free (secname);
-
-	secname = g_strdup (buf + 1);
-	section = NULL;
-      }
-    }
-    else {
-      p = strchr (buf, '=');
-      if (p) {
-	*p++ = '\0';
-
-	if (!section && !secname)
-	  continue;
-
-	if (!section)
-	  find_key (filename, secname, buf, TRUE, NULL, &section, &key);
-	else
-	  key = key_in_section (section, buf);
-
-	if (key->value)
-	  g_free (key->value);
-
-	key->value = g_strdup (p);
-      }
-    }
-  }
-  g_free(secname);
+  g_free(state.secname);
   fclose (f);
 }
 
@@ -266,7 +335,7 @@ static void load_file (const char *filename) {
 static void unlink_file (const char *filename) {
   char *fn;
 
-  fn = file_in_dir (basedir, filename);
+  fn = file_in_dir (directories->data, filename);
 #ifdef DEBUG
   fprintf (stderr, "config.c: unlink_file (%s)\n", fn);
 #endif
@@ -293,6 +362,7 @@ static struct config_key *parse_path (const char *path,
   char *keyname = NULL;
   char *def;
   char *buf = NULL;
+  char *ptr = NULL;
   struct config_file *file;
   struct config_key *key = NULL;
 
@@ -322,9 +392,17 @@ static struct config_key *parse_path (const char *path,
   if (def)
     *def = '\0';
 
-  filename = &buf[1];
+  filename = ptr = &buf[1];
 
-  secname = strchr (filename, '/');
+  // XXX
+  if(!strncmp(buf, "/scripts", strlen("/scripts")))
+  {
+    ptr = strchr (ptr, '/');
+    if(ptr)
+      ++ptr;
+  }
+
+  secname = strchr (ptr, '/');
   if (secname) {
     *secname++ = '\0';
 
@@ -540,15 +618,15 @@ void config_set_string (const char *path, const char *str) {
 }
 
 
-void	*config_init_iterator (const char *path) {
+config_key_iterator* config_init_iterator (const char *path) {
   struct config_section *section;
 
   parse_path (path, FALSE, NULL, NULL, &section);
-  return (section)? section->keys : NULL;
+  return (section)? (config_key_iterator*)section->keys : NULL;
 }
 
 
-void	*config_iterator_next (void *iterator, char **key, char **val) {
+config_key_iterator* config_iterator_next (config_key_iterator* iterator, char **key, char **val) {
   struct config_key *cfg_key;
 
   if (!iterator)
@@ -559,8 +637,30 @@ void	*config_iterator_next (void *iterator, char **key, char **val) {
   if (key) *key = g_strdup (cfg_key->name);
   if (val) *val = g_strdup (cfg_key->value);
 
-  return ((GList *) iterator)->next;
+  return (config_key_iterator*)((GList *) iterator)->next;
 }
+
+config_section_iterator* config_init_section_iterator (const char *path) {
+  struct config_file *file;
+
+  parse_path (path, FALSE, NULL, &file, NULL);
+  return (file)? (config_section_iterator*)file->sections : NULL;
+}
+
+
+config_section_iterator* config_section_iterator_next (config_section_iterator* iterator, char **section) {
+  struct config_section *cfg_sect;
+
+  if (!iterator)
+    return NULL;
+
+  cfg_sect = ((GList *) iterator)->data;
+
+  if (section) *section = g_strdup (cfg_sect->name);
+
+  return (config_section_iterator*)((GList *) iterator)->next;
+}
+
 
 
 static void dump_file (struct config_file *file) {
@@ -570,12 +670,18 @@ static void dump_file (struct config_file *file) {
   FILE *f;
   char *fn;
 
+  if(!file->dirty)
+    return;
+
+  if(file->read_only)
+    return;
+
   if (!file->sections) {
     unlink_file (file->filename);
     return;
   }
 
-  fn = file_in_dir (basedir, file->filename);
+  fn = file_in_dir (directories->data, file->filename);
   f = fopen (fn, "w");
   g_free (fn);
 
@@ -602,8 +708,7 @@ void config_sync (void) {
 
   for (list = files; list; list = list->next) {
     file = (struct config_file *) list->data;
-    if (file->dirty)
-      dump_file (file);
+    dump_file (file);
   }
   /* config_drop_all (); */
 }
@@ -754,9 +859,7 @@ void config_pop_prefix (void) {
 }
 
 
-void config_set_base_dir (const char *dir) {
-  if (basedir)
-    g_free (basedir);
-  basedir = g_strdup (dir);
+void config_add_dir (const char *dir) {
+  directories = g_slist_prepend(directories,g_strdup (dir));
 }
 

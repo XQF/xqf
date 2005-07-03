@@ -1068,13 +1068,15 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
   return conn.result;
 }
 
-int run_program_sync(const char* argv[])
+int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer data)
 {
     int status = -1;
     pid_t pid;
 
     pid = fork();
     if ( pid == 0) {
+	if(child_callback)
+	    child_callback(data);
 	execvp(argv[0],argv);
 	_exit(EXIT_FAILURE);
     }     
@@ -1098,4 +1100,14 @@ int run_program_sync(const char* argv[])
     }
 
     return status;
+}
+
+int run_program_sync(const char* argv[])
+{
+    return _run_program_sync(argv, NULL, NULL);
+}
+
+int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), gpointer data)
+{
+    return _run_program_sync(argv, child_callback, data);
 }

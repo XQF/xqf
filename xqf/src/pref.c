@@ -48,6 +48,7 @@
 #include "q3maps.h"
 #include "splash.h"
 #include "srv-list.h"
+#include "scripts.h"
 
 static struct generic_prefs* new_generic_prefs (void);
 static GtkWidget *custom_args_options_page (enum server_type type);
@@ -1240,6 +1241,11 @@ static void ok_callback (GtkWidget *widget, GtkWidget* window)
   if(!check_qstat_source_port())
     return;
   
+  if(!check_script_prefs())
+    return;
+  
+  save_script_prefs();
+
   get_new_defaults();
   gtk_widget_destroy(window);
 
@@ -4987,18 +4993,12 @@ void preferences_dialog (int page_num) {
   label = gtk_label_new (_("Sounds"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
-/*
-  page = qw_q2_options_page ();
-  label = gtk_label_new (_("QW/Q2"));
+
+  page = scripts_config_page ();
+  label = gtk_label_new (_("Scripts"));
   gtk_widget_show (label);
   gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
-*/
-/*
-  page = q3_options_page ();
-  label = gtk_label_new (_("Q3/RTCW"));
-  gtk_widget_show (label);
-  gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
-*/
+
   gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), page_num);
 
   /* Initialize skins and custom cfgs */

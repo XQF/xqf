@@ -29,7 +29,7 @@
 struct history *history_new (char *id) {
   struct history *h;
   char path[128];
-  void *iterator;
+  config_key_iterator* iterator;
   char *keyval;
 
   h = g_malloc0 (sizeof (struct history));
