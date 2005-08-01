@@ -1,0 +1,57 @@
+#!/bin/sh
+# XQF demo script
+# modify and copy to ~/.qf/scripts or ~/.local/share/xqf/scripts
+#
+### BEGIN XQF INFO
+# [General]
+# version=1
+# summary=demo plugin
+# author=Ludwig Nussel <l-n@users.sourceforge.net>
+# license=GPL
+# 
+# [Action]
+# start=true
+# quit=true
+# gamestart=true
+# gamequit=true
+#
+# [option foo]
+# type=string
+# name=string option with default
+# default=this is the default value
+#
+# [option bar]
+# type=string
+# name=string option with empty default
+#
+# [option baz]
+# type=list
+# name=list option
+# default=default value
+# value0=first option
+# value1=second option
+# value2=third option
+#
+# [option foo1]
+# type=bool
+# name=boolean option
+# default=0
+#
+# [option bar1]
+# type=int
+# name=integer option
+# default=42
+### END XQF INFO
+
+case "$1" in
+	start) ;;
+	quit) ;;
+	gamestart) ;;
+	gamequit) ;;
+	*) exit 0 ;;
+esac
+
+echo $0 "$@"
+for i in  ${!XQF_*}; do
+	eval echo $i=\$$i
+done
