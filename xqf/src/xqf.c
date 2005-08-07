@@ -3208,6 +3208,12 @@ static void quick_filter_entry_changed(GtkWidget* entry, gpointer data)
   filter_toggle_callback(NULL, mask);
 }
 
+void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry)
+{
+  gtk_editable_delete_text(GTK_EDITABLE(entry), 0, -1);
+  gtk_widget_grab_focus(entry);
+}
+
 static void create_main_window (void)
 {
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -3238,6 +3244,8 @@ static void populate_main_window (void)
   GtkWidget *scrollwin;
   GtkWidget *entry;
   GtkWidget *label;
+  GtkWidget *button;
+  GtkWidget *pixmap;
   GtkAccelGroup *accel_group;
   int i;
 //  char *buf;
@@ -3420,6 +3428,15 @@ static void populate_main_window (void)
   gtk_paned_add1 (GTK_PANED (vpaned), vbox2);
 
   hbox = gtk_hbox_new (FALSE, 4);
+
+  button = gtk_button_new();
+  gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+  pixmap = gtk_pixmap_new (delete_pix.pix, delete_pix.mask);
+  gtk_container_add(GTK_CONTAINER(button), pixmap);
+  gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+
+  gtk_widget_show_all(button);
+
   label = gtk_label_new(_("Quick Filter:"));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
@@ -3428,6 +3445,9 @@ static void populate_main_window (void)
   gtk_signal_connect(GTK_OBJECT(entry), "changed", quick_filter_entry_changed, NULL);
   gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
   gtk_widget_show (entry);
+
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+      GTK_SIGNAL_FUNC (quickfilter_delete_button_clicked), entry);
 
   gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
