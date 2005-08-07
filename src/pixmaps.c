@@ -94,6 +94,7 @@
 #include "xpm/buddy-blue.xpm"
 
 #include "xpm/error.xpm"
+#include "xpm/delete.xpm"
 
 #include "xpm/server-na.xpm"
 #include "xpm/server-up.xpm"
@@ -130,6 +131,7 @@ struct pixmap group_pix[3];
 struct pixmap buddy_pix[9];
 
 struct pixmap error_pix;
+struct pixmap delete_pix;
 
 struct pixmap server_status[5];
 struct pixmap locked_pix;
@@ -223,6 +225,7 @@ void free_pixmaps (void)
     free_pixmap (&buddy_pix[i]);
 
   free_pixmap (&error_pix);
+  free_pixmap (&delete_pix);
 
   for (i = 0; i < 5; i++)
     free_pixmap (&server_status[i]);
@@ -350,6 +353,7 @@ void init_pixmaps (GtkWidget *window)
   create_pixmap (window, "server_error.xpm", &server_status[4]);
 
   create_pixmap (window, "error.xpm", &error_pix);
+  create_pixmap (window, "delete.xpm", &delete_pix);
   create_pixmap (window, "locked.xpm", &locked_pix);
   create_pixmap (window, "punkbuster.xpm", &punkbuster_pix);
   cat_pixmaps(window, &locked_punkbuster_pix, &punkbuster_pix, &locked_pix);

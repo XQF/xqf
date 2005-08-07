@@ -59,6 +59,7 @@ extern	struct pixmap group_pix[];
 extern	struct pixmap buddy_pix[];
 
 extern	struct pixmap error_pix;
+extern	struct pixmap delete_pix;
 
 extern	struct pixmap server_status[];
 
