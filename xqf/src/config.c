@@ -300,7 +300,7 @@ static void load_file (const char *filename) {
   {
     fn = file_in_dir (l->data, filename);
     f = fopen (fn, "r");
-    if(f) debug(0, "loaded %s", fn);
+    if(f) debug(4, "loaded %s", fn);
     g_free (fn);
   }
 

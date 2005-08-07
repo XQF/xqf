@@ -157,4 +157,12 @@ int run_program_sync(const char* argv[]);
 
 int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), gpointer data);
 
+/** \brief copy a file
+ *
+ * @param src source file
+ * @param dest destination file
+ * @returns NULL on success, error message on failure
+ */
+const char* copy_file(const char* src, const char* dest);
+
 #endif /* __UTILS_H__ */

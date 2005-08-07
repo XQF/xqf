@@ -381,9 +381,6 @@ static void sound_stop_file_dialog();
 static void sound_server_connect_file_dialog();
 static void sound_redial_success_file_dialog();
 
-static GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer type);
-static GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry);
-
 static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2) {
   int res;
 
@@ -5565,12 +5562,6 @@ void prefs_save (void) {
 }
 */
 
-static inline GtkWidget* topmost_parent(GtkWidget* widget)
-{
-  for(; widget && widget->parent; widget = widget->parent);
-  return widget;
-}
-
 void game_file_dialog_ok_callback (GtkWidget *ok_button, gpointer data)
 {
   enum server_type type;
@@ -5599,22 +5590,6 @@ void game_file_activate_callback (enum server_type type)
   const char* file = gtk_entry_get_text (GTK_ENTRY (genprefs[type].cmd_entry));
 
   pref_guess_dir (type, file, TRUE);
-}
-
-/** ok callback for file_dialog that sets the selected filename in the
- * textentry that was passed as user data to file_dialog()
- */
-void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry)
-{
-    const char *filename = NULL;
-    GtkWidget* filesel = topmost_parent(widget);
-
-    filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
-  
-    if (!filename)
-	return;
-
-    gtk_entry_set_text (GTK_ENTRY (textentry), filename);
 }
 
 void game_file_dialog(enum server_type type)
@@ -5676,53 +5651,6 @@ void file_dialog_destroy_callback (GtkWidget *widget, gpointer data)
 {
 }
 */
-
-/** Create a new file selection widget
- */
-static GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer data)
-{
-    GtkFileSelection* file_selector;
-
-    file_selector = GTK_FILE_SELECTION(gtk_file_selection_new (title));
-
-    if(!file_selector)
-	return NULL;
-    
-    gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
-    
-    /*
-    gtk_signal_connect (GTK_OBJECT (file_selector), "destroy",
-                        (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
-			*/
-
-    gtk_signal_connect (GTK_OBJECT (file_selector->ok_button),
-                        "clicked", ok_callback, data );
-
-    gtk_signal_connect_object (GTK_OBJECT (file_selector->ok_button),
-                               "clicked", (GtkSignalFunc) gtk_widget_destroy,
-                               GTK_OBJECT (file_selector));
-    
-    /* Connect the cancel_button to destroy the widget */
-    gtk_signal_connect_object (GTK_OBJECT (file_selector->cancel_button),
-                               "clicked", (GtkSignalFunc) gtk_widget_destroy,
-                               GTK_OBJECT (file_selector));
-    
-    gtk_widget_show(GTK_WIDGET(file_selector));
-
-    return GTK_WIDGET(file_selector);
-}
-
-/** create new file_dialog and connect the ok button to the textentry */
-static GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry)
-{
-    GtkWidget* filesel = file_dialog(title, GTK_SIGNAL_FUNC(file_dialog_ok_set_textentry), entry);
-    const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
-    if(text && *text)
-    {
-	 gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), text);
-    }
-    return filesel;
-}
 
 void q1_cmd_or_dir_changed(struct game* g)
 {

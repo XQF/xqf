@@ -49,7 +49,7 @@ static int unregister_window_callback (GtkWidget *widget, GdkEventKey *event)
 	return FALSE;
 }
 
-GtkWidget *dialog_create_modal_transient_window (char *title,
+GtkWidget *dialog_create_modal_transient_window (const char *title,
 						 int close_on_esc, 
 						 int allow_resize, 
 						 GtkSignalFunc on_destroy) {
@@ -103,7 +103,7 @@ GtkWidget *dialog_create_modal_transient_window (char *title,
 }
 
 
-void dialog_ok (char *title, char *fmt, ...) {
+void dialog_ok (const char *title, const char *fmt, ...) {
   GtkWidget *window;
   GtkWidget *main_vbox;
   GtkWidget *vbox;
@@ -176,7 +176,7 @@ static void redial_button_clicked_callback (GtkWidget *widget, int *data) {
 }
 
 
-int dialog_yesno (char *title, int defbutton, char *yes, char *no, 
+int dialog_yesno (const char *title, int defbutton, char *yes, char *no, 
                                                              char *fmt, ...) {
   GtkWidget *window;
   GtkWidget *main_vbox;
@@ -256,7 +256,7 @@ int dialog_yesno (char *title, int defbutton, char *yes, char *no,
   return res;
 }
 
-int dialog_yesnoredial (char *title, int defbutton, char *yes, char *no, char *redial,
+int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, char *redial,
                                                              char *fmt, ...) {
   GtkWidget *window;
   GtkWidget *main_vbox;
@@ -623,3 +623,62 @@ create_AboutWindow (void)
   return AboutWindow;
 }
 
+/** ok callback for file_dialog that sets the selected filename in the
+ * textentry that was passed as user data to file_dialog()
+ */
+static void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry)
+{
+    const char *filename = NULL;
+    GtkWidget* filesel = topmost_parent(widget);
+
+    filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+  
+    if (!filename)
+	return;
+
+    gtk_entry_set_text (GTK_ENTRY (textentry), filename);
+}
+
+GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer data)
+{
+    GtkFileSelection* file_selector;
+
+    file_selector = GTK_FILE_SELECTION(gtk_file_selection_new (title));
+
+    if(!file_selector)
+	return NULL;
+    
+    gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
+    
+    /*
+    gtk_signal_connect (GTK_OBJECT (file_selector), "destroy",
+                        (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
+			*/
+
+    gtk_signal_connect (GTK_OBJECT (file_selector->ok_button),
+                        "clicked", ok_callback, data );
+
+    gtk_signal_connect_object (GTK_OBJECT (file_selector->ok_button),
+                               "clicked", (GtkSignalFunc) gtk_widget_destroy,
+                               GTK_OBJECT (file_selector));
+    
+    /* Connect the cancel_button to destroy the widget */
+    gtk_signal_connect_object (GTK_OBJECT (file_selector->cancel_button),
+                               "clicked", (GtkSignalFunc) gtk_widget_destroy,
+                               GTK_OBJECT (file_selector));
+    
+    gtk_widget_show(GTK_WIDGET(file_selector));
+
+    return GTK_WIDGET(file_selector);
+}
+
+GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry)
+{
+    GtkWidget* filesel = file_dialog(title, GTK_SIGNAL_FUNC(file_dialog_ok_set_textentry), entry);
+    const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
+    if(text && *text)
+    {
+	 gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), text);
+    }
+    return filesel;
+}

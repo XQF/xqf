@@ -32,6 +32,7 @@
 #include "scripts.h"
 #include "config.h"
 #include "i18n.h"
+#include "dialogs.h"
 
 static unsigned MAX_SCRIPT_VERSION = 1;
 
@@ -89,6 +90,9 @@ typedef struct
 } ScriptOption;
 
 static GtkWidget* notebook;
+
+static void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data);
+static void install_button_callback (GtkWidget *widget, gpointer data);
 
 void scripts_add_dir(const char* dir)
 {
@@ -200,6 +204,7 @@ void scripts_load()
     config_section_iterator* sit;
     Script* script;
     const char* filename = s->data;
+    char* errtitle = _("Script error");
 
     // already known?
     if(g_datalist_get_data(&scriptdata, filename))
@@ -219,7 +224,7 @@ void scripts_load()
 
     if(version > MAX_SCRIPT_VERSION)
     {
-      xqf_warning("Script %s has version %d, xqf only supports version %d. Script ignored",
+      dialog_ok(errtitle, _("Script %s has version %d, xqf only supports version %d."),
 	      filename, version, MAX_SCRIPT_VERSION);
       script_free(script);
       continue;
@@ -227,19 +232,19 @@ void scripts_load()
 
     if(!script->summary)
     {
-      xqf_warning("Script %s missing summary. Script ignored", filename, script->summary);
+      dialog_ok(errtitle, _("Script %s missing summary."), filename);
       script_free(script);
       continue;
     }
     if(!script->author)
     {
-      xqf_warning("Script %s missing author. Script ignored", filename, script->author);
+      dialog_ok(errtitle, _("Script %s missing author."), filename);
       script_free(script);
       continue;
     }
     if(!script->license)
     {
-      xqf_warning("Script %s missing license. Script ignored", filename, script->license);
+      dialog_ok(errtitle, _("Script %s missing license."), filename);
       script_free(script);
       continue;
     }
@@ -493,6 +498,7 @@ void unref_option_widgets(Script* script)
   {
     ScriptOption* opt = optlist->data;
     gtk_widget_unref(opt->widget);
+    opt->widget = NULL;
   }
 }
 
@@ -577,6 +583,8 @@ GtkWidget *scripts_config_page ()
 {
   GtkWidget *page_vbox;
   GtkWidget *frame;
+  GtkWidget *vbox;
+  GtkWidget *button;
   GtkWidget *label;
   GtkWidget *gtklist=NULL;
   GtkWidget *scrollwin=NULL;
@@ -590,6 +598,8 @@ GtkWidget *scripts_config_page ()
   games_hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
   gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
+
+  vbox = gtk_vbox_new (FALSE, 0);
 
   frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
@@ -606,11 +616,21 @@ GtkWidget *scripts_config_page ()
 //  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
-  gtk_widget_show(gtklist);
   gtk_container_add (GTK_CONTAINER (frame), scrollwin);
-  gtk_widget_show(scrollwin);
-  gtk_box_pack_start (GTK_BOX (games_hbox), frame, FALSE, FALSE, 0);
-  gtk_widget_show (frame);
+  gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+
+  button = gtk_button_new_with_label(_("Install ..."));
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (button),
+                        "clicked", install_button_callback, NULL );
+
+#if have_time_to_implement_that
+  button = gtk_button_new_with_label(_("Remove"));
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+#endif
+
+  gtk_box_pack_start (GTK_BOX (games_hbox), vbox, FALSE, FALSE, 0);
 
   notebook = gtk_notebook_new ();
   // the tabs are hidden, so nobody will notice its a notebook
@@ -627,12 +647,6 @@ GtkWidget *scripts_config_page ()
 
     script = g_datalist_get_data(&scriptdata, filename);
 
-    if(!script)
-    {
-      xqf_error("no data for script %s", filename);
-      continue;
-    }
-
     item = gtk_list_item_new();
     if(s == scripts)
       gtk_list_item_select(GTK_LIST_ITEM(item));
@@ -646,20 +660,24 @@ GtkWidget *scripts_config_page ()
     gtk_container_add (GTK_CONTAINER (gtklist), item);
 
     label = gtk_label_new (filename);
-    gtk_widget_show (label);
 
-    page = generic_script_frame(filename, script);
+    if(script)
+    {
+      page = generic_script_frame(filename, script);
+
+      gtk_object_set_data_full (GTK_OBJECT (notebook), filename, script,
+                            (GtkDestroyNotify) unref_option_widgets);
+    }
+    else
+    {
+      page = gtk_label_new(_("Invalid script"));
+      gtk_widget_show(page);
+    }
 
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
-    gtk_object_set_data_full (GTK_OBJECT (notebook), filename, script,
-                            (GtkDestroyNotify) unref_option_widgets);
   }
 
-  gtk_widget_show (notebook);
-
-  gtk_widget_show (page_vbox);
-
-  gtk_widget_show (games_hbox);
+  gtk_widget_show_all (page_vbox);
 
   return page_vbox;
 }
@@ -710,7 +728,7 @@ void save_script_prefs()
 	  if((!val && opt->defval) || (val && !opt->defval) || (val && opt->defval && strcmp(opt->defval, val)))
 	  {
 	    g_free(opt->defval);
-	    debug(0, "set %s/%s=%s (before: %s)", s->data, opt->section, val, opt->defval);
+	    debug(4, "set %s/%s=%s (before: %s)", s->data, opt->section, val, opt->defval);
 	    if(opt->type == SCRIPT_OPTION_TYPE_INT)
 	    {
 	      int tmp = val?atoi(val):0;
@@ -729,7 +747,7 @@ void save_script_prefs()
 	  if(enable != opt->enable)
 	  {
 	    config_set_bool(opt->section, enable);
-	    debug(0, "set %s/%s=%d", s->data, opt->section, enable);
+	    debug(4, "set %s/%s=%d", s->data, opt->section, enable);
 	    opt->enable = enable;
 	  }
 	  break;
@@ -760,7 +778,7 @@ void script_set_env(struct script_env_callback_data* data)
   {
     ScriptOption* opt = l->data;
 
-    debug(0, "%s %s", opt->section, opt->defval);
+    debug(4, "%s %s", opt->section, opt->defval);
 
     snprintf(buf, sizeof(buf), "XQF_SCRIPT_OPTION_%s", opt->section+7);
 
@@ -786,7 +804,7 @@ static void run_scripts(ScriptActionType type, struct game* g, struct server* s)
 {
   GSList* l;
 
-  debug(0, "%s", action_key[type]);
+  debug(4, "%s", action_key[type]);
 
   for (l = action[type]; l; l = g_slist_next(l))
   {
@@ -801,7 +819,7 @@ static void run_scripts(ScriptActionType type, struct game* g, struct server* s)
     for(dir = scriptdirs; dir; dir = g_slist_next(dir))
     {
       snprintf(path, sizeof(path), "%s/%s", (char*)dir->data, script->name);
-      debug(0, "check %s", path);
+      debug(4, "check %s", path);
       if(access(path, X_OK))
       {
 	if(access(path, R_OK) == 0)
@@ -824,7 +842,7 @@ static void run_scripts(ScriptActionType type, struct game* g, struct server* s)
       data.g = g;
       data.script = script;
 
-      debug(0, "running script %s %s", cmd[0], cmd[1]);
+      debug(3, "running script %s %s", cmd[0], cmd[1]);
       run_program_sync_callback(cmd, script_set_env, &data);
     }
   }
@@ -848,4 +866,43 @@ void script_action_gamestart(struct game* g, struct server* s)
 void script_action_gamequit(struct game* g, struct server* s)
 {
   run_scripts(ONGAMEQUIT, g, s);
+}
+
+void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data)
+{
+    const char *filename = NULL;
+    char dest[PATH_MAX];
+    GtkWidget* filesel = topmost_parent(widget);
+    const char* msg;
+
+    filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+  
+    if (!filename)
+	return;
+
+    mkdir((const char*)scriptdirs->data, 0777);
+
+    snprintf(dest, sizeof(dest), "%s/%s", (const char*)scriptdirs->data, g_basename(filename));
+
+    if(!access(dest, F_OK))
+    {
+      if(!dialog_yesno(NULL, 0, NULL, NULL, _("Script %s already exists, overwrite?"), dest))
+	return;
+    }
+
+    if((msg = copy_file(filename, dest)))
+    {
+      dialog_ok(NULL, "%s", msg);
+      return;
+    }
+
+    g_datalist_remove_data(&scriptdata, g_basename(filename));
+    scripts_load();
+
+    dialog_ok(NULL, _("Script saved as\n%s\nPlease close and reopen the preferences dialog"), dest);
+}
+
+void install_button_callback (GtkWidget *widget, gpointer data)
+{
+  file_dialog(_("Select Script"), install_file_dialog_ok_callback, NULL);
 }
