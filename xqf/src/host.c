@@ -180,7 +180,7 @@ GSList *merge_hosts_to_resolve (GSList *hosts, GSList *servers) {
     }
   }
   
-  hosts = slist_sort_remove_dups(hosts,host_sorting_helper,host_unref);
+  hosts = slist_sort_remove_dups(hosts,(GCompareFunc)host_sorting_helper,(void(*)(void*))host_unref);
 
   return hosts;
 }
@@ -231,7 +231,7 @@ static GSList *host_cache_read_list (FILE *f) {
     }
   }
 
-  hosts = slist_sort_remove_dups(hosts,host_sorting_helper,host_unref);
+  hosts = slist_sort_remove_dups(hosts,(GCompareFunc)host_sorting_helper,(void(*)(void*))host_unref);
 
   return hosts;
 }

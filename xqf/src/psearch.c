@@ -302,12 +302,12 @@ static int integer_list_find_minimum (GList *list) {
   int res = 0;
 
   if (list) {
-    res = (int) list->data;
+    res = GPOINTER_TO_INT(list->data);
     list = list->next;
 
     while (list) {
-      if (res > (int) list->data) {
-	res = (int) list->data;
+      if (res > GPOINTER_TO_INT(list->data)) {
+	res = GPOINTER_TO_INT(list->data);
       }
       list = list->next;
     }
@@ -362,10 +362,10 @@ void find_player (int find_next) {
   if (find_next && server_clist->selection != NULL) {	/* selected one */
 
     if (server_clist->selection->next == NULL) {
-      server = (int) server_clist->selection->data;
+      server = GPOINTER_TO_INT(server_clist->selection->data);
 
       if (player_clist->selection)
-	player = (int) player_clist->selection->data + 1;
+	player = GPOINTER_TO_INT(player_clist->selection->data + 1);
 
       if (psearch_next_player (player))
 	return;

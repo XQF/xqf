@@ -1077,7 +1077,7 @@ int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer
     if ( pid == 0) {
 	if(child_callback)
 	    child_callback(data);
-	execvp(argv[0],argv);
+	execvp(argv[0],(void*)argv);
 	_exit(EXIT_FAILURE);
     }     
     else if(pid > 0)

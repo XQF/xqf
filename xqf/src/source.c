@@ -325,10 +325,12 @@ static int _compare_urls (const char *url1, const char *url2, gboolean withopts)
   return res;
 }
 
+#if 0
 static int compare_urls (const char *url1, const char *url2)
 {
   return _compare_urls(url1, url2, TRUE);
 }
+#endif
 
 static int compare_urls_noopts (const char *url1, const char *url2)
 {
@@ -897,7 +899,7 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
       if(!options.gsmtype)
       {
 	    master_options_release(&options, freeoptions);
-	    dialog_ok (NULL, _("'gsmtype' options missing for master %s."),path, name);
+	    dialog_ok (NULL, _("'gsmtype' options missing for master %s."), name);
 	    return NULL;
       }
     case MASTER_HTTP:

@@ -767,14 +767,15 @@ struct script_env_callback_data
   Script* script;
 };
 
-void script_set_env(struct script_env_callback_data* data)
+void script_set_env(void* data)
 {
   char buf[256];
   GSList* l;
+  struct script_env_callback_data* d = data;
 
-  server_set_env(data->s);
+  server_set_env(d->s);
 
-  for (l = g_slist_next(data->script->options); l; l = g_slist_next(l))
+  for (l = g_slist_next(d->script->options); l; l = g_slist_next(l))
   {
     ScriptOption* opt = l->data;
 

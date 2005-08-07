@@ -433,7 +433,7 @@ void server_clist_sync_selection (void) {
 
     if (selection && !selection->next) {
       cur_server = (struct server *) gtk_clist_get_row_data (
-                                         server_clist, (int) selection->data);
+                                         server_clist, GPOINTER_TO_INT(selection->data));
       server_ref (cur_server);
     }
 
@@ -503,7 +503,7 @@ GSList *server_clist_selected_servers (void) {
   debug (6, "server_clist_selected_servers() --");
   while (rows) {
     s = (struct server *) gtk_clist_get_row_data (
-                                              server_clist, (int) rows->data);
+                                              server_clist, GPOINTER_TO_INT(rows->data));
     list = server_list_prepend (list, s);
     rows = rows->next;
   }
@@ -561,15 +561,15 @@ void server_clist_selection_visible (void) {
     return;
 
   for (row = rows; row; row = row->next) {
-    vis = gtk_clist_row_is_visible (server_clist, (int) row->data);
+    vis = gtk_clist_row_is_visible (server_clist, GPOINTER_TO_INT(row->data));
     if (vis == GTK_VISIBILITY_FULL)
       return;
   }
 
-  min = (int) rows->data;
+  min = GPOINTER_TO_INT(rows->data);
   for (row = rows->next; row; row = row->next) {
-    if (min > (int) row->data)
-      min = (int) row->data;
+    if (min > GPOINTER_TO_INT(row->data))
+      min = GPOINTER_TO_INT(row->data);
   }
 
   if (rows->next)	/* if (g_list_length (rows) > 1) */

@@ -1944,6 +1944,7 @@ out:
   return ret;
 }
 
+#if 0
 static int is_dir (const char *dir, const char *gamedir) {
   struct stat stat_buf;
   char *path;
@@ -1956,6 +1957,7 @@ static int is_dir (const char *dir, const char *gamedir) {
   }
   return res;
 }
+#endif
 
 static int q1_exec_generic (const struct condef *con, int forkit) {
   char *argv[32];

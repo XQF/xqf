@@ -1394,7 +1394,7 @@ static gboolean dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
   struct generic_prefs *prefs;
   enum server_type type;
 
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
   prefs = &genprefs[type];
 
   debug (3, "type=%d",type);
@@ -2112,7 +2112,7 @@ static GtkWidget *create_wb_switch_menu (void (*callback) (GtkWidget *, int)) {
   for (i = 0; i < 9; i++) {
     menu_item = gtk_menu_item_new_with_label (_(wb_switch_labels[i]));
     gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-			GTK_SIGNAL_FUNC (callback), (gpointer) i);
+			GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER(i));
     gtk_menu_append (GTK_MENU (menu), menu_item);
     gtk_widget_show (menu_item);
   }
@@ -2297,7 +2297,7 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
   enum server_type type;
   struct game *g;
   
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
   g = &games[type];
 
   switch(type) {
@@ -2333,7 +2333,7 @@ static void new_custom_args_callback (GtkWidget *widget, gpointer data) {
 
   enum server_type type;
     
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
 
   current_row = -1;
 
@@ -2354,7 +2354,7 @@ static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   enum server_type type;
   struct game *g;
    
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
   g = &games[type];
 
   temp[0] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_game[type])));
@@ -2401,7 +2401,7 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
   enum server_type type;
   struct game *g;
   
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
   g = &games[type];
 
   if (current_row < 0)
@@ -2434,7 +2434,7 @@ static void custom_args_clist_select_row_callback (GtkWidget *widget,
   char* argstr;
   char* game_args[2] = {0} ;
 
-  type = (int) gtk_object_get_user_data (GTK_OBJECT (widget));
+  type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
 
   current_row = row;
   
@@ -2902,7 +2902,7 @@ static GtkWidget *games_config_page (int defgame) {
     gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
 
     gtk_signal_connect (GTK_OBJECT (genprefs[i].game_button), "select",
-	   GTK_SIGNAL_FUNC (game_listitem_selected_callback), (gpointer) i);
+	   GTK_SIGNAL_FUNC (game_listitem_selected_callback), GINT_TO_POINTER(i));
 
     gtk_widget_show(genprefs[i].game_button);
     gtk_container_add (GTK_CONTAINER (gtklist), genprefs[i].game_button);
