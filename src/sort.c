@@ -50,6 +50,26 @@ static inline int compare_strings (const char *str1, const char *str2) {
   return res;
 }
 
+static inline int compare_server_ping(const struct server* s1, const struct server* s2) {
+
+  int res = 0;
+
+  if (s1->ping >= 0) {
+    if (s2->ping >= 0) {
+      res = s1->ping - s2->ping;
+      if (!res) 
+	res = s1->retries - s2->retries;
+    }
+    else {
+      res = -1;
+    }
+  }
+  else {
+    res = (s2->ping >= 0)? 1 : 0;
+  }
+
+  return res;
+}
 
 int compare_servers (const struct server *s1, const struct server *s2,
                                                        enum ssort_mode mode) {
@@ -118,6 +138,17 @@ int compare_servers (const struct server *s1, const struct server *s2,
       res = 0;
     break;
     
+  case SORT_SERVER_ANTICHEAT:
+    if( (s1->flags & SERVER_PUNKBUSTER ) && ( s2->flags & SERVER_PUNKBUSTER ))
+      res = 0;
+    else if (s1->flags & SERVER_PUNKBUSTER )
+      res = 1;
+    else if (s2->flags & SERVER_PUNKBUSTER )
+      res = -1;
+    else
+      res = 0;
+    break;
+ 
   case SORT_SERVER_PLAYERS:
     res = s1->curplayers - s2->curplayers;
     if (!res) {
@@ -125,20 +156,15 @@ int compare_servers (const struct server *s1, const struct server *s2,
     }
     break;
 
+  case SORT_SERVER_MAXPLAYERS:
+    res = s1->maxplayers - s2->maxplayers;
+    if (!res) {
+      res = s1->curplayers - s2->curplayers;
+    }
+    break;
+
   case SORT_SERVER_PING:
-    if (s1->ping >= 0) {
-      if (s2->ping >= 0) {
-	res = s1->ping - s2->ping;
-	if (!res) 
-	  res = s1->retries - s2->retries;
-      }
-      else {
-	res = -1;
-      }
-    }
-    else {
-      res = (s2->ping >= 0)? 1 : 0;
-    }
+    res = compare_server_ping(s1, s2);
     break;
 
   case SORT_SERVER_TO:
@@ -157,11 +183,20 @@ int compare_servers (const struct server *s1, const struct server *s2,
     }
     break;
 
-#ifdef USE_GEOIP
   case SORT_SERVER_COUNTRY:
+#ifdef USE_GEOIP
     res = compare_strings (geoip_code_by_id(s1->country_id), geoip_code_by_id(s2->country_id));
   break;
 #endif
+
+  case SORT_SERVER_TYPE:
+      if(s1->type > s2->type)
+	res = 1;
+      else if(s1->type == s2->type)
+	res = 0;
+      else
+	res = -1;
+    break;
 		
   default:
     res = 0;

@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>	/* va_start, va_end */
+#include <string.h>
 
 #include <gtk/gtk.h>
 
@@ -47,17 +48,68 @@ GtkWidget *pane3_widget;
    list, you need to also add an entry in sort.h and sort.c 
 */
 
-static struct clist_column server_columns[10] = {
-  { N_("Name"),    180,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Address"), 140,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Ping"),     45,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("TO"),       35,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("Priv"),     35,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("Players"),  65,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("Map"),      55,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Game"),     55,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("GameType"), 55,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("OS"),       35,  GTK_JUSTIFY_LEFT,   NULL }
+static struct clist_column server_columns[] =
+{
+  {
+    name:      N_("Name"),
+    width:     180,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_SERVER_NAME, SORT_SERVER_TYPE, -1 },
+    sort_name: { NULL, N_("Type") },
+  },
+  {
+    name:      N_("Address"),
+    width:     140,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_SERVER_ADDRESS, SORT_SERVER_COUNTRY, -1 },
+    sort_name: { NULL, N_("Country") },
+  },
+  {
+    name:      N_("Ping"),
+    width:     45,
+    justify:   GTK_JUSTIFY_RIGHT,
+    sort_mode: { SORT_SERVER_PING, -1 }
+  },
+  {
+    name:      N_("TO"),
+    width:     35,
+    justify:   GTK_JUSTIFY_RIGHT,
+    sort_mode: { SORT_SERVER_TO, -1 }
+  },
+  {
+    name:      N_("Priv"),
+    width:     35,
+    justify:   GTK_JUSTIFY_RIGHT,
+    sort_mode: { SORT_SERVER_PRIVATE, SORT_SERVER_ANTICHEAT, -1 },
+    // Translator: "PunkBuster"
+    sort_name: { NULL, N_("PB") },
+  },
+  {
+    name:      N_("Players"),
+    width:     65,
+    justify:   GTK_JUSTIFY_RIGHT,
+    sort_mode: { SORT_SERVER_PLAYERS, SORT_SERVER_MAXPLAYERS, -1 },
+    // Translator: Max as in max players
+    sort_name: { NULL, N_("Max") },
+  },
+  {
+    name:      N_("Map"),
+    width:     55,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_SERVER_MAP, -1 }
+  },
+  {
+    name:      N_("Game"),
+    width:     55,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_SERVER_GAME, -1 }
+  },
+  {
+    name:      N_("GameType"),
+    width:     55,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_SERVER_GAMETYPE, -1 }
+  },
 };
 
 
@@ -71,13 +123,44 @@ struct clist_def server_clist_def = {
   SORT_SERVER_PING, GTK_SORT_ASCENDING
 };
 	
-static struct clist_column player_columns[6] = {
-  { N_("Name"),    100,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Frags"),    50,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("Colors"),   60,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Skin"),     50,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Ping"),     45,  GTK_JUSTIFY_RIGHT,  NULL },
-  { N_("Time"),     45,  GTK_JUSTIFY_LEFT,   NULL }
+static struct clist_column player_columns[] =
+{
+  {
+    name:      N_("Name"),
+    width:     100,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_PLAYER_NAME, -1 },
+  },
+  {
+    name:      N_("Frags"),
+    width:     50,
+    justify:   GTK_JUSTIFY_RIGHT,
+    sort_mode: { SORT_PLAYER_FRAGS, -1 },
+  },
+  {
+    name:      N_("Colors"),
+    width:     60,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_PLAYER_COLOR, -1 },
+  },
+  {
+    name:      N_("Skin"),
+    width:     50,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_PLAYER_SKIN, -1 },
+  },
+  {
+    name:      N_("Ping"),
+    width:     45,
+    justify:   GTK_JUSTIFY_RIGHT,
+    sort_mode: { SORT_PLAYER_PING, -1 },
+  },
+  {
+    name:      N_("Time"),
+    width:     45,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_PLAYER_TIME, -1 },
+  }
 };
 
 struct clist_def player_clist_def = {
@@ -90,9 +173,20 @@ struct clist_def player_clist_def = {
   SORT_PLAYER_FRAGS, GTK_SORT_DESCENDING
 };
 						  
-static struct clist_column srvinf_columns[2] = {
-  { N_("Rule"),     90,  GTK_JUSTIFY_LEFT,   NULL },
-  { N_("Value"),    80,  GTK_JUSTIFY_LEFT,   NULL }
+static struct clist_column srvinf_columns[] =
+{
+  {
+    name:      N_("Rule"),
+    width:     90,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_INFO_RULE, -1 },
+  },
+  {
+    name:      N_("Value"),
+    width:     80,
+    justify:   GTK_JUSTIFY_LEFT,
+    sort_mode: { SORT_INFO_VALUE, -1 },
+  }
 };
 
 struct clist_def srvinf_clist_def = {
@@ -181,11 +275,17 @@ GtkWidget *top_window (void) {
 
 static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef, 
                                                                int set_mark) {
-  char buf[128];
+  char buf[256];
 
   if (set_mark) {
+    const char* name = cldef->cols[clist->sort_column].sort_name[cldef->cols[clist->sort_column].current_sort_mode];
     g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name), 
                         (clist->sort_type == GTK_SORT_DESCENDING)? '>' : '<');
+    
+    if(name)
+    {
+      snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), " (%s)", _(name));
+    }
     gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), buf);
   }
   else {
@@ -259,17 +359,28 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
   return clist;
 }
 
+#define DIMOF(arr) (sizeof(arr)/sizeof(arr[0]))
 
 void clist_set_sort_column (GtkCList *clist, int column, 
                                                     struct clist_def *cldef) {
   if (column == clist->sort_column) {
+    if(clist->sort_type == GTK_SORT_DESCENDING)
+    {
+      cldef->cols[column].current_sort_mode = ++cldef->cols[column].current_sort_mode%DIMOF(cldef->cols[column].sort_mode);
+      if(cldef->cols[column].sort_mode[cldef->cols[column].current_sort_mode] == -1)
+	cldef->cols[column].current_sort_mode = 0;
+    }
+
     gtk_clist_set_sort_type (clist, 
                  GTK_SORT_DESCENDING + GTK_SORT_ASCENDING - clist->sort_type);
   }
   else {
+    cldef->cols[column].current_sort_mode = 0;
     clist_column_set_title (clist, cldef, FALSE);
     gtk_clist_set_sort_column (clist, column);
   }
+
+  debug(0, "%d %hhd", column, cldef->cols[column].current_sort_mode);
 
   clist_column_set_title (clist, cldef, TRUE);
   gtk_clist_sort (clist);

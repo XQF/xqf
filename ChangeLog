@@ -1,5 +1,6 @@
 Aug 07, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - add script install button
+- add multiple sort modes per column (#1253101)
 
 Aug 01, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - add demo script

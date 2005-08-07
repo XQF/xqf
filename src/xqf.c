@@ -1327,16 +1327,30 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
   set_widgets_sensitivity ();
 }
 
+static int server_clist_sort_mode = SORT_SERVER_PING;
+
+void server_clist_set_sort_mode(enum ssort_mode mode)
+{
+  server_clist_sort_mode = mode;
+}
 
 static int server_clist_compare_func (GtkCList *clist, 
                                      gconstpointer ptr1, gconstpointer ptr2) {
+  int res, mode;
   GtkCListRow *row1 = (GtkCListRow *) ptr1;
   GtkCListRow *row2 = (GtkCListRow *) ptr2;
   struct server *s1 = (struct server *) row1->data;
   struct server *s2 = (struct server *) row2->data;
-  debug (7, "server_clist_compare_func() --");
+  debug (7, "");
 
-  return compare_servers (s1, s2, clist->sort_column);
+  mode = server_clist_def.cols[clist->sort_column].sort_mode[server_clist_def.cols[clist->sort_column].current_sort_mode];
+  res = compare_servers (s1, s2, mode);
+
+  // fallback
+  if(res == 0 && mode != SORT_SERVER_PING)
+  {
+    res = compare_servers(s1, s2, SORT_SERVER_PING);
+  }
 }
 
 
