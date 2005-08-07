@@ -981,7 +981,7 @@ static GtkWidget *create_filter_menu()
     gtk_widget_show (menu_item);
 
     gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-	   GTK_SIGNAL_FUNC (filter_select_callback), (gpointer)i+1); // array starts from zero but filters from 1
+	   GTK_SIGNAL_FUNC (filter_select_callback), GINT_TO_POINTER(i+1)); // array starts from zero but filters from 1
   }
 
   gtk_widget_show (menu);

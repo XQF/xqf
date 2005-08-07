@@ -299,7 +299,7 @@ static void worker_parse_callback (char *str, void *data) {
 
 
 static void worker_close_callback (int error, void *data) {
-  int n = (int) data;
+  int n = GPOINTER_TO_INT(data);
 
   dns_workers[n].pid = -1;
   dns_workers_num--;
@@ -428,7 +428,7 @@ static int fork_worker (int n, char *str) {
 
     dns_workers[n].input->parse = worker_parse_callback;
     dns_workers[n].input->close = worker_close_callback;
-    dns_workers[n].input->data  = (void *) n;
+    dns_workers[n].input->data  = GINT_TO_POINTER(n);
 
     dns_workers_num++;
 

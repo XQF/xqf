@@ -948,7 +948,7 @@ GtkWidget *create_server_type_menu (int active_type,
 
     if(callback)
       gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                 GTK_SIGNAL_FUNC (callback), (gpointer) i);
+                 GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER(i));
 
     gtk_widget_show (menu_item);
 

@@ -1351,6 +1351,8 @@ static int server_clist_compare_func (GtkCList *clist,
   {
     res = compare_servers(s1, s2, SORT_SERVER_PING);
   }
+
+  return res;
 }
 
 
@@ -2031,7 +2033,7 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 	// list of selected items
 	selection = GTK_CLIST(source_ctree)->selection;
         // XXX: what is the first part of the && good for?
-	if (!g_list_find (selection, (gpointer) row) && 
+	if (!g_list_find (selection, GINT_TO_POINTER(row)) && 
                  (bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) == 0) {
 	  node_under_mouse = gtk_ctree_node_nth(GTK_CTREE (source_ctree),row);
 	  if(node_under_mouse)
@@ -2180,7 +2182,7 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
       if (gtk_clist_get_selection_info (server_clist, 
                                           bevent->x, bevent->y, &row, NULL)) {
 	selection = server_clist->selection;
-	if (!g_list_find (selection, (gpointer) row) && 
+	if (!g_list_find (selection, GINT_TO_POINTER(row)) && 
                  (bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) == 0) {
 	  server_clist_select_one (row);
 	}
@@ -2272,7 +2274,7 @@ static void add_to_player_filter_callback (GtkWidget *widget, unsigned mask) {
   if (!selection || !cur_server || stat_process)
     return;
 
-  row = (int) selection->data;
+  row = GPOINTER_TO_INT(selection->data);
   p = (struct player *) gtk_clist_get_row_data (player_clist, row);
 
   if (player_filter_add_player (p->name, mask)) {
@@ -3010,7 +3012,7 @@ static void populate_main_toolbar (void) {
 		   GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL,
                    _(filters[i].short_name), buf, NULL,
                    pixmap,
-                   GTK_SIGNAL_FUNC (filter_toggle_callback), (gpointer) mask);
+                   GTK_SIGNAL_FUNC (filter_toggle_callback), GINT_TO_POINTER(mask));
 
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_buttons[i]), 
                                     ((cur_filter & mask) != 0)? TRUE : FALSE);
@@ -3159,7 +3161,7 @@ static GtkWidget* create_filter_menu()
     gtk_widget_show (menu_item);
 
     gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-	   GTK_SIGNAL_FUNC (server_filter_select_callback), (gpointer)i); // array starts from zero but filters from 1
+	   GTK_SIGNAL_FUNC (server_filter_select_callback), GINT_TO_POINTER(i)); // array starts from zero but filters from 1
 
     /*
     // add separator

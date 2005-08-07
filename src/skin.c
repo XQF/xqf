@@ -386,7 +386,7 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
     gtk_container_add (GTK_CONTAINER (menu_item), button);
     gtk_menu_append (GTK_MENU (menu), menu_item);
     gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-                          GTK_SIGNAL_FUNC (callback), (gpointer) i);
+                          GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER(i));
     gtk_widget_show (menu_item);
 
     set_bg_color (menu_item, i);
