@@ -1111,3 +1111,51 @@ int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), 
 {
     return _run_program_sync(argv, child_callback, data);
 }
+
+const char* copy_file(const char* src, const char* dest)
+{
+  char buf[4*4096];
+  const char* msg = NULL;
+  int fdin = -1, fdout = -1;
+  int ret;
+
+  fdin = open(src, O_RDONLY);
+  if(fdin == -1)
+  {
+    msg = _("Can't open source file for reading");
+    goto error_out;
+  }
+
+  fdout = open(dest, O_CREAT|O_WRONLY|O_TRUNC, 0777);
+  if(fdout == -1)
+  {
+    msg = _("Can't open destination file for writing");
+    goto error_out;
+  }
+
+  while((ret = read(fdin, buf, sizeof(buf))) > 0)
+  {
+    if(write(fdout, buf, ret) == -1)
+    {
+      msg = _("write error on destination file");
+      goto error_out;
+    }
+  }
+
+  if(ret == -1)
+  {
+    msg = _("read error on source file");
+    goto error_out;
+  }
+
+error_out:
+  if(fdin != -1)
+    close(fdin);
+  if(fdout != -1)
+    close(fdout);
+
+  if(msg)
+    unlink(dest);
+
+  return msg;
+}
