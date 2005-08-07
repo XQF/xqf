@@ -50,6 +50,8 @@ print OUT "static void segv(void) { char* die = 0; ++*die; }\n";
 
 foreach my $file (@ARGV)
 {
+    my %syms;
+
     open (IN, "/usr/bin/nm -D $file|");
     while(<IN>)
     {
@@ -58,13 +60,30 @@ foreach my $file (@ARGV)
 	chomp $sym;
 	next if (exists($except->{$sym}));
 
-	my ($ver, $at);
+	$syms{$sym}=1;
+    }
+    close IN;
+
+    open (IN, "/usr/bin/readelf -W --symbols $file|");
+    while(<IN>)
+    {
+	my ($sym, $ver, $at);
+	next unless s/^ +\d+: *//;
+	chomp;
+	my @f = split(/ +/);
+
+	next unless $#f >= 6;
+	next unless $f[2] eq 'FUNC';
+	$sym = $f[6];
 	if($sym =~ /(.*?)(\@\@?)(.*)/)
 	{
 	    $sym = $1;
 	    $at = $2;
 	    $ver = $3;
 	}
+
+	next unless exists $syms{$sym};
+	delete $syms{$sym};
 
 	if($ver)
 	{
