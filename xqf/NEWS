@@ -1,3 +1,15 @@
+XQF 1.0.4 -- ???, 2005
+~~~~~~~~~
+Changes since 1.0.3:
+
+o new games: Nexuiz
+o add Epic's second UT2004 master
+o new Finish translation
+o add q3a Excessive Plus gametypes
+o honor setting to ignore bots when copying server info to clipboard
+o add support for plugin scripts
+o support multiple sort modes per column
+
 XQF 1.0.3 -- April 03, 2005
 ~~~~~~~~~
 Changes since 1.0.2:
