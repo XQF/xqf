@@ -29,6 +29,9 @@ struct clist_column {
   int	width;
   GtkJustification justify;
   GtkWidget *widget;
+  const char* const sort_name[3];
+  signed char sort_mode[3];
+  unsigned char current_sort_mode;
 };
 
 
