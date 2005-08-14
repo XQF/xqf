@@ -629,18 +629,18 @@ static void server_filter_on_ok ()
        set all new
      */
     guint i;
-    struct server_filter_vars* oldfilter = server_filter_vars_new();
-    struct server_filter_vars* newfilter = NULL;
-
     config_clean_section("/" CONFIG_FILE "/Server Filter");
 
     for(i=0;i<server_filters->len;i++)
     {
+      struct server_filter_vars* newfilter = NULL;
+      struct server_filter_vars* oldfilter = server_filter_vars_new();
+
       newfilter = g_array_index (server_filters, struct server_filter_vars*, i);
       server_filter_save_settings(i+1,oldfilter,newfilter);
-    }
 
-    server_filter_vars_free(oldfilter);
+      server_filter_vars_free(oldfilter);
+    }
   }
 
   current_server_filter = server_filter_dialog_current_filter;
@@ -677,6 +677,7 @@ static void server_filter_on_ok ()
 
 /** save settings of current server filter and detect if filter has changed
  * oldfilter is currently dummy
+ * modifies oldfilter
  */
 static void server_filter_save_settings (int number,
       struct server_filter_vars* oldfilter,
