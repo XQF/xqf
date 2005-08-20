@@ -294,7 +294,7 @@ static void load_file (const char *filename) {
   gboolean (*parse_line)(char* buf, struct state_s* state);
   struct config_file* file = NULL;
 
-  debug (0, "%s", filename);
+  debug (4, "%s", filename);
 
   for(l = directories; l && !f; l = g_slist_next(l))
   {

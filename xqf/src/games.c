@@ -590,7 +590,7 @@ struct game games[] = {
     parse_server        : quake_parse_server,
     analyze_serverinfo  : descent3_analyze_serverinfo,
     config_is_valid     : config_is_valid_generic,
-    exec_client         : gamespy_exec,
+    exec_client         : descent3_exec,
     save_info           : quake_save_info,
     command             : stringlist024,
   },
@@ -803,7 +803,7 @@ struct game games[] = {
     parse_server        : quake_parse_server,
     analyze_serverinfo  : un_analyze_serverinfo,
     config_is_valid     : config_is_valid_generic,
-    exec_client         : descent3_exec,
+    exec_client         : gamespy_exec,
     save_info           : quake_save_info,
   },
   {

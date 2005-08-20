@@ -2550,7 +2550,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 // Pass server IP address first otherwise it won't work.
 // Make sure ut/ut script (from installed game) contains
 // exec "./ut-bin" $* -log and not -log $* at the end
-// otherwise XQF you can not connect via the command line!
+// otherwise XQF can not connect via the command line!
 
   if(g->flags & GAME_LAUNCH_HOSTPORT) {
     // go through all server rules
