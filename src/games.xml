@@ -468,7 +468,7 @@
 	<icon>descent3.xpm</icon>
 	<parse_player>descent3_parse_player</parse_player>
 	<analyze_serverinfo>descent3_analyze_serverinfo</analyze_serverinfo>
-	<exec_client>gamespy_exec</exec_client>
+	<exec_client>descent3_exec</exec_client>
 	<command>descent3</command>
     </game>
     <game>
@@ -613,7 +613,7 @@
 	<icon>gamespy3d.xpm</icon>
 	<parse_player>un_parse_player</parse_player>
 	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
-	<exec_client>descent3_exec</exec_client>
+	<exec_client>gamespy_exec</exec_client>
     </game>
     <game>
 	<type>UNKNOWN_SERVER</type>
