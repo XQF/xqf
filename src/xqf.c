@@ -942,7 +942,6 @@ static gboolean check_launch (struct condef* con)
   gboolean launch = FALSE;
 
   struct server *s;
-  int reserved_slots;
 
   if (!con)
     return FALSE;
@@ -987,22 +986,7 @@ static gboolean check_launch (struct condef* con)
       }
     }
     
-    /*pulp*/
-    if (props && props->reserved_slots)
-    {
-      reserved_slots=props->reserved_slots;
-    }
-    else
-    {
-      reserved_slots=0;
-    }
-
-
-    if (!launch && !con->spectate
-	&& ( (s->curplayers >= (s->maxplayers - reserved_slots)) // really full
-	     || ((s->curplayers >= (s->maxplayers - s->private_client)) // private clients and no password set
-		     && !(props && props->server_password && *props->server_password))
-	     ))
+    if (!launch && !con->spectate && server_need_redial(s, props))
     {
       launch = dialog_yesnoredial (NULL, 1, _("Launch"), _("Cancel"), _("Redial"), 
   		     _("Server %s:%d is full.\n\nLaunch client anyway?"),
@@ -1016,7 +1000,7 @@ static gboolean check_launch (struct condef* con)
       {
         redialserver = 1;
  
-	launch = redial_dialog(con->s,reserved_slots);/*pulp*/
+	launch = redial_dialog(con->s, props);
 
 	if(launch == FALSE)
 	{
