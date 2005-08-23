@@ -48,6 +48,13 @@ extern 	void properties_dialog (struct server *s);
 
 extern	void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str);
 
+static inline int server_need_redial(struct server* s, struct server_props* props)
+{
+  return ((s->curplayers >= (s->maxplayers - (props?props->reserved_slots:0))) // really full
+	     || ((s->curplayers >= (s->maxplayers - s->private_client)) // private clients and no password set
+		     && !(props && props->server_password && *props->server_password))
+	     );
+}
 
 #endif /* __SRV_PROP_H__ */
 

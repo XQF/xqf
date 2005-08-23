@@ -20,8 +20,9 @@
 #define _REDIAL_H__
 
 #include "launch.h"
+#include "srv-prop.h"
 
-gboolean redial_dialog (struct server* s,  int r_slots); /*pulp*/
+gboolean redial_dialog (struct server* s, struct server_props* props);
 
 #endif /* __ADDMASTER_H__ */
 

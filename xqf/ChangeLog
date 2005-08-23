@@ -1,3 +1,7 @@
+Aug 23, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- fix redial dialog not honoring private clients (reported by Julien
+  Langer)
+
 Aug 20, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix gamespy and descent exec functions (reported by Steffen
   Pankratz)
