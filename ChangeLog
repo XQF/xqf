@@ -1,3 +1,6 @@
+Sep 07, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
+- docu update and master server cleanup by Steffen Pankratz
+
 Aug 23, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix redial dialog not honoring private clients (reported by Julien
   Langer)

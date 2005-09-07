@@ -1030,7 +1030,7 @@ void free_master (struct master *m) {
 static char *builtin_masters_update_info[] = {
 
   "ADD QS http://www.gameaholic.com/servers/qspy-quake Gameaholic.Com",
-  "ADD QS http://ironman.planetquake.com/serversqspy.txt Ironman",
+  "DELETE QS http://ironman.planetquake.com/serversqspy.txt Ironman", // does no longer work
 
   "ADD QWS master://192.246.40.37:27000 id Limbo",
   "ADD QWS master://192.246.40.37:27002 id CTF",
@@ -1092,7 +1092,6 @@ static char *builtin_masters_update_info[] = {
   "ADD T2S master://198.74.35.17:27999 Master 2",
   "ADD T2S master://198.74.35.18:27999 Master 3",
 
-
   "DELETE WOS master://wolf.idsoftware.com:27950 id", // does no longer work
   "ADD WOS master://wolfmaster.idsoftware.com:27950 id",
   "ADD WOETS master://etmaster.idsoftware.com:27950 id",
@@ -1112,27 +1111,28 @@ static char *builtin_masters_update_info[] = {
 
   "ADD SOF2S master://master.sof2.ravensoft.com:20110 Raven",
 
-  "ADD UT2S http://ut2003master.epicgames.com/serverlist/full-all.txt Epic",
-  "ADD UT2S http://ut2003master.epicgames.com/serverlist/demo-all.txt Epic Demo",
+  "DELETE UT2S http://ut2003master.epicgames.com/serverlist/full-all.txt Epic", // does no longer work
+  "DELETE UT2S http://ut2003master.epicgames.com/serverlist/demo-all.txt Epic Demo", // does no longer work
   
-  "ADD SAS http://masterserver.savagedemo.s2games.com/gamelist.dat S2 Games",
-
-  "ADD UNS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT&hostport=1 multiplay.co.uk - UT",
-  "ADD MHS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=MOHAA&hostport=1 multiplay.co.uk - MOHAA",
-  "ADD EFS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=EF&hostport=1 multiplay.co.uk - Elite Force",
+  "DELETE SAS http://masterserver.savagedemo.s2games.com/gamelist.dat S2 Games", // does no longer work
+  "ADD SAS http://masterserver.savage.s2games.com/gamelist_full.dat S2 Games",
+  
+  "DELETE UNS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT&hostport=1 multiplay.co.uk - UT", // does no longer work
+  "DELETE MHS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=MOHAA&hostport=1 multiplay.co.uk - MOHAA", // does no longer work
+  "DELETE EFS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=EF&hostport=1 multiplay.co.uk - Elite Force", // does no longer work
 
   // version 2.0 not listed here
-  "DELETE AMS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=AA&hostport=1 multiplay.co.uk - Army Ops",
-  "ADD SOF2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=SOF2&hostport=1 multiplay.co.uk - SOF2",
-  "ADD UT2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K3&hostport=1 multiplay.co.uk - UT2003",
-  "ADD UT2004S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K4&hostport=1 multiplay.co.uk - UT2004",
-  "ADD UT2004S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K4D&hostport=1 multiplay.co.uk - UT2004 Demo",
-  "ADD HLS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=HLS&hostport=1 multiplay.co.uk - Half-Life",
+  "DELETE AMS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=AA&hostport=1 multiplay.co.uk - Army Ops", // does no longer work
+  "DELETE SOF2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=SOF2&hostport=1 multiplay.co.uk - SOF2", // does no longer work
+  "DELETE UT2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K3&hostport=1 multiplay.co.uk - UT2003", // does no longer work
+  "DELETE UT2004S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K4&hostport=1 multiplay.co.uk - UT2004", // does no longer work
+  "DELETE UT2004S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K4D&hostport=1 multiplay.co.uk - UT2004 Demo", // does no longer work
+  "DELETE HLS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=HLS&hostport=1 multiplay.co.uk - Half-Life", // does no longer work
 
   "ADD CODS master://cod01.activision.com Activision",
-  "ADD CODS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=COD multiplay.co.uk - Call of Duty",
+  "DELETE CODS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=COD multiplay.co.uk - Call of Duty",
 
-  "ADD BF1942 http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=BF1942&hostport=1 multiplay.co.uk - BF1942",
+  "DELETE BF1942 http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=BF1942&hostport=1 multiplay.co.uk - BF1942",
 
   "ADD JK3S master://masterjk3.ravensoft.com:29060 Ravensoft",
 
