@@ -429,7 +429,7 @@ msgid ""
 "Please specify correct %s working directory\n"
 "or leave it empty (~/.q3a is used by default)"
 msgstr ""
-"Das Verzeichnis \"%s\" existiert nicht oder enhält kein \"baseq3\" (\"demoq3"
+"Das Verzeichnis \"%s\" existiert nicht oder enthält kein \"baseq3\" (\"demoq3"
 "\") Unterverzeichnis\n"
 "Bitte geben Sie ein korrektes Arbeitsverzeichnis für %s an,\n"
 "oder lassen Sie es leer (~/.q3a wird Standardmäßig benutzt)"
@@ -984,7 +984,7 @@ msgstr "Beim Beenden"
 
 #: ../src/pref.c:4242
 msgid "Save server lists"
-msgstr "Serverlisten speichen"
+msgstr "Serverlisten speichern"
 
 #: ../src/pref.c:4257
 msgid "Save server information"
@@ -1073,7 +1073,7 @@ msgstr "Test"
 #. Sounds Enable / Disable
 #: ../src/pref.c:4558
 msgid "Sound Enable / Disable"
-msgstr "Sound (De)Aktiveren"
+msgstr "Sound (De)Aktivieren"
 
 #: ../src/pref.c:4572
 msgid "Enable Sound"
@@ -1156,7 +1156,7 @@ msgstr "Skripte"
 
 #: ../src/pref.c:5136
 msgid "Unable to get user name/home/tmpdir"
-msgstr "Konnte Benutzername,Heimatverzeichnis oder tmpdir nicht ermitteln"
+msgstr "Konnte Benutzername, Heimatverzeichnis oder tmpdir nicht ermitteln"
 
 #. translator: %s = game name, e.g. Quake 3 Arena
 #: ../src/pref.c:5543
