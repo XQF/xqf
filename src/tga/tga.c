@@ -48,11 +48,11 @@ typedef struct _TargaHeader
     unsigned char	pixel_size, attributes;
 } TargaHeader;
 
-#define CHECK(x) do { if(buf_p+x>=buffer+length) goto error_out; } while(0)
+#define CHECK(x) do { if(buf_p+x>buffer+length) { xqf_warning("image data %d bytes to short", x); goto error_out;} } while(0)
 
-char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *width, unsigned *height)
+unsigned char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *width, unsigned *height)
 {
-    int         columns = 0, rows = 0, numPixels = 0;
+    unsigned    columns = 0, rows = 0, numPixels = 0;
     byte        *pixbuf = NULL;
     int         row = 0, column = 0;
     const byte  *buf_p = NULL;
@@ -115,14 +115,26 @@ char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *width, unsi
 
     columns = targa_header.width;
     rows = targa_header.height;
-    numPixels = columns * rows;
+    numPixels = columns * rows * 4;
+
+    if(!rows || !columns)
+    {
+	xqf_warning("invalid image size: %ux%u", rows, columns);
+	return NULL;
+    }
+    
+    if(numPixels > 0x7FFFFFFF)
+    {
+	xqf_warning("image too big: %ux%u", rows, columns);
+	return NULL;
+    }
 
     if (width)
 	*width = columns;
     if (height)
 	*height = rows;
 
-    targa_rgba = g_malloc (numPixels*4);
+    targa_rgba = g_malloc (numPixels);
 
 
     CHECK(targa_header.id_length);
