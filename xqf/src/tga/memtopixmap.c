@@ -90,12 +90,13 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
   if(!ok)
   {
     unsigned h = 0, w = 0;
-    char* data;
+    unsigned char* data;
     g_free(loader);
     loader = NULL;
 
     data = LoadTGA(mem, len, &w, &h);
-    g_return_val_if_fail(data != NULL, NULL);
+    if(!data)
+	return NULL;
 
 //    printf("%dx%d\n", w, h);
 

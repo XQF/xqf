@@ -29,6 +29,6 @@
  * @return pointer to image memory in RGBA format. Size is width*heigth*4. Must
  * be freed manually
  */
-char* LoadTGA (const unsigned char* buffer, size_t length, int *width, int *height);
+unsigned char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *width, unsigned *height);
 
 #endif
