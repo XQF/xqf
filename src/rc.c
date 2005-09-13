@@ -100,9 +100,7 @@ static struct keyword  keywords[] = {
   { "q1_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: QS/custom cfg" },
   { "qw_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/custom cfg" },
   { "q2_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/custom cfg" },
-#ifdef QSTAT23
   { "q3_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q3S/custom cfg" },
-#endif 
 
   { "q1_dir",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QS/dir" },
   { "q1_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QS/cmd" },
@@ -110,10 +108,8 @@ static struct keyword  keywords[] = {
   { "qw_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/cmd" },
   { "q2_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/dir" },
   { "q2_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/cmd" },
-#ifdef QSTAT23
   { "q3_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q3S/dir" },
   { "q3_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q3S/cmd" },
-#endif
   { "hl_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: HLS/dir" },
   { "hl_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: HLS/cmd" },
 

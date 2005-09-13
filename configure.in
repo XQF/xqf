@@ -3,7 +3,7 @@
 # Initially written by Markus Fischer <mfischer@josefine.ben.tuwien.ac.at>
 #
 
-AC_INIT([XQF],[1.0.3],[xqf-developer@lists.sourceforge.net], [xqf])
+AC_INIT([XQF],[1.0.3.1],[xqf-developer@lists.sourceforge.net], [xqf])
 AC_CONFIG_SRCDIR([src/xqf.c])
 AC_PREREQ(2.52)
 
@@ -22,9 +22,10 @@ AM_GLIB_GNU_GETTEXT
 dnl Checks for programs.
 AC_PROG_CC
 AC_ISC_POSIX
+AC_PROG_LN_S
+AC_PROG_RANLIB
 
 AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -83,16 +84,6 @@ fi
 
 AC_SUBST(QSTATEXEC)
 
-case "$qstat_version" in
-	2.0*|2.1*|2.3*|2.4a|2.4b|2.4c|2.4d)
-	qstat_is=tooold
-	;;
-esac
-
-QSTAT23="-DQSTAT23 -DQSTAT_HAS_UNREAL_SUPPORT"
-
-AC_SUBST(QSTAT23)
-
 AC_CHECK_HEADER(zlib.h,,[AC_MSG_ERROR([zlib.h not found, please install zlib development files])])
 AC_CHECK_LIB(z, crc32,[AC_DEFINE([HAVE_LIBZ],[],[Whether libz is installed])],[AC_MSG_ERROR([libz not found])])
 
@@ -142,7 +133,7 @@ if test "x$USE_GEOIP" != "xno"; then
 			DUMMY_LIBGEOIP_SONAME=`objdump -p "$use_geoip_dummy"|awk '$1 == "SONAME" {print $2}'`
 			if test "x$DUMMY_LIBGEOIP_SONAME" != x; then
 			    DUMMY_LIBGEOIP_ORIG="$use_geoip_dummy"
-			    GEOIP_LIB="libxqf_dummy_GeoIP.la"
+			    GEOIP_LIB='-L$(top_builddir)/src -lxqf_dummy_GeoIP'
 
 			    AC_SUBST(DUMMY_LIBGEOIP_SONAME)
 			    AC_SUBST(DUMMY_LIBGEOIP_ORIG)
@@ -174,7 +165,7 @@ if test "x$use_pixbuf_dummy" != "xno"; then
     DUMMY_LIBGDKPIXBUF_SONAME=`objdump -p "$use_pixbuf_dummy"|awk '$1 == "SONAME" {print $2}'`
     if test "x$DUMMY_LIBGDKPIXBUF_SONAME" != x; then
 	DUMMY_LIBGDKPIXBUF_ORIG="$use_pixbuf_dummy"
-	GDK_PIXBUF_LIBS="libxqf_dummy_gdk_pixbuf.la"
+	GDK_PIXBUF_LIBS="-lxqf_dummy_gdk_pixbuf"
 
 	AC_SUBST(DUMMY_LIBGDKPIXBUF_SONAME)
 	AC_SUBST(DUMMY_LIBGDKPIXBUF_ORIG)
@@ -260,11 +251,5 @@ if test "x$qstat_is" = "xnotfound" ; then
 *** QStat is *required* to run XQF
 *** Get it from http://qstat.org/
 *** and put it in your path
-])
-elif test "x$qstat_is" = "xtooold" ; then
-	AC_MSG_RESULT([
-*** You have an old QStat version installed
-*** QStat 2.4e is recommended to run XQF
-*** Get it from http://qstat.org/
 ])
 fi

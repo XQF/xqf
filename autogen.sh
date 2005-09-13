@@ -109,16 +109,16 @@ fi
 
 rm -f tmpout $GETTEXTIZE_FIXED
 
-# workaround for libtoolize putting files in ..
-if [ ! -e install-sh ]; then
-	removeinstallsh=1
-	touch install-sh
-fi
-
-echo "running libtoolize ..."
-libtoolize --force || die libtoolize libtool
-
-[ -n "$removeinstallsh" ] && rm install-sh
+## workaround for libtoolize putting files in ..
+#if [ ! -e install-sh ]; then
+#	removeinstallsh=1
+#	touch install-sh
+#fi
+#
+#echo "running libtoolize ..."
+#libtoolize --force || die libtoolize libtool
+#
+#[ -n "$removeinstallsh" ] && rm install-sh
 
 # Some old version of GNU build tools fail to set error codes.
 # Check that they generate some of the files they should.

@@ -26,18 +26,37 @@ my $versfile;
 my $outfile;
 my $weak;
 
+sub help($)
+{
+	print <<EOF;
+
+Generate stub functions for library symbols
+
+Usage: $0 OPTIONS LIBRARY
+
+OPTIONS:
+	-x <SYM1[,SYM2[,...]]>      exclude symbols from list
+	-v <FILE>                   write version map into FILE
+	-o <FILE>                   write C code into FILE
+	--weak                      generate weak symbols
+	--help                      this screen
+EOF
+	exit(shift);
+}
+
 Getopt::Long::Configure("no_ignore_case");
 GetOptions (
     "x=s@"   => $except,
     "v=s"   => \$versfile,
     "o=s"   => \$outfile,
     "weak"   => \$weak,
+    "h|help"  => sub { help(0); }
     ) or exit(1);
 
 if(!$outfile)
 {
     print STDERR "no output file specified\n";
-    exit(1);
+    help(1);
 }
 
 $except = { map { $_ => 1 }  split(/,/,join(',',@{$except}))};
@@ -50,21 +69,9 @@ print OUT "static void segv(void) { char* die = 0; ++*die; }\n";
 
 foreach my $file (@ARGV)
 {
-    my %syms;
+    my %seen;
 
-    open (IN, "/usr/bin/nm -D $file|");
-    while(<IN>)
-    {
-	my ($addr, $type, $sym) = split(/ +/);
-	next unless ($type eq 'T' || $type eq 'W');
-	chomp $sym;
-	next if (exists($except->{$sym}));
-
-	$syms{$sym}=1;
-    }
-    close IN;
-
-    open (IN, "/usr/bin/readelf -W --symbols $file|");
+    open (IN, "/usr/bin/readelf -W --symbols $file|") or die;
     while(<IN>)
     {
 	my ($sym, $ver, $at);
@@ -74,7 +81,13 @@ foreach my $file (@ARGV)
 
 	next unless $#f >= 6;
 	next unless $f[2] eq 'FUNC';
+	next unless $f[3] eq 'GLOBAL';
+	next unless $f[5] =~ /\d+/;
 	$sym = $f[6];
+
+	next if exists $seen{$sym};
+	$seen{$sym} = 1;
+
 	if($sym =~ /(.*?)(\@\@?)(.*)/)
 	{
 	    $sym = $1;
@@ -82,8 +95,7 @@ foreach my $file (@ARGV)
 	    $ver = $3;
 	}
 
-	next unless exists $syms{$sym};
-	delete $syms{$sym};
+	next if exists $except->{$sym};
 
 	if($ver)
 	{

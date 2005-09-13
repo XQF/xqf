@@ -1,3 +1,8 @@
+Sep 13, 2005: <l-n@users.sourceforge.net>
+- get rid of libtool
+- set version to 1.0.3.1
+- another attempt to finally fix gensyms.pl
+
 Sep 12, 2005: <l-n@users.sourceforge.net>
 - fix integer overflow in TGA loader
 
