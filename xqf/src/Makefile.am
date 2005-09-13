@@ -34,7 +34,12 @@ xqf_LDADD = $(INTLLIBS) \
 	    $(GDK_PIXBUF_LIBS) \
 	    -lz
 
-xqf_LDFLAGS = #-Wl,-rpath,\$$ORIGIN
+xqf_LDFLAGS = -Wl,-rpath,$(pkglibdir)
+
+# we need to specify all deps manually due to dummy libs
+xqf_DEPENDENCIES = \
+	$(top_builddir)/src/zip/libunzip.a \
+	$(top_builddir)/src/tga/libtga.a
 
 xqf_rcon_LDADD = @INTLLIBS@ $(GLIB_LIBS) $(XQFRCON_LIBS) @PACKAGE_LIBS@
 xqf_rcon_SOURCES = \
@@ -141,34 +146,48 @@ test_utils_LDADD = $(xqf_LDADD)
 gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
 gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
 
-pkglib_LTLIBRARIES =
+pkglib_PROGRAMS =
+
 if DUMMY_LIBGEOIP
-pkglib_LTLIBRARIES += libxqf_dummy_GeoIP.la
+pkglib_PROGRAMS += libxqf_dummy_GeoIP.so.0
+xqf_DEPENDENCIES += libxqf_dummy_GeoIP.so
 endif
 if DUMMY_LIBGDKPIXBUF
-pkglib_LTLIBRARIES += libxqf_dummy_gdk_pixbuf.la
+pkglib_PROGRAMS += libxqf_dummy_gdk_pixbuf.so.0
+xqf_DEPENDENCIES += libxqf_dummy_gdk_pixbuf.so
 endif
 
 libxqf_dummy_gdk_pixbuf.c:
-	$(top_srcdir)/src/gensyms.pl -x gdk_pixbuf_new_from_file,gdk_pixbuf_render_pixmap_and_mask,gdk_pixbuf_unref /opt/gnome/lib/libgdk_pixbuf.so -o $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c || rm $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c
+	$(top_srcdir)/src/gensyms.pl -x gdk_pixbuf_new_from_file,gdk_pixbuf_render_pixmap_and_mask,gdk_pixbuf_unref $(DUMMY_LIBGDKPIXBUF_ORIG) -o $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c || rm $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c
 	test -s $(top_srcdir)/src/libxqf_dummy_gdk_pixbuf.c
 
-libxqf_dummy_gdk_pixbuf_la_SOURCES = libxqf_dummy_gdk_pixbuf_stubs.c
-nodist_libxqf_dummy_gdk_pixbuf_la_SOURCES = libxqf_dummy_gdk_pixbuf.c
-libxqf_dummy_gdk_pixbuf_la_LDFLAGS = -nostdlib -shared -Wl,-f,libgdk_pixbuf.so.2
-libxqf_dummy_gdk_pixbuf_la_LIBADD =
+nodist_libxqf_dummy_gdk_pixbuf_so_0_SOURCES = libxqf_dummy_gdk_pixbuf.c
+libxqf_dummy_gdk_pixbuf_so_0_SOURCES = libxqf_dummy_gdk_pixbuf_stubs.c
+libxqf_dummy_gdk_pixbuf_so_0_LDFLAGS = -nostdlib -shared -Wl,-f,$(DUMMY_LIBGDKPIXBUF_SONAME) -Wl,-soname,libxqf_dummy_gdk_pixbuf.so.0
+libxqf_dummy_gdk_pixbuf_so_0_CFLAGS = -fPIC -DPIC
+
+libxqf_dummy_gdk_pixbuf.so: libxqf_dummy_gdk_pixbuf.so.0
+	rm -f $@
+	$(LN_S) $< $@
 
 libxqf_dummy_GeoIP.c:
 	$(top_srcdir)/src/gensyms.pl -x GeoIP_new,GeoIP_open $(DUMMY_LIBGEOIP_ORIG) -o $(top_srcdir)/src/libxqf_dummy_GeoIP.c || rm $(top_srcdir)/src/libxqf_dummy_GeoIP.c
 	test -s $(top_srcdir)/src/libxqf_dummy_GeoIP.c
 
-libxqf_dummy_GeoIP_la_SOURCES = libxqf_dummy_GeoIP_stubs.c
-nodist_libxqf_dummy_GeoIP_la_SOURCES = libxqf_dummy_GeoIP.c
-libxqf_dummy_GeoIP_la_LDFLAGS = -nostdlib -shared -Wl,-f,$(DUMMY_LIBGEOIP_SONAME)
-libxqf_dummy_GeoIP_la_LIBADD =
+nodist_libxqf_dummy_GeoIP_so_0_SOURCES = libxqf_dummy_GeoIP.c
+libxqf_dummy_GeoIP_so_0_SOURCES = libxqf_dummy_GeoIP_stubs.c
+libxqf_dummy_GeoIP_so_0_LDFLAGS = -nostdlib -shared -Wl,-f,$(DUMMY_LIBGEOIP_SONAME) -Wl,-soname,libxqf_dummy_GeoIP.so.0
+libxqf_dummy_GeoIP_so_0_CFLAGS = -fPIC -DPIC
 
+libxqf_dummy_GeoIP.so: libxqf_dummy_GeoIP.so.0
+	rm -f $@
+	$(LN_S) $< $@
 
-CLEANFILES = $(nodist_libxqf_dummy_gdk_pixbuf_la_SOURCES) $(nodist_libxqf_dummy_GeoIP_la_SOURCES)
+CLEANFILES = \
+	$(nodist_libxqf_dummy_gdk_pixbuf_so_0_SOURCES) \
+	$(nodist_libxqf_dummy_GeoIP_so_0_SOURCES) \
+	libxqf_dummy_GeoIP.so \
+	libxqf_dummy_gdk_pixbuf.so
 
 gamelist: gamesxml2c
 	$(top_builddir)/src/gamesxml2c $(top_srcdir)/src/games.xml > $(top_srcdir)/src/games.c
