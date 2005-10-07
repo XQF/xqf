@@ -807,7 +807,7 @@ void et_update_prefs (struct game* g)
 
 static void doom3_detect_version(struct game* g)
 {
-  FILE* f;
+  FILE* f = NULL;
   char* verinfo = NULL;
   const char* attrproto;
   char line[64];
