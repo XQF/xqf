@@ -146,6 +146,33 @@
 	<main_mod>baseq3</main_mod>
 	<pd>q3_private</pd>
     </game>
+
+    <game>
+	<base>Q3_SERVER</base>
+	<type>Q4_SERVER</type>
+	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL</flags>
+	<name>Quake 4</name>
+	<default_port>28004</default_port>
+	<default_master_port>27650</default_master_port>
+	<id>Q4S</id>
+	<qstat_str>Q4S</qstat_str>
+	<qstat_option>-q4s</qstat_option>
+	<qstat_master_option>-q4m</qstat_master_option>
+	<icon>q4.xpm</icon>
+	<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<init_maps>doom3_init_maps</init_maps>
+	<has_map>doom3_has_map</has_map>
+	<get_mapshot>doom3_get_mapshot</get_mapshot>
+	<arch_identifier>si_version</arch_identifier>
+	<command>quake4</command>
+	<cmd_or_dir_changed>doom3_cmd_or_dir_changed</cmd_or_dir_changed>
+	<update_prefs>quake4_update_prefs</update_prefs>
+	<default_home>~/.quake4</default_home>
+	<main_mod>baseQUAKE4-1</main_mod>
+	<pd>quake4_private</pd>
+    </game>
+
     <game>
 	<base>Q3_SERVER</base>
 	<type>WO_SERVER</type>
@@ -180,6 +207,7 @@
 	<main_mod>etmain</main_mod>
 	<pd>wolfet_private</pd>
     </game>
+
     <game>
 	<base>Q3_SERVER</base>
 	<type>DOOM3_SERVER</type>

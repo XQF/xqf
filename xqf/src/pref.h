@@ -132,6 +132,7 @@ void q3_update_prefs (struct game* g);
 void wo_update_prefs (struct game* g);
 void et_update_prefs (struct game* g);
 void doom3_update_prefs (struct game* g);
+void quake4_update_prefs (struct game* g);
 void ef_update_prefs (struct game* g);
 void cod_update_prefs (struct game* g);
 void jk3_update_prefs (struct game* g);

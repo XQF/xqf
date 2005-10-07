@@ -127,13 +127,13 @@ static void client_sigchild_handler (int signum) {
   GSList *list;
   struct running_client *cl;
 
-  debug(3,"client_sigchild_handler(%d)",signum);
+//  debug(3,"client_sigchild_handler(%d)",signum);
 
   while ((pid = waitpid (WAIT_ANY, &status, WNOHANG)) > 0) {
-    debug(4,"client_sigchild_handler() -- pid %d, status %d",pid,WEXITSTATUS(status));
+//    debug(4,"client_sigchild_handler() -- pid %d, status %d",pid,WEXITSTATUS(status));
     if(WIFSIGNALED(status)&& WTERMSIG(status)==SIGSEGV)
     {
-      debug(0,"*** SEGFAULT pid %d ***",pid);
+//      debug(0,"*** SEGFAULT pid %d ***",pid);
     }
     for (list = clients; list; list = list->next) {
       cl = (struct running_client *) list->data;

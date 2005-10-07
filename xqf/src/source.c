@@ -1059,6 +1059,8 @@ static char *builtin_masters_update_info[] = {
   "DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld", // doesn't work (26.09.2004)
   "ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 Gameaholic.com",
 
+  "ADD Q4S master://q4master.idsoftware.com id",
+
 //  "ADD HWS master://santa.quakeforge.net:26900 QuakeForge",
 
   "ADD SNS http://www.gameaholic.com/servers/qspy-sin Gameaholic.Com",
@@ -1149,6 +1151,7 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S lan://255.255.255.255 LAN",
   "ADD HLS lan://255.255.255.255 LAN",
   "ADD Q3S lan://255.255.255.255 LAN",
+  "ADD Q4S lan://255.255.255.255 LAN",
   "ADD WOS lan://255.255.255.255 LAN",
   "ADD WOETS lan://255.255.255.255 LAN",
   "ADD EFS lan://255.255.255.255 LAN",

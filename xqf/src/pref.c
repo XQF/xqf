@@ -274,6 +274,9 @@ static GtkWidget *woet_setfs_gamebutton;
 /* Doom 3 */
 static GtkWidget *doom3_proto_entry;
 
+/* Quake 4 */
+static GtkWidget *quake4_proto_entry;
+
 /* Voyager Elite Force */
 static GtkWidget *ef_proto_entry;
 static GtkWidget *ef_setfs_gamebutton;
@@ -368,6 +371,13 @@ char* doom3_masterprotocols[] = {
 	NULL
 };
 
+char* quake4_masterprotocols[] = {
+	"auto",
+	"0 - any",
+	"2.63 - German retail",
+	"2.62 - retail",
+	NULL
+};
 
 static void game_file_dialog(enum server_type type);
 static void game_dir_dialog(enum server_type type);
@@ -798,7 +808,7 @@ void et_update_prefs (struct game* g)
 static void doom3_detect_version(struct game* g)
 {
   FILE* f;
-  char* verinfo;
+  char* verinfo = NULL;
   const char* attrproto;
   char line[64];
 
@@ -806,8 +816,19 @@ static void doom3_detect_version(struct game* g)
 
   attrproto = game_get_attribute(g->type,"masterprotocol");
 
-  verinfo = file_in_dir (g->real_dir, "version.info");
-  f = fopen(verinfo, "r");
+  if(g->real_home && *g->real_home)
+  {
+    verinfo = file_in_dir (g->real_home, "version.info");
+    f = fopen(verinfo, "r");
+  }
+
+  if(!f)
+  {
+    g_free(verinfo);
+    verinfo = file_in_dir (g->real_dir, "version.info");
+    f = fopen(verinfo, "r");
+  }
+
   if(!f)
     goto out;
 
@@ -817,7 +838,7 @@ static void doom3_detect_version(struct game* g)
   if(!fgets(line, sizeof(line), f))
     goto out;
 
-  debug(3, "detected doom3 protocol version %s", line);
+  debug(3, "detected %s protocol version %s", g->name, line);
 
   game_set_attribute(g->type, "_masterprotocol", g_strdup(line));
 
@@ -835,7 +856,24 @@ void doom3_update_prefs (struct game* g)
   str1 = strchr(str,' ');
   if (str1) *str1='\0';
 
-  game_set_attribute(DOOM3_SERVER,"masterprotocol",strdup_strip(str));
+  game_set_attribute(g->type,"masterprotocol",strdup_strip(str));
+  config_set_string ("protocol", (str)? str : "");
+  g_free(str);
+  str=NULL;
+
+  doom3_detect_version(g);
+}
+
+void quake4_update_prefs (struct game* g)
+{
+  char* str, *str1;
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (quake4_proto_entry)->entry)));
+  // locate first space and mark it as str's end
+  str1 = strchr(str,' ');
+  if (str1) *str1='\0';
+
+  game_set_attribute(g->type,"masterprotocol",strdup_strip(str));
   config_set_string ("protocol", (str)? str : "");
   g_free(str);
   str=NULL;
@@ -3414,6 +3452,42 @@ static GtkWidget *doom3_options_page (void) {
   return page_vbox;
 }
 
+// additional options for quake4
+static GtkWidget *quake4_options_page (void) {
+  GtkWidget *page_vbox;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  page_vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+
+	  label = gtk_label_new (_("Masterserver Protocol Version"));
+	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	  gtk_widget_show (label);
+
+	  quake4_proto_entry = gtk_combo_new ();
+	  gtk_combo_set_use_arrows_always (GTK_COMBO (quake4_proto_entry), TRUE);
+	  gtk_combo_set_popdown_strings(GTK_COMBO (quake4_proto_entry),
+			  createGListfromchar(quake4_masterprotocols));
+	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (quake4_proto_entry)->list),
+			  GTK_SELECTION_BROWSE);
+	  
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (quake4_proto_entry)->entry),
+		game_get_attribute(DOOM3_SERVER,"masterprotocol"));
+
+	  gtk_box_pack_start (GTK_BOX (hbox), quake4_proto_entry, FALSE, FALSE, 0);
+	  gtk_widget_show (quake4_proto_entry);
+
+	gtk_widget_show (hbox);
+
+  gtk_widget_show (page_vbox);
+
+  return page_vbox;
+}
+
 // additional options for call of duty
 static GtkWidget *cod_options_page (void) {
   GtkWidget *page_vbox;
@@ -3591,6 +3665,11 @@ void add_woet_options_to_notebook(GtkWidget *notebook)
 void add_doom3_options_to_notebook(GtkWidget *notebook)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), doom3_options_page(), gtk_label_new (_("Options")));
+}
+
+void add_quake4_options_to_notebook(GtkWidget *notebook)
+{
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), quake4_options_page(), gtk_label_new (_("Options")));
 }
 
 void add_cod_options_to_notebook(GtkWidget *notebook)
@@ -4890,6 +4969,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
   new_genprefs[WOET_SERVER].add_options_to_notebook = add_woet_options_to_notebook;
   new_genprefs[DOOM3_SERVER].add_options_to_notebook = add_doom3_options_to_notebook;
+  new_genprefs[Q4_SERVER].add_options_to_notebook = add_quake4_options_to_notebook;
   new_genprefs[COD_SERVER].add_options_to_notebook = add_cod_options_to_notebook;
   new_genprefs[JK3_SERVER].add_options_to_notebook = add_jk3_options_to_notebook;
   new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_sof2_options_to_notebook;
@@ -5380,6 +5460,21 @@ int prefs_load (void) {
   game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
 
   config_pop_prefix ();
+
+  /* Quake 4 */
+  config_push_prefix ("/" CONFIG_FILE "/Game: Q4S");
+  
+  tmp = config_get_string ("protocol=auto");
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+
+  game_set_attribute(Q4_SERVER,"masterprotocol",tmp);
+
+  config_pop_prefix ();
+
 
   /* Doom 3 */
   config_push_prefix ("/" CONFIG_FILE "/Game: DOOM3");
