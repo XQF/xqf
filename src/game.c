@@ -156,6 +156,7 @@ static struct quake_private mohaa_private;
 static struct quake_private cod_private;
 static struct quake_private jk3_private;
 static struct quake_private doom3_private;
+static struct quake_private quake4_private;
 
 #include "games.c"
 
