@@ -67,6 +67,7 @@ void findq3maps(GHashTable* maphash, const char* startdir);
  * find all maps in .pk4 files one level under startdir
  */
 void finddoom3maps(GHashTable* maphash, const char* startdir);
+void findquake4maps(GHashTable* maphash, const char* startdir);
 
 void findquakemaps(GHashTable* maphash, const char* startdir);
 
