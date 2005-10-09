@@ -1585,6 +1585,9 @@ static void doom3_analyze_serverinfo (struct server *s) {
 	s->flags |= SERVER_INCOMPATIBLE;
       }
     }
+    else if (!strcmp(*info_ptr, "sv_punkbuster") && info_ptr[1] && info_ptr[1][0] == '1') {
+      s->flags |= SERVER_PUNKBUSTER;
+    }
   }
 
   if(fs_game)
