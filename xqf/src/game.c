@@ -127,6 +127,10 @@ static void doom3_init_maps(enum server_type);
 static size_t doom3_get_mapshot(struct server* s, guchar** buf);
 static gboolean doom3_has_map(struct server* s);
 
+static void quake4_init_maps(enum server_type);
+static size_t quake4_get_mapshot(struct server* s, guchar** buf);
+static gboolean quake4_has_map(struct server* s);
+
 static void unreal_init_maps(enum server_type);
 static gboolean unreal_has_map(struct server* s);
 
@@ -3369,6 +3373,23 @@ static void doom3_init_maps(enum server_type type)
   }
 }
 
+static void quake4_init_maps(enum server_type type)
+{
+  struct quake_private* pd = NULL;
+
+  pd = (struct quake_private*)games[type].pd;
+  g_return_if_fail(pd!=NULL);
+  
+  q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+  pd->maphash = q3_init_maphash();
+  findquake4maps(pd->maphash,games[type].real_dir);
+
+  if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
+  {
+    findquake4maps(pd->maphash, games[type].real_home);
+  }
+}
+
 static void unreal_init_maps(enum server_type type)
 {
   struct unreal_private* pd = NULL;
@@ -3424,6 +3445,10 @@ static gboolean doom3_has_map(struct server* s)
   return doom3_lookup_map(hash,s->map);
 }
 
+static gboolean quake4_has_map(struct server* s)
+{
+  return doom3_has_map(s);
+}
 
 static size_t q3_get_mapshot(struct server* s, guchar** buf)
 {
@@ -3461,6 +3486,11 @@ static size_t doom3_get_mapshot(struct server* s, guchar** buf)
     return FALSE;
 
   return doom3_lookup_mapshot(hash,s->map, buf);
+}
+
+static size_t quake4_get_mapshot(struct server* s, guchar** buf)
+{
+  return doom3_get_mapshot(s, buf);
 }
 
 static gboolean unreal_has_map(struct server* s)

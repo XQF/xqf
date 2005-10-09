@@ -190,6 +190,32 @@ static char* is_doom3_map(const char* name)
     return NULL;
 }
 
+// must free
+static inline gboolean is_quake4_mapshot(const char* name)
+{
+    if(g_strncasecmp(name,"gfx/guis/loadscreens/",21))
+	return FALSE;
+
+    if (!g_strcasecmp(name+strlen(name)-4,".jpg")
+	|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+    {
+	return TRUE;
+    }
+
+    return FALSE;
+}
+
+static char* is_quake4_map(const char* name)
+{
+    if (!g_strncasecmp(name,"maps/",5)
+	    && !g_strcasecmp(name+strlen(name)-4,".map"))
+    {
+	const char* basename = g_basename(name);
+	return g_strndup(basename,strlen(basename)-4);
+    }
+    return NULL;
+}
+
 /** open zip file and insert all contained .bsp into maphash */
 static void findq3maps_zip(const char* path, GHashTable* maphash,
 	char* (*is_map_func)(const char* name),
@@ -318,14 +344,16 @@ void q3_contains_file(const char* name, int level, GHashTable* maphash)
     }
 }
 
-void doom3_contains_file(const char* name, int level, GHashTable* maphash)
+static void _doom3_contains_file(const char* name, int level, GHashTable* maphash,
+	char* (*is_map_func)(const char* name),
+	gboolean (*is_mapshot_func)(const char* name))
 {
 //    printf("%s at level %d\n",name,level);
     if( level == 1
 	&& !g_strcasecmp(name+strlen(name)-4,".pk4")
 	&& strlen(name) > 4)
     {
-	findq3maps_zip(name, maphash, is_doom3_map, is_doom3_mapshot);
+	findq3maps_zip(name, maphash, is_map_func, is_mapshot_func);
     }
     else if( level == 4
 	&& strlen(name) > 4
@@ -344,6 +372,17 @@ void doom3_contains_file(const char* name, int level, GHashTable* maphash)
 	}
     }
 }
+
+void doom3_contains_file(const char* name, int level, GHashTable* maphash)
+{
+    _doom3_contains_file(name, level, maphash, is_doom3_map, is_doom3_mapshot);
+}
+
+void quake4_contains_file(const char* name, int level, GHashTable* maphash)
+{
+    _doom3_contains_file(name, level, maphash, is_quake4_map, is_quake4_mapshot);
+}
+
 
 /** 
  * traverse directory tree starting at startdir. Calls found_file for each file
@@ -622,6 +661,13 @@ void finddoom3maps(GHashTable* maphash, const char* startdir)
     traverse_dir(startdir, (FoundFileFunction)doom3_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
     process_levelshots(maphash);
 }
+
+void findquake4maps(GHashTable* maphash, const char* startdir)
+{
+    traverse_dir(startdir, (FoundFileFunction)quake4_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+    process_levelshots(maphash);
+}
+
 
 
 #if 0
