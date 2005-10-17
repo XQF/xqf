@@ -3476,7 +3476,7 @@ static GtkWidget *quake4_options_page (void) {
 			  GTK_SELECTION_BROWSE);
 	  
 	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (quake4_proto_entry)->entry),
-		game_get_attribute(DOOM3_SERVER,"masterprotocol"));
+		game_get_attribute(Q4_SERVER,"masterprotocol"));
 
 	  gtk_box_pack_start (GTK_BOX (hbox), quake4_proto_entry, FALSE, FALSE, 0);
 	  gtk_widget_show (quake4_proto_entry);

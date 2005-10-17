@@ -44,11 +44,11 @@
 #define PERCENTS(A,B)	((B)? (A)/((B)/100.0) : 0)
 
 #define	OS_NUM		5
-#define CPU_NUM		5
+#define CPU_NUM		6
 
 
 enum OS { OS_WINDOWS = 0, OS_LINUX, OS_SOLARIS, OS_MACOS, OS_UNKNOWN };
-enum CPU { CPU_X86 = 0, CPU_SPARC, CPU_AXP, CPU_PPC, CPU_UNKNOWN };
+enum CPU { CPU_X86 = 0, CPU_X86_64, CPU_SPARC, CPU_AXP, CPU_PPC, CPU_UNKNOWN };
 
 struct server_stats {
   int	players;
@@ -87,7 +87,7 @@ static const char *os_names[OS_NUM] = {
 };
 
 static const char *cpu_names[CPU_NUM] = {
-  "Intel x86", "Sparc", "AXP", "PPC", N_("unknown")
+  "i386", "x86_64", "sparc", "alpha", "ppc", N_("unknown")
 };
 
 const char *srv_label = N_("Servers");
@@ -167,7 +167,9 @@ enum CPU identify_cpu (struct server *s, const char *versionstr) {
   	return CPU_UNKNOWN;
   g_strdown(str);
   
-  if (strstr (str, "x86") || strstr (str, "i386"))
+  if (strstr (str, "x86_64") || strstr (str, "amd64") || strstr(str, "x64"))
+    cpu = CPU_X86_64;
+  else if (strstr (str, "x86") || strstr (str, "i386"))
     cpu = CPU_X86;
   else if (strstr (str, "sparc"))
     cpu = CPU_SPARC;
@@ -474,7 +476,7 @@ static void arch_notebook_page (GtkWidget *notebook,
   int i, j;
   int cpu_total;
 
-  table = gtk_table_new (OS_NUM + 2, CPU_NUM + 3, FALSE);
+  table = gtk_table_new (CPU_NUM + 2, OS_NUM + 3, FALSE);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, NULL);
 

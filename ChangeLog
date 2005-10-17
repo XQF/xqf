@@ -1,3 +1,7 @@
+Oct 17, 2005: <l-n@users.sourceforge.net>
+- add x86_64 to statistics page
+- fix Q4 master server protocol prefs
+
 Oct 09, 2005: <l-n@users.sourceforge.net>
 - update NEWS
 - show anti-cheat icon for Doom3 and Quake4 (thanks Timothee Besset for
