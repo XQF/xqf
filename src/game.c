@@ -453,11 +453,19 @@ static struct player *descent3_parse_player (char *token[], int n, struct server
 
 static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
+  char* clan = NULL;
+  unsigned clanlen = 0;
 
   if (n < 3)
     return NULL;
 
-  player = g_malloc0 (sizeof (struct player) + strlen (token[0]) + 1);
+  if(n > 3 && strcmp(token[3], "0"))
+  {
+    clan = token[3];
+    clanlen = strlen(clan)+1;
+  }
+
+  player = g_malloc0 (sizeof (struct player) + strlen (token[0]) + 1 + clanlen);
   player->time  = -1;
   player->frags = strtosh (token[1]);
   player->ping  = strtosh (token[2]);
@@ -466,6 +474,13 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 
   player->name = (char *) player + sizeof (struct player);
   q3_unescape (player->name, token[0]);
+
+  // show clan name in model column
+  if(clan)
+  {
+    player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
+    strcpy(player->model, clan);
+  }
 
   return player;
 }
@@ -3257,6 +3272,18 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 p->frags,
 		 0, // deaths
 		 p->ping);
+	break;
+
+      case Q4_SERVER:
+	fprintf (f, 
+		 "%s" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%s\n",
+		 (p->name)? p->name : "",
+		 p->frags,
+		 p->ping,
+		 p->model?p->model:"0");
 	break;
 
       default:
