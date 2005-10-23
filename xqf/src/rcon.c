@@ -209,7 +209,7 @@ static int rcon_send(const char* cmd)
     buf = g_strdup_printf("\377\377\377\377rcon %s %s %s",rcon_challenge, rcon_password, cmd);
     bufsize = strlen(buf)+1;
   }
-  else if (rcon_servertype == DOOM3_SERVER)
+  else if (rcon_servertype == DOOM3_SERVER || rcon_servertype == Q4_SERVER)
   {
     const char prefix[] = "\377\377rcon";
     bufsize = sizeof(prefix) +strlen(rcon_password) +1 +strlen(cmd) +1;
@@ -338,6 +338,7 @@ static char* rcon_receive()
       break;
 
     case DOOM3_SERVER:
+    case Q4_SERVER:
       // "\377\377print\0????\0"
       if(size > 2+6+4+1)
       {
@@ -693,7 +694,7 @@ int main(int argc, char* argv[])
   if( argc-argpos<2 || !strcmp(argv[argpos],"--help"))
   {
       printf(_("Usage: %s [server type] <ip> <port>\n"),argv[0]);
-      printf(_("  server type is either --qws, --hws or --hls.\n"));
+      printf(_("  server type is either --qws, --hws, --hls or --dm3s.\n"));
       printf(_("  If no server type is specified, Q3 style rcon is assumed.\n"));
       return 1;
   }
