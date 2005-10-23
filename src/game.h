@@ -112,6 +112,9 @@ struct game {
   /** NULL terminated list of commands to search in $PATH for suggestion */
   char** command;
 
+  /** NULL terminated list attributes and keys. used for filling games_data  */
+  char** attributes;
+
   char *game_cfg;
   GData *games_data;
   GSList *custom_args;
@@ -127,8 +130,11 @@ extern	GtkWidget *game_pixmap_with_label (enum server_type type);
 
 // retreive game specific value that belongs to key, do not free return value!
 const char* game_get_attribute(enum server_type type, const char* key);
-// set game specific key/value pair, value is _not_ copied
+// set game specific key/value pair, value is _not_ copied but will be freed internally
 const char* game_set_attribute(enum server_type type, const char* key, char* value);
+
+// set game specific key/value pair, value is _not_ copied and will not be freed internally
+const char* game_set_attribute_const(enum server_type type, const char* attr, const char* value);
 
 void init_games(void);
 void games_done(void);

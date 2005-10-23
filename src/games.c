@@ -9,35 +9,37 @@ static char* stringlist006[] = { "baseq3", "demoq3", NULL };
 static char* stringlist007[] = { "q3", "quake3", NULL };
 static char* stringlist008[] = { "q4base", NULL };
 static char* stringlist009[] = { "quake4", NULL };
-static char* stringlist010[] = { "wolfmp", "main", "demomain", NULL };
-static char* stringlist011[] = { "wolf", NULL };
-static char* stringlist012[] = { "etmain", NULL };
-static char* stringlist013[] = { "et", NULL };
-static char* stringlist014[] = { "base", NULL };
-static char* stringlist015[] = { "doom3", NULL };
-static char* stringlist016[] = { "BaseEF", NULL };
-static char* stringlist017[] = { "sof", NULL };
-static char* stringlist018[] = { "main", NULL };
-static char* stringlist019[] = { "tribes2", NULL };
-static char* stringlist020[] = { "ut", NULL };
-static char* stringlist021[] = { "ut2003", "ut2003_demo", NULL };
-static char* stringlist022[] = { "ut2004", "ut2004demo", NULL };
-static char* stringlist023[] = { "rune", NULL };
-static char* stringlist024[] = { "postal2mp", "postal2mpdemo", NULL };
-static char* stringlist025[] = { "armyops", NULL };
-static char* stringlist026[] = { "descent3", NULL };
-static char* stringlist027[] = { "ssamtfe", NULL };
-static char* stringlist028[] = { "ssamtse", NULL };
-static char* stringlist029[] = { "main", NULL };
-static char* stringlist030[] = { "mohaa", NULL };
+static char* stringlist010[] = { "+rconpassword", "+net_clientRemoteConsolePassword", NULL };
+static char* stringlist011[] = { "wolfmp", "main", "demomain", NULL };
+static char* stringlist012[] = { "wolf", NULL };
+static char* stringlist013[] = { "etmain", NULL };
+static char* stringlist014[] = { "et", NULL };
+static char* stringlist015[] = { "base", NULL };
+static char* stringlist016[] = { "doom3", NULL };
+static char* stringlist017[] = { "+rconpassword", "+net_clientRemoteConsolePassword", NULL };
+static char* stringlist018[] = { "BaseEF", NULL };
+static char* stringlist019[] = { "sof", NULL };
+static char* stringlist020[] = { "main", NULL };
+static char* stringlist021[] = { "tribes2", NULL };
+static char* stringlist022[] = { "ut", NULL };
+static char* stringlist023[] = { "ut2003", "ut2003_demo", NULL };
+static char* stringlist024[] = { "ut2004", "ut2004demo", NULL };
+static char* stringlist025[] = { "rune", NULL };
+static char* stringlist026[] = { "postal2mp", "postal2mpdemo", NULL };
+static char* stringlist027[] = { "armyops", NULL };
+static char* stringlist028[] = { "descent3", NULL };
+static char* stringlist029[] = { "ssamtfe", NULL };
+static char* stringlist030[] = { "ssamtse", NULL };
 static char* stringlist031[] = { "main", NULL };
-static char* stringlist032[] = { "codmp", NULL };
-static char* stringlist033[] = { "savage", NULL };
-static char* stringlist034[] = { "base", NULL };
-static char* stringlist035[] = { "jamp", NULL };
-static char* stringlist036[] = { "netpanzer", NULL };
-static char* stringlist037[] = { "data", NULL };
-static char* stringlist038[] = { "nexuiz", NULL };
+static char* stringlist032[] = { "mohaa", NULL };
+static char* stringlist033[] = { "main", NULL };
+static char* stringlist034[] = { "codmp", NULL };
+static char* stringlist035[] = { "savage", NULL };
+static char* stringlist036[] = { "base", NULL };
+static char* stringlist037[] = { "jamp", NULL };
+static char* stringlist038[] = { "netpanzer", NULL };
+static char* stringlist039[] = { "data", NULL };
+static char* stringlist040[] = { "nexuiz", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -181,6 +183,7 @@ struct game games[] = {
     pd                  : &quake4_private,
     main_mod            : stringlist008,
     command             : stringlist009,
+    attributes          : stringlist010,
   },
   {
     type                : WO_SERVER,
@@ -209,8 +212,8 @@ struct game games[] = {
     update_prefs        : wo_update_prefs,
     default_home        : "~/.wolf",
     pd                  : &wolf_private,
-    main_mod            : stringlist010,
-    command             : stringlist011,
+    main_mod            : stringlist011,
+    command             : stringlist012,
   },
   {
     type                : WOET_SERVER,
@@ -239,8 +242,8 @@ struct game games[] = {
     update_prefs        : et_update_prefs,
     default_home        : "~/.etwolf",
     pd                  : &wolfet_private,
-    main_mod            : stringlist012,
-    command             : stringlist013,
+    main_mod            : stringlist013,
+    command             : stringlist014,
   },
   {
     type                : DOOM3_SERVER,
@@ -270,8 +273,9 @@ struct game games[] = {
     update_prefs        : doom3_update_prefs,
     default_home        : "~/.doom3",
     pd                  : &doom3_private,
-    main_mod            : stringlist014,
-    command             : stringlist015,
+    main_mod            : stringlist015,
+    command             : stringlist016,
+    attributes          : stringlist017,
   },
   {
     type                : EF_SERVER,
@@ -295,7 +299,7 @@ struct game games[] = {
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
     update_prefs        : ef_update_prefs,
-    main_mod            : stringlist016,
+    main_mod            : stringlist018,
   },
   {
     type                : H2_SERVER,
@@ -421,7 +425,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : q2_exec_generic,
     save_info           : quake_save_info,
-    command             : stringlist017,
+    command             : stringlist019,
   },
   {
     type                : SOF2S_SERVER,
@@ -444,7 +448,7 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    main_mod            : stringlist018,
+    main_mod            : stringlist020,
   },
   {
     type                : T2_SERVER,
@@ -466,7 +470,7 @@ struct game games[] = {
     arch_identifier     : "linux",
     identify_os         : t2_identify_os,
     update_prefs        : tribes2_update_prefs,
-    command             : stringlist019,
+    command             : stringlist021,
   },
   {
     type                : HR_SERVER,
@@ -502,7 +506,7 @@ struct game games[] = {
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
     pd                  : &ut_private,
-    command             : stringlist020,
+    command             : stringlist022,
   },
   {
     type                : UT2_SERVER,
@@ -523,7 +527,7 @@ struct game games[] = {
     has_map             : unreal_has_map,
     default_home        : "~/.ut2003",
     pd                  : &ut2_private,
-    command             : stringlist021,
+    command             : stringlist023,
   },
   {
     type                : UT2004_SERVER,
@@ -548,7 +552,7 @@ struct game games[] = {
     update_prefs        : ut2004_update_prefs,
     default_home        : "~/.ut2004",
     pd                  : &ut2004_private,
-    command             : stringlist022,
+    command             : stringlist024,
   },
   {
     type                : RUNE_SERVER,
@@ -568,7 +572,7 @@ struct game games[] = {
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
     pd                  : &rune_private,
-    command             : stringlist023,
+    command             : stringlist025,
   },
   {
     type                : POSTAL2_SERVER,
@@ -588,7 +592,7 @@ struct game games[] = {
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
     pd                  : &postal2_private,
-    command             : stringlist024,
+    command             : stringlist026,
   },
   {
     type                : AAO_SERVER,
@@ -608,7 +612,7 @@ struct game games[] = {
     init_maps           : unreal_init_maps,
     has_map             : unreal_has_map,
     pd                  : &aao_private,
-    command             : stringlist025,
+    command             : stringlist027,
   },
   {
     type                : DESCENT3_SERVER,
@@ -625,7 +629,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : descent3_exec,
     save_info           : quake_save_info,
-    command             : stringlist026,
+    command             : stringlist028,
   },
   {
     type                : SSAM_SERVER,
@@ -642,7 +646,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : ssam_exec,
     save_info           : quake_save_info,
-    command             : stringlist027,
+    command             : stringlist029,
   },
   {
     type                : SSAMSE_SERVER,
@@ -659,7 +663,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : ssam_exec,
     save_info           : quake_save_info,
-    command             : stringlist028,
+    command             : stringlist030,
   },
   {
     type                : MOHAA_SERVER,
@@ -687,8 +691,8 @@ struct game games[] = {
     identify_os         : identify_os,
     default_home        : "~/.mohaa",
     pd                  : &mohaa_private,
-    main_mod            : stringlist029,
-    command             : stringlist030,
+    main_mod            : stringlist031,
+    command             : stringlist032,
   },
   {
     type                : COD_SERVER,
@@ -715,8 +719,8 @@ struct game games[] = {
     identify_os         : identify_os,
     update_prefs        : cod_update_prefs,
     pd                  : &cod_private,
-    main_mod            : stringlist031,
-    command             : stringlist032,
+    main_mod            : stringlist033,
+    command             : stringlist034,
   },
   {
     type                : SAS_SERVER,
@@ -733,7 +737,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : savage_exec,
     save_info           : quake_save_info,
-    command             : stringlist033,
+    command             : stringlist035,
   },
   {
     type                : BF1942_SERVER,
@@ -776,8 +780,8 @@ struct game games[] = {
     identify_os         : identify_os,
     update_prefs        : jk3_update_prefs,
     pd                  : &jk3_private,
-    main_mod            : stringlist034,
-    command             : stringlist035,
+    main_mod            : stringlist036,
+    command             : stringlist037,
   },
   {
     type                : NETP_SERVER,
@@ -796,7 +800,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : netpanzer_exec,
     save_info           : quake_save_info,
-    command             : stringlist036,
+    command             : stringlist038,
   },
   {
     type                : NEXUIZ_SERVER,
@@ -820,8 +824,8 @@ struct game games[] = {
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
     default_home        : "~/.nexuiz",
-    main_mod            : stringlist037,
-    command             : stringlist038,
+    main_mod            : stringlist039,
+    command             : stringlist040,
   },
   {
     type                : GPS_SERVER,

@@ -170,6 +170,8 @@
 	<update_prefs>quake4_update_prefs</update_prefs>
 	<default_home>~/.quake4</default_home>
 	<main_mod>q4base</main_mod>
+	<attributes>+net_clientRemoteConsolePassword</attributes>
+	<attributes>+rconpassword</attributes>
 	<pd>quake4_private</pd>
     </game>
 
@@ -231,6 +233,8 @@
 	<update_prefs>doom3_update_prefs</update_prefs>
 	<default_home>~/.doom3</default_home>
 	<main_mod>base</main_mod>
+	<attributes>+net_clientRemoteConsolePassword</attributes>
+	<attributes>+rconpassword</attributes>
 	<pd>doom3_private</pd>
     </game>
 

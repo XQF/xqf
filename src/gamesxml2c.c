@@ -62,7 +62,8 @@ typedef enum
     TAG_data = TAG_start_multi,
     TAG_main_mod,
     TAG_command,
-    TAG_end_multi = TAG_command,
+    TAG_attributes,
+    TAG_end_multi = TAG_attributes,
 
     TAG_base,
 
@@ -133,6 +134,7 @@ static void tags_init()
     add_tag(TAG_data,               Tag_no_inherit, Tag_type_literal, "data");
     add_tag(TAG_main_mod,           Tag_no_inherit, Tag_type_string,  "main_mod");
     add_tag(TAG_command,            Tag_no_inherit, Tag_type_string,  "command");
+    add_tag(TAG_attributes,         Tag_no_inherit, Tag_type_string,  "attributes");
     add_tag(TAG_base,               Tag_no_inherit, Tag_type_literal, "base");
     add_tag(TAG_invalid,            Tag_no_inherit, Tag_type_literal, NULL);
 }
