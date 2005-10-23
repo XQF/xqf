@@ -188,13 +188,21 @@ static struct gsname2type_s gsname2type[] =
 
 void init_games()
 {
-  unsigned i;
+  unsigned i, j;
 
   debug(3,"initializing games");
 
   for (i = 0; i < GAMES_TOTAL; i++)
   {
     g_datalist_init(&games[i].games_data);
+  }
+
+  for (i = 0; i < GAMES_TOTAL; i++)
+  {
+    for (j = 0; games[i].attributes && games[i].attributes[j]; j += 2)
+    {
+      game_set_attribute_const(i,games[i].attributes[j], games[i].attributes[j+1]);
+    }
   }
 
   game_set_attribute(SFS_SERVER,"game_notes",strdup(_
@@ -235,6 +243,14 @@ const char* game_get_attribute(enum server_type type, const char* attr)
 const char* game_set_attribute(enum server_type type, const char* attr, char* value)
 {
   g_datalist_set_data_full(&games[type].games_data,attr,value,g_free);
+  return value;
+}
+
+// set game specific key/value pair, value is _not_ copied and must not be
+// freed manually
+const char* game_set_attribute_const(enum server_type type, const char* attr, const char* value)
+{
+  g_datalist_set_data_full(&games[type].games_data,attr,(void*)value,NULL);
   return value;
 }
 
@@ -2339,7 +2355,11 @@ static int q3_exec (const struct condef *con, int forkit) {
 
   if (con->rcon_password)
   {
-    argv[argi++] = "+rconpassword";
+    const char* pwvarname = NULL;
+    if((pwvarname = game_get_attribute(con->s->type, "+rconpassword")))
+      argv[argi++] = (char*)pwvarname;
+    else
+      argv[argi++] = "+rconpassword";
     argv[argi++] = con->rcon_password;
   }
 
