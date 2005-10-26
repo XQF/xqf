@@ -1,3 +1,7 @@
+Oct 26, 2005: <l-n@users.sourceforge.net>
+- make "Show only configured games" button reappear
+- require qstat 2.10
+
 Oct 23, 2005: <l-n@users.sourceforge.net>
 - fix Q4 rcon
 - change Q4 main mod to q4base

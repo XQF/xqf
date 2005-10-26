@@ -4123,6 +4123,8 @@ static GtkWidget *appearance_options_page (void) {
                                                              FALSE, FALSE, 0);
   gtk_widget_show (show_only_configured_games_check_button);
 
+  gtk_widget_show (hbox);
+
   /* gtkrc */
 
   hbox = gtk_hbox_new (FALSE, 4);
