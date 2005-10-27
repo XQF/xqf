@@ -495,7 +495,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   if(clan)
   {
     player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
-    strcpy(player->model, clan);
+    q3_unescape(player->model, clan);
   }
 
   return player;

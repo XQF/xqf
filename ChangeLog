@@ -1,3 +1,6 @@
+Oct 27, 2005: <l-n@users.sourceforge.net>
+- unescape Q4 clan tags (thanks Gonzalo Nemmi for reporting)
+
 Oct 26, 2005: <l-n@users.sourceforge.net>
 - make "Show only configured games" button reappear
 - require qstat 2.10
