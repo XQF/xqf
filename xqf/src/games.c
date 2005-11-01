@@ -127,7 +127,7 @@ struct game games[] = {
   },
   {
     type                : Q3_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Quake3: Arena",
     default_port        : 27960,
     default_master_port : 27950,
@@ -157,7 +157,7 @@ struct game games[] = {
   },
   {
     type                : Q4_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Quake 4",
     default_port        : 28004,
     default_master_port : 27650,
@@ -189,7 +189,7 @@ struct game games[] = {
   },
   {
     type                : WO_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Wolfenstein",
     default_port        : 27960,
     default_master_port : 27950,
@@ -219,7 +219,7 @@ struct game games[] = {
   },
   {
     type                : WOET_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Enemy Territory",
     default_port        : 27960,
     default_master_port : 27950,
@@ -249,7 +249,7 @@ struct game games[] = {
   },
   {
     type                : DOOM3_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Doom 3",
     default_port        : 27666,
     default_master_port : 27650,
@@ -281,7 +281,7 @@ struct game games[] = {
   },
   {
     type                : EF_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Voyager Elite Force",
     default_port        : 27960,
     default_master_port : 27950,
@@ -431,7 +431,7 @@ struct game games[] = {
   },
   {
     type                : SOF2S_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Soldier of Fortune 2",
     default_port        : 20100,
     default_master_port : 20110,
@@ -669,7 +669,7 @@ struct game games[] = {
   },
   {
     type                : MOHAA_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Medal of Honor: Allied Assault",
     default_port        : 12204,
     default_master_port : 27950,
@@ -698,7 +698,7 @@ struct game games[] = {
   },
   {
     type                : COD_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Call of Duty",
     default_port        : 28960,
     default_master_port : 20510,
@@ -759,7 +759,7 @@ struct game games[] = {
   },
   {
     type                : JK3_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Jedi Academy",
     default_port        : 29070,
     default_master_port : 29060,
@@ -806,7 +806,7 @@ struct game games[] = {
   },
   {
     type                : NEXUIZ_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Nexuiz",
     default_port        : 27960,
     default_master_port : 27950,
@@ -831,7 +831,7 @@ struct game games[] = {
   },
   {
     type                : WARSOW_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Warsow",
     default_port        : 27960,
     default_master_port : 27950,

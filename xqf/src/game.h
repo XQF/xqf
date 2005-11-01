@@ -42,6 +42,7 @@ enum {
   GAME_QUAKE3_MASTERPROTOCOL	= 0x0400, // master server protocol version is in games_data["masterprotocol"]
   GAME_LAUNCH_HOSTPORT		= 0x0800, // use hostport rule as port when launching
   GAME_MASTER_CDKEY		= 0x1000, // master server requires CD key
+  GAME_Q3COLORS			= 0x2000, // Q3 color codes
 };
 
 struct game {
