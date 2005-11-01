@@ -582,7 +582,7 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
       return;
 
   if (*(token[2])) {		/* if name is not empty */
-    if (server->type != Q3_SERVER) {
+    if ((games[server->type].flags & GAME_Q3COLORS) == 0) {
       server->name = g_strdup (token[2]);
     }
     else {
