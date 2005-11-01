@@ -635,6 +635,23 @@
 	<main_mod>data</main_mod>
     </game>
     <game>
+	<base>Q3_SERVER</base>
+	<type>WARSOW_SERVER</type>
+	<name>Warsow</name>
+	<id>WARSOWS</id>
+	<qstat_str>WARSOWS</qstat_str>
+	<qstat_option>-warsows</qstat_option>
+	<qstat_master_option>-warsowm</qstat_master_option>
+	<icon>warsow.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<init_maps>NULL</init_maps>
+	<has_map>NULL</has_map>
+	<get_mapshot>NULL</get_mapshot>
+	<command>warsow</command>
+	<default_home>~/.warsow</default_home>
+	<main_mod>basewsw</main_mod>
+    </game>
+    <game>
 	<type>GPS_SERVER</type>
 	<name>Generic Gamespy</name>
 	<flags>GAME_CONNECT</flags>

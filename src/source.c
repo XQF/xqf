@@ -1146,6 +1146,9 @@ static char *builtin_masters_update_info[] = {
   "ADD NEXUIZS master://ghdigital.com ghdigital.com",
   "ADD NEXUIZS master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
+  "ADD WARSOWS master://ghdigital.com ghdigital.com",
+  "ADD WARSOWS master://dpmaster.deathmask.net dpmaster.deathmask.net",
+
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
   "ADD Q2S lan://255.255.255.255 LAN",

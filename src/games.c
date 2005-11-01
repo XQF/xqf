@@ -40,6 +40,8 @@ static char* stringlist037[] = { "jamp", NULL };
 static char* stringlist038[] = { "netpanzer", NULL };
 static char* stringlist039[] = { "data", NULL };
 static char* stringlist040[] = { "nexuiz", NULL };
+static char* stringlist041[] = { "basewsw", NULL };
+static char* stringlist042[] = { "warsow", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -826,6 +828,31 @@ struct game games[] = {
     default_home        : "~/.nexuiz",
     main_mod            : stringlist039,
     command             : stringlist040,
+  },
+  {
+    type                : WARSOW_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL,
+    name                : "Warsow",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "WARSOWS",
+    qstat_str           : "WARSOWS",
+    qstat_option        : "-warsows",
+    qstat_master_option : "-warsowm",
+    icon                : "warsow.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    default_home        : "~/.warsow",
+    main_mod            : stringlist041,
+    command             : stringlist042,
   },
   {
     type                : GPS_SERVER,

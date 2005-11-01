@@ -69,6 +69,7 @@
 #include "xpm/ut2004.xpm"
 #include "xpm/netp.xpm"
 #include "xpm/nexuiz.xpm"
+#include "xpm/warsow.xpm"
 
 #include "xpm/gamespy3d.xpm"
 #include "xpm/ssam.xpm"
