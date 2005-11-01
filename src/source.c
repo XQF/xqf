@@ -1176,6 +1176,7 @@ static char *builtin_gslist_masters_update_info[] = {
   "ADD QWS gslist://master.gamespy.com;gsmtype=quakeworld Gslist",
   "ADD Q2S gslist://master.gamespy.com;gsmtype=quake2 Gslist",
   "ADD Q3S gslist://master.gamespy.com;gsmtype=quake3 Gslist",
+  "ADD Q4S gslist://master.gamespy.com;gsmtype=quake4 Gslist",
   "ADD WOS gslist://master.gamespy.com;gsmtype=rtcw Gslist",
   "ADD WOETS gslist://master.gamespy.com;gsmtype=rtcwet Gslist",
   "ADD DM3S gslist://master.gamespy.com;gsmtype=doom3 Gslist",
