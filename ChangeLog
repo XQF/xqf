@@ -1,5 +1,6 @@
 Nov 12, 2005: <l-n@users.sourceforge.net>
 - clean up code duplication in pref.c
+- add support for warsow level shots
 
 Nov 01, 2005: <l-n@users.sourceforge.net>
 - add gslist Q4 master

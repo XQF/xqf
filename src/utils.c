@@ -1159,3 +1159,35 @@ error_out:
 
   return msg;
 }
+
+char* load_file_mem(const char* name, size_t* size)
+{
+  char* buf = NULL;
+  struct stat stb;
+  int fd;
+
+  fd = open(name, O_RDONLY);
+  if(fd == -1)
+    goto out;
+
+  if(fstat(fd, &stb) == -1)
+    goto out;
+
+  buf = g_malloc(stb.st_size);
+
+  if(read(fd, buf, stb.st_size) != stb.st_size)
+  {
+    g_free(buf);
+    buf = NULL;
+    goto out;
+  }
+
+out:
+  if(fd != -1)
+    close(fd);
+
+  if(buf)
+    *size = stb.st_size;
+
+  return buf;
+}

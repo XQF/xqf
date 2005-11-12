@@ -422,6 +422,28 @@ static struct q3_common_prefs_s q4_prefs =
   flags    : Q3_PREF_PB | Q3_PREF_CONSOLE,
 };
 
+static const char* nexuiz_masterprotocols[] = {
+	"3",
+	NULL
+};
+
+static struct q3_common_prefs_s nexuiz_prefs =
+{
+  protocols: nexuiz_masterprotocols,
+  defproto : "3",
+};
+
+static const char* warsow_masterprotocols[] = {
+	"6",
+	NULL
+};
+
+static struct q3_common_prefs_s warsow_prefs =
+{
+  protocols: warsow_masterprotocols,
+  defproto : "6",
+};
+
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);
 
 static void game_file_dialog(enum server_type type);
@@ -3042,6 +3064,8 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case SOF2S_SERVER: return &sof2_prefs;
     case COD_SERVER: return &cod_prefs;
     case JK3_SERVER: return &jk3_prefs;
+    case NEXUIZ_SERVER: return &nexuiz_prefs;
+    case WARSOW_SERVER: return &warsow_prefs;
     default: return NULL;
   }
 }
@@ -4602,6 +4626,8 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
   new_genprefs[EF_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[NEXUIZ_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     new_genprefs[i].pref_dir = g_strdup (games[i].dir);

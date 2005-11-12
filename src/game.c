@@ -1509,6 +1509,10 @@ static void q3_analyze_serverinfo (struct server *s) {
 	strcmp (*info_ptr, "g_gametypestring") == 0) {
 	s->gametype = info_ptr[1];
     }
+    else if (s->type == WARSOW_SERVER &&
+	strcmp (*info_ptr, "g_gametype_name") == 0) {
+	s->gametype = info_ptr[1];
+    }
     else if (strcmp (*info_ptr, "g_needpass") == 0) {
       n = strtol (info_ptr[1], NULL, 10);
       if ((n & 1) != 0)

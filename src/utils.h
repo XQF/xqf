@@ -165,4 +165,12 @@ int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), 
  */
 const char* copy_file(const char* src, const char* dest);
 
+/** \brief read file into memory
+ *
+ * @param name file name
+ * @param size pointer to store buffer size
+ * @returns pointer to allocated data or NULL on error
+ */
+char* load_file_mem(const char* name, size_t* size);
+
 #endif /* __UTILS_H__ */
