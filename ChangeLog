@@ -1,3 +1,6 @@
+Nov 12, 2005: <l-n@users.sourceforge.net>
+- clean up code duplication in pref.c
+
 Nov 01, 2005: <l-n@users.sourceforge.net>
 - add gslist Q4 master
 - initial Warsow support, partially broken

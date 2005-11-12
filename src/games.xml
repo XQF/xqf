@@ -26,6 +26,7 @@
 	<identify_os/>
 	<command/>
 	<cmd_or_dir_changed/>
+	<prefs_load/>
 	<update_prefs/>
 	<default_home/>
 	<main_mod/>
@@ -53,6 +54,7 @@
 	<command>nq-sgl</command>
 	<command>twilight-nq</command>
 	<cmd_or_dir_changed>q1_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q1_prefs_load</prefs_load>
 	<update_prefs>q1_update_prefs</update_prefs>
 	<main_mod>id1</main_mod>
 	<pd>q1_private</pd>
@@ -83,6 +85,7 @@
 	<command>qw-client-sgl</command>
 	<command>twilight-qw</command>
 	<cmd_or_dir_changed>qw_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>qw_prefs_load</prefs_load>
 	<update_prefs>qw_update_prefs</update_prefs>
 	<main_mod>qw</main_mod>
 	<main_mod>id1</main_mod>
@@ -112,6 +115,7 @@
 	<identify_os>identify_os</identify_os>
 	<command>quake2</command>
 	<cmd_or_dir_changed>q2_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q2_prefs_load</prefs_load>
 	<update_prefs>q2_update_prefs</update_prefs>
 	<main_mod>baseq2</main_mod>
 	<pd>q2_private</pd>
@@ -141,6 +145,7 @@
 	<command>quake3</command>
 	<command>q3</command>
 	<default_home>~/.q3a</default_home>
+	<prefs_load>q3_prefs_load</prefs_load>
 	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>demoq3</main_mod>
 	<main_mod>baseq3</main_mod>
@@ -166,6 +171,7 @@
 	<arch_identifier>si_version</arch_identifier>
 	<command>quake4</command>
 	<cmd_or_dir_changed>doom3_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
 	<update_prefs>quake4_update_prefs</update_prefs>
 	<default_home>~/.quake4</default_home>
 	<main_mod>q4base</main_mod>
@@ -186,7 +192,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>wolf</command>
 	<default_home>~/.wolf</default_home>
-	<update_prefs>wo_update_prefs</update_prefs>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>demomain</main_mod>
 	<main_mod>main</main_mod>
 	<main_mod>wolfmp</main_mod>
@@ -204,7 +211,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>et</command>
 	<default_home>~/.etwolf</default_home>
-	<update_prefs>et_update_prefs</update_prefs>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>etmain</main_mod>
 	<pd>wolfet_private</pd>
     </game>
@@ -228,6 +236,7 @@
 	<arch_identifier>si_version</arch_identifier>
 	<command>doom3</command>
 	<cmd_or_dir_changed>doom3_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
 	<update_prefs>doom3_update_prefs</update_prefs>
 	<default_home>~/.doom3</default_home>
 	<main_mod>base</main_mod>
@@ -248,7 +257,8 @@
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
-	<update_prefs>ef_update_prefs</update_prefs>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>BaseEF</main_mod>
     </game>
     <game>
@@ -369,6 +379,8 @@
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
 	<main_mod>main</main_mod>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
     </game>
     <game>
 	<type>T2_SERVER</type>
@@ -387,6 +399,7 @@
 	<arch_identifier>linux</arch_identifier>
 	<identify_os>t2_identify_os</identify_os>
 	<command>tribes2</command>
+	<prefs_load>tribes2_prefs_load</prefs_load>
 	<update_prefs>tribes2_update_prefs</update_prefs>
     </game>
     <game>
@@ -551,7 +564,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<arch_identifier>NULL</arch_identifier>
 	<command>codmp</command>
-	<update_prefs>cod_update_prefs</update_prefs>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>main</main_mod>
 	<pd>cod_private</pd>
     </game>
@@ -596,7 +610,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<arch_identifier>NULL</arch_identifier>
 	<command>jamp</command>
-	<update_prefs>jk3_update_prefs</update_prefs>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>base</main_mod>
 	<pd>jk3_private</pd>
     </game>

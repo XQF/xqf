@@ -53,6 +53,7 @@ typedef enum
     TAG_identify_cpu,
     TAG_identify_os,
     TAG_cmd_or_dir_changed,
+    TAG_prefs_load,
     TAG_update_prefs,
     TAG_default_home,
     TAG_pd,
@@ -128,6 +129,7 @@ static void tags_init()
     add_tag(TAG_identify_cpu,       Tag_do_inherit, Tag_type_literal, "identify_cpu");
     add_tag(TAG_identify_os,        Tag_do_inherit, Tag_type_literal, "identify_os");
     add_tag(TAG_cmd_or_dir_changed, Tag_do_inherit, Tag_type_literal, "cmd_or_dir_changed");
+    add_tag(TAG_prefs_load,         Tag_no_inherit, Tag_type_literal, "prefs_load");
     add_tag(TAG_update_prefs,       Tag_no_inherit, Tag_type_literal, "update_prefs");
     add_tag(TAG_default_home,       Tag_no_inherit, Tag_type_string,  "default_home");
     add_tag(TAG_pd,                 Tag_no_inherit, Tag_type_address, "pd");
