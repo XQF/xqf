@@ -98,6 +98,9 @@ struct game {
   /** called when either cmd or dir have changed. Also on xqf startup */
   void (*cmd_or_dir_changed)(struct game* g);
 
+  /** load preferences from config */
+  void (*prefs_load)(struct game* g);
+
   /** sync preference dialog to config */
   void (*update_prefs)(struct game* g);
 

@@ -249,47 +249,6 @@ static GtkWidget *custom_args_entry_game[GAMES_TOTAL];
 static GtkWidget *custom_args_entry_args[GAMES_TOTAL];
 static int current_row = -1;
 
-/* Quake 3 settings */
-static GtkWidget *vmfixbutton;
-//static GtkWidget *rafixbutton;
-static GtkWidget *setfs_gamebutton;
-static GtkWidget *set_punkbusterbutton;
-static GtkWidget *q3proto_entry;
-static GtkWidget *pass_memory_options_button;
-static GtkWidget *com_hunkmegs_spinner;
-static GtkWidget *com_soundmegs_spinner;
-static GtkWidget *com_zonemegs_spinner;
-static GtkWidget *cg_precachedmodels_spinner;
-
-
-/* Wolfenstein */
-static GtkWidget *wo_proto_entry;
-static GtkWidget *wo_setfs_gamebutton;
-static GtkWidget *wo_set_punkbusterbutton;
-
-/* Enemy Territory */
-static GtkWidget *woet_proto_entry;
-static GtkWidget *woet_setfs_gamebutton;
-
-/* Doom 3 */
-static GtkWidget *doom3_proto_entry;
-
-/* Quake 4 */
-static GtkWidget *quake4_proto_entry;
-
-/* Voyager Elite Force */
-static GtkWidget *ef_proto_entry;
-static GtkWidget *ef_setfs_gamebutton;
-
-/* Call of Duty */
-static GtkWidget *cod_proto_entry;
-
-/* Jedi Academy */
-static GtkWidget *jk3_proto_entry;
-
-/* Soldier of Fortune 2 */
-static GtkWidget *sof2_proto_entry;
-
 struct generic_prefs {
   char *pref_dir;
   char *real_dir;
@@ -298,7 +257,7 @@ struct generic_prefs {
   GtkWidget *cfg_combo;
   GtkWidget *game_button;
   // function for adding game specific tabs to notebook
-  void (*add_options_to_notebook) (GtkWidget *notebook);
+  void (*add_options_to_notebook) (GtkWidget *notebook, enum server_type type);
 
   // game specific data
   GData* games_data;
@@ -306,9 +265,27 @@ struct generic_prefs {
   GSList *custom_args;
 } *genprefs = NULL;
 
+enum
+{
+  Q3_PREF_SETFS_GAME = 0x01,
+  Q3_PREF_PB         = 0x02,
+  Q3_PREF_CONSOLE    = 0x04,
+};
+
+/* Quake 3 settings */
+struct q3_common_prefs_s
+{
+  const char** protocols;
+  const char* defproto;
+  unsigned flags;
+  GtkWidget *setfs_gamebutton;
+  GtkWidget *set_punkbusterbutton;
+  GtkWidget *proto_entry;
+  GtkWidget *console_button;
+};
 
 // change config_get_string below too!
-char* q3_masterprotocols[] = {
+static const char* q3_masterprotocols[] = {
 	"68 - v1.32",
 	"67 - v1.31",
 	"66 - v1.30",
@@ -319,8 +296,22 @@ char* q3_masterprotocols[] = {
 	NULL
 };
 
+static struct q3_common_prefs_s q3_prefs =
+{
+  protocols: q3_masterprotocols,
+  defproto : "68",
+  flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+};
+
+static GtkWidget *pass_memory_options_button;
+static GtkWidget *com_hunkmegs_spinner;
+static GtkWidget *com_soundmegs_spinner;
+static GtkWidget *com_zonemegs_spinner;
+static GtkWidget *cg_precachedmodels_spinner;
+
+
 // change config_get_string below too!
-char* wo_masterprotocols[] = {
+static const char* wo_masterprotocols[] = {
 	"60 - v1.4",
 	"59 - v1.32",
 	"58 - v1.3",
@@ -330,8 +321,15 @@ char* wo_masterprotocols[] = {
 	NULL
 };
 
+static struct q3_common_prefs_s wo_prefs =
+{
+  protocols: wo_masterprotocols,
+  defproto : "60",
+  flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+};
+
 // change config_get_string below too!
-char* woet_masterprotocols[] = {
+static const char* woet_masterprotocols[] = {
 	"84 - v2.60",
 	"83 - v2.56",
 	"82 - v2.55 (Release)",
@@ -339,31 +337,62 @@ char* woet_masterprotocols[] = {
 	NULL
 };
 
-char* ef_masterprotocols[] = {
+static struct q3_common_prefs_s woet_prefs =
+{
+  protocols: woet_masterprotocols,
+  defproto : "84",
+  flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+};
+
+static const char* ef_masterprotocols[] = {
 	"24",
 	NULL
 };
 
-char* cod_masterprotocols[] = {
+static struct q3_common_prefs_s ef_prefs =
+{
+  protocols: ef_masterprotocols,
+  defproto : "24",
+};
+
+static const char* cod_masterprotocols[] = {
 	"5 - v1.4",
 	"1 - retail",
 	NULL
 };
 
-char* jk3_masterprotocols[] = {
+static struct q3_common_prefs_s cod_prefs =
+{
+  protocols: cod_masterprotocols,
+  defproto : "5",
+};
+
+static const char* jk3_masterprotocols[] = {
 	"26 - v1.01",
 	"25 - v1.0",
 	NULL
 };
 
-char* sof2_masterprotocols[] = {
+static struct q3_common_prefs_s jk3_prefs =
+{
+  protocols: jk3_masterprotocols,
+  defproto : "26",
+};
+
+static const char* sof2_masterprotocols[] = {
 	"2004 - SOF2 1.02",
 	"2003 - SOF2 1.01",
 	"2002 - SOF2 1.00",
 	NULL
 };
 
-char* doom3_masterprotocols[] = {
+static struct q3_common_prefs_s sof2_prefs =
+{
+  protocols: sof2_masterprotocols,
+  defproto : "2004",
+};
+
+static const char* doom3_masterprotocols[] = {
 	"auto",
 	"1.40 - 1.3.1302",
 	"1.35 - 1.1.1282",
@@ -371,13 +400,29 @@ char* doom3_masterprotocols[] = {
 	NULL
 };
 
-char* quake4_masterprotocols[] = {
+static struct q3_common_prefs_s doom3_prefs =
+{
+  protocols: doom3_masterprotocols,
+  defproto : "auto",
+  flags    : Q3_PREF_PB,
+};
+
+static const char* quake4_masterprotocols[] = {
 	"auto",
 	"0 - any",
 	"2.63 - German retail",
 	"2.62 - retail",
 	NULL
 };
+
+static struct q3_common_prefs_s q4_prefs =
+{
+  protocols: quake4_masterprotocols,
+  defproto : "auto",
+  flags    : Q3_PREF_PB | Q3_PREF_CONSOLE,
+};
+
+static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);
 
 static void game_file_dialog(enum server_type type);
 static void game_dir_dialog(enum server_type type);
@@ -702,107 +747,98 @@ void q2_update_prefs (struct game* g)
     config_set_int ("noskins", default_q2_noskins = pref_q2_noskins);
 }
 
-void q3_update_prefs (struct game* g)
+void q3_update_prefs_common (struct game* g)
 {
   char* str, *str1;
+  const char* strold;
   int i;
+  enum server_type type = g->type;
+  struct q3_common_prefs_s* w;
 
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry)));
+  w = get_pref_widgets_for_game(type);
+  g_return_if_fail(w != NULL);
+
+  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w->proto_entry)->entry)));
   // locate first space and mark it as str's end
   str1 = strchr(str,' ');
   if (str1) *str1='\0';
 
-  
-  game_set_attribute(Q3_SERVER,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
+  strold = game_get_attribute(type,"masterprotocol");
+  if(strcmp(str, strold?strold:""))
+  {
+    game_set_attribute(type,"masterprotocol",strdup_strip(str));
+    config_set_string ("protocol", (str)? str : "");
+  }
   g_free(str);
   str=NULL;
 
-  i = GTK_TOGGLE_BUTTON (vmfixbutton)->active;
-//  if (i != q3_opts.vmfix)
-    config_set_bool ("vmfix", i);
-    game_set_attribute(Q3_SERVER,"vmfix",g_strdup(bool2str(i)));
+  if(w->setfs_gamebutton)
+  {
+    int o;
+    i = GTK_TOGGLE_BUTTON (w->setfs_gamebutton)->active;
+    o = str2bool(game_get_attribute(type,"setfs_game"));
+    if(i != o)
+    {
+      config_set_bool ("setfs_game", i);
+      game_set_attribute(type,"setfs_game",g_strdup(bool2str(i)));
+    }
+  }
 
-#if 0
-  i = GTK_TOGGLE_BUTTON (rafixbutton)->active;
-//  if (i != q3_opts.rafix)
-    config_set_bool ("rafix", i);
-    game_set_attribute(Q3_SERVER,"rafix",g_strdup(bool2str(i)));
-#endif
+  if(w->set_punkbusterbutton)
+  {
+    int o;
+    i = GTK_TOGGLE_BUTTON (w->set_punkbusterbutton)->active;
+    o = str2bool(game_get_attribute(type,"set_punkbuster"));
+    if(i != o)
+    {
+      config_set_bool ("set_punkbuster", i);
+      game_set_attribute(type,"set_punkbuster",g_strdup(bool2str(i)));
+    }
+  }
 
-  i = GTK_TOGGLE_BUTTON (setfs_gamebutton)->active;
-//  if (i != q3_opts.setfs_game)
-    config_set_bool ("setfs_game", i);
-    game_set_attribute(Q3_SERVER,"setfs_game",g_strdup(bool2str(i)));
-
-  i = GTK_TOGGLE_BUTTON (set_punkbusterbutton)->active;
-    config_set_bool ("set_punkbuster", i);
-    game_set_attribute(Q3_SERVER,"set_punkbuster",g_strdup(bool2str(i)));
+  if(w->console_button)
+  {
+    int o;
+    i = GTK_TOGGLE_BUTTON (w->console_button)->active;
+    o = str2bool(game_get_attribute(type,"enable_console"));
+    if(i != o)
+    {
+      config_set_bool ("enable_console", i);
+      game_set_attribute(type,"enable_console",g_strdup(bool2str(i)));
+    }
+  }
+}
   
-  
+void q3_update_prefs (struct game* g)
+{
+  int i;
+  enum server_type type = g->type;
+  struct q3_common_prefs_s* w;
+
+  w = get_pref_widgets_for_game(type);
+  g_return_if_fail(w != NULL);
+
+  q3_update_prefs_common(g);
+
   i = GTK_TOGGLE_BUTTON (pass_memory_options_button)->active;
   config_set_bool ("pass_memory_options", i);
-  game_set_attribute(Q3_SERVER,"pass_memory_options",g_strdup(bool2str(i)));
+  game_set_attribute(type,"pass_memory_options",g_strdup(bool2str(i)));
 
   i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
   config_set_int ("com_hunkmegs", i);
-  game_set_attribute(Q3_SERVER,"com_hunkmegs",g_strdup_printf("%d",i));
+  game_set_attribute(type,"com_hunkmegs",g_strdup_printf("%d",i));
 
   i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
   config_set_int ("com_soundmegs", i);
-  game_set_attribute(Q3_SERVER,"com_soundmegs",g_strdup_printf("%d",i));
+  game_set_attribute(type,"com_soundmegs",g_strdup_printf("%d",i));
 
   i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
   config_set_int ("com_zonemegs", i);
-  game_set_attribute(Q3_SERVER,"com_zonemegs",g_strdup_printf("%d",i));
+  game_set_attribute(type,"com_zonemegs",g_strdup_printf("%d",i));
 
   i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
   config_set_int ("cg_precachedmodels", i);
-  game_set_attribute(Q3_SERVER,"cg_precachedmodels",g_strdup_printf("%d",i));
-}
-
-void wo_update_prefs (struct game* g)
-{
-  char* str, *str1;
-  int i;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(WO_SERVER,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
-
-  i = GTK_TOGGLE_BUTTON (wo_setfs_gamebutton)->active;
-  config_set_bool ("setfs_game", i);
-  game_set_attribute(WO_SERVER,"setfs_game",g_strdup(bool2str(i)));
-
-  i = GTK_TOGGLE_BUTTON (wo_set_punkbusterbutton)->active;
-  config_set_bool ("set_punkbuster", i);
-  game_set_attribute(WO_SERVER,"set_punkbuster",g_strdup(bool2str(i)));
-}
-
-void et_update_prefs (struct game* g)
-{
-  char* str, *str1;
-  int i;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (woet_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(WOET_SERVER,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
-
-  i = GTK_TOGGLE_BUTTON (woet_setfs_gamebutton)->active;
-  config_set_bool ("setfs_game", i);
-  game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(i)));
+  game_set_attribute(type,"cg_precachedmodels",g_strdup_printf("%d",i));
 }
 
 static void doom3_detect_version(struct game* g)
@@ -849,86 +885,14 @@ out:
 
 void doom3_update_prefs (struct game* g)
 {
-  char* str, *str1;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(g->type,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
-
+  q3_update_prefs_common(g);
   doom3_detect_version(g);
 }
 
 void quake4_update_prefs (struct game* g)
 {
-  char* str, *str1;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (quake4_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(g->type,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
-
+  q3_update_prefs_common(g);
   doom3_detect_version(g);
-}
-
-void ef_update_prefs (struct game* g)
-{
-  char* str, *str1;
-  int i;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(EF_SERVER,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
-
-  i = GTK_TOGGLE_BUTTON (ef_setfs_gamebutton)->active;
-  config_set_bool ("setfs_game", i);
-  game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(i)));
-}
-
-void cod_update_prefs (struct game* g)
-{
-  char* str, *str1;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (cod_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(COD_SERVER,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
-}
-
-void jk3_update_prefs (struct game* g)
-{
-  char* str, *str1;
-
-  str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (jk3_proto_entry)->entry)));
-  // locate first space and mark it as str's end
-  str1 = strchr(str,' ');
-  if (str1) *str1='\0';
-
-  game_set_attribute(JK3_SERVER,"masterprotocol",strdup_strip(str));
-  config_set_string ("protocol", (str)? str : "");
-  g_free(str);
-  str=NULL;
 }
 
 void tribes2_update_prefs (struct game* g)
@@ -2549,7 +2513,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
   // call game specific function to add its options
   if(genprefs[type].add_options_to_notebook)
-    genprefs[type].add_options_to_notebook(notebook);
+    genprefs[type].add_options_to_notebook(notebook, type);
     
 
   table = gtk_table_new ((games[type].custom_cfgs)? 3 : 2, 2, FALSE);
@@ -3065,67 +3029,85 @@ static void add_pushlatency_options (GtkWidget *vbox) {
   gtk_widget_show (pushlatency_value_spinner);
 }
 
-static GtkWidget *q3_options_page (void) {
+static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type)
+{
+  switch(type)
+  {
+    case Q3_SERVER: return &q3_prefs;
+    case Q4_SERVER: return &q4_prefs;
+    case WO_SERVER: return &wo_prefs;
+    case WOET_SERVER: return &woet_prefs;
+    case DOOM3_SERVER: return &doom3_prefs;
+    case EF_SERVER: return &ef_prefs;
+    case SOF2S_SERVER: return &sof2_prefs;
+    case COD_SERVER: return &cod_prefs;
+    case JK3_SERVER: return &jk3_prefs;
+    default: return NULL;
+  }
+}
+
+static GtkWidget *q3_options_page (enum server_type type) {
   GtkWidget *page_vbox;
   GtkWidget *hbox;
   GtkWidget *label;
 
+  struct q3_common_prefs_s* w = get_pref_widgets_for_game(type);
+
   page_vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+  if(w->protocols)
+  {
+    hbox = gtk_hbox_new (FALSE, 8);
+    gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-#if 0
-	  q3proto_entry = gtk_entry_new ();
-	  gtk_entry_set_max_length(GTK_ENTRY (q3proto_entry),3);
-	  if(q3_opts.masterprotocol)
-	    gtk_entry_set_text (GTK_ENTRY (q3proto_entry), q3_opts.masterprotocol);
-#endif
-	  q3proto_entry = gtk_combo_new ();
-//	  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry), 3);
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (q3proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (q3proto_entry),
-			  createGListfromchar(q3_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (q3proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
+      label = gtk_label_new (_("Masterserver Protocol Version"));
+      gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+      gtk_widget_show (label);
 
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (q3proto_entry)->entry),
-		game_get_attribute(Q3_SERVER,"masterprotocol"));
+      w->proto_entry = gtk_combo_new ();
+      gtk_combo_set_use_arrows_always (GTK_COMBO (w->proto_entry), TRUE);
+      gtk_combo_set_popdown_strings(GTK_COMBO (w->proto_entry),
+		      createGListfromchar((char**)w->protocols));
+      gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (w->proto_entry)->list),
+		      GTK_SELECTION_BROWSE);
 
-	  gtk_box_pack_start (GTK_BOX (hbox), q3proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (q3proto_entry);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w->proto_entry)->entry),
+	    game_get_attribute(type,"masterprotocol"));
 
-	gtk_widget_show (hbox);
+      gtk_box_pack_start (GTK_BOX (hbox), w->proto_entry, FALSE, FALSE, 0);
+      gtk_widget_show (w->proto_entry);
 
-	vmfixbutton = gtk_check_button_new_with_label (_("vm_cgame fix"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (vmfixbutton),
-		str2bool(game_get_attribute(Q3_SERVER,"vmfix")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), vmfixbutton, FALSE, FALSE, 0);
-	gtk_widget_show (vmfixbutton);
+    gtk_widget_show (hbox);
 
-#if 0
-	rafixbutton = gtk_check_button_new_with_label (_("Rocketarena fix"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rafixbutton),
-		str2bool(game_get_attribute(Q3_SERVER,"rafix")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), rafixbutton, FALSE, FALSE, 0);
-	gtk_widget_show (rafixbutton);
-#endif
-	setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (setfs_gamebutton),
-		str2bool(game_get_attribute(Q3_SERVER,"setfs_game")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), setfs_gamebutton, FALSE, FALSE, 0);
-	gtk_widget_show (setfs_gamebutton);
+  }
 
+  if(w->flags & Q3_PREF_SETFS_GAME)
+  {
+    w->setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w->setfs_gamebutton),
+	    str2bool(game_get_attribute(type,"setfs_game")));
+    gtk_box_pack_start (GTK_BOX (page_vbox), w->setfs_gamebutton, FALSE, FALSE, 0);
+    gtk_widget_show (w->setfs_gamebutton);
+  }
 
-	set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (set_punkbusterbutton),
-		str2bool(game_get_attribute(Q3_SERVER,"set_punkbuster")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), set_punkbusterbutton, FALSE, FALSE, 0);
-	gtk_widget_show (set_punkbusterbutton);
+  if(w->flags & Q3_PREF_PB)
+  {
+    w->set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w->set_punkbusterbutton),
+	    str2bool(game_get_attribute(type,"set_punkbuster")));
+    gtk_box_pack_start (GTK_BOX (page_vbox), w->set_punkbusterbutton, FALSE, FALSE, 0);
+    gtk_widget_show (w->set_punkbusterbutton);
+  }
+
+  if(w->flags & Q3_PREF_CONSOLE)
+  {
+    w->console_button = gtk_check_button_new_with_label (_("enable console"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w->console_button),
+	    str2bool(game_get_attribute(type,"enable_console")));
+    gtk_box_pack_start (GTK_BOX (page_vbox), w->console_button, FALSE, FALSE, 0);
+    gtk_widget_show (w->console_button);
+  }
 
   gtk_widget_show (page_vbox);
 
@@ -3319,377 +3301,20 @@ static GtkWidget *q3_mem_options_page (void) {
   return page_vbox;
 }
 
-
-static GtkWidget *wolf_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-#if 0
-	  wo_proto_entry = gtk_entry_new ();
-	  gtk_entry_set_max_length(GTK_ENTRY (wo_proto_entry),3);
-	  if(wo_opts.masterprotocol)
-	    gtk_entry_set_text (GTK_ENTRY (wo_proto_entry), wo_opts.masterprotocol);
-#endif
-
-	  wo_proto_entry = gtk_combo_new ();
-//	  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry), 3);
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (wo_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (wo_proto_entry),
-			  createGListfromchar(wo_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (wo_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (wo_proto_entry)->entry),
-		game_get_attribute(WO_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), wo_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (wo_proto_entry);
-
-	gtk_widget_show (hbox);
-
-	wo_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (wo_setfs_gamebutton),
-		str2bool(game_get_attribute(WO_SERVER,"setfs_game")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), wo_setfs_gamebutton, FALSE, FALSE, 0);
-	gtk_widget_show (wo_setfs_gamebutton);
-
-	wo_set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (wo_set_punkbusterbutton),
-		str2bool(game_get_attribute(WO_SERVER,"set_punkbuster")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), wo_set_punkbusterbutton, FALSE, FALSE, 0);
-	gtk_widget_show (wo_set_punkbusterbutton);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for enemy territory
-static GtkWidget *woet_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  woet_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (woet_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (woet_proto_entry),
-			  createGListfromchar(woet_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (woet_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (woet_proto_entry)->entry),
-		game_get_attribute(WOET_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), woet_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (woet_proto_entry);
-
-	  woet_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (woet_setfs_gamebutton),
-		  str2bool(game_get_attribute(WO_SERVER,"setfs_game")));
-	  gtk_box_pack_start (GTK_BOX (page_vbox), woet_setfs_gamebutton, FALSE, FALSE, 0);
-	  gtk_widget_show (woet_setfs_gamebutton);
-
-	gtk_widget_show (hbox);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for doom3
-static GtkWidget *doom3_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  doom3_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (doom3_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (doom3_proto_entry),
-			  createGListfromchar(doom3_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (doom3_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (doom3_proto_entry)->entry),
-		game_get_attribute(DOOM3_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), doom3_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (doom3_proto_entry);
-
-	gtk_widget_show (hbox);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for quake4
-static GtkWidget *quake4_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  quake4_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (quake4_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (quake4_proto_entry),
-			  createGListfromchar(quake4_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (quake4_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (quake4_proto_entry)->entry),
-		game_get_attribute(Q4_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), quake4_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (quake4_proto_entry);
-
-	gtk_widget_show (hbox);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for call of duty
-static GtkWidget *cod_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  cod_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (cod_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (cod_proto_entry),
-			  createGListfromchar(cod_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (cod_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (cod_proto_entry)->entry),
-		game_get_attribute(COD_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), cod_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (cod_proto_entry);
-
-	gtk_widget_show (hbox);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for jedi academy
-static GtkWidget *jk3_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  jk3_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (jk3_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (jk3_proto_entry),
-			  createGListfromchar(jk3_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (jk3_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (jk3_proto_entry)->entry),
-		game_get_attribute(JK3_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), jk3_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (jk3_proto_entry);
-
-	gtk_widget_show (hbox);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for soldier of fortune2
-static GtkWidget *sof2_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  sof2_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (sof2_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (sof2_proto_entry),
-			  createGListfromchar(sof2_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (sof2_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (sof2_proto_entry)->entry),
-		game_get_attribute(SOF2S_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), sof2_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (sof2_proto_entry);
-
-	gtk_widget_show (hbox);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-// additional options for voyager elite force
-static GtkWidget *ef_options_page (void) {
-  GtkWidget *page_vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-
-  page_vbox = gtk_vbox_new (FALSE, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	  label = gtk_label_new (_("Masterserver Protocol Version"));
-	  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	  gtk_widget_show (label);
-
-	  ef_proto_entry = gtk_combo_new ();
-	  gtk_combo_set_use_arrows_always (GTK_COMBO (ef_proto_entry), TRUE);
-	  gtk_combo_set_popdown_strings(GTK_COMBO (ef_proto_entry),
-			  createGListfromchar(ef_masterprotocols));
-	  gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (ef_proto_entry)->list),
-			  GTK_SELECTION_BROWSE);
-	  
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (ef_proto_entry)->entry),
-		game_get_attribute(EF_SERVER,"masterprotocol"));
-
-	  gtk_box_pack_start (GTK_BOX (hbox), ef_proto_entry, FALSE, FALSE, 0);
-	  gtk_widget_show (ef_proto_entry);
-
-	gtk_widget_show (hbox);
-
-	ef_setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ef_setfs_gamebutton),
-		str2bool(game_get_attribute(EF_SERVER,"setfs_game")));
-	gtk_box_pack_start (GTK_BOX (page_vbox), ef_setfs_gamebutton, FALSE, FALSE, 0);
-	gtk_widget_show (ef_setfs_gamebutton);
-
-  gtk_widget_show (page_vbox);
-
-  return page_vbox;
-}
-
-void add_q3_options_to_notebook(GtkWidget *notebook)
+void add_q3_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_options_page(), gtk_label_new (_("Options")));
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_mem_options_page(), gtk_label_new (_("Memory")));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_options_page(type), gtk_label_new (_("Options")));
+
+  if(type == Q3_SERVER)
+    gtk_notebook_append_page (GTK_NOTEBOOK (notebook), q3_mem_options_page(), gtk_label_new (_("Memory")));
 }
 
-void add_un_options_to_notebook(GtkWidget *notebook)
+void add_un_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
 }
 
-void add_ut2_options_to_notebook(GtkWidget *notebook)
+void add_ut2_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
-}
-
-void add_wolf_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), wolf_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_woet_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), woet_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_doom3_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), doom3_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_quake4_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), quake4_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_cod_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), cod_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_jk3_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), jk3_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_sof2_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), sof2_options_page(), gtk_label_new (_("Options")));
-}
-
-void add_ef_options_to_notebook(GtkWidget *notebook)
-{
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), ef_options_page(), gtk_label_new (_("Options")));
 }
 
 static GtkWidget *qw_options_page (void) {
@@ -3904,25 +3529,25 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
   return page_vbox;
 }
 
-void add_qw_options_to_notebook(GtkWidget *notebook)
+void add_qw_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), qw_options_page(), gtk_label_new (_("Weapons")));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), qw_q2_options_page(0), gtk_label_new (_("Options")));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_qw_page(), gtk_label_new (_("Player Profile")));
 }
 
-void add_q2_options_to_notebook(GtkWidget *notebook)
+void add_q2_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), qw_q2_options_page(1), gtk_label_new (_("Options")));
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_q2_page(), gtk_label_new (_("Player Profile")));
 }
 
-void add_q1_options_to_notebook(GtkWidget *notebook)
+void add_q1_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_q1_page(), gtk_label_new (_("Player Profile")));
 }
 
-void add_t2_options_to_notebook(GtkWidget *notebook)
+void add_t2_options_to_notebook(GtkWidget *notebook, enum server_type type)
 {
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), player_profile_t2_page(), gtk_label_new (_("Player Profile")));
 }
@@ -4968,15 +4593,15 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[Q3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[UN_SERVER].add_options_to_notebook = add_un_options_to_notebook;
   new_genprefs[UT2_SERVER].add_options_to_notebook = add_ut2_options_to_notebook;
-  new_genprefs[WO_SERVER].add_options_to_notebook = add_wolf_options_to_notebook;
-  new_genprefs[WOET_SERVER].add_options_to_notebook = add_woet_options_to_notebook;
-  new_genprefs[DOOM3_SERVER].add_options_to_notebook = add_doom3_options_to_notebook;
-  new_genprefs[Q4_SERVER].add_options_to_notebook = add_quake4_options_to_notebook;
-  new_genprefs[COD_SERVER].add_options_to_notebook = add_cod_options_to_notebook;
-  new_genprefs[JK3_SERVER].add_options_to_notebook = add_jk3_options_to_notebook;
-  new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_sof2_options_to_notebook;
+  new_genprefs[WO_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[WOET_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[DOOM3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[Q4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[COD_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[JK3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
-  new_genprefs[EF_SERVER].add_options_to_notebook = add_ef_options_to_notebook;
+  new_genprefs[EF_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     new_genprefs[i].pref_dir = g_strdup (games[i].dir);
@@ -5295,13 +4920,111 @@ static void set_style()
   }
 }
 
+static void prefs_load_for_game(enum server_type type)
+{
+  char buf[256];
+  struct game *g = &games[type];
+
+  if(!g->prefs_load)
+    return;
+
+  g_snprintf (buf, sizeof(buf), "/" CONFIG_FILE "/Game: %s", type2id (type));
+  config_push_prefix (buf);
+
+  g->prefs_load(g);
+
+  config_pop_prefix ();
+}
+
+void q1_prefs_load(struct game* g)
+{
+  default_q1_name =              config_get_string ("player name");
+  default_q1_top_color =      config_get_int ("top=0");
+  default_q1_bottom_color =   config_get_int ("bottom=0");
+}
+
+void qw_prefs_load(struct game* g)
+{
+  default_qw_name =              config_get_string ("player name");
+  default_qw_team =              config_get_string ("team");
+  default_qw_skin =           config_get_string ("skin");
+  default_qw_top_color =      config_get_int ("top=0");
+  default_qw_bottom_color =   config_get_int ("bottom=0");
+
+  default_qw_rate =              config_get_int ("rate=2500");
+  default_qw_cl_nodelta =        config_get_int ("cl_nodelta=0");
+  default_qw_cl_predict =        config_get_int ("cl_predict=1");
+  default_qw_noskins =           config_get_int ("noskins=0");
+  default_noaim =             config_get_int ("noaim=0");
+  default_b_switch =          config_get_int ("b_switch=0");
+  default_w_switch =          config_get_int ("w_switch=0");
+  pushlatency_mode =          config_get_int ("pushlatency mode=1");
+  pushlatency_value =         config_get_int ("pushlatency value=-50");
+}
+
+void q2_prefs_load(struct game* g)
+{
+  default_q2_name =              config_get_string ("player name");
+  default_q2_skin =           config_get_string ("skin");
+  default_q2_rate =              config_get_int ("rate=2500");
+  default_q2_cl_nodelta =        config_get_int ("cl_nodelta=0");
+  default_q2_cl_predict =        config_get_int ("cl_predict=1");
+  default_q2_noskins =           config_get_int ("noskins=0");
+}
+
+void q3_prefs_load_common(struct game* g)
+{
+  char* tmp;
+  enum server_type type = g->type;
+  struct q3_common_prefs_s* w;
+  char buf[256];
+
+  w = get_pref_widgets_for_game(type);
+  g_return_if_fail(w->defproto != NULL);
+
+  g_snprintf (buf, sizeof(buf), "protocol=%s", w->defproto);
+
+  tmp = config_get_string (buf);
+  if ( strlen( tmp ) == 0 )
+  {
+    g_free(tmp);
+    tmp = NULL;
+  }
+  game_set_attribute(type,"masterprotocol",tmp);
+
+  if(w->flags & Q3_PREF_SETFS_GAME)
+    game_set_attribute(type,"setfs_game",config_get_string ("setfs_game=true"));
+
+  if(w->flags & Q3_PREF_PB)
+    game_set_attribute(type,"set_punkbuster",config_get_string ("set_punkbuster=true"));
+
+  if(w->flags & Q3_PREF_CONSOLE)
+    game_set_attribute(type,"enable_console",config_get_string ("enable_console=true"));
+}
+  
+void q3_prefs_load(struct game* g)
+{
+  enum server_type type = g->type;
+
+  q3_prefs_load_common(g);
+
+  game_set_attribute(type,"pass_memory_options",config_get_string("pass_memory_options=false"));
+  game_set_attribute(type,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
+  game_set_attribute(type,"com_zonemegs",config_get_string("com_zonemegs=16"));
+  game_set_attribute(type,"com_soundmegs",config_get_string("com_soundmegs=8"));
+  game_set_attribute(type,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
+}
+
+void tribes2_prefs_load(struct game* g)
+{
+  default_t2_name = config_get_string ("player name");
+}
+
 int prefs_load (void) {
   char *oldversion;
   int i;
   int old_rc_loaded;
   int newversion = FALSE;
-
-  char* tmp;
 
   oldversion = config_get_string ("/" CONFIG_FILE "/Program/version");
 
@@ -5350,196 +5073,8 @@ int prefs_load (void) {
 
   } while(0);
 
-  config_push_prefix ("/" CONFIG_FILE "/Game: QS");
-
-  default_q1_name =              config_get_string ("player name");
-  default_q1_top_color =      config_get_int ("top=0");
-  default_q1_bottom_color =   config_get_int ("bottom=0");
-
-  config_pop_prefix ();
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: QWS");
-
-  default_qw_name =              config_get_string ("player name");
-  default_qw_team =              config_get_string ("team");
-  default_qw_skin =           config_get_string ("skin");
-  default_qw_top_color =      config_get_int ("top=0");
-  default_qw_bottom_color =   config_get_int ("bottom=0");
-
-  default_qw_rate =              config_get_int ("rate=2500");
-  default_qw_cl_nodelta =        config_get_int ("cl_nodelta=0");
-  default_qw_cl_predict =        config_get_int ("cl_predict=1");
-  default_qw_noskins =           config_get_int ("noskins=0");
-  default_noaim =             config_get_int ("noaim=0");
-  default_b_switch =          config_get_int ("b_switch=0");
-  default_w_switch =          config_get_int ("w_switch=0");
-  pushlatency_mode =          config_get_int ("pushlatency mode=1");
-  pushlatency_value =         config_get_int ("pushlatency value=-50");
-
-  config_pop_prefix ();
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: Q2S");
-
-  default_q2_name =              config_get_string ("player name");
-  default_q2_skin =           config_get_string ("skin");
-  default_q2_rate =              config_get_int ("rate=2500");
-  default_q2_cl_nodelta =        config_get_int ("cl_nodelta=0");
-  default_q2_cl_predict =        config_get_int ("cl_predict=1");
-  default_q2_noskins =           config_get_int ("noskins=0");
-
-  config_pop_prefix ();
-
-  /* Quake3 */
-  config_push_prefix ("/" CONFIG_FILE "/Game: Q3S");
-
-  tmp = config_get_string ("protocol=68");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-  game_set_attribute(Q3_SERVER,"masterprotocol",tmp);
-  game_set_attribute(Q3_SERVER,"vmfix",config_get_string ("vmfix=true"));
-//  game_set_attribute(Q3_SERVER,"rafix",config_get_string ("rafix=true"));
-  game_set_attribute(Q3_SERVER,"setfs_game",config_get_string ("setfs_game=true"));
-  game_set_attribute(Q3_SERVER,"set_punkbuster",config_get_string ("set_punkbuster=true"));
-  
-  game_set_attribute(Q3_SERVER,"pass_memory_options",config_get_string("pass_memory_options=false"));
-  game_set_attribute(Q3_SERVER,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
-  game_set_attribute(Q3_SERVER,"com_zonemegs",config_get_string("com_zonemegs=16"));
-  game_set_attribute(Q3_SERVER,"com_soundmegs",config_get_string("com_soundmegs=8"));
-  game_set_attribute(Q3_SERVER,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
-
-  config_pop_prefix ();
-
-  /* Wolfenstein */
-  config_push_prefix ("/" CONFIG_FILE "/Game: WOS");
-  
-  tmp = config_get_string ("protocol=60");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(WO_SERVER,"masterprotocol",tmp);
-  game_set_attribute(WO_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
-  game_set_attribute(WO_SERVER,"set_punkbuster",g_strdup(bool2str(config_get_bool ("set_punkbuster=true"))));
-
-  config_pop_prefix ();
-
-  /* Unreal (Tournament) */
-  // config_push_prefix ("/" CONFIG_FILE "/Game: UNS");
-  
-  // config_pop_prefix ();
-
-  /* Voyager Elite Force */
-  config_push_prefix ("/" CONFIG_FILE "/Game: EFS");
-  
-  tmp = config_get_string ("protocol=24");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(EF_SERVER,"masterprotocol",tmp);
-  game_set_attribute(EF_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
-
-  config_pop_prefix ();
-
-  /* Enemy Territory */
-  config_push_prefix ("/" CONFIG_FILE "/Game: WOETS");
-  
-  tmp = config_get_string ("protocol=84");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(WOET_SERVER,"masterprotocol",tmp);
-  game_set_attribute(WOET_SERVER,"setfs_game",g_strdup(bool2str(config_get_bool ("setfs_game=true"))));
-
-  config_pop_prefix ();
-
-  /* Quake 4 */
-  config_push_prefix ("/" CONFIG_FILE "/Game: Q4S");
-  
-  tmp = config_get_string ("protocol=auto");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(Q4_SERVER,"masterprotocol",tmp);
-
-  config_pop_prefix ();
-
-
-  /* Doom 3 */
-  config_push_prefix ("/" CONFIG_FILE "/Game: DOOM3");
-  
-  tmp = config_get_string ("protocol=auto");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(DOOM3_SERVER,"masterprotocol",tmp);
-
-  config_pop_prefix ();
-
-  /* Call of Duty */
-  config_push_prefix ("/" CONFIG_FILE "/Game: CODS");
-  
-  tmp = config_get_string ("protocol=5");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(COD_SERVER,"masterprotocol",tmp);
-
-  config_pop_prefix ();
-  
-    /* Jedi Academy */
-  config_push_prefix ("/" CONFIG_FILE "/Game: JK3S");
-  
-  tmp = config_get_string ("protocol=26");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(JK3_SERVER,"masterprotocol",tmp);
-
-  config_pop_prefix ();
-
-  /* Soldier of Fortune 2 */
-  config_push_prefix ("/" CONFIG_FILE "/Game: SOF2S");
-  
-  tmp = config_get_string ("protocol=2004");
-  if ( strlen( tmp ) == 0 )
-  {
-    g_free(tmp);
-    tmp = NULL;
-  }
-
-  game_set_attribute(SOF2S_SERVER,"masterprotocol",tmp);
-
-  config_pop_prefix ();
-
-
-  config_push_prefix ("/" CONFIG_FILE "/Game: T2S");
-
-  default_t2_name =              config_get_string ("player name");
-
-  config_pop_prefix ();
+  for (i = 0; i < GAMES_TOTAL; i++)
+    prefs_load_for_game (i);
 
   config_push_prefix ("/" CONFIG_FILE "/Games Config");
 

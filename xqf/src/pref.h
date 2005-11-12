@@ -118,24 +118,20 @@ extern	char	*sound_redial_success;
 
 extern int skip_startup_mapscan;
 
-// Quake 3 Arena
-//extern struct q3engineopts q3_opts;
-// Return to Castle Wolfenstein
-//extern struct q3engineopts wo_opts;
-// Any other game with Q3 engine
-//extern struct q3engineopts generic_q3_opts;
+void q1_prefs_load(struct game* g);
+void qw_prefs_load(struct game* g);
+void q2_prefs_load(struct game* g);
+void q3_prefs_load(struct game* g);
+void q3_prefs_load_common(struct game* g);
+void tribes2_prefs_load(struct game* g);
 
 void q1_update_prefs (struct game* g);
 void qw_update_prefs (struct game* g);
 void q2_update_prefs (struct game* g);
 void q3_update_prefs (struct game* g);
-void wo_update_prefs (struct game* g);
-void et_update_prefs (struct game* g);
+void q3_update_prefs_common (struct game* g);
 void doom3_update_prefs (struct game* g);
 void quake4_update_prefs (struct game* g);
-void ef_update_prefs (struct game* g);
-void cod_update_prefs (struct game* g);
-void jk3_update_prefs (struct game* g);
 void tribes2_update_prefs (struct game* g);
 void ut2004_update_prefs (struct game* g);
 
