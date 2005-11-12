@@ -645,6 +645,8 @@
 	<get_mapshot>NULL</get_mapshot>
 	<command>nexuiz</command>
 	<default_home>~/.nexuiz</default_home>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>data</main_mod>
     </game>
     <game>
@@ -657,12 +659,15 @@
 	<qstat_master_option>-warsowm</qstat_master_option>
 	<icon>warsow.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-	<init_maps>NULL</init_maps>
-	<has_map>NULL</has_map>
-	<get_mapshot>NULL</get_mapshot>
+	<init_maps>q3_init_maps</init_maps>
+	<has_map>quake_has_map</has_map>
+	<get_mapshot>q3_get_mapshot</get_mapshot>
 	<command>warsow</command>
 	<default_home>~/.warsow</default_home>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>basewsw</main_mod>
+	<pd>warsow_private</pd>
     </game>
     <game>
 	<type>GPS_SERVER</type>
