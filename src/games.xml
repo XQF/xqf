@@ -373,6 +373,9 @@
 	<default_port>20100</default_port>
 	<default_master_port>20110</default_master_port>
 	<id>SOF2S</id>
+	<qstat_str>SOF2S</qstat_str>
+	<qstat_option>-sof2s</qstat_option>
+	<qstat_master_option>-sof2m</qstat_master_option>
 	<icon>sof2s.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<init_maps>NULL</init_maps>

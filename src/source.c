@@ -1191,6 +1191,7 @@ static char *builtin_gslist_masters_update_info[] = {
   "ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2d Gslist (Demo)",
   "ADD AMS gslist://master.gamespy.com;portadjust=-1;gsmtype=armygame Gslist",
   "ADD D3G gslist://master.gamespy.com;gsmtype=descent3 Gslist",
+  "ADD SOF2S gslist://master.gamespy.com;gsmtype=sof2 Gslist",
 //  "ADD GPS gslist://master.gamespy.com;gsmtype=mohaa Gslist", // no fixed port offset
 //  "ADD SMS gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussam Gslist", // not compatible with linux version
 //  "ADD SMSSE gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussamse Gslist", // not compatible with linux version
