@@ -1123,6 +1123,8 @@ static char *builtin_masters_update_info[] = {
   "DELETE MHS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=MOHAA&hostport=1 multiplay.co.uk - MOHAA", // does no longer work
   "DELETE EFS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=EF&hostport=1 multiplay.co.uk - Elite Force", // does no longer work
 
+  "ADD AMS http://simplembs.armygame.com/sparse.txt armygame.com",
+
   // version 2.0 not listed here
   "DELETE AMS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=AA&hostport=1 multiplay.co.uk - Army Ops", // does no longer work
   "DELETE SOF2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=SOF2&hostport=1 multiplay.co.uk - SOF2", // does no longer work
