@@ -130,6 +130,7 @@ static char *progress_bar_str = NULL;
 static GtkWidget *server_menu = NULL;
 static GtkWidget *source_menu = NULL;
 static GtkWidget *player_menu = NULL;
+static GtkWidget *server_info_menu = NULL;
 
 static GtkWidget *connect_menu_item = NULL;
 static GtkWidget *observe_menu_item = NULL;
@@ -1667,6 +1668,31 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
   gtk_editable_copy_clipboard(selection_manager);
 }
 
+static void copy_server_info_callback (GtkWidget *widget, gpointer data) {
+  GList *selection = GTK_CLIST(srvinf_ctree)->selection;
+  int pos = 0;
+
+  gtk_editable_delete_text (selection_manager, 0, -1);
+
+  if(!g_list_length (selection))
+  {
+    gtk_editable_select_region (selection_manager, 0, 0);
+  }
+  else
+  {
+    for (; selection; selection = selection->next)
+    {
+      GtkCTreeNode* node = GTK_CTREE_NODE(selection->data);
+      char* txt = NULL;
+
+      gtk_ctree_node_get_text(GTK_CTREE(srvinf_ctree), node, 1, &txt);
+      gtk_editable_insert_text (selection_manager, txt, strlen (txt), &pos);
+    }
+    gtk_editable_select_region (selection_manager, 0, -1);
+  }
+  gtk_editable_copy_clipboard(selection_manager);
+}
+
 static void copy_text_to_clipboard(const char* text)
 {
   int pos = 0;
@@ -2192,6 +2218,58 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
   return FALSE;
 }
 
+static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event)
+{
+  GdkEventButton *bevent = (GdkEventButton *) event;
+  GList *selection;
+  GtkCTreeNode *node, *node_under_mouse;
+  int row = -1;
+  int node_is_in_selection = 0;
+
+  if (event->type == GDK_BUTTON_PRESS
+      && bevent->window == GTK_CLIST(srvinf_ctree)->clist_window
+      && bevent->button == 3) {
+
+    if (gtk_clist_get_selection_info (GTK_CLIST(srvinf_ctree), 
+	  bevent->x, bevent->y, &row, NULL)) {
+
+      selection = GTK_CLIST(srvinf_ctree)->selection;
+      if (!g_list_find (selection, GINT_TO_POINTER(row)) && 
+	  (bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) == 0) {
+	node_under_mouse = gtk_ctree_node_nth(GTK_CTREE (srvinf_ctree),row);
+	if(node_under_mouse)
+	{
+	  // go through all selected masters and search if the one under the
+	  // cursor is among them
+	  while(selection)
+	  {
+	    node = GTK_CTREE_NODE(selection->data);
+	    if(node == node_under_mouse)
+	    {
+	      node_is_in_selection = 1;
+	      break;
+	    }
+	    selection = selection->next;
+	  }
+
+	  // clear selection and only select the one under the curser
+	  if(!node_is_in_selection)
+	  {
+	    gtk_ctree_unselect_recursive(GTK_CTREE(srvinf_ctree),NULL);
+	    gtk_ctree_select (GTK_CTREE (srvinf_ctree), node_under_mouse);
+	  }
+	}
+      }
+    }
+    gtk_menu_popup (GTK_MENU (server_info_menu), NULL, NULL, NULL, NULL,
+	bevent->button, bevent->time);
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
 
 static void source_selection_changed (void) {
   GList *selection = GTK_CLIST (source_ctree)->selection;
@@ -2489,6 +2567,14 @@ static const struct menuitem srvopt_menu_items[] = {
   { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
 };
 
+static const struct menuitem srvinfo_menu_items[] = {
+  { 
+    MENU_ITEM,		N_("Copy"),		0,   	0,
+    GTK_SIGNAL_FUNC (copy_server_info_callback), NULL,
+    NULL
+  },
+  { MENU_END,		NULL,			0, 0, NULL, NULL, NULL }
+};
 static const struct menuitem file_menu_items[] = {
   { 
     MENU_ITEM,		N_("_Statistics"),	0,	0,
@@ -3314,6 +3400,7 @@ static void populate_main_window (void)
 
   server_menu = create_menu (srvopt_menu_items, accel_group);
 
+  server_info_menu = create_menu (srvinfo_menu_items, accel_group);
 
   source_menu = create_menu (source_ctree_popup_menu, accel_group);
 
@@ -3496,6 +3583,9 @@ static void populate_main_window (void)
 
   gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "click_column",
                   GTK_SIGNAL_FUNC (clist_set_sort_column), &srvinf_clist_def);
+
+  gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "event",
+                         GTK_SIGNAL_FUNC (server_info_clist_event_callback), NULL);
 
   gtk_clist_set_compare_func (GTK_CLIST (srvinf_ctree),
 			     (GtkCListCompareFunc) srvinf_clist_compare_func);
