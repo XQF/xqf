@@ -380,7 +380,7 @@ void clist_set_sort_column (GtkCList *clist, int column,
     gtk_clist_set_sort_column (clist, column);
   }
 
-  debug(0, "%d %hhd", column, cldef->cols[column].current_sort_mode);
+  debug(3, "%d %hhd", column, cldef->cols[column].current_sort_mode);
 
   clist_column_set_title (clist, cldef, TRUE);
   gtk_clist_sort (clist);

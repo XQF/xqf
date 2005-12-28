@@ -356,6 +356,7 @@ static struct q3_common_prefs_s ef_prefs =
 };
 
 static const char* cod_masterprotocols[] = {
+	"6 - v1.5",
 	"5 - v1.4",
 	"1 - retail",
 	NULL
