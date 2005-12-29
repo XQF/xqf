@@ -1,3 +1,14 @@
+XQF 1.0.5 -- ???
+~~~~~~~~~
+Changes since 1.0.4:
+
+o new games: Warsow
+o fix Quake 4 RCON
+o add "Show only configured games" button again
+o fix SOF2 query
+o add new America's Army master server
+o support copying server info values to clipboard
+
 XQF 1.0.4 -- October 20, 2005
 ~~~~~~~~~
 Changes since 1.0.3:
