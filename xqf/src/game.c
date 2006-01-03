@@ -1151,6 +1151,18 @@ static char *wolfet_gametypes[MAX_WOLFET_TYPES] = {
   NULL			// 6+ ???
 };
 
+#define MAX_WOLFET_TCETEST_TYPES 8
+static char *wolfet_tcetest_gametypes[MAX_WOLFET_TCETEST_TYPES] = {
+  NULL,			// 0 - Unknown
+  NULL,			// 1 - Unknown
+  NULL,			// 2 - Unknown
+  NULL,			// 3 - Unknown
+  NULL,			// 4 - Unknown
+  "Demolition",		// 5 - Demolition
+  NULL,			// 6 - Unknown
+  "Bodycount"			// 7 - Bodycount
+};
+
 #define MAX_JK3_TYPES 9
 static char *jk3_gametypes[MAX_JK3_TYPES] = {
   "FFA",		// 0 - Free For All
@@ -1369,6 +1381,11 @@ struct q3a_gametype_s wolfet_gametype_map[] =
     "shrubet",
     wolfet_gametypes,
     MAX_WOLFET_TYPES
+  },
+  {
+    "tcetest",
+    wolfet_tcetest_gametypes,
+    MAX_WOLFET_TCETEST_TYPES
   }
 };
 
