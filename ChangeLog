@@ -1,3 +1,7 @@
+Jan 03, 2006: <l-n@users.sourceforge.net>
+- add TC:E game types (patch by Steffen Pankratz)
+- remove AMS from qstat.cfg, it's native now
+
 Dec 28, 2005: <l-n@users.sourceforge.net>
 - add CoD protocol 6
 
