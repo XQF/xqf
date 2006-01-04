@@ -34,7 +34,7 @@ xqf_LDADD = $(INTLLIBS) \
 	    $(GDK_PIXBUF_LIBS) \
 	    -lz
 
-xqf_LDFLAGS = -Wl,-rpath,$(pkglibdir)
+xqf_LDFLAGS = -Wl,-rpath,$(pkglibdir) -Wl,--export-dynamic -Wl,--version-script=$(top_srcdir)/src/xqf.map
 
 # we need to specify all deps manually due to dummy libs
 xqf_DEPENDENCIES = \

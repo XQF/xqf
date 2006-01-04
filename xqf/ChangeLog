@@ -1,3 +1,6 @@
+Jan 04, 2006: <l-n@users.sourceforge.net>
+- add -Wl,--export-dynamic to LDFLAGS as xqf relies on it
+
 Jan 03, 2006: <l-n@users.sourceforge.net>
 - add TC:E game types (patch by Steffen Pankratz)
 - remove AMS from qstat.cfg, it's native now
