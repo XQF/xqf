@@ -1,3 +1,6 @@
+Jan 05, 2006: <l-n@users.sourceforge.net>
+- fix cursor navigation in server list (thanks Simon Philips)
+
 Jan 04, 2006: <l-n@users.sourceforge.net>
 - add -Wl,--export-dynamic to LDFLAGS as xqf relies on it
 
