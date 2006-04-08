@@ -56,6 +56,7 @@ extern void qw_cmd_or_dir_changed(struct game* g);
 extern void q2_cmd_or_dir_changed(struct game* g);
 extern void ut2004_cmd_or_dir_changed(struct game* g);
 extern void doom3_cmd_or_dir_changed(struct game* g);
+extern void tremulous_cmd_or_dir_changed(struct game* g);
 
 static struct player *poqs_parse_player(char *tokens[], int num, struct server *s);
 static struct player *qw_parse_player(char *tokens[], int num, struct server *s);
@@ -162,6 +163,7 @@ static struct quake_private jk3_private;
 static struct quake_private doom3_private;
 static struct quake_private quake4_private;
 static struct quake_private warsow_private;
+static struct quake_private tremulous_private;
 
 #include "games.c"
 
@@ -1483,6 +1485,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=SOF2S_SERVER;
       }
+      else if(!strncmp(info_ptr[1],"tremulous",9))
+      {
+	s->type=TREMULOUS_SERVER;
+      }
 
       break;
     }
@@ -2527,11 +2533,6 @@ static int hl_exec (const struct condef *con, int forkit) {
   argv[argi++] = strtok (cmd, delim);
   while ((argv[argi] = strtok (NULL, delim)) != NULL)
     argi++;
-
-  if(con->s->type == HL2_SERVER) // XXX
-  {
-    argv[argi++] = "-steam";
-  }
 
   if (con->gamedir) {
     argv[argi++] = "-game";
