@@ -70,6 +70,7 @@
 #include "xpm/netp.xpm"
 #include "xpm/nexuiz.xpm"
 #include "xpm/warsow.xpm"
+#include "xpm/tremulous.xpm"
 
 #include "xpm/gamespy3d.xpm"
 #include "xpm/ssam.xpm"

@@ -42,6 +42,8 @@ static char* stringlist039[] = { "data", NULL };
 static char* stringlist040[] = { "nexuiz", NULL };
 static char* stringlist041[] = { "basewsw", NULL };
 static char* stringlist042[] = { "warsow", NULL };
+static char* stringlist043[] = { "base", NULL };
+static char* stringlist044[] = { "tremulous", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -361,7 +363,7 @@ struct game games[] = {
   },
   {
     type                : HL_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_STEAM,
     name                : "Half-Life",
     default_port        : 27015,
     default_master_port : 27010,
@@ -384,7 +386,7 @@ struct game games[] = {
   },
   {
     type                : HL2_SERVER,
-    flags               : GAME_CONNECT | GAME_PASSWORD,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_MASTER_STEAM,
     name                : "Half-Life 2",
     default_port        : 27015,
     default_master_port : 27011,
@@ -875,6 +877,38 @@ struct game games[] = {
     pd                  : &warsow_private,
     main_mod            : stringlist041,
     command             : stringlist042,
+  },
+  {
+    type                : TREMULOUS_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Tremulous",
+    default_port        : 30720,
+    default_master_port : 30710,
+    id                  : "TREMULOUS",
+    qstat_str           : "TREMULOUS",
+    qstat_option        : "-tremulous",
+    qstat_master_option : "-tremulousm",
+    icon                : "tremulous.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.tremulous",
+    pd                  : &tremulous_private,
+    main_mod            : stringlist043,
+    command             : stringlist044,
   },
   {
     type                : GPS_SERVER,

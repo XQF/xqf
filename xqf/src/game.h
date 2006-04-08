@@ -43,6 +43,7 @@ enum {
   GAME_LAUNCH_HOSTPORT		= 0x0800, // use hostport rule as port when launching
   GAME_MASTER_CDKEY		= 0x1000, // master server requires CD key
   GAME_Q3COLORS			= 0x2000, // Q3 color codes
+  GAME_MASTER_STEAM		= 0x4000, // server side filter
 };
 
 struct game {

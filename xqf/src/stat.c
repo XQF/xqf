@@ -1343,7 +1343,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
 	arg_type = g_strdup_printf("%s,outfile", master_qstat_option(m));
       }
     }
-    else if( m->type == HL_SERVER && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
+    else if( (games[m->type].flags & GAME_MASTER_STEAM) && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
     {
       struct server_filter_vars* filter =
 	g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);

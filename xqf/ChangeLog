@@ -1,3 +1,8 @@
+Apr 08, 2006: <l-n@users.sourceforge.net>
+- Tremulous support
+- don't pass -steam option to hl2
+- strip newline when reading the doom3 version file
+
 Jan 05, 2006: <l-n@users.sourceforge.net>
 - fix cursor navigation in server list (thanks Simon Philips)
 

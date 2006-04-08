@@ -445,6 +445,19 @@ static struct q3_common_prefs_s warsow_prefs =
   defproto : "6",
 };
 
+static const char* tremulous_masterprotocols[] = {
+	"auto",
+	"69 - v1.1.0",
+	NULL
+};
+
+static struct q3_common_prefs_s tremulous_prefs =
+{
+  protocols: tremulous_masterprotocols,
+  defproto : "69",
+};
+
+
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);
 
 static void game_file_dialog(enum server_type type);
@@ -897,6 +910,9 @@ static void doom3_detect_version(struct game* g)
   if(!fgets(line, sizeof(line), f))
     goto out;
 
+  if(strlen(line) && line[strlen(line)-1] == '\n')
+	  line[strlen(line)-1] = '\0';
+
   debug(3, "detected %s protocol version %s", g->name, line);
 
   game_set_attribute(g->type, "_masterprotocol", g_strdup(line));
@@ -913,6 +929,12 @@ void doom3_update_prefs (struct game* g)
 }
 
 void quake4_update_prefs (struct game* g)
+{
+  q3_update_prefs_common(g);
+  doom3_detect_version(g);
+}
+
+void tremulous_update_prefs (struct game* g)
 {
   q3_update_prefs_common(g);
   doom3_detect_version(g);
@@ -3067,6 +3089,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case JK3_SERVER: return &jk3_prefs;
     case NEXUIZ_SERVER: return &nexuiz_prefs;
     case WARSOW_SERVER: return &warsow_prefs;
+    case TREMULOUS_SERVER: return &tremulous_prefs;
     default: return NULL;
   }
 }
@@ -4629,6 +4652,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[EF_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[NEXUIZ_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     new_genprefs[i].pref_dir = g_strdup (games[i].dir);
@@ -5332,6 +5356,11 @@ void ut2004_cmd_or_dir_changed(struct game* g)
 }
 
 void doom3_cmd_or_dir_changed(struct game* g)
+{
+  doom3_detect_version(g);
+}
+
+void tremulous_cmd_or_dir_changed(struct game* g)
 {
   doom3_detect_version(g);
 }

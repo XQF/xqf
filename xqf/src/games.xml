@@ -302,7 +302,7 @@
     <game>
 	<type>HL_SERVER</type>
 	<name>Half-Life</name>
-	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON</flags>
+	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_STEAM</flags>
 	<default_port>27015</default_port>
 	<default_master_port>27010</default_master_port>
 	<id>HLS</id>
@@ -322,7 +322,7 @@
     <game>
 	<type>HL2_SERVER</type>
 	<name>Half-Life 2</name>
-	<flags>GAME_CONNECT | GAME_PASSWORD</flags>
+	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_MASTER_STEAM</flags>
 	<default_port>27015</default_port>
 	<default_master_port>27011</default_master_port>
 	<id>A2S</id>
@@ -671,6 +671,26 @@
 	<update_prefs>q3_update_prefs_common</update_prefs>
 	<main_mod>basewsw</main_mod>
 	<pd>warsow_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
+	<type>TREMULOUS_SERVER</type>
+	<name>Tremulous</name>
+        <default_port>30720</default_port>
+        <default_master_port>30710</default_master_port>
+	<id>TREMULOUS</id>
+	<qstat_str>TREMULOUS</qstat_str>
+	<qstat_option>-tremulous</qstat_option>
+	<qstat_master_option>-tremulousm</qstat_master_option>
+	<icon>tremulous.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>tremulous</command>
+	<default_home>~/.tremulous</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>base</main_mod>
+	<pd>tremulous_private</pd>
     </game>
     <game>
 	<type>GPS_SERVER</type>
