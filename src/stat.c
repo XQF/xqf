@@ -1527,6 +1527,8 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
   argv[argi++] = "-P";
 
+  argv[argi++] = "-carets";
+
   if (g_slist_length (job->servers) <= MAX_SERVERS_IN_CMDLINE) {
     for (tmp = job->servers; tmp; tmp = tmp->next) {
       s = (struct server *) tmp->data;
