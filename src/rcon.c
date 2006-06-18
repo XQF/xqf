@@ -86,7 +86,7 @@ static void rcon_print (char *fmt, ...) {
 
   if (fmt) {
     va_start (ap, fmt);
-    g_vsnprintf (buf, 2048, fmt, ap);
+    g_vsnprintf (buf, sizeof(buf), fmt, ap);
     va_end (ap);
 
     gtk_text_freeze (GTK_TEXT (rcon_text));
@@ -315,6 +315,7 @@ static char* msg_terminate (char *msg, int size)
 static char* rcon_receive()
 {
   char *msg = "\n";
+  ssize_t t;
   ssize_t size;
 
   if (!packet)
@@ -335,6 +336,26 @@ static char* rcon_receive()
       // "\377\377\377\377<some character>"
       msg = packet + 4 + 1;
       size = size - 4 - 1;
+
+      for(t = 0; t < size && msg[t]; t++)      // filter QW KTPRO status list
+      {
+        if((unsigned char)msg[t] == 141)
+          msg[t] = '>';
+
+        msg[t]&=0x7f;
+
+        if(msg[t] < 32)
+        {
+          if(msg[t] >= 0x12 && msg[t] <= 0x12 + 9)
+            msg[t]+='0' - 0x12;    // yellow numbers
+          else if(msg[t] == 16)
+            msg[t] = '[';
+          else if(msg[t] == 17)
+            msg[t] = ']';
+          else if(msg[t] != '\n' && msg[t] != '\r')
+            msg[t] = '.';        // unprintable
+        }
+      }
       break;
 
     case DOOM3_SERVER:

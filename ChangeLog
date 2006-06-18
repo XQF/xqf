@@ -4,6 +4,7 @@ Jun 18, 2006: <l-n@users.sourceforge.net>
 - allow to also delete servers that are not in the Favorites list
 - display Warsow team colors (suggested by Tomasz Kalkosiński)
 - fix compilation of stand alone rcon tool (patch by O. Sezer)
+- filter QuakeWorld namefun characters in rcon (patch by Jorge Hodge)
 
 Apr 08, 2006: <l-n@users.sourceforge.net>
 - Tremulous support
