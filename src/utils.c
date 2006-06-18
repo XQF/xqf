@@ -922,6 +922,7 @@ int set_nonblock (int fd)
 
 // TODO: code is generic enough to move into separate file
 
+#if !defined(RCON_STANDALONE)
 int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 {
     int pipefds[2];
@@ -1191,3 +1192,5 @@ out:
 
   return buf;
 }
+#endif	// ! RCON_STANDALONE
+

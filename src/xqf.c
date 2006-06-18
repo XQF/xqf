@@ -445,11 +445,13 @@ void set_widgets_sensitivity (void) {
   gtk_widget_set_sensitive (edit_favadd_menu_item, sens);
   gtk_widget_set_sensitive (server_favadd_menu_item, sens);
 
+#if 0
   sens = (!stat_process && selected && source_is_favorites);
 
   gtk_widget_set_sensitive (delete_menu_item, sens);
   gtk_widget_set_sensitive (edit_delete_menu_item, sens);
   gtk_widget_set_sensitive (server_delete_menu_item, sens);
+#endif
 
   sens = (!stat_process && masters_to_delete);
 
@@ -1614,29 +1616,64 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
   return;
 }
 
-static void del_server_callback (GtkWidget *widget, gpointer data) {
-  GSList *list;
-  GSList *tmp;
+static void del_server_callback (GtkWidget *widget, gpointer data)
+{
+  GSList *selected;
+  GSList *l, *c;
+  int is_favorites = 0;
+  int delete_from_all = 0;
 
-  debug (7, "del_server_callback() -- ");
-  if (stat_process || !cur_source || 
-                            (struct master *) cur_source->data != favorites) {
+  debug(3, "--");
+
+  if (stat_process || !cur_source)
     return;
-  }
 
-  list = server_clist_selected_servers ();
-  if (list) {
-    for (tmp = list; tmp; tmp = tmp->next) {
-      favorites->servers = 
-	server_list_remove (favorites->servers, (struct server *) tmp->data);
+  selected = server_clist_selected_servers();
+
+  if(!selected)
+    return;
+
+  for (c = cur_source; c; c = c->next )
+  {
+    struct master* m = (struct master *) c->data;
+
+    if(m == favorites)
+      is_favorites = 1;
+
+    if(!delete_from_all && m->isgroup)
+    {
+      delete_from_all = dialog_yesno (NULL, 1, _("Yes"), _("No"),
+	  _("Remove selected servers from all lists?"));
     }
-    save_favorites ();
-    server_list_free (list);
-
-
-    update_server_lists_from_selected_source ();
-    server_clist_build_filtered (cur_server_list, FALSE);
   }
+
+  for (l = selected; l; l = l->next)
+  {
+    struct server* s = (struct server*) l->data;
+
+    if(delete_from_all)
+    {
+      server_remove_from_all(s);
+      master_remove_server(favorites, s);
+    }
+    else
+    {
+      for (c = cur_source; c; c = c->next )
+      {
+	struct master* m = (struct master *) c->data;
+
+	master_remove_server(m, s);
+      }
+    }
+  }
+
+  if(is_favorites)
+    save_favorites();
+
+  g_slist_free(selected);
+
+  update_server_lists_from_selected_source ();
+  server_clist_build_filtered (cur_server_list, FALSE);
 }
 
 
@@ -2519,7 +2556,7 @@ static const struct menuitem srvopt_menu_items[] = {
     &favadd_menu_item
   },
   { 
-    MENU_ITEM,		N_("Remove from Favorites"),		0,   	0,
+    MENU_ITEM,		N_("Remove"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &delete_menu_item
   },
@@ -2635,7 +2672,7 @@ static const struct menuitem edit_menu_items[] = {
     &edit_favadd_menu_item
   },
   { 
-    MENU_ITEM,		N_("_Remove from Favorites"),		'D',   	GDK_CONTROL_MASK,
+    MENU_ITEM,		N_("_Remove"),		'D',   	GDK_CONTROL_MASK,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &edit_delete_menu_item
   },
@@ -2795,7 +2832,7 @@ static const struct menuitem server_menu_items[] = {
     &server_favadd_menu_item
   },
   { 
-    MENU_ITEM,		N_("_Remove from Favorites"),		0,   	0,
+    MENU_ITEM,		N_("_Remove"),		0,   	0,
     GTK_SIGNAL_FUNC (del_server_callback), NULL,
     &server_delete_menu_item
   },

@@ -216,7 +216,7 @@ void init_games()
   				   ("Note:  Unreal Tournament will not launch correctly without\n"\
     				    "modifications to the game's startup script.  Please see the\n"\
 			  	    "XQF documentation for more information.")));
-  game_set_attribute(HL_SERVER,"game_notes",strdup(_
+  game_set_attribute(HL_SERVER_OLD,"game_notes",strdup(_
   				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));
 
   game_set_attribute(SAS_SERVER,"game_notes",strdup(_
@@ -326,7 +326,7 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 }
 
 
-static void q3_unescape (char *dst, char *src) {
+static void q3_unescape (char *dst, const char *src) {
 
   while (*src) {
     if (src[0] != '^' || src[1] == '\0' || src[1] < '0' || src[1] > '9')
@@ -472,7 +472,7 @@ static struct player *descent3_parse_player (char *token[], int n, struct server
 
 static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
-  char* clan = NULL;
+  const char* clan = NULL;
   unsigned clanlen = 0;
 
   if (n < 3)
@@ -482,6 +482,16 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   {
     clan = token[3];
     clanlen = strlen(clan)+1;
+  }
+
+  if(s->type == WARSOW_SERVER && clan)
+  {
+    static const char* colors[] = { "spectator", "", "red", "blue", "green", "yellow" };
+    unsigned i = atoi(clan);
+    if(i > 5) i = 1;
+    player->model = colors[i];
+    clan = NULL;
+    clanlen = 0;
   }
 
   player = g_malloc0 (sizeof (struct player) + strlen (token[0]) + 1 + clanlen);
@@ -3299,6 +3309,18 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 p->model?p->model:"0");
 	break;
 
+      case HL_SERVER:
+      case HL_SERVER_OLD:
+      case HL2_SERVER:
+	fprintf (f, 
+		 "%s" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%d\n",
+		 (p->name)? p->name : "",
+		 p->frags,
+		 p->time);
+	break;
+
       default:
 	fprintf (f, 
 		 "%s" QSTAT_DELIM_STR 
@@ -3306,7 +3328,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 "%d\n",
 		 (p->name)? p->name : "",
 		 p->frags,
-		 (s->type == HL_SERVER)? p->time : p->ping);
+		 p->ping);
 	break;
 
       } /* switch (s->type) */

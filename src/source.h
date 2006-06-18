@@ -74,6 +74,9 @@ extern gboolean have_gslist_masters();
 /** \brief check whether the gslist program is in $PATH */
 extern gboolean have_gslist_installed();
 
+void master_remove_server(struct master* m, struct server* s);
+void server_remove_from_all(struct server *s);
+
 #endif /* __SOURCE_H__ */
 
 

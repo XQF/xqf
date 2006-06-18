@@ -109,6 +109,7 @@ enum server_type {
   H2_SERVER,
   HW_SERVER,
   SN_SERVER,
+  HL_SERVER_OLD,
   HL_SERVER,
   HL2_SERVER,
   KP_SERVER,
