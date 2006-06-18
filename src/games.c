@@ -874,7 +874,7 @@ struct game games[] = {
     type                : WARSOW_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Warsow",
-    default_port        : 27960,
+    default_port        : 44400,
     default_master_port : 27950,
     id                  : "WARSOWS",
     qstat_str           : "WARSOWS",

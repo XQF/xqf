@@ -676,6 +676,7 @@
 	<base>Q3_SERVER</base>
 	<type>WARSOW_SERVER</type>
 	<name>Warsow</name>
+        <default_port>44400</default_port>
 	<id>WARSOWS</id>
 	<qstat_str>WARSOWS</qstat_str>
 	<qstat_option>-warsows</qstat_option>

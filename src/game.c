@@ -489,8 +489,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
     static const char* colors[] = { "spectator", "", "red", "blue", "green", "yellow" };
     unsigned i = atoi(clan);
     if(i > 5) i = 1;
-    player->model = colors[i];
-    clan = NULL;
+    clan = colors[i];
     clanlen = 0;
   }
 
@@ -507,8 +506,15 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   // show clan name in model column
   if(clan)
   {
-    player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
-    q3_unescape(player->model, clan);
+    if(s->type == WARSOW_SERVER)
+    {
+      player->model = (char*)clan;
+    }
+    else
+    {
+      player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
+      q3_unescape(player->model, clan);
+    }
   }
 
   return player;
