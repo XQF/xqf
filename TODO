@@ -1,4 +1,5 @@
 If there is nothing interesting on TV:
+- clean TODO list
 - Configure option for home directory as well as global directory
 - update game types for Q3 mods - move to external file
 - Ability to delete servers from non-Favorites (really? -- ln)
@@ -12,6 +13,7 @@ If there is nothing interesting on TV:
   each game
 - Redial feature:  User configurable options
 - make rcon window non-modal
+- display text why a server sucks in warning popop
 
 Jobs you can do if your holidays are boring:
 - dynamic dialogs using libglade
