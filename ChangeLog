@@ -1,3 +1,6 @@
+Oct 28, 2006: Jordi Mallach <jordi@sindominio.net>
+- fix Polish and reenable
+
 Oct 28, 2006: <l-n@users.sourceforge.net>
 - update qstat.cfg from qstat
 - disable Polish translation, file is broken
@@ -5,9 +8,9 @@ Oct 28, 2006: <l-n@users.sourceforge.net>
 - update docu
 
 Oct 26, 2006: Jordi Mallach <jordi@sindominio.net>
-- add Polish translation by Miłosz Kosobucki.
-- updated Catalan translation.
-- tweaks to desktop file.
+- add Polish translation by Miłosz Kosobucki
+- updated Catalan translation
+- tweaks to desktop file
 
 Jun 18, 2006: <l-n@users.sourceforge.net>
 - split Half-Life support into old and new version
