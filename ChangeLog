@@ -1,6 +1,7 @@
 Oct 28, 2006: <l-n@users.sourceforge.net>
 - update qstat.cfg from qstat
 - disable Polish translation, file is broken
+- add Warsow master protocol version 8
 
 Oct 26, 2006: Jordi Mallach <jordi@sindominio.net>
 - add Polish translation by Miłosz Kosobucki.

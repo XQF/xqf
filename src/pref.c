@@ -435,6 +435,7 @@ static struct q3_common_prefs_s nexuiz_prefs =
 };
 
 static const char* warsow_masterprotocols[] = {
+	"8 - v0.2",
 	"7 - v0.1",
 	"6 - v0.072",
 	NULL
