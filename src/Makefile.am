@@ -16,7 +16,7 @@ INCLUDES = -I$(top_srcdir)/intl \
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
 
-EXTRA_DIST = qstat.cfg games.xml games.c $(noinst_SCRIPTS)
+EXTRA_DIST = qstat.cfg games.xml games.c $(noinst_SCRIPTS) xqf.map
 
 bin_PROGRAMS = xqf
 if BUILD_XQFRCON
