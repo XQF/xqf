@@ -31,7 +31,7 @@ if [ -r mail ]; then
 	mailaddr=`cat mail`
 else
 	SFLOGIN=`cat CVS/Root |sed 's/.*:\(.*\)@.*/\1/'`
-	REALNAME=`getent passwd|awk -F : "\\$3==$UID{print \\$5}"`
+	REALNAME=`getent passwd|awk -v UID=$UID  -F : '$3==UID{FS=",";$0=$5;print $1;exit 0}'`
 	mailaddr="$REALNAME <$SFLOGIN@users.sourceforge.net>"
 fi;
 
