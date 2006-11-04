@@ -1,4 +1,4 @@
-XQF 1.0.5 -- ???
+XQF 1.0.5 -- November 04, 2006
 ~~~~~~~~~
 Changes since 1.0.4:
 
@@ -13,6 +13,7 @@ o don't pass -steam option to hl2 anymore
 o fix cursor navigation in server list
 o allow to also delete servers that are not in the Favorites list
 o split Half-Life support into old and new version
+o new Polish translation
 
 XQF 1.0.4 -- October 20, 2005
 ~~~~~~~~~
