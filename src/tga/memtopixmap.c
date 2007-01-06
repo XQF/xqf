@@ -91,7 +91,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
   {
     unsigned h = 0, w = 0;
     unsigned char* data;
-    g_free(loader);
+    gtk_object_unref(GTK_OBJECT(loader));
     loader = NULL;
 
     data = LoadTGA(mem, len, &w, &h);
@@ -113,7 +113,8 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
   else
   {
     pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-    g_free(loader);
+    gdk_pixbuf_ref(pixbuf);
+    gtk_object_unref(GTK_OBJECT(loader));
   }
 
   return pixbuf;
