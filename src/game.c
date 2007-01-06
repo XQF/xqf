@@ -82,7 +82,6 @@ static void descent3_analyze_serverinfo (struct server *s);
 static void savage_analyze_serverinfo (struct server *s);
 
 static int quake_config_is_valid (struct server *s);
-static int quake3_config_is_valid (struct server *s);
 static int config_is_valid_generic (struct server *s);
 
 static int write_q1_vars (const struct condef *con);
@@ -1721,73 +1720,6 @@ static int quake_config_is_valid (struct server *s) {
     return FALSE;
   }
 
-  g_free (path);
-  return TRUE;
-}
-
-/** find the quake3 directory */
-static char *quake3_data_dir (struct game* this) {
-  struct stat stat_buf;
-  char *path = NULL;
-  char *dir = NULL;
-  unsigned i = 0;
-
-  if(!this)
-    return NULL;
-
-  dir = this->real_home?this->real_home:this->real_dir;
-
-  if (!dir)
-    return NULL;
-
-  for(i = 0; this->main_mod[i]; ++i)
-  {
-    path = file_in_dir (dir, this->main_mod[i]);
-    if (stat (path, &stat_buf) == 0 && S_ISDIR (stat_buf.st_mode))
-    {
-      break;
-    }
-    else
-    {
-      g_free (path);
-      path = NULL;
-    }
-  }
-  return path;
-}
-
-
-static int quake3_config_is_valid (struct server *s) {
-  struct game *g = &games[s->type];
-  char *path;
-
-  if(!config_is_valid_generic(s))
-    return FALSE;
-  
-  path = quake3_data_dir (g);
-
-  if (path == NULL) {
-    if (!g->real_dir || g->real_dir[0] == '\0') {
-      dialog_ok (NULL, 
-		 // %s Quake3
-		 _("~/.q3a directory doesn\'t exist or doesn\'t contain\n"
-		 "\"baseq3\" (\"demoq3\") subdirectory.\n"
-		 "Please run %s client at least once before running XQF\n"
-		 "or specify correct %s working directory."),
-		 g->name, g->name);
-    }
-    else {
-      dialog_ok (NULL, 
-		 // %s directory, Quake3
-		 _("\"%s\" directory doesn\'t exist or doesn\'t contain "
-		 "\"baseq3\" (\"demoq3\") subdirectory.\n"
-		 "Please specify correct %s working directory\n"
-  	         "or leave it empty (~/.q3a is used by default)"), 
-		 g->real_dir, g->name);
-    }
-    return FALSE;
-  }
-  
   g_free (path);
   return TRUE;
 }

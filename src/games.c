@@ -6,7 +6,7 @@ static char* stringlist003[] = { "twilight-qw", "qw-client-sgl", "qw-client-glx"
 static char* stringlist004[] = { "baseq2", NULL };
 static char* stringlist005[] = { "quake2", NULL };
 static char* stringlist006[] = { "baseq3", "demoq3", NULL };
-static char* stringlist007[] = { "q3", "quake3", NULL };
+static char* stringlist007[] = { "ioquake3", "q3", "quake3", NULL };
 static char* stringlist008[] = { "q4base", NULL };
 static char* stringlist009[] = { "quake4", NULL };
 static char* stringlist010[] = { "+rconpassword", "+net_clientRemoteConsolePassword", NULL };
@@ -144,7 +144,7 @@ struct game games[] = {
     parse_player        : q3_parse_player,
     parse_server        : quake_parse_server,
     analyze_serverinfo  : q3_analyze_serverinfo,
-    config_is_valid     : quake3_config_is_valid,
+    config_is_valid     : config_is_valid_generic,
     exec_client         : q3_exec,
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,

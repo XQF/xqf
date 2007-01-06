@@ -133,7 +133,7 @@
 	<icon>q3.xpm</icon>
 	<parse_player>q3_parse_player</parse_player>
 	<analyze_serverinfo>q3_analyze_serverinfo</analyze_serverinfo>
-	<config_is_valid>quake3_config_is_valid</config_is_valid>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<exec_client>q3_exec</exec_client>
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>q3_init_maps</init_maps>
@@ -144,6 +144,7 @@
 	<identify_os>identify_os</identify_os>
 	<command>quake3</command>
 	<command>q3</command>
+	<command>ioquake3</command>
 	<default_home>~/.q3a</default_home>
 	<prefs_load>q3_prefs_load</prefs_load>
 	<update_prefs>q3_update_prefs</update_prefs>
