@@ -1057,6 +1057,7 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S master://master.planetgloom.com gloom",
 
   "ADD Q3S master://master3.idsoftware.com id",
+  "ADD Q3S master://master.urbanterror.net Urban Terror",
 //  "ADD Q3S master://q3master.splatterworld.de Germany",
 //  "ADD Q3S master://q3.golsyd.net.au Australia",
   "DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld", // doesn't work (26.09.2004)

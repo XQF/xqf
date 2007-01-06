@@ -1,7 +1,8 @@
 Jan 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove check for baseq3 directory (#1629221)
 - fix reference counting of a GtkPixbuf when showing a map preview
-  (1629309)
+  (#1629309)
+- add Urban Terror master server (#1629226)
 
 Nov 04, 2006: Ludwig Nussel <l-n@users.sourceforge.net>
 - release 1.0.5
