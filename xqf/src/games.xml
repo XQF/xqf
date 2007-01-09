@@ -133,7 +133,7 @@
 	<icon>q3.xpm</icon>
 	<parse_player>q3_parse_player</parse_player>
 	<analyze_serverinfo>q3_analyze_serverinfo</analyze_serverinfo>
-	<config_is_valid>quake3_config_is_valid</config_is_valid>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<exec_client>q3_exec</exec_client>
 	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
 	<init_maps>q3_init_maps</init_maps>
@@ -144,6 +144,7 @@
 	<identify_os>identify_os</identify_os>
 	<command>quake3</command>
 	<command>q3</command>
+	<command>ioquake3</command>
 	<default_home>~/.q3a</default_home>
 	<prefs_load>q3_prefs_load</prefs_load>
 	<update_prefs>q3_update_prefs</update_prefs>
@@ -300,8 +301,8 @@
 	<exec_client>q2_exec_generic</exec_client>
     </game>
     <game>
-	<type>HL_SERVER</type>
-	<name>Half-Life</name>
+	<type>HL_SERVER_OLD</type>
+	<name>Half-Life (old)</name>
 	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_STEAM</flags>
 	<default_port>27015</default_port>
 	<default_master_port>27010</default_master_port>
@@ -309,6 +310,26 @@
 	<qstat_str>HLS</qstat_str>
 	<qstat_option>-hls</qstat_option>
 	<qstat_master_option>-hlm</qstat_master_option>
+	<icon>hl.xpm</icon>
+	<parse_player>hl_parse_player</parse_player>
+	<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
+	<exec_client>hl_exec</exec_client>
+	<init_maps>quake_init_maps</init_maps>
+	<has_map>quake_has_map</has_map>
+	<arch_identifier>sv_os</arch_identifier>
+	<identify_os>identify_os</identify_os>
+	<pd>hl_private</pd>
+    </game>
+    <game>
+	<type>HL_SERVER</type>
+	<name>Half-Life</name>
+	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_STEAM</flags>
+	<default_port>27015</default_port>
+	<default_master_port>27010</default_master_port>
+	<id>HLA2S</id>
+	<qstat_str>HLA2S</qstat_str>
+	<qstat_option>-hla2s</qstat_option>
+	<qstat_master_option>-hla2sm</qstat_master_option>
 	<icon>hl.xpm</icon>
 	<parse_player>hl_parse_player</parse_player>
 	<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
@@ -656,6 +677,7 @@
 	<base>Q3_SERVER</base>
 	<type>WARSOW_SERVER</type>
 	<name>Warsow</name>
+        <default_port>44400</default_port>
 	<id>WARSOWS</id>
 	<qstat_str>WARSOWS</qstat_str>
 	<qstat_option>-warsows</qstat_option>

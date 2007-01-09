@@ -1,3 +1,37 @@
+Jan 09, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
+- use g_object_unref instead of gtk_object_unref for GTK2 (#1629598)
+
+Jan 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
+- remove check for baseq3 directory (#1629221)
+- fix reference counting of a GtkPixbuf when showing a map preview
+  (#1629309)
+- add Urban Terror master server (#1629226)
+
+Nov 04, 2006: Ludwig Nussel <l-n@users.sourceforge.net>
+- release 1.0.5
+
+Oct 28, 2006: Jordi Mallach <jordi@sindominio.net>
+- fix Polish and reenable
+
+Oct 28, 2006: <l-n@users.sourceforge.net>
+- update qstat.cfg from qstat
+- disable Polish translation, file is broken
+- add Warsow master protocol version 8
+- update docu
+
+Oct 26, 2006: Jordi Mallach <jordi@sindominio.net>
+- add Polish translation by Miłosz Kosobucki
+- updated Catalan translation
+- tweaks to desktop file
+
+Jun 18, 2006: <l-n@users.sourceforge.net>
+- split Half-Life support into old and new version
+- fix saving of Half-Life player information
+- allow to also delete servers that are not in the Favorites list
+- display Warsow team colors (suggested by Tomasz Kalkosiński)
+- fix compilation of stand alone rcon tool (patch by O. Sezer)
+- filter QuakeWorld namefun characters in rcon (patch by Jorge Hodge)
+
 Apr 08, 2006: <l-n@users.sourceforge.net>
 - Tremulous support
 - don't pass -steam option to hl2

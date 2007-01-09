@@ -6,7 +6,7 @@ static char* stringlist003[] = { "twilight-qw", "qw-client-sgl", "qw-client-glx"
 static char* stringlist004[] = { "baseq2", NULL };
 static char* stringlist005[] = { "quake2", NULL };
 static char* stringlist006[] = { "baseq3", "demoq3", NULL };
-static char* stringlist007[] = { "q3", "quake3", NULL };
+static char* stringlist007[] = { "ioquake3", "q3", "quake3", NULL };
 static char* stringlist008[] = { "q4base", NULL };
 static char* stringlist009[] = { "quake4", NULL };
 static char* stringlist010[] = { "+rconpassword", "+net_clientRemoteConsolePassword", NULL };
@@ -144,7 +144,7 @@ struct game games[] = {
     parse_player        : q3_parse_player,
     parse_server        : quake_parse_server,
     analyze_serverinfo  : q3_analyze_serverinfo,
-    config_is_valid     : quake3_config_is_valid,
+    config_is_valid     : config_is_valid_generic,
     exec_client         : q3_exec,
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,
@@ -362,15 +362,38 @@ struct game games[] = {
     save_info           : quake_save_info,
   },
   {
-    type                : HL_SERVER,
+    type                : HL_SERVER_OLD,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_STEAM,
-    name                : "Half-Life",
+    name                : "Half-Life (old)",
     default_port        : 27015,
     default_master_port : 27010,
     id                  : "HLS",
     qstat_str           : "HLS",
     qstat_option        : "-hls",
     qstat_master_option : "-hlm",
+    icon                : "hl.xpm",
+    parse_player        : hl_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : hl_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : hl_exec,
+    save_info           : quake_save_info,
+    init_maps           : quake_init_maps,
+    has_map             : quake_has_map,
+    arch_identifier     : "sv_os",
+    identify_os         : identify_os,
+    pd                  : &hl_private,
+  },
+  {
+    type                : HL_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_STEAM,
+    name                : "Half-Life",
+    default_port        : 27015,
+    default_master_port : 27010,
+    id                  : "HLA2S",
+    qstat_str           : "HLA2S",
+    qstat_option        : "-hla2s",
+    qstat_master_option : "-hla2sm",
     icon                : "hl.xpm",
     parse_player        : hl_parse_player,
     parse_server        : quake_parse_server,
@@ -851,7 +874,7 @@ struct game games[] = {
     type                : WARSOW_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Warsow",
-    default_port        : 27960,
+    default_port        : 44400,
     default_master_port : 27950,
     id                  : "WARSOWS",
     qstat_str           : "WARSOWS",

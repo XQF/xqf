@@ -524,6 +524,7 @@ static void read_server_info (const char *filename) {
   char *buf;
   char *pos;
   GSList *strings;
+  int line = 1;
 
   debug(3,"read_server_info(%s)",filename);
 
@@ -541,7 +542,7 @@ static void read_server_info (const char *filename) {
 
   while (1) {
     if (pos - buf > 1024*16 - 16) {
-      fprintf (stderr, "server record is too large\n");
+      xqf_error("server record is too large in %s, line %d\n", realname, line);
       g_slist_free (strings);
       break;
     }
@@ -560,6 +561,7 @@ static void read_server_info (const char *filename) {
     else {
 
       if (pos[0] == '\n') {		/* empty line */
+	++line;
 	parse_saved_server (strings);
 	g_slist_free (strings);
 	strings = NULL;
@@ -570,6 +572,7 @@ static void read_server_info (const char *filename) {
 
 	while (*pos) {
 	  if (*pos == '\n') {
+	    ++line;
 	    *pos = '\0';
 	    break;
 	  }
@@ -1054,6 +1057,7 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S master://master.planetgloom.com gloom",
 
   "ADD Q3S master://master3.idsoftware.com id",
+  "ADD Q3S master://master.urbanterror.net Urban Terror",
 //  "ADD Q3S master://q3master.splatterworld.de Germany",
 //  "ADD Q3S master://q3.golsyd.net.au Australia",
   "DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld", // doesn't work (26.09.2004)
@@ -1071,6 +1075,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD HLS,-stm master://steam1.steampowered.com Steam 1",
   "ADD HLS,-stm master://steam2.steampowered.com Steam 2",
+
+  "ADD HLA2S master://steam1.steampowered.com Steam 1",
 
   "ADD A2S,-stma2s master://steam1.steampowered.com:27011 Steam 1",
   "ADD A2S,-stma2s master://steam2.steampowered.com:27011 Steam 2",
@@ -1674,4 +1680,28 @@ gboolean have_gslist_installed()
   char* gslist = find_file_in_path("gslist");
   g_free(gslist);
   return (gslist != NULL);
+}
+
+void master_remove_server(struct master* m, struct server* s)
+{
+  if(!m || !s)
+    return;
+
+  m->servers = server_list_remove(m->servers, s);
+}
+
+void server_remove_from_all(struct server *s)
+{
+  GSList *list;
+  struct master *m;
+
+  for (list = all_masters; list; list = list->next)
+  {
+    m = (struct master *) list->data;
+
+    if (m == favorites)
+      continue;
+
+    m->servers = server_list_remove(m->servers, s);
+  }
 }

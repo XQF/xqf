@@ -1,13 +1,19 @@
-XQF 1.0.5 -- ???
+XQF 1.0.5 -- November 04, 2006
 ~~~~~~~~~
 Changes since 1.0.4:
 
-o new games: Warsow
+o new games: Warsow, Tremulous
 o fix Quake 4 RCON
 o add "Show only configured games" button again
 o fix SOF2 query
 o add new America's Army master server
 o support copying server info values to clipboard
+o fix build with newer GTK2 versions
+o don't pass -steam option to hl2 anymore
+o fix cursor navigation in server list
+o allow to also delete servers that are not in the Favorites list
+o split Half-Life support into old and new version
+o new Polish translation
 
 XQF 1.0.4 -- October 20, 2005
 ~~~~~~~~~

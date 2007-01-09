@@ -82,7 +82,6 @@ static void descent3_analyze_serverinfo (struct server *s);
 static void savage_analyze_serverinfo (struct server *s);
 
 static int quake_config_is_valid (struct server *s);
-static int quake3_config_is_valid (struct server *s);
 static int config_is_valid_generic (struct server *s);
 
 static int write_q1_vars (const struct condef *con);
@@ -216,7 +215,7 @@ void init_games()
   				   ("Note:  Unreal Tournament will not launch correctly without\n"\
     				    "modifications to the game's startup script.  Please see the\n"\
 			  	    "XQF documentation for more information.")));
-  game_set_attribute(HL_SERVER,"game_notes",strdup(_
+  game_set_attribute(HL_SERVER_OLD,"game_notes",strdup(_
   				   ("Sample Command Line:  wine hl.exe -- hl.exe -console")));
 
   game_set_attribute(SAS_SERVER,"game_notes",strdup(_
@@ -326,7 +325,7 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 }
 
 
-static void q3_unescape (char *dst, char *src) {
+static void q3_unescape (char *dst, const char *src) {
 
   while (*src) {
     if (src[0] != '^' || src[1] == '\0' || src[1] < '0' || src[1] > '9')
@@ -472,7 +471,7 @@ static struct player *descent3_parse_player (char *token[], int n, struct server
 
 static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   struct player *player = NULL;
-  char* clan = NULL;
+  const char* clan = NULL;
   unsigned clanlen = 0;
 
   if (n < 3)
@@ -482,6 +481,15 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   {
     clan = token[3];
     clanlen = strlen(clan)+1;
+  }
+
+  if(s->type == WARSOW_SERVER && clan)
+  {
+    static const char* colors[] = { "spectator", "", "red", "blue", "green", "yellow" };
+    unsigned i = atoi(clan);
+    if(i > 5) i = 1;
+    clan = colors[i];
+    clanlen = 0;
   }
 
   player = g_malloc0 (sizeof (struct player) + strlen (token[0]) + 1 + clanlen);
@@ -497,8 +505,15 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
   // show clan name in model column
   if(clan)
   {
-    player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
-    q3_unescape(player->model, clan);
+    if(s->type == WARSOW_SERVER)
+    {
+      player->model = (char*)clan;
+    }
+    else
+    {
+      player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
+      q3_unescape(player->model, clan);
+    }
   }
 
   return player;
@@ -1705,73 +1720,6 @@ static int quake_config_is_valid (struct server *s) {
     return FALSE;
   }
 
-  g_free (path);
-  return TRUE;
-}
-
-/** find the quake3 directory */
-static char *quake3_data_dir (struct game* this) {
-  struct stat stat_buf;
-  char *path = NULL;
-  char *dir = NULL;
-  unsigned i = 0;
-
-  if(!this)
-    return NULL;
-
-  dir = this->real_home?this->real_home:this->real_dir;
-
-  if (!dir)
-    return NULL;
-
-  for(i = 0; this->main_mod[i]; ++i)
-  {
-    path = file_in_dir (dir, this->main_mod[i]);
-    if (stat (path, &stat_buf) == 0 && S_ISDIR (stat_buf.st_mode))
-    {
-      break;
-    }
-    else
-    {
-      g_free (path);
-      path = NULL;
-    }
-  }
-  return path;
-}
-
-
-static int quake3_config_is_valid (struct server *s) {
-  struct game *g = &games[s->type];
-  char *path;
-
-  if(!config_is_valid_generic(s))
-    return FALSE;
-  
-  path = quake3_data_dir (g);
-
-  if (path == NULL) {
-    if (!g->real_dir || g->real_dir[0] == '\0') {
-      dialog_ok (NULL, 
-		 // %s Quake3
-		 _("~/.q3a directory doesn\'t exist or doesn\'t contain\n"
-		 "\"baseq3\" (\"demoq3\") subdirectory.\n"
-		 "Please run %s client at least once before running XQF\n"
-		 "or specify correct %s working directory."),
-		 g->name, g->name);
-    }
-    else {
-      dialog_ok (NULL, 
-		 // %s directory, Quake3
-		 _("\"%s\" directory doesn\'t exist or doesn\'t contain "
-		 "\"baseq3\" (\"demoq3\") subdirectory.\n"
-		 "Please specify correct %s working directory\n"
-  	         "or leave it empty (~/.q3a is used by default)"), 
-		 g->real_dir, g->name);
-    }
-    return FALSE;
-  }
-  
   g_free (path);
   return TRUE;
 }
@@ -3299,6 +3247,18 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 p->model?p->model:"0");
 	break;
 
+      case HL_SERVER:
+      case HL_SERVER_OLD:
+      case HL2_SERVER:
+	fprintf (f, 
+		 "%s" QSTAT_DELIM_STR 
+		 "%d" QSTAT_DELIM_STR 
+		 "%d\n",
+		 (p->name)? p->name : "",
+		 p->frags,
+		 p->time);
+	break;
+
       default:
 	fprintf (f, 
 		 "%s" QSTAT_DELIM_STR 
@@ -3306,7 +3266,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 		 "%d\n",
 		 (p->name)? p->name : "",
 		 p->frags,
-		 (s->type == HL_SERVER)? p->time : p->ping);
+		 p->ping);
 	break;
 
       } /* switch (s->type) */
