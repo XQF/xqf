@@ -1,3 +1,6 @@
+Jan 09, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
+- use g_object_unref instead of gtk_object_unref for GTK2 (#1629598)
+
 Jan 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
 - remove check for baseq3 directory (#1629221)
 - fix reference counting of a GtkPixbuf when showing a map preview
