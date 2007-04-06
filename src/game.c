@@ -1222,6 +1222,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
     MAX_Q3A_UT3_TYPES
   },
   {
+    "q3ut4",
+    q3a_ut3_gametypes,
+    MAX_Q3A_UT3_TYPES
+  },
+  {
     "threewave",
     q3a_threewave_gametypes,
     MAX_Q3A_THREEWAVE_TYPES
