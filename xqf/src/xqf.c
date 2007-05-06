@@ -954,8 +954,20 @@ static gboolean check_launch (struct condef* con)
 
   if (props && props->sucks)
   {
+    char* comment = props->comment;
+    if(comment && strlen(comment))
+    {
+      comment = g_strdup_printf(_("\n\nThe server sucks for the following reason:\n%s"), props->comment);
+    }
+    else
+    {
+      comment = NULL;
+    }
     launch = dialog_yesno (NULL, 1, _("Yes"), _("No"),
-	_("You said this servers sucks.\nDo you want to risk a game this time?"));
+	/* translator: %s = optional reason why the server sucks */
+	_("You said this servers sucks.\nDo you want to risk a game this time?%s"), comment?comment:"");
+
+    g_free(comment);
 
     if (!launch)
     {

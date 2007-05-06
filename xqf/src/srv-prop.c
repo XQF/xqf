@@ -171,9 +171,9 @@ void props_save (void) {
       {
 	char* s = p->comment;
 	
-	// strip last \n, otherwise one is added each time the server is saved
-	if(s[strlen(s)] == '\n')
-	  s[strlen(s)] = '\0';
+	// strip trailing \n, otherwise one is added each time the server is saved
+	while(s[strlen(s)-1] == '\n')
+	  s[strlen(s)-1] = '\0';
 	
 	fputs("comment ", f);
 	while(*s)
