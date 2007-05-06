@@ -1,3 +1,7 @@
+May 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
+- display user specified comment about why a server sucks when
+  trying to connect
+
 Apr 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
 - add q3ut4 game types (#1693170)
 
