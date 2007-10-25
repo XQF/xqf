@@ -319,7 +319,7 @@ struct game games[] = {
     cmd_or_dir_changed  : doom3_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
     update_prefs        : quake4_update_prefs,
-    default_home        : "~/.etqw",
+    default_home        : "~/.etqwcl",
     pd                  : &etqw_private,
     main_mod            : stringlist018,
     command             : stringlist019,
