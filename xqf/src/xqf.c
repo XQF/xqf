@@ -3993,6 +3993,10 @@ int main (int argc, char *argv[]) {
 
   parse_commandline(argc,argv);
 
+  if (!GDK_PIXBUF_INSTALLED) {
+    xqf_warning(_("gdk-pixbuf is not installed. Some icons may not be displayed"));
+  }
+
   if (dns_spawn_helper () < 0) {
     xqf_error ("Unable to start DNS helper");
     return 1;
