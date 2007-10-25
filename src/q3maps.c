@@ -245,6 +245,32 @@ static char* is_quake4_map(const char* name)
     return NULL;
 }
 
+// must free
+static gboolean is_etqw_mapshot(const char* name)
+{
+    if(g_strncasecmp(name,"levelshots/thumbs/",18))
+	return FALSE;
+
+    if (!g_strcasecmp(name+strlen(name)-4,".jpg")
+	|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+    {
+	return TRUE;
+    }
+
+    return FALSE;
+}
+
+static char* is_etqw_map(const char* name)
+{
+    if (!g_strncasecmp(name,"maps/",5)
+	    && !g_strcasecmp(name+strlen(name)-4,".stm"))
+    {
+	const char* basename = g_basename(name);
+	return g_strndup(basename,strlen(basename)-4);
+    }
+    return NULL;
+}
+
 static gboolean if_map_insert(const char* path, GHashTable* maphash,
 	char* (*is_map_func)(const char* name))
 {
@@ -424,6 +450,11 @@ void doom3_contains_file(const char* name, int level, GHashTable* maphash)
 void quake4_contains_file(const char* name, int level, GHashTable* maphash)
 {
     _doom3_contains_file(name, level, maphash, is_quake4_map, is_quake4_mapshot);
+}
+
+void etqw_contains_file(const char* name, int level, GHashTable* maphash)
+{
+    _doom3_contains_file(name, level, maphash, is_etqw_map, is_etqw_mapshot);
 }
 
 
@@ -718,6 +749,11 @@ void findquake4maps(GHashTable* maphash, const char* startdir)
     process_levelshots(maphash);
 }
 
+void findetqwmaps(GHashTable* maphash, const char* startdir)
+{
+    traverse_dir(startdir, (FoundFileFunction)etqw_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+    process_levelshots(maphash);
+}
 
 
 #if 0

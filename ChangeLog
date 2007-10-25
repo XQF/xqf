@@ -1,3 +1,8 @@
+Oct 25, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
+- print only one single warning if gdk-pixbuf isn't installed
+- add hexenworld master server support (Patch by O. Sezer)
+- add support for ETQW
+
 May 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
 - display user specified comment about why a server sucks when
   trying to connect

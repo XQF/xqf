@@ -131,6 +131,8 @@ static void quake4_init_maps(enum server_type);
 static size_t quake4_get_mapshot(struct server* s, guchar** buf);
 static gboolean quake4_has_map(struct server* s);
 
+static void etqw_init_maps(enum server_type);
+
 static void unreal_init_maps(enum server_type);
 static gboolean unreal_has_map(struct server* s);
 
@@ -1654,7 +1656,8 @@ static void doom3_analyze_serverinfo (struct server *s) {
     else if (!s->gametype && strcmp (*info_ptr, "si_gameType") == 0) {
 	s->gametype = info_ptr[1];
     }
-    else if (strcmp (*info_ptr, "si_usepass") == 0) {
+    else if (strcmp (*info_ptr, "si_usepass") == 0
+	|| strcmp (*info_ptr, "si_needPass") == 0) {
       int n = atoi (info_ptr[1]);
       if ((n & 1) != 0)
 	s->flags |= SERVER_PASSWORD;
@@ -1669,7 +1672,9 @@ static void doom3_analyze_serverinfo (struct server *s) {
 	s->flags |= SERVER_INCOMPATIBLE;
       }
     }
-    else if (!strcmp(*info_ptr, "sv_punkbuster") && info_ptr[1] && info_ptr[1][0] == '1') {
+    else if ((!strcmp(*info_ptr, "sv_punkbuster")
+	  || !strcmp(*info_ptr, "net_serverPunkbusterEnabled"))
+	&& info_ptr[1] && info_ptr[1][0] == '1') {
       s->flags |= SERVER_PUNKBUSTER;
     }
   }
@@ -3393,6 +3398,23 @@ static void quake4_init_maps(enum server_type type)
   if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
   {
     findquake4maps(pd->maphash, games[type].real_home);
+  }
+}
+
+static void etqw_init_maps(enum server_type type)
+{
+  struct quake_private* pd = NULL;
+
+  pd = (struct quake_private*)games[type].pd;
+  g_return_if_fail(pd!=NULL);
+  
+  q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+  pd->maphash = q3_init_maphash();
+  findetqwmaps(pd->maphash,games[type].real_dir);
+
+  if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
+  {
+    findetqwmaps(pd->maphash, games[type].real_home);
   }
 }
 

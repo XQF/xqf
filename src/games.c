@@ -17,7 +17,7 @@ static char* stringlist014[] = { "et", NULL };
 static char* stringlist015[] = { "base", NULL };
 static char* stringlist016[] = { "doom3", NULL };
 static char* stringlist017[] = { "+rconpassword", "+net_clientRemoteConsolePassword", NULL };
-static char* stringlist018[] = { "q4base", NULL };
+static char* stringlist018[] = { "base", NULL };
 static char* stringlist019[] = { "etqw", NULL };
 static char* stringlist020[] = { "+rconpassword", "+net_clientRemoteConsolePassword", NULL };
 static char* stringlist021[] = { "BaseEF", NULL };
@@ -302,7 +302,7 @@ struct game games[] = {
     qstat_str           : "ETQWS",
     qstat_option        : "-etqws",
     qstat_master_option : "-q3m",
-    icon                : "error.xpm",
+    icon                : "etqw.xpm",
     parse_player        : q3_parse_player,
     parse_server        : quake_parse_server,
     analyze_serverinfo  : doom3_analyze_serverinfo,
@@ -310,7 +310,7 @@ struct game games[] = {
     exec_client         : q3_exec,
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,
-    init_maps           : quake4_init_maps,
+    init_maps           : etqw_init_maps,
     has_map             : quake4_has_map,
     get_mapshot         : quake4_get_mapshot,
     arch_identifier     : "si_version",
