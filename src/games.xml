@@ -279,9 +279,11 @@
 	<flags>GAME_CONNECT | GAME_QUAKE1_PLAYER_COLORS | GAME_RCON</flags>
 	<name>HexenWorld</name>
 	<default_port>26950</default_port>
+	<default_master_port>26900</default_master_port>
 	<id>HWS</id>
 	<qstat_str>HWS</qstat_str>
 	<qstat_option>-hws</qstat_option>
+	<qstat_master_option>-hwm</qstat_master_option>
 	<icon>hw.xpm</icon>
 	<parse_player>qw_parse_player</parse_player>
 	<analyze_serverinfo>qw_analyze_serverinfo</analyze_serverinfo>
