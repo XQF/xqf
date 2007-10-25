@@ -248,6 +248,33 @@
 
     <game>
 	<base>Q3_SERVER</base>
+	<type>ETQW_SERVER</type>
+	<name>ET: Quake Wars</name>
+	<default_port>27733</default_port>
+	<id>ETQWS</id>
+	<qstat_str>ETQWS</qstat_str>
+	<qstat_option>-etqws</qstat_option>
+	<icon>error.xpm</icon>
+	<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<init_maps>quake4_init_maps</init_maps>
+	<has_map>quake4_has_map</has_map>
+	<get_mapshot>quake4_get_mapshot</get_mapshot>
+	<arch_identifier>si_version</arch_identifier>
+	<command>etqw</command>
+	<cmd_or_dir_changed>doom3_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>quake4_update_prefs</update_prefs>
+	<default_home>~/.etqw</default_home>
+	<main_mod>q4base</main_mod>
+	<attributes>+net_clientRemoteConsolePassword</attributes>
+	<attributes>+rconpassword</attributes>
+	<pd>etqw_private</pd>
+    </game>
+
+
+    <game>
+	<base>Q3_SERVER</base>
 	<type>EF_SERVER</type>
 	<name>Voyager Elite Force</name>
 	<id>EFS</id>

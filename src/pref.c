@@ -423,6 +423,20 @@ static struct q3_common_prefs_s q4_prefs =
   flags    : Q3_PREF_PB | Q3_PREF_CONSOLE,
 };
 
+static const char* etqw_masterprotocols[] = {
+	"auto",
+	"0 - any",
+	"10.16 - retail",
+	NULL
+};
+
+static struct q3_common_prefs_s etqw_prefs =
+{
+  protocols: etqw_masterprotocols,
+  defproto : "auto",
+  flags    : Q3_PREF_PB | Q3_PREF_CONSOLE,
+};
+
 static const char* nexuiz_masterprotocols[] = {
 	"3",
 	NULL
@@ -3085,6 +3099,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case WO_SERVER: return &wo_prefs;
     case WOET_SERVER: return &woet_prefs;
     case DOOM3_SERVER: return &doom3_prefs;
+    case ETQW_SERVER: return &etqw_prefs;
     case EF_SERVER: return &ef_prefs;
     case SOF2S_SERVER: return &sof2_prefs;
     case COD_SERVER: return &cod_prefs;
@@ -3092,7 +3107,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case NEXUIZ_SERVER: return &nexuiz_prefs;
     case WARSOW_SERVER: return &warsow_prefs;
     case TREMULOUS_SERVER: return &tremulous_prefs;
-    default: return NULL;
+    default: xqf_error("need to define preferences"); return NULL;
   }
 }
 
