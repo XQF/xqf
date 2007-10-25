@@ -161,6 +161,7 @@ static struct quake_private cod_private;
 static struct quake_private jk3_private;
 static struct quake_private doom3_private;
 static struct quake_private quake4_private;
+static struct quake_private etqw_private;
 static struct quake_private warsow_private;
 static struct quake_private tremulous_private;
 

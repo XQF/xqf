@@ -1106,6 +1106,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD DM3S master://idnet.ua-corp.com:27650 id",
 
+  "ADD ETQWS http://etqw-ipgetter.demonware.net/ipgetter/ demonware",
+
   "ADD EFS http://www.gameaholic.com/servers/qspy-startrekeliteforce Gameaholic.com",
   "ADD EFS master://master.stef1.ravensoft.com:27953  Ravensoft",
 
