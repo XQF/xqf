@@ -80,6 +80,7 @@
 #include "xpm/bf1942.xpm"
 #include "xpm/jk3.xpm"
 #include "xpm/doom3.xpm"
+#include "xpm/etqw.xpm"
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"

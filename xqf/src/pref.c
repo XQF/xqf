@@ -4662,6 +4662,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[WOET_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[DOOM3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[Q4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[ETQW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[COD_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[JK3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_q3_options_to_notebook;

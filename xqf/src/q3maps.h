@@ -68,6 +68,7 @@ void findq3maps(GHashTable* maphash, const char* startdir);
  */
 void finddoom3maps(GHashTable* maphash, const char* startdir);
 void findquake4maps(GHashTable* maphash, const char* startdir);
+void findetqwmaps(GHashTable* maphash, const char* startdir);
 
 void findquakemaps(GHashTable* maphash, const char* startdir);
 
