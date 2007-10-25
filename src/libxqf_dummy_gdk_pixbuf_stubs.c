@@ -19,6 +19,9 @@
 
 #include <stddef.h>
 
+unsigned int gdk_pixbuf_major_version;
+unsigned int gdk_pixbuf_minor_version;
+
 void *gdk_pixbuf_new_from_file (const char *filename)
 {
 	return NULL;

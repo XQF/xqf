@@ -163,7 +163,7 @@ if test "x$use_pixbuf_dummy" != "xno"; then
     DUMMY_LIBGDKPIXBUF_SONAME=`objdump -p "$use_pixbuf_dummy"|awk '$1 == "SONAME" {print $2}'`
     if test "x$DUMMY_LIBGDKPIXBUF_SONAME" != x; then
 	DUMMY_LIBGDKPIXBUF_ORIG="$use_pixbuf_dummy"
-	GDK_PIXBUF_LIBS="-lxqf_dummy_gdk_pixbuf"
+	GDK_PIXBUF_LIBS='-L$(top_builddir)/src  -lxqf_dummy_gdk_pixbuf'
 
 	AC_SUBST(DUMMY_LIBGDKPIXBUF_SONAME)
 	AC_SUBST(DUMMY_LIBGDKPIXBUF_ORIG)

@@ -198,7 +198,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
     pix->pix = gdk_pixmap_colormap_create_from_xpm (NULL, colormap, &pix->mask,
 						   NULL, found_filename);
   }
-  else
+  else if(GDK_PIXBUF_INSTALLED)
   {
 
 /*FIXME_GTK2: need GError*/
@@ -219,6 +219,11 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 
     gdk_pixbuf_unref(pixbuf);
   }
+  else
+  {
+      g_free (found_filename);
+      return NULL;
+  }
 
   if (pix->pix == NULL)
   {
@@ -236,6 +241,9 @@ void* load_pixmap_as_pixbuf (const gchar* filename)
 {
   gchar *found_filename = NULL;
   GdkPixbuf* pixbuf = NULL;
+
+  if(!GDK_PIXBUF_INSTALLED)
+    return NULL;
   
   found_filename = find_pixmap_file(filename);
 
