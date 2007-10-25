@@ -25,8 +25,6 @@ AC_ISC_POSIX
 AC_PROG_LN_S
 AC_PROG_RANLIB
 
-AC_DISABLE_STATIC
-
 dnl Checks for header files.
 AC_HEADER_STDC
 
