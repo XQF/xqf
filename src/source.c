@@ -1182,6 +1182,7 @@ static char *builtin_masters_update_info[] = {
   "ADD POSTAL2 lan://255.255.255.255 LAN",
   "ADD SFS lan://255.255.255.255 LAN",
   "ADD DM3S lan://255.255.255.255 LAN",
+  "ADD ETQWS lan://255.255.255.255 LAN",
   
   NULL
 };
