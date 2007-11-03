@@ -413,6 +413,10 @@ static const char* quake4_masterprotocols[] = {
 	"0 - any",
 	"2.63 - German retail",
 	"2.62 - retail",
+	"2.32837 - 1.2 German",
+	"2.69 - 1.2",
+	"2.32853 - 1.4.2 German",
+	"2.85 - 1.4.2",
 	NULL
 };
 
@@ -427,6 +431,7 @@ static const char* etqw_masterprotocols[] = {
 	"auto",
 	"0 - any",
 	"10.16 - retail",
+	"10.17 - 1.2",
 	NULL
 };
 
