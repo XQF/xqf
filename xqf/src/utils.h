@@ -173,4 +173,6 @@ const char* copy_file(const char* src, const char* dest);
  */
 char* load_file_mem(const char* name, size_t* size);
 
+void close_fds(int exclude);
+
 #endif /* __UTILS_H__ */

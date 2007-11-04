@@ -270,7 +270,8 @@ int client_launch_exec (int forkit, char *dir, char* argv[],
       client_attach (pid, pipefds[0], s);
     }
     else {	/* child */
-      close (pipefds[0]);
+
+      close_fds(pipefds[1]);
 
       if (dir && dir[0] != '\0') {
 	if (chdir (dir) != 0) {
