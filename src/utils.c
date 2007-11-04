@@ -950,6 +950,8 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 	//    dup2 (pipefds[1], 2);
 	close (pipefds[1]);
 
+	close_fds(-1);
+
 	debug(3,"child about to exec %s", argv[0]);
 
 	execvp (argv[0], argv);
@@ -1194,3 +1196,13 @@ out:
 }
 #endif	// ! RCON_STANDALONE
 
+void close_fds(int exclude)
+{
+  unsigned i;
+  int maxfd = sysconf(_SC_OPEN_MAX);
+  for (i = 3; i < maxfd; ++i)
+  {
+    if(i == exclude) continue;
+    close(i);
+  }
+}
