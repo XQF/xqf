@@ -1,4 +1,7 @@
-Jan 11, 2008: Ludwig Nussel <@users.sourceforge.net>
+Jan 13, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
+- add master for OpenArena (#1869975)
+
+Jan 11, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix busy loop when client exits
 
 Nov 04, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
