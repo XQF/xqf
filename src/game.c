@@ -67,6 +67,7 @@ static struct player *hl_parse_player(char *tokens[], int num, struct server *s)
 static struct player *un_parse_player(char *tokens[], int num, struct server *s);
 static struct player *descent3_parse_player(char *tokens[], int num, struct server *s);
 static struct player *savage_parse_player (char *token[], int n, struct server *s);
+static struct player *ottd_parse_player(char *tokens[], int num, struct server *s);
 
 static void quake_parse_server (char *tokens[], int num, struct server *s);
 
@@ -80,6 +81,7 @@ static void un_analyze_serverinfo (struct server *s);
 static void bf1942_analyze_serverinfo (struct server *s);
 static void descent3_analyze_serverinfo (struct server *s);
 static void savage_analyze_serverinfo (struct server *s);
+static void ottd_analyze_serverinfo (struct server *s);
 
 static int quake_config_is_valid (struct server *s);
 static int config_is_valid_generic (struct server *s);
@@ -103,6 +105,7 @@ static int ssam_exec (const struct condef *con, int forkit);
 static int savage_exec (const struct condef *con, int forkit);
 static int netpanzer_exec (const struct condef *con, int forkit);
 static int descent3_exec (const struct condef *con, int forkit);
+static int ottd_exec (const struct condef *con, int forkit);
 
 /*
 static GList *q1_custom_cfgs (struct game* this, char *dir, char *game);
@@ -583,6 +586,11 @@ static struct player *un_parse_player (char *token[], int n, struct server *s) {
 }
 
 static struct player *savage_parse_player (char *token[], int n, struct server *s)
+{
+    return q2_parse_player(token, n, s);
+}
+
+static struct player *ottd_parse_player (char *token[], int n, struct server *s)
 {
     return q2_parse_player(token, n, s);
 }
@@ -1682,6 +1690,25 @@ static void doom3_analyze_serverinfo (struct server *s) {
   if(fs_game)
   {
     s->game=fs_game;
+  }
+}
+
+static void ottd_analyze_serverinfo (struct server *s) {
+  char **info_ptr;
+
+  /* Clear out the flags */
+  s->flags = 0;
+
+  if ((games[s->type].flags & GAME_SPECTATE) != 0)
+    s->flags |= SERVER_SPECTATE;
+  
+  for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+    if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1],"0") )
+    {
+      s->flags |= SERVER_PASSWORD;
+      if (games[s->type].flags & GAME_SPECTATE)
+	s->flags |= SERVER_SP_PASSWORD;
+    }
   }
 }
 
@@ -2974,6 +3001,33 @@ static int descent3_exec (const struct condef *con, int forkit) {
   return retval;
 }
 
+
+// OTTD: only supports -n
+static int ottd_exec(const struct condef *con, int forkit) {
+  char *argv[32];
+  int argi = 0;
+  char *cmd;
+  struct game *g = &games[con->s->type];
+  int retval;
+
+  cmd = strdup_strip (g->cmd);
+
+  argv[argi++] = strtok (cmd, delim);
+  while ((argv[argi] = strtok (NULL, delim)) != NULL)
+    argi++;
+
+  if (con->server) {
+    argv[argi++] = "-n";
+    argv[argi++] = con->server;
+  }
+
+  argv[argi] = NULL;
+
+  retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+  g_free (cmd);
+  return retval;
+}
 
 static char *dir_custom_cfg_filter (const char *dir, const char *str) {
   static const char *cfgext[] = { ".cfg", ".scr", ".rc", NULL };

@@ -1162,6 +1162,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD TREMULOUS master://master.tremulous.net:30710 tremulous.net",
 
+  "ADD OTTDS master://master.openttd.org OpenTTD",
+
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
   "ADD Q2S lan://255.255.255.255 LAN",

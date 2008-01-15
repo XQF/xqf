@@ -47,6 +47,7 @@ static char* stringlist044[] = { "basewsw", NULL };
 static char* stringlist045[] = { "warsow", NULL };
 static char* stringlist046[] = { "base", NULL };
 static char* stringlist047[] = { "tremulous", NULL };
+static char* stringlist048[] = { "openttd", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -970,6 +971,27 @@ struct game games[] = {
     pd                  : &tremulous_private,
     main_mod            : stringlist046,
     command             : stringlist047,
+  },
+  {
+    type                : OTTD_SERVER,
+    flags               : GAME_CONNECT,
+    name                : "OpenTTD",
+    default_port        : 3979,
+    default_master_port : 3978,
+    id                  : "OTTDS",
+    qstat_str           : "OTTDS",
+    qstat_option        : "-ottds",
+    qstat_master_option : "-ottdm",
+    icon                : "openttd.xpm",
+    parse_player        : ottd_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : ottd_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : ottd_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    default_home        : "~/.openttd",
+    command             : stringlist048,
   },
   {
     type                : GPS_SERVER,
