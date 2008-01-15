@@ -81,6 +81,7 @@
 #include "xpm/jk3.xpm"
 #include "xpm/doom3.xpm"
 #include "xpm/etqw.xpm"
+#include "xpm/openttd.xpm"
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"

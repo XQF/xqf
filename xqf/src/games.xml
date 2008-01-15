@@ -744,6 +744,25 @@
 	<pd>tremulous_private</pd>
     </game>
     <game>
+	<type>OTTD_SERVER</type>
+	<flags>GAME_CONNECT</flags>
+	<name>OpenTTD</name>
+	<default_port>3979</default_port>
+	<default_master_port>3978</default_master_port>
+	<id>OTTDS</id>
+	<qstat_str>OTTDS</qstat_str>
+	<qstat_option>-ottds</qstat_option>
+	<qstat_master_option>-ottdm</qstat_master_option>
+	<icon>openttd.xpm</icon>
+	<parse_player>ottd_parse_player</parse_player>
+	<analyze_serverinfo>ottd_analyze_serverinfo</analyze_serverinfo>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<exec_client>ottd_exec</exec_client>
+	<custom_cfgs>quake_custom_cfgs</custom_cfgs>
+	<command>openttd</command>
+	<default_home>~/.openttd</default_home>
+    </game>
+    <game>
 	<type>GPS_SERVER</type>
 	<name>Generic Gamespy</name>
 	<flags>GAME_CONNECT</flags>
