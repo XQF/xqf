@@ -27,12 +27,14 @@
 export LANG=en_US.UTF-8
 export TZ=UTC
 
-if [ -r mail ]; then
-	mailaddr=`cat mail`
+if [ -r .sflogin ]; then
+	mailaddr=`cat .sflogin`
 else
-	SFLOGIN=`cat CVS/Root |sed 's/.*:\(.*\)@.*/\1/'`
 	REALNAME=`getent passwd|awk -v UID=$UID  -F : '$3==UID{FS=",";$0=$5;print $1;exit 0}'`
-	mailaddr="$REALNAME <$SFLOGIN@users.sourceforge.net>"
+	mailaddr="$REALNAME <$USER@users.sourceforge.net>"
+	echo "please add your name and email to the file '.sflogin', e.g."
+	echo "echo '$mailaddr' > .sflogin"
+	exit 1
 fi;
 
 EDITOR=${EDITOR:-vim}
