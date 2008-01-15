@@ -168,10 +168,13 @@ static void client_input_callback (struct running_client *cl, int fd,
 
   res = read (fd, cl->buffer + cl->pos, CLIENT_ERROR_BUFFER - 1 - cl->pos);
 
-  if (res <= 0) {	/* read error or EOF */
+  if (res < 0) {	/* read error or EOF */
     if (errno == EAGAIN || errno == EWOULDBLOCK)
       return;
 
+    client_detach (cl);
+    return;
+  } else if (res == 0) {
     client_detach (cl);
     return;
   }
