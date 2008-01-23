@@ -454,6 +454,8 @@ static struct q3_common_prefs_s nexuiz_prefs =
 };
 
 static const char* warsow_masterprotocols[] = {
+	"10 - v0.40",
+	"9 - v0.32",
 	"8 - v0.2",
 	"7 - v0.1",
 	"6 - v0.072",
@@ -463,7 +465,7 @@ static const char* warsow_masterprotocols[] = {
 static struct q3_common_prefs_s warsow_prefs =
 {
   protocols: warsow_masterprotocols,
-  defproto : "6",
+  defproto : "10",
 };
 
 static const char* tremulous_masterprotocols[] = {
