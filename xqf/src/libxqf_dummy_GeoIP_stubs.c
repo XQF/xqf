@@ -19,9 +19,6 @@
 
 #include <GeoIP.h>
 
-const char GeoIP_country_code[247][3];
-const char * GeoIP_country_name[247];
-
 GEOIP_API GeoIP* GeoIP_new(int flags)
 {
 	return 0;

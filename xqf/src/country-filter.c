@@ -31,9 +31,13 @@
 #include <unistd.h> // access()
 
 #include <GeoIP.h>
+#include <dlfcn.h>
 
-const unsigned MaxCountries = sizeof(GeoIP_country_code)/3;
-static const unsigned LAN_GeoIPid = sizeof(GeoIP_country_code)/3; // MaxCountries doesn't work in C
+static const char*  xqf_geoip_country_code;
+static const char** xqf_geoip_country_name;
+
+unsigned MaxCountries;
+static unsigned LAN_GeoIPid;
 
 static GeoIP* gi;
 
@@ -57,10 +61,13 @@ void geoip_init(void)
   if(!gi)
     gi = GeoIP_new(GEOIP_STANDARD);
 
-  if(gi)
+  if(gi && geoip_num_countries())
     flags = g_malloc0((MaxCountries+1) *sizeof(struct pixmap)); /*+1-> flag for LAN server*/
   else
+  {
+    geoip_done();
     xqf_error("GeoIP initialization failed");
+  }
 }
 
 void geoip_done(void)
@@ -87,18 +94,18 @@ const char* geoip_code_by_id(int id)
   if (id == LAN_GeoIPid)
     return "00";
   else
-    return GeoIP_country_code[id];
+    return &xqf_geoip_country_code[id*3];
 }
 
 
 const char* geoip_name_by_id(int id)
 {
-  if(id < 0 || id > MaxCountries) return NULL;
-  
+  if(!gi || id < 0 || id > MaxCountries) return NULL;
+
   if (id == LAN_GeoIPid)
     return "LAN";
   else
-    return GeoIP_country_name[id];
+    return xqf_geoip_country_name[id];
 }
 
 int geoip_id_by_code(const char *country)
@@ -112,7 +119,7 @@ int geoip_id_by_code(const char *country)
 
   for (i=1;i<MaxCountries;++i)
   {
-    if (strcmp(country,GeoIP_country_code[i])==0) 
+    if (strcmp(country,xqf_geoip_country_name[i])==0) 
       return i;
   }
 
@@ -254,9 +261,57 @@ struct pixmap* get_pixmap_for_country_with_fallback(int id)
   return &flags[0];
 }
 
+static void* lookup_symbol(const char* name)
+{
+  void* p;
+  char* error;
+  dlerror();
+  p = dlsym(NULL, name);
+  if ((error = dlerror()) != NULL) {
+      xqf_error("failed to lookup %s: %s", name, error);
+      return NULL;
+  }
+  return p;
+}
+
 unsigned geoip_num_countries()
 {
-  return MaxCountries+1;
+  if((void*)xqf_geoip_country_code == (void*)-1)
+    return 0;
+
+  if(!xqf_geoip_country_code)
+  {
+    unsigned i;
+
+    xqf_geoip_country_name = lookup_symbol("GeoIP_country_name");
+    xqf_geoip_country_code = lookup_symbol("GeoIP_country_code");
+
+    if(!xqf_geoip_country_name || !xqf_geoip_country_code)
+    {
+      /* nasty hack to determine the number of countries at run time */
+      MaxCountries = LAN_GeoIPid = 0;
+      xqf_geoip_country_name = (void*)-1;
+      xqf_geoip_country_code = (void*)-1;
+      return 0;
+    }
+
+    for (i = 0; xqf_geoip_country_code[i*3] && i < 333 /* arbitrary limit */; ++i)
+      /* nothing */;
+
+    if(i >= 333)
+    {
+      xqf_geoip_country_name = (void*)-1;
+      xqf_geoip_country_code = (void*)-1;
+      xqf_error("failed to determine number of supported countries");
+      return 0;
+    }
+
+    MaxCountries = LAN_GeoIPid = i;
+  }
+
+  debug(1, "MaxCountries %u", MaxCountries);
+
+  return MaxCountries;
 }
 
 #endif
