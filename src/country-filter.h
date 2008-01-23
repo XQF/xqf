@@ -24,7 +24,7 @@
 #include "pixmaps.h"
 #include <arpa/inet.h>
 
-extern const unsigned MaxCountries;
+extern unsigned MaxCountries;
 
 extern void geoip_init(void);
 extern void geoip_done(void);

@@ -1881,7 +1881,7 @@ static void populate_country_clist(GtkWidget* clist, gboolean all)
 
     gtk_clist_clear(GTK_CLIST(clist));
 
-    for (i = 0; i <= MaxCountries; ++i)
+    for (i = 0; i <= geoip_num_countries(); ++i)
     {
 	if(all)
 	    countrypix = get_pixmap_for_country_with_fallback(i);
