@@ -4,7 +4,6 @@ VERSION=1.0.5
 d=xqf-${VERSION}_$DATE
 set -e
 set -x
-mkdir $d
-cvs export -d $d -r HEAD xqf
+svn export . $d
 tar --force-local --owner=root --group=root -cjf $d.tar.bz2 $d
 /bin/rm -r $d
