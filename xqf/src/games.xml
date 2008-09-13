@@ -744,6 +744,24 @@
 	<pd>tremulous_private</pd>
     </game>
     <game>
+	<base>Q3_SERVER</base>
+	<type>OPENARENA_SERVER</type>
+	<name>Open Arena</name>
+	<id>OPENARENAS</id>
+	<qstat_str>OPENARENAS</qstat_str>
+	<qstat_option>-openarenas</qstat_option>
+	<qstat_master_option>-openarenam</qstat_master_option>
+	<icon>openarena.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>openarena</command>
+	<default_home>~/.openarena</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>baseq3</main_mod>
+	<pd>openarena_private</pd>
+    </game>
+    <game>
 	<type>OTTD_SERVER</type>
 	<flags>GAME_CONNECT</flags>
 	<name>OpenTTD</name>
