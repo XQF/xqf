@@ -47,7 +47,9 @@ static char* stringlist044[] = { "basewsw", NULL };
 static char* stringlist045[] = { "warsow", NULL };
 static char* stringlist046[] = { "base", NULL };
 static char* stringlist047[] = { "tremulous", NULL };
-static char* stringlist048[] = { "openttd", NULL };
+static char* stringlist048[] = { "baseq3", NULL };
+static char* stringlist049[] = { "openarena", NULL };
+static char* stringlist050[] = { "openttd", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -973,6 +975,38 @@ struct game games[] = {
     command             : stringlist047,
   },
   {
+    type                : OPENARENA_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Open Arena",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "OPENARENAS",
+    qstat_str           : "OPENARENAS",
+    qstat_option        : "-openarenas",
+    qstat_master_option : "-openarenam",
+    icon                : "quake3.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.openarena",
+    pd                  : &openarena_private,
+    main_mod            : stringlist048,
+    command             : stringlist049,
+  },
+  {
     type                : OTTD_SERVER,
     flags               : GAME_CONNECT,
     name                : "OpenTTD",
@@ -991,7 +1025,7 @@ struct game games[] = {
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,
     default_home        : "~/.openttd",
-    command             : stringlist048,
+    command             : stringlist050,
   },
   {
     type                : GPS_SERVER,
