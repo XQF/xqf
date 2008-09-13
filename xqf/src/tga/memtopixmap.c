@@ -214,6 +214,13 @@ void pixbuf2rgbbuf(GdkPixbuf* pixbuf)
 	printf("%d(%d)x%d %d\n", w, rs, h, c);
 
 	pos = rgbbuf = g_new0(guchar, h*w*3);
+
+	if(c != 3 && c != 4)
+	{
+	    fprintf(stderr, "color depth %d not supported\n", c);
+	    return;
+	}
+
 	buf = gdk_pixbuf_get_pixels (pixbuf);
 	for(y=0; y < h; ++y)
 	{
@@ -222,7 +229,8 @@ void pixbuf2rgbbuf(GdkPixbuf* pixbuf)
 		*pos++ = *buf++;
 		*pos++ = *buf++;
 		*pos++ = *buf++;
-		buf++;
+		if(c == 4)
+		    buf++;
 	    }
 	    if(x*c<rs)
 	    {
