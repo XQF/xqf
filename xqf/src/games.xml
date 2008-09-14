@@ -746,7 +746,7 @@
     <game>
 	<base>Q3_SERVER</base>
 	<type>OPENARENA_SERVER</type>
-	<name>Open Arena</name>
+	<name>OpenArena</name>
 	<id>OPENARENAS</id>
 	<qstat_str>OPENARENAS</qstat_str>
 	<qstat_option>-openarenas</qstat_option>
