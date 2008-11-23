@@ -170,6 +170,7 @@ static struct quake_private etqw_private;
 static struct quake_private warsow_private;
 static struct quake_private tremulous_private;
 static struct quake_private openarena_private;
+static struct quake_private iourt_private;
 
 #include "games.c"
 
@@ -1442,6 +1443,15 @@ struct q3a_gametype_s jk3_gametype_map[] =
   }
 };
 
+struct q3a_gametype_s iourt_gametype_map[] =
+{
+  {
+    "q3ut4",
+    q3a_ut3_gametypes,
+    MAX_Q3A_UT3_TYPES
+  }
+};
+
 void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
 {
   char *endptr;
@@ -1521,7 +1531,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=TREMULOUS_SERVER;
       }
-
+      else if(!strncmp(info_ptr[1],"ioq3 1.35urt",12))
+      {
+        s->type=IOURT_SERVER;
+      }
       break;
     }
   }
@@ -1629,7 +1642,11 @@ static void q3_analyze_serverinfo (struct server *s) {
     {
       q3_decode_gametype( s, jk3_gametype_map );
     }
-
+    else if ( s->type == IOURT_SERVER)
+    {
+      q3_decode_gametype( s, iourt_gametype_map );
+    }
+ 
   }
 }
 

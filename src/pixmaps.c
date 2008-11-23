@@ -83,6 +83,7 @@
 #include "xpm/etqw.xpm"
 #include "xpm/openttd.xpm"
 #include "xpm/openarena.xpm"
+#include "xpm/iourt.xpm"
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"

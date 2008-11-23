@@ -492,6 +492,18 @@ static struct q3_common_prefs_s openarena_prefs =
   defproto : "70",
 };
 
+static const char* iourt_masterprotocols[] = {
+        "auto",
+        "68 - v1.35",
+        NULL
+};
+
+static struct q3_common_prefs_s iourt_prefs =
+{
+  protocols: iourt_masterprotocols,
+  defproto : "68",
+};
+
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);
 
 static void game_file_dialog(enum server_type type);
@@ -3126,6 +3138,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case WARSOW_SERVER: return &warsow_prefs;
     case TREMULOUS_SERVER: return &tremulous_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
+    case IOURT_SERVER: return &iourt_prefs; 
     default: xqf_error("need to define preferences"); return NULL;
   }
 }
@@ -4691,6 +4704,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[IOURT_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     new_genprefs[i].pref_dir = g_strdup (games[i].dir);
