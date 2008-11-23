@@ -781,6 +781,24 @@
 	<default_home>~/.openttd</default_home>
     </game>
     <game>
+        <base>Q3_SERVER</base>
+        <type>IOURT_SERVER</type>
+        <name>ioUrbanTerror</name>
+        <id>IOURTS</id>
+        <qstat_str>IOURTS</qstat_str>
+        <qstat_option>-iourts</qstat_option>
+        <qstat_master_option>-iourtm</qstat_master_option>
+        <icon>iourt.xpm</icon>
+        <config_is_valid>config_is_valid_generic</config_is_valid>
+        <command>ioUrbanTerror</command>
+        <default_home>~/.ioUrbanTerror</default_home>
+        <cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+        <prefs_load>q3_prefs_load_common</prefs_load>
+        <update_prefs>tremulous_update_prefs</update_prefs>
+        <main_mod>q3ut4</main_mod>
+        <pd>iourt_private</pd>
+    </game>
+    <game>
 	<type>GPS_SERVER</type>
 	<name>Generic Gamespy</name>
 	<flags>GAME_CONNECT</flags>

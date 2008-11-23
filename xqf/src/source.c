@@ -1057,7 +1057,10 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S master://master.planetgloom.com gloom",
 
   "ADD Q3S master://master3.idsoftware.com id",
-  "ADD Q3S master://master.urbanterror.net Urban Terror",
+/* removed, because it's added as IOURT_Master and all q3ut4 servers are also in IDs Q3 Master by default
+ * "ADD Q3S master://master.urbanterror.net Urban Terror",
+ */
+
 //  "ADD Q3S master://q3master.splatterworld.de Germany",
 //  "ADD Q3S master://q3.golsyd.net.au Australia",
   "DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld", // doesn't work (26.09.2004)
@@ -1165,6 +1168,7 @@ static char *builtin_masters_update_info[] = {
   "ADD OPENARENAS master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
   "ADD OTTDS master://master.openttd.org OpenTTD",
+  "ADD IOURTS master://master.urbanterror.net ioUrbanTerror",
 
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
