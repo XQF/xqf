@@ -1531,7 +1531,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=TREMULOUS_SERVER;
       }
-      else if(!strncmp(info_ptr[1],"ioq3 1.35urt",12))
+      else if(games[IOURT_SERVER].cmd && !strncmp(info_ptr[1],"ioq3 1.35urt",12))
       {
         s->type=IOURT_SERVER;
       }
