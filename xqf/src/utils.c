@@ -1053,7 +1053,7 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
   if (conn.fd<0||conn.pid<=0)
     return FALSE;
 
-  conn.bufsize = 512;
+  conn.bufsize = 1024;
   conn.buf = g_new0(char,conn.bufsize);
   conn.result = FALSE;
   conn.do_quit = TRUE;
