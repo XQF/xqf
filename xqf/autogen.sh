@@ -17,6 +17,11 @@ test -z "$srcdir" && srcdir=.
 (
 cd $srcdir
 
+if ! gtk-config --version >/dev/null 2>&1; then
+	mkdir m4
+	ln -s ../xqf-acinclude-nogtk1.m4 m4/gtk.m4
+fi
+
 # extract flag icons
 rm pixmaps/flags/*.png
 tar -C pixmaps -xzf pixmaps/flags.tar.gz
