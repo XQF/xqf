@@ -24,7 +24,6 @@ my $except = [];
 my %versions;
 my $versfile;
 my $outfile;
-my $weak;
 
 sub help($)
 {
@@ -38,7 +37,6 @@ OPTIONS:
 	-x <SYM1[,SYM2[,...]]>      exclude symbols from list
 	-v <FILE>                   write version map into FILE
 	-o <FILE>                   write C code into FILE
-	--weak                      generate weak symbols
 	--help                      this screen
 EOF
 	exit(shift);
@@ -49,7 +47,6 @@ GetOptions (
     "x=s@"   => $except,
     "v=s"   => \$versfile,
     "o=s"   => \$outfile,
-    "weak"   => \$weak,
     "h|help"  => sub { help(0); }
     ) or exit(1);
 
@@ -65,28 +62,41 @@ $except->{'_init'} = 1;
 $except->{'_fini'} = 1;
 
 open (OUT, '>', $outfile) or die;
-print OUT "static void segv(void) { char* die = 0; ++*die; }\n";
+print OUT "#include <stdlib.h>\n";
+print OUT "static void segv(void) { exit(0); }\n";
+print OUT "static char array[1];\n";
+
+srand(42);
 
 foreach my $file (@ARGV)
 {
-    my %seen;
+    my %sectlist;
+    open (IN, "/usr/bin/readelf -W --sections $file|") or die;
+    while(<IN>)
+    {
+	next unless /^ +\[ *(\d+)\] *(\.rodata|\.data.rel.ro|\.data|\.bss)/;
+	$sectlist{$1} = $2;
+    }
+    close IN;
 
     open (IN, "/usr/bin/readelf -W --symbols $file|") or die;
     while(<IN>)
     {
-	my ($sym, $ver, $at);
+	my ($size, $type, $bind, $visib, $sect, $sym, $ver, $at);
 	next unless s/^ +\d+: *//;
 	chomp;
 	my @f = split(/ +/);
 
 	next unless $#f >= 6;
-	next unless $f[2] eq 'FUNC';
-	next unless $f[3] eq 'GLOBAL';
+	$size = $f[1];
+	next unless $f[2] eq 'FUNC' or $f[2] eq 'OBJECT';
+	$type = $f[2];
+	next unless $f[3] eq 'GLOBAL' or $f[3] eq 'WEAK';
+	$bind = $f[3];
+	$visib = $f[4];
 	next unless $f[5] =~ /\d+/;
+	$sect = $f[5];
 	$sym = $f[6];
-
-	next if exists $seen{$sym};
-	$seen{$sym} = 1;
 
 	if($sym =~ /(.*?)(\@\@?)(.*)/)
 	{
@@ -97,18 +107,41 @@ foreach my $file (@ARGV)
 
 	next if exists $except->{$sym};
 
+	if($visib eq 'PROTECTED') {
+	    print OUT "__attribute__ ((visibility (\"protected\"))) ";
+	}
 	if($ver)
 	{
 	    my $vsym = sprintf "SEGV_%08X_%s",int(rand(0xffffffff)), $sym;
 	    push @{$versions{$ver}}, $vsym;
 	    print OUT "__asm__(\".symver $vsym,$sym$at$ver\");\n";
-	    print OUT "void $vsym() { segv(); }\n" unless $weak;
-	    print OUT "void $vsym() __attribute__ ((weak, alias (\"segv\")));\n" if $weak;
+	    $sym=$vsym;
 	}
-	else
+	if($type eq 'FUNC')
 	{
-	    print OUT "void $sym() { segv(); }\n" unless $weak;
-	    print OUT "void $sym() __attribute__ ((weak, alias (\"segv\")));\n" if $weak;
+	    print OUT "void $sym() { segv(); }\n" if $bind eq 'GLOBAL';;
+	    print OUT "void $sym() __attribute__ ((weak, alias (\"segv\")));\n" if $bind eq 'WEAK';
+	}
+	elsif($type eq 'OBJECT')
+	{
+	    print OUT "__attribute__ ((weak)) " if $bind eq 'WEAK';
+
+	    if($sectlist{$sect} eq '.rodata')
+	    {
+		print OUT "const char $sym\[$size\]={1};\n";
+	    }
+	    elsif($sectlist{$sect} eq '.data.rel.ro')
+	    {
+		print OUT "char* const $sym\[$size/sizeof(void*)\]={array};\n";
+	    }
+	    elsif($sectlist{$sect} eq '.data')
+	    {
+		print OUT "char $sym\[$size\]={1};\n";
+	    }
+	    elsif($sectlist{$sect} eq '.bss')
+	    {
+		print OUT "char $sym\[$size\];\n";
+	    }
 	}
     }
     close IN;
