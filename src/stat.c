@@ -324,7 +324,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   }
   else
   {
-    debug(3,"parse_master_output() -- unkown string %s",str);
+    debug(3,"parse_master_output() -- unknown string %s",str);
     return TRUE;
   }
 
