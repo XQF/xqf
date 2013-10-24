@@ -11,13 +11,12 @@ AM_INIT_AUTOMAKE
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
-AC_DEFINE(GETTEXT_PACKAGE, "xqf", [Gettext domain name])
+AM_GLIB_GNU_GETTEXT
+IT_PROG_INTLTOOL([0.40.0])
+
 GETTEXT_PACKAGE=xqf
 AC_SUBST(GETTEXT_PACKAGE)
-
-AC_PROG_INTLTOOL([0.25])
-ALL_LINGUAS="ca da de es fi fr pl ru"
-AM_GLIB_GNU_GETTEXT
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext domain name.])
 
 dnl Checks for programs.
 AC_PROG_CC
