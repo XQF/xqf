@@ -149,7 +149,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
   g_return_val_if_fail(pix!=NULL,NULL);
 
   found_filename = find_pixmap_file(filename);
-  if(is_suffix(filename, ".xpm")) // try png instead
+  if(!found_filename && is_suffix(filename, ".xpm")) // try png instead
   {
     char* tmp = g_strdup(filename);
     strcpy(tmp+strlen(tmp)-3, "png");
@@ -159,6 +159,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 
   if(!found_filename)
   {
+#if 0
     // not file on disk maybe xpm compiled into binary
     if(is_suffix(filename, ".xpm"))
     {
@@ -191,6 +192,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 	pix->pix = gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, &pix->mask, NULL, xpm);
       }
     }
+#endif
   }
   else if(is_suffix(found_filename, ".xpm"))
   {

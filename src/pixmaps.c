@@ -333,31 +333,31 @@ void init_pixmaps (GtkWidget *window)
   create_pixmap (window, "record.xpm", &record_pix);
 
   create_pixmap (window, "sfilter.xpm", &sfilter_pix);
-  create_pixmap (window, "sfilter_cfg.xpm", &sfilter_cfg_pix);
+  create_pixmap (window, "sfilter-cfg.xpm", &sfilter_cfg_pix);
 
   create_pixmap (window, "pfilter.xpm", &pfilter_pix);
-  create_pixmap (window, "pfilter_cfg.xpm", &pfilter_cfg_pix);
+  create_pixmap (window, "pfilter-cfg.xpm", &pfilter_cfg_pix);
 
-  create_pixmap (window, "green_plus.xpm", &gplus_pix);
-  create_pixmap (window, "red_minus.xpm", &rminus_pix);
+  create_pixmap (window, "green-plus.xpm", &gplus_pix);
+  create_pixmap (window, "red-minus.xpm", &rminus_pix);
 
-  create_pixmap (window, "man_black.xpm", &man_black_pix);
-  create_pixmap (window, "man_red.xpm", &man_red_pix);
-  create_pixmap (window, "man_yellow.xpm", &man_yellow_pix);
+  create_pixmap (window, "man-black.xpm", &man_black_pix);
+  create_pixmap (window, "man-red.xpm", &man_red_pix);
+  create_pixmap (window, "man-yellow.xpm", &man_yellow_pix);
 
-  create_pixmap (window, "group_red.xpm", &group_pix[0]);
-  create_pixmap (window, "group_green.xpm", &group_pix[1]);
-  create_pixmap (window, "group_blue.xpm", &group_pix[2]);
+  create_pixmap (window, "group-red.xpm", &group_pix[0]);
+  create_pixmap (window, "group-green.xpm", &group_pix[1]);
+  create_pixmap (window, "group-blue.xpm", &group_pix[2]);
 
-  create_pixmap (window, "buddy_red.xpm", &buddy_pix[1]);
-  create_pixmap (window, "buddy_green.xpm", &buddy_pix[2]);
-  create_pixmap (window, "buddy_blue.xpm", &buddy_pix[4]);
+  create_pixmap (window, "buddy-red.xpm", &buddy_pix[1]);
+  create_pixmap (window, "buddy-green.xpm", &buddy_pix[2]);
+  create_pixmap (window, "buddy-blue.xpm", &buddy_pix[4]);
 
-  create_pixmap (window, "server_na.xpm", &server_status[0]);
-  create_pixmap (window, "server_up.xpm", &server_status[1]);
-  create_pixmap (window, "server_down.xpm", &server_status[2]);
-  create_pixmap (window, "server_to.xpm", &server_status[3]);
-  create_pixmap (window, "server_error.xpm", &server_status[4]);
+  create_pixmap (window, "server-na.xpm", &server_status[0]);
+  create_pixmap (window, "server-up.xpm", &server_status[1]);
+  create_pixmap (window, "server-down.xpm", &server_status[2]);
+  create_pixmap (window, "server-to.xpm", &server_status[3]);
+  create_pixmap (window, "server-error.xpm", &server_status[4]);
 
   create_pixmap (window, "error.xpm", &error_pix);
   create_pixmap (window, "delete.xpm", &delete_pix);

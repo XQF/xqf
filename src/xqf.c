@@ -4003,6 +4003,7 @@ int main (int argc, char *argv[]) {
   }
 
   add_pixmap_path_for_theme("default");
+  add_pixmap_directory(xqf_PACKAGE_DATA_DIR);
 
   qstat_configfile = g_strconcat(xqf_PACKAGE_DATA_DIR, "/qstat.cfg", NULL);
   
