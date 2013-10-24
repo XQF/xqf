@@ -1,6 +1,7 @@
 ABOUT-NLS
 COPYING
 INSTALL
+README
 Makefile.in
 Makefile
 aclocal.m4
