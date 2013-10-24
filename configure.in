@@ -38,7 +38,7 @@ AC_SUBST(RELEASE)
 
 dnl compile with gtk 1.2 or gtk 2 ?
 AC_MSG_CHECKING([whether GTK 2 should be used])
-AC_ARG_ENABLE(gtk2,[  --enable-gtk2      enable experimental GTK2 support (default=no)],USE_GTK2=$enableval, USE_GTK2=no)
+AC_ARG_ENABLE(gtk2,[  --enable-gtk2      enable GTK2 support (default=yes)],USE_GTK2=$enableval, USE_GTK2=yes)
 AC_MSG_RESULT([$USE_GTK2])
 
 if test "x$USE_GTK2" != "xno"; then
@@ -53,11 +53,7 @@ if test "x$USE_GTK2" != "xno"; then
         AC_SUBST(PACKAGE_CFLAGS)
         AC_SUBST(PACKAGE_LIBS)                
 else
-
-        AM_PATH_GLIB(1.2.0,,exit 1)
-        AM_PATH_GTK(1.2.0,,exit 1)
-        AM_PATH_GDK_PIXBUF(,,[AC_MSG_ERROR([gdk-pixbuf not found, please install gdk-pixbuf-devel])])
-
+	AC_MSG_ERROR([GTK+ 1.2 is not available on Debian])
 fi
 
 dnl check for qstat
