@@ -2416,6 +2416,23 @@ static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
       add_custom_args_defaults2("AoCampaignLobbyGame", "-mod=AlienSwarm -log=AlienSwarm.log",UT2004_SERVER, data);
       break;
 
+    case HL2_SERVER:
+      add_custom_args_defaults2("cstrike", "-applaunch 240",HL2_SERVER, data);
+      add_custom_args_defaults2("dod", "-applaunch 300",HL2_SERVER, data);
+      add_custom_args_defaults2("hl2mp", "-applaunch 320",HL2_SERVER, data);
+      break;
+
+    case HL_SERVER:
+      add_custom_args_defaults2("cstrike", "-applaunch 10",HL_SERVER, data);
+      add_custom_args_defaults2("tfc", "-applaunch 20",HL_SERVER, data);
+      add_custom_args_defaults2("dod", "-applaunch 30",HL_SERVER, data);
+      add_custom_args_defaults2("dmc", "-applaunch 40",HL_SERVER, data);
+      add_custom_args_defaults2("op4", "-applaunch 50",HL_SERVER, data);
+      add_custom_args_defaults2("ricochet", "-applaunch 60",HL_SERVER, data);
+      add_custom_args_defaults2("valve", "-applaunch 70",HL_SERVER, data);
+      add_custom_args_defaults2("czero", "-applaunch 80",HL_SERVER, data);
+      break;
+
     default:
       dialog_ok (NULL, _("There are no defaults for this game"));
       break;
