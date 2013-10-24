@@ -146,14 +146,14 @@ test_utils_LDADD = $(xqf_LDADD)
 gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
 gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
 
-pkglib_PROGRAMS =
+pkglibexec_PROGRAMS =
 
 if DUMMY_LIBGEOIP
-pkglib_PROGRAMS += libxqf_dummy_GeoIP.so.0
+pkglibexec_PROGRAMS += libxqf_dummy_GeoIP.so.0
 xqf_DEPENDENCIES += libxqf_dummy_GeoIP.so
 endif
 if DUMMY_LIBGDKPIXBUF
-pkglib_PROGRAMS += libxqf_dummy_gdk_pixbuf.so.0
+pkglibexec_PROGRAMS += libxqf_dummy_gdk_pixbuf.so.0
 xqf_DEPENDENCIES += libxqf_dummy_gdk_pixbuf.so
 endif
 
