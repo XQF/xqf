@@ -32,7 +32,7 @@ xqf_LDADD = $(INTLLIBS) \
 	    $(GEOIP_LIB) \
 	    $(PACKAGE_LIBS) \
 	    $(GDK_PIXBUF_LIBS) \
-	    -lz
+	    -lz -ldl
 
 xqf_LDFLAGS = -Wl,-rpath,$(pkglibdir) -Wl,--export-dynamic -Wl,--version-script=$(top_srcdir)/src/xqf.map
 
