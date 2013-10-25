@@ -180,7 +180,6 @@
 	<attributes>+rconpassword</attributes>
 	<pd>quake4_private</pd>
     </game>
-
     <game>
 	<base>Q3_SERVER</base>
 	<type>WO_SERVER</type>
@@ -271,8 +270,6 @@
 	<attributes>+rconpassword</attributes>
 	<pd>etqw_private</pd>
     </game>
-
-
     <game>
 	<base>Q3_SERVER</base>
 	<type>EF_SERVER</type>
@@ -281,7 +278,6 @@
 	<qstat_master_option>-efm</qstat_master_option>
 	<icon>ef.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
-
 	<init_maps>NULL</init_maps>
 	<has_map>NULL</has_map>
 	<get_mapshot>NULL</get_mapshot>
@@ -669,18 +665,18 @@
 	<pd>jk3_private</pd>
     </game>
     <game>
-        <type>NETP_SERVER</type>
-        <base>GPS_SERVER</base>
-        <name>NetPanzer</name>
-        <default_port>3030</default_port>
-        <default_master_port>28900</default_master_port>
-        <id>NETP</id>
-        <qstat_option>-netp</qstat_option>
-        <qstat_master_option>-netpm,netpanzer</qstat_master_option>
-        <icon>netp.xpm</icon>
-        <config_is_valid>config_is_valid_generic</config_is_valid>
-        <arch_identifier>NULL</arch_identifier>
-        <command>netpanzer</command>
+	<type>NETP_SERVER</type>
+	<base>GPS_SERVER</base>
+	<name>NetPanzer</name>
+	<default_port>3030</default_port>
+	<default_master_port>28900</default_master_port>
+	<id>NETP</id>
+	<qstat_option>-netp</qstat_option>
+	<qstat_master_option>-netpm,netpanzer</qstat_master_option>
+	<icon>netp.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<arch_identifier>NULL</arch_identifier>
+	<command>netpanzer</command>
 	<exec_client>netpanzer_exec</exec_client>
     </game>
     <game>
@@ -704,9 +700,28 @@
     </game>
     <game>
 	<base>Q3_SERVER</base>
+	<type>XONOTIC_SERVER</type>
+	<name>Xonotic</name>
+	<id>XONOTICS</id>
+	<qstat_str>XONOTICS</qstat_str>
+	<qstat_option>-nexuizs</qstat_option>
+	<qstat_master_option>-nexuizm</qstat_master_option>
+	<icon>xonotic.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<init_maps>NULL</init_maps>
+	<has_map>NULL</has_map>
+	<get_mapshot>NULL</get_mapshot>
+	<command>xonotic</command>
+	<default_home>~/.xonotic</default_home>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
+	<main_mod>data</main_mod>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
 	<type>WARSOW_SERVER</type>
 	<name>Warsow</name>
-        <default_port>44400</default_port>
+	<default_port>44400</default_port>
 	<id>WARSOWS</id>
 	<qstat_str>WARSOWS</qstat_str>
 	<qstat_option>-warsows</qstat_option>
@@ -727,8 +742,8 @@
 	<base>Q3_SERVER</base>
 	<type>TREMULOUS_SERVER</type>
 	<name>Tremulous</name>
-        <default_port>30720</default_port>
-        <default_master_port>30710</default_master_port>
+	<default_port>30720</default_port>
+	<default_master_port>30710</default_master_port>
 	<id>TREMULOUS</id>
 	<qstat_str>TREMULOUS</qstat_str>
 	<qstat_option>-tremulous</qstat_option>
@@ -781,22 +796,22 @@
 	<default_home>~/.openttd</default_home>
     </game>
     <game>
-        <base>Q3_SERVER</base>
-        <type>IOURT_SERVER</type>
-        <name>ioUrbanTerror</name>
-        <id>IOURTS</id>
-        <qstat_str>IOURTS</qstat_str>
-        <qstat_option>-iourts</qstat_option>
-        <qstat_master_option>-iourtm</qstat_master_option>
-        <icon>iourt.xpm</icon>
-        <config_is_valid>config_is_valid_generic</config_is_valid>
-        <command>ioUrbanTerror</command>
-        <default_home>~/.ioUrbanTerror</default_home>
-        <cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
-        <prefs_load>q3_prefs_load_common</prefs_load>
-        <update_prefs>tremulous_update_prefs</update_prefs>
-        <main_mod>q3ut4</main_mod>
-        <pd>iourt_private</pd>
+	<base>Q3_SERVER</base>
+	<type>IOURT_SERVER</type>
+	<name>ioUrbanTerror</name>
+	<id>IOURTS</id>
+	<qstat_str>IOURTS</qstat_str>
+	<qstat_option>-iourts</qstat_option>
+	<qstat_master_option>-iourtm</qstat_master_option>
+	<icon>iourt.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>ioUrbanTerror</command>
+	<default_home>~/.ioUrbanTerror</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>q3ut4</main_mod>
+	<pd>iourt_private</pd>
     </game>
     <game>
 	<type>GPS_SERVER</type>

@@ -453,6 +453,17 @@ static struct q3_common_prefs_s nexuiz_prefs =
   defproto : "3",
 };
 
+static const char* xonotic_masterprotocols[] = {
+	"3",
+	NULL
+};
+
+static struct q3_common_prefs_s xonotic_prefs =
+{
+  protocols: xonotic_masterprotocols,
+  defproto : "3",
+};
+
 static const char* warsow_masterprotocols[] = {
 	"10 - v0.40",
 	"9 - v0.32",
@@ -3152,6 +3163,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case COD_SERVER: return &cod_prefs;
     case JK3_SERVER: return &jk3_prefs;
     case NEXUIZ_SERVER: return &nexuiz_prefs;
+    case XONOTIC_SERVER: return &xonotic_prefs;
     case WARSOW_SERVER: return &warsow_prefs;
     case TREMULOUS_SERVER: return &tremulous_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
@@ -4718,6 +4730,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
   new_genprefs[EF_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[NEXUIZ_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[XONOTIC_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
