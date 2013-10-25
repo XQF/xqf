@@ -491,6 +491,18 @@ static struct q3_common_prefs_s tremulous_prefs =
   defproto : "69",
 };
 
+static const char* unvanquished_masterprotocols[] = {
+    "auto",
+	"86",
+	NULL
+};
+
+static struct q3_common_prefs_s unvanquished_prefs =
+{
+  protocols: unvanquished_masterprotocols,
+  defproto : "86",
+};
+
 static const char* openarena_masterprotocols[] = {
 	"auto",
 	"70 - v0.8.0",
@@ -992,6 +1004,12 @@ void quake4_update_prefs (struct game* g)
 }
 
 void tremulous_update_prefs (struct game* g)
+{
+  q3_update_prefs_common(g);
+  doom3_detect_version(g);
+}
+
+void unvanquished_update_prefs (struct game* g)
 {
   q3_update_prefs_common(g);
   doom3_detect_version(g);
@@ -3166,6 +3184,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case XONOTIC_SERVER: return &xonotic_prefs;
     case WARSOW_SERVER: return &warsow_prefs;
     case TREMULOUS_SERVER: return &tremulous_prefs;
+    case UNVANQUISHED_SERVER: return &unvanquished_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
     case IOURT_SERVER: return &iourt_prefs; 
     default: xqf_error("need to define preferences"); return NULL;
@@ -4733,6 +4752,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[XONOTIC_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[UNVANQUISHED_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[IOURT_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 

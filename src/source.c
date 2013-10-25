@@ -1168,6 +1168,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD TREMULOUS master://master.tremulous.net:30710 tremulous.net",
 
+  "ADD UNVANQUISHEDS master://unvanquished.net:27950 unvanquished.net",
+
   "ADD OPENARENAS master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
   "ADD OTTDS master://master.openttd.org OpenTTD",

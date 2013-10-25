@@ -760,6 +760,26 @@
     </game>
     <game>
 	<base>Q3_SERVER</base>
+	<type>UNVANQUISHED_SERVER</type>
+	<name>Unvanquished</name>
+	<default_port>27950</default_port>
+	<default_master_port>27950</default_master_port>
+	<id>UNVANQUISHEDS</id>
+	<qstat_str>UNVANQUISHEDS</qstat_str>
+	<qstat_option>-tremulous</qstat_option>
+	<qstat_master_option>-tremulousm</qstat_master_option>
+	<icon>unvanquished.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>unvanquished</command>
+	<default_home>~/.Unvanquished</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>main</main_mod>
+	<pd>unvanquished_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
 	<type>OPENARENA_SERVER</type>
 	<name>OpenArena</name>
 	<id>OPENARENAS</id>
