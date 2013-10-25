@@ -49,11 +49,15 @@ static char* stringlist046[] = { "basewsw", NULL };
 static char* stringlist047[] = { "warsow", NULL };
 static char* stringlist048[] = { "base", NULL };
 static char* stringlist049[] = { "tremulous", NULL };
-static char* stringlist050[] = { "baseq3", NULL };
-static char* stringlist051[] = { "openarena", NULL };
-static char* stringlist052[] = { "openttd", NULL };
-static char* stringlist053[] = { "q3ut4", NULL };
-static char* stringlist054[] = { "ioUrbanTerror", NULL };
+static char* stringlist050[] = { "main", NULL };
+static char* stringlist051[] = { "unvanquished", NULL };
+static char* stringlist052[] = { "baseq3", NULL };
+static char* stringlist053[] = { "openarena", NULL };
+static char* stringlist054[] = { "openttd", NULL };
+static char* stringlist055[] = { "q3ut4", NULL };
+static char* stringlist056[] = { "ioUrbanTerror", NULL };
+static char* stringlist057[] = { "smokinguns", NULL };
+static char* stringlist058[] = { "smokinguns", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -1006,6 +1010,38 @@ struct game games[] = {
     command             : stringlist049,
   },
   {
+    type                : UNVANQUISHED_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Unvanquished",
+    default_port        : 27950,
+    default_master_port : 27950,
+    id                  : "UNVANQUISHEDS",
+    qstat_str           : "UNVANQUISHEDS",
+    qstat_option        : "-tremulous",
+    qstat_master_option : "-tremulousm",
+    icon                : "unvanquished.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.Unvanquished",
+    pd                  : &unvanquished_private,
+    main_mod            : stringlist050,
+    command             : stringlist051,
+  },
+  {
     type                : OPENARENA_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "OpenArena",
@@ -1034,8 +1070,8 @@ struct game games[] = {
     update_prefs        : tremulous_update_prefs,
     default_home        : "~/.openarena",
     pd                  : &openarena_private,
-    main_mod            : stringlist050,
-    command             : stringlist051,
+    main_mod            : stringlist052,
+    command             : stringlist053,
   },
   {
     type                : OTTD_SERVER,
@@ -1056,7 +1092,7 @@ struct game games[] = {
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,
     default_home        : "~/.openttd",
-    command             : stringlist052,
+    command             : stringlist054,
   },
   {
     type                : IOURT_SERVER,
@@ -1087,8 +1123,40 @@ struct game games[] = {
     update_prefs        : tremulous_update_prefs,
     default_home        : "~/.ioUrbanTerror",
     pd                  : &iourt_private,
-    main_mod            : stringlist053,
-    command             : stringlist054,
+    main_mod            : stringlist055,
+    command             : stringlist056,
+  },
+  {
+    type                : SMOKINGUNS_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Smokin'Guns",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "SMOKINGUNSS",
+    qstat_str           : "SMOKINGUNSS",
+    qstat_option        : "-q3s",
+    qstat_master_option : "-q3m",
+    icon                : "smokinguns.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.smokinguns",
+    pd                  : &smokinguns_private,
+    main_mod            : stringlist057,
+    command             : stringlist058,
   },
   {
     type                : GPS_SERVER,

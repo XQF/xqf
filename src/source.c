@@ -1173,7 +1173,10 @@ static char *builtin_masters_update_info[] = {
   "ADD OPENARENAS master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
   "ADD OTTDS master://master.openttd.org OpenTTD",
+
   "ADD IOURTS master://master.urbanterror.net ioUrbanTerror",
+
+  "ADD SMOKINGUNSS master://master.smokin-guns.org master.smokinguns.org",
 
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",

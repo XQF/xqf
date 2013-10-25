@@ -527,6 +527,18 @@ static struct q3_common_prefs_s iourt_prefs =
   defproto : "68",
 };
 
+static const char* smokinguns_masterprotocols[] = {
+        "auto",
+        "68",
+        NULL
+};
+
+static struct q3_common_prefs_s smokinguns_prefs =
+{
+  protocols: smokinguns_masterprotocols,
+  defproto : "68",
+};
+
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);
 
 static void game_file_dialog(enum server_type type);
@@ -3187,6 +3199,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case UNVANQUISHED_SERVER: return &unvanquished_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
     case IOURT_SERVER: return &iourt_prefs; 
+    case SMOKINGUNS_SERVER: return &smokinguns_prefs; 
     default: xqf_error("need to define preferences"); return NULL;
   }
 }
@@ -4755,6 +4768,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[UNVANQUISHED_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[IOURT_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[SMOKINGUNS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     new_genprefs[i].pref_dir = g_strdup (games[i].dir);

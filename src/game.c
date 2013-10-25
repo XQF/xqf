@@ -172,6 +172,7 @@ static struct quake_private tremulous_private;
 static struct quake_private unvanquished_private;
 static struct quake_private openarena_private;
 static struct quake_private iourt_private;
+static struct quake_private smokinguns_private;
 
 #include "games.c"
 
