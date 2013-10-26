@@ -704,8 +704,8 @@
 	<name>Xonotic</name>
 	<id>XONOTICS</id>
 	<qstat_str>XONOTICS</qstat_str>
-	<qstat_option>-nexuizs</qstat_option>
-	<qstat_master_option>-nexuizm</qstat_master_option>
+	<qstat_option>-xonotics</qstat_option>
+	<qstat_master_option>-xonoticm</qstat_master_option>
 	<icon>xonotic.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<init_maps>NULL</init_maps>
@@ -766,8 +766,8 @@
 	<default_master_port>27950</default_master_port>
 	<id>UNVANQUISHEDS</id>
 	<qstat_str>UNVANQUISHEDS</qstat_str>
-	<qstat_option>-tremulous</qstat_option>
-	<qstat_master_option>-tremulousm</qstat_master_option>
+	<qstat_option>-unvanquisheds</qstat_option>
+	<qstat_master_option>-unvanquishedm</qstat_master_option>
 	<icon>unvanquished.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>unvanquished</command>
@@ -839,8 +839,8 @@
 	<name>Smokin'Guns</name>
 	<id>SMOKINGUNSS</id>
 	<qstat_str>SMOKINGUNSS</qstat_str>
-	<qstat_option>-q3s</qstat_option>
-	<qstat_master_option>-q3m</qstat_master_option>
+	<qstat_option>-smokingunss</qstat_option>
+	<qstat_master_option>-smokingunsm</qstat_master_option>
 	<icon>smokinguns.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>smokinguns</command>
