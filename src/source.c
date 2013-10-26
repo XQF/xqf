@@ -1177,6 +1177,10 @@ static char *builtin_masters_update_info[] = {
   "ADD IOURTS master://master.urbanterror.net ioUrbanTerror",
 
   "ADD SMOKINGUNSS master://master.smokin-guns.org master.smokinguns.org",
+  "ADD SMOKINGUNSS master://master.smokin-guns.org master.ioquake3.org",
+  "ADD SMOKINGUNSS master://master.smokin-guns.org master.q3alive.net",
+  "ADD SMOKINGUNSS master://master.smokin-guns.org parttimegeeks.net:27950",
+  "ADD SMOKINGUNSS master://master.smokin-guns.org soulserv.net:27950",
 
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
