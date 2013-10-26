@@ -17,8 +17,14 @@ test -z "$srcdir" && srcdir=.
 (
 cd $srcdir
 
+# For autotools compatibility
 if ! test -e README; then
 	ln -s README.md README
+fi
+
+# For autotools compatibility
+if ! test -e NEWS; then
+	ln -s NEWS.md NEWS
 fi
 
 if ! gtk-config --version >/dev/null 2>&1; then

@@ -1,3 +1,12 @@
+Dec 21, 2010: Ludwig Nussel <l-n@users.sourceforge.net>
+- add hack for systems without gtk1
+
+Apr 25, 2009: Ludwig Nussel <l-n@users.sourceforge.net>
+- increase buffer size for qstat version check
+
+Jan 11, 2009: Ludwig Nussel <l-n@users.sourceforge.net>
+- launch q3ut4 as Quake3 mod if ioUrbanTerror isn't configured
+
 Nov 23, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
 - add ioUrbanTerror as separate game
   (#2330187, patch by Alexander Hambalgo)

@@ -27,12 +27,17 @@ AVAILABILITY
 COPYRIGHT
 ---------
 
-XQF is Copyright (C) 2013 Thomas DEBESSE <xqf@illwieckz.net>
-XQF is Copyright (C) 2001-2013 Jordi Mallach <jordi@debian.org>
-XQF is Copyright (C) 2001-2010 Ludwig Nussel <l_n@users.sourceforge.net>
-XQF is Copyright (C) 2000-2003 Alex Burger <alex_b@users.sourceforge.net>
-XQF is Copyright (C) 2000-2002 Bill Adams <bill@evilbill.org>
-XQF is Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>
+XQF is Copyright (C) 1998-2000 Roman Pozlevich
 
-Copying is allowed under the terms of GNU General Public License.  
+HISTORY
+-------
+
+2013 Thomas Debesse <xqf@illwieckz.net>
+2001-2013 Jordi Mallach <jordi@debian.org>
+2001-2010 Ludwig Nussel <l_n@users.sourceforge.net>
+2000-2003 Alex Burger <alex_b@users.sourceforge.net>
+2000-2002 Bill Adams <bill@evilbill.org>
+1998-2000 Roman Pozlevich <roma@botik.ru>
+
+Copying is allowed under the terms of GNU General Public License.
 See the file COPYING for more details.

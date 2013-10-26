@@ -498,6 +498,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"http://sourceforge.net/projects/xqf\n";
   char *contrib1 = _("Maintainers:");
   char *contrib2 =
+	"Thomas Debesse <xqf@illwieckz.net>\n"
 	"Ludwig Nussel <l-n@users.sourceforge.net>\n"
 	"Alex Burger <alex_b@users.sourceforge.net>\n"
 	"Jordi Mallach <jordi@sindominio.net>\n"
