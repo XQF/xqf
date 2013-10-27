@@ -817,6 +817,24 @@
     </game>
     <game>
 	<base>Q3_SERVER</base>
+	<type>Q3RALLY_SERVER</type>
+	<name>Q3 Rally</name>
+	<id>Q3RALLYS</id>
+	<qstat_str>Q3RALLYS</qstat_str>
+	<qstat_option>-q3rallys</qstat_option>
+	<qstat_master_option>-q3rallym</qstat_master_option>
+	<icon>q3rally.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>q3rally</command>
+	<default_home>~/.q3rally</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>baseq3</main_mod>
+	<pd>q3rally_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
 	<type>IOURT_SERVER</type>
 	<name>ioUrbanTerror</name>
 	<id>IOURTS</id>
@@ -832,6 +850,24 @@
 	<update_prefs>tremulous_update_prefs</update_prefs>
 	<main_mod>q3ut4</main_mod>
 	<pd>iourt_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
+	<type>REACTION_SERVER</type>
+	<name>Reaction</name>
+	<id>REACTIONS</id>
+	<qstat_str>REACTIONS</qstat_str>
+	<qstat_option>-reactions</qstat_option>
+	<qstat_master_option>-reactionm</qstat_master_option>
+	<icon>reaction.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>Reaction</command>
+	<default_home>~/.Reaction</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>rq3</main_mod>
+	<pd>reaction_private</pd>
     </game>
     <game>
 	<base>Q3_SERVER</base>
@@ -863,6 +899,24 @@
 	<parse_player>un_parse_player</parse_player>
 	<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 	<exec_client>gamespy_exec</exec_client>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
+	<type>ALIENARENA_SERVER</type>
+	<name>Alien Arena</name>
+	<id>ALIENARENAS</id>
+	<qstat_str>ALIENARENAS</qstat_str>
+	<qstat_option>-alienarenas</qstat_option>
+	<qstat_master_option>-alienarenam</qstat_master_option>
+	<icon>alienarena.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>alienarena</command>
+	<default_home>~/.codered/</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q2_prefs_load</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>arena</main_mod>
+	<pd>alienarena_private</pd>
     </game>
     <game>
 	<type>UNKNOWN_SERVER</type>

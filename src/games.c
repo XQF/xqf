@@ -54,10 +54,16 @@ static char* stringlist051[] = { "unvanquished", NULL };
 static char* stringlist052[] = { "baseq3", NULL };
 static char* stringlist053[] = { "openarena", NULL };
 static char* stringlist054[] = { "openttd", NULL };
-static char* stringlist055[] = { "q3ut4", NULL };
-static char* stringlist056[] = { "ioUrbanTerror", NULL };
-static char* stringlist057[] = { "smokinguns", NULL };
-static char* stringlist058[] = { "smokinguns", NULL };
+static char* stringlist055[] = { "baseq3", NULL };
+static char* stringlist056[] = { "q3rally", NULL };
+static char* stringlist057[] = { "q3ut4", NULL };
+static char* stringlist058[] = { "ioUrbanTerror", NULL };
+static char* stringlist059[] = { "rq3", NULL };
+static char* stringlist060[] = { "Reaction", NULL };
+static char* stringlist061[] = { "smokinguns", NULL };
+static char* stringlist062[] = { "smokinguns", NULL };
+static char* stringlist063[] = { "arena", NULL };
+static char* stringlist064[] = { "alienarena", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -1095,6 +1101,38 @@ struct game games[] = {
     command             : stringlist054,
   },
   {
+    type                : Q3RALLY_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Q3 Rally",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "Q3RALLYS",
+    qstat_str           : "Q3RALLYS",
+    qstat_option        : "-q3rallys",
+    qstat_master_option : "-q3rallym",
+    icon                : "q3rally.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.q3rally",
+    pd                  : &q3rally_private,
+    main_mod            : stringlist055,
+    command             : stringlist056,
+  },
+  {
     type                : IOURT_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "ioUrbanTerror",
@@ -1123,8 +1161,40 @@ struct game games[] = {
     update_prefs        : tremulous_update_prefs,
     default_home        : "~/.ioUrbanTerror",
     pd                  : &iourt_private,
-    main_mod            : stringlist055,
-    command             : stringlist056,
+    main_mod            : stringlist057,
+    command             : stringlist058,
+  },
+  {
+    type                : REACTION_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Reaction",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "REACTIONS",
+    qstat_str           : "REACTIONS",
+    qstat_option        : "-reactions",
+    qstat_master_option : "-reactionm",
+    icon                : "reaction.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.Reaction",
+    pd                  : &reaction_private,
+    main_mod            : stringlist059,
+    command             : stringlist060,
   },
   {
     type                : SMOKINGUNS_SERVER,
@@ -1155,8 +1225,8 @@ struct game games[] = {
     update_prefs        : tremulous_update_prefs,
     default_home        : "~/.smokinguns",
     pd                  : &smokinguns_private,
-    main_mod            : stringlist057,
-    command             : stringlist058,
+    main_mod            : stringlist061,
+    command             : stringlist062,
   },
   {
     type                : GPS_SERVER,
@@ -1173,6 +1243,38 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : gamespy_exec,
     save_info           : quake_save_info,
+  },
+  {
+    type                : ALIENARENA_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Alien Arena",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "ALIENARENAS",
+    qstat_str           : "ALIENARENAS",
+    qstat_option        : "-alienarenas",
+    qstat_master_option : "-alienarenam",
+    icon                : "alienarena.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
+    prefs_load          : q2_prefs_load,
+    update_prefs        : tremulous_update_prefs,
+    default_home        : "~/.codered/",
+    pd                  : &alienarena_private,
+    main_mod            : stringlist063,
+    command             : stringlist064,
   },
   {
     type                : UNKNOWN_SERVER,

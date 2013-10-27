@@ -85,8 +85,11 @@
 #include "xpm/etqw.xpm"
 #include "xpm/openttd.xpm"
 #include "xpm/openarena.xpm"
+#include "xpm/q3rally.xpm"
 #include "xpm/iourt.xpm"
+#include "xpm/reaction.xpm"
 #include "xpm/smokinguns.xpm"
+#include "xpm/alienarena.xpm"
 
 #include "xpm/green-plus.xpm"
 #include "xpm/red-minus.xpm"

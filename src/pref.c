@@ -465,6 +465,8 @@ static struct q3_common_prefs_s xonotic_prefs =
 };
 
 static const char* warsow_masterprotocols[] = {
+	"auto",
+	"15 - v1.02",
 	"10 - v0.40",
 	"9 - v0.32",
 	"8 - v0.2",
@@ -476,7 +478,7 @@ static const char* warsow_masterprotocols[] = {
 static struct q3_common_prefs_s warsow_prefs =
 {
   protocols: warsow_masterprotocols,
-  defproto : "10",
+  defproto : "15",
 };
 
 static const char* tremulous_masterprotocols[] = {
@@ -505,6 +507,7 @@ static struct q3_common_prefs_s unvanquished_prefs =
 
 static const char* openarena_masterprotocols[] = {
 	"auto",
+	"71 - v0.8.8"
 	"70 - v0.8.0",
 	NULL
 };
@@ -512,7 +515,19 @@ static const char* openarena_masterprotocols[] = {
 static struct q3_common_prefs_s openarena_prefs =
 {
   protocols: openarena_masterprotocols,
-  defproto : "70",
+  defproto : "71",
+};
+
+static const char* q3rally_masterprotocols[] = {
+        "auto",
+        "71 - v0.0.0.3",
+        NULL
+};
+
+static struct q3_common_prefs_s q3rally_prefs =
+{
+  protocols: q3rally_masterprotocols,
+  defproto : "71",
 };
 
 static const char* iourt_masterprotocols[] = {
@@ -527,9 +542,21 @@ static struct q3_common_prefs_s iourt_prefs =
   defproto : "68",
 };
 
-static const char* smokinguns_masterprotocols[] = {
+static const char* reaction_masterprotocols[] = {
         "auto",
         "68",
+        NULL
+};
+
+static struct q3_common_prefs_s reaction_prefs =
+{
+  protocols: reaction_masterprotocols,
+  defproto : "68",
+};
+
+static const char* smokinguns_masterprotocols[] = {
+        "auto",
+        "68 - v1.1",
         NULL
 };
 
@@ -537,6 +564,18 @@ static struct q3_common_prefs_s smokinguns_prefs =
 {
   protocols: smokinguns_masterprotocols,
   defproto : "68",
+};
+
+static const char* alienarena_masterprotocols[] = {
+        "auto",
+        "34 - v7.66",
+        NULL
+};
+
+static struct q3_common_prefs_s alienarena_prefs =
+{
+  protocols: alienarena_masterprotocols,
+  defproto : "34",
 };
 
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);
@@ -3198,8 +3237,11 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case TREMULOUS_SERVER: return &tremulous_prefs;
     case UNVANQUISHED_SERVER: return &unvanquished_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
+    case Q3RALLY_SERVER: return &q3rally_prefs; 
     case IOURT_SERVER: return &iourt_prefs; 
+    case REACTION_SERVER: return &reaction_prefs; 
     case SMOKINGUNS_SERVER: return &smokinguns_prefs; 
+    case ALIENARENA_SERVER: return &alienarena_prefs; 
     default: xqf_error("need to define preferences"); return NULL;
   }
 }
@@ -4767,8 +4809,11 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[UNVANQUISHED_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[Q3RALLY_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[IOURT_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[REACTION_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[SMOKINGUNS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[ALIENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
   for (i = 0; i < GAMES_TOTAL; i++) {
     new_genprefs[i].pref_dir = g_strdup (games[i].dir);

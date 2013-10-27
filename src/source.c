@@ -1056,7 +1056,8 @@ static char *builtin_masters_update_info[] = {
   "ADD Q2S master://netdome.biz netdome.biz",
   "ADD Q2S master://master.planetgloom.com gloom",
 
-  "ADD Q3S master://master3.idsoftware.com id",
+  "DELETE Q3S master://master3.idsoftware.com id", // switched off
+  "ADD Q3S master://master.ioquake3.org master.ioquake3.org",
 /* removed, because it's added as IOURT_Master and all q3ut4 servers are also in IDs Q3 Master by default
  * "ADD Q3S master://master.urbanterror.net Urban Terror",
  */
@@ -1171,16 +1172,27 @@ static char *builtin_masters_update_info[] = {
   "ADD UNVANQUISHEDS master://unvanquished.net:27950 unvanquished.net",
 
   "ADD OPENARENAS master://dpmaster.deathmask.net dpmaster.deathmask.net",
+  "ADD OPENARENAS master://master.ioquake3.org master.ioquake3.org",
 
   "ADD OTTDS master://master.openttd.org OpenTTD",
 
+  "ADD Q3RALLYS master://master.q3rally.com master.q3rally.com",
+  /* "DELETE Q3RALLYS master://master.ioquake3.org master.ioquake3.org", */ // not used anymore
+  "DELETE Q3RALLYS master://master.q3alive.net master.q3alive.net", // switched off
+
   "ADD IOURTS master://master.urbanterror.net ioUrbanTerror",
 
+  "ADD REACTIONS master://master.rq3.com master.rq3.com",
+  /* "ADD REACTIONS master://master.ioquake3.org master.ioquake3.org", */ // not used anymore
+
   "ADD SMOKINGUNSS master://master.smokin-guns.org master.smokin-guns.org",
-  "ADD SMOKINGUNSS master://master.ioquake3.org master.ioquake3.org",
-  "ADD SMOKINGUNSS master://master.q3alive.net master.q3alive.net",
+  /* "DELETE SMOKINGUNSS master://master.ioquake3.org master.ioquake3.org", */ // not used 	nymore
   "ADD SMOKINGUNSS master://parttimegeeks.net:27950 parttimegeeks.net",
-  "ADD SMOKINGUNSS master://soulserv.net:27950 soulserv.net",
+  /* "DELETE SMOKINGUNSS master://soulserv.net:27950 soulserv.net", */ // down
+  "DELETE SMOKINGUNSS master://master.q3alive.net master.q3alive.net", // switched off
+
+  "ADD ALIENARENAS master://master.corservers.com:27900 master.corservers.com",
+  "ADD ALIENARENAS master://master2.corservers.com:27900 master2.corservers.com",
 
   "ADD QS lan://255.255.255.255 LAN",
   "ADD QWS lan://255.255.255.255 LAN",
@@ -1204,7 +1216,18 @@ static char *builtin_masters_update_info[] = {
   "ADD SFS lan://255.255.255.255 LAN",
   "ADD DM3S lan://255.255.255.255 LAN",
   "ADD ETQWS lan://255.255.255.255 LAN",
+  "ADD NEXUIZS lan://255.255.255.255 LAN",
+  "ADD XONOTICS lan://255.255.255.255 LAN",
+  "ADD WARSOWS lan://255.255.255.255 LAN",
+  "ADD TREMULOUS lan://255.255.255.255 LAN",
+  "ADD UNVANQUISHEDS lan://255.255.255.255 LAN",
+  "ADD OPENARENAS lan://255.255.255.255 LAN",
   "ADD OTTDS lan://255.255.255.255 LAN",
+  "ADD Q3RALLYS lan://255.255.255.255 LAN",
+  "ADD IOURTS lan://255.255.255.255 LAN",
+  "ADD REACTIONS lan://255.255.255.255 LAN",
+  "ADD SMOKINGUNSS lan://255.255.255.255 LAN",
+  "ADD ALIENARENAS lan://255.255.255.255 LAN",
 
   NULL
 };

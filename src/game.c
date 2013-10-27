@@ -171,8 +171,11 @@ static struct quake_private warsow_private;
 static struct quake_private tremulous_private;
 static struct quake_private unvanquished_private;
 static struct quake_private openarena_private;
+static struct quake_private q3rally_private;
 static struct quake_private iourt_private;
+static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
+static struct quake_private alienarena_private;
 
 #include "games.c"
 
@@ -1504,9 +1507,13 @@ static void q3_analyze_serverinfo (struct server *s) {
   // whether the server protcol for that game is compatible
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "version" ) == 0) {
-      if(!strncmp(info_ptr[1],"Q3",2))
+      if(!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5))
       {
 	s->type=Q3_SERVER;
+      }
+      if(!strncmp(info_ptr[1],"ioq3+oa",7))
+      {
+	s->type=OPENARENA_SERVER;
       }
       else if(!strncmp(info_ptr[1],"Wolf",4))
       {
@@ -1533,9 +1540,25 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=TREMULOUS_SERVER;
       }
-      else if(games[IOURT_SERVER].cmd && !strncmp(info_ptr[1],"ioq3 1.35urt",12))
+      else if(!strncmp(info_ptr[1],"Unvanquished",12))
       {
-        s->type=IOURT_SERVER;
+	s->type=UNVANQUISHED_SERVER;
+      }
+      else if(games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1],"ioq3 1.35urt",12) || !strncmp(info_ptr[1],"ioq3-urt",8)))
+      {
+	s->type=IOURT_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"Reaction",8))
+      {
+	s->type=REACTION_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"Q3Rally",7))
+      {
+	s->type=Q3RALLY_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"Smokin' Guns",12))
+      {
+	s->type=SMOKINGUNS_SERVER;
       }
       break;
     }
@@ -1617,6 +1640,13 @@ static void q3_analyze_serverinfo (struct server *s) {
   else if(game)
   {
     s->game=game;
+
+    // since ioq3, many mods have same declaration (ioq3), we can discriminate with game or gamename
+    // also, some mods are played as mod or as standalone, prefer standalone to mods when standalone available
+    if(!strncmp(game,"rq3",3))
+      {
+	s->type=REACTION_SERVER;
+      }
   }
   else if(gamename)
   {
