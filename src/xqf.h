@@ -45,7 +45,7 @@
 #define	Q1_DEFAULT_PORT		26000		/* Quake */
 #define	QW_DEFAULT_PORT		27500		/* QuakeWorld */
 #define	Q2_DEFAULT_PORT		27910		/* Quake2 */
-#define	Q3_DEFAULT_PORT		27960		/* Quake3: Arena */
+#define	Q3_DEFAULT_PORT		27960		/* Quake3 Arena */
 #define	WO_DEFAULT_PORT		27960		/* Wolfenstein */
 #define	EF_DEFAULT_PORT		27960		/* Voyager Elite Force */
 #define	H2_DEFAULT_PORT		26900		/* Hexen2 */

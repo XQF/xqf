@@ -1647,6 +1647,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=REACTION_SERVER;
       }
+    else if(!strncmp(game,"q3ut4",5))
+      {
+	s->type=IOURT_SERVER;
+      }
   }
   else if(gamename)
   {

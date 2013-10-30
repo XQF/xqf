@@ -123,7 +123,7 @@
     <game>
 	<type>Q3_SERVER</type>
 	<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS</flags>
-	<name>Quake3: Arena</name>
+	<name>Quake Ⅲ Arena</name>
 	<default_port>27960</default_port>
 	<default_master_port>27950</default_master_port>
 	<id>Q3S</id>
@@ -216,7 +216,6 @@
 	<main_mod>etmain</main_mod>
 	<pd>wolfet_private</pd>
     </game>
-
     <game>
 	<base>Q3_SERVER</base>
 	<type>DOOM3_SERVER</type>
@@ -244,7 +243,6 @@
 	<attributes>+rconpassword</attributes>
 	<pd>doom3_private</pd>
     </game>
-
     <game>
 	<base>Q3_SERVER</base>
 	<type>ETQW_SERVER</type>
@@ -836,15 +834,17 @@
     <game>
 	<base>Q3_SERVER</base>
 	<type>IOURT_SERVER</type>
-	<name>ioUrbanTerror</name>
+	<name>UrbanTerror</name>
 	<id>IOURTS</id>
 	<qstat_str>IOURTS</qstat_str>
 	<qstat_option>-iourts</qstat_option>
 	<qstat_master_option>-iourtm</qstat_master_option>
 	<icon>iourt.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>urbanterror</command>
+	<command>Quake3-UrT</command>
 	<command>ioUrbanTerror</command>
-	<default_home>~/.ioUrbanTerror</default_home>
+	<default_home>~/.q3a</default_home>
 	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
 	<update_prefs>tremulous_update_prefs</update_prefs>

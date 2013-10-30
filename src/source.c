@@ -1032,7 +1032,7 @@ void free_master (struct master *m) {
 
 static char *builtin_masters_update_info[] = {
 
-  "ADD QS http://www.gameaholic.com/servers/qspy-quake Gameaholic.Com",
+  "ADD QS http://www.gameaholic.com/servers/qspy-quake gameaholic.com",
   "DELETE QS http://ironman.planetquake.com/serversqspy.txt Ironman", // does no longer work
 
   "ADD QWS master://192.246.40.37:27000 id Limbo",
@@ -1050,7 +1050,7 @@ static char *builtin_masters_update_info[] = {
   "DELETE Q2S master://master.quake.inet.fi:27900 iNET (Finland)", // doesn't work (26.09.2004)
   "DELETE Q2S master://q2master.mondial.net.au:27900 Australia", // doesn't work (26.09.2004)
   "DELETE Q2S master://q2master.gxp.de:27900 gXp (Germany)", // doesn't work (26.09.2004)
-  "ADD Q2S http://www.gameaholic.com/servers/qspy-quake2 Gameaholic.Com",
+  "ADD Q2S http://www.gameaholic.com/servers/qspy-quake2 gameaholic.com",
   "ADD Q2S http://www.lithium.com/quake2/gamespy.txt Lithium",
   "ADD Q2S master://masterserver.exhale.de exhale.de",
   "ADD Q2S master://netdome.biz netdome.biz",
@@ -1065,14 +1065,14 @@ static char *builtin_masters_update_info[] = {
 //  "ADD Q3S master://q3master.splatterworld.de Germany",
 //  "ADD Q3S master://q3.golsyd.net.au Australia",
   "DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld", // doesn't work (26.09.2004)
-  "ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 Gameaholic.com",
+  "ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 gameaholic.com",
   "ADD Q3S master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
   "ADD Q4S master://q4master.idsoftware.com id",
 
 //  "ADD HWS master://santa.quakeforge.net:26900 QuakeForge",
 
-  "ADD SNS http://www.gameaholic.com/servers/qspy-sin Gameaholic.Com",
+  "ADD SNS http://www.gameaholic.com/servers/qspy-sin gameaholic.com",
   "ADD SNS http://asp.planetquake.com/sinserverlist/servers.txt PlanetQuake",
 
   "DELETE HLS master://half-life.east.won.net WON East", // switched off
@@ -1087,10 +1087,10 @@ static char *builtin_masters_update_info[] = {
   "ADD A2S,-stma2s master://steam2.steampowered.com:27011 Steam 2",
   "ADD A2S,-stma2s master://69.28.151.178:27011 Valve 1",
 
-  "ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin Gameaholic.Com",
+  "ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin gameaholic.com",
   "ADD Q2S:KP http://www.ogn.org:6666 OGN",
 
-  "ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 Gameaholic.Com",
+  "ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 gameaholic.com",
 
   "DELETE UNS gmaster://unreal.epicgames.com:28900 Epic", // doesn't work (26.11.2004)
   "DELETE UNS gmaster://utmaster.barrysworld.com:28909 BarrysWorld", // doesn't work (26.09.2004)
@@ -1106,14 +1106,15 @@ static char *builtin_masters_update_info[] = {
   "ADD T2S master://198.74.35.18:27999 Master 3",
 
   "DELETE WOS master://wolf.idsoftware.com:27950 id", // does no longer work
-  "ADD WOS master://wolfmaster.idsoftware.com:27950 id",
-  "ADD WOETS master://etmaster.idsoftware.com:27950 id",
+  "ADD WOS master://wolfmaster.idsoftware.com:27950 wolfmaster.idsoftware.com",
 
-  "ADD DM3S master://idnet.ua-corp.com:27650 id",
+  "ADD WOETS master://etmaster.idsoftware.com:27950 etmaster.idsoftware.com",
+
+  "ADD DM3S master://idnet.ua-corp.com:27650 idnet.ua-corp.com:",
 
   "ADD ETQWS http://etqw-ipgetter.demonware.net/ipgetter/ demonware",
 
-  "ADD EFS http://www.gameaholic.com/servers/qspy-startrekeliteforce Gameaholic.com",
+  "ADD EFS http://www.gameaholic.com/servers/qspy-startrekeliteforce gameaholic.com",
   "ADD EFS master://master.stef1.ravensoft.com:27953  Ravensoft",
 
   "DELETE D3P master://gt.pxo.net:3445 PXO", // doesn't work
@@ -1177,19 +1178,19 @@ static char *builtin_masters_update_info[] = {
   "ADD OTTDS master://master.openttd.org OpenTTD",
 
   "ADD Q3RALLYS master://master.q3rally.com master.q3rally.com",
-  /* "DELETE Q3RALLYS master://master.ioquake3.org master.ioquake3.org", */ // not used anymore
+  // "DELETE Q3RALLYS master://master.ioquake3.org master.ioquake3.org", // not used anymore
   "DELETE Q3RALLYS master://master.q3alive.net master.q3alive.net", // switched off
 
-  "ADD IOURTS master://master.urbanterror.net ioUrbanTerror",
+  "ADD IOURTS master://master.urbanterror.net master.urbanterror.net",
 
   "ADD REACTIONS master://master.rq3.com master.rq3.com",
-  /* "ADD REACTIONS master://master.ioquake3.org master.ioquake3.org", */ // not used anymore
+  // "ADD REACTIONS master://master.ioquake3.org master.ioquake3.org", // not used anymore
 
   "ADD SMOKINGUNSS master://master.smokin-guns.org master.smokin-guns.org",
-  /* "DELETE SMOKINGUNSS master://master.ioquake3.org master.ioquake3.org", */ // not used 	nymore
+  // "DELETE SMOKINGUNSS master://master.ioquake3.org master.ioquake3.org", // not used anymore
   "ADD SMOKINGUNSS master://parttimegeeks.net:27950 parttimegeeks.net",
-  /* "DELETE SMOKINGUNSS master://soulserv.net:27950 soulserv.net", */ // down
-  "DELETE SMOKINGUNSS master://master.q3alive.net master.q3alive.net", // switched off
+  // "DELETE SMOKINGUNSS master://soulserv.net:27950 soulserv.net", // switched off
+  // "DELETE SMOKINGUNSS master://master.q3alive.net master.q3alive.net", // switched off
 
   "ADD ALIENARENAS master://master.corservers.com:27900 master.corservers.com",
   "ADD ALIENARENAS master://master2.corservers.com:27900 master2.corservers.com",

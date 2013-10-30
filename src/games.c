@@ -57,7 +57,7 @@ static char* stringlist054[] = { "openttd", NULL };
 static char* stringlist055[] = { "baseq3", NULL };
 static char* stringlist056[] = { "q3rally", NULL };
 static char* stringlist057[] = { "q3ut4", NULL };
-static char* stringlist058[] = { "ioUrbanTerror", NULL };
+static char* stringlist058[] = { "ioUrbanTerror", "Quake3-UrT", "urbanterror", NULL };
 static char* stringlist059[] = { "rq3", NULL };
 static char* stringlist060[] = { "Reaction", NULL };
 static char* stringlist061[] = { "smokinguns", NULL };
@@ -153,7 +153,7 @@ struct game games[] = {
   {
     type                : Q3_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-    name                : "Quake3: Arena",
+    name                : "Quake Ⅲ Arena",
     default_port        : 27960,
     default_master_port : 27950,
     id                  : "Q3S",
@@ -1135,7 +1135,7 @@ struct game games[] = {
   {
     type                : IOURT_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-    name                : "ioUrbanTerror",
+    name                : "UrbanTerror",
     default_port        : 27960,
     default_master_port : 27950,
     id                  : "IOURTS",
@@ -1159,7 +1159,7 @@ struct game games[] = {
     cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
     update_prefs        : tremulous_update_prefs,
-    default_home        : "~/.ioUrbanTerror",
+    default_home        : "~/.q3a",
     pd                  : &iourt_private,
     main_mod            : stringlist057,
     command             : stringlist058,
