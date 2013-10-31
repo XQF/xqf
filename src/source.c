@@ -1164,6 +1164,7 @@ static char *builtin_masters_update_info[] = {
 
   "ADD XONOTICS master://ghdigital.com ghdigital.com",
   "ADD XONOTICS master://dpmaster.deathmask.net dpmaster.deathmask.net",
+  "ADD XONOTICS master://dpmaster.tchr.no dpmaster.tchr.no",
 
   "ADD WARSOWS master://ghdigital.com ghdigital.com",
   "ADD WARSOWS master://dpmaster.deathmask.net dpmaster.deathmask.net",
