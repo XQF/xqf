@@ -1507,7 +1507,7 @@ static void q3_analyze_serverinfo (struct server *s) {
   // whether the server protcol for that game is compatible
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "version" ) == 0) {
-      if(!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5))
+      if(!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5) || !strncmp(info_ptr[1],"ioQ3 ",5))
       {
 	s->type=Q3_SERVER;
       }
@@ -1643,11 +1643,12 @@ static void q3_analyze_serverinfo (struct server *s) {
 
     // since ioq3, many mods have same declaration (ioq3), we can discriminate with game or gamename
     // also, some mods are played as mod or as standalone, prefer standalone to mods when standalone available
-    if(!strncmp(game,"rq3",3))
+    // but recognize standalone only if standalone is configured
+    if(games[REACTION_SERVER].cmd && !strncmp(game,"rq3",3))
       {
 	s->type=REACTION_SERVER;
       }
-    else if(!strncmp(game,"q3ut4",5))
+    else if(games[IOURT_SERVER].cmd && !strncmp(game,"q3ut4",5))
       {
 	s->type=IOURT_SERVER;
       }
