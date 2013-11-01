@@ -107,11 +107,9 @@ msgid "Redial"
 msgstr "Tenter une reconnexion"
 
 #: ../src/dialogs.c:493
-#, fuzzy, c-format
+#, c-format
 msgid "Version %s"
-msgstr ""
-"Version %s\n"
-"\n"
+msgstr "Version %s"
 
 #. translators can use the copyright symbol instead of (C)
 #: ../src/dialogs.c:496
@@ -915,7 +913,7 @@ msgstr "Montrer seulement les jeux configurés"
 
 #: ../src/pref.c:3808
 msgid "Use custom color settings"
-msgstr ""
+msgstr "Utilise une couleur personnalisée"
 
 #: ../src/pref.c:3810
 msgid ""
@@ -923,6 +921,9 @@ msgid ""
 "for this setting to take effect. Note that you may need to install the gtk-"
 "engines package."
 msgstr ""
+"Utiliser les couleurs personnalisées de XQF au lieu des couleurs systême."
+"Vous devez redémarrer XQF pour que cette option prenne effet. Notez qu'il "
+"vous faudra peut-être installer le paquet gtk-engine."
 
 #. Toolbar
 #: ../src/pref.c:3831
@@ -1264,7 +1265,7 @@ msgid "Usage: %s [server type] <ip> <port>\n"
 msgstr "Utilisation : %s [type de serveur] <ip> <port>\n"
 
 #: ../src/rcon.c:718
-#, fuzzy, c-format
+#, c-format
 msgid "  server type is either --qws, --hws, --hls or --dm3s.\n"
 msgstr "  le type de serveur est soit --qws, soit --hws, soit --hls.\n"
 
@@ -1414,7 +1415,7 @@ msgstr "Mot de passe RCon/Admin"
 
 #: ../src/srv-prop.c:728
 msgid "This server sucks"
-msgstr ""
+msgstr "Ce serveur est à éviter"
 
 #: ../src/srv-prop.c:771 ../src/xqf.c:2603 ../src/xqf.c:2741
 msgid "Properties"
@@ -1458,9 +1459,9 @@ msgstr ""
 "Vérifiez que le dossier de travail est correctement configuré."
 
 #: ../src/stat.c:1559
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create a temporary file %s: %s"
-msgstr "Échec de la création du fichier temporaire %s"
+msgstr "Échec de la création du fichier temporaire %s: %s"
 
 #. The space behind up and down is to make the strings different from
 #. those in flt-player.c because their meaning is different in german
@@ -1669,6 +1670,8 @@ msgid ""
 "You said this servers sucks.\n"
 "Do you want to risk a game this time?"
 msgstr ""
+"Vous aviez dit qu'il fallait éviter ce serveur.\n"
+"Voulez vous risquer une partie cette fois-ci ?"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -1743,6 +1746,9 @@ msgid ""
 "%s\n"
 "Don't forget that you need to run 'gslist -u' before you can use it."
 msgstr ""
+"Pour le support GSlist il faut que vous installiez le programme "
+"« gslist » disponible à %s\n"
+"N’oubliez pas qu'il vous faut exécuter « gslist -u » avant de pouvoir l'utiliser"
 
 #: ../src/xqf.c:1862
 msgid "You have to select the server you want to delete"
@@ -2053,7 +2059,6 @@ msgid "no sound player configured"
 msgstr "pas de lecteur audio configuré"
 
 #: ../src/xqf.c:3767
-#, fuzzy
 msgid ""
 "Usage:\n"
 "\txqf [OPTIONS]\n"
@@ -2068,8 +2073,9 @@ msgstr ""
 "\txqf [OPTIONS]\n"
 "\n"
 "OPTIONS :\n"
-"\t--launch \"TYPE_DE_SERVEUR IP\"\tLance directement un jeu sur le serveur "
+"\t--launch \"[TYPE_DE_SERVEUR] IP\"\tLance directement un jeu sur le serveur "
 "spécifié.\n"
+"\t--add    \"[TYPE_DE_SERVEUR] IP\"\tAjouter le serveur spécifié aux favoris.\n"
 "\t--debug <level>\t\t\tActive les messages de debug au niveau spécifié.\n"
 "\t--version\t\t\tAffiche la version et quitte.\n"
 
@@ -2105,23 +2111,23 @@ msgstr "Chargement…"
 #: ../src/loadpixmap.c:245 ../src/loadpixmap.c:257
 #, c-format
 msgid "Error loading pixmap file: %s"
-msgstr ""
+msgstr "Erreur au chargement du fichier pixmap : %s"
 
 #: ../src/trayicon.c:376 ../src/trayicon.c:382 ../src/trayicon.c:390
 #: ../src/trayicon.c:396 ../src/trayicon.c:410
 #, c-format
 msgid "Error in file: %s line: %d\n"
-msgstr ""
+msgstr "Erreur dans le fichier : %s line %d\n"
 
 #. translator: show main window
 #: ../src/trayicon.c:473
 msgid "Show"
-msgstr ""
+msgstr "Montrer"
 
 #. translator: hide main window
 #: ../src/trayicon.c:479
 msgid "Hide"
-msgstr ""
+msgstr "Cacher"
 
 #: ../src/trayicon.c:484
 msgid "Exit"
