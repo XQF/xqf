@@ -1,3 +1,39 @@
+Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
+- complete french translation (100%)
+
+Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
+- detect more ioQuake3 variant as ioQuake3
+- launch some Quake3 derivatives as ioQuake3 mod if standalone isn't installed
+- add another master for Xonotic (dpmaster.tchr.no)
+
+Oct 30, 2013: Thomas Debesse <xqf@illwieckz.net>
+- recognize Urban Terror in Quake3 server list even if engine is bare ioQuake3
+- update and improve french translation (near 100%),
+  use french typography (thin space, apostrophe, french quote, etc.)
+
+Oct 27, 2013: Thomas Debesse <xqf@illwieckz.net>
+- add Alien Arena, Reaction and Q3 Rally games
+- add LAN broadcast for Nexuiz, Xonotic, Warsow, Tremulous, Unvanquished,
+  OpenArena, Q3 Rally, Urban Terror, Reaction, Smokin'Guns and Alien Arena
+- update Warsow protocol version and improve Warsow icon
+- detect ioQuake3 server as Quake3 server
+
+Oct 26, 2013: Thomas Debesse <xqf@illwieckz.net>
+- add Unvanquished, Xonotic and Smokin'Guns games
+
+Oct 25, 2013: Thomas Debesse <xqf@illwieckz.net>
+- fix "dlsym" compilation problem
+- fix spelling (Debian patch, Jordi Mallach)
+- fix intltool compilation problem (Debian patch, Jordi Mallach)
+- fix redline check (Debian patch, Sven Joachim)
+- fix autotools (Debian patch, Jordi Mallach)
+- drop gtk 1.2 support (Debian patch, Jordi Mallach)
+- fix X11 build dependency (Debian patch, Jordi Mallach)
+- fix desktop file (Debian patch, Jordi Mallach)
+- fix steam applaunch (Debian patch, Jo Shields)
+- fix Voyager Elite Force xpm path file (Debian patch, Jordi Mallach)
+- fix missing pixmap file opening (Debian patch, Lars Wirzenius)
+
 Dec 21, 2010: Ludwig Nussel <l-n@users.sourceforge.net>
 - add hack for systems without gtk1
 

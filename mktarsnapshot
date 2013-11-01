@@ -1,6 +1,6 @@
 #!/bin/sh
 DATE=`date +%Y%m%d%H%M`
-VERSION=1.0.5.1-git
+VERSION=1.0.5.2
 d=xqf-${VERSION}_$DATE
 set -e
 set -x

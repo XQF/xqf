@@ -1,5 +1,5 @@
-XQF 1.0.5.2-git -- Current time
--------------------------------
+XQF 1.0.5.2-git -- Currently
+----------------------------
 
 Changes since 1.0.5:
 
