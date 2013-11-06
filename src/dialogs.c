@@ -499,10 +499,10 @@ void about_dialog (GtkWidget *widget, gpointer data) {
   char *contrib1 = _("Maintainers:");
   char *contrib2 =
 	"Thomas Debesse <xqf@illwieckz.net>\n"
-	"Ludwig Nussel <l-n@users.sourceforge.net>\n"
+	"Ludwig Nussel <ludwig.nussel@suse.de>\n"
 	"Alex Burger <alex_b@users.sourceforge.net>\n"
 	"Jordi Mallach <jordi@sindominio.net>\n"
-	"Bill Adams <webmaster@evil.inetarena.com>\n";
+	"Bill Adams <bill@evilbill.org>\n";
   char *contrib3 = _("Contributors:");
   char *contrib4 = 
 	"Jochen Baier <email@jochen-baier.de>\n"

@@ -3,21 +3,24 @@ XQF 1.0.5.2-git -- Currently
 
 Changes since 1.0.5:
 
-* new games: Unvanquished, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, OpenArena, OpenTTD, Enemy Territory: Quake Wars
-* add LAN broadcast for many games
-* drop disabled master servers (like id master server for Quake 3)
-* add new master servers (like ioquake3 master replacing id master)
-* add Warsow protocol numbers
-* add Hexen World master server support
-* enhance Steam applaunch support
-* enable GTK+2 build by default, GTK+1 build is no longer guaranteed
-* add x11 libs to pkg_modules
-* fix build with newer linker versions
-* fix autotools, intltool
-* fix readline check 
-* fix xpm segfaults
-* fix crash with 24 bit images
-* determine number of GeoIP countries at runtime
+* New games: Unvanquished, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, OpenArena, OpenTTD, Enemy Territory: Quake Wars
+* Recognize Unvanquished extended color codes
+* Add LAN broadcast for many games
+* Drop disabled master servers (like id master server for Quake 3)
+* Add or substitute new master servers (like ioquake3 master supplanting id master)
+* Add Warsow protocol numbers
+* Add Hexen World master server support
+* Enhance Steam applaunch support
+* Enable GTK+2 build by default, GTK+1 build is no longer guaranteed
+* Add scalable SVG icon
+* Add x11 libs to pkg_modules
+* Fix build with newer linker versions
+* Fix autotools, intltool
+* Fix readline check 
+* Fix xpm segfaults
+* Fix crash with 24 bit images
+* Determine number of GeoIP countries at runtime
+* French translation is over
 
 XQF 1.0.5 -- November 04, 2006
 ------------------------------
