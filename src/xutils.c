@@ -40,7 +40,7 @@ void iconify_window (GdkWindow *window) {
   XIconifyWindow (GDK_DISPLAY (), xwindow, DefaultScreen (GDK_DISPLAY ()));
 }
 
-static const char* minimize_icon = "xqf_48x48.png";
+static const char* minimize_icon = "xqf.svg";
 
 void window_set_icon (GtkWidget *win)
 {
