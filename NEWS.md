@@ -3,7 +3,7 @@ XQF 1.0.5.2-git -- Currently
 
 Changes since 1.0.5:
 
-* New games: Unvanquished, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, OpenArena, OpenTTD, Enemy Territory: Quake Wars
+* New games: Unvanquished, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Enemy Territory: Quake Wars
 * Recognize Unvanquished extended color codes
 * Add LAN broadcast for many games
 * Drop disabled master servers (like id master server for Quake 3)

@@ -1182,6 +1182,8 @@ static char *builtin_masters_update_info[] = {
   // "DELETE Q3RALLYS master://master.ioquake3.org master.ioquake3.org", // not used anymore
   "DELETE Q3RALLYS master://master.q3alive.net master.q3alive.net", // switched off
 
+  "ADD WOPS master://master.worldofpadman.com:27955 master.worldofpadman.com",
+
   "ADD IOURTS master://master.urbanterror.net master.urbanterror.net",
 
   "ADD REACTIONS master://master.rq3.com master.rq3.com",
@@ -1226,6 +1228,7 @@ static char *builtin_masters_update_info[] = {
   "ADD OPENARENAS lan://255.255.255.255 LAN",
   "ADD OTTDS lan://255.255.255.255 LAN",
   "ADD Q3RALLYS lan://255.255.255.255 LAN",
+  "ADD WOPS lan://255.255.255.255 LAN",
   "ADD IOURTS lan://255.255.255.255 LAN",
   "ADD REACTIONS lan://255.255.255.255 LAN",
   "ADD SMOKINGUNSS lan://255.255.255.255 LAN",

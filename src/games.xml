@@ -833,6 +833,24 @@
     </game>
     <game>
 	<base>Q3_SERVER</base>
+	<type>WOP_SERVER</type>
+	<name>World of Padman</name>
+	<id>WOPS</id>
+	<qstat_str>WOPS</qstat_str>
+	<qstat_option>-wops</qstat_option>
+	<qstat_master_option>-wopm</qstat_master_option>
+	<icon>wop.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>worldofpadman</command>
+	<default_home>~/.WoPadman</default_home>
+	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>tremulous_update_prefs</update_prefs>
+	<main_mod>wop</main_mod>
+	<pd>wop_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
 	<type>IOURT_SERVER</type>
 	<name>UrbanTerror</name>
 	<id>IOURTS</id>

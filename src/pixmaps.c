@@ -86,6 +86,7 @@
 #include "xpm/openttd.xpm"
 #include "xpm/openarena.xpm"
 #include "xpm/q3rally.xpm"
+#include "xpm/wop.xpm"
 #include "xpm/iourt.xpm"
 #include "xpm/reaction.xpm"
 #include "xpm/smokinguns.xpm"

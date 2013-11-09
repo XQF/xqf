@@ -172,6 +172,7 @@ static struct quake_private tremulous_private;
 static struct quake_private unvanquished_private;
 static struct quake_private openarena_private;
 static struct quake_private q3rally_private;
+static struct quake_private wop_private;
 static struct quake_private iourt_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
@@ -1584,6 +1585,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       else if(!strncmp(info_ptr[1],"Unvanquished",12))
       {
 	s->type=UNVANQUISHED_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"wop",3))
+      {
+	s->type=WOP_SERVER;
       }
       else if(games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1],"ioq3 1.35urt",12) || !strncmp(info_ptr[1],"ioq3-urt",8)))
       {
