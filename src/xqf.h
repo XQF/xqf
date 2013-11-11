@@ -22,14 +22,15 @@
 #include "gnuconfig.h"	/* GNU autoconf */
 
 #include <sys/types.h>
-#include <netinet/in.h> /* struct in_addr */
+#include <netinet/in.h>	/* struct in_addr */
 #include <arpa/inet.h>	/* struct in_addr */
 #include <time.h>	/* time_t */
 
 #include <gtk/gtk.h>
 #include <glib.h>
 
-#define RC_DIR		".qf"
+#define RC_DIR		".qf"	/* legacy config dir, before 1.0.6 */
+#define XDG_RC_DIR	"qf"	/* new config dir, since 1.0.6 */
 #define RC_FILE		"qfrc"
 #define CONFIG_FILE	"config"
 #define SERVERS_FILE	"servers"

@@ -3981,6 +3981,15 @@ int main (int argc, char *argv[]) {
   set_debug_level (DEFAULT_DEBUG_LEVEL);
   debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);
 
+  /* migrate config directory to follow XDG  Base Directory Specification
+   * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+   * https://developer.gnome.org/basedir-spec/
+   * https://developer.gnome.org/glib/2.37/glib-Miscellaneous-Utility-Functions.html#g-get-user-config-dir
+   */
+  if (!rc_migrate_dir()) {
+    return 1;
+  }
+
   if (!init_user_info ()) {
     return 1;
   }

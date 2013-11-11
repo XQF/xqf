@@ -1,3 +1,7 @@
+Nov 11, 2013: Thomas Debesse <xqf@illwieckz.net>
+- follow XDG Base Directory Specification for user configuration directory
+  and migrate previously created directory
+
 Nov 10, 2013: Thomas Debesse <xqf@illwieckz.net>
 - add World of Padman game
 

@@ -13,6 +13,7 @@ Changes since 1.0.5:
 * Enhance Steam applaunch support
 * Enable GTK+2 build by default, GTK+1 build is no longer guaranteed
 * Add scalable SVG icon
+* Follow XDG Base Directory Specification for user configuration directory and migrate previously created directory
 * Add x11 libs to pkg_modules
 * Fix build with newer linker versions
 * Fix autotools, intltool

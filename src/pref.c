@@ -5068,11 +5068,11 @@ int fix_qw_player_color (int color) {
 
 
 int init_user_info (void) {
-  if (!g_get_user_name () || !g_get_home_dir () || !g_get_tmp_dir ()) {
-    xqf_error(_("Unable to get user name/home/tmpdir"));
+  if (!g_get_user_name () || !g_get_home_dir () || !g_get_tmp_dir () || !g_get_user_config_dir ()) {
+    xqf_error(_("Unable to get user name/home directory/XDG config directory/tmp directory"));
     return FALSE;
   }
-  user_rcdir  = file_in_dir (g_get_home_dir (), RC_DIR);
+  user_rcdir  = file_in_dir (g_get_user_config_dir (), XDG_RC_DIR);
   return TRUE;
 }
 
