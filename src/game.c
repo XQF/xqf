@@ -169,6 +169,8 @@ static struct quake_private quake4_private;
 static struct quake_private etqw_private;
 static struct quake_private warsow_private;
 static struct quake_private tremulous_private;
+static struct quake_private tremulousgpp_private;
+static struct quake_private tremfusion_private;
 static struct quake_private unvanquished_private;
 static struct quake_private openarena_private;
 static struct quake_private q3rally_private;
@@ -1580,7 +1582,26 @@ static void q3_analyze_serverinfo (struct server *s) {
       }
       else if(!strncmp(info_ptr[1],"tremulous",9))
       {
+	if(!strncmp(info_ptr[1],"tremulous 1.1.0",15))
+        {
+	  s->type=TREMULOUS_SERVER;
+        }
+        else if(!strncmp(info_ptr[1],"tremulous gpp1",14))
+        {
+	  s->type=TREMULOUSGPP_SERVER;
+        }
+	else
+        {
+	  s->type=TREMULOUS_SERVER;
+        }
+      }
+      else if(!strncmp(info_ptr[1],"KoRx",4))
+      {
 	s->type=TREMULOUS_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"tremfusion",10))
+      {
+	s->type=TREMFUSION_SERVER;
       }
       else if(!strncmp(info_ptr[1],"Unvanquished",12))
       {

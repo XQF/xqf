@@ -49,23 +49,27 @@ static char* stringlist046[] = { "basewsw", NULL };
 static char* stringlist047[] = { "warsow", NULL };
 static char* stringlist048[] = { "base", NULL };
 static char* stringlist049[] = { "tremulous", NULL };
-static char* stringlist050[] = { "main", NULL };
-static char* stringlist051[] = { "unvanquished", NULL };
-static char* stringlist052[] = { "baseq3", NULL };
-static char* stringlist053[] = { "openarena", NULL };
-static char* stringlist054[] = { "openttd", NULL };
-static char* stringlist055[] = { "baseq3", NULL };
-static char* stringlist056[] = { "q3rally", NULL };
-static char* stringlist057[] = { "wop", NULL };
-static char* stringlist058[] = { "worldofpadman", NULL };
-static char* stringlist059[] = { "q3ut4", NULL };
-static char* stringlist060[] = { "ioUrbanTerror", "Quake3-UrT", "urbanterror", NULL };
-static char* stringlist061[] = { "rq3", NULL };
-static char* stringlist062[] = { "Reaction", NULL };
-static char* stringlist063[] = { "smokinguns", NULL };
-static char* stringlist064[] = { "smokinguns", NULL };
-static char* stringlist065[] = { "arena", NULL };
-static char* stringlist066[] = { "alienarena", NULL };
+static char* stringlist050[] = { "base", NULL };
+static char* stringlist051[] = { "tremulous-gpp", NULL };
+static char* stringlist052[] = { "base", NULL };
+static char* stringlist053[] = { "tremfusion", NULL };
+static char* stringlist054[] = { "main", NULL };
+static char* stringlist055[] = { "unvanquished", NULL };
+static char* stringlist056[] = { "baseq3", NULL };
+static char* stringlist057[] = { "openarena", NULL };
+static char* stringlist058[] = { "openttd", NULL };
+static char* stringlist059[] = { "baseq3", NULL };
+static char* stringlist060[] = { "q3rally", NULL };
+static char* stringlist061[] = { "wop", NULL };
+static char* stringlist062[] = { "worldofpadman", NULL };
+static char* stringlist063[] = { "q3ut4", NULL };
+static char* stringlist064[] = { "ioUrbanTerror", "Quake3-UrT", "urbanterror", NULL };
+static char* stringlist065[] = { "rq3", NULL };
+static char* stringlist066[] = { "Reaction", NULL };
+static char* stringlist067[] = { "smokinguns", NULL };
+static char* stringlist068[] = { "smokinguns", NULL };
+static char* stringlist069[] = { "arena", NULL };
+static char* stringlist070[] = { "alienarena", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -991,9 +995,9 @@ struct game games[] = {
     name                : "Tremulous",
     default_port        : 30720,
     default_master_port : 30710,
-    id                  : "TREMULOUS",
-    qstat_str           : "TREMULOUS",
-    qstat_option        : "-tremulous",
+    id                  : "TREMULOUSS",
+    qstat_str           : "TREMULOUSS",
+    qstat_option        : "-tremulouss",
     qstat_master_option : "-tremulousm",
     icon                : "tremulous.xpm",
     parse_player        : q3_parse_player,
@@ -1011,11 +1015,73 @@ struct game games[] = {
     identify_os         : identify_os,
     cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.tremulous",
     pd                  : &tremulous_private,
     main_mod            : stringlist048,
     command             : stringlist049,
+  },
+  {
+    type                : TREMULOUSGPP_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Tremulous GPP",
+    default_port        : 30720,
+    default_master_port : 30700,
+    id                  : "TREMULOUSGPPS",
+    qstat_str           : "TREMULOUSGPPS",
+    qstat_option        : "-tremulousgpp",
+    qstat_master_option : "-tremulousgppm",
+    icon                : "tremulousgpp.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : q3_update_prefs,
+    default_home        : "~/.tremulous",
+    pd                  : &tremulousgpp_private,
+    main_mod            : stringlist050,
+    command             : stringlist051,
+  },
+  {
+    type                : TREMFUSION_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "TremFusion",
+    default_port        : 30720,
+    default_master_port : 30710,
+    id                  : "TREMFUSIONS",
+    qstat_str           : "TREMFUSIONS",
+    qstat_option        : "-tremfusions",
+    qstat_master_option : "-tremfusionm",
+    icon                : "tremfusion.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : q3_update_prefs,
+    default_home        : "~/.tremulous",
+    pd                  : &tremfusion_private,
+    main_mod            : stringlist052,
+    command             : stringlist053,
   },
   {
     type                : UNVANQUISHED_SERVER,
@@ -1041,13 +1107,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.Unvanquished",
     pd                  : &unvanquished_private,
-    main_mod            : stringlist050,
-    command             : stringlist051,
+    main_mod            : stringlist054,
+    command             : stringlist055,
   },
   {
     type                : OPENARENA_SERVER,
@@ -1073,13 +1138,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.openarena",
     pd                  : &openarena_private,
-    main_mod            : stringlist052,
-    command             : stringlist053,
+    main_mod            : stringlist056,
+    command             : stringlist057,
   },
   {
     type                : OTTD_SERVER,
@@ -1100,7 +1164,7 @@ struct game games[] = {
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,
     default_home        : "~/.openttd",
-    command             : stringlist054,
+    command             : stringlist058,
   },
   {
     type                : Q3RALLY_SERVER,
@@ -1126,13 +1190,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.q3rally",
     pd                  : &q3rally_private,
-    main_mod            : stringlist055,
-    command             : stringlist056,
+    main_mod            : stringlist059,
+    command             : stringlist060,
   },
   {
     type                : WOP_SERVER,
@@ -1158,18 +1221,17 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.WoPadman",
     pd                  : &wop_private,
-    main_mod            : stringlist057,
-    command             : stringlist058,
+    main_mod            : stringlist061,
+    command             : stringlist062,
   },
   {
     type                : IOURT_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-    name                : "UrbanTerror",
+    name                : "ioUrbanTerror",
     default_port        : 27960,
     default_master_port : 27950,
     id                  : "IOURTS",
@@ -1190,13 +1252,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.q3a",
     pd                  : &iourt_private,
-    main_mod            : stringlist059,
-    command             : stringlist060,
+    main_mod            : stringlist063,
+    command             : stringlist064,
   },
   {
     type                : REACTION_SERVER,
@@ -1222,13 +1283,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.Reaction",
     pd                  : &reaction_private,
-    main_mod            : stringlist061,
-    command             : stringlist062,
+    main_mod            : stringlist065,
+    command             : stringlist066,
   },
   {
     type                : SMOKINGUNS_SERVER,
@@ -1254,13 +1314,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q3_prefs_load_common,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.smokinguns",
     pd                  : &smokinguns_private,
-    main_mod            : stringlist063,
-    command             : stringlist064,
+    main_mod            : stringlist067,
+    command             : stringlist068,
   },
   {
     type                : GPS_SERVER,
@@ -1302,13 +1361,12 @@ struct game games[] = {
     arch_identifier     : "version",
     identify_cpu        : identify_cpu,
     identify_os         : identify_os,
-    cmd_or_dir_changed  : tremulous_cmd_or_dir_changed,
     prefs_load          : q2_prefs_load,
-    update_prefs        : tremulous_update_prefs,
+    update_prefs        : q3_update_prefs,
     default_home        : "~/.codered/",
     pd                  : &alienarena_private,
-    main_mod            : stringlist065,
-    command             : stringlist066,
+    main_mod            : stringlist069,
+    command             : stringlist070,
   },
   {
     type                : UNKNOWN_SERVER,

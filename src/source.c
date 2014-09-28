@@ -1169,7 +1169,11 @@ static char *builtin_masters_update_info[] = {
   "ADD WARSOWS master://ghdigital.com ghdigital.com",
   "ADD WARSOWS master://dpmaster.deathmask.net dpmaster.deathmask.net",
 
-  "ADD TREMULOUS master://master.tremulous.net:30710 tremulous.net",
+  "ADD TREMULOUSS master://master.tremulous.net:30710 tremulous.net",
+
+  "ADD TREMULOUSGPPS master://master.tremulous.net:30700 tremulous.net",
+
+  "ADD TREMFUSIONS master://master.tremulous.net:30710 tremulous.net",
 
   "ADD UNVANQUISHEDS master://unvanquished.net:27950 unvanquished.net",
 
@@ -1223,7 +1227,9 @@ static char *builtin_masters_update_info[] = {
   "ADD NEXUIZS lan://255.255.255.255 LAN",
   "ADD XONOTICS lan://255.255.255.255 LAN",
   "ADD WARSOWS lan://255.255.255.255 LAN",
-  "ADD TREMULOUS lan://255.255.255.255 LAN",
+  "ADD TREMULOUSS lan://255.255.255.255 LAN",
+  "ADD TREMULOUSGPPS lan://255.255.255.255 LAN",
+  "ADD TREMFUSIONS lan://255.255.255.255 LAN",
   "ADD UNVANQUISHEDS lan://255.255.255.255 LAN",
   "ADD OPENARENAS lan://255.255.255.255 LAN",
   "ADD OTTDS lan://255.255.255.255 LAN",

@@ -493,6 +493,30 @@ static struct q3_common_prefs_s tremulous_prefs =
   defproto : "69",
 };
 
+static const char* tremulousgpp_masterprotocols[] = {
+	"auto",
+	"70 - GPP",
+	NULL
+};
+
+static struct q3_common_prefs_s tremulousgpp_prefs =
+{
+  protocols: tremulousgpp_masterprotocols,
+  defproto : "70",
+};
+
+static const char* tremfusion_masterprotocols[] = {
+	"auto",
+	"69 - v0.99",
+	NULL
+};
+
+static struct q3_common_prefs_s tremfusion_prefs =
+{
+  protocols: tremfusion_masterprotocols,
+  defproto : "69",
+};
+
 static const char* unvanquished_masterprotocols[] = {
     "auto",
 	"86",
@@ -1064,18 +1088,6 @@ void doom3_update_prefs (struct game* g)
 }
 
 void quake4_update_prefs (struct game* g)
-{
-  q3_update_prefs_common(g);
-  doom3_detect_version(g);
-}
-
-void tremulous_update_prefs (struct game* g)
-{
-  q3_update_prefs_common(g);
-  doom3_detect_version(g);
-}
-
-void unvanquished_update_prefs (struct game* g)
 {
   q3_update_prefs_common(g);
   doom3_detect_version(g);
@@ -3250,6 +3262,8 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case XONOTIC_SERVER: return &xonotic_prefs;
     case WARSOW_SERVER: return &warsow_prefs;
     case TREMULOUS_SERVER: return &tremulous_prefs;
+    case TREMULOUSGPP_SERVER: return &tremulousgpp_prefs;
+    case TREMFUSION_SERVER: return &tremfusion_prefs;
     case UNVANQUISHED_SERVER: return &unvanquished_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
     case Q3RALLY_SERVER: return &q3rally_prefs; 
@@ -4823,6 +4837,8 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[XONOTIC_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[TREMULOUSGPP_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[TREMFUSION_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[UNVANQUISHED_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[Q3RALLY_SERVER].add_options_to_notebook = add_q3_options_to_notebook;

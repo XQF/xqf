@@ -72,6 +72,8 @@
 #include "xpm/xonotic.xpm"
 #include "xpm/warsow.xpm"
 #include "xpm/tremulous.xpm"
+#include "xpm/tremulousgpp.xpm"
+#include "xpm/tremfusion.xpm"
 #include "xpm/unvanquished.xpm"
 
 #include "xpm/gamespy3d.xpm"

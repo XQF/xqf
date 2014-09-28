@@ -1,15 +1,20 @@
+Sep 28, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- distinguish Tremulous, Tremulous GPP and TremFusion
+- some cleaning (id tech 3 derivatives are not described as tremulous anymore)
+- tremulous server qstat variable renamed to 'gamename'+'s' like others
+
 Nov 11, 2013: Thomas Debesse <xqf@illwieckz.net>
 - follow XDG Base Directory Specification for user configuration directory
-  and migrate previously created directory
+  and migrate old directory to the new one
 
 Nov 10, 2013: Thomas Debesse <xqf@illwieckz.net>
 - add World of Padman game
 
 Nov 06, 2013: Thomas Debesse <xqf@illwieckz.net>
-- recognize Unvanquished extended color codes
+- recognize Unvanquished extended color codes to prevent printing
 
 Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
-- complete french translation (100%)
+- completed french translation (100%)
 
 Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
 - detect more ioQuake3 variant as ioQuake3

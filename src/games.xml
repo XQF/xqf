@@ -742,9 +742,9 @@
 	<name>Tremulous</name>
 	<default_port>30720</default_port>
 	<default_master_port>30710</default_master_port>
-	<id>TREMULOUS</id>
-	<qstat_str>TREMULOUS</qstat_str>
-	<qstat_option>-tremulous</qstat_option>
+	<id>TREMULOUSS</id>
+	<qstat_str>TREMULOUSS</qstat_str>
+	<qstat_option>-tremulouss</qstat_option>
 	<qstat_master_option>-tremulousm</qstat_master_option>
 	<icon>tremulous.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>
@@ -752,9 +752,47 @@
 	<default_home>~/.tremulous</default_home>
 	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>base</main_mod>
 	<pd>tremulous_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
+	<type>TREMULOUSGPP_SERVER</type>
+	<name>Tremulous GPP</name>
+	<default_port>30720</default_port>
+	<default_master_port>30700</default_master_port>
+	<id>TREMULOUSGPPS</id>
+	<qstat_str>TREMULOUSGPPS</qstat_str>
+	<qstat_option>-tremulousgpp</qstat_option>
+	<qstat_master_option>-tremulousgppm</qstat_master_option>
+	<icon>tremulousgpp.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>tremulous-gpp</command>
+	<default_home>~/.tremulous</default_home>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs</update_prefs>
+	<main_mod>base</main_mod>
+	<pd>tremulousgpp_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
+	<type>TREMFUSION_SERVER</type>
+	<name>TremFusion</name>
+	<default_port>30720</default_port>
+	<default_master_port>30710</default_master_port>
+	<id>TREMFUSIONS</id>
+	<qstat_str>TREMFUSIONS</qstat_str>
+	<qstat_option>-tremfusions</qstat_option>
+	<qstat_master_option>-tremfusionm</qstat_master_option>
+	<icon>tremfusion.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>tremfusion</command>
+	<default_home>~/.tremulous</default_home>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs</update_prefs>
+	<main_mod>base</main_mod>
+	<pd>tremfusion_private</pd>
     </game>
     <game>
 	<base>Q3_SERVER</base>
@@ -770,9 +808,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>unvanquished</command>
 	<default_home>~/.Unvanquished</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>main</main_mod>
 	<pd>unvanquished_private</pd>
     </game>
@@ -788,9 +825,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>openarena</command>
 	<default_home>~/.openarena</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>baseq3</main_mod>
 	<pd>openarena_private</pd>
     </game>
@@ -825,9 +861,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>q3rally</command>
 	<default_home>~/.q3rally</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>baseq3</main_mod>
 	<pd>q3rally_private</pd>
     </game>
@@ -843,16 +878,15 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>worldofpadman</command>
 	<default_home>~/.WoPadman</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>wop</main_mod>
 	<pd>wop_private</pd>
     </game>
     <game>
 	<base>Q3_SERVER</base>
 	<type>IOURT_SERVER</type>
-	<name>UrbanTerror</name>
+	<name>ioUrbanTerror</name>
 	<id>IOURTS</id>
 	<qstat_str>IOURTS</qstat_str>
 	<qstat_option>-iourts</qstat_option>
@@ -863,9 +897,8 @@
 	<command>Quake3-UrT</command>
 	<command>ioUrbanTerror</command>
 	<default_home>~/.q3a</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>q3ut4</main_mod>
 	<pd>iourt_private</pd>
     </game>
@@ -881,9 +914,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>Reaction</command>
 	<default_home>~/.Reaction</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>rq3</main_mod>
 	<pd>reaction_private</pd>
     </game>
@@ -899,9 +931,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>smokinguns</command>
 	<default_home>~/.smokinguns</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q3_prefs_load_common</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>smokinguns</main_mod>
 	<pd>smokinguns_private</pd>
     </game>
@@ -930,9 +961,8 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>alienarena</command>
 	<default_home>~/.codered/</default_home>
-	<cmd_or_dir_changed>tremulous_cmd_or_dir_changed</cmd_or_dir_changed>
 	<prefs_load>q2_prefs_load</prefs_load>
-	<update_prefs>tremulous_update_prefs</update_prefs>
+	<update_prefs>q3_update_prefs</update_prefs>
 	<main_mod>arena</main_mod>
 	<pd>alienarena_private</pd>
     </game>
