@@ -1188,7 +1188,7 @@ static char *builtin_masters_update_info[] = {
 
   "ADD WOPS master://master.worldofpadman.com:27955 master.worldofpadman.com",
 
-  "ADD IOURTS master://master.urbanterror.net master.urbanterror.net",
+  "ADD IOURTS master://master.urbanterror.info:27900 master.urbanterror.net",
 
   "ADD REACTIONS master://master.rq3.com master.rq3.com",
   // "ADD REACTIONS master://master.ioquake3.org master.ioquake3.org", // not used anymore

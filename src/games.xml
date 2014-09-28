@@ -887,6 +887,8 @@
 	<base>Q3_SERVER</base>
 	<type>IOURT_SERVER</type>
 	<name>ioUrbanTerror</name>
+	<default_port>27960</default_port>
+	<default_master_port>27900</default_master_port>
 	<id>IOURTS</id>
 	<qstat_str>IOURTS</qstat_str>
 	<qstat_option>-iourts</qstat_option>
