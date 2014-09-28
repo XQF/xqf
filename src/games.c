@@ -1233,7 +1233,7 @@ struct game games[] = {
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "ioUrbanTerror",
     default_port        : 27960,
-    default_master_port : 27950,
+    default_master_port : 27900,
     id                  : "IOURTS",
     qstat_str           : "IOURTS",
     qstat_option        : "-iourts",
