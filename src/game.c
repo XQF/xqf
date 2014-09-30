@@ -161,6 +161,7 @@ static struct quake_private q1_private, qw_private, q2_private, hl_private;
 static struct quake_private q3_private;
 static struct quake_private wolf_private;
 static struct quake_private wolfet_private;
+static struct quake_private etl_private;
 static struct quake_private mohaa_private;
 static struct quake_private cod_private;
 static struct quake_private jk3_private;
@@ -1566,6 +1567,10 @@ static void q3_analyze_serverinfo (struct server *s) {
       else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5))
       {
 	s->type=WOET_SERVER;
+      }
+      else if(!strncmp(info_ptr[1],"ET Legacy",9))
+      {
+	s->type=ETL_SERVER;
       }
       // voyager elite force
       else if(!strncmp(info_ptr[1],"ST:V HM",7))

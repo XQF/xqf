@@ -344,6 +344,18 @@ static struct q3_common_prefs_s woet_prefs =
   flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
 };
 
+static const char* etl_masterprotocols[] = {
+	"84 - v2.71",
+	NULL
+};
+
+static struct q3_common_prefs_s etl_prefs =
+{
+  protocols: etl_masterprotocols,
+  defproto : "84",
+  flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+};
+
 static const char* ef_masterprotocols[] = {
 	"24",
 	NULL
@@ -3252,6 +3264,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case Q4_SERVER: return &q4_prefs;
     case WO_SERVER: return &wo_prefs;
     case WOET_SERVER: return &woet_prefs;
+    case ETL_SERVER: return &etl_prefs;
     case DOOM3_SERVER: return &doom3_prefs;
     case ETQW_SERVER: return &etqw_prefs;
     case EF_SERVER: return &ef_prefs;
@@ -4825,6 +4838,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[UT2_SERVER].add_options_to_notebook = add_ut2_options_to_notebook;
   new_genprefs[WO_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[WOET_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[ETL_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[DOOM3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[Q4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[ETQW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;

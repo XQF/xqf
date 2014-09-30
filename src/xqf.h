@@ -105,6 +105,7 @@ enum server_type {
   Q4_SERVER,
   WO_SERVER,
   WOET_SERVER,
+  ETL_SERVER,
   DOOM3_SERVER,
   ETQW_SERVER,
   EF_SERVER,

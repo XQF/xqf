@@ -1110,6 +1110,8 @@ static char *builtin_masters_update_info[] = {
 
   "ADD WOETS master://etmaster.idsoftware.com:27950 etmaster.idsoftware.com",
 
+  "ADD ETLS master://etmaster.idsoftware.com:27950 etmaster.idsoftware.com",
+
   "ADD DM3S master://idnet.ua-corp.com:27650 idnet.ua-corp.com:",
 
   "ADD ETQWS http://etqw-ipgetter.demonware.net/ipgetter/ demonware",
@@ -1210,6 +1212,7 @@ static char *builtin_masters_update_info[] = {
   "ADD Q4S lan://255.255.255.255 LAN",
   "ADD WOS lan://255.255.255.255 LAN",
   "ADD WOETS lan://255.255.255.255 LAN",
+  "ADD ETLS lan://255.255.255.255 LAN",
   "ADD EFS lan://255.255.255.255 LAN",
   "ADD UT2S lan://255.255.255.255 LAN",
   "ADD UT2004S lan://255.255.255.255 LAN",
