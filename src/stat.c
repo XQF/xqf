@@ -915,12 +915,13 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
 
       if (conn->buf[conn->lastnl] == '\0') {
 	blocked = TRUE;
-	gdk_input_remove (conn->tag);
 
 	parse_qstat_record (conn);
 
 	g_slist_free (conn->strings);
 	conn->strings = NULL;
+
+	g_source_remove (conn->tag);
 
 	first_used = conn->lastnl + 1;
       }
