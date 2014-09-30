@@ -903,7 +903,7 @@
     <game>
 	<base>Q3_SERVER</base>
 	<type>IOURT_SERVER</type>
-	<name>ioUrbanTerror</name>
+	<name>Urban Terror</name>
 	<default_port>27960</default_port>
 	<default_master_port>27900</default_master_port>
 	<id>IOURTS</id>
@@ -914,7 +914,7 @@
 	<config_is_valid>config_is_valid_generic</config_is_valid>
 	<command>urbanterror</command>
 	<command>Quake3-UrT</command>
-	<command>ioUrbanTerror</command>
+	<command>Urban Terror</command>
 	<default_home>~/.q3a</default_home>
 	<prefs_load>q3_prefs_load_common</prefs_load>
 	<update_prefs>q3_update_prefs</update_prefs>

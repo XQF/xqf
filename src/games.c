@@ -65,7 +65,7 @@ static char* stringlist062[] = { "q3rally", NULL };
 static char* stringlist063[] = { "wop", NULL };
 static char* stringlist064[] = { "worldofpadman", NULL };
 static char* stringlist065[] = { "q3ut4", NULL };
-static char* stringlist066[] = { "ioUrbanTerror", "Quake3-UrT", "urbanterror", NULL };
+static char* stringlist066[] = { "Urban Terror", "Quake3-UrT", "urbanterror", NULL };
 static char* stringlist067[] = { "rq3", NULL };
 static char* stringlist068[] = { "Reaction", NULL };
 static char* stringlist069[] = { "smokinguns", NULL };
@@ -1264,7 +1264,7 @@ struct game games[] = {
   {
     type                : IOURT_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-    name                : "ioUrbanTerror",
+    name                : "Urban Terror",
     default_port        : 27960,
     default_master_port : 27900,
     id                  : "IOURTS",
