@@ -256,7 +256,7 @@ struct game games[] = {
   {
     type                : WOET_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-    name                : "Enemy Territory",
+    name                : "Wolfenstein: Enemy Territory",
     default_port        : 27960,
     default_master_port : 27950,
     id                  : "WOETS",
@@ -624,7 +624,7 @@ struct game games[] = {
   {
     type                : UN_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD,
-    name                : "Unreal / UT",
+    name                : "Unreal / Unreal Tournament",
     default_port        : 7777,
     id                  : "UNS",
     qstat_str           : "UNS",
