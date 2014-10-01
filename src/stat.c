@@ -80,7 +80,9 @@ static void stat_free_conn (struct stat_conn *conn) {
   job->cons = g_slist_remove (job->cons, conn);
 
   if (conn->fd >= 0) {
-    gdk_input_remove (conn->tag);
+    g_source_remove (conn->tag);
+    // conn->tag = NULL; ?
+    
     close (conn->fd);
   }
 
@@ -922,6 +924,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
 	conn->strings = NULL;
 
 	g_source_remove (conn->tag);
+	// conn->tag = NULL; ?
 
 	first_used = conn->lastnl + 1;
       }

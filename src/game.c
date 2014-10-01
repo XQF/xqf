@@ -1552,39 +1552,63 @@ static void q3_analyze_serverinfo (struct server *s) {
   // whether the server protcol for that game is compatible
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
     if (strcmp (*info_ptr, "version" ) == 0) {
+      // Quake 3 Arena
       if(!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5) || !strncmp(info_ptr[1],"ioQ3 ",5))
       {
 	s->type=Q3_SERVER;
       }
+      // Open Arena
       if(!strncmp(info_ptr[1],"ioq3+oa",7))
       {
 	s->type=OPENARENA_SERVER;
       }
+      // Wolfenstein
       else if(!strncmp(info_ptr[1],"Wolf",4))
       {
 	s->type=WO_SERVER;
       }
+      // Wolfenstein: Enemy Territory
       else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4))
       {
-	s->type=WOET_SERVER;
+      	if (games[WOET_SERVER].cmd)
+	{
+	  s->type=WOET_SERVER;
+	}
+	// play with ET:L if only installed
+	else if (games[ETL_SERVER].cmd)
+	{
+	  s->type=ETL_SERVER;
+	}
       }
+      // Enemy Territory: Legacy
       else if(!strncmp(info_ptr[1],"ET Legacy",9))
       {
-	s->type=ETL_SERVER;
+	if (games[ETL_SERVER].cmd)
+	{
+	  s->type=ETL_SERVER;
+	}
+	// play with Wolf:ET if only installed
+      	if (games[WOET_SERVER].cmd)
+	{
+	  s->type=WOET_SERVER;
+	}
       }
-      // voyager elite force
+      // Voyager: Elite Force
       else if(!strncmp(info_ptr[1],"ST:V HM",7))
       {
 	s->type=EF_SERVER;
       }
+      // Medal of Honor: Allied Assault
       else if(!strncmp(info_ptr[1],"Medal",5))
       {
 	s->type=MOHAA_SERVER;
       }
+      // Soldier Of Fortune 2
       else if(!strncmp(info_ptr[1],"SOF2MP",6))
       {
 	s->type=SOF2S_SERVER;
       }
+      // Tremulous 1.1, Tremulous GPP
       else if(!strncmp(info_ptr[1],"tremulous",9))
       {
 	if(!strncmp(info_ptr[1],"tremulous 1.1.0",15))
@@ -1600,34 +1624,42 @@ static void q3_analyze_serverinfo (struct server *s) {
 	  s->type=TREMULOUS_SERVER;
         }
       }
+      // Tremulous 1.1 mod KoRx
       else if(!strncmp(info_ptr[1],"KoRx",4))
       {
 	s->type=TREMULOUS_SERVER;
       }
+      // Tremfusion
       else if(!strncmp(info_ptr[1],"tremfusion",10))
       {
 	s->type=TREMFUSION_SERVER;
       }
+      // Unvanquished
       else if(!strncmp(info_ptr[1],"Unvanquished",12))
       {
 	s->type=UNVANQUISHED_SERVER;
       }
+      // World of Padman
       else if(!strncmp(info_ptr[1],"wop",3))
       {
 	s->type=WOP_SERVER;
       }
+      // Urban Terror
       else if(games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1],"ioq3 1.35urt",12) || !strncmp(info_ptr[1],"ioq3-urt",8)))
       {
 	s->type=IOURT_SERVER;
       }
+      // Reaction
       else if(!strncmp(info_ptr[1],"Reaction",8))
       {
 	s->type=REACTION_SERVER;
       }
+      // Q3 Rally
       else if(!strncmp(info_ptr[1],"Q3Rally",7))
       {
 	s->type=Q3RALLY_SERVER;
       }
+      // Smokin' Guns
       else if(!strncmp(info_ptr[1],"Smokin' Guns",12))
       {
 	s->type=SMOKINGUNS_SERVER;
