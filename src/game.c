@@ -1564,7 +1564,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=WO_SERVER;
       }
-      else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5))
+      else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4))
       {
 	s->type=WOET_SERVER;
       }

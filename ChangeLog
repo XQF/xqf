@@ -1,3 +1,7 @@
+Oct 01, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- fix Unvanquished status packet
+- detect some Wolf:ET server with unusual version name
+
 Sep 30, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - add Enemy Territory:Legacy game
 - fix a bug that crashes XQF when very populated master servers from different
