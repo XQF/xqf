@@ -1,5 +1,8 @@
 Sep 30, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - add Enemy Territory:Legacy game
+- fix a bug that crashes XQF when very populated master servers from different
+  games list the same server (like a game appearing both as a mod and as standalone)
+- fix an error due to GLib 2.40 changes (this one reveals the previous one, thanks)
 
 Sep 28, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - distinguish Tremulous, Tremulous GPP and TremFusion
