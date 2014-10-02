@@ -50,9 +50,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
   gboolean ok = FALSE;
   GdkPixbuf* pixbuf = NULL;
 
-#ifdef USE_GTK2
   GError *err=NULL;
-#endif
 
   if(!mem) return NULL;
   if(!len) return NULL;
@@ -68,7 +66,6 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
   loader = gdk_pixbuf_loader_new();
   g_return_val_if_fail(loader!=NULL, NULL);
   
-#ifdef USE_GTK2
   ok = gdk_pixbuf_loader_write(loader, mem, len,&err);
   if(err != NULL)
   {
@@ -82,20 +79,12 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
     xqf_warning("%s", err->message);
     g_error_free(err);
   }
-#else
-  ok = gdk_pixbuf_loader_write(loader, mem, len);
-  gdk_pixbuf_loader_close(loader);
-#endif
 
   if(!ok)
   {
     unsigned h = 0, w = 0;
     unsigned char* data;
-#ifdef USE_GTK2
     g_object_unref(G_OBJECT(loader));
-#else
-    gtk_object_unref(GTK_OBJECT(loader));
-#endif
     loader = NULL;
 
     data = LoadTGA(mem, len, &w, &h);
@@ -118,11 +107,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
   {
     pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
     gdk_pixbuf_ref(pixbuf);
-#ifdef USE_GTK2
     g_object_unref(G_OBJECT(loader));
-#else
-    gtk_object_unref(GTK_OBJECT(loader));
-#endif
   }
 
   return pixbuf;

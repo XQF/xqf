@@ -44,7 +44,6 @@ static const char* minimize_icon = "xqf.svg";
 
 void window_set_icon (GtkWidget *win)
 {
-#ifdef USE_GTK2
   GdkPixbuf* pixbuf;
   pixbuf = load_pixmap_as_pixbuf(minimize_icon);
   if(pixbuf)
@@ -52,13 +51,4 @@ void window_set_icon (GtkWidget *win)
     gtk_window_set_icon (GTK_WINDOW (win), pixbuf);
     gdk_pixbuf_unref (pixbuf);
   }
-#else
-  static struct pixmap pix;
-
-  if(!load_pixmap_as_pixmap(win, minimize_icon, &pix))
-    return;
-
-  gdk_window_set_icon(win->window, NULL, pix.pix, pix.mask);
-  gdk_window_set_icon_name(win->window, "XQF");
-#endif
 }

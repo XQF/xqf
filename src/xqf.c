@@ -2187,13 +2187,8 @@ static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, in
 
 //  debug(0,"%d %d %d %d %d %d",scr_w,scr_h,x,y,w,h);
 
-/*FIXME_GTK2: gtk_widget_popup() is deprecated */
-#ifdef USE_GTK2
   gtk_widget_set_uposition (server_mapshot_popup, x, y);
   gtk_widget_show(server_mapshot_popup);
-#else
-  gtk_widget_popup (server_mapshot_popup, x, y);
-#endif
 }
 
 static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
@@ -2430,13 +2425,8 @@ static void player_skin_preview_popup_show (guchar *skin,
   x = (x + 320 > scr_w)? scr_w - 320 : x;
   y = (y + 200 > scr_h)? scr_h - 200 : y;
 
-/*FIXME_GTK2: gtk_widget_popup() is deprecated */
-#ifdef USE_GTK2
   gtk_widget_set_uposition (player_skin_popup, x, y);
   gtk_widget_show(player_skin_popup);
-#else
-  gtk_widget_popup (player_skin_popup, x, y);
-#endif
 
   draw_qw_skin (player_skin_popup_preview, skin, top, bottom);
 }
@@ -3502,19 +3492,13 @@ static void populate_main_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
-/*FIXME_GTK2:*/
-#ifdef USE_GTK2
   main_toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR(main_toolbar),GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR(main_toolbar),GTK_TOOLBAR_BOTH);
   gtk_box_pack_start (GTK_BOX (main_vbox), main_toolbar, FALSE, FALSE, 0);
-  // FIXME
+
+  // FIXME GTK2
   gtk_box_reorder_child(GTK_BOX (main_vbox), main_toolbar, 2);
-#else
-  main_toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-                                                            GTK_TOOLBAR_BOTH);
-  gtk_box_pack_start (GTK_BOX (vbox), main_toolbar, FALSE, FALSE, 0);
-#endif
   populate_main_toolbar ();
   gtk_widget_show (main_toolbar);
 
@@ -3666,15 +3650,11 @@ static void populate_main_window (void)
 
   main_status_bar = gtk_statusbar_new ();
   gtk_box_pack_start (GTK_BOX (hbox), main_status_bar, TRUE, TRUE, 0);
-#ifdef USE_GTK2
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_status_bar), FALSE);
-#endif
   gtk_widget_show (main_status_bar);
 
   main_filter_status_bar = gtk_statusbar_new ();
-#ifdef USE_GTK2
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_filter_status_bar), FALSE);
-#endif
   gtk_widget_set_usize (main_filter_status_bar, 100, -1);
   gtk_box_pack_start (GTK_BOX (hbox), main_filter_status_bar, TRUE, TRUE, 0);
   gtk_widget_show (main_filter_status_bar);
@@ -3972,9 +3952,7 @@ int main (int argc, char *argv[]) {
 #ifdef ENABLE_NLS
   setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, xqf_LOCALEDIR);
-#ifdef USE_GTK2
   bind_textdomain_codeset(PACKAGE, "UTF-8");
-#endif
   textdomain(PACKAGE);
 #endif
 

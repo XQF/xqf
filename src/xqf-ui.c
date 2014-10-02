@@ -615,16 +615,7 @@ int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
 
   gdk_window_get_size (pixmap, &pix_w, &pix_h);
 
-/*FIXME_GTK2: style->font not working with gtk2*/
-#ifdef USE_GTK2
   height=pix_h+1;
-#else
-
-  height = MAX (pix_h, clist->style->font->ascent +
-                                             clist->style->font->descent + 1);
-  if (height == pix_h + 1)
-    height++;	/* beautify selection */
-#endif
 
   return height;
 }
@@ -632,9 +623,6 @@ int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
 
 void set_toolbar_appearance (GtkToolbar *toolbar, int style, int tips) {
 
-/*FIXME_GTK2: gtk_toolbar_set_button_relief (), gtk_toolbar_set_space_style () */
-/*gtk_toolbar_set_space_size () is deprecated*/
-#ifdef USE_GTK2
   switch (style) {
 
   case 0:
@@ -655,35 +643,6 @@ void set_toolbar_appearance (GtkToolbar *toolbar, int style, int tips) {
   default:
     break;
   }
-
-#else
-  switch (style) {
-
-  case 0:
-    gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_ICONS);
-    gtk_toolbar_set_button_relief (toolbar, GTK_RELIEF_NONE);
-    gtk_toolbar_set_space_style (toolbar, GTK_TOOLBAR_SPACE_LINE);
-    gtk_toolbar_set_space_size (toolbar, 16);
-    break;
-
-  case 1:
-    gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_TEXT);
-    gtk_toolbar_set_button_relief (toolbar, GTK_RELIEF_NORMAL);
-    gtk_toolbar_set_space_style (toolbar, GTK_TOOLBAR_SPACE_EMPTY);
-    gtk_toolbar_set_space_size (toolbar, 8);
-    break;
-
-  case 2:
-    gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_BOTH);
-    gtk_toolbar_set_button_relief (toolbar, GTK_RELIEF_NONE);
-    gtk_toolbar_set_space_style (toolbar, GTK_TOOLBAR_SPACE_LINE);
-    gtk_toolbar_set_space_size (toolbar, 16);
-    break;
-
-  default:
-    break;
-  }
-#endif
 
   gtk_toolbar_set_tooltips (toolbar, tips);
 }
@@ -865,18 +824,10 @@ void restore_main_window_geometry (void) {
 
   gtk_paned_set_position (GTK_PANED (pane1_widget), (pane1)? pane1 : 120);
 
-/*FIXME_GTK2: GTK_PANED ()->gutter_size is not working, do not know why*/
-#ifdef USE_GTK2
   gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 :
            server_clist_def.height +4);
   gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 :
            player_clist_def.height + 4);
-#else
-  gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 :
-           server_clist_def.height + GTK_PANED (pane2_widget)->gutter_size/2);
-  gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 :
-           player_clist_def.height + GTK_PANED (pane3_widget)->gutter_size/2);
-#endif
 }
 
 GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name)

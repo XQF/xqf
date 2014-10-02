@@ -589,7 +589,6 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
 	server->retries = maxretries;
     }
 
-#ifdef USE_GTK2
     if(server->name && !g_utf8_validate(server->name,-1,NULL))
     {
       // don't care about conversion errors
@@ -600,7 +599,6 @@ static struct server *parse_server (char *token[], int n, time_t refreshed,
 	server->name = convd;
       }
     }
-#endif
   }
 
   if(!saved && server->ping<MAX_PING)

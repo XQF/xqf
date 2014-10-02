@@ -216,12 +216,7 @@ struct pixmap* get_pixmap_for_country(int id)
 
   debug(4,"loading %s",filename);
 
-/*FIXME_GTK2: need GError*/
-#ifdef USE_GTK2
   pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-#else
-  pixbuf = gdk_pixbuf_new_from_file(filename);
-#endif
 
   if (pixbuf == NULL)
   {

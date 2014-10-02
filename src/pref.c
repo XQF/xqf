@@ -181,9 +181,10 @@ static  GtkWidget *save_plrinfo_check_button;
 static  GtkWidget *auto_favorites_check_button;
 static  GtkWidget *show_splash_button;
 static  GtkWidget *auto_maps_check_button;
-#ifdef USE_GTK2
+
+/*Tray Icon*/
 static  GtkWidget *tray_icon_check_button;
-#endif
+
 static  GtkWidget *show_hostnames_check_button;
 static  GtkWidget *show_defport_check_button;
 static  GtkWidget *toolbar_style_radio_buttons[3];
@@ -1275,11 +1276,10 @@ static void get_new_defaults (void) {
   if (i != default_auto_maps)
     config_set_bool ("search maps", default_auto_maps = i);
 
-#ifdef USE_GTK2
+  /*Tray icon*/
   i = GTK_TOGGLE_BUTTON (tray_icon_check_button)->active;
   if (i != default_show_tray_icon)
     config_set_bool ("showtray", default_show_tray_icon = i);
-#endif
 
   config_pop_prefix ();
 
@@ -4152,7 +4152,6 @@ static GtkWidget *general_options_page (void) {
 
       gtk_widget_show (hbox);
   
-#ifdef USE_GTK2
   /*Tray icon*/
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -4167,7 +4166,6 @@ static GtkWidget *general_options_page (void) {
   gtk_box_pack_start (GTK_BOX (hbox), tray_icon_check_button, FALSE, FALSE, 0);
   gtk_widget_show (tray_icon_check_button);
   gtk_widget_show (hbox);
-#endif
   
     gtk_widget_show (vbox);
 
@@ -5114,11 +5112,7 @@ void free_user_info (void) {
   }
 }
 
-#ifdef USE_GTK2
 #define XQF_GTKRCNAME "gtkrc-2.0"
-#else
-#define XQF_GTKRCNAME "gtkrc"
-#endif
 
 static void set_style()
 {
@@ -5127,37 +5121,9 @@ static void set_style()
 
   use_custom_gtkrc = config_get_bool_with_default("use custom gtkrc=true", &deflt);
 
-#ifndef USE_GTK2
-  if(use_custom_gtkrc)
-  {
-    GtkStyle* style;
-    GtkWidget* w;
-
-    w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gtk_widget_realize(w);
-
-    style = gtk_widget_get_style(w);
-
-    if(!style->engine)
-    {
-      gtk_rc_parse_string("style \"default\" { engine \"raleigh\" { } }");
-    }
-    /* user did not specify whether he wants custom colors but since there is
-     * an engine connected he probably already has a custom gtkrc. Don't apply
-     * custom colors in this case */
-    else if(deflt)
-    {
-      use_custom_gtkrc = FALSE;
-    }
-
-    gtk_widget_destroy(w);
-  }
-#else
-
   /** do not apply custom colors in GTK2 by default */
   if(deflt)
     use_custom_gtkrc = FALSE;
-#endif
 
   if(use_custom_gtkrc)
   {

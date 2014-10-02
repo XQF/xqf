@@ -203,12 +203,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
   else if(GDK_PIXBUF_INSTALLED)
   {
 
-/*FIXME_GTK2: need GError*/
-#ifdef USE_GTK2
     GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
-#else
-    GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename);
-#endif
     if (pixbuf == NULL)
     {
       // translator: %s = file name
@@ -256,12 +251,7 @@ void* load_pixmap_as_pixbuf (const gchar* filename)
     return NULL;
   }
 
-/*FIXME_GTK2: need GError*/
-#ifdef USE_GTK2
   pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
-#else
-  pixbuf = gdk_pixbuf_new_from_file(found_filename);
-#endif
   if (pixbuf == NULL)
     // translator: %s = file name
     xqf_warning (_("Error loading pixmap file: %s"), found_filename);

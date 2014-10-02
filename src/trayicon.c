@@ -35,20 +35,6 @@
 #include <gtk/gtk.h>
 #include "gnuconfig.h"
 
-#ifndef USE_GTK2
-/*dummy functions for gtk 1.x, this avoid a lot ifdef´s*/
-void tray_init (GtkWidget* window)
-{
-  gtk_widget_show(window);
-};
-void tray_delete_event_hook (void) {/**/};
-void tray_icon_set_tooltip (gchar *tip) {/**/};
-void tray_icon_stop_animation (void) {/**/};
-void tray_icon_start_animation (void) {/**/};
-extern void tray_done (void) {/**/};
-extern gboolean tray_icon_work(void) {return FALSE;};
-#else
-
 #include <stdio.h>
 #include <gtk/gtkplug.h>
 #include <gdk/gdk.h>
@@ -928,4 +914,3 @@ egg_tray_icon_cancel_message (EggTrayIcon *icon,
                       id, 0, 0);
 }
 
-#endif /*GTK 2*/
