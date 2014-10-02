@@ -83,6 +83,7 @@
 #include "xpm/savage.xpm"
 #include "xpm/cod.xpm"
 #include "xpm/bf1942.xpm"
+#include "xpm/jk2.xpm"
 #include "xpm/jk3.xpm"
 #include "xpm/doom3.xpm"
 #include "xpm/etqw.xpm"

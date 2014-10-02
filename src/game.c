@@ -164,6 +164,7 @@ static struct quake_private wolfet_private;
 static struct quake_private etl_private;
 static struct quake_private mohaa_private;
 static struct quake_private cod_private;
+static struct quake_private jk2_private;
 static struct quake_private jk3_private;
 static struct quake_private doom3_private;
 static struct quake_private quake4_private;
@@ -1243,6 +1244,19 @@ static char *wolfet_tcetest_gametypes[MAX_WOLFET_TCETEST_TYPES] = {
   "Bodycount"			// 7 - Bodycount
 };
 
+#define MAX_JK2_TYPES 9
+static char *jk2_gametypes[MAX_JK2_TYPES] = {
+  "FFA",		// 0 - Free For All
+  "Holocron",		// 1 - Holocron
+  "Jedi Master",	// 2 - Jedi Master
+  "Duell",		// 3 - Duell
+  "FFA",		// 4 - Free For All
+  "TFFA",		// 5 - Team Free For All
+  NULL, 		// 6 - Unknown
+  "CTF",		// 7 - Capture the Flag
+  "Capture the Ysalimari" // 8 - Capture the Ysalimari
+};
+
 #define MAX_JK3_TYPES 9
 static char *jk3_gametypes[MAX_JK3_TYPES] = {
   "FFA",		// 0 - Free For All
@@ -1473,6 +1487,20 @@ struct q3a_gametype_s wolfet_gametype_map[] =
     MAX_WOLFET_TCETEST_TYPES
   }
 };
+
+struct q3a_gametype_s jk2_gametype_map[] =
+{
+  {
+    "basejk",
+    jk2_gametypes,
+    MAX_JK2_TYPES
+  },
+  {
+    "base",
+    jk2_gametypes,
+    MAX_JK2_TYPES
+  }
+}; 
 
 struct q3a_gametype_s jk3_gametype_map[] =
 {
@@ -1778,6 +1806,10 @@ static void q3_analyze_serverinfo (struct server *s) {
     else if ( s->type == WOET_SERVER)
     {
       q3_decode_gametype( s, wolfet_gametype_map );
+    }
+    else if ( s->type == JK2_SERVER)
+    {
+      q3_decode_gametype( s, jk2_gametype_map );
     }
     else if ( s->type == JK3_SERVER)
     {

@@ -662,6 +662,25 @@
     </game>
     <game>
 	<base>Q3_SERVER</base>
+	<type>JK2_SERVER</type>
+	<name>Jedi Outcast</name>
+	<default_port>28070</default_port>
+	<default_master_port>28060</default_master_port>
+	<id>JK2S</id>
+	<qstat_str>JK2S</qstat_str>
+	<qstat_option>-jk2s</qstat_option>
+	<qstat_master_option>-jk2m</qstat_master_option>
+	<icon>jk2.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<arch_identifier>NULL</arch_identifier>
+	<command>jamp</command>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs_common</update_prefs>
+	<main_mod>base</main_mod>
+	<pd>jk2_private</pd>
+    </game>
+    <game>
+	<base>Q3_SERVER</base>
 	<type>JK3_SERVER</type>
 	<name>Jedi Academy</name>
 	<default_port>29070</default_port>

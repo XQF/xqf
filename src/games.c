@@ -42,36 +42,38 @@ static char* stringlist039[] = { "codmp", NULL };
 static char* stringlist040[] = { "savage", NULL };
 static char* stringlist041[] = { "base", NULL };
 static char* stringlist042[] = { "jamp", NULL };
-static char* stringlist043[] = { "netpanzer", NULL };
-static char* stringlist044[] = { "data", NULL };
-static char* stringlist045[] = { "nexuiz", NULL };
+static char* stringlist043[] = { "base", NULL };
+static char* stringlist044[] = { "jamp", NULL };
+static char* stringlist045[] = { "netpanzer", NULL };
 static char* stringlist046[] = { "data", NULL };
-static char* stringlist047[] = { "xonotic", NULL };
-static char* stringlist048[] = { "basewsw", NULL };
-static char* stringlist049[] = { "warsow", NULL };
-static char* stringlist050[] = { "base", NULL };
-static char* stringlist051[] = { "tremulous", NULL };
+static char* stringlist047[] = { "nexuiz", NULL };
+static char* stringlist048[] = { "data", NULL };
+static char* stringlist049[] = { "xonotic", NULL };
+static char* stringlist050[] = { "basewsw", NULL };
+static char* stringlist051[] = { "warsow", NULL };
 static char* stringlist052[] = { "base", NULL };
-static char* stringlist053[] = { "tremulous-gpp", NULL };
+static char* stringlist053[] = { "tremulous", NULL };
 static char* stringlist054[] = { "base", NULL };
-static char* stringlist055[] = { "tremfusion", NULL };
-static char* stringlist056[] = { "main", NULL };
-static char* stringlist057[] = { "unvanquished", NULL };
-static char* stringlist058[] = { "baseq3", NULL };
-static char* stringlist059[] = { "openarena", NULL };
-static char* stringlist060[] = { "openttd", NULL };
-static char* stringlist061[] = { "baseq3", NULL };
-static char* stringlist062[] = { "q3rally", NULL };
-static char* stringlist063[] = { "wop", NULL };
-static char* stringlist064[] = { "worldofpadman", NULL };
-static char* stringlist065[] = { "q3ut4", NULL };
-static char* stringlist066[] = { "Urban Terror", "Quake3-UrT", "urbanterror", NULL };
-static char* stringlist067[] = { "rq3", NULL };
-static char* stringlist068[] = { "Reaction", NULL };
-static char* stringlist069[] = { "smokinguns", NULL };
-static char* stringlist070[] = { "smokinguns", NULL };
-static char* stringlist071[] = { "arena", NULL };
-static char* stringlist072[] = { "alienarena", NULL };
+static char* stringlist055[] = { "tremulous-gpp", NULL };
+static char* stringlist056[] = { "base", NULL };
+static char* stringlist057[] = { "tremfusion", NULL };
+static char* stringlist058[] = { "main", NULL };
+static char* stringlist059[] = { "unvanquished", NULL };
+static char* stringlist060[] = { "baseq3", NULL };
+static char* stringlist061[] = { "openarena", NULL };
+static char* stringlist062[] = { "openttd", NULL };
+static char* stringlist063[] = { "baseq3", NULL };
+static char* stringlist064[] = { "q3rally", NULL };
+static char* stringlist065[] = { "wop", NULL };
+static char* stringlist066[] = { "worldofpadman", NULL };
+static char* stringlist067[] = { "q3ut4", NULL };
+static char* stringlist068[] = { "Urban Terror", "Quake3-UrT", "urbanterror", NULL };
+static char* stringlist069[] = { "rq3", NULL };
+static char* stringlist070[] = { "Reaction", NULL };
+static char* stringlist071[] = { "smokinguns", NULL };
+static char* stringlist072[] = { "smokinguns", NULL };
+static char* stringlist073[] = { "arena", NULL };
+static char* stringlist074[] = { "alienarena", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -890,6 +892,35 @@ struct game games[] = {
     save_info           : quake_save_info,
   },
   {
+    type                : JK2_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "Jedi Outcast",
+    default_port        : 28070,
+    default_master_port : 28060,
+    id                  : "JK2S",
+    qstat_str           : "JK2S",
+    qstat_option        : "-jk2s",
+    qstat_master_option : "-jk2m",
+    icon                : "jk2.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : q3_update_prefs_common,
+    pd                  : &jk2_private,
+    main_mod            : stringlist041,
+    command             : stringlist042,
+  },
+  {
     type                : JK3_SERVER,
     flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
     name                : "Jedi Academy",
@@ -915,8 +946,8 @@ struct game games[] = {
     prefs_load          : q3_prefs_load_common,
     update_prefs        : q3_update_prefs_common,
     pd                  : &jk3_private,
-    main_mod            : stringlist041,
-    command             : stringlist042,
+    main_mod            : stringlist043,
+    command             : stringlist044,
   },
   {
     type                : NETP_SERVER,
@@ -935,7 +966,7 @@ struct game games[] = {
     config_is_valid     : config_is_valid_generic,
     exec_client         : netpanzer_exec,
     save_info           : quake_save_info,
-    command             : stringlist043,
+    command             : stringlist045,
   },
   {
     type                : NEXUIZ_SERVER,
@@ -961,8 +992,8 @@ struct game games[] = {
     prefs_load          : q3_prefs_load_common,
     update_prefs        : q3_update_prefs_common,
     default_home        : "~/.nexuiz",
-    main_mod            : stringlist044,
-    command             : stringlist045,
+    main_mod            : stringlist046,
+    command             : stringlist047,
   },
   {
     type                : XONOTIC_SERVER,
@@ -988,8 +1019,8 @@ struct game games[] = {
     prefs_load          : q3_prefs_load_common,
     update_prefs        : q3_update_prefs_common,
     default_home        : "~/.xonotic",
-    main_mod            : stringlist046,
-    command             : stringlist047,
+    main_mod            : stringlist048,
+    command             : stringlist049,
   },
   {
     type                : WARSOW_SERVER,
@@ -1019,8 +1050,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs_common,
     default_home        : "~/.warsow",
     pd                  : &warsow_private,
-    main_mod            : stringlist048,
-    command             : stringlist049,
+    main_mod            : stringlist050,
+    command             : stringlist051,
   },
   {
     type                : TREMULOUS_SERVER,
@@ -1051,8 +1082,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.tremulous",
     pd                  : &tremulous_private,
-    main_mod            : stringlist050,
-    command             : stringlist051,
+    main_mod            : stringlist052,
+    command             : stringlist053,
   },
   {
     type                : TREMULOUSGPP_SERVER,
@@ -1082,8 +1113,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.tremulous",
     pd                  : &tremulousgpp_private,
-    main_mod            : stringlist052,
-    command             : stringlist053,
+    main_mod            : stringlist054,
+    command             : stringlist055,
   },
   {
     type                : TREMFUSION_SERVER,
@@ -1113,8 +1144,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.tremulous",
     pd                  : &tremfusion_private,
-    main_mod            : stringlist054,
-    command             : stringlist055,
+    main_mod            : stringlist056,
+    command             : stringlist057,
   },
   {
     type                : UNVANQUISHED_SERVER,
@@ -1144,8 +1175,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.Unvanquished",
     pd                  : &unvanquished_private,
-    main_mod            : stringlist056,
-    command             : stringlist057,
+    main_mod            : stringlist058,
+    command             : stringlist059,
   },
   {
     type                : OPENARENA_SERVER,
@@ -1175,8 +1206,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.openarena",
     pd                  : &openarena_private,
-    main_mod            : stringlist058,
-    command             : stringlist059,
+    main_mod            : stringlist060,
+    command             : stringlist061,
   },
   {
     type                : OTTD_SERVER,
@@ -1197,7 +1228,7 @@ struct game games[] = {
     custom_cfgs         : quake_custom_cfgs,
     save_info           : quake_save_info,
     default_home        : "~/.openttd",
-    command             : stringlist060,
+    command             : stringlist062,
   },
   {
     type                : Q3RALLY_SERVER,
@@ -1227,8 +1258,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.q3rally",
     pd                  : &q3rally_private,
-    main_mod            : stringlist061,
-    command             : stringlist062,
+    main_mod            : stringlist063,
+    command             : stringlist064,
   },
   {
     type                : WOP_SERVER,
@@ -1258,8 +1289,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.WoPadman",
     pd                  : &wop_private,
-    main_mod            : stringlist063,
-    command             : stringlist064,
+    main_mod            : stringlist065,
+    command             : stringlist066,
   },
   {
     type                : IOURT_SERVER,
@@ -1289,8 +1320,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.q3a",
     pd                  : &iourt_private,
-    main_mod            : stringlist065,
-    command             : stringlist066,
+    main_mod            : stringlist067,
+    command             : stringlist068,
   },
   {
     type                : REACTION_SERVER,
@@ -1320,8 +1351,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.Reaction",
     pd                  : &reaction_private,
-    main_mod            : stringlist067,
-    command             : stringlist068,
+    main_mod            : stringlist069,
+    command             : stringlist070,
   },
   {
     type                : SMOKINGUNS_SERVER,
@@ -1351,8 +1382,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.smokinguns",
     pd                  : &smokinguns_private,
-    main_mod            : stringlist069,
-    command             : stringlist070,
+    main_mod            : stringlist071,
+    command             : stringlist072,
   },
   {
     type                : GPS_SERVER,
@@ -1398,8 +1429,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.codered/",
     pd                  : &alienarena_private,
-    main_mod            : stringlist071,
-    command             : stringlist072,
+    main_mod            : stringlist073,
+    command             : stringlist074,
   },
   {
     type                : UNKNOWN_SERVER,

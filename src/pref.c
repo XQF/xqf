@@ -381,10 +381,21 @@ static struct q3_common_prefs_s cod_prefs =
   defproto : "5",
 };
 
+static const char* jk2_masterprotocols[] = {
+	"16 - v1.04",
+	NULL
+};
+
 static const char* jk3_masterprotocols[] = {
 	"26 - v1.01",
 	"25 - v1.0",
 	NULL
+};
+
+static struct q3_common_prefs_s jk2_prefs =
+{
+  protocols: jk2_masterprotocols,
+  defproto : "16",
 };
 
 static struct q3_common_prefs_s jk3_prefs =
@@ -3270,6 +3281,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case EF_SERVER: return &ef_prefs;
     case SOF2S_SERVER: return &sof2_prefs;
     case COD_SERVER: return &cod_prefs;
+    case JK2_SERVER: return &jk2_prefs;
     case JK3_SERVER: return &jk3_prefs;
     case NEXUIZ_SERVER: return &nexuiz_prefs;
     case XONOTIC_SERVER: return &xonotic_prefs;
@@ -4841,6 +4853,7 @@ static struct generic_prefs* new_generic_prefs (void) {
   new_genprefs[Q4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[ETQW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[COD_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+  new_genprefs[JK2_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[JK3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
   new_genprefs[T2_SERVER].add_options_to_notebook = add_t2_options_to_notebook;
