@@ -382,6 +382,7 @@ static struct q3_common_prefs_s cod_prefs =
 };
 
 static const char* jk2_masterprotocols[] = {
+	"26 - v1.5",
 	"16 - v1.04",
 	NULL
 };
@@ -395,7 +396,7 @@ static const char* jk3_masterprotocols[] = {
 static struct q3_common_prefs_s jk2_prefs =
 {
   protocols: jk2_masterprotocols,
-  defproto : "16",
+  defproto : "26",
 };
 
 static struct q3_common_prefs_s jk3_prefs =
