@@ -80,9 +80,11 @@ static void stat_free_conn (struct stat_conn *conn) {
   job->cons = g_slist_remove (job->cons, conn);
 
   if (conn->fd >= 0) {
-    gdk_input_remove (conn->tag);
+    g_source_remove (conn->tag);
+    // conn->tag = NULL; ?
 
     close (conn->fd);
+    // conn->chan ?
   }
 
   if (conn->pid > 0)
@@ -384,9 +386,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   return TRUE;
 }
 
-
-static void stat_master_input_callback (struct stat_conn *conn, int fd, 
-                                                GdkInputCondition condition) {
+static GIOFunc stat_master_input_callback (struct stat_conn *conn, int fd, 
+                                                GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
   char *tmp;
@@ -865,8 +866,8 @@ static void stat_servers_update_done (struct stat_conn *conn) {
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
-static void stat_servers_input_callback (struct stat_conn *conn, int fd, 
-                                                GdkInputCondition condition) {
+static GIOFunc stat_servers_input_callback (struct stat_conn *conn, int fd, 
+                                                GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
   int blocked = FALSE;
@@ -914,7 +915,8 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
 
       if (conn->buf[conn->lastnl] == '\0') {
 	blocked = TRUE;
-	gdk_input_remove (conn->tag);
+	g_source_remove (conn->tag);
+	// conn->tag = NULL; ?
 
 	parse_qstat_record (conn);
 
@@ -947,7 +949,10 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
     }
 
     if (blocked) {
-      conn->tag = gdk_input_add (conn->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
+      g_source_remove (conn->tag);
+      // conn->tag = NULL; ?
+
+      conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
                                                   conn->input_callback, conn);
     }
 
@@ -958,7 +963,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
   return connection to local file
  */
 static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
-                          GdkInputFunction input_callback, struct master *m)
+                          GIOFunc input_callback, struct master *m)
 {
     struct stat_conn *conn;
     char *file2;
@@ -983,6 +988,7 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
     conn->tmpfile = NULL;
     conn->pid = 0;
     conn->fd = fd; 
+    conn->chan = g_io_channel_unix_new (conn->fd);
     conn->pos = 0;
     conn->lastnl = 0;
     conn->first = TRUE;
@@ -997,9 +1003,9 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
     conn->job = job;
     job->cons = g_slist_prepend (job->cons, conn);
 
-    conn->tag = gdk_input_add (conn->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
-				     (GdkInputFunction) input_callback, conn);
-    conn->input_callback = (GdkInputFunction) input_callback;
+    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
+				     (GIOFunc) input_callback, conn);
+    conn->input_callback = (GIOFunc) input_callback;
 
     if (file2)
       g_free(file2);
@@ -1012,7 +1018,7 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
   options.  Returns a "conn?"
 */
 static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], 
-                          GdkInputFunction input_callback, struct master *m) {
+                          GIOFunc input_callback, struct master *m) {
  
   struct stat_conn *conn;
   pid_t pid;
@@ -1043,11 +1049,13 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
       failed("fcntl", NULL);
 
     conn = g_malloc (sizeof (struct stat_conn));
+
     conn->buf = g_malloc (BUFFER_MINSIZE);
     conn->bufsize = BUFFER_MINSIZE;
     conn->tmpfile = NULL;
     conn->pid = pid;
     conn->fd = pipefds[0];
+    conn->chan = g_io_channel_unix_new (conn->fd);
     conn->pos = 0;
     conn->lastnl = 0;
     conn->first = TRUE;
@@ -1062,9 +1070,9 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
     conn->job = job;
     job->cons = g_slist_prepend (job->cons, conn);
 
-    conn->tag = gdk_input_add (conn->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
-                                     (GdkInputFunction) input_callback, conn);
-    conn->input_callback = (GdkInputFunction) input_callback;
+    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
+				     (GIOFunc) input_callback, conn);
+    conn->input_callback = (GIOFunc) input_callback;
   }
   else {	/* child */
     close (pipefds[0]);
@@ -1446,12 +1454,11 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       fprintf (stderr, "\n");
     }
 
-    conn = start_qstat (job, argv, 
-			      (GdkInputFunction) stat_master_input_callback, m);
+    conn = start_qstat (job, argv, (GIOFunc) stat_master_input_callback, m);
   }
   else if(file)
   {
-    conn = new_file_conn (job, file, (GdkInputFunction) stat_master_input_callback, m);
+    conn = new_file_conn (job, file, (GIOFunc) stat_master_input_callback, m);
     g_free (file);
   }
   
@@ -1574,7 +1581,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
     xqf_error("FIXME: argi too big, stack corrupt");
 
   conn = start_qstat (job, argv, 
-                        (GdkInputFunction) stat_servers_input_callback, NULL);
+                        (GIOFunc) stat_servers_input_callback, NULL);
   if (conn && fn)
     conn->tmpfile = g_strdup (fn);
 

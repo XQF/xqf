@@ -50,9 +50,10 @@ struct stat_job;
 struct stat_conn {
   pid_t	pid;
   int	fd;
+  GIOChannel *chan;
 
-  int	tag;
-  GdkInputFunction input_callback;
+  gpointer tag;
+  GIOFunc input_callback;
 
   char	*buf;
   int	bufsize;
