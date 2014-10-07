@@ -49,6 +49,7 @@
 #include "xpm/q4.xpm"
 #include "xpm/wo.xpm"
 #include "xpm/et.xpm"
+#include "xpm/etl.xpm"
 #include "xpm/ef.xpm"
 #include "xpm/hex.xpm"
 #include "xpm/hw.xpm"

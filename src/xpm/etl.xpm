@@ -1,5 +1,5 @@
 /* XPM */
-static char * etl_nb_xpm[] = {
+static char * etl_xpm[] = {
 "17 17 3 1",
 " 	c None",
 ".	c #000000",
