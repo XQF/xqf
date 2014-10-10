@@ -52,7 +52,7 @@ struct stat_conn {
   int	fd;
   GIOChannel *chan;
 
-  gpointer tag;
+  guint tag;
   GIOFunc input_callback;
 
   char	*buf;

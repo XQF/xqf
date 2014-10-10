@@ -386,7 +386,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   return TRUE;
 }
 
-static GIOFunc stat_master_input_callback (struct stat_conn *conn, int fd, 
+static void stat_master_input_callback (struct stat_conn *conn, int fd, 
                                                 GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
@@ -866,7 +866,7 @@ static void stat_servers_update_done (struct stat_conn *conn) {
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
-static GIOFunc stat_servers_input_callback (struct stat_conn *conn, int fd, 
+static void stat_servers_input_callback (struct stat_conn *conn, int fd, 
                                                 GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
