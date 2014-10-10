@@ -3292,12 +3292,12 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
     case TREMFUSION_SERVER: return &tremfusion_prefs;
     case UNVANQUISHED_SERVER: return &unvanquished_prefs;
     case OPENARENA_SERVER: return &openarena_prefs;
-    case Q3RALLY_SERVER: return &q3rally_prefs; 
-    case WOP_SERVER: return &wop_prefs; 
-    case IOURT_SERVER: return &iourt_prefs; 
-    case REACTION_SERVER: return &reaction_prefs; 
-    case SMOKINGUNS_SERVER: return &smokinguns_prefs; 
-    case ALIENARENA_SERVER: return &alienarena_prefs; 
+    case Q3RALLY_SERVER: return &q3rally_prefs;
+    case WOP_SERVER: return &wop_prefs;
+    case IOURT_SERVER: return &iourt_prefs;
+    case REACTION_SERVER: return &reaction_prefs;
+    case SMOKINGUNS_SERVER: return &smokinguns_prefs;
+    case ALIENARENA_SERVER: return &alienarena_prefs;
     default: xqf_error("need to define preferences"); return NULL;
   }
 }

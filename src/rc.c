@@ -501,7 +501,7 @@ int rc_migrate_dir (void) {
         fprintf(stderr, "Can't create XDG user config directory %s\n", xdg_user_dir);
         free(legacy_user_rcdir);
         free(xdg_user_rcdir);
-        return res; 
+        return res;
       }
     }
     else {

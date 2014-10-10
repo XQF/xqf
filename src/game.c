@@ -1500,7 +1500,7 @@ struct q3a_gametype_s jk2_gametype_map[] =
     jk2_gametypes,
     MAX_JK2_TYPES
   }
-}; 
+};
 
 struct q3a_gametype_s jk3_gametype_map[] =
 {
@@ -1598,7 +1598,7 @@ static void q3_analyze_serverinfo (struct server *s) {
       // Wolfenstein: Enemy Territory
       else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4))
       {
-      	if (games[WOET_SERVER].cmd)
+       if (games[WOET_SERVER].cmd)
 	{
 	  s->type=WOET_SERVER;
 	}
@@ -1616,7 +1616,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 	  s->type=ETL_SERVER;
 	}
 	// play with Wolf:ET if only installed
-      	if (games[WOET_SERVER].cmd)
+       if (games[WOET_SERVER].cmd)
 	{
 	  s->type=WOET_SERVER;
 	}

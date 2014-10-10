@@ -17,7 +17,7 @@ Changes since 1.0.5:
 * Add x11 libs to pkg_modules
 * Fix build with newer linker versions
 * Fix autotools, intltool
-* Fix readline check 
+* Fix readline check
 * Fix xpm segfaults
 * Fix crash with 24 bit images
 * Fix crash when a server is listed in two games with very populated servers (GLib source IDS reused)
@@ -179,7 +179,7 @@ Changes since 0.9.10:
 * Serious Sam support (requires SMS gametype via ~/.qstatrc). Does not currently support any masters.
 * Fixed -game parameter for Half-Life
 * RTCW voteflags decoded in properties pane
-* Visual marker in the map column to show if you have the listed map installed on your computer. (Q3, RTCW, UT, Rune, UT2) 
+* Visual marker in the map column to show if you have the listed map installed on your computer. (Q3, RTCW, UT, Rune, UT2)
 
 XQF 0.9.10 -- November 16, 2002
 -------------------------------
@@ -202,8 +202,8 @@ Changes since 0.9.9:
 * Use correct parameters (-game,+connect,+password) when launching Half-Life
 * New master type of "file" to read IP addresses from a file
 * Unreal Tournament 2003 support
-* Fixed Half-Life rcon support 
-* Player search visible improvements 
+* Fixed Half-Life rcon support
+* Player search visible improvements
 * Fixed Tribes2 master support and added additional masters
 * Updated QuakeWorld master list
 * Unlimited number of server filters instead of ten

@@ -82,7 +82,7 @@ static void stat_free_conn (struct stat_conn *conn) {
   if (conn->fd >= 0) {
     g_source_remove (conn->tag);
     // conn->tag = NULL; ?
-    
+
     close (conn->fd);
   }
 
