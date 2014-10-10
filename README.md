@@ -7,14 +7,17 @@ DESCRIPTION
 -----------
 
 XQF is a server browser and launcher for games using [id Tech engines](http://en.wikipedia.org/wiki/Id_Tech), [Unreal engines](http://en.wikipedia.org/wiki/Unreal_Engine) and derivatives.  
-It uses the [GTK+](http://www.gtk.org/) 2 toolkit.  
+It uses the [GTK+](http://www.gtk.org/) 2 toolkit.
+
 XQF is a front-end to [QStat](http://qstat.sourceforge.net/), a program by Steve Jankowski.
+
+See the file [NEWS.md](NEWS.md) and the [ChangeLog](ChangeLog) for updated information.
 
 
 INSTALLING / USAGE
 ------------------
 
-Please see the docs/xqfdocs.html file for more information.
+Please see the ``docs/xqfdocs.html`` file for more information. Warning, this page is not up to date!
 
 
 AVAILABILITY
