@@ -1185,7 +1185,7 @@ static char *builtin_masters_update_info[] = {
 
   "ADD OTTDS master://master.openttd.org OpenTTD",
 
-  "ADD Q3RALLYS master://master.q3rally.com master.q3rally.com",
+  "DELETE Q3RALLYS master://master.q3rally.com master.q3rally.com", // switched off
   // "DELETE Q3RALLYS master://master.ioquake3.org master.ioquake3.org", // not used anymore
   "DELETE Q3RALLYS master://master.q3alive.net master.q3alive.net", // switched off
 
@@ -1202,6 +1202,8 @@ static char *builtin_masters_update_info[] = {
   "ADD SMOKINGUNSS master://parttimegeeks.net:27950 parttimegeeks.net",
   // "DELETE SMOKINGUNSS master://soulserv.net:27950 soulserv.net", // switched off
   // "DELETE SMOKINGUNSS master://master.q3alive.net master.q3alive.net", // switched off
+
+  "ADD ZEQ2LITES master://master.ioquake3.org master.ioquake3.org",
 
   "ADD ALIENARENAS master://master.corservers.com:27900 master.corservers.com",
   "ADD ALIENARENAS master://master2.corservers.com:27900 master2.corservers.com",
@@ -1244,6 +1246,7 @@ static char *builtin_masters_update_info[] = {
   "ADD IOURTS lan://255.255.255.255 LAN",
   "ADD REACTIONS lan://255.255.255.255 LAN",
   "ADD SMOKINGUNSS lan://255.255.255.255 LAN",
+  "ADD ZEQ2LITES lan://255.255.255.255 LAN",
   "ADD ALIENARENAS lan://255.255.255.255 LAN",
 
   NULL

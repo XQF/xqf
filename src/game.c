@@ -180,6 +180,7 @@ static struct quake_private wop_private;
 static struct quake_private iourt_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
+static struct quake_private zeq2lite_private;
 static struct quake_private alienarena_private;
 
 #include "games.c"
@@ -1579,7 +1580,7 @@ static void q3_analyze_serverinfo (struct server *s) {
   // check if it's really a q3 server. We need to do that first to determine
   // whether the server protcol for that game is compatible
   for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-    if (strcmp (*info_ptr, "version" ) == 0) {
+    if (strcmp (*info_ptr, "version") == 0) {
       // Quake 3 Arena
       if(!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5) || !strncmp(info_ptr[1],"ioQ3 ",5))
       {
@@ -1692,6 +1693,11 @@ static void q3_analyze_serverinfo (struct server *s) {
       {
 	s->type=SMOKINGUNS_SERVER;
       }
+      // ZEQ2 Lite
+      else if(!strncmp(info_ptr[1],"zeq2lite",8))
+      {
+	s->type=ZEQ2LITE_SERVER;
+      }
       break;
     }
   }
@@ -1791,31 +1797,31 @@ static void q3_analyze_serverinfo (struct server *s) {
   }
 
   if(s->gametype) {
-    if ( s->type == Q3_SERVER)
+    if (s->type == Q3_SERVER)
     {
       q3_decode_gametype( s, q3a_gametype_map );
     }
-    else if ( s->type == WO_SERVER)
+    else if (s->type == WO_SERVER)
     {
       q3_decode_gametype( s, wolf_gametype_map );
     }
-    else if ( s->type == EF_SERVER)
+    else if (s->type == EF_SERVER)
     {
       q3_decode_gametype( s, ef_gametype_map );
     }
-    else if ( s->type == WOET_SERVER)
+    else if (s->type == WOET_SERVER)
     {
       q3_decode_gametype( s, wolfet_gametype_map );
     }
-    else if ( s->type == JK2_SERVER)
+    else if (s->type == JK2_SERVER)
     {
       q3_decode_gametype( s, jk2_gametype_map );
     }
-    else if ( s->type == JK3_SERVER)
+    else if (s->type == JK3_SERVER)
     {
       q3_decode_gametype( s, jk3_gametype_map );
     }
-    else if ( s->type == IOURT_SERVER)
+    else if (s->type == IOURT_SERVER)
     {
       q3_decode_gametype( s, iourt_gametype_map );
     }

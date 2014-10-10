@@ -975,6 +975,23 @@
 	<pd>smokinguns_private</pd>
     </game>
     <game>
+	<base>Q3_SERVER</base>
+	<type>ZEQ2LITE_SERVER</type>
+	<name>ZEQ2 Lite</name>
+	<id>ZEQ2LITES</id>
+	<qstat_str>ZEQ2LITES</qstat_str>
+	<qstat_option>-zeq2lites</qstat_option>
+	<qstat_master_option>-zeq2litem</qstat_master_option>
+	<icon>zeq2lite.xpm</icon>
+	<config_is_valid>config_is_valid_generic</config_is_valid>
+	<command>ZEQ2.i386</command>
+	<default_home>~/.ZEQ2</default_home>
+	<prefs_load>q3_prefs_load_common</prefs_load>
+	<update_prefs>q3_update_prefs</update_prefs>
+	<main_mod>ZEQ2</main_mod>
+	<pd>zeq2lite_private</pd>
+    </game>
+    <game>
 	<type>GPS_SERVER</type>
 	<name>Generic Gamespy</name>
 	<flags>GAME_CONNECT</flags>

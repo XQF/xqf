@@ -94,6 +94,7 @@
 #include "xpm/iourt.xpm"
 #include "xpm/reaction.xpm"
 #include "xpm/smokinguns.xpm"
+#include "xpm/zeq2lite.xpm"
 #include "xpm/alienarena.xpm"
 
 #include "xpm/green-plus.xpm"

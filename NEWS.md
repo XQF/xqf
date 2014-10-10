@@ -3,24 +3,22 @@ XQF 1.0.5.2-git -- Currently
 
 Changes since 1.0.5:
 
-* New games: Unvanquished, Tremulous GPP, TremFusion, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Enemy Territory: Quake Wars, Enemy Territory: Legacy
+* New games: Unvanquished, Tremulous GPP, TremFusion, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Enemy Territory: Quake Wars, Enemy Territory: Legacy, ZEQ2 Lite, Jedi Outcast
 * Recognize Unvanquished extended color codes and prevent for printing
 * Add LAN broadcast for many games
 * Drop disabled master servers (like id master server for Quake 3)
-* Add or substitute new master servers (like ioquake3 master supplanting id master)
+* Add or substitute new master servers (like ioquake3 master substitute id master)
 * Add Warsow protocol numbers
 * Add Hexen World master server support
 * Enhance Steam applaunch support
-* Enable GTK+2 build by default, GTK+1 build is no longer guaranteed
+* Drop GTK+1 support
 * Add scalable SVG icon
 * Follow XDG Base Directory Specification for user configuration directory and migrate previously created directory
 * Add x11 libs to pkg_modules
 * Fix build with newer linker versions
 * Fix autotools, intltool
 * Fix readline check
-* Fix xpm segfaults
 * Fix crash with 24 bit images
-* Fix crash when a server is listed in two games with very populated servers (GLib source IDS reused)
 * Determine number of GeoIP countries at runtime
 * Complete French translation
 

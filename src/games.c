@@ -72,8 +72,10 @@ static char* stringlist069[] = { "rq3", NULL };
 static char* stringlist070[] = { "Reaction", NULL };
 static char* stringlist071[] = { "smokinguns", NULL };
 static char* stringlist072[] = { "smokinguns", NULL };
-static char* stringlist073[] = { "arena", NULL };
-static char* stringlist074[] = { "alienarena", NULL };
+static char* stringlist073[] = { "ZEQ2", NULL };
+static char* stringlist074[] = { "ZEQ2.i386", NULL };
+static char* stringlist075[] = { "arena", NULL };
+static char* stringlist076[] = { "alienarena", NULL };
 struct game games[] = {
   {
     type                : Q1_SERVER,
@@ -1386,6 +1388,37 @@ struct game games[] = {
     command             : stringlist072,
   },
   {
+    type                : ZEQ2LITE_SERVER,
+    flags               : GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
+    name                : "ZEQ2 Lite",
+    default_port        : 27960,
+    default_master_port : 27950,
+    id                  : "ZEQ2LITES",
+    qstat_str           : "ZEQ2LITES",
+    qstat_option        : "-zeq2lites",
+    qstat_master_option : "-zeq2litem",
+    icon                : "zeq2lite.xpm",
+    parse_player        : q3_parse_player,
+    parse_server        : quake_parse_server,
+    analyze_serverinfo  : q3_analyze_serverinfo,
+    config_is_valid     : config_is_valid_generic,
+    exec_client         : q3_exec,
+    custom_cfgs         : quake_custom_cfgs,
+    save_info           : quake_save_info,
+    init_maps           : q3_init_maps,
+    has_map             : quake_has_map,
+    get_mapshot         : q3_get_mapshot,
+    arch_identifier     : "version",
+    identify_cpu        : identify_cpu,
+    identify_os         : identify_os,
+    prefs_load          : q3_prefs_load_common,
+    update_prefs        : q3_update_prefs,
+    default_home        : "~/.ZEQ2",
+    pd                  : &zeq2lite_private,
+    main_mod            : stringlist073,
+    command             : stringlist074,
+  },
+  {
     type                : GPS_SERVER,
     flags               : GAME_CONNECT,
     name                : "Generic Gamespy",
@@ -1429,8 +1462,8 @@ struct game games[] = {
     update_prefs        : q3_update_prefs,
     default_home        : "~/.codered/",
     pd                  : &alienarena_private,
-    main_mod            : stringlist073,
-    command             : stringlist074,
+    main_mod            : stringlist075,
+    command             : stringlist076,
   },
   {
     type                : UNKNOWN_SERVER,

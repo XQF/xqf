@@ -1,17 +1,20 @@
+Oct 10, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- add ZEQ2 Lite game
+
+Oct 02, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- add Jedi Outcast (JK2) game (VictorBE patch)
+
 Oct 01, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - fix Unvanquished status packet
 - detect some Wolf:ET server with unusual version name
 
 Sep 30, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - add Enemy Territory:Legacy game
-- fix a bug that crashes XQF when very populated master servers from different
-  games list the same server (like a game appearing both as a mod and as standalone)
-- fix an error due to GLib 2.40 changes (this one reveals the previous one, thanks)
 
 Sep 28, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - distinguish Tremulous, Tremulous GPP and TremFusion
 - some cleaning (id tech 3 derivatives are not described as tremulous anymore)
-- renamed tremulous server qstat variable to 'gamename'+'s' like others
+- rename tremulous server qstat variable to 'gamename'+'s' like others
 - master server for UrbanTerror updated
 
 Nov 11, 2013: Thomas Debesse <xqf@illwieckz.net>
@@ -25,7 +28,7 @@ Nov 06, 2013: Thomas Debesse <xqf@illwieckz.net>
 - recognize Unvanquished extended color codes to prevent printing
 
 Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
-- completed french translation (100%)
+- complete french translation (100%)
 
 Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
 - detect more ioQuake3 variant as ioQuake3
@@ -120,11 +123,11 @@ Oct 28, 2006: <l-n@users.sourceforge.net>
 - update qstat.cfg from qstat
 - disable Polish translation, file is broken
 - add Warsow master protocol version 8
-- update docu
+- update documentation
 
 Oct 26, 2006: Jordi Mallach <jordi@sindominio.net>
 - add Polish translation by Miłosz Kosobucki
-- updated Catalan translation
+- update Catalan translation
 - tweaks to desktop file
 
 Jun 18, 2006: <l-n@users.sourceforge.net>
@@ -359,7 +362,7 @@ Nov 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 
 Nov 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - update German translation
-- add wolfmp as main mod of rtcw (reportet by Ruediger Meier)
+- add wolfmp as main mod of rtcw (reported by Ruediger Meier)
 
 Nov 11, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add options for qstat source ip and port range (feature #1034631)
