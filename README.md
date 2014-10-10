@@ -28,10 +28,11 @@ AVAILABILITY
 COPYRIGHT
 ---------
 
-XQF is Copyright (C) 1998-2000 Roman Pozlevich
+XQF is Copyright © 1998-2000 Roman Pozlevich.  
+See the file [AUTHORS.md](AUTHORS.md) for contributors.
 
 Copying is allowed under the terms of GNU General Public License.  
-See the file COPYING for more details.
+See the file [COPYING](COPYING) for more details.
 
 
 HISTORY
