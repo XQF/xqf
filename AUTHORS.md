@@ -1,9 +1,10 @@
-Copyright (C) 1998-2002 Roman Pozlevich <roma@botik.ru>
+Author
+------
 
 Roman Pozlevich <roma@botik.ru>
 
-
-Significant contributors:
+Significant contributors
+------------------------
 
 Bill Adams <bill@evilbill.org>
 Alex Burger <alex_b@users.sf.net>
@@ -11,7 +12,8 @@ Ludwig Nussel <ludwig.nussel@suse.de>
 Jordi Mallach <jordi@debian.org>
 Thomas Debesse <xqf@illwieckz.net>
 
-Other contributors:
+Other contributors
+------------------
 
 Jochen Baier <email@jochen-baier.de>
 Jo Shields <directhex@apebox.org>
@@ -34,7 +36,8 @@ Florian Riepler
 Mike Mestnik
 Luigi Auriemma
 
-Translators:
+Translators
+-----------
 
 Dan Korostelev <dan@ats.energo.ru>
 Michel Briand <michelbriand@free.fr>
@@ -43,7 +46,8 @@ Sami Laitinen
 Miłosz Kosobucki
 Morten Brix Pedersen
 
-Special Thanks:
+Special thanks (reports, ideas…)
+--------------------------------
 
 Tomasz Kalkosiński
 Timothée Besset

@@ -27,6 +27,11 @@ if ! test -e NEWS; then
 	ln -s NEWS.md NEWS
 fi
 
+# For autotools compatibility
+if ! test -e AUTHORS; then
+	ln -s AUTHORS.md AUTHORS
+fi
+
 if ! gtk-config --version >/dev/null 2>&1; then
 	mkdir m4
 	ln -s ../xqf-acinclude-nogtk1.m4 m4/gtk.m4
