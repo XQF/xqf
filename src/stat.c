@@ -80,8 +80,9 @@ static void stat_free_conn (struct stat_conn *conn) {
   job->cons = g_slist_remove (job->cons, conn);
 
   if (conn->fd >= 0) {
+	printf("free:g_source_remove: %p\n", conn->tag);
     g_source_remove (conn->tag);
-    // conn->tag = NULL; ?
+    conn->tag = NULL;
 
     close (conn->fd);
     // conn->chan ?
@@ -921,8 +922,6 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
 
       if (conn->buf[conn->lastnl] == '\0') {
 	blocked = TRUE;
-	g_source_remove (conn->tag);
-	// conn->tag = NULL; ?
 
 	parse_qstat_record (conn);
 
@@ -955,6 +954,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
     }
 
     if (blocked) {
+	printf("blocked:g_source_remove: %p\n", conn->tag);
       g_source_remove (conn->tag);
       // conn->tag = NULL; ?
 
