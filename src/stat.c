@@ -388,8 +388,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   return TRUE;
 }
 
-static gboolean stat_master_input_callback (struct stat_conn *conn, GIOChannel *chan, 
-                                                GIOCondition condition) {
+static gboolean stat_master_input_callback (GIOChannel *chan, 
+                                                GIOCondition condition, struct stat_conn *conn) {
   struct stat_job *job = conn->job;
   int first_used = 0;
   char *tmp;
@@ -871,8 +871,8 @@ static void stat_servers_update_done (struct stat_conn *conn) {
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
-static gboolean stat_servers_input_callback (struct stat_conn *conn, GIOChannel *chan, 
-                                                GIOCondition condition) {
+static gboolean stat_servers_input_callback (GIOChannel *chan, 
+                                                GIOCondition condition, struct stat_conn *conn) {
   struct stat_job *job = conn->job;
   int first_used = 0;
   int blocked = FALSE;
@@ -1077,7 +1077,7 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
     conn->job = job;
     job->cons = g_slist_prepend (job->cons, conn);
 
-    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
+    conn->tag = g_io_add_watch (chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
 				     input_callback, conn);
     conn->input_callback = input_callback;
   }
