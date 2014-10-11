@@ -386,7 +386,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   return TRUE;
 }
 
-static void stat_master_input_callback (struct stat_conn *conn, int fd, 
+static gboolean stat_master_input_callback (struct stat_conn *conn, int fd, 
                                                 GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
@@ -400,7 +400,7 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
   if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP
 	&& parse_savage_master_output(conn))
   {
-    return;
+    return FALSE;
   }
 
   while (1) {
@@ -411,27 +411,27 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
       stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
       stat_update_masters (job);
       debug_decrease_indent();
-      return;
+      return FALSE;
     }
 
     res = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
     if (res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
 	debug_decrease_indent();
-	return;
+	return FALSE;
       }
       failed ("read", NULL);
       stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
       stat_update_masters (job);
       debug_decrease_indent();
-      return;
+      return FALSE;
     }
     if (res == 0) {	/* EOF */
       debug(3,"stat_master_input_callback -- eof");
       stat_master_update_done (conn, job, conn->master, SOURCE_UP);
       stat_update_masters (job);
       debug_decrease_indent();
-      return;
+      return FALSE;
     }
 
     tmp = conn->buf + conn->pos;
@@ -446,7 +446,7 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
 	stat_master_update_done (conn, job, conn->master, conn->master->state);
 	stat_update_masters (job);
 	debug_decrease_indent();
-	return;
+	return FALSE;
       }
 
       first_used = tmp - conn->buf;
@@ -461,6 +461,8 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
     }
   }
   debug_decrease_indent();
+
+  return TRUE;
 }
 
 
@@ -866,7 +868,7 @@ static void stat_servers_update_done (struct stat_conn *conn) {
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
-static void stat_servers_input_callback (struct stat_conn *conn, int fd, 
+static gboolean stat_servers_input_callback (struct stat_conn *conn, int fd, 
                                                 GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
@@ -883,7 +885,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
 	fprintf (stderr, "server record is too large\n");
 	stat_servers_update_done (conn);
 	stat_next (job);
-	return;
+	return FALSE;
       }
       conn->bufsize += conn->bufsize;
       tmp = conn->buf;
@@ -898,7 +900,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
       failed ("read", NULL);
       stat_servers_update_done (conn);
       stat_next (job);
-      return;
+      return FALSE;
     }
     if (res == 0) {	/* EOF */
       debug (3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
@@ -956,6 +958,7 @@ static void stat_servers_input_callback (struct stat_conn *conn, int fd,
                                                   conn->input_callback, conn);
     }
 
+    return TRUE;
   }
 }
 
@@ -1004,8 +1007,8 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
     job->cons = g_slist_prepend (job->cons, conn);
 
     conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
-				     (GIOFunc) input_callback, conn);
-    conn->input_callback = (GIOFunc) input_callback;
+				     input_callback, conn);
+    conn->input_callback = input_callback;
 
     if (file2)
       g_free(file2);
@@ -1071,8 +1074,8 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
     job->cons = g_slist_prepend (job->cons, conn);
 
     conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
-				     (GIOFunc) input_callback, conn);
-    conn->input_callback = (GIOFunc) input_callback;
+				     input_callback, conn);
+    conn->input_callback = input_callback;
   }
   else {	/* child */
     close (pipefds[0]);
@@ -1454,11 +1457,11 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job,
       fprintf (stderr, "\n");
     }
 
-    conn = start_qstat (job, argv, (GIOFunc) stat_master_input_callback, m);
+    conn = start_qstat (job, argv, stat_master_input_callback, m);
   }
   else if(file)
   {
-    conn = new_file_conn (job, file, (GIOFunc) stat_master_input_callback, m);
+    conn = new_file_conn (job, file, stat_master_input_callback, m);
     g_free (file);
   }
   
@@ -1581,7 +1584,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
     xqf_error("FIXME: argi too big, stack corrupt");
 
   conn = start_qstat (job, argv, 
-                        (GIOFunc) stat_servers_input_callback, NULL);
+                        stat_servers_input_callback, NULL);
   if (conn && fn)
     conn->tmpfile = g_strdup (fn);
 
