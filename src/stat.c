@@ -79,12 +79,14 @@ static void stat_free_conn (struct stat_conn *conn) {
   job->cons = g_slist_remove (job->cons, conn);
 
   if (conn->fd >= 0) {
-	printf("free:g_source_remove: %p\n", conn->tag);
     g_source_remove (conn->tag);
     conn->tag = NULL;
 
+    g_io_channel_unref(conn->chan);
+    g_source_remove(conn->chan);
+    conn->chan = NULL;
+
     close (conn->fd);
-    // conn->chan ?
   }
 
   if (conn->pid > 0)
