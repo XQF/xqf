@@ -871,7 +871,7 @@ static void stat_servers_update_done (struct stat_conn *conn) {
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
-static gboolean stat_servers_input_callback (struct stat_conn *conn, int fd, 
+static gboolean stat_servers_input_callback (struct stat_conn *conn, GIOChannel *chan, 
                                                 GIOCondition condition) {
   struct stat_job *job = conn->job;
   int first_used = 0;
@@ -897,7 +897,7 @@ static gboolean stat_servers_input_callback (struct stat_conn *conn, int fd,
     }
 
     // FIXME GIOStatus, GError
-    g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, res, NULL);
+    g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, res, NULL);
     if (*res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
 	return FALSE;
