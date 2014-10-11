@@ -79,14 +79,13 @@ static void stat_free_conn (struct stat_conn *conn) {
   job->cons = g_slist_remove (job->cons, conn);
 
   if (conn->fd >= 0) {
-    g_source_remove (conn->tag);
-    conn->tag = NULL;
-
     // FIXME GError
     g_io_channel_shutdown(conn->chan, TRUE, NULL);
     g_io_channel_unref(conn->chan);
-    g_source_remove(conn->chan);
-    conn->chan = NULL;
+    conn->chan = 0;
+
+    g_source_remove (conn->tag);
+    conn->tag = 0;
 
     close (conn->fd);
   }
@@ -1005,8 +1004,7 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
     conn->job = job;
     job->cons = g_slist_prepend (job->cons, conn);
 
-    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
-				     input_callback, conn);
+    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, input_callback, conn);
     conn->input_callback = input_callback;
 
     if (file2)

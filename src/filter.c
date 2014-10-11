@@ -1109,12 +1109,10 @@ static void server_filter_fill_widgets(guint num)
 
   gboolean dofree = FALSE;
 #ifdef USE_GEOIP
-  char buf[3];
   int f_number;
   int rw = 0;
   
   struct pixmap* countrypix = NULL;
-  buf[2]='\0';
 #endif
 
   if(num > 0)

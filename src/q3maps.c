@@ -81,7 +81,7 @@ static inline int    LittleLong (int l)
 static void findmaps_pak(const char* packfile, GHashTable* maphash)
 {
     dpackheader_t header;
-    int numpackfiles;
+//    int numpackfiles;
     int fd;
     dpackfile_t info;
 
@@ -105,7 +105,7 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash)
     header.dirofs = LittleLong (header.dirofs);
     header.dirlen = LittleLong (header.dirlen);
 
-    numpackfiles = header.dirlen / sizeof(dpackfile_t);
+//    numpackfiles = header.dirlen / sizeof(dpackfile_t);
 
 //    printf ("packfile %s (%i files)\n", packfile, numpackfiles);
 

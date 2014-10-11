@@ -1,3 +1,7 @@
+Oct 12, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- fix a 14+ years old malloc bug, a sum of strings (therefor a sum of chars)
+  was used as instead of a sum of string lengths
+
 Oct 11, 2014: Thomas DEBESSE <xqf@ilwieckz.net>
 - port obsolete fd handling code to GIOChannel (many thanks to Chris Vine for
   his precious and generous help)

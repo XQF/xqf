@@ -2478,7 +2478,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   int enable_console = 0;
   int pass_memory_options = 0;
   
-  struct quake_private* pd = NULL;
+  // struct quake_private* pd = NULL;
   
   if(!con) return -1;
   if(!con->s) return -1;
@@ -2486,7 +2486,7 @@ static int q3_exec (const struct condef *con, int forkit) {
   g = &games[con->s->type];
   if(!g) return -1;
 
-  pd = (struct quake_private*)games[con->s->type].pd;
+  // pd = (struct quake_private*)games[con->s->type].pd;
 
   setfs_game          = str2bool(game_get_attribute(g->type,"setfs_game"));
   set_punkbuster      = str2bool(game_get_attribute(g->type,"set_punkbuster"));
@@ -3549,7 +3549,7 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
   int j;
   char conf[15];
   char *token[2];
-  int n;
+  // int n;
   char ** ret = NULL;
   GSList *temp;
 
@@ -3562,7 +3562,8 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
     g_snprintf (conf, 15, "custom_arg%d", j);
     arg = g_strdup((char *) temp->data);
 
-    n = tokenize (arg, token, 2, ",");
+    // n = tokenize (arg, token, 2, ",");
+    tokenize (arg, token, 2, ",");
     
     if(!(strcasecmp(token[0],gamestring))) {
       ret = g_strsplit(token[1]," ",0);

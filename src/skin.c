@@ -298,13 +298,13 @@ guchar *get_q2_skin (char *skin, char *path) {
   char *skinsdir;
   char *filename;
   guchar *pcx;
-  int skinlen;
+  // int skinlen;
 
   if (!skin || skin[0] == '\0')
     return NULL;
 
   skinsdir = file_in_dir (path, "baseq2/players/");
-  skinlen = strlen (skin);
+  // skinlen = strlen (skin);
   filename = skin_filename (skin, skinsdir, "_i.pcx");
 
   pcx = read_skin_pcx (filename, TRUE);

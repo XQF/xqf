@@ -829,12 +829,12 @@ int verify_q3_settings (void)
   int com_hunkmegs        = 0;
   int com_zonemegs        = 0;
   int com_soundmegs       = 0;
-  int cg_precachedmodels  = 0;
+  // int cg_precachedmodels  = 0;
 
   com_hunkmegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
   com_soundmegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
   com_zonemegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
-  cg_precachedmodels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
+  // cg_precachedmodels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
 
   if( com_soundmegs + com_zonemegs >= com_hunkmegs )
   {
@@ -1077,12 +1077,12 @@ static void doom3_detect_version(struct game* g)
 {
   FILE* f = NULL;
   char* verinfo = NULL;
-  const char* attrproto;
+  // const char* attrproto;
   char line[64];
 
   debug(3, "cmd: %s, dir: %s", g->cmd, g->real_dir);
 
-  attrproto = game_get_attribute(g->type,"masterprotocol");
+  // attrproto = game_get_attribute(g->type,"masterprotocol");
 
   if(g->real_home && *g->real_home)
   {
@@ -2531,10 +2531,8 @@ static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type 
 // TODO: implement a proper generic solution
 static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
   enum server_type type;
-  struct game *g;
   
   type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
-  g = &games[type];
 
   switch(type) {
   
@@ -2605,10 +2603,8 @@ static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
   int row;
   char *temp[2];
   enum server_type type;
-  struct game *g;
    
   type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
-  g = &games[type];
 
   temp[0] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_game[type])));
   temp[1] = strdup_strip (gtk_entry_get_text (GTK_ENTRY (custom_args_entry_args[type])));
@@ -2652,10 +2648,8 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
   GSList *link;
   int row;
   enum server_type type;
-  struct game *g;
   
   type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
-  g = &games[type];
 
   if (current_row < 0)
     return;
@@ -2721,10 +2715,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
   GtkWidget *button;
   GtkWidget *hbox2 = NULL;
   struct generic_prefs *prefs = &genprefs[type];
-  struct game *g;
  
-  g = &games[type];
-
   page_vbox = gtk_vbox_new (FALSE, 4);
 
   frame = gtk_frame_new (NULL);

@@ -136,8 +136,7 @@ extern	void parse_saved_server (GSList *strings);
 extern	void stat_start (struct stat_job *job);
 extern	void stat_stop (struct stat_job *job);
 
-extern	struct stat_job *stat_job_create (GSList *masters, GSList *names,
-                                              GSList *servers, GSList *hosts);
+extern	struct stat_job *stat_job_create (GSList *masters, GSList *names, GSList *servers, GSList *hosts);
 extern	void stat_job_free (struct stat_job *job);
 
 

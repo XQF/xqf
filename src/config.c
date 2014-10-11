@@ -55,6 +55,7 @@ struct config_key {
   char *value;
 };
 
+/* never used
 #ifdef DEBUG
 static void dump_base (void) {
   GList *fptr, *sptr, *kptr;
@@ -79,7 +80,7 @@ static void dump_base (void) {
   fprintf (stderr, "----\n");
 }
 #endif
-
+*/
 
 /**
  * lookup keyname in secname in filename (secname and keyname can be NULL).
