@@ -392,15 +392,15 @@ static void stat_master_input_callback (struct stat_conn *conn, int fd,
   char *tmp;
   int res;
 
+  debug_increase_indent();
+  debug(3,"stat_master_input_callback(%p,%d,...)",conn,fd);
+
 #warning ugly hack for savage, make master handling more generic!
   if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP
 	&& parse_savage_master_output(conn))
   {
     return;
   }
-
-  debug_increase_indent();
-  debug(3,"stat_master_input_callback(%p,%d,...)",conn,fd);
 
   while (1) {
     first_used = 0;
