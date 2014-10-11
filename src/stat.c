@@ -82,6 +82,8 @@ static void stat_free_conn (struct stat_conn *conn) {
     g_source_remove (conn->tag);
     conn->tag = NULL;
 
+    // FIXME GError
+    g_io_channel_shutdown(conn->chan, TRUE, NULL);
     g_io_channel_unref(conn->chan);
     g_source_remove(conn->chan);
     conn->chan = NULL;
