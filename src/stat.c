@@ -123,7 +123,7 @@ static void stat_master_update_done
 // otherwise return false so the normal parse function can do the work
 static gboolean parse_savage_master_output (struct stat_conn *conn)
 {
-  gsize *res = 0;
+  gsize res = 0;
   struct stat_job *job = conn->job;
 
   conn->bufsize = 17;
@@ -132,7 +132,7 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
   if(conn->first)
   {
     // FIXME GIOStatus, GError
-    g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, res, NULL);
+    g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, &res, NULL);
     if (res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
 	return TRUE;
@@ -142,13 +142,13 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
       stat_update_masters (job);
       return TRUE;
     }
-    if (*res == 0) {	/* EOF */
+    if (res == 0) {	/* EOF */
       stat_master_update_done (conn, job, conn->master, SOURCE_UP);
       stat_update_masters (job);
       return TRUE;
     }
 
-    conn->pos += *res;
+    conn->pos += res;
 
     if(conn->pos < 5) // we need five bytes
       return TRUE;
@@ -173,8 +173,8 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
   {
     size_t off = 0;
     // FIXME GIOStatus, GError
-    g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, res, NULL);
-    if (*res < 0) {
+    g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, NULL);
+    if (res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
 	return TRUE;
       }
@@ -183,13 +183,13 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
       stat_update_masters (job);
       return TRUE;
     }
-    if (*res == 0) {	/* EOF */
+    if (res == 0) {	/* EOF */
       stat_master_update_done (conn, job, conn->master, SOURCE_UP);
       stat_update_masters (job);
       return TRUE;
     }
 
-    conn->pos += *res;
+    conn->pos += res;
 
     // we always need six bytes
     for(off=0; off + 6 <= conn->pos; off+=6 )
@@ -393,7 +393,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan,
   struct stat_job *job = conn->job;
   int first_used = 0;
   char *tmp;
-  gsize *res = 0;
+  gsize res = 0;
 
   debug_increase_indent();
   debug(3,"stat_master_input_callback(%p,%d,...)",conn,chan);
@@ -417,8 +417,8 @@ static gboolean stat_master_input_callback (GIOChannel *chan,
     }
 
     // FIXME GIOStatus, GError
-    g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, res, NULL);
-    if (*res < 0) {
+    g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, NULL);
+    if (res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
 	debug_decrease_indent();
 	return FALSE;
@@ -429,7 +429,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan,
       debug_decrease_indent();
       return FALSE;
     }
-    if (*res == 0) {	/* EOF */
+    if (res == 0) {	/* EOF */
       debug(3,"stat_master_input_callback -- eof");
       stat_master_update_done (conn, job, conn->master, SOURCE_UP);
       stat_update_masters (job);
@@ -438,9 +438,9 @@ static gboolean stat_master_input_callback (GIOChannel *chan,
     }
 
     tmp = conn->buf + conn->pos;
-    conn->pos += *res;
+    conn->pos += res;
 
-    while (*res && (tmp = memchr (tmp, '\n', *res)) != NULL) {
+    while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
       *tmp++ = '\0';
 
 //      debug(0,"%s",conn->buf + first_used);
@@ -453,7 +453,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan,
       }
 
       first_used = tmp - conn->buf;
-      *res = conn->buf + conn->pos - tmp;
+      res = conn->buf + conn->pos - tmp;
     }
 
     if (first_used > 0) {
@@ -877,7 +877,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
   int first_used = 0;
   int blocked = FALSE;
   char *tmp;
-  gsize *res = 0;
+  gsize res = 0;
   /* debug (3, "stat_servers_input_callback() -- Conn %lx", conn); */
   while (1) {
     first_used = 0;
@@ -897,8 +897,8 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
     }
 
     // FIXME GIOStatus, GError
-    g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, res, NULL);
-    if (*res < 0) {
+    g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, NULL);
+    if (res < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
 	return FALSE;
       failed ("read", NULL);
@@ -906,7 +906,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
       stat_next (job);
       return FALSE;
     }
-    if (*res == 0) {	/* EOF */
+    if (res == 0) {	/* EOF */
       debug (3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
       stat_servers_update_done (conn);
       stat_next (job);
@@ -914,9 +914,9 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
     }
 
     tmp = conn->buf + conn->pos;
-    conn->pos += *res;
+    conn->pos += res;
 
-    while (*res && (tmp = memchr (tmp, '\n', *res)) != NULL) {
+    while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
       *tmp++ = '\0';
 
       if (conn->buf[conn->lastnl] == '\0') {
@@ -937,7 +937,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
       }
 
       conn->lastnl = tmp - conn->buf;
-      *res = conn->buf + conn->pos - tmp;
+      res = conn->buf + conn->pos - tmp;
     }
 
     if (first_used) {
@@ -1077,7 +1077,7 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
     conn->job = job;
     job->cons = g_slist_prepend (job->cons, conn);
 
-    conn->tag = g_io_add_watch (chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
+    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
 				     input_callback, conn);
     conn->input_callback = input_callback;
   }
