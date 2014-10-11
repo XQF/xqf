@@ -41,14 +41,15 @@ Translators
 
 * Dan Korostelev <dan@ats.energo.ru>
 * Michel Briand <michelbriand@free.fr>
-* Francois Perichon
+* François Perichon
 * Sami Laitinen
 * Miłosz Kosobucki
 * Morten Brix Pedersen
 
-Special thanks (reports, ideas…)
+Special thanks (reports, ideas, help…)
 --------------------------------
 
+* Chris Vine <chris@cvine.freeserve.co.uk>
 * Tomasz Kalkosiński
 * Timothée Besset
 * Simon Philips
