@@ -58,8 +58,7 @@ typedef void (*server_unref_void)(void*);
 typedef void (*userver_unref_void)(void*);
 
 static int failed (char *name, char *arg) {
-  fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", 
-                                                          g_strerror (errno));
+  fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
 
   xqf_error("%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
   
@@ -389,8 +388,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
   return TRUE;
 }
 
-static gboolean stat_master_input_callback (GIOChannel *chan, 
-                                                GIOCondition condition, struct stat_conn *conn) {
+static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condition, struct stat_conn *conn) {
   struct stat_job *job = conn->job;
   int first_used = 0;
   char *tmp;
@@ -510,8 +508,7 @@ static char **parse_serverinfo (char *token[], int n) {
 }
 
 
-static struct server *parse_server (char *token[], int n, time_t refreshed,
-                                                                  int saved) {
+static struct server *parse_server (char *token[], int n, time_t refreshed, int saved) {
   struct host *h;
   struct server *server;
   enum server_type type;
@@ -872,8 +869,7 @@ static void stat_servers_update_done (struct stat_conn *conn) {
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
-static gboolean stat_servers_input_callback (GIOChannel *chan, 
-                                                GIOCondition condition, struct stat_conn *conn) {
+static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition condition, struct stat_conn *conn) {
   struct stat_job *job = conn->job;
   int first_used = 0;
   int blocked = FALSE;
@@ -931,8 +927,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
 	first_used = conn->lastnl + 1;
       }
       else {
-	conn->strings = g_slist_append (conn->strings, 
-                                                    conn->buf + conn->lastnl);
+	conn->strings = g_slist_append (conn->strings, conn->buf + conn->lastnl);
       }
 
       conn->lastnl = tmp - conn->buf;
@@ -954,12 +949,9 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
     }
 
     if (blocked) {
-	printf("blocked:g_source_remove: %p\n", conn->tag);
       g_source_remove (conn->tag);
-      // conn->tag = NULL; ?
 
-      conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
-                                                  conn->input_callback, conn);
+      conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, conn->input_callback, conn);
     }
 
     return TRUE;
@@ -969,8 +961,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan,
 /**
   return connection to local file
  */
-static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
-                          GIOFunc input_callback, struct master *m)
+static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, GIOFunc input_callback, struct master *m)
 {
     struct stat_conn *conn;
     char *file2;
@@ -1024,8 +1015,7 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file,
   start_qstat -- Fork and run qstat with the given command line
   options.  Returns a "conn?"
 */
-static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], 
-                          GIOFunc input_callback, struct master *m) {
+static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFunc input_callback, struct master *m) {
  
   struct stat_conn *conn;
   pid_t pid;
@@ -1077,8 +1067,7 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[],
     conn->job = job;
     job->cons = g_slist_prepend (job->cons, conn);
 
-    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, 
-				     input_callback, conn);
+    conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, input_callback, conn);
     conn->input_callback = input_callback;
   }
   else {	/* child */
@@ -1526,8 +1515,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
   argv[argi++] = "-maxsimultaneous";
   argv[argi++] = &buf[bufi];
-  bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%d", 
-                                                             maxsimultaneous);
+  bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%d", maxsimultaneous);
   argv[argi++] = "-retry";
   argv[argi++] = &buf[bufi];
   bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%d", maxretries);
@@ -1550,8 +1538,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	argv[argi++] = games[s->type].qstat_option;
 
       argv[argi++] = &buf[bufi];
-      bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%s:%d",
-                                            inet_ntoa (s->host->ip), s->port);
+      bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%s:%d", inet_ntoa (s->host->ip), s->port);
     }
   }
   else
@@ -1561,8 +1548,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
     argv[argi++] = "-f";
     fn = &buf[bufi];
-    bufi += 1 + g_snprintf(fn, sizeof (buf) - bufi,
-		  "%s/xqf-qstat.XXXXXX", g_get_tmp_dir ());
+    bufi += 1 + g_snprintf(fn, sizeof (buf) - bufi, "%s/xqf-qstat.XXXXXX", g_get_tmp_dir ());
 
     argv[argi++] = fn;
     
@@ -1575,8 +1561,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
     for (tmp =job-> servers; tmp; tmp = tmp->next) {
       s = (struct server *) tmp->data;
-      fprintf (f, "%s %s:%d\n", games[s->type].qstat_str,
-                                            inet_ntoa (s->host->ip), s->port);
+      fprintf (f, "%s %s:%d\n", games[s->type].qstat_str, inet_ntoa (s->host->ip), s->port);
     }
 
     fclose (f);
@@ -1639,13 +1624,10 @@ static void stat_master_update_done (struct stat_conn *conn,
 
   job->need_redraw = TRUE;
   /*
-  job->delayed.queued_servers = server_list_append_list (
-                     job->delayed.queued_servers, m->servers, UNKNOWN_SERVER);
+  job->delayed.queued_servers = server_list_append_list (job->delayed.queued_servers, m->servers, UNKNOWN_SERVER);
 
-  job->servers = server_list_append_list (job->servers, m->servers,
-                                                              UNKNOWN_SERVER);
-  job->names = userver_list_append_list (job->names, m->uservers,
-                                                              UNKNOWN_SERVER);
+  job->servers = server_list_append_list (job->servers, m->servers, UNKNOWN_SERVER);
+  job->names = userver_list_append_list (job->names, m->uservers, UNKNOWN_SERVER);
   */
   for (tmp = m->servers; tmp; tmp = tmp->next)
   {
@@ -1662,8 +1644,7 @@ static void stat_master_update_done (struct stat_conn *conn,
     userver_ref(us);
   }
 
-  job->delayed.queued_servers = slist_sort_remove_dups(job->delayed.queued_servers,
-      compare_ptr,(server_unref_void)server_unref);
+  job->delayed.queued_servers = slist_sort_remove_dups(job->delayed.queued_servers, compare_ptr,(server_unref_void)server_unref);
   
   job->servers = slist_sort_remove_dups(job->servers,compare_ptr,(server_unref_void)server_unref);
   
@@ -1729,8 +1710,7 @@ static void stat_update_masters (struct stat_job *job) {
 }
 
 
-static void stat_master_resolved_callback (char *id, struct host *h,
-                                         enum dns_status status, void *data) {
+static void stat_master_resolved_callback (char *id, struct host *h, enum dns_status status, void *data) {
   struct stat_job *job = (struct stat_job *) data;
   struct master *m;
   GSList *list;
@@ -1774,8 +1754,7 @@ static void stat_master_resolved_callback (char *id, struct host *h,
 
 
 // ip for hostname resolved
-static void stat_name_resolved_callback (char *id, struct host *h,
-                                         enum dns_status status, void *data) {
+static void stat_name_resolved_callback (char *id, struct host *h, enum dns_status status, void *data) {
   struct stat_job *job = (struct stat_job *) data;
   struct userver *us;
   GSList *list;
@@ -1829,8 +1808,7 @@ static void stat_name_resolved_callback (char *id, struct host *h,
 }
 
 
-static void stat_host_resolved_callback (char *id, struct host *h,
-                                         enum dns_status status, void *data) {
+static void stat_host_resolved_callback (char *id, struct host *h, enum dns_status status, void *data) {
   struct stat_job *job = (struct stat_job *) data;
   GSList *tmp;
 

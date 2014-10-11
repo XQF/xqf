@@ -96,10 +96,8 @@ enum stat_state {
 
 typedef void (*master_func) (struct stat_job *job, struct master *m);
 typedef void (*server_func) (struct stat_job *job, struct server *s);
-typedef void (*host_func)   (struct stat_job *job, struct host *h, 
-                                                      enum dns_status status);
-typedef void (*name_func)   (struct stat_job *job, struct userver *us,
-                                                      enum dns_status status);
+typedef void (*host_func)   (struct stat_job *job, struct host *h, enum dns_status status);
+typedef void (*name_func)   (struct stat_job *job, struct userver *us, enum dns_status status);
 typedef void (*state_func)  (struct stat_job *job, enum stat_state state);
 typedef void (*close_func)  (struct stat_job *job, int killed);
 
