@@ -800,7 +800,7 @@
 	<default_master_port>30700</default_master_port>
 	<id>TREMULOUSGPPS</id>
 	<qstat_str>TREMULOUSGPPS</qstat_str>
-	<qstat_option>-tremulousgpp</qstat_option>
+	<qstat_option>-tremulousgpps</qstat_option>
 	<qstat_master_option>-tremulousgppm</qstat_master_option>
 	<icon>tremulousgpp.xpm</icon>
 	<config_is_valid>config_is_valid_generic</config_is_valid>

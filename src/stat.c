@@ -1574,8 +1574,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
   if(argi >= sizeof(argv))
     xqf_error("FIXME: argi too big, stack corrupt");
 
-  conn = start_qstat (job, argv, 
-                        (GIOFunc) stat_servers_input_callback, NULL);
+  conn = start_qstat (job, argv, (GIOFunc) stat_servers_input_callback, NULL);
   if (conn && fn)
     conn->tmpfile = g_strdup (fn);
 

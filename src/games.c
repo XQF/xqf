@@ -1095,7 +1095,7 @@ struct game games[] = {
     default_master_port : 30700,
     id                  : "TREMULOUSGPPS",
     qstat_str           : "TREMULOUSGPPS",
-    qstat_option        : "-tremulousgpp",
+    qstat_option        : "-tremulousgpps",
     qstat_master_option : "-tremulousgppm",
     icon                : "tremulousgpp.xpm",
     parse_player        : q3_parse_player,
