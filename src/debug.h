@@ -22,17 +22,17 @@
 #define DEFAULT_DEBUG_LEVEL 0
 
 #define debug(level,fmt,rest...) \
-  if( level <= get_debug_level() ) \
-    debug_int(__FILE__,__LINE__,__FUNCTION__,level,fmt,##rest)
+	if( level <= get_debug_level() ) \
+		debug_int(__FILE__,__LINE__,__FUNCTION__,level,fmt,##rest)
 
 #define xqf_informal(fmt,rest...) \
-  debug_int(__FILE__,__LINE__,__FUNCTION__,-1,fmt,##rest)
+	debug_int(__FILE__,__LINE__,__FUNCTION__,-1,fmt,##rest)
 
 #define xqf_warning(fmt,rest...) \
-  debug_int(__FILE__,__LINE__,__FUNCTION__,-2,fmt,##rest)
+	debug_int(__FILE__,__LINE__,__FUNCTION__,-2,fmt,##rest)
 
 #define xqf_error(fmt,rest...) \
-  debug_int(__FILE__,__LINE__,__FUNCTION__,-3,fmt,##rest)
+	debug_int(__FILE__,__LINE__,__FUNCTION__,-3,fmt,##rest)
 
 void debug_int(const char* file, int line, const char* function, int level, const char* fmt, ...);
 void debug_cmd(int, char *[], char *, ...);

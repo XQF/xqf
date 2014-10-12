@@ -22,28 +22,26 @@
 #include <gtk/gtk.h>
 
 
-#define Q2_SKIN_SCALE	3
+#define Q2_SKIN_SCALE 3
 
 
-extern	GList *get_qw_skin_list (const char *dir);
-extern	GList *get_q2_skin_list (const char *dir);
+extern GList *get_qw_skin_list (const char *dir);
+extern GList *get_q2_skin_list (const char *dir);
 
-extern	void draw_qw_skin (GtkWidget *preview, guchar *data, 
-                                                         int top, int bottom);
+extern void draw_qw_skin (GtkWidget *preview, guchar *data, int top, int bottom);
 
-extern	void draw_q2_skin (GtkWidget *preview, guchar *data, int scale); 
+extern void draw_q2_skin (GtkWidget *preview, guchar *data, int scale); 
 
-extern	guchar *get_qw_skin (char *filename, char *path);
-extern	guchar *get_q2_skin (char *skin, char *path);
+extern guchar *get_qw_skin (char *filename, char *path);
+extern guchar *get_q2_skin (char *skin, char *path);
 
-extern	void allocate_quake_player_colors (GdkWindow *window);
+extern void allocate_quake_player_colors (GdkWindow *window);
 
-extern	void set_bg_color (GtkWidget *widget, int color);
+extern void set_bg_color (GtkWidget *widget, int color);
 
-extern	GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int));
+extern GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int));
 
-extern	GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, 
-                     unsigned char top, unsigned char bottom, GSList **cache);
+extern GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache);
 
 
 #endif /* __SKIN_H__ */

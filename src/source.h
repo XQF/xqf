@@ -22,47 +22,45 @@
 #include "xqf.h"
 
 
-#define	FILENAME_FAVORITES	"favorites"
-#define	FILENAME_LISTS		"lists"
-#define	FILENAME_SRVINFO	"srvinfo"
+#define FILENAME_FAVORITES  "favorites"
+#define FILENAME_LISTS      "lists"
+#define FILENAME_SRVINFO    "srvinfo"
 
-//#define	PREFIX_MASTER		"master://"
-//#define	PREFIX_GMASTER		"gmaster://"
-//#define	PREFIX_URL_HTTP		"http://"
+// #define PREFIX_MASTER       "master://"
+// #define PREFIX_GMASTER      "gmaster://"
+// #define PREFIX_URL_HTTP     "http://"
 
-#define	ACTION_ADD		"ADD"
-#define	ACTION_DELETE		"DELETE"
+#define ACTION_ADD          "ADD"
+#define ACTION_DELETE       "DELETE"
 
 extern char* master_prefixes[MASTER_NUM_QUERY_TYPES];
 extern char* master_designation[MASTER_NUM_QUERY_TYPES];
 
-extern	struct master *favorites;
-extern	GSList *master_groups;
+extern struct master *favorites;
+extern GSList *master_groups;
 
-extern	struct master *add_master (char *path,
-				   char *name, 
-				   enum server_type type, 
-				   const char* qstat_query_arg,
-				   int user, 
-				   int lookup_only);
+extern struct master *add_master (char *path,
+		char *name, 
+		enum server_type type, 
+		const char* qstat_query_arg,
+		int user, 
+		int lookup_only);
 
-extern	void free_master (struct master *m);
+extern void free_master (struct master *m);
 
-extern	void save_favorites (void);
+extern void save_favorites (void);
 
-extern	void init_masters (int autoupdate);
-extern	void update_master_list_builtin (void);
-extern	void update_master_gslist_builtin (void);
+extern void init_masters (int autoupdate);
+extern void update_master_list_builtin (void);
+extern void update_master_gslist_builtin (void);
 
-extern	void free_masters (void);
+extern void free_masters (void);
 
-extern	void collate_server_lists (GSList *masters, GSList **servers, 
-                                                           GSList **uservers);
-extern	void master_selection_to_lists (GSList *list, GSList **masters, 
-                                         GSList **servers, GSList **uservers);
-extern	int source_has_masters_to_update (GSList *source);
-extern	int source_has_masters_to_delete (GSList *source);
-extern	GSList *references_to_server (struct server *s);
+extern void collate_server_lists (GSList *masters, GSList **servers, GSList **uservers);
+extern void master_selection_to_lists (GSList *list, GSList **masters, GSList **servers, GSList **uservers);
+extern int source_has_masters_to_update (GSList *source);
+extern int source_has_masters_to_delete (GSList *source);
+extern GSList *references_to_server (struct server *s);
 
 
 extern enum master_query_type get_master_query_type_from_address(char* address);

@@ -18,11 +18,11 @@
 
 #include "gnuconfig.h"
 
-#include <sys/types.h>	/* FD_SETSIZE */
-#include <stdio.h>	/* fprintf */
-#include <stdlib.h>	/* strtol */
-#include <string.h>	/* strcmp, strlen */
-#include <sys/time.h>	/* FD_SETSIZE */
+#include <sys/types.h>  /* FD_SETSIZE */
+#include <stdio.h>      /* fprintf */
+#include <stdlib.h>     /* strtol */
+#include <string.h>     /* strcmp, strlen */
+#include <sys/time.h>   /* FD_SETSIZE */
 #include <sys/stat.h>   /* stat */
 #include <unistd.h>     /* readlink */
 #include <sys/resource.h> /* setrlimit */
@@ -1496,7 +1496,7 @@ static void ok_callback (GtkWidget *widget, GtkWidget* window)
 static void update_q1_skin (void) {
 
   if (q1_skin_preview == NULL)
-    return;			/* no configuration window */
+    return;     /* no configuration window */
 
   if (q1_skin_data) {
     g_free (q1_skin_data);
@@ -1520,7 +1520,7 @@ static void update_qw_skins (char *initstr) {
   char *str = NULL;
 
   if (qw_skin_preview == NULL)
-    return;			/* no configuration window */
+    return;     /* no configuration window */
 
   if (qw_skin_data) {
     g_free (qw_skin_data);
@@ -1560,7 +1560,7 @@ static void update_q2_skins (char *initstr) {
   char *str = NULL;
 
   if (q2_skin_preview == NULL)
-    return;			/* no configuration window */
+    return;     /* no configuration window */
 
   if (q2_skin_data) {
     g_free (q2_skin_data);
@@ -5430,11 +5430,11 @@ static void scan_maps_for(enum server_type type)
 
 /*
 void prefs_save (void) {
-  config_push_prefix ("/" CONFIG_FILE "/Preferences");
-  config_set_bool ("show hostnames", show_hostnames);
-  config_set_bool ("show default port", show_default_port);
-  config_pop_prefix ();
-  config_sync ();
+	config_push_prefix ("/" CONFIG_FILE "/Preferences");
+	config_set_bool ("show hostnames", show_hostnames);
+	config_set_bool ("show default port", show_default_port);
+	config_pop_prefix ();
+	config_sync ();
 }
 */
 

@@ -23,27 +23,26 @@
 
 
 struct condef {
-  struct server *s;
-  char *server;
-  char *gamedir;
-  char *password;
-  char *spectator_password;
-  char *rcon_password;
-  char *custom_cfg;
-  char *demo;
-  int spectate;
+	struct server *s;
+	char *server;
+	char *gamedir;
+	char *password;
+	char *spectator_password;
+	char *rcon_password;
+	char *custom_cfg;
+	char *demo;
+	int spectate;
 };
 
-extern	void client_init (void);
-extern	void client_detach_all (void);
+extern void client_init (void);
+extern void client_detach_all (void);
 
-extern	int client_launch_exec (int forkit, char *dir, char *argv[], 
-                                                            struct server *s);
+extern int client_launch_exec (int forkit, char *dir, char *argv[], struct server *s);
 
-extern 	int client_launch (const struct condef *con, int forkit);
+extern int client_launch (const struct condef *con, int forkit);
 
-extern	struct condef *condef_new (struct server *s);
-extern	void condef_free (struct condef *con);
+extern struct condef *condef_new (struct server *s);
+extern void condef_free (struct condef *con);
 
 
 #endif /* __LAUNCH_H__ */

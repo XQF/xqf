@@ -23,8 +23,8 @@
 
 
 struct master *add_master_dialog (struct master *m);
-extern	void add_master_init (void);
-extern	void add_master_done (void);
+extern void add_master_init (void);
+extern void add_master_done (void);
 
 
 #endif /* __ADDMASTER_H__ */

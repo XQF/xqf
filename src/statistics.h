@@ -20,7 +20,7 @@
 #define __STATISTICS_H__
 
 
-extern 	void statistics_dialog (void);
+extern void statistics_dialog (void);
 
 extern enum CPU identify_cpu (struct server *s, const char *versionstr);
 extern enum OS identify_os (struct server *s, char *versionstr);

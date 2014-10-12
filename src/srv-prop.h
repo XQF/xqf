@@ -23,37 +23,36 @@
 
 
 struct server_props {
-  struct host *host;
-  int port;
+	struct host *host;
+	int port;
 
-  char *custom_cfg;
+	char *custom_cfg;
 
-  char *server_password;
-  char *spectator_password;
-  char *rcon_password;
-  int  reserved_slots; /*pulp*/
+	char *server_password;
+	char *spectator_password;
+	char *rcon_password;
+	int  reserved_slots;        /*pulp*/
 
-  int sucks;
-  char *comment;
+	int sucks;
+	char *comment;
 };
 
-extern	struct server_props *properties (struct server *s);
-extern	struct server_props *properties_new (struct host *host, 
-                                                         unsigned short port);
-extern	void props_free_all (void);
-extern	void props_save (void);
-extern	void props_load (void);
+extern struct server_props *properties (struct server *s);
+extern struct server_props *properties_new (struct host *host, unsigned short port);
+extern void props_free_all (void);
+extern void props_save (void);
+extern void props_load (void);
 
-extern 	void properties_dialog (struct server *s);
+extern void properties_dialog (struct server *s);
 
-extern	void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str);
+extern void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str);
 
 static inline int server_need_redial(struct server* s, struct server_props* props)
 {
-  return ((s->curplayers >= (s->maxplayers - (props?props->reserved_slots:0))) // really full
-	     || ((s->curplayers >= (s->maxplayers - s->private_client)) // private clients and no password set
-		     && !(props && props->server_password && *props->server_password))
-	     );
+	return ((s->curplayers >= (s->maxplayers - (props?props->reserved_slots:0)))    // really full
+		|| ((s->curplayers >= (s->maxplayers - s->private_client))                  // private clients and no password set
+		&& !(props && props->server_password && *props->server_password))
+	);
 }
 
 #endif /* __SRV_PROP_H__ */

@@ -37,18 +37,18 @@ static GtkWidget *server_combo;
 
 
 static void server_combo_activate_callback (GtkWidget *widget, gpointer data) {
-  enter_server_result = strdup_strip (gtk_entry_get_text (
-                                GTK_ENTRY (GTK_COMBO (server_combo)->entry)));
-  history_add (server_history, enter_server_result);
+	enter_server_result = strdup_strip (gtk_entry_get_text (
+				GTK_ENTRY (GTK_COMBO (server_combo)->entry)));
+	history_add (server_history, enter_server_result);
 
-  config_set_string ("/" CONFIG_FILE "/Add Server/game", 
-                                                      type2id (*server_type));
+	config_set_string ("/" CONFIG_FILE "/Add Server/game", 
+			type2id (*server_type));
 }
 
 
 static void select_server_type_callback (GtkWidget *widget, 
-  					                  enum server_type type) {
-  *server_type = type;
+		enum server_type type) {
+	*server_type = type;
 }
 
 /** dialog to prompt user for server type and address
@@ -58,142 +58,141 @@ static void select_server_type_callback (GtkWidget *widget,
  * @returns address string or NULL if user pressed cancel. string must be freed
  */
 char *add_server_dialog (enum server_type *type, const char* addr) {
-  GtkWidget *window;
-  GtkWidget *main_vbox;
-  GtkWidget *option_menu;
-  GtkWidget *hbox;
-  GtkWidget *label;
-  GtkWidget *button;
-  GtkWidget *hseparator;
+	GtkWidget *window;
+	GtkWidget *main_vbox;
+	GtkWidget *option_menu;
+	GtkWidget *hbox;
+	GtkWidget *label;
+	GtkWidget *button;
+	GtkWidget *hseparator;
 
-  g_return_val_if_fail(type != NULL, NULL);
+	g_return_val_if_fail(type != NULL, NULL);
 
-  enter_server_result = NULL;
+	enter_server_result = NULL;
 
-  if(*type == UNKNOWN_SERVER)
-  {
-    char *typestr;
+	if(*type == UNKNOWN_SERVER)
+	{
+		char *typestr;
 
-    // Get last game type added (stored in server_combo_activate_callback)
-    typestr = config_get_string ("/" CONFIG_FILE "/Add Server/game");
-   
-    if (typestr) {
-      *type = id2type (typestr);
-      g_free (typestr);
-    }
-    else {
-      *type = 0; // Set to first game
-    }
-  }
+		// Get last game type added (stored in server_combo_activate_callback)
+		typestr = config_get_string ("/" CONFIG_FILE "/Add Server/game");
 
-  server_type = type;
+		if (typestr) {
+			*type = id2type (typestr);
+			g_free (typestr);
+		}
+		else {
+			*type = 0; // Set to first game
+		}
+	}
 
-  window = dialog_create_modal_transient_window (_("Add Server"), 
-                                                           TRUE, FALSE, NULL);
-  main_vbox = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	server_type = type;
 
-  hbox = gtk_hbox_new (FALSE, 8);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 16);
-  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	window = dialog_create_modal_transient_window (_("Add Server"), TRUE, FALSE, NULL);
+	main_vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-  /* Server Entry */
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox), 16);
+	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
-  label = gtk_label_new (_("Server:"));
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-  gtk_widget_show (label);
+	/* Server Entry */
 
-  server_combo = gtk_combo_new ();
-  gtk_widget_set_usize (server_combo, 200, -1);
-  gtk_box_pack_start (GTK_BOX (hbox), server_combo, TRUE, TRUE, 0);
-  gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (server_combo)->entry), 128);
-  gtk_combo_set_case_sensitive (GTK_COMBO (server_combo), TRUE);
-  gtk_combo_set_use_arrows_always (GTK_COMBO (server_combo), TRUE);
-  gtk_combo_disable_activate (GTK_COMBO (server_combo));
-  gtk_signal_connect (
-                   GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
-                   GTK_SIGNAL_FUNC (server_combo_activate_callback), NULL);
-  gtk_signal_connect_object (
-                   GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
-                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	label = gtk_label_new (_("Server:"));
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_widget_show (label);
 
-  GTK_WIDGET_SET_FLAGS (GTK_COMBO (server_combo)->entry, GTK_CAN_FOCUS);
-  GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (server_combo)->button, GTK_CAN_FOCUS);
-  gtk_widget_grab_focus (GTK_COMBO (server_combo)->entry);
-  gtk_widget_show (server_combo);
+	server_combo = gtk_combo_new ();
+	gtk_widget_set_usize (server_combo, 200, -1);
+	gtk_box_pack_start (GTK_BOX (hbox), server_combo, TRUE, TRUE, 0);
+	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (server_combo)->entry), 128);
+	gtk_combo_set_case_sensitive (GTK_COMBO (server_combo), TRUE);
+	gtk_combo_set_use_arrows_always (GTK_COMBO (server_combo), TRUE);
+	gtk_combo_disable_activate (GTK_COMBO (server_combo));
+	gtk_signal_connect (
+			GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
+			GTK_SIGNAL_FUNC (server_combo_activate_callback), NULL);
+	gtk_signal_connect_object (
+			GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
+			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
 
-  combo_set_vals (server_combo, server_history->items, addr);
+	GTK_WIDGET_SET_FLAGS (GTK_COMBO (server_combo)->entry, GTK_CAN_FOCUS);
+	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (server_combo)->button, GTK_CAN_FOCUS);
+	gtk_widget_grab_focus (GTK_COMBO (server_combo)->entry);
+	gtk_widget_show (server_combo);
 
-  /* Server Type Option Menu */
+	combo_set_vals (server_combo, server_history->items, addr);
 
-  option_menu = create_server_type_menu (*type,
-		      create_server_type_menu_filter_configured,
-		      GTK_SIGNAL_FUNC(select_server_type_callback));
+	/* Server Type Option Menu */
 
-  gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
-  gtk_widget_show (option_menu);
+	option_menu = create_server_type_menu (*type,
+			create_server_type_menu_filter_configured,
+			GTK_SIGNAL_FUNC(select_server_type_callback));
 
-  gtk_widget_show (hbox);
+	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
+	gtk_widget_show (option_menu);
 
-  /* Separator */
+	gtk_widget_show (hbox);
 
-  hseparator = gtk_hseparator_new ();
-  gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
-  gtk_widget_show (hseparator);
+	/* Separator */
 
-  /* Buttons */
+	hseparator = gtk_hseparator_new ();
+	gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
+	gtk_widget_show (hseparator);
 
-  hbox = gtk_hbox_new (FALSE, 8);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
-  gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	/* Buttons */
 
-  /* Cancel Button */
+	hbox = gtk_hbox_new (FALSE, 8);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
+	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
-  button = gtk_button_new_with_label (_("Cancel"));
-  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-  gtk_widget_set_usize (button, 80, -1);
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-  gtk_widget_show (button);
+	/* Cancel Button */
 
-  /* OK Button */
+	button = gtk_button_new_with_label (_("Cancel"));
+	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_widget_set_usize (button, 80, -1);
+	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_show (button);
 
-  button = gtk_button_new_with_label ("OK");
-  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-  gtk_widget_set_usize (button, 80, -1);
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-		             GTK_SIGNAL_FUNC (server_combo_activate_callback),
-			     GTK_OBJECT (GTK_COMBO (server_combo)->entry));
-  gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-                   GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
-  GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default (button);
-  gtk_widget_show (button);
+	/* OK Button */
 
-  gtk_widget_show (hbox);
+	button = gtk_button_new_with_label ("OK");
+	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_widget_set_usize (button, 80, -1);
+	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+			GTK_SIGNAL_FUNC (server_combo_activate_callback),
+			GTK_OBJECT (GTK_COMBO (server_combo)->entry));
+	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
+			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (button);
+	gtk_widget_show (button);
 
-  gtk_widget_show (main_vbox);
-  gtk_widget_show (window);
+	gtk_widget_show (hbox);
 
-  gtk_main ();
+	gtk_widget_show (main_vbox);
+	gtk_widget_show (window);
 
-  unregister_window (window);
+	gtk_main ();
 
-  return enter_server_result;
+	unregister_window (window);
+
+	return enter_server_result;
 }
 
 
 void add_server_init (void) {
-  server_history = history_new (_("Add Server"));
+	server_history = history_new (_("Add Server"));
 }
 
 
 void add_server_done (void) {
-  if (server_history) {
-    history_free (server_history);
-    server_history = NULL;
-  }
+	if (server_history) {
+		history_free (server_history);
+		server_history = NULL;
+	}
 }
 
 

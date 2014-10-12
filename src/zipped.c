@@ -17,9 +17,9 @@
  */
 
 #include <sys/types.h>
-#include <stdio.h>	/* FILE, popen, pclose, ... */
-#include <unistd.h>	/* unlink, stat */
-#include <sys/stat.h>	/* stat */
+#include <stdio.h>      /* FILE, popen, pclose, ... */
+#include <unistd.h>     /* unlink, stat */
+#include <sys/stat.h>   /* stat */
 
 #include <gtk/gtk.h>
 
@@ -27,9 +27,9 @@
 
 
 struct compr {
-  char *suffix;
-  char *compress;
-  char *expand;
+	char *suffix;
+	char *compress;
+	char *expand;
 };
 
 
@@ -39,106 +39,106 @@ struct compr {
 # ifdef COMPRESSOR_GZIP
 #  define COMPRESSOR_DEFAULT 2
 # else
-#  define COMPRESSOR_DEFAULT 0	/* None */
+#  define COMPRESSOR_DEFAULT 0  /* None */
 # endif
 #endif
 
 
 static struct compr compressor[] = {
-  { "",      NULL,        NULL          },
-  { ".bz2",  "bzip2 -1",  "bzip2 -d -c" },
-  { ".gz",   "gzip -1",   "gzip -d -c"  },
-  { NULL,    NULL,        NULL          }
+	{ "",      NULL,        NULL          },
+	{ ".bz2",  "bzip2 -1",  "bzip2 -d -c" },
+	{ ".gz",   "gzip -1",   "gzip -d -c"  },
+	{ NULL,    NULL,        NULL          }
 };
 
 
 void zstream_open_r (struct zstream *z, const char *name) {
-  struct stat stbuf;
-  char *fn;
-  char *cmd;
-  int i;
+	struct stat stbuf;
+	char *fn;
+	char *cmd;
+	int i;
 
-  if (!z) return;
+	if (!z) return;
 
-  for (i = 0; compressor[i].suffix; i++) {
-    fn = g_strconcat (name, compressor[i].suffix, NULL);
-  
-    if (stat (fn, &stbuf) == 0) {
-      if (compressor[i].expand) {
-	cmd = g_strconcat (compressor[i].expand, " ", fn, NULL);
+	for (i = 0; compressor[i].suffix; i++) {
+		fn = g_strconcat (name, compressor[i].suffix, NULL);
+
+		if (stat (fn, &stbuf) == 0) {
+			if (compressor[i].expand) {
+				cmd = g_strconcat (compressor[i].expand, " ", fn, NULL);
 
 #ifdef DEBUG
-	fprintf (stderr, "popen(\"%s\", \"r\")\n", cmd);
+				fprintf (stderr, "popen(\"%s\", \"r\")\n", cmd);
 #endif
 
-	z->f = popen (cmd, "r");
-	z->is_pipe = TRUE;
-	g_free (cmd);
-      }
-      else {
-	z->f = fopen (name, "r");
-	z->is_pipe = FALSE;
-      }
-      g_free (fn);
-      return;
-    }
+				z->f = popen (cmd, "r");
+				z->is_pipe = TRUE;
+				g_free (cmd);
+			}
+			else {
+				z->f = fopen (name, "r");
+				z->is_pipe = FALSE;
+			}
+			g_free (fn);
+			return;
+		}
 
-    g_free (fn);
-  }
+		g_free (fn);
+	}
 
-  z->f = NULL;
+	z->f = NULL;
 }
 
 
 void zstream_open_w (struct zstream *z, const char *name) {
-  char *cmd;
+	char *cmd;
 
-  if (!z) return;
+	if (!z) return;
 
-  zstream_unlink (name);
+	zstream_unlink (name);
 
-  z->f = NULL;
+	z->f = NULL;
 
-  if (compressor[COMPRESSOR_DEFAULT].compress) {
-    cmd = g_strconcat (compressor[COMPRESSOR_DEFAULT].compress, " >", 
-		       name, compressor[COMPRESSOR_DEFAULT].suffix, 
-		       NULL);
+	if (compressor[COMPRESSOR_DEFAULT].compress) {
+		cmd = g_strconcat (compressor[COMPRESSOR_DEFAULT].compress, " >", 
+				name, compressor[COMPRESSOR_DEFAULT].suffix, 
+				NULL);
 #ifdef DEBUG
-    fprintf (stderr, "popen(\"%s\", \"w\")\n", cmd);
+		fprintf (stderr, "popen(\"%s\", \"w\")\n", cmd);
 #endif
 
-    z->f = popen (cmd, "w");
-    z->is_pipe = TRUE;
-    g_free (cmd);
-  }
-  else {
-    z->f = fopen (name, "w");
-    z->is_pipe = FALSE;
-  }
+		z->f = popen (cmd, "w");
+		z->is_pipe = TRUE;
+		g_free (cmd);
+	}
+	else {
+		z->f = fopen (name, "w");
+		z->is_pipe = FALSE;
+	}
 }
 
 
 void zstream_close (struct zstream *z) {
-  if (z && z->f) {
+	if (z && z->f) {
 
-    if (z->is_pipe)
-      pclose (z->f);
-    else
-      fclose (z->f);
+		if (z->is_pipe)
+			pclose (z->f);
+		else
+			fclose (z->f);
 
-    z->f = NULL;
-  }
+		z->f = NULL;
+	}
 }
 
 
 void zstream_unlink (const char *name) {
-  char *fn;
-  int i;
+	char *fn;
+	int i;
 
-  for (i = 0; compressor[i].suffix; i++) {
-    fn = g_strconcat (name, compressor[i].suffix, NULL);
-    unlink (fn);
-    g_free (fn);
-  }
+	for (i = 0; compressor[i].suffix; i++) {
+		fn = g_strconcat (name, compressor[i].suffix, NULL);
+		unlink (fn);
+		g_free (fn);
+	}
 }
 

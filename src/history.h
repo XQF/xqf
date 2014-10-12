@@ -22,19 +22,17 @@
 #include <glib.h>
 
 
-#define	HISTORY_DEFAULT_MAX_ITEMS	16
+#define HISTORY_DEFAULT_MAX_ITEMS 16
 
 struct history {
-  GList *items;
-  char *id;
-  int size;
+	GList *items;
+	char *id;
+	int size;
 };
 
-extern	struct history *history_new (char *id);
-extern	char *history_add (struct history *h, char *str);
-extern  void history_free (struct history *h);
-
+extern struct history *history_new (char *id);
+extern char *history_add (struct history *h, char *str);
+extern void history_free (struct history *h);
 
 #endif /* __HISTORY_H__ */
-
 

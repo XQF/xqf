@@ -20,53 +20,50 @@
 #define __UTILS_H__
 
 #include <sys/types.h>
-#include <stdio.h>	/* FILE */
+#include <stdio.h>      /* FILE */
 #include <time.h>
 
 #include <glib.h>
 
 
-extern	short strtosh (const char *str);
-extern	unsigned short strtoush (const char *str);
+extern short strtosh (const char *str);
+extern unsigned short strtoush (const char *str);
 
-extern	char *strdup_strip (const char *);
-extern  char *file_in_dir (const char *, const char *);
-extern  int str_isempty (const char *);
-extern	char *expand_tilde (const char *path);
+extern char *strdup_strip (const char *);
+extern char *file_in_dir (const char *, const char *);
+extern int str_isempty (const char *);
+extern char *expand_tilde (const char *path);
 
-extern	GList *dir_to_list (const char *dirname, 
-                               char * (*filter) (const char *, const char *));
+extern GList *dir_to_list (const char *dirname, char * (*filter) (const char *, const char *));
 
-extern	GList *merge_sorted_string_lists (GList *list1, GList *list2);
+extern GList *merge_sorted_string_lists (GList *list1, GList *list2);
 
-extern	GSList *unique_strings (GSList *strings);
+extern GSList *unique_strings (GSList *strings);
 
 // build GList from array of char*
 extern GList* createGListfromchar(char* strings[]);
-  
-extern	void on_sig (int signum, void (*func) (int signum));
-extern 	void ignore_sigpipe (void);
 
-extern	void print_dq_string (FILE *f, const unsigned char *str);
+extern void on_sig (int signum, void (*func) (int signum));
+extern void ignore_sigpipe (void);
 
-extern	char *lowcasestrstr (const char *str, const char *substr);
+extern void print_dq_string (FILE *f, const unsigned char *str);
 
-extern	int tokenize (char *str, char *token[], int max, const char *dlm);
-extern	int safe_tokenize (const char *str, char *token[], 
-                                                    int max, const char *dlm);
-extern	int tokenize_bychar (char *str, char *token[], int max, char dlm);
+extern char *lowcasestrstr (const char *str, const char *substr);
 
-extern	int hostname_is_valid (const char *hostname);
+extern int tokenize (char *str, char *token[], int max, const char *dlm);
+extern int safe_tokenize (const char *str, char *token[], int max, const char *dlm);
+extern int tokenize_bychar (char *str, char *token[], int max, char dlm);
 
-extern	char *find_game_dir (const char *basegamedir, const char *game,
-						int *match_result);
+extern int hostname_is_valid (const char *hostname);
 
-extern	char* resolve_path(const char* path);
+extern char *find_game_dir (const char *basegamedir, const char *game, int *match_result);
+
+extern char* resolve_path(const char* path);
 
 /* 
    Find a server setting from the info list in 
    the server struct.  The key passed will be converted to lower case.
-*/
+   */
 extern char* find_server_setting_for_key (char*, char**);
 
 
@@ -119,36 +116,35 @@ char* timet2string(const time_t* t);
 /** set fd non blocking
   @param fd the file descriptor
   @return zero on success, -1 on failure
- */
+  */
 int set_nonblock (int fd);
 
 struct external_program_connection
 {
-    pid_t pid;
-    int fd;
-    gint tag; // for gdkinput
-    char* buf;
-    size_t bufsize;
-    size_t pos;
-    unsigned linenr;
+	pid_t pid;
+	int fd;
+	gint tag; // for gdkinput
+	char* buf;
+	size_t bufsize;
+	size_t pos;
+	unsigned linenr;
 
-    // contains the \0 terminated line without \n when linefunc is called
-    const char* current_line;
+	// contains the \0 terminated line without \n when linefunc is called
+	const char* current_line;
 
-    // function to be called when a complete line was received
-    void (*linefunc)(struct external_program_connection* conn);
+	// function to be called when a complete line was received
+	void (*linefunc)(struct external_program_connection* conn);
 
-    // call gtk_main_quit
-    gboolean do_quit;
+	// call gtk_main_quit
+	gboolean do_quit;
 
-    gpointer data;
+	gpointer data;
 
-    int result;
+	int result;
 };
 
 int start_prog_and_return_fd(char *const argv[], pid_t *pid);
-void external_program_input_callback(struct external_program_connection* conn,
-		int fd, GIOCondition condition);
+void external_program_input_callback(struct external_program_connection* conn, int fd, GIOCondition condition);
 
 /** enters gtk main loop */
 int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data);

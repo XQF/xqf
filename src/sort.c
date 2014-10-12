@@ -17,12 +17,12 @@
  */
 
 #include <sys/types.h>
-#include <string.h>	/* strcmp */
+#include <string.h> /* strcmp */
 
 #include <gtk/gtk.h>
 
 #include "xqf.h"
-#include "xqf-ui.h"	/* for deprecated functions */
+#include "xqf-ui.h" /* for deprecated functions */
 #include "pref.h"
 #include "utils.h"
 #include "server.h"
@@ -32,246 +32,246 @@
 
 
 static inline int compare_strings (const char *str1, const char *str2) {
-  int res;
+	int res;
 
-  if (str1) {
-    if (str2) {
-      res = g_strcasecmp (str1, str2);
-      if (!res)
-	res = strcmp (str1, str2);
-    }
-    else {
-      res = 1;
-    }
-  }
-  else {
-    res = (str2)? -1 : 0;
-  }
-  return res;
+	if (str1) {
+		if (str2) {
+			res = g_strcasecmp (str1, str2);
+			if (!res)
+				res = strcmp (str1, str2);
+		}
+		else {
+			res = 1;
+		}
+	}
+	else {
+		res = (str2)? -1 : 0;
+	}
+	return res;
 }
 
 static inline int compare_server_ping(const struct server* s1, const struct server* s2) {
 
-  int res = 0;
+	int res = 0;
 
-  if (s1->ping >= 0) {
-    if (s2->ping >= 0) {
-      res = s1->ping - s2->ping;
-      if (!res) 
-	res = s1->retries - s2->retries;
-    }
-    else {
-      res = -1;
-    }
-  }
-  else {
-    res = (s2->ping >= 0)? 1 : 0;
-  }
+	if (s1->ping >= 0) {
+		if (s2->ping >= 0) {
+			res = s1->ping - s2->ping;
+			if (!res) 
+				res = s1->retries - s2->retries;
+		}
+		else {
+			res = -1;
+		}
+	}
+	else {
+		res = (s2->ping >= 0)? 1 : 0;
+	}
 
-  return res;
+	return res;
 }
 
 int compare_servers (const struct server *s1, const struct server *s2,
-                                                       enum ssort_mode mode) {
-  int res;
+		enum ssort_mode mode) {
+	int res;
 
-  if(!s1) return 0;
-  if(!s2) return 0;
+	if(!s1) return 0;
+	if(!s2) return 0;
 
-  switch (mode) {
+	switch (mode) {
 
-  case SORT_SERVER_NAME:
-    res = compare_strings (s1->name, s2->name);
-    break;
+		case SORT_SERVER_NAME:
+			res = compare_strings (s1->name, s2->name);
+			break;
 
-  case SORT_SERVER_ADDRESS:
-    if (show_hostnames) {
+		case SORT_SERVER_ADDRESS:
+			if (show_hostnames) {
 
-      if (s1->host->name && !s2->host->name) {
-	res = -1;
-	break;
-      }
+				if (s1->host->name && !s2->host->name) {
+					res = -1;
+					break;
+				}
 
-      if (s2->host->name && !s1->host->name) {
-	res = 1;
-	break;
-      }
+				if (s2->host->name && !s1->host->name) {
+					res = 1;
+					break;
+				}
 
-      if (s1->host->name && s2->host->name) {
-	res = compare_strings (s1->host->name, s2->host->name);
-	if (res == 0)
-	  res = s1->port - s2->port;
-	break;
-      }
+				if (s1->host->name && s2->host->name) {
+					res = compare_strings (s1->host->name, s2->host->name);
+					if (res == 0)
+						res = s1->port - s2->port;
+					break;
+				}
 
-    }
+			}
 
-    if (s1->host->ip.s_addr == s2->host->ip.s_addr) {
-      res = s1->port - s2->port;
-    }
-    else {
-      res = (g_ntohl (s1->host->ip.s_addr) > g_ntohl (s2->host->ip.s_addr))? 
-                                                                       1 : -1;
-    }
-    break;
+			if (s1->host->ip.s_addr == s2->host->ip.s_addr) {
+				res = s1->port - s2->port;
+			}
+			else {
+				res = (g_ntohl (s1->host->ip.s_addr) > g_ntohl (s2->host->ip.s_addr))? 
+					1 : -1;
+			}
+			break;
 
-  case SORT_SERVER_MAP:
-    res = compare_strings (s1->map, s2->map);
-    break;
+		case SORT_SERVER_MAP:
+			res = compare_strings (s1->map, s2->map);
+			break;
 
-  case SORT_SERVER_GAME:
-    res = compare_strings (s1->game, s2->game);
-    break;
+		case SORT_SERVER_GAME:
+			res = compare_strings (s1->game, s2->game);
+			break;
 
-  case SORT_SERVER_GAMETYPE:
-    res = compare_strings (s1->gametype, s2->gametype);
-    break;
-    
-  case SORT_SERVER_PRIVATE:
-    if( (s1->flags & SERVER_PASSWORD ) && ( s2->flags & SERVER_PASSWORD ))
-      res = 0;
-    else if (s1->flags & SERVER_PASSWORD )
-      res = 1;
-    else if (s2->flags & SERVER_PASSWORD )
-      res = -1;
-    else
-      res = 0;
-    break;
-    
-  case SORT_SERVER_ANTICHEAT:
-    if( (s1->flags & SERVER_PUNKBUSTER ) && ( s2->flags & SERVER_PUNKBUSTER ))
-      res = 0;
-    else if (s1->flags & SERVER_PUNKBUSTER )
-      res = 1;
-    else if (s2->flags & SERVER_PUNKBUSTER )
-      res = -1;
-    else
-      res = 0;
-    break;
- 
-  case SORT_SERVER_PLAYERS:
-    res = s1->curplayers - s2->curplayers;
-    if (!res) {
-      res = s1->maxplayers - s2->maxplayers;
-    }
-    break;
+		case SORT_SERVER_GAMETYPE:
+			res = compare_strings (s1->gametype, s2->gametype);
+			break;
 
-  case SORT_SERVER_MAXPLAYERS:
-    res = s1->maxplayers - s2->maxplayers;
-    if (!res) {
-      res = s1->curplayers - s2->curplayers;
-    }
-    break;
+		case SORT_SERVER_PRIVATE:
+			if( (s1->flags & SERVER_PASSWORD ) && ( s2->flags & SERVER_PASSWORD ))
+				res = 0;
+			else if (s1->flags & SERVER_PASSWORD )
+				res = 1;
+			else if (s2->flags & SERVER_PASSWORD )
+				res = -1;
+			else
+				res = 0;
+			break;
 
-  case SORT_SERVER_PING:
-    res = compare_server_ping(s1, s2);
-    break;
+		case SORT_SERVER_ANTICHEAT:
+			if( (s1->flags & SERVER_PUNKBUSTER ) && ( s2->flags & SERVER_PUNKBUSTER ))
+				res = 0;
+			else if (s1->flags & SERVER_PUNKBUSTER )
+				res = 1;
+			else if (s2->flags & SERVER_PUNKBUSTER )
+				res = -1;
+			else
+				res = 0;
+			break;
 
-  case SORT_SERVER_TO:
-    if (s1->retries >= 0) {
-      if (s2->retries >= 0) {
-	res = s1->retries - s2->retries;
-	if (!res) 
-	  res = s1->ping - s2->ping;
-      }
-      else {
-	res = -1;
-      }
-    }
-    else {
-      res = (s2->retries >= 0)? 1 : 0;
-    }
-    break;
+		case SORT_SERVER_PLAYERS:
+			res = s1->curplayers - s2->curplayers;
+			if (!res) {
+				res = s1->maxplayers - s2->maxplayers;
+			}
+			break;
 
-  case SORT_SERVER_COUNTRY:
+		case SORT_SERVER_MAXPLAYERS:
+			res = s1->maxplayers - s2->maxplayers;
+			if (!res) {
+				res = s1->curplayers - s2->curplayers;
+			}
+			break;
+
+		case SORT_SERVER_PING:
+			res = compare_server_ping(s1, s2);
+			break;
+
+		case SORT_SERVER_TO:
+			if (s1->retries >= 0) {
+				if (s2->retries >= 0) {
+					res = s1->retries - s2->retries;
+					if (!res) 
+						res = s1->ping - s2->ping;
+				}
+				else {
+					res = -1;
+				}
+			}
+			else {
+				res = (s2->retries >= 0)? 1 : 0;
+			}
+			break;
+
+		case SORT_SERVER_COUNTRY:
 #ifdef USE_GEOIP
-    res = compare_strings (geoip_code_by_id(s1->country_id), geoip_code_by_id(s2->country_id));
-  break;
+			res = compare_strings (geoip_code_by_id(s1->country_id), geoip_code_by_id(s2->country_id));
+			break;
 #endif
 
-  case SORT_SERVER_TYPE:
-      if(s1->type > s2->type)
-	res = 1;
-      else if(s1->type == s2->type)
-	res = 0;
-      else
-	res = -1;
-    break;
-		
-  default:
-    res = 0;
-    break;
-  }
+		case SORT_SERVER_TYPE:
+			if(s1->type > s2->type)
+				res = 1;
+			else if(s1->type == s2->type)
+				res = 0;
+			else
+				res = -1;
+			break;
 
-  return res;
+		default:
+			res = 0;
+			break;
+	}
+
+	return res;
 }
 
 
 int compare_players (const struct player *p1, const struct player *p2,
-                                                       enum psort_mode mode) {
-  int res;
+		enum psort_mode mode) {
+	int res;
 
-  if(!p1) return 0;
-  if(!p2) return 0;
+	if(!p1) return 0;
+	if(!p2) return 0;
 
-  switch (mode) {
+	switch (mode) {
 
-  case SORT_PLAYER_FRAGS:
-    res = p1->frags - p2->frags;
-    break;
+		case SORT_PLAYER_FRAGS:
+			res = p1->frags - p2->frags;
+			break;
 
-  case SORT_PLAYER_NAME:
-    res = compare_strings (p1->name, p2->name);
-    break;
+		case SORT_PLAYER_NAME:
+			res = compare_strings (p1->name, p2->name);
+			break;
 
-  case SORT_PLAYER_TIME:
-    res = p1->time - p2->time;
-    break;
+		case SORT_PLAYER_TIME:
+			res = p1->time - p2->time;
+			break;
 
-  case SORT_PLAYER_COLOR:
-    res = p1->pants - p2->pants;
-    if (!res) {
-      res = p1->shirt - p2->shirt;
-    }
-    break;
+		case SORT_PLAYER_COLOR:
+			res = p1->pants - p2->pants;
+			if (!res) {
+				res = p1->shirt - p2->shirt;
+			}
+			break;
 
-  case SORT_PLAYER_PING:
-    res = p1->ping - p2->ping;
-    break;
+		case SORT_PLAYER_PING:
+			res = p1->ping - p2->ping;
+			break;
 
-  case SORT_PLAYER_SKIN:
-    res = compare_strings (p1->skin, p2->skin);
-    break;
+		case SORT_PLAYER_SKIN:
+			res = compare_strings (p1->skin, p2->skin);
+			break;
 
-  default:
-    res = 0;
-    break;
-  }
+		default:
+			res = 0;
+			break;
+	}
 
-  return res;
+	return res;
 }
 
 
 int compare_srvinfo (const char **i1, const char **i2, enum isort_mode mode) {
-  int res;
+	int res;
 
-  if(!i1) return 0;
-  if(!i2) return 0;
+	if(!i1) return 0;
+	if(!i2) return 0;
 
-  switch (mode) {
+	switch (mode) {
 
-  case SORT_INFO_RULE:
-    res = compare_strings (i1[0], i2[0]);
-    break;
+		case SORT_INFO_RULE:
+			res = compare_strings (i1[0], i2[0]);
+			break;
 
-  case SORT_INFO_VALUE:
-    res = compare_strings (i1[1], i2[1]);
-    break;
+		case SORT_INFO_VALUE:
+			res = compare_strings (i1[1], i2[1]);
+			break;
 
-  default:
-    res = 0;
-    break;
-  }
+		default:
+			res = 0;
+			break;
+	}
 
-  return res;
+	return res;
 }

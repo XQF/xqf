@@ -17,13 +17,13 @@
  */
 
 #include <stdio.h>
-#include <ctype.h>	/* is...() */
-#include <string.h>	/* strcmp */
-#include <sys/stat.h>	/* stat. mkdir */
-#include <unistd.h>	/* stat, mkdir, unlink */
-#include <sys/types.h>	/* mkdir */
-#include <fcntl.h>	/* mkdir */
-#include <stdlib.h>	/* free */
+#include <ctype.h>      /* is...() */
+#include <string.h>     /* strcmp */
+#include <sys/stat.h>   /* stat. mkdir */
+#include <unistd.h>     /* stat, mkdir, unlink */
+#include <sys/types.h>  /* mkdir */
+#include <fcntl.h>      /* mkdir */
+#include <stdlib.h>     /* free */
 
 #include "xqf.h"
 #include "game.h"
@@ -48,497 +48,487 @@ static int pos;
 
 static struct keyword  keywords[] = {
 
-  { "q1_top",	 KEYWORD_INT,   "/" CONFIG_FILE "/Game: QS/top" },
-  { "q1_bottom", KEYWORD_INT,	"/" CONFIG_FILE "/Game: QS/bottom" },
-  { "team",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/team" },
-  { "qw_skin",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/skin" },
-  { "qw_top",	 KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/top" },
-  { "qw_bottom", KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/bottom" },
-  { "q2_skin",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/skin" },
-  { "rate", 	 KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/rate" },
-  { "cl_nodelta",KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/cl_nodelta" },
-  { "cl_predict",KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/cl_predict" },
-  { "noaim",	 KEYWORD_INT,   "/" CONFIG_FILE "/Game: QWS/noaim" },
-  { "pushlatency",KEYWORD_INT,  "/" CONFIG_FILE "/Game: QWS/pushlatency mode" },
-  { "noskins",	 KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/noskins" },
-  { "w_switch",	 KEYWORD_INT,   "/" CONFIG_FILE "/Game: QWS/w_switch" },
-  { "b_switch",	 KEYWORD_INT,   "/" CONFIG_FILE "/Game: QWS/b_switch" },
+	{ "q1_top",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QS/top" },
+	{ "q1_bottom",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QS/bottom" },
+	{ "team",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/team" },
+	{ "qw_skin",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/skin" },
+	{ "qw_top",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/top" },
+	{ "qw_bottom",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/bottom" },
+	{ "q2_skin",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q2S/skin" },
+	{ "rate", 		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/rate" },
+	{ "cl_nodelta",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/cl_nodelta" },
+	{ "cl_predict",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/cl_predict" },
+	{ "noaim",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/noaim" },
+	{ "pushlatency",	KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/pushlatency mode" },
+	{ "noskins",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/noskins" },
+	{ "w_switch",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/w_switch" },
+	{ "b_switch",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/b_switch" },
 
-  { "name",	 KEYWORD_STRING,"/" CONFIG_FILE "/Games Config/player name" },
-  { "nosound",   KEYWORD_BOOL,  "/" CONFIG_FILE "/Games Config/nosound" },
-  { "nocdaudio", KEYWORD_BOOL,  "/" CONFIG_FILE "/Games Config/nocdaudio" },
+	{ "name",		KEYWORD_STRING,	"/" CONFIG_FILE "/Games Config/player name" },
+	{ "nosound",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Games Config/nosound" },
+	{ "nocdaudio",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Games Config/nocdaudio" },
 
-  { "retries",   KEYWORD_INT, 	"/" CONFIG_FILE "/Server Filter/retries" },
-  { "ping",  	 KEYWORD_INT,	"/" CONFIG_FILE "/Server Filter/ping" },
-  { "notfull",   KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/not full" },
-  { "notempty",  KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/not empty" },
-  { "nocheats",  KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no cheats" },
-  { "nopasswd",  KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no password" },
+	{ "retries",		KEYWORD_INT, 	"/" CONFIG_FILE "/Server Filter/retries" },
+	{ "ping",  		KEYWORD_INT,	"/" CONFIG_FILE "/Server Filter/ping" },
+	{ "notfull",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/not full" },
+	{ "notempty",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/not empty" },
+	{ "nocheats",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no cheats" },
+	{ "nopasswd",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no password" },
 
-  { "terminate",  KEYWORD_BOOL, "/" CONFIG_FILE "/General/terminate" },
-  { "iconify",    KEYWORD_BOOL, "/" CONFIG_FILE "/General/iconify" },
-  { "savelists",  KEYWORD_BOOL, "/" CONFIG_FILE "/General/save lists" },
-  { "saveservers",KEYWORD_BOOL, "/" CONFIG_FILE "/General/save srvinfo" },
-  { "saveplayers",KEYWORD_BOOL, "/" CONFIG_FILE "/General/save players" },
+	{ "terminate",		KEYWORD_BOOL,	"/" CONFIG_FILE "/General/terminate" },
+	{ "iconify",		KEYWORD_BOOL,	"/" CONFIG_FILE "/General/iconify" },
+	{ "savelists",		KEYWORD_BOOL,	"/" CONFIG_FILE "/General/save lists" },
+	{ "saveservers",	KEYWORD_BOOL,	"/" CONFIG_FILE "/General/save srvinfo" },
+	{ "saveplayers",	KEYWORD_BOOL,	"/" CONFIG_FILE "/General/save players" },
 
-  { "autofavorites", KEYWORD_BOOL,
-    "/" CONFIG_FILE "/General/refresh favorites" },
+	{ "autofavorites",	KEYWORD_BOOL,	"/" CONFIG_FILE "/General/refresh favorites" },
 
-  { "tb_style",	 KEYWORD_INT,	"/" CONFIG_FILE "/Appearance/toolbar style" },
-  { "tb_tips",	 KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/toolbar tips" },
+	{ "tb_style",		KEYWORD_INT,	"/" CONFIG_FILE "/Appearance/toolbar style" },
+	{ "tb_tips",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/toolbar tips" },
 
-  { "sort_on_refresh",	KEYWORD_BOOL,
-    "/" CONFIG_FILE "/Appearance/sort on refresh" },
-  { "ref_on_update",	KEYWORD_BOOL,
-    "/" CONFIG_FILE "/Appearance/refresh on update" },
-  { "alwaysresolve",	KEYWORD_BOOL,
-    "/" CONFIG_FILE "/Appearance/show hostnames" },
-  { "maxsimultaneous",	KEYWORD_INT, 
-    "/" CONFIG_FILE "/QStat/maxsimultaneous" },
-  { "maxretries", 	KEYWORD_INT,
-    "/" CONFIG_FILE "/QStat/maxretires" },
+	{ "sort_on_refresh",	KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/sort on refresh" },
+	{ "ref_on_update",	KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/refresh on update" },
+	{ "alwaysresolve",	KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/show hostnames" },
+	{ "maxsimultaneous",	KEYWORD_INT,	"/" CONFIG_FILE "/QStat/maxsimultaneous" },
+	{ "maxretries", 	KEYWORD_INT,	"/" CONFIG_FILE "/QStat/maxretires" },
 
-  { "q1_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: QS/custom cfg" },
-  { "qw_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/custom cfg" },
-  { "q2_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/custom cfg" },
-  { "q3_custom_cfg", KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q3S/custom cfg" },
+	{ "q1_custom_cfg",	KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QS/custom cfg" },
+	{ "qw_custom_cfg",	KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/custom cfg" },
+	{ "q2_custom_cfg",	KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q2S/custom cfg" },
+	{ "q3_custom_cfg",	KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q3S/custom cfg" },
 
-  { "q1_dir",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QS/dir" },
-  { "q1_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QS/cmd" },
-  { "qw_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/dir" },
-  { "qw_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/cmd" },
-  { "q2_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/dir" },
-  { "q2_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q2S/cmd" },
-  { "q3_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q3S/dir" },
-  { "q3_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: Q3S/cmd" },
-  { "hl_dir",    KEYWORD_STRING,"/" CONFIG_FILE "/Game: HLS/dir" },
-  { "hl_cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: HLS/cmd" },
+	{ "q1_dir",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QS/dir" },
+	{ "q1_cmd",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QS/cmd" },
+	{ "qw_dir",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/dir" },
+	{ "qw_cmd",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/cmd" },
+	{ "q2_dir",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q2S/dir" },
+	{ "q2_cmd",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q2S/cmd" },
+	{ "q3_dir",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q3S/dir" },
+	{ "q3_cmd",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: Q3S/cmd" },
+	{ "hl_dir",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: HLS/dir" },
+	{ "hl_cmd",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: HLS/cmd" },
 
-  /* compatibility with ancient versions */
+	/* compatibility with ancient versions */
 
-  { "top",	 KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/top" },
-  { "bottom",	 KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/bottom" },
+	{ "top",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/top" },
+	{ "bottom",		KEYWORD_INT,	"/" CONFIG_FILE "/Game: QWS/bottom" },
 
-  { "cl_predict_players", KEYWORD_INT, 
-    "/" CONFIG_FILE "/Game: QWS/cl_predict" },
+	{ "cl_predict_players",	KEYWORD_INT, 	"/" CONFIG_FILE "/Game: QWS/cl_predict" },
 
-  { "skin",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/skin" },
-  { "dir",       KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/dir" },
-  { "cmd",	 KEYWORD_STRING,"/" CONFIG_FILE "/Game: QWS/dir" },
+	{ "skin",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/skin" },
+	{ "dir",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/dir" },
+	{ "cmd",		KEYWORD_STRING,	"/" CONFIG_FILE "/Game: QWS/dir" },
 
-  { NULL, 	0, 		NULL }
+	{ NULL, 		0, 		NULL }
 };
 
 
 static void unexpected_char_error (char c) {
-  fprintf (stderr, "Unexpected character: ");
-  fprintf (stderr, (isprint (c))? "\'%c\'" : "\\%03o", c);
-  fprintf (stderr, " in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
+	fprintf (stderr, "Unexpected character: ");
+	fprintf (stderr, (isprint (c))? "\'%c\'" : "\\%03o", c);
+	fprintf (stderr, " in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
 }
 
 
 static void unexpected_eof_error (void) {
-  fprintf (stderr, "Unexpected end of line in file %s[line:%d,pos:%d]\n", 
-           rcfilename, line, pos);
+	fprintf (stderr, "Unexpected end of line in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
 }
 
 
 static void syntax_error (void) {
-  fprintf (stderr, "Syntax error in file %s[line:%d,pos:%d]\n", 
-           rcfilename, line, pos);
+	fprintf (stderr, "Syntax error in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
 }
 
 
 static void unexpected_token_error (int need_token) {
-  fprintf (stderr, "Syntax error in file %s[line:%d,pos:%d]\n",
-                                                   rcfilename, line, pos);
-  fprintf (stderr, "Skipping to the end of the line...\n");
+	fprintf (stderr, "Syntax error in file %s[line:%d,pos:%d]\n", rcfilename, line, pos);
+	fprintf (stderr, "Skipping to the end of the line...\n");
 }
 
 
 static inline int rc_getc (FILE *rc) {
-  pos++;
-  return getc (rc);
+	pos++;
+	return getc (rc);
 }
 
 
 static inline int rc_ungetc (char c, FILE *rc) {
-  pos--;
-  return ungetc (c, rc);
+	pos--;
+	return ungetc (c, rc);
 }
 
 
 static int rc_open (char *filename) {
-  rc = fopen (filename, "r");
-  if (rc == NULL)
-    return -1;
+	rc = fopen (filename, "r");
+	if (rc == NULL)
+		return -1;
 
-  token_str = g_malloc (BUFFER_SIZE);
-  tptr = token_str;
-  state = STATE_SPACE;
-  token_int = 0;
-  line = pos = 1;
-  rcfilename = g_strdup (filename);
-  return 0;
+	token_str = g_malloc (BUFFER_SIZE);
+	tptr = token_str;
+	state = STATE_SPACE;
+	token_int = 0;
+	line = pos = 1;
+	rcfilename = g_strdup (filename);
+	return 0;
 }
 
 
 static void rc_close (void) {
-  if (rc) {
-    fclose (rc);
-    rc = NULL;
-  }
+	if (rc) {
+		fclose (rc);
+		rc = NULL;
+	}
 
-  if (token_str) {
-    g_free (token_str);
-    token_str = NULL;
-  }
+	if (token_str) {
+		g_free (token_str);
+		token_str = NULL;
+	}
 
-  if (rcfilename) {
-    g_free (rcfilename);
-    rcfilename = NULL;
-  }
+	if (rcfilename) {
+		g_free (rcfilename);
+		rcfilename = NULL;
+	}
 }
 
 
 static int rc_next_token (void) {
-  int c;
-  int num, i;
-  int sign = 1;
+	int c;
+	int num, i;
+	int sign = 1;
 
-  if (!rc)
-    return TOKEN_EOF;
+	if (!rc)
+		return TOKEN_EOF;
 
-  if ((c = rc_getc (rc)) == EOF) {
-    rc_close ();
-    return TOKEN_EOF;
-  }
-
-  tptr = token_str;
-
-  while (1) {
-
-    switch (state) {
-
-    case STATE_SPACE:
-      if (c == ' ' || c == '\r' || c == '\t')
-	break;
-
-      if (isdigit (c)) {
-	sign = 1;
-	token_int = c - '0';
-	state = STATE_INT;
-	break;
-      }
-
-      if (isalnum (c) || c == '_') {
-	*tptr++ = c;
-	state = STATE_TOKEN;
-	break;
-      }
-
-      switch (c) {
-
-      case '\n':
-	line++;
-	pos = 1;
-	return TOKEN_EOL;
-	break;
-
-      case ',':
-	return TOKEN_COMMA;
-	break;
-
-      case '\"':
-	state = STATE_STRING;
-	break;
-
-      case '-':
-	sign = -1;
-	token_int = 0;
-	state = STATE_INT;
-	break;
-	
-      case '#':
-	state = STATE_COMMENT;
-	break;
-
-      default:
-	unexpected_char_error (c);
-	break;
-
-      }	/* switch */
-      
-      break;
-
-    case STATE_COMMENT:
-      if (c == '\n') {
-	line++;
-	pos = 1;
-	state = STATE_SPACE;
-	return TOKEN_EOL;
-      }
-      break;
-
-    case STATE_INT:
-      if (!isdigit (c)) {
-	rc_ungetc (c, rc);
-	token_int = token_int * sign;
-	state = STATE_SPACE;
-	return TOKEN_INT;
-      }
-
-      token_int = token_int*10 + c - '0';
-      break;
-
-    case STATE_TOKEN:
-      if (!isalnum (c) && c != '_') {
-	rc_ungetc (c, rc);
-	*tptr = '\0';
-	state = STATE_SPACE;
-	return TOKEN_KEYWORD;
-      }
-
-      *tptr++ = c;
-      break;
-      
-    case STATE_STRING:
-      if (c == '\"') {
-	*tptr = '\0';
-	state = STATE_SPACE;
-	return TOKEN_STRING;
-      }
-
-      if (c == '\n') {
-	unexpected_eof_error ();
-	rc_ungetc (c, rc);
-	*tptr = '\0';
-	state = STATE_SPACE;
-	return TOKEN_STRING;
-      }
-
-      if (c == '\\') {
 	if ((c = rc_getc (rc)) == EOF) {
-	  *tptr = '\0';
-	  rc_close ();
-	  return TOKEN_STRING;
+		rc_close ();
+		return TOKEN_EOF;
 	}
 
-	if (c >= '0' && c <='7') {
-	  for (i=0, num=0; i < 3; i++) {
-	    num <<= 3;
-	    num |= c - '0';
-	    c = rc_getc (rc);
-	    if (c < '0' || c > '7')
-	      break;
-	  }
+	tptr = token_str;
 
-	  *tptr++ = num;
+	while (1) {
 
-	  if (c == EOF) {
-	    *tptr = '\0';
-	    rc_close ();
-	    return TOKEN_STRING;
-	  }
-	  
-	  continue;
-	} /* if (c >= '0' && c <='7') */
+		switch (state) {
 
-	switch (c) {
+			case STATE_SPACE:
+				if (c == ' ' || c == '\r' || c == '\t')
+					break;
 
-	case 'n':
-	  *tptr++ = '\n';
-	  break;
+				if (isdigit (c)) {
+					sign = 1;
+					token_int = c - '0';
+					state = STATE_INT;
+					break;
+				}
 
-	case 'r':
-	  *tptr++ = '\r';
-	  break;
+				if (isalnum (c) || c == '_') {
+					*tptr++ = c;
+					state = STATE_TOKEN;
+					break;
+				}
 
-	case 't':
-	  *tptr++ = '\t';
-	  break;
+				switch (c) {
 
-	default:
-	  *tptr++ = c;
-	  break;
+					case '\n':
+						line++;
+						pos = 1;
+						return TOKEN_EOL;
+						break;
 
-	} /* switch (c) */
-	break;
-	
-      } /* if (c == '\\') */
+					case ',':
+						return TOKEN_COMMA;
+						break;
 
-      *tptr++ = c;
-      break;
+					case '\"':
+						state = STATE_STRING;
+						break;
 
-    } /* switch (state) */
+					case '-':
+						sign = -1;
+						token_int = 0;
+						state = STATE_INT;
+						break;
 
-    c = rc_getc (rc);
+					case '#':
+						state = STATE_COMMENT;
+						break;
 
-  } /* while (1) */
+					default:
+						unexpected_char_error (c);
+						break;
+
+				}   /* switch */
+
+				break;
+
+			case STATE_COMMENT:
+				if (c == '\n') {
+					line++;
+					pos = 1;
+					state = STATE_SPACE;
+					return TOKEN_EOL;
+				}
+				break;
+
+			case STATE_INT:
+				if (!isdigit (c)) {
+					rc_ungetc (c, rc);
+					token_int = token_int * sign;
+					state = STATE_SPACE;
+					return TOKEN_INT;
+				}
+
+				token_int = token_int*10 + c - '0';
+				break;
+
+			case STATE_TOKEN:
+				if (!isalnum (c) && c != '_') {
+					rc_ungetc (c, rc);
+					*tptr = '\0';
+					state = STATE_SPACE;
+					return TOKEN_KEYWORD;
+				}
+
+				*tptr++ = c;
+				break;
+
+			case STATE_STRING:
+				if (c == '\"') {
+					*tptr = '\0';
+					state = STATE_SPACE;
+					return TOKEN_STRING;
+				}
+
+				if (c == '\n') {
+					unexpected_eof_error ();
+					rc_ungetc (c, rc);
+					*tptr = '\0';
+					state = STATE_SPACE;
+					return TOKEN_STRING;
+				}
+
+				if (c == '\\') {
+					if ((c = rc_getc (rc)) == EOF) {
+						*tptr = '\0';
+						rc_close ();
+						return TOKEN_STRING;
+					}
+
+					if (c >= '0' && c <='7') {
+						for (i=0, num=0; i < 3; i++) {
+							num <<= 3;
+							num |= c - '0';
+							c = rc_getc (rc);
+							if (c < '0' || c > '7')
+								break;
+						}
+
+						*tptr++ = num;
+
+						if (c == EOF) {
+							*tptr = '\0';
+							rc_close ();
+							return TOKEN_STRING;
+						}
+
+						continue;
+					} /* if (c >= '0' && c <='7') */
+
+					switch (c) {
+
+						case 'n':
+							*tptr++ = '\n';
+							break;
+
+						case 'r':
+							*tptr++ = '\r';
+							break;
+
+						case 't':
+							*tptr++ = '\t';
+							break;
+
+						default:
+							*tptr++ = c;
+							break;
+
+					} /* switch (c) */
+					break;
+
+				} /* if (c == '\\') */
+
+				*tptr++ = c;
+				break;
+
+		} /* switch (state) */
+
+		c = rc_getc (rc);
+
+	} /* while (1) */
 
 }
 
 
 static void rc_skip_to_eol (void) {
-  while (token != TOKEN_EOL && token != TOKEN_EOF) {
-    token = rc_next_token ();
-  }
+	while (token != TOKEN_EOL && token != TOKEN_EOF) {
+		token = rc_next_token ();
+	}
 }
 
 
 static int rc_expect_token (int need_token) {
-  if ((token = rc_next_token ()) == need_token)
-    return TRUE;
+	if ((token = rc_next_token ()) == need_token)
+		return TRUE;
 
-  unexpected_token_error (need_token);
-  rc_skip_to_eol ();
-  return FALSE;
+	unexpected_token_error (need_token);
+	rc_skip_to_eol ();
+	return FALSE;
 }
 
 
 int rc_parse (void) {
-  char *fn;
-  struct keyword *kw;
+	char *fn;
+	struct keyword *kw;
 
-  fn = file_in_dir (user_rcdir, RC_FILE);
-  rc_open (fn);
-  g_free (fn);
+	fn = file_in_dir (user_rcdir, RC_FILE);
+	rc_open (fn);
+	g_free (fn);
 
-  if(!rc)
-    return -1;
+	if(!rc)
+		return -1;
 
-  while ((token = rc_next_token ()) != TOKEN_EOF) {
+	while ((token = rc_next_token ()) != TOKEN_EOF) {
 
-    switch (token) {
+		switch (token) {
 
-    case TOKEN_KEYWORD:
-      for (kw = keywords; kw->name; kw++) {
-	if (strcmp (token_str, kw->name) == 0) {
+			case TOKEN_KEYWORD:
+				for (kw = keywords; kw->name; kw++) {
+					if (strcmp (token_str, kw->name) == 0) {
 
-	  switch (kw->required) {
-	  case KEYWORD_INT:
-	    if (rc_expect_token (TOKEN_INT))
-	      config_set_int (kw->config, token_int);
-	    break;
+						switch (kw->required) {
+							case KEYWORD_INT:
+								if (rc_expect_token (TOKEN_INT))
+									config_set_int (kw->config, token_int);
+								break;
 
-	  case KEYWORD_BOOL:
-	    if (rc_expect_token (TOKEN_INT))
-	      config_set_bool (kw->config, token_int);
-	    break;
+							case KEYWORD_BOOL:
+								if (rc_expect_token (TOKEN_INT))
+									config_set_bool (kw->config, token_int);
+								break;
 
-	  case KEYWORD_STRING:
-	    if (rc_expect_token (TOKEN_STRING))
-	      config_set_string (kw->config, token_str);
-	    break;
-	  }
+							case KEYWORD_STRING:
+								if (rc_expect_token (TOKEN_STRING))
+									config_set_string (kw->config, token_str);
+								break;
+						}
 
-	  break;
+						break;
+					}
+				}
+				break;
+
+			case TOKEN_EOL:
+			case TOKEN_EOF:
+				break;
+
+			default:
+				syntax_error ();
+				rc_skip_to_eol ();
+				break;
+
+		} /* switch */
+	} /* while */
+
+	rc_close ();
+
+	/* Compatibility with old versions */
+
+	if (!games[Q1_SERVER].dir && games[QW_SERVER].dir) {
+		games[Q1_SERVER].dir = g_strdup (games[QW_SERVER].dir);
+		config_set_string ("/" CONFIG_FILE "/Game: QS/dir", games[Q1_SERVER].dir);
 	}
-      }
-      break;
 
-    case TOKEN_EOL:
-    case TOKEN_EOF:
-      break;
+	if (default_w_switch < 0) default_w_switch = 0;
+	if (default_b_switch < 0) default_b_switch = 0;
 
-    default:
-      syntax_error ();
-      rc_skip_to_eol ();
-      break;
-
-    } /* switch */
-  } /* while */
-
-  rc_close ();
-
-  /* Compatibility with old versions */
-
-  if (!games[Q1_SERVER].dir && games[QW_SERVER].dir) {
-    games[Q1_SERVER].dir = g_strdup (games[QW_SERVER].dir);
-    config_set_string ("/" CONFIG_FILE "/Game: QS/dir", games[Q1_SERVER].dir);
-  }
-
-  if (default_w_switch < 0) default_w_switch = 0;
-  if (default_b_switch < 0) default_b_switch = 0;
-
-  return 0;
+	return 0;
 }
 
 
 int rc_save (void) {
-  char *fn;
+	char *fn;
 
-  fn = file_in_dir (user_rcdir, RC_FILE);
-  unlink (fn);
-  g_free (fn);
-  return 0;
+	fn = file_in_dir (user_rcdir, RC_FILE);
+	unlink (fn);
+	g_free (fn);
+	return 0;
 }
 
 
 int rc_migrate_dir (void) {
-  int res;
-  struct stat st_buf;
-  char* legacy_user_rcdir = NULL;
-  char* xdg_user_rcdir = NULL;
-  char* xdg_user_dir = NULL;
+	int res;
+	struct stat st_buf;
+	char* legacy_user_rcdir = NULL;
+	char* xdg_user_rcdir = NULL;
+	char* xdg_user_dir = NULL;
 
-  if (!g_get_user_name () || !g_get_home_dir () || !g_get_user_config_dir ()) {
-    fprintf(stderr, "Unable to get user name/home directory/XDG config directory\n");
-    return FALSE;
-  }
+	if (!g_get_user_name () || !g_get_home_dir () || !g_get_user_config_dir ()) {
+		fprintf(stderr, "Unable to get user name/home directory/XDG config directory\n");
+		return FALSE;
+	}
 
-  xdg_user_dir = g_get_user_config_dir ();
-  legacy_user_rcdir = file_in_dir (g_get_home_dir (), RC_DIR);
-  xdg_user_rcdir = file_in_dir (xdg_user_dir, XDG_RC_DIR);
+	xdg_user_dir = g_get_user_config_dir ();
+	legacy_user_rcdir = file_in_dir (g_get_home_dir (), RC_DIR);
+	xdg_user_rcdir = file_in_dir (xdg_user_dir, XDG_RC_DIR);
 
-  /* if ~/.qf exists and ~/.config/xqf does not exists */
-  if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) == -1)
-  {
-    /* if ~/.config does not exists, create it */
-    if (stat (xdg_user_dir, &st_buf) == -1) {
-      res = mkdir (xdg_user_dir, 0755);
-      if (res != 0) {
-        fprintf(stderr, "Can't create XDG user config directory %s\n", xdg_user_dir);
-        free(legacy_user_rcdir);
-        free(xdg_user_rcdir);
-        return res;
-      }
-    }
-    else {
-      /* move ~/.qf ~/.config/qf */
-      fprintf(stdout, "Moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-      res = rename(legacy_user_rcdir, xdg_user_rcdir);
-      if (res == 0) {
-        fprintf(stdout, "Legacy config directory %s succesfully moved to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-      }
-      else {
-        fprintf(stderr, "Error when moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-        free(legacy_user_rcdir);
-        free(xdg_user_rcdir);
-        return res;
-      }
-    }
-  }
-  else if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) != -1) {
-    fprintf(stderr, "Warning, there is an old legacy config directory %s, but XDG user config directory %s will be used\n", legacy_user_rcdir, xdg_user_rcdir);
-  }
-  free(legacy_user_rcdir);
-  free(xdg_user_rcdir);
-  return TRUE;
+	/* if ~/.qf exists and ~/.config/xqf does not exists */
+	if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) == -1)
+	{
+		/* if ~/.config does not exists, create it */
+		if (stat (xdg_user_dir, &st_buf) == -1) {
+			res = mkdir (xdg_user_dir, 0755);
+			if (res != 0) {
+				fprintf(stderr, "Can't create XDG user config directory %s\n", xdg_user_dir);
+				free(legacy_user_rcdir);
+				free(xdg_user_rcdir);
+				return res;
+			}
+		}
+		else {
+			/* move ~/.qf ~/.config/qf */
+			fprintf(stdout, "Moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
+			res = rename(legacy_user_rcdir, xdg_user_rcdir);
+			if (res == 0) {
+				fprintf(stdout, "Legacy config directory %s succesfully moved to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
+			}
+			else {
+				fprintf(stderr, "Error when moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
+				free(legacy_user_rcdir);
+				free(xdg_user_rcdir);
+				return res;
+			}
+		}
+	}
+	else if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) != -1) {
+		fprintf(stderr, "Warning, there is an old legacy config directory %s, but XDG user config directory %s will be used\n", legacy_user_rcdir, xdg_user_rcdir);
+	}
+	free(legacy_user_rcdir);
+	free(xdg_user_rcdir);
+	return TRUE;
 }
 
 int rc_check_dir (void) {
-  struct stat st_buf;
+	struct stat st_buf;
 
-  if (stat (user_rcdir, &st_buf) == -1) {
-    return mkdir (user_rcdir, 0755);
-  }
-  else {
-    if (!S_ISDIR (st_buf.st_mode)) {
-      fprintf (stderr, "%s is not a directory\n", user_rcdir);
-      return -1;
-    }
-  }
+	if (stat (user_rcdir, &st_buf) == -1) {
+		return mkdir (user_rcdir, 0755);
+	}
+	else {
+		if (!S_ISDIR (st_buf.st_mode)) {
+			fprintf (stderr, "%s is not a directory\n", user_rcdir);
+			return -1;
+		}
+	}
 
-  return 0;
+	return 0;
 }

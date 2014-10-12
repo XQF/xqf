@@ -21,12 +21,12 @@
 
 
 #include <sys/types.h>
-#include <stdio.h>	/* FILE */
+#include <stdio.h>      /* FILE */
 
 
 struct zstream {
-  FILE *f;
-  int is_pipe;
+	FILE *f;
+	int is_pipe;
 };
 
 

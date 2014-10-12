@@ -39,105 +39,105 @@ static guint current_progress;
 
 void destroy_splashscreen(void)
 {
-  if(!splashscreen) return;
+	if(!splashscreen) return;
 
-  gtk_widget_destroy(splashscreen);
-  splashscreen = NULL;
+	gtk_widget_destroy(splashscreen);
+	splashscreen = NULL;
 }
 
 void create_splashscreen (void)
 {
-  GtkWidget *vbox1;
-  GtkWidget *logo;
-  GtkWidget *entry;
-  GtkWidget *progress;
+	GtkWidget *vbox1;
+	GtkWidget *logo;
+	GtkWidget *entry;
+	GtkWidget *progress;
 
-  if(splashscreen) return;
+	if(splashscreen) return;
 
-  if(!default_show_splash) return;
+	if(!default_show_splash) return;
 
-  splashscreen = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_object_set_data (GTK_OBJECT (splashscreen), "splashscreen", splashscreen);
-  gtk_window_set_title (GTK_WINDOW (splashscreen), _("XQF: Loading"));
-  gtk_window_set_position (GTK_WINDOW (splashscreen), GTK_WIN_POS_CENTER);
-  gtk_window_set_modal (GTK_WINDOW (splashscreen), TRUE);
-  gtk_window_set_type_hint(GTK_WINDOW (splashscreen), GDK_WINDOW_TYPE_HINT_SPLASHSCREEN);
+	splashscreen = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_object_set_data (GTK_OBJECT (splashscreen), "splashscreen", splashscreen);
+	gtk_window_set_title (GTK_WINDOW (splashscreen), _("XQF: Loading"));
+	gtk_window_set_position (GTK_WINDOW (splashscreen), GTK_WIN_POS_CENTER);
+	gtk_window_set_modal (GTK_WINDOW (splashscreen), TRUE);
+	gtk_window_set_type_hint(GTK_WINDOW (splashscreen), GDK_WINDOW_TYPE_HINT_SPLASHSCREEN);
 
-  vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_ref (vbox1);
-  gtk_object_set_data_full (GTK_OBJECT (splashscreen), "vbox1", vbox1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (vbox1);
-  gtk_container_add (GTK_CONTAINER (splashscreen), vbox1);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox1), 3);
+	vbox1 = gtk_vbox_new (FALSE, 0);
+	gtk_widget_ref (vbox1);
+	gtk_object_set_data_full (GTK_OBJECT (splashscreen), "vbox1", vbox1,
+			(GtkDestroyNotify) gtk_widget_unref);
+	gtk_widget_show (vbox1);
+	gtk_container_add (GTK_CONTAINER (splashscreen), vbox1);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 3);
 
-  logo = load_pixmap (splashscreen, "splash.png");
-  gtk_widget_ref (logo);
-  gtk_object_set_data_full (GTK_OBJECT (splashscreen), "logo", logo,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (logo);
-  gtk_box_pack_start (GTK_BOX (vbox1), logo, TRUE, TRUE, 0);
+	logo = load_pixmap (splashscreen, "splash.png");
+	gtk_widget_ref (logo);
+	gtk_object_set_data_full (GTK_OBJECT (splashscreen), "logo", logo,
+			(GtkDestroyNotify) gtk_widget_unref);
+	gtk_widget_show (logo);
+	gtk_box_pack_start (GTK_BOX (vbox1), logo, TRUE, TRUE, 0);
 
-  entry = gtk_entry_new ();
-  gtk_widget_ref (entry);
-  gtk_object_set_data_full (GTK_OBJECT (splashscreen), "entry", entry,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (entry);
-  gtk_box_pack_start (GTK_BOX (vbox1), entry, FALSE, FALSE, 0);
-  gtk_entry_set_editable (GTK_ENTRY (entry), FALSE);
-  gtk_entry_set_text (GTK_ENTRY (entry), _("Loading ..."));
+	entry = gtk_entry_new ();
+	gtk_widget_ref (entry);
+	gtk_object_set_data_full (GTK_OBJECT (splashscreen), "entry", entry,
+			(GtkDestroyNotify) gtk_widget_unref);
+	gtk_widget_show (entry);
+	gtk_box_pack_start (GTK_BOX (vbox1), entry, FALSE, FALSE, 0);
+	gtk_entry_set_editable (GTK_ENTRY (entry), FALSE);
+	gtk_entry_set_text (GTK_ENTRY (entry), _("Loading ..."));
 
-  progress = gtk_progress_bar_new ();
-  gtk_widget_ref (progress);
-  gtk_object_set_data_full (GTK_OBJECT (splashscreen), "progress", progress,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (progress);
-  gtk_box_pack_start (GTK_BOX (vbox1), progress, FALSE, FALSE, 0);
-  gtk_progress_configure (GTK_PROGRESS (progress), 42, 0, 100);
+	progress = gtk_progress_bar_new ();
+	gtk_widget_ref (progress);
+	gtk_object_set_data_full (GTK_OBJECT (splashscreen), "progress", progress,
+			(GtkDestroyNotify) gtk_widget_unref);
+	gtk_widget_show (progress);
+	gtk_box_pack_start (GTK_BOX (vbox1), progress, FALSE, FALSE, 0);
+	gtk_progress_configure (GTK_PROGRESS (progress), 42, 0, 100);
 
-  gtk_signal_connect (GTK_OBJECT (splashscreen), "destroy",
-		      GTK_SIGNAL_FUNC (destroy_splashscreen), NULL);
+	gtk_signal_connect (GTK_OBJECT (splashscreen), "destroy",
+			GTK_SIGNAL_FUNC (destroy_splashscreen), NULL);
 
-  gtk_widget_show (splashscreen);
+	gtk_widget_show (splashscreen);
 
-  // force it to draw now.
-  gdk_flush();
+	// force it to draw now.
+	gdk_flush();
 
-  // go into main loop, processing events.
-  while (gtk_events_pending() || !GTK_WIDGET_REALIZED(logo))
-    gtk_main_iteration();
+	// go into main loop, processing events.
+	while (gtk_events_pending() || !GTK_WIDGET_REALIZED(logo))
+		gtk_main_iteration();
 
-  // test
-  while (gdk_events_pending())
-    gdk_flush();
+	// test
+	while (gdk_events_pending())
+		gdk_flush();
 
-  current_progress = 0;
+	current_progress = 0;
 }
 
 /* set percentage on splash screen, thanks to lopster for this code */
 void splash_set_progress(const char* message, guint per)
 {
-  GtkProgressBar* progress;
-  GtkEntry* entry;
+	GtkProgressBar* progress;
+	GtkEntry* entry;
 
-  if (!splashscreen) return;
+	if (!splashscreen) return;
 
-  if (per > 100) per = 100;
+	if (per > 100) per = 100;
 
-  current_progress = per;
+	current_progress = per;
 
-  progress = GTK_PROGRESS_BAR(lookup_widget(splashscreen, "progress"));
-  entry = GTK_ENTRY(lookup_widget(splashscreen, "entry"));
-  if (message)
-    gtk_entry_set_text(entry, message);
-  gtk_progress_bar_update(progress, per*1.0/100);
+	progress = GTK_PROGRESS_BAR(lookup_widget(splashscreen, "progress"));
+	entry = GTK_ENTRY(lookup_widget(splashscreen, "entry"));
+	if (message)
+		gtk_entry_set_text(entry, message);
+	gtk_progress_bar_update(progress, per*1.0/100);
 
-  while (gtk_events_pending())
-    gtk_main_iteration();
+	while (gtk_events_pending())
+		gtk_main_iteration();
 }
 
 void splash_increase_progress(const char* message, guint per)
 {
-  if(!splashscreen) return;
-  splash_set_progress(message,current_progress+per);
+	if(!splashscreen) return;
+	splash_set_progress(message,current_progress+per);
 }

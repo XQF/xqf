@@ -17,7 +17,7 @@
  */
 
 #include <sys/types.h>
-#include <string.h>		/* strcmp */
+#include <string.h>     /* strcmp */
 
 #include <glib.h>
 
@@ -27,79 +27,79 @@
 
 
 struct history *history_new (char *id) {
-  struct history *h;
-  char path[128];
-  config_key_iterator* iterator;
-  char *keyval;
+	struct history *h;
+	char path[128];
+	config_key_iterator* iterator;
+	char *keyval;
 
-  h = g_malloc0 (sizeof (struct history));
-  h->id = g_strdup (id);
-  h->size = HISTORY_DEFAULT_MAX_ITEMS;
+	h = g_malloc0 (sizeof (struct history));
+	h->id = g_strdup (id);
+	h->size = HISTORY_DEFAULT_MAX_ITEMS;
 
-  g_snprintf (path, 128, "/" CONFIG_FILE "/History: %s", h->id);
+	g_snprintf (path, 128, "/" CONFIG_FILE "/History: %s", h->id);
 
-  iterator = config_init_iterator (path);
-  while (iterator) {
-    iterator = config_iterator_next (iterator, NULL, &keyval);
-    h->items = g_list_append (h->items, keyval);
-  }
+	iterator = config_init_iterator (path);
+	while (iterator) {
+		iterator = config_iterator_next (iterator, NULL, &keyval);
+		h->items = g_list_append (h->items, keyval);
+	}
 
-  return h;
+	return h;
 }
 
 
 char *history_add (struct history *h, char *str) {
-  GList *list;
+	GList *list;
 
-  if (!h || !str)
-    return str;
+	if (!h || !str)
+		return str;
 
-  for (list = h->items; list; list = list->next) {
-    if (!strcmp (str, (char *) list->data)) {
-      g_free (list->data);
-      h->items = g_list_remove_link (h->items, list);
-      break;
-    }
-  }
+	for (list = h->items; list; list = list->next) {
+		if (!strcmp (str, (char *) list->data)) {
+			g_free (list->data);
+			h->items = g_list_remove_link (h->items, list);
+			break;
+		}
+	}
 
-  while (h->items && g_list_length (h->items) >= h->size) {
-    list = g_list_last (h->items);
-    g_free (list->data);
-    h->items = g_list_remove_link (h->items, list); 
-  }
-  
-  h->items = g_list_prepend (h->items, g_strdup (str));
+	while (h->items && g_list_length (h->items) >= h->size) {
+		list = g_list_last (h->items);
+		g_free (list->data);
+		h->items = g_list_remove_link (h->items, list); 
+	}
 
-  return str;
+	h->items = g_list_prepend (h->items, g_strdup (str));
+
+	return str;
 }
 
 
 void history_free (struct history *h) {
-  GList *list;
-  char fmt[128];
-  char key[128];
-  int i;
+	GList *list;
+	char fmt[128];
+	char key[128];
+	int i;
 
-  if(!h) return;
+	if(!h) return;
 
-  g_snprintf (fmt, 128, "/" CONFIG_FILE "/History: %s/%%i", h->id);
+	g_snprintf (fmt, 128, "/" CONFIG_FILE "/History: %s/%%i", h->id);
 
-  for (i = 0, list = h->items; list; i++, list = list->next) {
-    g_snprintf (key, 128, fmt, i);
-    config_set_string (key, (char *) list->data);
-  }
+	for (i = 0, list = h->items; list; i++, list = list->next) {
+		g_snprintf (key, 128, fmt, i);
+		config_set_string (key, (char *) list->data);
+	}
 
-  if (h) {
-    if (h->items) {
-      g_list_foreach (h->items, (GFunc) g_free, NULL);
-      g_list_free (h->items);
-      h->items = NULL;
-    }
-    if (h->id) {
-      g_free (h->id);
-      h->id = NULL;
-    }
-    g_free (h);
-  }
+	if (h) {
+		if (h->items) {
+			g_list_foreach (h->items, (GFunc) g_free, NULL);
+			g_list_free (h->items);
+			h->items = NULL;
+		}
+		if (h->id) {
+			g_free (h->id);
+			h->id = NULL;
+		}
+		g_free (h);
+	}
 }
 

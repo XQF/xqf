@@ -27,57 +27,57 @@ static int debug_level;
 
 void debug_int(const char* file, int line, const char* function, int level, const char* fmt, ...)
 {
-  va_list argp;
-  int i;
-  char buf[9];
-  time_t now;
+	va_list argp;
+	int i;
+	char buf[9];
+	time_t now;
 
-  for (i=0;i<indent_level;i++)
-  {
-    fprintf(stderr, " ");
-  }
-  now = time(NULL);
-  strftime(buf,9,"%T",localtime(&now));
+	for (i=0;i<indent_level;i++)
+	{
+		fprintf(stderr, " ");
+	}
+	now = time(NULL);
+	strftime(buf,9,"%T",localtime(&now));
 
-  if(level == -3)
-    fprintf(stderr, "ERROR! %s %s:%d %s() - ", buf, file, line, function);
-  else if(level == -2)
-    fprintf(stderr, "WARNING %s %s:%d %s() - ", buf, file, line, function);
-  else if(level == -1)
-    fprintf(stderr, "note %s %s:%d %s() - ", buf, file, line, function);
-  else
-    fprintf(stderr, "debug(%d) %s %s:%d %s() - ", level, buf, file, line, function);
+	if(level == -3)
+		fprintf(stderr, "ERROR! %s %s:%d %s() - ", buf, file, line, function);
+	else if(level == -2)
+		fprintf(stderr, "WARNING %s %s:%d %s() - ", buf, file, line, function);
+	else if(level == -1)
+		fprintf(stderr, "note %s %s:%d %s() - ", buf, file, line, function);
+	else
+		fprintf(stderr, "debug(%d) %s %s:%d %s() - ", level, buf, file, line, function);
 
-  va_start(argp, fmt);
-  vfprintf(stderr, fmt, argp);
-  va_end(argp);
-  fprintf(stderr, "\n");
+	va_start(argp, fmt);
+	vfprintf(stderr, fmt, argp);
+	va_end(argp);
+	fprintf(stderr, "\n");
 }
 
 void debug_cmd(int level, char *argv[], char *fmt, ...)
 {
-  va_list argp;
-  int i;
-  if( level > debug_level ) return;
-  fprintf(stderr, "debug(%d): ", level);
-  va_start(argp, fmt);
-  vfprintf(stderr, fmt, argp);
-  va_end(argp);
-  fprintf(stderr, "  EXEC> ");
-  for (i = 0; argv[i]; ++i)
-    fprintf (stderr, "%s ", argv[i]);
-  fprintf(stderr, "\n");
+	va_list argp;
+	int i;
+	if( level > debug_level ) return;
+	fprintf(stderr, "debug(%d): ", level);
+	va_start(argp, fmt);
+	vfprintf(stderr, fmt, argp);
+	va_end(argp);
+	fprintf(stderr, "  EXEC> ");
+	for (i = 0; argv[i]; ++i)
+		fprintf (stderr, "%s ", argv[i]);
+	fprintf(stderr, "\n");
 }
 
 
 void set_debug_level (int level)
 {
-  debug_level = level;
+	debug_level = level;
 }
 
 inline int get_debug_level (void)
 {
-  return (debug_level);
+	return (debug_level);
 }
 
 int debug_increase_indent()

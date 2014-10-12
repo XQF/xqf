@@ -20,32 +20,30 @@
 #define __DNS_H__
 
 
-#define DNS_MSG_PREFIX		"DNS:"
-#define DNS_MSG_NOTFOUND	"NOTFOUND"
-#define DNS_MSG_TIMEOUT		"TIMEOUT"
-#define DNS_MSG_ERROR		"ERROR"
+#define DNS_MSG_PREFIX      "DNS:"
+#define DNS_MSG_NOTFOUND    "NOTFOUND"
+#define DNS_MSG_TIMEOUT     "TIMEOUT"
+#define DNS_MSG_ERROR       "ERROR"
 
-#define DNS_CMD_RESET		"/RESET"
+#define DNS_CMD_RESET       "/RESET"
 
 enum dns_status {
-  DNS_STATUS_OK = 0,
-  DNS_STATUS_TIMEOUT,
-  DNS_STATUS_NOTFOUND,
-  DNS_STATUS_ERROR
+	DNS_STATUS_OK = 0,
+	DNS_STATUS_TIMEOUT,
+	DNS_STATUS_NOTFOUND,
+	DNS_STATUS_ERROR
 };
 
-extern	int str_is_ip_address (char *str);
+extern int str_is_ip_address (char *str);
 
-extern	int dns_spawn_helper (void);
-extern	void dns_gtk_init (void);
-extern	void dns_helper_shutdown (void);
-extern	void dns_cancel_requests (void);
-extern	void dns_lookup (const char *str);
-extern	void dns_set_callback (void (*cb) (char *item, struct host *h, 
-                                           enum dns_status status, void *data),
-                                                                   void *data);
-extern	char *dns_lookup_by_addr (char *ip);
-extern	char *dns_lookup_by_name (char *name);
+extern int dns_spawn_helper (void);
+extern void dns_gtk_init (void);
+extern void dns_helper_shutdown (void);
+extern void dns_cancel_requests (void);
+extern void dns_lookup (const char *str);
+extern void dns_set_callback (void (*cb) (char *item, struct host *h, 	enum dns_status status, void *data), void *data);
+extern char *dns_lookup_by_addr (char *ip);
+extern char *dns_lookup_by_name (char *name);
 
 
 #endif /* __DNS_H__ */

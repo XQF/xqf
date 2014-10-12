@@ -28,147 +28,147 @@
 #include "menus.h"
 
 static void create_menu_recursive (GtkWidget *menu, 
-				   const struct menuitem *items, 
-				   GtkAccelGroup *accel_group) {
-  GtkWidget *menu_item;
-  GtkWidget *label;
+		const struct menuitem *items, 
+		GtkAccelGroup *accel_group) {
+	GtkWidget *menu_item;
+	GtkWidget *label;
 
-//  GtkWidget *button= NULL;
-//  GSList    *group = NULL;
+	//  GtkWidget *button= NULL;
+	//  GSList    *group = NULL;
 
-  while (items->type != MENU_END) {
+	while (items->type != MENU_END) {
 
-    switch (items->type) {
+		switch (items->type) {
 
 #if 0 
-      /* This does not work, I need to figure out how to       
-	 add some sort of indicator as to the active filter */
-    case MENU_RADIO_ITEM:
-      if( button == NULL ){
-	button = gtk_radio_button_new_with_label( NULL, items->label );
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
-      } else {
-	group =  gtk_radio_button_group (GTK_RADIO_BUTTON ( button ));
-	button = gtk_radio_button_new_with_label(group, "button2");
-      }
-      
-      if (GTK_IS_MENU_BAR (menu))
-	gtk_menu_bar_append (GTK_MENU_BAR (menu), button);
-      else 
-	gtk_menu_append (GTK_MENU (menu), button);
+			/* This does not work, I need to figure out how to       
+			   add some sort of indicator as to the active filter */
+			case MENU_RADIO_ITEM:
+				if( button == NULL ){
+					button = gtk_radio_button_new_with_label( NULL, items->label );
+					gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+				} else {
+					group =  gtk_radio_button_group (GTK_RADIO_BUTTON ( button ));
+					button = gtk_radio_button_new_with_label(group, "button2");
+				}
 
-      gtk_widget_show (button);
- 
-      if (items->widget)
-	*items->widget = button;
-      
-      break;
+				if (GTK_IS_MENU_BAR (menu))
+					gtk_menu_bar_append (GTK_MENU_BAR (menu), button);
+				else 
+					gtk_menu_append (GTK_MENU (menu), button);
+
+				gtk_widget_show (button);
+
+				if (items->widget)
+					*items->widget = button;
+
+				break;
 #endif
 
-    case MENU_ITEM:
-    case MENU_CHECK_ITEM:
-    case MENU_RADIO_ITEM:
-    case MENU_BRANCH:
-    case MENU_LAST_BRANCH:
+			case MENU_ITEM:
+			case MENU_CHECK_ITEM:
+			case MENU_RADIO_ITEM:
+			case MENU_BRANCH:
+			case MENU_LAST_BRANCH:
 
-      switch (items->type) {
+				switch (items->type) {
 
 
-      case MENU_RADIO_ITEM:
-	menu_item = NULL;	/* Not Implemented */
+					case MENU_RADIO_ITEM:
+						menu_item = NULL;   /* Not Implemented */
 
-      case MENU_CHECK_ITEM:
-	menu_item = gtk_check_menu_item_new ();
-	gtk_check_menu_item_set_show_toggle (
-                                       GTK_CHECK_MENU_ITEM (menu_item), TRUE);
-	break;
+					case MENU_CHECK_ITEM:
+						menu_item = gtk_check_menu_item_new ();
+						gtk_check_menu_item_set_show_toggle (
+								GTK_CHECK_MENU_ITEM (menu_item), TRUE);
+						break;
 
-      default:
-	menu_item = gtk_menu_item_new ();
-	break;
+					default:
+						menu_item = gtk_menu_item_new ();
+						break;
 
-      }
+				}
 
-      label = gtk_widget_new (GTK_TYPE_ACCEL_LABEL,
-			      "GtkWidget::visible", TRUE,
-			      "GtkWidget::parent", menu_item,
-			      "GtkAccelLabel::accel_widget", menu_item,
-			      "GtkMisc::xalign", 0.0,
-			      NULL);
+				label = gtk_widget_new (GTK_TYPE_ACCEL_LABEL,
+						"GtkWidget::visible", TRUE,
+						"GtkWidget::parent", menu_item,
+						"GtkAccelLabel::accel_widget", menu_item,
+						"GtkMisc::xalign", 0.0,
+						NULL);
 
-      gtk_label_parse_uline (GTK_LABEL (label), _(items->label));
+				gtk_label_parse_uline (GTK_LABEL (label), _(items->label));
 
-      if (items->type != MENU_BRANCH && items->type != MENU_LAST_BRANCH) {
-	if (items->callback) {
-	  gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
- 	                 GTK_SIGNAL_FUNC (items->callback), items->user_data);
+				if (items->type != MENU_BRANCH && items->type != MENU_LAST_BRANCH) {
+					if (items->callback) {
+						gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
+								GTK_SIGNAL_FUNC (items->callback), items->user_data);
+					}
+
+					if (accel_group && items->accel_key) {
+						gtk_widget_add_accelerator (menu_item, "activate", accel_group,
+								items->accel_key, items->accel_mods, GTK_ACCEL_VISIBLE);
+					}
+				}
+				else {  /* Branch */
+					if (items->type == MENU_LAST_BRANCH)
+						gtk_menu_item_right_justify (GTK_MENU_ITEM (menu_item));
+
+					gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item),
+							create_menu (items->user_data, accel_group));
+				}
+
+				if (GTK_IS_MENU_BAR (menu))
+					gtk_menu_bar_append (GTK_MENU_BAR (menu), menu_item);
+				else 
+					gtk_menu_append (GTK_MENU (menu), menu_item);
+				gtk_widget_show (menu_item);
+
+				if (items->widget)
+					*items->widget = menu_item;
+
+				break;
+
+			case MENU_SEPARATOR:
+				menu_item = gtk_menu_item_new ();
+				gtk_widget_set_sensitive (menu_item, FALSE);
+				gtk_menu_append (GTK_MENU (menu), menu_item);
+				gtk_widget_show (menu_item);
+				break;
+
+			case MENU_TEAROFF:
+				menu_item = gtk_tearoff_menu_item_new ();
+				gtk_menu_append (GTK_MENU (menu), menu_item);
+				gtk_widget_show (menu_item);
+				break;
+
+			default:
+				break;
+		}
+
+		items++;
 	}
-
-	if (accel_group && items->accel_key) {
-	  gtk_widget_add_accelerator (menu_item, "activate", accel_group,
-                      items->accel_key, items->accel_mods, GTK_ACCEL_VISIBLE);
-	}
-      }
-      else {	/* Branch */
-	if (items->type == MENU_LAST_BRANCH)
-	  gtk_menu_item_right_justify (GTK_MENU_ITEM (menu_item));
-
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item),
-  			         create_menu (items->user_data, accel_group));
-      }
-
-      if (GTK_IS_MENU_BAR (menu))
-	gtk_menu_bar_append (GTK_MENU_BAR (menu), menu_item);
-      else 
-	gtk_menu_append (GTK_MENU (menu), menu_item);
-      gtk_widget_show (menu_item);
-
-      if (items->widget)
-	*items->widget = menu_item;
-
-      break;
-
-    case MENU_SEPARATOR:
-      menu_item = gtk_menu_item_new ();
-      gtk_widget_set_sensitive (menu_item, FALSE);
-      gtk_menu_append (GTK_MENU (menu), menu_item);
-      gtk_widget_show (menu_item);
-      break;
-
-    case MENU_TEAROFF:
-      menu_item = gtk_tearoff_menu_item_new ();
-      gtk_menu_append (GTK_MENU (menu), menu_item);
-      gtk_widget_show (menu_item);
-      break;
-
-    default:
-      break;
-    }
-
-    items++;
-  }
 }
 
 
 GtkWidget *create_menu (const struct menuitem *items, 
-                                                 GtkAccelGroup *accel_group) {
-  GtkWidget *menu;
+		GtkAccelGroup *accel_group) {
+	GtkWidget *menu;
 
-  menu = gtk_menu_new ();
+	menu = gtk_menu_new ();
 
-  create_menu_recursive (menu, items, accel_group);
+	create_menu_recursive (menu, items, accel_group);
 
-  return menu;
+	return menu;
 }
 
 
 GtkWidget *create_menubar (const struct menuitem *items, 
-                                                 GtkAccelGroup *accel_group) {
-  GtkWidget *menubar;
-  menubar = gtk_menu_bar_new ();
+		GtkAccelGroup *accel_group) {
+	GtkWidget *menubar;
+	menubar = gtk_menu_bar_new ();
 
-  create_menu_recursive (menubar, items, accel_group);
+	create_menu_recursive (menubar, items, accel_group);
 
-  return menubar;
+	return menubar;
 }
 

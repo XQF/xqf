@@ -20,29 +20,29 @@
 #define __PSEARCH_H__
 
 
-#define	PSEARCH_HISTORY_MAXITEMS	10
+#define PSEARCH_HISTORY_MAXITEMS 10
 
 enum psearch_mode { 
-  PSEARCH_MODE_STRING = 0,
-  PSEARCH_MODE_SUBSTR = 1,
-  PSEARCH_MODE_REGEXP = 2
+	PSEARCH_MODE_STRING = 0,
+	PSEARCH_MODE_SUBSTR = 1,
+	PSEARCH_MODE_REGEXP = 2
 };
 
 struct psearch_data {
-  char *pattern;
-  enum psearch_mode mode;
-  void *data;
+	char *pattern;
+	enum psearch_mode mode;
+	void *data;
 };
 
-extern	int find_player_dialog (void);
+extern int find_player_dialog (void);
 
-extern	void psearch_init (void);
-extern	void psearch_done (void);
+extern void psearch_init (void);
+extern void psearch_done (void);
 
-extern	int psearch_data_is_empty (void);
-extern	char *psearch_lookup_pattern (void);
+extern int psearch_data_is_empty (void);
+extern char *psearch_lookup_pattern (void);
 
-extern	void find_player (int find_next);
+extern void find_player (int find_next);
 
 
 #endif /* __PSEARCH_H__ */

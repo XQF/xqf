@@ -24,38 +24,38 @@
 
 
 enum keyword_type {
-  KEYWORD_INT,
-  KEYWORD_BOOL,
-  KEYWORD_STRING
+	KEYWORD_INT,
+	KEYWORD_BOOL,
+	KEYWORD_STRING
 };
 
 struct keyword {
-  char *name;
-  enum keyword_type required;
-  char *config;
+	char *name;
+	enum keyword_type required;
+	char *config;
 };
 
 
-#define	BUFFER_SIZE	1024
+#define BUFFER_SIZE     1024
 
-#define STATE_SPACE	0
-#define STATE_TOKEN	1
-#define STATE_INT	2
-#define STATE_STRING	3
-#define STATE_COMMENT	4
+#define STATE_SPACE     0
+#define STATE_TOKEN     1
+#define STATE_INT       2
+#define STATE_STRING    3
+#define STATE_COMMENT   4
 
-#define TOKEN_EOF	0
-#define TOKEN_KEYWORD	1
-#define TOKEN_INT	2
-#define TOKEN_STRING	3
-#define TOKEN_COMMA	4
-#define TOKEN_EOL	5
+#define TOKEN_EOF       0
+#define TOKEN_KEYWORD   1
+#define TOKEN_INT       2
+#define TOKEN_STRING    3
+#define TOKEN_COMMA     4
+#define TOKEN_EOL       5
 
 
-extern	int rc_parse (void);
-extern  int rc_save (void);
-extern  int rc_migrate_dir (void);
-extern  int rc_check_dir (void);
+extern int rc_parse (void);
+extern int rc_save (void);
+extern int rc_migrate_dir (void);
+extern int rc_check_dir (void);
 
 
 #endif /* __RC_H__ */

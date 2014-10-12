@@ -23,8 +23,8 @@
 #include <glib.h>
 
 /**
-  * name is the full path of a file at found at level l
-  */
+ * name is the full path of a file at found at level l
+ */
 typedef void (*FoundFileFunction)(const char* name, int l, gpointer data);
 
 /**

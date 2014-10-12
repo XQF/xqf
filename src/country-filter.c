@@ -42,271 +42,272 @@ static unsigned LAN_GeoIPid;
 static GeoIP* gi;
 
 /* array of (struct pixmap*), indexed by country id.
-   flags[id] has three states:
-     -1     flag unavailable
-      0     flag not yet loaded
-     <else> pointer to struct pixmap
+flags[id] has three states:
+	-1     flag unavailable
+	0     flag not yet loaded
+	<else> pointer to struct pixmap
 */
+
 static struct pixmap* flags = NULL;
 
 void geoip_init(void)
 {
-  const char* geoipdat = getenv("xqf_GEOIPDAT");
+	const char* geoipdat = getenv("xqf_GEOIPDAT");
 
-  if(gi) return; // already initialized
+	if(gi) return; // already initialized
 
-  if(geoipdat)
-    gi = GeoIP_open(geoipdat, GEOIP_STANDARD);
+	if(geoipdat)
+		gi = GeoIP_open(geoipdat, GEOIP_STANDARD);
 
-  if(!gi)
-    gi = GeoIP_new(GEOIP_STANDARD);
+	if(!gi)
+		gi = GeoIP_new(GEOIP_STANDARD);
 
-  if(gi && geoip_num_countries())
-    flags = g_malloc0((MaxCountries+1) *sizeof(struct pixmap)); /*+1-> flag for LAN server*/
-  else
-  {
-    geoip_done();
-    xqf_error("GeoIP initialization failed");
-  }
+	if(gi && geoip_num_countries())
+		flags = g_malloc0((MaxCountries+1) *sizeof(struct pixmap)); /*+1-> flag for LAN server*/
+	else
+	{
+		geoip_done();
+		xqf_error("GeoIP initialization failed");
+	}
 }
 
 void geoip_done(void)
 {
-  if(gi)
-    GeoIP_delete(gi); 
-  g_free(flags);
+	if(gi)
+		GeoIP_delete(gi); 
+	g_free(flags);
 }
 
 gboolean geoip_is_working (void)
 {
 
-  if (gi)
-    return TRUE;
-  else
-    return FALSE;
+	if (gi)
+		return TRUE;
+	else
+		return FALSE;
 }
 
 const char* geoip_code_by_id(int id)
 {
-  if(id < 0 || id > MaxCountries ) return NULL;
+	if(id < 0 || id > MaxCountries ) return NULL;
 
-  /* LAN server have code ="00" */  
-  if (id == LAN_GeoIPid)
-    return "00";
-  else
-    return &xqf_geoip_country_code[id*3];
+	/* LAN server have code ="00" */  
+	if (id == LAN_GeoIPid)
+		return "00";
+	else
+		return &xqf_geoip_country_code[id*3];
 }
 
 
 const char* geoip_name_by_id(int id)
 {
-  if(!gi || id < 0 || id > MaxCountries) return NULL;
+	if(!gi || id < 0 || id > MaxCountries) return NULL;
 
-  if (id == LAN_GeoIPid)
-    return "LAN";
-  else
-    return xqf_geoip_country_name[id];
+	if (id == LAN_GeoIPid)
+		return "LAN";
+	else
+		return xqf_geoip_country_name[id];
 }
 
 int geoip_id_by_code(const char *country)
 {
-  int i;
+	int i;
 
-  if(!gi) return -1;
+	if(!gi) return -1;
 
-  if (strcmp(country,"00")==0)
-    return LAN_GeoIPid;
+	if (strcmp(country,"00")==0)
+		return LAN_GeoIPid;
 
-  for (i=1;i<MaxCountries;++i)
-  {
-    if (strcmp(country,xqf_geoip_country_name[i])==0) 
-      return i;
-  }
+	for (i=1;i<MaxCountries;++i)
+	{
+		if (strcmp(country,xqf_geoip_country_name[i])==0) 
+			return i;
+	}
 
-  return 0;
+	return 0;
 }
 
 /*Checks for RFC1918 private addresses; returns TRUE if is a private address. */
 /*from the napshare source*/
 static gboolean is_private_ip(guint32 ip)
 {
-  /* 127.0.0.0 -- (localhost) */
-  if ((ip & 0xff000000) == 0x7f000000)
-  {
-      return TRUE;
-  }
+	/* 127.0.0.0 -- (localhost) */
+	if ((ip & 0xff000000) == 0x7f000000)
+	{
+		return TRUE;
+	}
 
-  /* 10.0.0.0 -- (10/8 prefix) */
-  if ((ip & 0xff000000) == 0xa000000)
-  {
-      return TRUE;
-  }
+	/* 10.0.0.0 -- (10/8 prefix) */
+	if ((ip & 0xff000000) == 0xa000000)
+	{
+		return TRUE;
+	}
 
-  /* 172.16.0.0 -- (172.16/12 prefix) */
-  if ((ip & 0xfff00000) == 0xac100000)
-  {
-      return TRUE;
-  }
+	/* 172.16.0.0 -- (172.16/12 prefix) */
+	if ((ip & 0xfff00000) == 0xac100000)
+	{
+		return TRUE;
+	}
 
-  /* 192.168.0.0 -- (192.168/16 prefix) */
-  if ((ip & 0xffff0000) == 0xc0a80000)
-  {
-      return TRUE;
-  }
+	/* 192.168.0.0 -- (192.168/16 prefix) */
+	if ((ip & 0xffff0000) == 0xc0a80000)
+	{
+		return TRUE;
+	}
 
-  return FALSE;
+	return FALSE;
 }
 
 
 int geoip_id_by_ip(struct in_addr in)
 {
 
-  if(!gi) return -1;
-    
-  /*check if the server is inside a LAN*/
-  if (is_private_ip(htonl(in.s_addr)))
-    return LAN_GeoIPid;
-  else
-    return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
+	if(!gi) return -1;
+
+	/*check if the server is inside a LAN*/
+	if (is_private_ip(htonl(in.s_addr)))
+		return LAN_GeoIPid;
+	else
+		return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
 }
 
 static char* find_flag_file(int id)
 {
-  char file[] = "flags/lan.png";
-  char* filename;
+	char file[] = "flags/lan.png";
+	char* filename;
 
-  if (id != LAN_GeoIPid)
-  {
-    const char* code = geoip_code_by_id(id);
-    if(!code) return NULL;
-    strncpy(file+strlen("flags/"),code,2);
-    strcpy(file+strlen("flags/")+2,".png");
-    g_strdown(file);
-  }
+	if (id != LAN_GeoIPid)
+	{
+		const char* code = geoip_code_by_id(id);
+		if(!code) return NULL;
+		strncpy(file+strlen("flags/"),code,2);
+		strcpy(file+strlen("flags/")+2,".png");
+		g_strdown(file);
+	}
 
-  filename = find_pixmap_directory(file);
+	filename = find_pixmap_directory(file);
 
-  return filename;
+	return filename;
 }
 
 struct pixmap* get_pixmap_for_country(int id)
 {
-  GdkPixbuf* pixbuf = NULL;
-  struct pixmap* pix = NULL;
+	GdkPixbuf* pixbuf = NULL;
+	struct pixmap* pix = NULL;
 
-  char* filename = NULL;
+	char* filename = NULL;
 
-  if(!flags) return NULL;
-  if(id < 1) return NULL; // no flag for N/A
-  
-  pix = &flags[id];
+	if(!flags) return NULL;
+	if(id < 1) return NULL; // no flag for N/A
 
-  if(pix->pix == GINT_TO_POINTER(-1)) return NULL;
-  if(pix->pix) return pix;
+	pix = &flags[id];
 
-  if(!GDK_PIXBUF_INSTALLED) return NULL;
+	if(pix->pix == GINT_TO_POINTER(-1)) return NULL;
+	if(pix->pix) return pix;
 
-  filename = find_flag_file(id);
+	if(!GDK_PIXBUF_INSTALLED) return NULL;
 
-  if(!filename || access(filename,R_OK))
-  {
-    g_free(filename);
-    return NULL;
-  }
+	filename = find_flag_file(id);
 
-  debug(4,"loading %s",filename);
+	if(!filename || access(filename,R_OK))
+	{
+		g_free(filename);
+		return NULL;
+	}
 
-  pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+	debug(4,"loading %s",filename);
 
-  if (pixbuf == NULL)
-  {
-    pix->pix=GINT_TO_POINTER(-1);
-    g_warning (_("Error loading pixmap file: %s"), filename);
-    g_free (filename);
-    return NULL;
-  }
+	pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
-  gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
+	if (pixbuf == NULL)
+	{
+		pix->pix=GINT_TO_POINTER(-1);
+		g_warning (_("Error loading pixmap file: %s"), filename);
+		g_free (filename);
+		return NULL;
+	}
 
-  gdk_pixbuf_unref(pixbuf);
-  g_free (filename);
+	gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
 
-  return pix;
+	gdk_pixbuf_unref(pixbuf);
+	g_free (filename);
+
+	return pix;
 }
 
 struct pixmap* get_pixmap_for_country_with_fallback(int id)
 {
-  struct pixmap* pix = get_pixmap_for_country(id);
-  if(pix)
-    return pix;
+	struct pixmap* pix = get_pixmap_for_country(id);
+	if(pix)
+		return pix;
 
-  if(!flags || flags[0].pix == GINT_TO_POINTER(-1))
-    return NULL;
+	if(!flags || flags[0].pix == GINT_TO_POINTER(-1))
+		return NULL;
 
-  if(!flags[0].pix)
-  {
-    flags[0].pix = gdk_pixmap_colormap_create_from_xpm_d(NULL,
-	gdk_colormap_get_system(),
-	&flags[0].mask,
-	NULL,
-	noflag_xpm);
-    if(!flags[0].pix)
-      flags[0].pix = GINT_TO_POINTER(-1);
-  }
-  return &flags[0];
+	if(!flags[0].pix)
+	{
+		flags[0].pix = gdk_pixmap_colormap_create_from_xpm_d(NULL,
+				gdk_colormap_get_system(),
+				&flags[0].mask,
+				NULL,
+				noflag_xpm);
+		if(!flags[0].pix)
+			flags[0].pix = GINT_TO_POINTER(-1);
+	}
+	return &flags[0];
 }
 
 static void* lookup_symbol(const char* name)
 {
-  void* p;
-  char* error;
-  dlerror();
-  p = dlsym(NULL, name);
-  if ((error = dlerror()) != NULL) {
-      xqf_error("failed to lookup %s: %s", name, error);
-      return NULL;
-  }
-  return p;
+	void* p;
+	char* error;
+	dlerror();
+	p = dlsym(NULL, name);
+	if ((error = dlerror()) != NULL) {
+		xqf_error("failed to lookup %s: %s", name, error);
+		return NULL;
+	}
+	return p;
 }
 
 unsigned geoip_num_countries()
 {
-  if((void*)xqf_geoip_country_code == (void*)-1)
-    return 0;
+	if((void*)xqf_geoip_country_code == (void*)-1)
+		return 0;
 
-  if(!xqf_geoip_country_code)
-  {
-    unsigned i;
+	if(!xqf_geoip_country_code)
+	{
+		unsigned i;
 
-    xqf_geoip_country_name = lookup_symbol("GeoIP_country_name");
-    xqf_geoip_country_code = lookup_symbol("GeoIP_country_code");
+		xqf_geoip_country_name = lookup_symbol("GeoIP_country_name");
+		xqf_geoip_country_code = lookup_symbol("GeoIP_country_code");
 
-    if(!xqf_geoip_country_name || !xqf_geoip_country_code)
-    {
-      /* nasty hack to determine the number of countries at run time */
-      MaxCountries = LAN_GeoIPid = 0;
-      xqf_geoip_country_name = (void*)-1;
-      xqf_geoip_country_code = (void*)-1;
-      return 0;
-    }
+		if(!xqf_geoip_country_name || !xqf_geoip_country_code)
+		{
+			/* nasty hack to determine the number of countries at run time */
+			MaxCountries = LAN_GeoIPid = 0;
+			xqf_geoip_country_name = (void*)-1;
+			xqf_geoip_country_code = (void*)-1;
+			return 0;
+		}
 
-    for (i = 0; xqf_geoip_country_code[i*3] && i < 333 /* arbitrary limit */; ++i)
-      /* nothing */;
+		for (i = 0; xqf_geoip_country_code[i*3] && i < 333 /* arbitrary limit */; ++i)
+			/* nothing */;
 
-    if(i >= 333)
-    {
-      xqf_geoip_country_name = (void*)-1;
-      xqf_geoip_country_code = (void*)-1;
-      xqf_error("failed to determine number of supported countries");
-      return 0;
-    }
+		if(i >= 333)
+		{
+			xqf_geoip_country_name = (void*)-1;
+			xqf_geoip_country_code = (void*)-1;
+			xqf_error("failed to determine number of supported countries");
+			return 0;
+		}
 
-    MaxCountries = LAN_GeoIPid = i;
-  }
+		MaxCountries = LAN_GeoIPid = i;
+	}
 
-  debug(1, "MaxCountries %u", MaxCountries);
+	debug(1, "MaxCountries %u", MaxCountries);
 
-  return MaxCountries;
+	return MaxCountries;
 }
 
 #endif

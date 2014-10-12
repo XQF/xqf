@@ -22,50 +22,50 @@
 #include <gtk/gtk.h>
 
 
-#define  HOST_CACHE_MAX_AGE	(7 * 24 * 60 * 60)	/* one week */
-#define  HOST_CACHE_MAX_SIZE	5000
+#define HOST_CACHE_MAX_AGE  (7 * 24 * 60 * 60)  /* one week */
+#define HOST_CACHE_MAX_SIZE 5000
 
 
-extern	int hosts_total (void);
-extern	GSList *all_hosts (void);
-extern	struct host *host_add (const char *address);
-extern  struct host *host_add_in (struct in_addr addr);
-extern	void host_unref (struct host *h);
+extern int hosts_total (void);
+extern GSList *all_hosts (void);
+extern struct host *host_add (const char *address);
+extern struct host *host_add_in (struct in_addr addr);
+extern void host_unref (struct host *h);
 
-extern	GSList *merge_host_to_resolve  (GSList *hosts, struct host *h);
-extern	GSList *merge_hosts_to_resolve (GSList *hosts, GSList *servers);
+extern GSList *merge_host_to_resolve  (GSList *hosts, struct host *h);
+extern GSList *merge_hosts_to_resolve (GSList *hosts, GSList *servers);
 
-extern	void host_cache_save (void);
-extern	void host_cache_load (void);
-extern	void host_cache_clear (void);
+extern void host_cache_save (void);
+extern void host_cache_load (void);
+extern void host_cache_clear (void);
 
 static inline void host_ref (struct host *h) {
-  if (h) {
-    h->ref_count++;
-  }
+	if (h) {
+		h->ref_count++;
+	}
 }
 
 static inline GSList *host_list_add (GSList *list, struct host *h) {
-  if (g_slist_find (list, h) == NULL) {
-    list = g_slist_prepend (list, h);
-    host_ref (h);
-  }
-  return list;
+	if (g_slist_find (list, h) == NULL) {
+		list = g_slist_prepend (list, h);
+		host_ref (h);
+	}
+	return list;
 }
 
 static inline GSList *host_list_remove (GSList *list, struct host *h) {
-  if (g_slist_find (list, h)) {
-    list = g_slist_remove (list, h);
-    host_unref (h);
-  }
-  return list;
+	if (g_slist_find (list, h)) {
+		list = g_slist_remove (list, h);
+		host_unref (h);
+	}
+	return list;
 }
 
 static inline void host_list_free (GSList *list) {
-  if (list) {
-    g_slist_foreach (list, (GFunc) host_unref, NULL);
-    g_slist_free (list);
-  }
+	if (list) {
+		g_slist_foreach (list, (GFunc) host_unref, NULL);
+		g_slist_free (list);
+	}
 }
 
 

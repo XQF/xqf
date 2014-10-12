@@ -22,20 +22,20 @@
 
 #include <glib.h>
 
-extern	int	config_get_int_with_default (const char *path, int *def);
-extern	double	config_get_float_with_default (const char *path, int *def);
-extern	int	config_get_bool_with_default (const char *path, int *def);
-extern	char*	config_get_string_with_default (const char *path, int *def);
+extern int      config_get_int_with_default (const char *path, int *def);
+extern double   config_get_float_with_default (const char *path, int *def);
+extern int      config_get_bool_with_default (const char *path, int *def);
+extern char*    config_get_string_with_default (const char *path, int *def);
 
-#define	config_get_int(Path)	config_get_int_with_default ((Path), NULL)
-#define	config_get_float(Path)	config_get_float_with_default ((Path), NULL)
-#define	config_get_bool(Path)	config_get_bool_with_default ((Path), NULL)
-#define	config_get_string(Path)	config_get_string_with_default ((Path), NULL)
+#define config_get_int(Path)    config_get_int_with_default ((Path), NULL)
+#define config_get_float(Path)  config_get_float_with_default ((Path), NULL)
+#define config_get_bool(Path)   config_get_bool_with_default ((Path), NULL)
+#define config_get_string(Path) config_get_string_with_default ((Path), NULL)
 
-extern	void	config_set_int (const char *path, int i);
-extern	void	config_set_float (const char *path, double f);
-extern	void	config_set_bool (const char *path, int b);
-extern	void	config_set_string (const char *path, const char *s);
+extern void config_set_int (const char *path, int i);
+extern void config_set_float (const char *path, double f);
+extern void config_set_bool (const char *path, int b);
+extern void config_set_string (const char *path, const char *s);
 
 typedef struct config_key_iterator config_key_iterator;
 
@@ -44,7 +44,7 @@ typedef struct config_key_iterator config_key_iterator;
  * @param path path to a section
  * @returns an iterator
  */
-extern	config_key_iterator* config_init_iterator (const char *path);
+extern config_key_iterator* config_init_iterator (const char *path);
 
 /** \brief get current key and value in sequence
  *
@@ -53,7 +53,7 @@ extern	config_key_iterator* config_init_iterator (const char *path);
  * @param val where to place the value or NULL. Must be freed manually
  * @return iterator of next element or NULL if done
  */
-extern	config_key_iterator* config_iterator_next (config_key_iterator *iterator, char **key, char **val);
+extern config_key_iterator* config_iterator_next (config_key_iterator *iterator, char **key, char **val);
 
 typedef struct config_section_iterator config_section_iterator;
 
@@ -62,7 +62,7 @@ typedef struct config_section_iterator config_section_iterator;
  * @param path path to a file
  * @returns an iterator
  */
-extern	config_section_iterator* config_init_section_iterator (const char *path);
+extern config_section_iterator* config_init_section_iterator (const char *path);
 
 /** \brief get section in sequence
  *
@@ -70,21 +70,21 @@ extern	config_section_iterator* config_init_section_iterator (const char *path);
  * @param section where to place the section name or NULL. Must be freed manually
  * @return iterator of next element or NULL if done
  */
-extern	config_section_iterator* config_section_iterator_next (config_section_iterator *iterator, char **section);
+extern config_section_iterator* config_section_iterator_next (config_section_iterator *iterator, char **section);
 
 
-extern	void 	config_clean_key (const char *path);
-extern	void 	config_clean_section (const char *path);
-extern	void 	config_clean_file (const char *path);
+extern void config_clean_key (const char *path);
+extern void config_clean_section (const char *path);
+extern void config_clean_file (const char *path);
 
-extern	void	config_sync (void);
-extern	void	config_drop_all (void);
-extern	void	config_drop_file (const char *path);
+extern void config_sync (void);
+extern void config_drop_all (void);
+extern void config_drop_file (const char *path);
 
-extern	void 	config_push_prefix (const char *prefix);
-extern	void 	config_pop_prefix (void);
+extern void config_push_prefix (const char *prefix);
+extern void config_pop_prefix (void);
 
-extern	void	config_add_dir (const char *dir);
+extern void config_add_dir (const char *dir);
 
 
 #endif /* __CONFIG_H__ */

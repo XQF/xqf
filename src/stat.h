@@ -19,7 +19,7 @@
 #ifndef __QSTAT_H__
 #define __QSTAT_H__
 
-#include <unistd.h>	/* pid_t */
+#include <unistd.h>     /* pid_t */
 
 #include <gtk/gtk.h>
 
@@ -28,17 +28,17 @@
 
 
 #ifndef HTTP_HELPER
-# define HTTP_HELPER		"wget -t 1 -T 20 -q -e robots=off --user-agent=XQF/" VERSION " -O -"
+# define HTTP_HELPER        "wget -t 1 -T 20 -q -e robots=off --user-agent=XQF/" VERSION " -O -"
 #endif
 
 
-#define QSTAT_DELIM		'\t'
-#define QSTAT_DELIM_STR		"\t"
-#define QSTAT_MASTER_DELIM	' '
+#define QSTAT_DELIM         '\t'
+#define QSTAT_DELIM_STR     "\t"
+#define QSTAT_MASTER_DELIM  ' '
 
-#define BUFFER_MINSIZE	1024
-#define BUFFER_MAXSIZE	(128*1024)
-#define BUFFER_TRESHOLD	64
+#define BUFFER_MINSIZE      1024
+#define BUFFER_MAXSIZE      (128*1024)
+#define BUFFER_TRESHOLD     64
 
 // EVENT_* used to decide what sound to play
 #define EVENT_REFRESH_SELECTED 1
@@ -48,50 +48,50 @@
 struct stat_job;
 
 struct stat_conn {
-  pid_t	pid;
-  int	fd;
-  GIOChannel *chan;
+	pid_t pid;
+	int fd;
+	GIOChannel *chan;
 
-  guint tag;
-  GIOFunc input_callback;
+	guint tag;
+	GIOFunc input_callback;
 
-  char	*buf;
-  int	bufsize;
-  int	pos;
-  int 	lastnl;
+	char *buf;
+	int bufsize;
+	int pos;
+	int lastnl;
 
-  GSList *strings;	/* a list of strings in `buf' */
+	GSList *strings;    /* a list of strings in `buf' */
 
-  GSList *servers;
-  GSList *uservers;
-  struct master *master;
+	GSList *servers;
+	GSList *uservers;
+	struct master *master;
 
-  struct stat_job *job;
+	struct stat_job *job;
 
-  char *tmpfile;
+	char *tmpfile;
 
-  // UGLY HACKS
-  gboolean first; // marker for savage check header
-  gboolean is_savage; // true if file is in savage format
+	// UGLY HACKS
+	gboolean first;     // marker for savage check header
+	gboolean is_savage; // true if file is in savage format
 };
 
 struct delayed_refresh {
-  GSList *queued_servers;
-  GSList *queued_hosts;
-  GtkFunction refresh_handler;
-  unsigned timeout_id;
+	GSList *queued_servers;
+	GSList *queued_hosts;
+	GtkFunction refresh_handler;
+	unsigned timeout_id;
 };
 
 struct stat_progress {
-  int tasks;
-  int done;
+	int tasks;
+	int done;
 };
 
 enum stat_state {
-  STAT_RESOLVE_NAMES,
-  STAT_UPDATE_SOURCE,
-  STAT_REFRESH_SERVERS,
-  STAT_RESOLVE_HOSTS
+	STAT_RESOLVE_NAMES,
+	STAT_UPDATE_SOURCE,
+	STAT_REFRESH_SERVERS,
+	STAT_RESOLVE_HOSTS
 };
 
 typedef void (*master_func) (struct stat_job *job, struct master *m);
@@ -102,42 +102,42 @@ typedef void (*state_func)  (struct stat_job *job, enum stat_state state);
 typedef void (*close_func)  (struct stat_job *job, int killed);
 
 struct stat_job {
-  GSList *masters;		/*  GSList <struct master *>   */
-  GSList *servers;		/*  GSList <struct server *>   */
-  GSList *hosts;		/*  GSList <struct host *>     */
-  GSList *names;		/*  GSList <struct userver *>  */
+	GSList *masters;    /* GSList <struct master *> */
+	GSList *servers;    /* GSList <struct server *> */
+	GSList *hosts;      /* GSList <struct host *>   */
+	GSList *names;      /* GSList <struct userver *>*/
 
-  GSList *cons;			/* open connections */
+	GSList *cons;       /* open connections */
 
-  GSList *master_handlers;
-  GSList *server_handlers;
-  GSList *host_handlers;
-  GSList *name_handlers;
+	GSList *master_handlers;
+	GSList *server_handlers;
+	GSList *host_handlers;
+	GSList *name_handlers;
 
-  GSList *state_handlers;
-  GSList *close_handlers;
+	GSList *state_handlers;
+	GSList *close_handlers;
 
-  struct delayed_refresh delayed;
-  struct stat_progress progress;
+	struct delayed_refresh delayed;
+	struct stat_progress progress;
 
-  int need_refresh;
-  int need_redraw;
+	int need_refresh;
+	int need_redraw;
 
-  int masters_to_resolve;
-  int q2_masters;
-  
-  enum stat_state state;
+	int masters_to_resolve;
+	int q2_masters;
 
-  gpointer data;		/* arbitrary data */
+	enum stat_state state;
+
+	gpointer data;      /* arbitrary data */
 };
 
-extern	void parse_saved_server (GSList *strings);
+extern void parse_saved_server (GSList *strings);
 
-extern	void stat_start (struct stat_job *job);
-extern	void stat_stop (struct stat_job *job);
+extern void stat_start (struct stat_job *job);
+extern void stat_stop (struct stat_job *job);
 
-extern	struct stat_job *stat_job_create (GSList *masters, GSList *names, GSList *servers, GSList *hosts);
-extern	void stat_job_free (struct stat_job *job);
+extern struct stat_job *stat_job_create (GSList *masters, GSList *names, GSList *servers, GSList *hosts);
+extern void stat_job_free (struct stat_job *job);
 
 
 #endif /* __QSTAT_H__ */

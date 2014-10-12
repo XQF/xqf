@@ -23,42 +23,39 @@
 
 
 enum ssort_mode {
-  SORT_SERVER_NAME = 0,
-  SORT_SERVER_ADDRESS,
-  SORT_SERVER_PING,
-  SORT_SERVER_TO,
-  SORT_SERVER_PRIVATE,
-  SORT_SERVER_ANTICHEAT,
-  SORT_SERVER_PLAYERS,
-  SORT_SERVER_MAXPLAYERS,
-  SORT_SERVER_MAP,
-  SORT_SERVER_GAME,
-  SORT_SERVER_GAMETYPE,
-  SORT_SERVER_COUNTRY,
-  SORT_SERVER_TYPE,
+	SORT_SERVER_NAME = 0,
+	SORT_SERVER_ADDRESS,
+	SORT_SERVER_PING,
+	SORT_SERVER_TO,
+	SORT_SERVER_PRIVATE,
+	SORT_SERVER_ANTICHEAT,
+	SORT_SERVER_PLAYERS,
+	SORT_SERVER_MAXPLAYERS,
+	SORT_SERVER_MAP,
+	SORT_SERVER_GAME,
+	SORT_SERVER_GAMETYPE,
+	SORT_SERVER_COUNTRY,
+	SORT_SERVER_TYPE,
 };
 
 enum psort_mode {
-  SORT_PLAYER_NAME = 0,
-  SORT_PLAYER_FRAGS,
-  SORT_PLAYER_COLOR,
-  SORT_PLAYER_SKIN,
-  SORT_PLAYER_PING,
-  SORT_PLAYER_TIME
+	SORT_PLAYER_NAME = 0,
+	SORT_PLAYER_FRAGS,
+	SORT_PLAYER_COLOR,
+	SORT_PLAYER_SKIN,
+	SORT_PLAYER_PING,
+	SORT_PLAYER_TIME
 };
 
 enum isort_mode {
-  SORT_INFO_RULE = 0,
-  SORT_INFO_VALUE
+	SORT_INFO_RULE = 0,
+	SORT_INFO_VALUE
 };
 
 
-extern	int compare_servers (const struct server *a, const struct server *b,
-                                                        enum ssort_mode mode);
-extern	int compare_players (const struct player *a, const struct player *b,
-                                                        enum psort_mode mode);
-extern	int compare_srvinfo (const char **i1, const char **i2,
-                                                        enum isort_mode mode);
+extern int compare_servers (const struct server *a, const struct server *b, enum ssort_mode mode);
+extern int compare_players (const struct player *a, const struct player *b, enum psort_mode mode);
+extern int compare_srvinfo (const char **i1, const char **i2, enum isort_mode mode);
 
 
 #endif /* __SORT_H__ */

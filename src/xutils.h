@@ -22,7 +22,7 @@
 #include <gtk/gtk.h>
 
 
-extern	void iconify_window (GdkWindow *window);
+extern void iconify_window (GdkWindow *window);
 
 void window_set_icon (GtkWidget *window);
 

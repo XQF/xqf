@@ -27,28 +27,25 @@
 
 
 void iconify_window (GdkWindow *window) {
-  Window xwindow;
+	Window xwindow;
 
-  if (!window)
-    return;
+	if (!window)
+		return;
 
+	xwindow = GDK_WINDOW_XWINDOW(window);
 
-
-  xwindow = GDK_WINDOW_XWINDOW(window);
-
-
-  XIconifyWindow (GDK_DISPLAY (), xwindow, DefaultScreen (GDK_DISPLAY ()));
+	XIconifyWindow (GDK_DISPLAY (), xwindow, DefaultScreen (GDK_DISPLAY ()));
 }
 
 static const char* minimize_icon = "xqf.svg";
 
 void window_set_icon (GtkWidget *win)
 {
-  GdkPixbuf* pixbuf;
-  pixbuf = load_pixmap_as_pixbuf(minimize_icon);
-  if(pixbuf)
-  {
-    gtk_window_set_icon (GTK_WINDOW (win), pixbuf);
-    gdk_pixbuf_unref (pixbuf);
-  }
+	GdkPixbuf* pixbuf;
+	pixbuf = load_pixmap_as_pixbuf(minimize_icon);
+	if(pixbuf)
+	{
+		gtk_window_set_icon (GTK_WINDOW (win), pixbuf);
+		gdk_pixbuf_unref (pixbuf);
+	}
 }

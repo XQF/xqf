@@ -24,36 +24,34 @@
 
 
 enum menuitem_type {
-  MENU_END = 0,
-  MENU_ITEM,
-  MENU_CHECK_ITEM,
-  MENU_RADIO_ITEM,
-  MENU_SEPARATOR,
-  MENU_TEAROFF,
-  MENU_BRANCH,
-  MENU_LAST_BRANCH
+	MENU_END = 0,
+	MENU_ITEM,
+	MENU_CHECK_ITEM,
+	MENU_RADIO_ITEM,
+	MENU_SEPARATOR,
+	MENU_TEAROFF,
+	MENU_BRANCH,
+	MENU_LAST_BRANCH
 };
 
 struct menuitem {
-  enum menuitem_type type;
+	enum menuitem_type type;
 
-  const char *label;
+	const char *label;
 
-  guint accel_key;
-  GdkModifierType accel_mods;
+	guint accel_key;
+	GdkModifierType accel_mods;
 
-  GtkSignalFunc	callback;
-  gpointer user_data;
+	GtkSignalFunc callback;
+	gpointer user_data;
 
-  GtkWidget **widget;
+	GtkWidget **widget;
 };
 
 
-extern	GtkWidget *create_menu (const struct menuitem *items, 
-                                                  GtkAccelGroup *accel_group);
+extern GtkWidget *create_menu (const struct menuitem *items, GtkAccelGroup *accel_group);
 
-extern	GtkWidget *create_menubar (const struct menuitem *items, 
-                                                  GtkAccelGroup *accel_group);
+extern GtkWidget *create_menubar (const struct menuitem *items, GtkAccelGroup *accel_group);
 
 #endif /* __MENUS_H__ */
 

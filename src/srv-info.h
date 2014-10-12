@@ -23,7 +23,7 @@
 #include "xqf.h"
 
 
-extern	void srvinf_ctree_set_server (struct server *s);
+extern void srvinf_ctree_set_server (struct server *s);
 
 
 #endif /* __SRV_INFO_H__ */

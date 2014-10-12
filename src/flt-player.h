@@ -25,37 +25,37 @@
 #include <gtk/gtk.h>
 
 #include "xqf.h"
-#include "filter.h" /*For server_filter_vars */
+#include "filter.h"     /*For server_filter_vars */
 
 enum pattern_mode { 
-  PATTERN_MODE_STRING = 0,
-  PATTERN_MODE_SUBSTR = 1,
-  PATTERN_MODE_REGEXP = 2
+	PATTERN_MODE_STRING = 0,
+	PATTERN_MODE_SUBSTR = 1,
+	PATTERN_MODE_REGEXP = 2
 };
 
 struct player_pattern {
-  char *pattern;
-  enum pattern_mode mode;
-  unsigned groups;
-  char *comment;
+	char *pattern;
+	enum pattern_mode mode;
+	unsigned groups;
+	char *comment;
 
-  char *error;
-  void *data;
+	char *error;
+	void *data;
 
-  int dirty;
+	int dirty;
 };
 
-extern  int player_filter (struct server *s);
+extern int player_filter (struct server *s);
 
-extern	void player_filter_page (GtkWidget *notebook);
+extern void player_filter_page (GtkWidget *notebook);
 
-extern	void player_filter_new_defaults (void);
-extern	void player_filter_cfg_clean_up (void);
+extern void player_filter_new_defaults (void);
+extern void player_filter_cfg_clean_up (void);
 
-extern	int player_filter_add_player (char *name, unsigned mask);
+extern int player_filter_add_player (char *name, unsigned mask);
 
-extern	void player_filter_init (void);
-extern	void player_filter_done (void);
+extern void player_filter_init (void);
+extern void player_filter_done (void);
 
 
 #endif /* __FLT_PLAYER_H__ */

@@ -29,7 +29,8 @@ void create_splashscreen (void);
 void destroy_splashscreen(void);
 
 /* set percentage on splash screen to absolute value, thanks to lopster for
- * this code */
+ * this code
+ * */
 void splash_set_progress(const char* message, guint per);
 
 /* add per to current percentage */
