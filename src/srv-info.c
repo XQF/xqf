@@ -281,7 +281,7 @@ static char *q2_expert_expflags[Q2_EXPERT_EXPFLAGS] = {
 	"No Plats",             /*    16384 */
 	"Team Distribution",    /*    32768 */
 
-	"Alternate Restore"     /*    65536 */
+	"Alternate Restore",    /*    65536 */
 	"Ammo Regen"            /*   131072 */
 };
 
