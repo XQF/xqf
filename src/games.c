@@ -104,8 +104,7 @@ struct game games[] = {
 	},
 	{
 		type                : QW_SERVER,
-		flags               : GAME_CONNECT | GAME_RECORD | GAME_SPECTATE | GAME_RCON
-	    | GAME_QUAKE1_PLAYER_COLORS | GAME_QUAKE1_SKIN,
+		flags               : GAME_CONNECT | GAME_RECORD | GAME_SPECTATE | GAME_RCON | GAME_QUAKE1_PLAYER_COLORS | GAME_QUAKE1_SKIN,
 		name                : "QuakeWorld",
 		default_port        : 27500,
 		default_master_port : 27000,

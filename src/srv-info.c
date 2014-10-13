@@ -73,154 +73,154 @@ static char *qw_teamplay_fortress[QW_TEAMPLAY_TF] = {
 #define Q2_DMFLAGS 20
 
 static char *q2_dmflags[Q2_DMFLAGS] = {
-	"No Health",            /*      1 */
-	"No Powerups",          /*      2 */
-	"Weapons Stay",         /*      4 */
-	"No Falling Damage",    /*      8 */
+	"No Health",                /*      1 */
+	"No Powerups",              /*      2 */
+	"Weapons Stay",             /*      4 */
+	"No Falling Damage",        /*      8 */
 
-	"Instant Powerups",     /*     16 */
-	"Same Map",             /*     32 */
-	"Teams by Skin",        /*     64 */
-	"Teams by Model",       /*    128 */
+	"Instant Powerups",         /*     16 */
+	"Same Map",                 /*     32 */
+	"Teams by Skin",            /*     64 */
+	"Teams by Model",           /*    128 */
 
-	"No Friendly Fire",     /*    256 */
-	"Spawn Farthest",       /*    512 */
-	"Force Respawn",        /*   1024 */
-	"No Armor",             /*   2048 */
+	"No Friendly Fire",         /*    256 */
+	"Spawn Farthest",           /*    512 */
+	"Force Respawn",            /*   1024 */
+	"No Armor",                 /*   2048 */
 
-	"Allow Exit",           /*   4096 */
-	"Infinite Ammo",        /*   8192 */
-	"Quad Drop",            /*  16384 */
-	"Fixed FOV",            /*  32768 */
+	"Allow Exit",               /*   4096 */
+	"Infinite Ammo",            /*   8192 */
+	"Quad Drop",                /*  16384 */
+	"Fixed FOV",                /*  32768 */
 
-	NULL,                   /*  65536 */
-	"CTF Forced Join",      /* 131072 */
-	"Armor Protect",        /* 262144 */
-	"CTF No Tech Powerups"  /* 524288 */
+	NULL,                       /*  65536 */
+	"CTF Forced Join",          /* 131072 */
+	"Armor Protect",            /* 262144 */
+	"CTF No Tech Powerups"      /* 524288 */
 };
 
 
 #define Q2_XATRIX_DMFLAGS 17
 
 static char *q2_xatrix_dmflags[Q2_XATRIX_DMFLAGS] = {
-	"No Health",            /*      1 */
-	"No Powerups",          /*      2 */
-	"Weapons Stay",         /*      4 */
-	"No Falling Damage",    /*      8 */
+	"No Health",                /*      1 */
+	"No Powerups",              /*      2 */
+	"Weapons Stay",             /*      4 */
+	"No Falling Damage",        /*      8 */
 
-	"Instant Powerups",     /*     16 */
-	"Same Map",             /*     32 */
-	"Teams by Skin",        /*     64 */
-	"Teams by Model",       /*    128 */
+	"Instant Powerups",         /*     16 */
+	"Same Map",                 /*     32 */
+	"Teams by Skin",            /*     64 */
+	"Teams by Model",           /*    128 */
 
-	"No Friendly Fire",     /*    256 */
-	"Spawn Farthest",       /*    512 */
-	"Force Respawn",        /*   1024 */
-	"No Armor",             /*   2048 */
+	"No Friendly Fire",         /*    256 */
+	"Spawn Farthest",           /*    512 */
+	"Force Respawn",            /*   1024 */
+	"No Armor",                 /*   2048 */
 
-	"Allow Exit",           /*   4096 */
-	"Infinite Ammo",        /*   8192 */
-	"Quad Drop",            /*  16384 */
-	"Fixed FOV",            /*  32768 */
+	"Allow Exit",               /*   4096 */
+	"Infinite Ammo",            /*   8192 */
+	"Quad Drop",                /*  16384 */
+	"Fixed FOV",                /*  32768 */
 
-	"DualFire Drop"         /*  65536 */
+	"DualFire Drop"             /*  65536 */
 };
 
 
 #define Q2_ROGUE_DMFLAGS 21
 
 static char *q2_rogue_dmflags[Q2_ROGUE_DMFLAGS] = {
-	"No Health",            /*      1 */
-	"No Powerups",          /*      2 */
-	"Weapons Stay",         /*      4 */
-	"No Falling Damage",    /*      8 */
+	"No Health",                /*      1 */
+	"No Powerups",              /*      2 */
+	"Weapons Stay",             /*      4 */
+	"No Falling Damage",        /*      8 */
 
-	"Instant Powerups",     /*     16 */
-	"Same Map",             /*     32 */
-	"Teams by Skin",        /*     64 */
-	"Teams by Model",       /*    128 */
+	"Instant Powerups",         /*     16 */
+	"Same Map",                 /*     32 */
+	"Teams by Skin",            /*     64 */
+	"Teams by Model",           /*    128 */
 
-	"No Friendly Fire",     /*    256 */
-	"Spawn Farthest",       /*    512 */
-	"Force Respawn",        /*   1024 */
-	"No Armor",             /*   2048 */
+	"No Friendly Fire",         /*    256 */
+	"Spawn Farthest",           /*    512 */
+	"Force Respawn",            /*   1024 */
+	"No Armor",                 /*   2048 */
 
-	"Allow Exit",           /*   4096 */
-	"Infinite Ammo",        /*   8192 */
-	"Quad Drop",            /*  16384 */
-	"Fixed FOV",            /*  32768 */
+	"Allow Exit",               /*   4096 */
+	"Infinite Ammo",            /*   8192 */
+	"Quad Drop",                /*  16384 */
+	"Fixed FOV",                /*  32768 */
 
-	NULL,                   /*  65536 */
-	"No Mines",             /* 131072 */
-	"No Stack Double",      /* 262144 */
-	"No Nukes",             /* 524288 */
+	NULL,                       /*  65536 */
+	"No Mines",                 /* 131072 */
+	"No Stack Double",          /* 262144 */
+	"No Nukes",                 /* 524288 */
 
-	"No Spheres"            /* 1048576 */
+	"No Spheres"                /* 1048576 */
 };
 
 
 #define Q2_GXMOD_DMFLAGS 19
 
 static char *q2_gxmod_dmflags[Q2_GXMOD_DMFLAGS] = {
-	"No Health",            /*      1 */
-	"No Powerups",          /*      2 */
-	"Weapons Stay",         /*      4 */
-	"No Falling Damage",    /*      8 */
+	"No Health",                /*      1 */
+	"No Powerups",              /*      2 */
+	"Weapons Stay",             /*      4 */
+	"No Falling Damage",        /*      8 */
 
-	"Instant Powerups",     /*     16 */
-	"Same Level",           /*     32 */
-	"Teams by Skin",        /*     64 */
-	"Teams by Model",       /*    128 */
+	"Instant Powerups",         /*     16 */
+	"Same Level",               /*     32 */
+	"Teams by Skin",            /*     64 */
+	"Teams by Model",           /*    128 */
 
-	"No Friendly Fire",     /*    256 */
-	"Spawn Farthest",       /*    512 */
-	"Force Respawn",        /*   1024 */
-	"No Armor",             /*   2048 */
+	"No Friendly Fire",         /*    256 */
+	"Spawn Farthest",           /*    512 */
+	"Force Respawn",            /*   1024 */
+	"No Armor",                 /*   2048 */
 
-	"Allow Level Exit",     /*   4096 */
-	"Infinite Ammo",        /*   8192 */
-	"Quad Drop",            /*  16384 */
-	"Fixed FOV",            /*  32768 */
+	"Allow Level Exit",         /*   4096 */
+	"Infinite Ammo",            /*   8192 */
+	"Quad Drop",                /*  16384 */
+	"Fixed FOV",                /*  32768 */
 
-	"Team DM",              /*  65536 */
-	"Pratice Mode",         /* 131072 */
-	"Armor Protect"         /* 262144 */
+	"Team DM",                  /*  65536 */
+	"Pratice Mode",             /* 131072 */
+	"Armor Protect"             /* 262144 */
 };
 
 
 #define Q2_GXMOD_WEAPFLAGS 9
 
 static char *q2_gxmod_weapflags[Q2_GXMOD_WEAPFLAGS] = {
-	"Shotgun",              /*      1 */
-	"Super Shotgun",        /*      2 */
-	"Machinegun",           /*      4 */
-	"Chaingun",             /*      8 */
+	"Shotgun",                  /*      1 */
+	"Super Shotgun",            /*      2 */
+	"Machinegun",               /*      4 */
+	"Chaingun",                 /*      8 */
 
-	"Grenade Launcher",     /*     16 */
-	"Rocket Launcher",      /*     32 */
-	"Hyperblaster",         /*     64 */
-	"Railgun",              /*    128 */
+	"Grenade Launcher",         /*     16 */
+	"Rocket Launcher",          /*     32 */
+	"Hyperblaster",             /*     64 */
+	"Railgun",                  /*    128 */
 
-	"BFG"                   /*    256 */
+	"BFG"                       /*    256 */
 };
 
 
 #define Q2_GXMOD_POWERUPFLAGS 11
 
 static char *q2_gxmod_powerupflags[Q2_GXMOD_POWERUPFLAGS] = {
-	"Body Armor",           /*      1 */
-	"Combat Armor",         /*      2 */
-	"Jacket Armor",         /*      4 */
-	"Armor Shard",          /*      8 */
+	"Body Armor",               /*      1 */
+	"Combat Armor",             /*      2 */
+	"Jacket Armor",             /*      4 */
+	"Armor Shard",              /*      8 */
 
-	"Power Shield",         /*     16 */
-	"Quad Damage",          /*     32 */
-	"Mega Health",          /*     64 */
-	"Large Health",         /*    128 */
+	"Power Shield",             /*     16 */
+	"Quad Damage",              /*     32 */
+	"Mega Health",              /*     64 */
+	"Large Health",             /*    128 */
 
-	"Health",               /*    256 */
-	"Small Health",         /*    512 */
-	"Invincibility"         /*   1024 */
+	"Health",                   /*    256 */
+	"Small Health",             /*    512 */
+	"Invincibility"             /*   1024 */
 };
 
 
@@ -251,38 +251,38 @@ static char *q2_lmctf_ctfflags[Q2_LMCTF_CTFFLAGS] = {
 #define Q2_LMCTF_RUNES 4
 
 static char *q2_lmctf_runes[Q2_LMCTF_RUNES] = {
-	"Damage Powerup",       /*      1 */
-	"Resist Powerup",       /*      2 */
-	"Haste Powerup",        /*      4 */
-	"Regen Powerup"         /*      8 */
+	"Damage Powerup",           /*      1 */
+	"Resist Powerup",           /*      2 */
+	"Haste Powerup",            /*      4 */
+	"Regen Powerup"             /*      8 */
 };
 
 
 #define Q2_EXPERT_EXPFLAGS 18
 
 static char *q2_expert_expflags[Q2_EXPERT_EXPFLAGS] = {
-	"Expert Weapons",       /*      1 */
-	"Balanced Items",       /*      2 */
-	"Free Gear",            /*      4 */
-	"Expert Powerups",      /*      8 */
+	"Expert Weapons",           /*      1 */
+	"Balanced Items",           /*      2 */
+	"Free Gear",                /*      4 */
+	"Expert Powerups",          /*      8 */
 
-	"No Powerups",          /*      16 */
-	"Expert Hook",          /*      32 */
-	"No Hacks",             /*      64 */
-	"Player ID",            /*      128 */
+	"No Powerups",              /*     16 */
+	"Expert Hook",              /*     32 */
+	"No Hacks",                 /*     64 */
+	"Player ID",                /*    128 */
 
-	"Enforced Teams",       /*      256 */
-	"Fair Teams",           /*      512 */
-	"No Team Switch",       /*     1024 */
-	"Pogo",                 /*     2048 */
+	"Enforced Teams",           /*    256 */
+	"Fair Teams",               /*    512 */
+	"No Team Switch",           /*   1024 */
+	"Pogo",                     /*   2048 */
 
-	"Slow Hook",            /*     4096 */
-	"Sky Solid",            /*     8192 */
-	"No Plats",             /*    16384 */
-	"Team Distribution",    /*    32768 */
+	"Slow Hook",                /*   4096 */
+	"Sky Solid",                /*   8192 */
+	"No Plats",                 /*  16384 */
+	"Team Distribution",        /*  32768 */
 
-	"Alternate Restore",    /*    65536 */
-	"Ammo Regen"            /*   131072 */
+	"Alternate Restore",        /*  65536 */
+	"Ammo Regen"                /* 131072 */
 };
 
 
@@ -297,130 +297,130 @@ static char *q2_wf_wfflags[Q2_WF_WFFLAGS] = {
 	"No Flying",                    /*      16 */
 	"Decoy Pursue",                 /*      32 */
 	"No Railgun Effect (unused)",   /*      64 */
-	"No Turrets",                   /*      128 */
+	"No Turrets",                   /*     128 */
 
-	"No Earthquake Grenades",       /*      256 */
-	NULL,                           /*      512 */
-	"Next Map Voting",              /*     1024 */
-	NULL,                           /*     2048 */
+	"No Earthquake Grenades",       /*     256 */
+	NULL,                           /*     512 */
+	"Next Map Voting",              /*    1024 */
+	NULL,                           /*    2048 */
 
-	"CTF Mode",                     /*     4096 */
-	"No Player Classes",            /*     8192 */
-	"ZBot Detection"                /*    16384 */
+	"CTF Mode",                     /*    4096 */
+	"No Player Classes",            /*    8192 */
+	"ZBot Detection"                /*   16384 */
 };
 
 
 #define Q3_DMFLAGS 16
 
 static char *q3_dmflags[Q3_DMFLAGS] = {
-	"No Health",            /*      1 */
-	"No Powerups",          /*      2 */
-	"Weapons Stay",         /*      4 */
-	"No Falling Damage",    /*      8 */
+	"No Health",                /*      1 */
+	"No Powerups",              /*      2 */
+	"Weapons Stay",             /*      4 */
+	"No Falling Damage",        /*      8 */
 
-	"Instant Powerups",     /*     16 */
-	"Same Map",             /*     32 */
-	"Teams by Skin",        /*     64 */
-	"Teams by Model",       /*    128 */
+	"Instant Powerups",         /*     16 */
+	"Same Map",                 /*     32 */
+	"Teams by Skin",            /*     64 */
+	"Teams by Model",           /*    128 */
 
-	"No Friendly Fire",     /*    256 */
-	"Spawn Farthest",       /*    512 */
-	"Force Respawn",        /*   1024 */
-	"No Armor",             /*   2048 */
+	"No Friendly Fire",         /*    256 */
+	"Spawn Farthest",           /*    512 */
+	"Force Respawn",            /*   1024 */
+	"No Armor",                 /*   2048 */
 
-	"Allow Exit",           /*   4096 */
-	"Infinite Ammo",        /*   8192 */
-	"Quad Drop",            /*  16384 */
-	"Fixed FOV"             /*  32768 */
+	"Allow Exit",               /*   4096 */
+	"Infinite Ammo",            /*   8192 */
+	"Quad Drop",                /*  16384 */
+	"Fixed FOV"                 /*  32768 */
 };
 
 #define Q3_GENERATIONS_DMFLAGS 16
 
 static char *q3_generations_dmflags[Q3_GENERATIONS_DMFLAGS] = {
-	"No health",            // 1
-	"No powerups",          // 2
-	"No armor",             // 4
-	"No falling damage",    // 8
+	"No health",                /*      1 */
+	"No powerups",              /*      2 */
+	"No armor",                 /*      4 */
+	"No falling damage",        /*      8 */
 
-	"Fully Loaded",         // 16
-	"Infinite Ammo",        // 32
-	"Quad Drop",            // 64
-	"Spawn Farthest",       // 128
+	"Fully Loaded",             /*     16 */
+	"Infinite Ammo",            /*     32 */
+	"Quad Drop",                /*     64 */
+	"Spawn Farthest",           /*    128 */
 
-	"Force Respawn",        // 256
-	"Fixed FOV",            // 512
-	"No spectator",         // 1024
-	"No CTF techs",         // 2048
+	"Force Respawn",            /*    256 */
+	"Fixed FOV",                /*    512 */
+	"No spectator",             /*   1024 */
+	"No CTF techs",             /*   2048 */
 
-	"Allow Grapple to sky", // 4096
-	"Weapon Grapple",       // 8192
-	"Offhand Grapple",      // 16384
-	"No Footsteps Sound",   // 32768
+	"Allow Grapple to sky",     /*   4096 */
+	"Weapon Grapple",           /*   8192 */
+	"Offhand Grapple",          /*  16384 */
+	"No Footsteps Sound",       /*  32768 */
 };
 
 #define Q3_GENERATIONS_GENFLAGS 7
 
 static char *q3_generations_genflags[Q3_GENERATIONS_GENFLAGS] = {
 	"",
-	"Disable Earth",        // 2 You cannot select the Earth Soldiers class.
-	"Disable Doom",         // 4 You cannot select the Doom Warriors class.
-	"Disable Slipgate",     // 8 You cannot select the Slipgaters class.
-	"Disable Strogg",       // 16 You cannot select the Strogg Troopers class.
+	"Disable Earth",            // 2 You cannot select the Earth Soldiers class.
+	"Disable Doom",             // 4 You cannot select the Doom Warriors class.
+	"Disable Slipgate",         // 8 You cannot select the Slipgaters class.
+	"Disable Strogg",           // 16 You cannot select the Strogg Troopers class.
 
-	"Disable Arena",        // 32 You cannot select the Arena Gladiators class.
-	"Class-Based Teams ",   // 64 In DM, each class is its own team.
+	"Disable Arena",            // 32 You cannot select the Arena Gladiators class.
+	"Class-Based Teams ",       // 64 In DM, each class is its own team.
 };
 
 #define Q3_Q3UT3_VOTEFLAGS 6
 static char *q3_q3ut3_voteflags[Q3_Q3UT3_VOTEFLAGS] = {
-	"Map, Team, Friendlyfire",          // 1
-	"Gametype, Wave Respawn",           // 2
-	"Time-, Capture-, Fraglimit",       // 4
-	"Various delays and times",         // 8
-	"Matchmode, exec",                  // 16
-	"Gear",                             // 32
+	"Map, Team, Friendlyfire",          /*      1 */
+	"Gametype, Wave Respawn",           /*      2 */
+	"Time-, Capture-, Fraglimit",       /*      4 */
+	"Various delays and times",         /*      8 */
+	"Matchmode, exec",                  /*     16 */
+	"Gear",                             /*     32 */
 };
 
 #define Q3_Q3UT3_GEARFLAGS 6
 static char *q3_q3ut3_gearflags[Q3_Q3UT3_GEARFLAGS] = {
-	"No Grenades",                      // 1
-	"No Snipers (psg1 or sr8)",         // 2
-	"No Spas",                          // 4
-	"No Pistols",                       // 8
-	"No Autos (primary or secondary)",  // 16
-	"No Negev",                         // 32
+	"No Grenades",                      /*      1 */
+	"No Snipers (psg1 or sr8)",         /*      2 */
+	"No Spas",                          /*      4 */
+	"No Pistols",                       /*      8 */
+	"No Autos (primary or secondary)",  /*     16 */
+	"No Negev",                         /*     32 */
 };
 
 #define Q3_FREEZE_DMFLAGS 11
 
 static char *q3_freeze_dmflags[Q3_FREEZE_DMFLAGS] = {
-	NULL,                   /*      1 */
-	NULL,                   /*      2 */
-	NULL,                   /*      4 */
-	"No Falling Damage",    /*      8 */
+	NULL,                       /*      1 */
+	NULL,                       /*      2 */
+	NULL,                       /*      4 */
+	"No Falling Damage",        /*      8 */
 
-	"Fixed FOV",            /*     16 */
-	"No footsteps",         /*     32 */
-	"No item reset",        /*     64 */
-	"No team reset",        /*    128 */
+	"Fixed FOV",                /*     16 */
+	"No footsteps",             /*     32 */
+	"No item reset",            /*     64 */
+	"No team reset",            /*    128 */
 
-	"Weapons stay",         /*    256 */
-	"No playerclip",        /*    512 */
-	"Nightmare mode",       /*   1024 */
+	"Weapons stay",             /*    256 */
+	"No playerclip",            /*    512 */
+	"Nightmare mode",           /*   1024 */
 };
 
 #define RTCW_VOTEFLAGS 8
 
 static char *rtcw_voteflags[RTCW_VOTEFLAGS] = {
-	"Restart Map",          /*      1 */
-	"Reset Match",          /*      2 */
-	"Start Match",          /*      4 */
-	"Next Map",             /*      8 */
+	"Restart Map",              /*      1 */
+	"Reset Match",              /*      2 */
+	"Start Match",              /*      4 */
+	"Next Map",                 /*      8 */
 
-	"Swap Teams",           /*     16 */
-	"Game Type",            /*     32 */
-	"Kick Player",          /*     64 */
-	"Change Map",           /*    128 */
+	"Swap Teams",               /*     16 */
+	"Game Type",                /*     32 */
+	"Kick Player",              /*     64 */
+	"Change Map",               /*    128 */
 };
 
 #define WOET_VOTEFLAGS 17
