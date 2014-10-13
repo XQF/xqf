@@ -1,4 +1,8 @@
 Oct 12, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- fix another 14+ years old bug, a comma was missing in a string table of
+  some Quake 2 game properties
+
+Oct 12, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - fix a 14+ years old malloc bug, a sum of strings (therefor a sum of chars)
   was used as instead of a sum of string lengths
 

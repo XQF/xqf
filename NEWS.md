@@ -19,6 +19,8 @@ Changes since 1.0.5:
 * Fix autotools, intltool
 * Fix readline check
 * Fix crash with 24 bit images
+* Fix a string length routine that was broken since at least the year 2000 so reloading master server may result in segfault
+* Fix a string table of Quake 2 game properties that was broken since at least the year 2000, too
 * Determine number of GeoIP countries at runtime
 * Complete French translation
 
