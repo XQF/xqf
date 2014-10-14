@@ -165,7 +165,7 @@ enum CPU identify_cpu (struct server *s, const char *versionstr) {
 
 	if (!(str = g_strdup(versionstr)))
 		return CPU_UNKNOWN;
-	g_strdown(str);
+	g_ascii_strdown(str, -1);
 
 	if (strstr (str, "x86_64") || strstr (str, "amd64") || strstr(str, "x64"))
 		cpu = CPU_X86_64;
@@ -192,7 +192,7 @@ enum OS identify_os (struct server *s, char *versionstr) {
 
 	if (!(str = g_strdup(versionstr)))
 		return CPU_UNKNOWN;
-	g_strdown(str);
+	g_ascii_strdown(str, -1);
 
 	if (strstr (str, "win"))
 		os = OS_WINDOWS;

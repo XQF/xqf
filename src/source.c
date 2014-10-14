@@ -279,7 +279,7 @@ static char *unify_url (const char *url) {
 
 	strncpy (unified, url, ptr2 - url);
 	unified[ptr2 - url] = '\0';
-	g_strdown (unified);
+	g_ascii_strdown (unified, -1);
 
 	strcpy (unified + (ptr2 - url), ptr3);
 
@@ -445,7 +445,7 @@ static void master_add_server (struct master *m, char *str,
 			host_unref (h);
 		}
 		else {      /* hostname */
-			g_strdown (addr);
+			g_ascii_strdown (addr, -1);
 			if ((us = userver_add (addr, port, type)) != NULL)
 				m->uservers = userver_list_add (m->uservers, us);
 		}

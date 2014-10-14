@@ -182,7 +182,7 @@ static char* find_flag_file(int id)
 		if(!code) return NULL;
 		strncpy(file+strlen("flags/"),code,2);
 		strcpy(file+strlen("flags/")+2,".png");
-		g_strdown(file);
+		g_ascii_strdown(file, -1);
 	}
 
 	filename = find_pixmap_directory(file);

@@ -375,7 +375,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 		}
 		else {  /* hostname */
 
-			g_strdown (addr);
+			g_ascii_strdown (addr, -1);
 			port += conn->master->options.portadjust;
 			if ((us = userver_add (addr, port, type)) != NULL)
 			{

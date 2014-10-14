@@ -122,7 +122,7 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash)
 		{
 			// s#maps/(.*)\.bsp#\1#
 			char* mapname=g_strndup(info.name+5,strlen(info.name)-4-5);
-			g_strdown(mapname);
+			g_ascii_strdown(mapname, -1);
 			if(g_hash_table_lookup(maphash,mapname))
 			{
 				g_free(mapname);
@@ -278,7 +278,7 @@ static gboolean if_map_insert(const char* path, GHashTable* maphash,
 	if((name = is_map_func(path)))
 	{
 		// s#maps/(.*)\.bsp#\1#
-		g_strdown(name);
+		g_ascii_strdown(name, -1);
 		if(g_hash_table_lookup(maphash,name))
 		{
 			g_free(name);
@@ -393,7 +393,7 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash)
 	{
 		const char* basename = g_basename(name);
 		char* mapname=g_strndup(basename,strlen(basename)-4);
-		g_strdown(mapname);
+		g_ascii_strdown(mapname, -1);
 		if(g_hash_table_lookup(maphash,mapname))
 		{
 			g_free(mapname);
@@ -698,7 +698,7 @@ static void process_levelshots(GHashTable* maphash)
 		if(!mi->levelshot || strlen(mi->levelshot) <= 4 ) { g_free(mi); continue; }
 		mapbase = g_basename(mi->levelshot);
 		mapname = g_strndup(mapbase,strlen(mapbase)-4);
-		g_strdown(mapname);
+		g_ascii_strdown(mapname, -1);
 		found = g_hash_table_lookup_extended(maphash,mapname,(gpointer)&origkey,(gpointer)&mih);
 		if(found != TRUE || mih != GINT_TO_POINTER(-1)) // not in hash or mapinfo alread defined
 		{
