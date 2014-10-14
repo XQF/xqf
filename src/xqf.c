@@ -3893,7 +3893,7 @@ static void populate_main_window (void)
 	gtk_widget_show (label);
 
 	entry = gtk_entry_new();
-	gtk_signal_connect(GTK_OBJECT(entry), "changed", quick_filter_entry_changed, NULL);
+	gtk_signal_connect(GTK_OBJECT(entry), "changed", G_CALLBACK(quick_filter_entry_changed), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
 	gtk_widget_show (entry);
 

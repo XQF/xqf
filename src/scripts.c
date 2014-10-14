@@ -623,7 +623,7 @@ GtkWidget *scripts_config_page ()
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
 	gtk_signal_connect (GTK_OBJECT (button),
-			"clicked", install_button_callback, NULL );
+			"clicked", G_CALLBACK(install_button_callback), NULL );
 
 #if have_time_to_implement_that
 	button = gtk_button_new_with_label(_("Remove"));
@@ -905,5 +905,5 @@ void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data)
 
 void install_button_callback (GtkWidget *widget, gpointer data)
 {
-	file_dialog(_("Select Script"), install_file_dialog_ok_callback, NULL);
+	file_dialog(_("Select Script"), G_CALLBACK(install_file_dialog_ok_callback), NULL);
 }
