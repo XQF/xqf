@@ -990,6 +990,23 @@
 		<pd>zeq2lite_private</pd>
 	</game>
 	<game>
+		<base>Q3_SERVER</base>
+		<type>TURTLEARENA_SERVER</type>
+		<name>Turtle Arena</name>
+		<id>TURTLEARENAS</id>
+		<qstat_str>TURTLEARENAS</qstat_str>
+		<qstat_option>-turtlearenas</qstat_option>
+		<qstat_master_option>-turtlearenam</qstat_master_option>
+		<icon>turtlearena.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<command>turtlearena</command>
+		<default_home>~/.turtlearena</default_home>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs</update_prefs>
+		<main_mod>base</main_mod>
+		<pd>turtlearena_private</pd>
+	</game>
+	<game>
 		<type>GPS_SERVER</type>
 		<name>Generic Gamespy</name>
 		<flags>GAME_CONNECT</flags>

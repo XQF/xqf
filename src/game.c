@@ -181,6 +181,7 @@ static struct quake_private iourt_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
 static struct quake_private zeq2lite_private;
+static struct quake_private turtlearena_private;
 static struct quake_private alienarena_private;
 
 #include "games.c"
@@ -1697,6 +1698,11 @@ static void q3_analyze_serverinfo (struct server *s) {
 			else if(!strncmp(info_ptr[1],"zeq2lite",8))
 			{
 				s->type=ZEQ2LITE_SERVER;
+			}
+			// Turtle Arena
+			else if(!strncmp(info_ptr[1],"Turtle Arena",12))
+			{
+				s->type=TURTLEARENA_SERVER;
 			}
 			break;
 		}

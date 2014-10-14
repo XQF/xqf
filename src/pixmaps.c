@@ -76,7 +76,6 @@
 #include "xpm/tremulousgpp.xpm"
 #include "xpm/tremfusion.xpm"
 #include "xpm/unvanquished.xpm"
-
 #include "xpm/gamespy3d.xpm"
 #include "xpm/ssam.xpm"
 #include "xpm/mohaa.xpm"
@@ -95,6 +94,7 @@
 #include "xpm/reaction.xpm"
 #include "xpm/smokinguns.xpm"
 #include "xpm/zeq2lite.xpm"
+#include "xpm/turtlearena.xpm"
 #include "xpm/alienarena.xpm"
 
 #include "xpm/green-plus.xpm"
