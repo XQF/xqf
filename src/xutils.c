@@ -46,6 +46,6 @@ void window_set_icon (GtkWidget *win)
 	if(pixbuf)
 	{
 		gtk_window_set_icon (GTK_WINDOW (win), pixbuf);
-		gdk_pixbuf_unref (pixbuf);
+		g_object_unref (pixbuf);
 	}
 }

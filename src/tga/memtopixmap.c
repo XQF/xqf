@@ -106,7 +106,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
 		else
 		{
 				pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-				gdk_pixbuf_ref(pixbuf);
+				g_object_ref(pixbuf);
 				g_object_unref(G_OBJECT(loader));
 		}
 
@@ -155,8 +155,8 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 
 				gdk_pixbuf_render_pixmap_and_mask(pixbuf,pix,mask,0);
 
-				gdk_pixbuf_unref(pixbuf);
-				gdk_pixbuf_unref(pixbuf_tmp);
+				g_object_unref(pixbuf);
+				g_object_unref(pixbuf_tmp);
 		}
 		else
 		{
