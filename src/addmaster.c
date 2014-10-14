@@ -59,7 +59,7 @@ static void master_check_master_addr_prefix(void)
 	master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO(master_addr_combo)->entry));
 
 	// Replace up to :// with master type selected from radio buttons  
-	if (g_strncasecmp(master_addr, master_prefixes[current_master_query_type],
+	if (g_ascii_strncasecmp(master_addr, master_prefixes[current_master_query_type],
 				strlen(master_prefixes[current_master_query_type])))
 	{
 		pos = lowcasestrstr(master_addr,"://");

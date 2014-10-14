@@ -1708,7 +1708,7 @@ enum master_query_type get_master_query_type_from_address(char* address)
 	debug(6,"get_master_query_type_from_address(%s)",address);
 	for (type=MASTER_NATIVE;type<MASTER_NUM_QUERY_TYPES;type++)
 	{
-		if(!g_strncasecmp( address, master_prefixes[type],
+		if(!g_ascii_strncasecmp( address, master_prefixes[type],
 					strlen(master_prefixes[type])))
 		{
 			debug(6,"get_master_query_type_from_address: found %s",master_prefixes[type]);

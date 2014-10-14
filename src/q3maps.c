@@ -169,7 +169,7 @@ static gboolean is_q3_mapshot(const char* name)
 	if(!name)
 		return FALSE;
 
-	if(g_strncasecmp(name,"levelshots/",11))
+	if(g_ascii_strncasecmp(name,"levelshots/",11))
 		return FALSE;
 
 	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
@@ -184,7 +184,7 @@ static gboolean is_q3_mapshot(const char* name)
 // must free
 static char* is_q3_map(const char* name)
 {
-	if (!g_strncasecmp(name,"maps/",5)
+	if (!g_ascii_strncasecmp(name,"maps/",5)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4,".bsp"))
 	{
 		const char* basename = g_basename(name);
@@ -196,7 +196,7 @@ static char* is_q3_map(const char* name)
 // must free
 static gboolean is_doom3_mapshot(const char* name)
 {
-	if(g_strncasecmp(name,"guis/assets/splash/",19))
+	if(g_ascii_strncasecmp(name,"guis/assets/splash/",19))
 		return FALSE;
 
 	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
@@ -210,7 +210,7 @@ static gboolean is_doom3_mapshot(const char* name)
 
 static char* is_doom3_map(const char* name)
 {
-	if (!g_strncasecmp(name,"maps/game/",10)
+	if (!g_ascii_strncasecmp(name,"maps/game/",10)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4,".map"))
 	{
 		const char* basename = g_basename(name);
@@ -222,7 +222,7 @@ static char* is_doom3_map(const char* name)
 // must free
 static gboolean is_quake4_mapshot(const char* name)
 {
-	if(g_strncasecmp(name,"gfx/guis/loadscreens/",21))
+	if(g_ascii_strncasecmp(name,"gfx/guis/loadscreens/",21))
 		return FALSE;
 
 	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
@@ -236,7 +236,7 @@ static gboolean is_quake4_mapshot(const char* name)
 
 static char* is_quake4_map(const char* name)
 {
-	if (!g_strncasecmp(name,"maps/",5)
+	if (!g_ascii_strncasecmp(name,"maps/",5)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4,".map"))
 	{
 		const char* basename = g_basename(name);
@@ -248,7 +248,7 @@ static char* is_quake4_map(const char* name)
 // must free
 static gboolean is_etqw_mapshot(const char* name)
 {
-	if(g_strncasecmp(name,"levelshots/thumbs/",18))
+	if(g_ascii_strncasecmp(name,"levelshots/thumbs/",18))
 		return FALSE;
 
 	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
@@ -262,7 +262,7 @@ static gboolean is_etqw_mapshot(const char* name)
 
 static char* is_etqw_map(const char* name)
 {
-	if (!g_strncasecmp(name,"maps/",5)
+	if (!g_ascii_strncasecmp(name,"maps/",5)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4,".stm"))
 	{
 		const char* basename = g_basename(name);

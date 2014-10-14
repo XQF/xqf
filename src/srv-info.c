@@ -549,15 +549,15 @@ void srvinf_ctree_set_server (struct server *s) {
 
 			case Q2_SERVER:
 				if (info[0] && !strcmp (info[0], "dmflags")) {
-					if (s->game && !g_strncasecmp (s->game, "gxmod", 5)) {
+					if (s->game && !g_ascii_strncasecmp (s->game, "gxmod", 5)) {
 						show_extended_flags (info[1], q2_gxmod_dmflags, Q2_GXMOD_DMFLAGS, 
 								FALSE, node);
 					}
-					else if (s->game && !g_strncasecmp (s->game, "xatrix", 6)) {
+					else if (s->game && !g_ascii_strncasecmp (s->game, "xatrix", 6)) {
 						show_extended_flags (info[1], q2_xatrix_dmflags, Q2_XATRIX_DMFLAGS, 
 								FALSE, node);
 					}
-					else if (s->game && !g_strncasecmp (s->game, "rogue", 5)) {
+					else if (s->game && !g_ascii_strncasecmp (s->game, "rogue", 5)) {
 						show_extended_flags (info[1], q2_rogue_dmflags, Q2_ROGUE_DMFLAGS, 
 								FALSE, node);
 					}
@@ -566,32 +566,32 @@ void srvinf_ctree_set_server (struct server *s) {
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "ctfflags")) {
-					if (s->game && !g_strncasecmp (s->game, "lmctf", 5)) {
+					if (s->game && !g_ascii_strncasecmp (s->game, "lmctf", 5)) {
 						show_extended_flags (info[1], q2_lmctf_ctfflags, Q2_LMCTF_CTFFLAGS, 
 								FALSE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "runes")) {
-					if (s->game && !g_strncasecmp (s->game, "lmctf", 5)) {
+					if (s->game && !g_ascii_strncasecmp (s->game, "lmctf", 5)) {
 						show_extended_flags (info[1], q2_lmctf_runes, Q2_LMCTF_RUNES, 
 								TRUE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "expflags")) {
-					if (s->game && !g_strncasecmp (s->game, "expert", 6)) {
+					if (s->game && !g_ascii_strncasecmp (s->game, "expert", 6)) {
 						show_extended_flags (info[1], q2_expert_expflags,
 								Q2_EXPERT_EXPFLAGS, FALSE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "weapflags")) {
-					if (s->game && (!g_strncasecmp (s->game, "gxmod", 5) || 
+					if (s->game && (!g_ascii_strncasecmp (s->game, "gxmod", 5) || 
 								!g_ascii_strcasecmp (s->game, "gx"))) {
 						show_extended_flags (info[1], q2_gxmod_weapflags, 
 								Q2_GXMOD_WEAPFLAGS, TRUE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "powerupflags")) {
-					if (s->game && !g_strncasecmp (s->game, "gxmod", 5)) {
+					if (s->game && !g_ascii_strncasecmp (s->game, "gxmod", 5)) {
 						show_extended_flags (info[1], q2_gxmod_powerupflags, 
 								Q2_GXMOD_POWERUPFLAGS, TRUE, node);
 					}
