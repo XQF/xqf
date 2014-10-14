@@ -1597,13 +1597,13 @@ static void q3_analyze_serverinfo (struct server *s) {
 				s->type=WO_SERVER;
 			}
 			// Wolfenstein: Enemy Territory
-			else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4))
+			else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ET 3",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4))
 			{
-				if (games[WOET_SERVER].cmd)
+				// play with Wolf:ET if ET:L is not installed
+				if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd)
 				{
 					s->type=WOET_SERVER;
 				}
-				// play with ET:L if only installed
 				else if (games[ETL_SERVER].cmd)
 				{
 					s->type=ETL_SERVER;
@@ -1616,8 +1616,8 @@ static void q3_analyze_serverinfo (struct server *s) {
 				{
 					s->type=ETL_SERVER;
 				}
-				// play with Wolf:ET if only installed
-				if (games[WOET_SERVER].cmd)
+				// play with Wolf:ET if ET:L is not installed
+				else if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd)
 				{
 					s->type=WOET_SERVER;
 				}
