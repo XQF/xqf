@@ -113,7 +113,7 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 			else
 			{
 				if(strlen(dire->d_name)>strlen(suffix)
-						&& !g_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix),suffix))
+						&& !g_ascii_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix),suffix))
 				{
 					// s#(.*)suffix#\1#
 					char* mapname = g_strndup(dire->d_name,strlen(dire->d_name)-strlen(suffix));

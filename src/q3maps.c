@@ -172,8 +172,8 @@ static gboolean is_q3_mapshot(const char* name)
 	if(g_strncasecmp(name,"levelshots/",11))
 		return FALSE;
 
-	if (!g_strcasecmp(name+strlen(name)-4,".jpg")
-			|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
+			|| !g_ascii_strcasecmp(name+strlen(name)-4,".tga"))
 	{
 		return TRUE;
 	}
@@ -185,7 +185,7 @@ static gboolean is_q3_mapshot(const char* name)
 static char* is_q3_map(const char* name)
 {
 	if (!g_strncasecmp(name,"maps/",5)
-			&& !g_strcasecmp(name+strlen(name)-4,".bsp"))
+			&& !g_ascii_strcasecmp(name+strlen(name)-4,".bsp"))
 	{
 		const char* basename = g_basename(name);
 		return g_strndup(basename,strlen(basename)-4);
@@ -199,8 +199,8 @@ static gboolean is_doom3_mapshot(const char* name)
 	if(g_strncasecmp(name,"guis/assets/splash/",19))
 		return FALSE;
 
-	if (!g_strcasecmp(name+strlen(name)-4,".jpg")
-			|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
+			|| !g_ascii_strcasecmp(name+strlen(name)-4,".tga"))
 	{
 		return TRUE;
 	}
@@ -211,7 +211,7 @@ static gboolean is_doom3_mapshot(const char* name)
 static char* is_doom3_map(const char* name)
 {
 	if (!g_strncasecmp(name,"maps/game/",10)
-			&& !g_strcasecmp(name+strlen(name)-4,".map"))
+			&& !g_ascii_strcasecmp(name+strlen(name)-4,".map"))
 	{
 		const char* basename = g_basename(name);
 		return g_strndup(basename,strlen(basename)-4);
@@ -225,8 +225,8 @@ static gboolean is_quake4_mapshot(const char* name)
 	if(g_strncasecmp(name,"gfx/guis/loadscreens/",21))
 		return FALSE;
 
-	if (!g_strcasecmp(name+strlen(name)-4,".jpg")
-			|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
+			|| !g_ascii_strcasecmp(name+strlen(name)-4,".tga"))
 	{
 		return TRUE;
 	}
@@ -237,7 +237,7 @@ static gboolean is_quake4_mapshot(const char* name)
 static char* is_quake4_map(const char* name)
 {
 	if (!g_strncasecmp(name,"maps/",5)
-			&& !g_strcasecmp(name+strlen(name)-4,".map"))
+			&& !g_ascii_strcasecmp(name+strlen(name)-4,".map"))
 	{
 		const char* basename = g_basename(name);
 		return g_strndup(basename,strlen(basename)-4);
@@ -251,8 +251,8 @@ static gboolean is_etqw_mapshot(const char* name)
 	if(g_strncasecmp(name,"levelshots/thumbs/",18))
 		return FALSE;
 
-	if (!g_strcasecmp(name+strlen(name)-4,".jpg")
-			|| !g_strcasecmp(name+strlen(name)-4,".tga"))
+	if (!g_ascii_strcasecmp(name+strlen(name)-4,".jpg")
+			|| !g_ascii_strcasecmp(name+strlen(name)-4,".tga"))
 	{
 		return TRUE;
 	}
@@ -263,7 +263,7 @@ static gboolean is_etqw_mapshot(const char* name)
 static char* is_etqw_map(const char* name)
 {
 	if (!g_strncasecmp(name,"maps/",5)
-			&& !g_strcasecmp(name+strlen(name)-4,".stm"))
+			&& !g_ascii_strcasecmp(name+strlen(name)-4,".stm"))
 	{
 		const char* basename = g_basename(name);
 		return g_strndup(basename,strlen(basename)-4);
@@ -374,9 +374,9 @@ gboolean quake_contains_dir(const char* name, int level, GHashTable* maphash)
 
 	len = strlen(name);
 
-	if(level == 1 && len > 4 && !g_strcasecmp(name+len-4,"maps"))
+	if(level == 1 && len > 4 && !g_ascii_strcasecmp(name+len-4,"maps"))
 		return TRUE;
-	if(level == 1 && len > 10 && !g_strcasecmp(name+len-10,"levelshots"))
+	if(level == 1 && len > 10 && !g_ascii_strcasecmp(name+len-10,"levelshots"))
 		return TRUE;
 
 	return FALSE;
@@ -385,11 +385,11 @@ gboolean quake_contains_dir(const char* name, int level, GHashTable* maphash)
 void quake_contains_file( const char* name, int level, GHashTable* maphash)
 {
 	// printf("%s at level %d\n",name,level);
-	if(strlen(name)>4 && !g_strcasecmp(name+strlen(name)-4,".pak") && level == 1)
+	if(strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4,".pak") && level == 1)
 	{
 		findmaps_pak(name,maphash);
 	}
-	if(strlen(name)>4 && !g_strcasecmp(name+strlen(name)-4,".bsp") && level == 2)
+	if(strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4,".bsp") && level == 2)
 	{
 		const char* basename = g_basename(name);
 		char* mapname=g_strndup(basename,strlen(basename)-4);
@@ -409,7 +409,7 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash)
 void q3_contains_file(const char* name, int level, GHashTable* maphash)
 {
 	// printf("%s at level %d\n",name,level);
-	if( level == 1 && !g_strcasecmp(name+strlen(name)-4,".pk3") && strlen(name) > 4)
+	if( level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4,".pk3") && strlen(name) > 4)
 	{
 		findq3maps_zip(name, maphash, is_q3_map, is_q3_mapshot);
 	}
@@ -426,7 +426,7 @@ static void _doom3_contains_file(const char* name, int level, GHashTable* maphas
 		gboolean (*is_mapshot_func)(const char* name))
 {
 	// printf("%s at level %d\n",name,level);
-	if( level == 1 && !g_strcasecmp(name+strlen(name)-4,".pk4") && strlen(name) > 4)
+	if( level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4,".pk4") && strlen(name) > 4)
 	{
 		findq3maps_zip(name, maphash, is_map_func, is_mapshot_func);
 	}

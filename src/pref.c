@@ -673,7 +673,7 @@ static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2)
 
   if (str1) {
     if (str2) {
-      res = g_strcasecmp (str1, str2);
+      res = g_ascii_strcasecmp (str1, str2);
       if (!res)
 	res = strcmp (str1, str2);
     }
@@ -5277,7 +5277,7 @@ int prefs_load (void) {
     rc_save ();
 
   if (oldversion) {
-    newversion = g_strcasecmp (oldversion, XQF_VERSION);
+    newversion = g_ascii_strcasecmp (oldversion, XQF_VERSION);
     g_free (oldversion);
   }
   else {

@@ -294,7 +294,7 @@ static void collect_statistics (void) {
 			if (info && games[s->type].arch_identifier)
 			{
 				while (info[0]) {
-					if (g_strcasecmp (info[0], games[s->type].arch_identifier) == 0)
+					if (g_ascii_strcasecmp (info[0], games[s->type].arch_identifier) == 0)
 					{
 						if (!info[1])
 							break;

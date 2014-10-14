@@ -36,7 +36,7 @@ static inline int compare_strings (const char *str1, const char *str2) {
 
 	if (str1) {
 		if (str2) {
-			res = g_strcasecmp (str1, str2);
+			res = g_ascii_strcasecmp (str1, str2);
 			if (!res)
 				res = strcmp (str1, str2);
 		}

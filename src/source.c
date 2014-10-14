@@ -209,10 +209,10 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
 		{
 			if (m->hostname) 
 			{
-				if (!g_strcasecmp (m->hostname, addr))
+				if (!g_ascii_strcasecmp (m->hostname, addr))
 				{
 					if((!str || // pre 0.9.4e list file
-								!g_strcasecmp (games[m->type].id, str)) // list file in new format
+								!g_ascii_strcasecmp (games[m->type].id, str)) // list file in new format
 							&& master_options_compare(&m->options, options))
 						break;
 				}
@@ -221,7 +221,7 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
 			{
 				if (m->host && inet_aton (addr, &ip) && ip.s_addr == m->host->ip.s_addr) {
 					if((!str || // pre 0.9.4e list file
-								!g_strcasecmp (games[m->type].id, str))
+								!g_ascii_strcasecmp (games[m->type].id, str))
 							&& master_options_compare(&m->options, options))
 						break;
 				}
@@ -371,7 +371,7 @@ static struct master *read_list_parse_master (char *str, char *url) {
 	QFMasterOptions options = { 0, NULL };
 	char* optstr = NULL;
 
-	if (favorites && !g_strcasecmp (str, favorites->name))
+	if (favorites && !g_ascii_strcasecmp (str, favorites->name))
 		return favorites;
 
 	debug(5, "%s %s", str, url);
@@ -1318,12 +1318,12 @@ static void update_master_list_action (const char *action) {
 		char* qstat_query_arg = master_id2type (token[1], &type);
 		if (type != UNKNOWN_SERVER) {
 
-			if (g_strcasecmp (token[0], ACTION_ADD) == 0) {
+			if (g_ascii_strcasecmp (token[0], ACTION_ADD) == 0) {
 				m = add_master (token[2], token[3], type, qstat_query_arg, FALSE, FALSE);
 				if (m && source_ctree != NULL)
 					source_ctree_add_master (source_ctree, m);
 			}
-			else if (g_strcasecmp (token[0], ACTION_DELETE) == 0) {
+			else if (g_ascii_strcasecmp (token[0], ACTION_DELETE) == 0) {
 				m = add_master (token[2], token[3], type, qstat_query_arg, FALSE, TRUE);
 				if (m) {
 					if (source_ctree != NULL)
@@ -1432,7 +1432,7 @@ static void load_master_list (void) {
 			user = FALSE;
 			tmp = strrchr (token[0], ',');
 			if (tmp) {
-				user = (g_strcasecmp (tmp+1, "USER") == 0);
+				user = (g_ascii_strcasecmp (tmp+1, "USER") == 0);
 				if(user)
 					*tmp = '\0';
 			}

@@ -535,12 +535,12 @@ void srvinf_ctree_set_server (struct server *s) {
 
 			case QW_SERVER:
 				if (info[0] && !strcmp (info[0], "teamplay")) {
-					if (s->game && (!g_strcasecmp (s->game, "ctf") ||
-								!g_strcasecmp (s->game, "starwars"))) {
+					if (s->game && (!g_ascii_strcasecmp (s->game, "ctf") ||
+								!g_ascii_strcasecmp (s->game, "starwars"))) {
 						show_extended_flags (info[1], qw_teamplay_ctf, QW_TEAMPLAY_CTF, 
 								FALSE, node);
 					}
-					else if (s->game && !g_strcasecmp (s->game, "fortress")) {
+					else if (s->game && !g_ascii_strcasecmp (s->game, "fortress")) {
 						show_extended_flags (info[1], qw_teamplay_fortress, QW_TEAMPLAY_TF, 
 								FALSE, node);
 					}
@@ -585,7 +585,7 @@ void srvinf_ctree_set_server (struct server *s) {
 				}
 				else if (info[0] && !strcmp (info[0], "weapflags")) {
 					if (s->game && (!g_strncasecmp (s->game, "gxmod", 5) || 
-								!g_strcasecmp (s->game, "gx"))) {
+								!g_ascii_strcasecmp (s->game, "gx"))) {
 						show_extended_flags (info[1], q2_gxmod_weapflags, 
 								Q2_GXMOD_WEAPFLAGS, TRUE, node);
 					}
@@ -597,7 +597,7 @@ void srvinf_ctree_set_server (struct server *s) {
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "wfflags")) {
-					if (s->game && !g_strcasecmp (s->game, "wf")) {
+					if (s->game && !g_ascii_strcasecmp (s->game, "wf")) {
 						show_extended_flags (info[1], q2_wf_wfflags, Q2_WF_WFFLAGS, 
 								FALSE, node);
 					}
@@ -606,10 +606,10 @@ void srvinf_ctree_set_server (struct server *s) {
 
 			case Q3_SERVER:
 				if (info[0] && !strcmp (info[0], "dmflags")) {
-					if (s->game && !g_strcasecmp (s->game, "generations")) {
+					if (s->game && !g_ascii_strcasecmp (s->game, "generations")) {
 						show_extended_flags (info[1], q3_generations_dmflags, Q3_GENERATIONS_DMFLAGS, FALSE, node);
 					}
-					else if (s->game && !g_strcasecmp (s->game, "freeze")) {
+					else if (s->game && !g_ascii_strcasecmp (s->game, "freeze")) {
 						show_extended_flags (info[1], q3_freeze_dmflags, Q3_FREEZE_DMFLAGS, FALSE, node);
 					}
 					else
@@ -617,32 +617,32 @@ void srvinf_ctree_set_server (struct server *s) {
 						show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
 					}
 				}
-				else if (info[0] && !g_strcasecmp (info[0], "g_allowvote")) {
-					if (s->game && !g_strcasecmp (s->game, "q3ut3")) {
+				else if (info[0] && !g_ascii_strcasecmp (info[0], "g_allowvote")) {
+					if (s->game && !g_ascii_strcasecmp (s->game, "q3ut3")) {
 						show_extended_flags (info[1], q3_q3ut3_voteflags, Q3_Q3UT3_VOTEFLAGS, FALSE, node);
 					}
 				}
-				else if (info[0] && !g_strcasecmp (info[0], "g_gear")) {
-					if (s->game && !g_strcasecmp (s->game, "q3ut3")) {
+				else if (info[0] && !g_ascii_strcasecmp (info[0], "g_gear")) {
+					if (s->game && !g_ascii_strcasecmp (s->game, "q3ut3")) {
 						show_extended_flags (info[1], q3_q3ut3_gearflags, Q3_Q3UT3_GEARFLAGS, FALSE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "genflags")) {
-					if (s->game && !g_strcasecmp (s->game, "generations")) {
+					if (s->game && !g_ascii_strcasecmp (s->game, "generations")) {
 						show_extended_flags (info[1], q3_generations_genflags, Q3_GENERATIONS_GENFLAGS, FALSE, node);
 					}
 				}
 				break;
 
 			case WO_SERVER:
-				if (info[0] && !g_strcasecmp (info[0], "g_voteFlags"))
+				if (info[0] && !g_ascii_strcasecmp (info[0], "g_voteFlags"))
 				{
 					show_extended_flags (info[1], rtcw_voteflags, RTCW_VOTEFLAGS, FALSE, node);
 				}
 				break;
 
 			case WOET_SERVER:
-				if (info[0] && !g_strcasecmp (info[0], "voteflags"))
+				if (info[0] && !g_ascii_strcasecmp (info[0], "voteflags"))
 				{
 					show_extended_flags (info[1], woet_voteflags, WOET_VOTEFLAGS, FALSE, node);
 				}
@@ -650,7 +650,7 @@ void srvinf_ctree_set_server (struct server *s) {
 
 			case UT2_SERVER:
 			case UT2004_SERVER:
-				if (info[0] && !g_strcasecmp (info[0], "mutator"))
+				if (info[0] && !g_ascii_strcasecmp (info[0], "mutator"))
 				{
 					show_split_value(info[1], "|", node);
 				}

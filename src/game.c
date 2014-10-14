@@ -282,24 +282,24 @@ enum server_type id2type (const char *id) {
 
 	for (i = 0; i < GAMES_TOTAL; i++) {
 		g_return_val_if_fail(games[i].id != NULL, UNKNOWN_SERVER);
-		if (g_strcasecmp (id, games[i].id) == 0)
+		if (g_ascii_strcasecmp (id, games[i].id) == 0)
 			return games[i].type;
 	}
 
 	for (i = 0; i < GAMES_TOTAL; i++) {
-		if (g_strcasecmp (id, games[i].qstat_str) == 0)
+		if (g_ascii_strcasecmp (id, games[i].qstat_str) == 0)
 			return games[i].type;
 	}
 
 	// workaround for qstat beta
-	if (g_strcasecmp (id, "RWS" ) == 0)
+	if (g_ascii_strcasecmp (id, "RWS" ) == 0)
 	{
 		return WO_SERVER;
 	}
 
-	if (g_strcasecmp (id, "QW") == 0)
+	if (g_ascii_strcasecmp (id, "QW") == 0)
 		return QW_SERVER;
-	if (g_strcasecmp (id, "Q2") == 0)
+	if (g_ascii_strcasecmp (id, "Q2") == 0)
 		return Q2_SERVER;
 
 	return UNKNOWN_SERVER;
@@ -769,8 +769,8 @@ static void un_analyze_serverinfo (struct server *s) {
 
 		// password required?
 		// If not password=False or password=0, set SERVER_PASSWORD
-		else if ((g_strcasecmp (*info_ptr, "password") == 0 || g_strcasecmp (*info_ptr, "gamepassword") == 0 ) && 
-				( g_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0") ) )
+		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0 ) && 
+				( g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0") ) )
 		{
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
@@ -1754,7 +1754,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 		else if (strcmp (*info_ptr, "cheats") == 0) {
 			s->flags |= SERVER_CHEATS;
 		}
-		else if (g_strcasecmp (*info_ptr, "sv_privateClients") == 0) {
+		else if (g_ascii_strcasecmp (*info_ptr, "sv_privateClients") == 0) {
 			s->private_client = strtol (info_ptr[1], NULL, 10);
 		}
 		else if (!strcmp(*info_ptr, "sv_punkbuster") && info_ptr[1] && info_ptr[1][0] == '1') {
@@ -2630,7 +2630,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 		gboolean is_mainmod = FALSE;
 		for(i = 0; g->main_mod && g->main_mod[i]; ++i)
 		{
-			if(!g_strcasecmp(con->s->game, g->main_mod[i]))
+			if(!g_ascii_strcasecmp(con->s->game, g->main_mod[i]))
 			{
 				is_mainmod = TRUE;
 				break;

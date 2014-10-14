@@ -668,7 +668,7 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 				if (!S_ISDIR(buf.st_mode))
 					continue;
 
-				if (!g_strcasecmp(name, game))
+				if (!g_ascii_strcasecmp(name, game))
 				{
 					debug( 3, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir, game);
 					result = 2; // Different case match

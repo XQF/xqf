@@ -108,7 +108,7 @@ int player_filter (struct server *s) {
 
 			if (pp->data && !pp->error) {
 				if ((pp->mode == PATTERN_MODE_STRING && 
-						g_strcasecmp (p->name, pp->data) == 0) ||
+						g_ascii_strcasecmp (p->name, pp->data) == 0) ||
 						(pp->mode == PATTERN_MODE_SUBSTR && 
 						 lowcasestrstr (p->name, pp->data)) ||
 						(pp->mode == PATTERN_MODE_REGEXP &&
@@ -982,7 +982,7 @@ int player_filter_add_player (char *name, unsigned mask) {
 	for (list = players; list; list = list->next) {
 		pp = (struct player_pattern *) list->data;
 		if (pp->mode == PATTERN_MODE_STRING && pp->pattern &&
-				g_strcasecmp (pattern, pp->pattern) == 0) {
+				g_ascii_strcasecmp (pattern, pp->pattern) == 0) {
 			break;
 		}
 	}

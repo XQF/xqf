@@ -277,7 +277,7 @@ guchar *get_qw_skin (char *skin, char *path) {
 	skinsdir = file_in_dir (path, "qw/skins/");
 	skinlen = strlen (skin);
 
-	if (skinlen > 4 && g_strcasecmp (skin + skinlen - 4, ".pcx") == 0)
+	if (skinlen > 4 && g_ascii_strcasecmp (skin + skinlen - 4, ".pcx") == 0)
 		filename = file_in_dir (skinsdir, skin);
 	else
 		filename = skin_filename (skin, skinsdir, ".pcx");

@@ -57,7 +57,7 @@ static const char *mode_names[3] = {
 static int psearch_test_player (struct player *p) {
 	return
 		((psearch.mode == PSEARCH_MODE_STRING && 
-		  g_strcasecmp (p->name, psearch.data) == 0) ||
+		  g_ascii_strcasecmp (p->name, psearch.data) == 0) ||
 		 (psearch.mode == PSEARCH_MODE_SUBSTR && 
 		  lowcasestrstr (p->name, psearch.data)) ||
 		 (psearch.mode == PSEARCH_MODE_REGEXP &&

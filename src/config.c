@@ -130,7 +130,7 @@ static void find_key (const char *filename,
 		// see if section is alreay known in file
 		for (list = file->sections; list; list = list->next) {
 			section = (struct config_section *) list->data;
-			if (g_strcasecmp (secname, section->name) == 0)
+			if (g_ascii_strcasecmp (secname, section->name) == 0)
 				break;
 		}
 
@@ -153,7 +153,7 @@ static void find_key (const char *filename,
 		// see if key is already in section
 		for (list = section->keys; list; list = list->next) {
 			key = (struct config_key *) list->data;
-			if (g_strcasecmp (keyname, key->name) == 0)
+			if (g_ascii_strcasecmp (keyname, key->name) == 0)
 				break;
 		}
 
@@ -184,7 +184,7 @@ static struct config_key *key_in_section (struct config_section *section,
 
 	for (list = section->keys; list; list = list->next) {
 		key = (struct config_key *) list->data;
-		if (g_strcasecmp (keyname, key->name) == 0)
+		if (g_ascii_strcasecmp (keyname, key->name) == 0)
 			break;
 	}
 
@@ -569,7 +569,7 @@ int config_get_bool_with_default (const char *path, int *def) {
 
 	/* Gnome returns FALSE as default value */
 
-	if (val && !g_strcasecmp (val, "true"))
+	if (val && !g_ascii_strcasecmp (val, "true"))
 		return TRUE;
 	else
 		return FALSE;
