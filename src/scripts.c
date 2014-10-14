@@ -883,7 +883,7 @@ void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data)
 
 	mkdir((const char*)scriptdirs->data, 0777);
 
-	snprintf(dest, sizeof(dest), "%s/%s", (const char*)scriptdirs->data, g_basename(filename));
+	snprintf(dest, sizeof(dest), "%s/%s", (const char*)scriptdirs->data, g_path_get_basename(filename));
 
 	if(!access(dest, F_OK))
 	{
@@ -897,7 +897,7 @@ void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data)
 		return;
 	}
 
-	g_datalist_remove_data(&scriptdata, g_basename(filename));
+	g_datalist_remove_data(&scriptdata, g_path_get_basename(filename));
 	scripts_load();
 
 	dialog_ok(NULL, _("Script saved as\n%s\nPlease close and reopen the preferences dialog"), dest);
