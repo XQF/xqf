@@ -646,7 +646,7 @@ static gboolean xlib_window_is_viewable (Window w)
 
 	while (w != 0) {
 		Window parent, root, *children;
-		int nchildren;
+		guint nchildren;
 
 		XGetWindowAttributes (GDK_DISPLAY(), w, &wa);
 
