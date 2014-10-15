@@ -1209,6 +1209,15 @@ static char *q3a_excessiveplus_gametypes[MAX_Q3A_EXCESSIVEPLUS_TYPES] = {
 	"Protect the Leader"    /* 9 = Protect the Leader */
 };
 
+#define MAX_OPENARENA_TYPES MAX_Q3A_WQ3_TYPES
+#define openarena_gametypes q3a_gametypes
+
+#define MAX_SMOKINGUNS_TYPES MAX_Q3A_WQ3_TYPES
+#define smokinguns_gametypes q3a_wq3_gametypes
+
+#define MAX_WORLDOFPADMAN_TYPES MAX_Q3A_WQ3_TYPES
+#define worldofpadman_gametypes q3a_wop_gametypes
+
 #define MAX_WOLF_TYPES 9
 static char *wolf_gametypes[MAX_WOLF_TYPES] = {
 	NULL,           // 0 - Unknown
@@ -1269,6 +1278,11 @@ static char *jk3_gametypes[MAX_JK3_TYPES] = {
 	"TFFA",         // 6 - Team Free For All
 	"Siege",        // 7 - Siege
 	"CTF"           // 8 - Capture the Flag
+};
+
+#define MAX_ZEQ2LITE_TYPES 1
+static char *zeq2lite_gametypes[MAX_ZEQ2LITE_TYPES] = {
+	"Struggle"     // 0 - Struggle
 };
 
 struct q3a_gametype_s {
@@ -1405,9 +1419,55 @@ struct q3a_gametype_s q3a_gametype_map[] =
 		MAX_Q3A_EXCESSIVEPLUS_TYPES
 	},
 	{
+		"excessivemaz",
+		q3a_excessiveplus_gametypes,
+		MAX_Q3A_EXCESSIVEPLUS_TYPES
+	},
+	{
+		// Open Arena specific
+		"baseoa",
+		q3a_gametypes,
+		MAX_Q3A_TYPES
+	},
+	{
 		NULL,
 		NULL,
 		0
+	}
+};
+
+#define oa_gametype_map q3a_gametype_map
+
+struct q3a_gametype_s smokinguns_gametype_map[] =
+{
+	{
+		"smokinguns",
+		smokinguns_gametypes,
+		MAX_SMOKINGUNS_TYPES
+	}
+};
+
+struct q3a_gametype_s wop_gametype_map[] =
+{
+	{
+		"WorldofPadman",
+		worldofpadman_gametypes,
+		MAX_WORLDOFPADMAN_TYPES
+	},
+	{
+		"wop",
+		worldofpadman_gametypes,
+		MAX_WORLDOFPADMAN_TYPES
+	},
+	{
+		"wop_beryllium",
+		worldofpadman_gametypes,
+		MAX_WORLDOFPADMAN_TYPES
+	},
+	{
+		"pcs",
+		worldofpadman_gametypes,
+		MAX_WORLDOFPADMAN_TYPES
 	}
 };
 
@@ -1464,6 +1524,11 @@ struct q3a_gametype_s wolfet_gametype_map[] =
 	},
 	{
 		"etmain",
+		wolfet_gametypes,
+		MAX_WOLFET_TYPES
+	},
+	{
+		"legacy",
 		wolfet_gametypes,
 		MAX_WOLFET_TYPES
 	},
@@ -1528,6 +1593,15 @@ struct q3a_gametype_s iourt_gametype_map[] =
 		"q3ut4",
 		q3a_ut3_gametypes,
 		MAX_Q3A_UT3_TYPES
+	}
+};
+
+struct q3a_gametype_s zeq2lite_gametype_map[] =
+{
+	{
+		"ZEQ2",
+		zeq2lite_gametypes,
+		MAX_ZEQ2LITE_TYPES
 	}
 };
 
@@ -1814,7 +1888,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 		{
 			q3_decode_gametype( s, ef_gametype_map );
 		}
-		else if (s->type == WOET_SERVER)
+		else if (s->type == WOET_SERVER || s->type == ETL_SERVER)
 		{
 			q3_decode_gametype( s, wolfet_gametype_map );
 		}
@@ -1830,7 +1904,18 @@ static void q3_analyze_serverinfo (struct server *s) {
 		{
 			q3_decode_gametype( s, iourt_gametype_map );
 		}
-
+		else if (s->type == WOP_SERVER)
+		{
+			q3_decode_gametype( s, wop_gametype_map );
+		}
+		else if (s->type == SMOKINGUNS_SERVER)
+		{
+			q3_decode_gametype( s, smokinguns_gametype_map );
+		}
+		else if (s->type == ZEQ2LITE_SERVER)
+		{
+			q3_decode_gametype( s, zeq2lite_gametype_map );
+		}
 	}
 }
 
