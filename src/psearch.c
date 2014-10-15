@@ -124,8 +124,7 @@ static int psearch_compile_pattern (void) {
 			case PSEARCH_MODE_STRING:
 			case PSEARCH_MODE_SUBSTR:
 			default:
-				psearch.data = g_strdup (psearch.pattern);
-				g_ascii_strdown (psearch.data, -1);
+				psearch.data = g_ascii_strdown(psearch.pattern, -1);    /* g_ascii_strdown does implicit strndup */
 				break;
 
 		}

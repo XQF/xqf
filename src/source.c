@@ -245,7 +245,7 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
  */
 
 static char *unify_url (const char *url) {
-	char *unified;
+	char *unified, *tmp;
 	char *ptr, *ptr2, *ptr3;
 	long port;
 	int len;
@@ -279,7 +279,10 @@ static char *unify_url (const char *url) {
 
 	strncpy (unified, url, ptr2 - url);
 	unified[ptr2 - url] = '\0';
-	g_ascii_strdown (unified, -1);
+	printf("1:%s\n", unified);
+	tmp = g_ascii_strdown (unified, -1);    /* g_ascii_strdown does not modify string in place */
+	strcpy(unified, tmp);                   /* so recopy returned string at same address */
+	printf("2:%s\n\n", unified);
 
 	strcpy (unified + (ptr2 - url), ptr3);
 
@@ -420,9 +423,8 @@ static gint server_sorting_helper (const struct server *s1,
 		return 1;
 }
 
-static void master_add_server (struct master *m, char *str, 
-		enum server_type type) {
-	char *addr;
+static void master_add_server (struct master *m, char *str, enum server_type type) {
+	char *addr, *tmp;
 	unsigned short port;
 	struct host *h;
 	struct server *s;
@@ -445,7 +447,8 @@ static void master_add_server (struct master *m, char *str,
 			host_unref (h);
 		}
 		else {      /* hostname */
-			g_ascii_strdown (addr, -1);
+			tmp = g_ascii_strdown (addr, -1);   /* g_ascii_strdown does not modify string in place */
+			strcpy(addr, tmp);                  /* so recopy returned string at same address */
 			if ((us = userver_add (addr, port, type)) != NULL)
 				m->uservers = userver_list_add (m->uservers, us);
 		}

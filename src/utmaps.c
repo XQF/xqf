@@ -116,8 +116,7 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 						&& !g_ascii_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix),suffix))
 				{
 					// s#(.*)suffix#\1#
-					char* mapname = g_strndup(dire->d_name,strlen(dire->d_name)-strlen(suffix));
-					g_ascii_strdown(mapname, -1);
+					char* mapname = g_ascii_strdown(dire->d_name, strlen(dire->d_name)-strlen(suffix)); /* g_ascii_strdown does implicit strndup */
 					if(g_hash_table_lookup(maphash,mapname))
 					{
 						g_free(mapname);

@@ -1553,8 +1553,7 @@ static void prepare_new_server_to_favorites(enum server_type type, char* str, gb
 		host_unref (h);
 	}
 	else {  /* hostname */
-		g_ascii_strdown (addr, -1);
-		us = userver_add (addr, port, type);
+		us = userver_add (g_ascii_strdown(addr, -1), port, type);
 	}
 	g_free (addr);
 

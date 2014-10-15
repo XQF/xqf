@@ -188,8 +188,7 @@ static void player_pattern_compile (struct player_pattern *pp) {
 			case PATTERN_MODE_STRING:
 			case PATTERN_MODE_SUBSTR:
 			default:
-				pp->data = g_strdup (pp->pattern);
-				g_ascii_strdown (pp->data, -1);
+				pp->data = g_ascii_strdown(pp->pattern, -1);    /* g_ascii_strdown does implicit strndup */
 				break;
 
 		}
