@@ -212,7 +212,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 
 		gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
 
-		gdk_pixbuf_unref(pixbuf);
+		g_object_unref(pixbuf);
 	}
 	else
 	{
