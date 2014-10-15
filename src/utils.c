@@ -315,7 +315,7 @@ void ignore_sigpipe (void) {
  * String Output
  */
 
-void print_dq_string (FILE *f, const unsigned char *ptr) {
+void print_dq_string (FILE *f, const char *ptr) {
 
 	if (!f)
 		return;

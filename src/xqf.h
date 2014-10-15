@@ -209,11 +209,11 @@ struct host {
 struct server {
 	struct host *host;
 
-	char *name;
+	gchar *name;
 	char *map;
 	char **info;
 	char *game;         /** pointer into info, do not free */
-	char  *gametype;    /** pointer into info, do not free */
+	char *gametype;     /** pointer into info, do not free */
 	GSList *players;    /** GSList<struct player *>  */
 
 #ifdef USE_GEOIP

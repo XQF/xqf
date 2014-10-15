@@ -49,7 +49,7 @@ static int host_hash_func (const struct in_addr *ip) {
 	if (!ip)
 		return 0;
 
-	ptr = (char *) &ip->s_addr;
+	ptr = (unsigned char *) &ip->s_addr;
 	return (ptr[0] + (ptr[1] << 2) + (ptr[2] << 4) + (ptr[3] << 6)) % hosts.num;
 }
 

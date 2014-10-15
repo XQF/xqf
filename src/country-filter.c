@@ -173,15 +173,15 @@ int geoip_id_by_ip(struct in_addr in)
 
 static char* find_flag_file(int id)
 {
-	char file[] = "flags/lan.png";
-	char* filename;
+	gchar file[] = "flags/lan.png";
+	gchar* filename;
 
 	if (id != LAN_GeoIPid)
 	{
-		const char* code = geoip_code_by_id(id);
-		if(!code) return NULL;
-		strncpy(file+strlen("flags/"),code,2);
-		strcpy(file+strlen("flags/")+2,".png");
+		const gchar* code = geoip_code_by_id(id);
+		if (!code) return NULL;
+		strncpy(file+strlen("flags/"), code, 2);
+		strcpy(file+strlen("flags/")+2, ".png");
 	}
 
 	filename = find_pixmap_directory(g_ascii_strdown(file, -1));

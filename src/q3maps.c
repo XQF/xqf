@@ -117,11 +117,11 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash)
 
 	while(read (fd,&info, sizeof(dpackfile_t))>0)
 	{
-		if(!strncmp(info.name,"maps/",5) &&
-				!strcmp(info.name+strlen(info.name)-4,".bsp"))
+		if(!strncmp(info.name,"maps/",5) && !strcmp(info.name+strlen(info.name)-4,".bsp"))
 		{
 			// s#maps/(.*)\.bsp#\1#
-			char* mapname=g_ascii_strdown(info.name+5, strlen(info.name)-4-5);  /* g_ascii_strdown does implicit strndup */
+			gchar* mapname = g_ascii_strdown(info.name+5, strlen(info.name)-4-5);
+
 			if(g_hash_table_lookup(maphash,mapname))
 			{
 				g_free(mapname);
@@ -270,21 +270,25 @@ static char* is_etqw_map(const char* name)
 	return NULL;
 }
 
-static gboolean if_map_insert(const char* path, GHashTable* maphash,
-		char* (*is_map_func)(const char* name))
+static gboolean if_map_insert(const char* path, GHashTable* maphash, char* (*is_map_func)(const char* name))
 {
-	char* name = NULL;
-	name = g_ascii_strdown(is_map_func(path), -1);  /* g_ascii_strdown does implicit strndup */
-	if(name)
+	gchar* mapname = NULL;
+	gchar* tmp;
+	mapname = is_map_func(path);
+	if(mapname)
 	{
 		// s#maps/(.*)\.bsp#\1#
-		if(g_hash_table_lookup(maphash,name))
+		tmp = g_ascii_strdown(mapname, -1);
+		strcpy(mapname, tmp);
+		g_free(tmp);
+
+		if(g_hash_table_lookup(maphash, mapname))
 		{
-			g_free(name);
+			g_free(mapname);
 		}
 		else
 		{
-			g_hash_table_insert(maphash,name,GUINT_TO_POINTER(-1));
+			g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(-1));
 		}
 		return TRUE;
 	}
@@ -390,8 +394,8 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash)
 	}
 	if(strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4,".bsp") && level == 2)
 	{
-		const char* basename = g_path_get_basename(name);
-		char* mapname=g_ascii_strdown(basename, strlen(basename)-4);    /* g_ascii_strdown does implicit strndup */
+		const gchar* basename = g_path_get_basename(name);
+		gchar* mapname=g_ascii_strdown(basename, strlen(basename)-4);    /* g_ascii_strdown does implicit strndup */
 		if(g_hash_table_lookup(maphash,mapname))
 		{
 			g_free(mapname);
@@ -689,8 +693,8 @@ static void process_levelshots(GHashTable* maphash)
 	{
 		struct q3mapinfo* mi = ptr->data;
 		struct q3mapinfo* mih = NULL;
-		char* mapname = NULL;
-		const char* mapbase = NULL;
+		gchar* mapname = NULL;
+		const gchar* mapbase = NULL;
 		char* origkey = NULL;
 		gboolean found = FALSE;
 		if(!mi->levelshot || strlen(mi->levelshot) <= 4 ) { g_free(mi); continue; }

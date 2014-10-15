@@ -279,10 +279,9 @@ static char *unify_url (const char *url) {
 
 	strncpy (unified, url, ptr2 - url);
 	unified[ptr2 - url] = '\0';
-	printf("1:%s\n", unified);
 	tmp = g_ascii_strdown (unified, -1);    /* g_ascii_strdown does not modify string in place */
 	strcpy(unified, tmp);                   /* so recopy returned string at same address */
-	printf("2:%s\n\n", unified);
+	g_free(tmp);
 
 	strcpy (unified + (ptr2 - url), ptr3);
 
@@ -424,7 +423,7 @@ static gint server_sorting_helper (const struct server *s1,
 }
 
 static void master_add_server (struct master *m, char *str, enum server_type type) {
-	char *addr, *tmp;
+	gchar *addr, *tmp;
 	unsigned short port;
 	struct host *h;
 	struct server *s;
@@ -449,6 +448,7 @@ static void master_add_server (struct master *m, char *str, enum server_type typ
 		else {      /* hostname */
 			tmp = g_ascii_strdown (addr, -1);   /* g_ascii_strdown does not modify string in place */
 			strcpy(addr, tmp);                  /* so recopy returned string at same address */
+			g_free(tmp);
 			if ((us = userver_add (addr, port, type)) != NULL)
 				m->uservers = userver_list_add (m->uservers, us);
 		}
@@ -828,8 +828,7 @@ static void master_options_release(QFMasterOptions* o, gboolean doit)
 	g_free(o->gsmtype);
 }
 
-struct master *add_master (char *path, char *name, enum server_type type, const char* qstat_query_arg,
-		int user, int lookup_only) {
+struct master *add_master (char *path, char *name, enum server_type type, const char* qstat_query_arg, int user, int lookup_only) {
 	char *addr = NULL;
 	unsigned short port = 0;
 	struct master *m = NULL;
@@ -1708,7 +1707,7 @@ GSList *references_to_server (struct server *s) {
 	return res;
 }
 
-enum master_query_type get_master_query_type_from_address(char* address)
+enum master_query_type get_master_query_type_from_address(const gchar* address)
 {
 	enum master_query_type type;
 	// check for known master prefix

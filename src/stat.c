@@ -255,8 +255,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	int n = 0;
 	char *endptr = NULL;
 	enum server_type type = UNKNOWN_SERVER;
-	char *addr = NULL;
-	char *tmp;
+	gchar *addr = NULL;
+	gchar *tmp;
 	unsigned short port;
 	struct server *s = NULL;
 	struct userver *us = NULL;
@@ -378,6 +378,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 			tmp = g_ascii_strdown (addr, -1);   /* g_ascii_strdown does not modify string in place */
 			addr = tmp;
+			g_free(tmp);
+
 			port += conn->master->options.portadjust;
 			if ((us = userver_add (addr, port, type)) != NULL)
 			{

@@ -52,7 +52,7 @@ static int server_hash_func (const struct host *h, unsigned short port) {
 	if (!h)
 		return 0;
 
-	ptr = (char *) &h->ip.s_addr;
+	ptr = (unsigned char *) &h->ip.s_addr;
 	return (ptr[0] + (ptr[1] << 2) + (ptr[2] << 4) + (ptr[3] << 6) + port) % 
 		servers.num;
 }

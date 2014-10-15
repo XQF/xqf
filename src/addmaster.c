@@ -53,8 +53,9 @@ static GtkWidget *master_query_type_radios[MASTER_NUM_QUERY_TYPES];
 // modify and write back if needed
 static void master_check_master_addr_prefix(void)
 {
-	char *pos;
-	char *master_addr;
+	const gchar *pos;
+	const gchar *master_addr;
+	gchar *master_tmp_addr;
 
 	master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO(master_addr_combo)->entry));
 
@@ -76,8 +77,7 @@ static void master_check_master_addr_prefix(void)
 		// Add lan://255.255.255.255 if user picks LAN and has not already entered an address
 		if(current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr)))
 		{
-			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type],
-					"255.255.255.255");
+			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type], "255.255.255.255");
 			gtk_entry_set_text(
 					GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
 			g_free(txt);
@@ -85,10 +85,9 @@ static void master_check_master_addr_prefix(void)
 
 		// Otherwise, just change the master type (xxx://)
 		else {
-			master_addr =
-				g_strconcat(master_prefixes[current_master_query_type],pos,NULL);
-			gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry),master_addr);
-			g_free(master_addr);
+			master_tmp_addr = g_strconcat(master_prefixes[current_master_query_type], pos, NULL);
+			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(master_addr_combo)->entry), master_tmp_addr);
+			g_free(master_tmp_addr);
 		}
 	}
 }
@@ -152,7 +151,7 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 
 static void master_type_radio_callback (GtkWidget *widget, enum master_query_type type)
 {
-	char* master_name;
+	const gchar* master_name;
 
 	// This gets called when a button is made inactive AND when it's made active
 	// so only do this if it's set to active
@@ -183,7 +182,7 @@ static void master_activate_radio_for_type( enum master_query_type type )
 
 static void master_address_from_history_selected_callback (GtkWidget *widget, gpointer data)
 {
-	char* str = gtk_entry_get_text( GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
+	const gchar* str = gtk_entry_get_text( GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
 	enum master_query_type type = get_master_query_type_from_address(str);
 	master_activate_radio_for_type(type);
 }

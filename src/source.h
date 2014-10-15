@@ -63,7 +63,7 @@ extern int source_has_masters_to_delete (GSList *source);
 extern GSList *references_to_server (struct server *s);
 
 
-extern enum master_query_type get_master_query_type_from_address(char* address);
+extern enum master_query_type get_master_query_type_from_address(const gchar* address);
 
 
 /** \brief check whether any gslist master is configured */

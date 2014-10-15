@@ -46,7 +46,7 @@ extern GList* createGListfromchar(char* strings[]);
 extern void on_sig (int signum, void (*func) (int signum));
 extern void ignore_sigpipe (void);
 
-extern void print_dq_string (FILE *f, const unsigned char *str);
+extern void print_dq_string (FILE *f, const char *str);
 
 extern char *lowcasestrstr (const char *str, const char *substr);
 

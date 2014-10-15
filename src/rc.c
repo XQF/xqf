@@ -468,9 +468,9 @@ int rc_save (void) {
 int rc_migrate_dir (void) {
 	int res;
 	struct stat st_buf;
-	char* legacy_user_rcdir = NULL;
-	char* xdg_user_rcdir = NULL;
-	char* xdg_user_dir = NULL;
+	const gchar* legacy_user_rcdir = NULL;
+	const gchar* xdg_user_rcdir = NULL;
+	const gchar* xdg_user_dir = NULL;
 
 	if (!g_get_user_name () || !g_get_home_dir () || !g_get_user_config_dir ()) {
 		fprintf(stderr, "Unable to get user name/home directory/XDG config directory\n");
@@ -489,8 +489,6 @@ int rc_migrate_dir (void) {
 			res = mkdir (xdg_user_dir, 0755);
 			if (res != 0) {
 				fprintf(stderr, "Can't create XDG user config directory %s\n", xdg_user_dir);
-				free(legacy_user_rcdir);
-				free(xdg_user_rcdir);
 				return res;
 			}
 		}
@@ -503,8 +501,6 @@ int rc_migrate_dir (void) {
 			}
 			else {
 				fprintf(stderr, "Error when moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-				free(legacy_user_rcdir);
-				free(xdg_user_rcdir);
 				return res;
 			}
 		}
@@ -512,8 +508,6 @@ int rc_migrate_dir (void) {
 	else if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) != -1) {
 		fprintf(stderr, "Warning, there is an old legacy config directory %s, but XDG user config directory %s will be used\n", legacy_user_rcdir, xdg_user_rcdir);
 	}
-	free(legacy_user_rcdir);
-	free(xdg_user_rcdir);
 	return TRUE;
 }
 

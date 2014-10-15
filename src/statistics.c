@@ -161,7 +161,7 @@ static void server_stats_destroy (void) {
 
 enum CPU identify_cpu (struct server *s, const char *versionstr) {
 	enum CPU cpu = CPU_UNKNOWN;
-	char *str;
+	gchar *str;
 
 	str = g_ascii_strdown(versionstr, -1);  /* g_ascii_strdown does implicit strndup */
 	if (!str)
@@ -188,11 +188,11 @@ enum CPU identify_cpu (struct server *s, const char *versionstr) {
 
 enum OS identify_os (struct server *s, char *versionstr) {
 	enum OS os = OS_UNKNOWN;
-	char *str;
+	gchar *str;
 
 	str = g_ascii_strdown(versionstr, -1);  /* g_ascii_strdown does implicit strndup */
 	if (!str)
-		return CPU_UNKNOWN;
+		return OS_UNKNOWN;
 
 	if (strstr (str, "win"))
 		os = OS_WINDOWS;

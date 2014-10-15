@@ -112,18 +112,17 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 			}
 			else
 			{
-				if(strlen(dire->d_name)>strlen(suffix)
-						&& !g_ascii_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix),suffix))
+				if(strlen(dire->d_name)>strlen(suffix) && !g_ascii_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix), suffix))
 				{
 					// s#(.*)suffix#\1#
-					char* mapname = g_ascii_strdown(dire->d_name, strlen(dire->d_name)-strlen(suffix)); /* g_ascii_strdown does implicit strndup */
+					gchar* mapname = g_ascii_strdown(dire->d_name, strlen(dire->d_name)-strlen(suffix)); /* g_ascii_strdown does implicit strndup */
 					if(g_hash_table_lookup(maphash,mapname))
 					{
 						g_free(mapname);
 					}
 					else
 					{
-						g_hash_table_insert(maphash,mapname,GUINT_TO_POINTER(1));
+						g_hash_table_insert(maphash, mapname, GUINT_TO_POINTER(1));
 					}
 				}
 				g_free(name);
