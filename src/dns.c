@@ -285,8 +285,7 @@ static void worker_parse_callback (char *str, void *data) {
 	int len;
 
 #ifdef DEBUG
-	int n = (int) data;
-	fprintf (stderr, "DNS Master> got \"%s\" from worker %d\n", str, n);
+	fprintf (stderr, "DNS Master> got \"%s\" from worker %p\n", str, data);
 #endif
 
 	len = strlen (str);

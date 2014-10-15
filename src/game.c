@@ -2793,10 +2793,9 @@ static int hl_exec (const struct condef *con, int forkit) {
 	char *argv[32];
 	int argi = 0;
 	char *cmd;
-	char** additional_args = NULL;
+	// char** additional_args = NULL;
 	struct game *g = &games[con->s->type];
 	int retval;
-	int i;
 
 	cmd = strdup_strip (g->cmd);
 

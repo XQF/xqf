@@ -1520,8 +1520,7 @@ static void update_q1_skin (void) {
   q1_skin_data = get_qw_skin ("base", genprefs[QW_SERVER].real_dir);
 
   if (q1_skin_data || q1_skin_is_valid) {
-    draw_qw_skin (q1_skin_preview, q1_skin_data, 
-                                     pref_q1_top_color, pref_q1_bottom_color);
+    draw_qw_skin (q1_skin_preview, q1_skin_data, pref_q1_top_color, pref_q1_bottom_color);
     q1_skin_is_valid = (q1_skin_data)? TRUE : FALSE;
   }
 }
@@ -1560,8 +1559,7 @@ static void update_qw_skins (char *initstr) {
     g_free (str);
 
   if (qw_skin_data || qw_skin_is_valid) {
-    draw_qw_skin (qw_skin_preview, qw_skin_data, 
-                                     pref_qw_top_color, pref_qw_bottom_color);
+    draw_qw_skin (qw_skin_preview, qw_skin_data, pref_qw_top_color, pref_qw_bottom_color);
     qw_skin_is_valid = (qw_skin_data)? TRUE : FALSE;
   }
 }
