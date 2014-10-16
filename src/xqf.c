@@ -788,7 +788,7 @@ static int stat_lists_refresh (struct stat_job *job) {
 			gtk_clist_thaw (server_clist);
 	}
 
-	print_status (main_status_bar, (progress_bar_str)? progress_bar_str : "", job->progress.done, job->progress.tasks);
+	// print_status (main_status_bar, (progress_bar_str)? progress_bar_str : "", job->progress.done, job->progress.tasks);
 	if (job->progress.tasks > 0) {
 		progress_bar_set_percentage (main_progress_bar, ((float)job->progress.done) / job->progress.tasks);
 	}
