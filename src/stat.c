@@ -56,10 +56,10 @@ static void parse_qstat_record (struct stat_conn *conn);
 typedef void (*server_unref_void)(void*);
 typedef void (*userver_unref_void)(void*);
 
-static int failed (char *name, char *arg) {
-	fprintf (stderr, "%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
+static int failed (gchar *name, gchar *arg) {
+	fprintf (stderr, "%s(%s) failed\n", name, (arg)? arg : "");
 
-	xqf_error("%s(%s) failed: %s\n", name, (arg)? arg : "", g_strerror (errno));
+	xqf_error("%s(%s) failed\n", name, (arg)? arg : "");
 
 	return TRUE;
 }
@@ -125,31 +125,33 @@ static void stat_master_update_done(
 // otherwise return false so the normal parse function can do the work
 static gboolean parse_savage_master_output (struct stat_conn *conn)
 {
-	gsize res = 0;
 	struct stat_job *job = conn->job;
+	gsize res = 0;
+	GError *err = NULL;
+	GIOStatus status;
 
 	conn->bufsize = 17;
 	debug(3,"conn->first %d",conn->first);
 	// check the signature of the first five bytes
 	if(conn->first)
 	{
-		// FIXME GIOStatus, GError
-		g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, &res, NULL);
-		if (res < 0) {
-			if (errno == EAGAIN || errno == EWOULDBLOCK) {
+		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, &res, &err);
+		if (status == G_IO_STATUS_EOF) {
+			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
+			stat_update_masters (job);
+			return TRUE;
+		}
+		else if (status == G_IO_STATUS_AGAIN) {
 				return TRUE;
-			}
+		}
+		else if (status != G_IO_STATUS_ERROR) {
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			return TRUE;
 		}
-		if (res == 0) { /* EOF */
-			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
-			stat_update_masters (job);
-			return TRUE;
-		}
 
+		/* G_IO_STATUS_NORMAL */
 		conn->pos += res;
 
 		if(conn->pos < 5) // we need five bytes
@@ -174,23 +176,23 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
 	while(1)
 	{
 		size_t off = 0;
-		// FIXME GIOStatus, GError
-		g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, NULL);
-		if (res < 0) {
-			if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				return TRUE;
-			}
+		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
+		if (status == G_IO_STATUS_EOF) {
+			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
+			stat_update_masters (job);
+			return TRUE;
+		}
+		else if (status == G_IO_STATUS_AGAIN) {
+			return TRUE;
+		}
+		else if (status == G_IO_STATUS_ERROR) {
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			return TRUE;
 		}
-		if (res == 0) { /* EOF */
-			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
-			stat_update_masters (job);
-			return TRUE;
-		}
 
+		/* G_IO_STATUS_NORMAL */
 		conn->pos += res;
 
 		// we always need six bytes
@@ -242,6 +244,7 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
 			conn->pos = conn->pos%6;
 		}
 	}
+	// infinite loop end, next lines are never read
 }
 
 /**
@@ -394,11 +397,15 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	return TRUE;
 }
 
+
+/* > the function should return FALSE if the event source should be removed */
 static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condition, struct stat_conn *conn) {
 	struct stat_job *job = conn->job;
 	int first_used = 0;
 	char *tmp;
 	gsize res = 0;
+	GError *err = NULL;
+	GIOStatus status;
 
 	debug_increase_indent();
 	debug(3,"stat_master_input_callback(%p,%d,...)",conn,chan);
@@ -407,6 +414,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 	if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP
 			&& parse_savage_master_output(conn))
 	{
+		/* FALSE == free the channel */
 		return FALSE;
 	}
 
@@ -421,27 +429,27 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			return FALSE;
 		}
 
-		// FIXME GIOStatus, GError
-		g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, NULL);
-		if (res < 0) {
-			if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				debug_decrease_indent();
-				return FALSE;
-			}
-			failed ("read", NULL);
-			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
-			stat_update_masters (job);
-			debug_decrease_indent();
-			return FALSE;
-		}
-		if (res == 0) { /* EOF */
+		status = g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
+		if (status == G_IO_STATUS_EOF) {
 			debug(3,"stat_master_input_callback -- eof");
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
 			debug_decrease_indent();
 			return FALSE;
 		}
+		else if (status == G_IO_STATUS_AGAIN) {
+			debug_decrease_indent();
+			return FALSE;
+		}
+		else if (status == G_IO_STATUS_ERROR) {
+			failed ("read", NULL);
+			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
+			stat_update_masters (job);
+			debug_decrease_indent();
+			return FALSE;
+		}
 
+		/* G_IO_STATUS_NORMAL */
 		tmp = conn->buf + conn->pos;
 		conn->pos += res;
 
@@ -468,9 +476,8 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			conn->pos = conn->pos - first_used;
 		}
 	}
-	debug_decrease_indent();
-
-	return TRUE;
+	// infinite loop end, next lines are never read
+	// debug_decrease_indent();
 }
 
 
@@ -871,7 +878,7 @@ static void stat_servers_update_done (struct stat_conn *conn) {
 
 
 /* 
-   stat_server_input_callback -- as data is returned from the qstat
+   stat_servers_input_callback -- as data is returned from the qstat
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
 */
@@ -881,6 +888,9 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 	int blocked = FALSE;
 	char *tmp;
 	gsize res = 0;
+	GError *err = NULL;
+	GIOStatus status;
+
 	/* debug (3, "stat_servers_input_callback() -- Conn %lx", conn); */
 	while (1) {
 		first_used = 0;
@@ -899,23 +909,25 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 			adjust_pointers (conn->strings, conn->buf, tmp);
 		}
 
-		// FIXME GIOStatus, GError
-		g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, NULL);
-		if (res < 0) {
-			if (errno == EAGAIN || errno == EWOULDBLOCK)
-				return FALSE;
-			failed ("read", NULL);
-			stat_servers_update_done (conn);
-			stat_next (job);
-			return FALSE;
-		}
-		if (res == 0) { /* EOF */
+		status = g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
+		if (status == G_IO_STATUS_EOF) {
 			debug (3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
 			stat_servers_update_done (conn);
 			stat_next (job);
 			return FALSE;
 		}
+		if (status != G_IO_STATUS_NORMAL) {
+			if (status == G_IO_STATUS_AGAIN) {
+				return TRUE;
+			}
+			/* G_IO_STATUS_ERROR */
+			failed ("read", NULL);
+			stat_servers_update_done (conn);
+			stat_next (job);
+			return FALSE;
+		}
 
+		/* G_IO_STATUS_NORMAL */
 		tmp = conn->buf + conn->pos;
 		conn->pos += res;
 
@@ -959,9 +971,8 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 
 			conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, conn->input_callback, conn);
 		}
-
-		return TRUE;
 	}
+	// infinite loop end, next lines are never read
 }
 
 /**
