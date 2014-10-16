@@ -143,8 +143,8 @@ test_utils_SOURCES = test_utils.c \
 test_utils_LDADD = $(xqf_LDADD)
 
 # it's only temporary, so ...
-gamesxml2c_LDFLAGS = $(shell xml2-config --libs)
-gamesxml2c_CFLAGS = $(shell xml2-config --cflags) 
+gamesxml2c_LDFLAGS := $(shell xml2-config --libs)
+gamesxml2c_CFLAGS := $(shell xml2-config --cflags) 
 
 pkglibexec_PROGRAMS =
 
