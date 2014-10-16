@@ -691,9 +691,8 @@ void save_script_prefs()
 {
 	GList* s;
 	char path[PATH_MAX];
-	unsigned i;
 
-	for (s = scripts; s; s = g_list_next(s), ++i)
+	for (s = scripts; s; s = g_list_next(s))
 	{
 		Script* script;
 		GSList* optlist;
