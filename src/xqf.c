@@ -844,9 +844,10 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
 		server_clist_build_filtered (cur_server_list, TRUE);
 	}
 	/*
-	   if(redialserver == 1)
-	   print_status (main_status_bar, _("Waiting to redial server(s)..."));
-	   else
+	if(redialserver == 1) {
+		print_status (main_status_bar, _("Waiting to redial server(s)..."));
+	else {
+	}
 	*/
 
 	tray_icon_stop_animation ();
