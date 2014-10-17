@@ -123,7 +123,7 @@ static void stat_master_update_done(
 
 // check if master output is in savage format, if yes parse it and return true.
 // otherwise return false so the normal parse function can do the work
-static gboolean parse_savage_master_output (struct stat_conn *conn)
+static void parse_savage_master_output (struct stat_conn *conn)
 {
 	struct stat_job *job = conn->job;
 	gsize res = 0;
@@ -132,67 +132,87 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
 
 	conn->bufsize = 17;
 	debug(3,"conn->first %d",conn->first);
-	// check the signature of the first five bytes
+
+	/* if this function is called for the first time on this conn */
 	if(conn->first)
 	{
+		debug(3,"parse_savage_master_output -- first time");
 		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, &res, &err);
+
 		if (status == G_IO_STATUS_EOF) {
+			debug(3,"parse_savage_master_output -- eof");
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
-			return TRUE;
+			return;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
-				return TRUE;
+			debug(3,"parse_savage_master_output -- unavailable");
+			return;
 		}
 		else if (status != G_IO_STATUS_ERROR) {
+			debug(3,"parse_savage_master_output -- error");
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
-			return TRUE;
+			return;
 		}
 
 		/* G_IO_STATUS_NORMAL */
 		conn->pos += res;
 
-		if(conn->pos < 5) // we need five bytes
-			return TRUE;
+		if(conn->pos < 5) { // we need five bytes
+			debug(3,"parse_savage_master_output -- too short");
+			return;
+		}
 
 		conn->first = 0;
 
-		// we know we have five bytes, reset buffer for further processing
+		/* we know we have five bytes, reset buffer for further processing */
 		conn->pos = 0;
 
+		/* check the signature of the first five bytes */
 		if(!memcmp(conn->buf,savage_master_header,5))
 		{
-			debug(3,"detected savage format");
+			debug(3,"parse_savage_master_output -- detected savage format");
 			conn->is_savage = TRUE;
 		}
-		else
-			return FALSE;
+		else { /* savage not detected */
+			debug(3,"parse_savage_master_output -- savage not detected");
+			return;
+		}
 	}
-	else if(!conn->is_savage)
-		return FALSE;
+	/* if this function is not called for the first time on this conn, check if savage was previously detected */
+	else if(!conn->is_savage) {
+		debug(3,"parse_savage_master_output -- not savage");
+		return;
+	}
 
+	/* if you are here, savage is detected: do your job */
+	/* return when there is nothing (more) to do */
 	while(1)
 	{
 		size_t off = 0;
 		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
 		if (status == G_IO_STATUS_EOF) {
+			debug(3,"parse_savage_master_output -- eof");
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
-			return TRUE;
+			return;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
-			return TRUE;
+			debug(3,"parse_savage_master_output -- unavailable");
+			return;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
+			debug(3,"parse_savage_master_output -- error");
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
-			return TRUE;
+			return;
 		}
 
 		/* G_IO_STATUS_NORMAL */
+		debug(3,"parse_savage_master_output -- chars read");
 		conn->pos += res;
 
 		// we always need six bytes
@@ -234,6 +254,7 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
 				host_unref (h);
 			}
 		}
+		debug(3,"parse_savage_master_output -- continue");
 		if(off >= conn->pos)
 		{
 			conn->pos=0;
@@ -244,7 +265,7 @@ static gboolean parse_savage_master_output (struct stat_conn *conn)
 			conn->pos = conn->pos%6;
 		}
 	}
-	// infinite loop end, next lines are never read
+	// infinite loop end, next lines are never reached
 }
 
 /**
@@ -386,7 +407,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 			port += conn->master->options.portadjust;
 			if ((us = userver_add (addr, port, type)) != NULL)
 			{
-				//	  conn->uservers = userver_list_add (conn->uservers, us);
+				// conn->uservers = userver_list_add (conn->uservers, us);
 				conn->uservers = g_slist_prepend (conn->uservers, us);
 				userver_ref(us);
 			}
@@ -398,7 +419,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 }
 
 
-/* > the function should return FALSE if the event source should be removed */
+/* the function should return FALSE if the event source should be removed */
 static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condition, struct stat_conn *conn) {
 	struct stat_job *job = conn->job;
 	int first_used = 0;
@@ -411,13 +432,23 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 	debug(3,"stat_master_input_callback(%p,%d,...)",conn,chan);
 
 #warning ugly hack for savage, make master handling more generic!
-	if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP
-			&& parse_savage_master_output(conn))
-	{
-		/* FALSE == free the channel */
-		return FALSE;
+	if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP) {
+		/* if first time, check it */
+		if (conn->first) {
+			debug(3,"stat_master_input_callback -- check first for savage");
+			parse_savage_master_output(conn);
+			/* if savage, do it */
+			if (conn->is_savage) {
+				debug(3,"stat_master_input_callback -- parse savage");
+				parse_savage_master_output(conn);
+				/* when there is nothing (more) to read, return */
+				return TRUE;
+			}
+		}
 	}
 
+	/* if you are here, savage is NOT detected, do your job */
+	/* return TRUE when there is nothing (more) to do */
 	while (1) {
 		first_used = 0;
 
@@ -426,7 +457,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			debug_decrease_indent();
-			return FALSE;
+			return TRUE;
 		}
 
 		status = g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
@@ -435,34 +466,39 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
 			debug_decrease_indent();
-			return FALSE;
+			return TRUE;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
+			debug(3,"stat_master_input_callback -- unavailable");
 			debug_decrease_indent();
-			return FALSE;
+			return TRUE;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
+			debug(3,"stat_master_input_callback -- error");
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			debug_decrease_indent();
-			return FALSE;
+			return TRUE;
 		}
 
 		/* G_IO_STATUS_NORMAL */
+		debug(3,"stat_master_input_callback -- chars read");
 		tmp = conn->buf + conn->pos;
 		conn->pos += res;
 
 		while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
+			debug(3,"stat_master_input_callback -- parse new line");
 			*tmp++ = '\0';
 
 			// debug(0,"%s",conn->buf + first_used);
 
 			if (!parse_master_output (conn->buf + first_used, conn)) {
+				debug(3,"stat_master_input_callback -- end parse");
 				stat_master_update_done (conn, job, conn->master, conn->master->state);
 				stat_update_masters (job);
 				debug_decrease_indent();
-				return FALSE;
+				return TRUE;
 			}
 
 			first_used = tmp - conn->buf;
@@ -901,7 +937,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 				fprintf (stderr, "server record is too large\n");
 				stat_servers_update_done (conn);
 				stat_next (job);
-				return FALSE;
+				return TRUE;
 			}
 			conn->bufsize += conn->bufsize;
 			tmp = conn->buf;
@@ -911,30 +947,35 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 
 		status = g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
 		if (status == G_IO_STATUS_EOF) {
+			debug(3,"stat_servers_input_callback -- eof");
 			debug (3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
 			stat_servers_update_done (conn);
 			stat_next (job);
-			return FALSE;
+			return TRUE;
 		}
-		if (status != G_IO_STATUS_NORMAL) {
-			if (status == G_IO_STATUS_AGAIN) {
-				return TRUE;
-			}
-			/* G_IO_STATUS_ERROR */
+		else if (status == G_IO_STATUS_AGAIN) {
+			debug(3,"stat_servers_input_callback -- unavailable");
+			return TRUE;
+		}
+		else if (status == G_IO_STATUS_ERROR) {
+			debug(3,"stat_servers_input_callback -- error");
 			failed ("read", NULL);
 			stat_servers_update_done (conn);
 			stat_next (job);
-			return FALSE;
+			return TRUE;
 		}
 
 		/* G_IO_STATUS_NORMAL */
+		debug(3,"stat_servers_input_callback -- chars read");
 		tmp = conn->buf + conn->pos;
 		conn->pos += res;
 
 		while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
+			debug(3,"stat_servers_input_callback -- parse new line");
 			*tmp++ = '\0';
 
 			if (conn->buf[conn->lastnl] == '\0') {
+				debug(3,"stat_servers_input_callback -- blocked");
 				blocked = TRUE;
 
 				parse_qstat_record (conn);
@@ -967,8 +1008,10 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 		}
 
 		if (blocked) {
+			debug(3,"stat_servers_input_callback -- if blocked");
 			g_source_remove (conn->tag);
 
+			debug(3,"stat_servers_input_callback -- new watch");
 			conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, conn->input_callback, conn);
 		}
 	}
