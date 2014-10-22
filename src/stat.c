@@ -912,16 +912,18 @@ static void stat_servers_update_done (struct stat_conn *conn) {
 
 static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 	GSList *strings = NULL;
-	// FIXME: this code assume that a qstat output line can't exceed 4096 bytes
-	gchar token[4096];
+	gsize token_mul = 1;
+	gchar *token = g_malloc(token_mul * BUFFER_MINSIZE * sizeof(gchar*));
 	gsize i, last;
 
 	for (i = 0, last = 0; i < bufsize; i++) {
-		if (i - last == 4096) {
-			printf("error: too long line\n");
-			return strings;
+		if (i - last == (token_mul * BUFFER_MINSIZE)) {
+			debug(6, "token too short: extending token size from %d to %d", (token_mul * BUFFER_MINSIZE), ((token_mul+1) * BUFFER_MINSIZE));
+			token_mul++;
+			token = g_realloc(token, (token_mul * BUFFER_MINSIZE * sizeof(gchar*)));
 		}
-		else if (buffer[i] == '\n' || buffer[i] == '\0') {
+
+		if (buffer[i] == '\n' || buffer[i] == '\0') {
 			token[i - last] = '\0';
 
 			debug(6, "stat_buffer_to_strings - token: %s", token);
@@ -933,6 +935,7 @@ static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 			token[i - last] = buffer[i];
 		}
 	}
+	g_free(token);
 	return strings;
 }
 
