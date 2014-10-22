@@ -55,8 +55,8 @@ struct stat_conn {
 	guint tag;
 	GIOFunc input_callback;
 
-	char *buf;
-	int bufsize;
+	gchar *buf;
+	gsize bufsize;
 	int pos;
 	int lastnl;
 
@@ -70,9 +70,11 @@ struct stat_conn {
 
 	char *tmpfile;
 
+#if 0
 	// UGLY HACKS
 	gboolean first;     // marker for savage check header
-	gboolean is_savage; // true if file is in savage format
+	boolean is_savage; // true if file is in savage format
+#endif
 };
 
 struct delayed_refresh {
