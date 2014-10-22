@@ -21,9 +21,8 @@
 
 #include <gtk/gtk.h>
 
-static inline GtkWidget* topmost_parent(GtkWidget* widget)
-{
-	for(; widget && widget->parent; widget = widget->parent);
+static inline GtkWidget* topmost_parent(GtkWidget* widget) {
+	for (; widget && widget->parent; widget = widget->parent);
 	return widget;
 }
 

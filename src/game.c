@@ -208,21 +208,17 @@ static struct gsname2type_s gsname2type[] =
 	{ NULL, UNKNOWN_SERVER }
 };
 
-void init_games()
-{
+void init_games() {
 	unsigned i, j;
 
 	debug(3,"initializing games");
 
-	for (i = 0; i < GAMES_TOTAL; i++)
-	{
+	for (i = 0; i < GAMES_TOTAL; i++) {
 		g_datalist_init(&games[i].games_data);
 	}
 
-	for (i = 0; i < GAMES_TOTAL; i++)
-	{
-		for (j = 0; games[i].attributes && games[i].attributes[j]; j += 2)
-		{
+	for (i = 0; i < GAMES_TOTAL; i++) {
+		for (j = 0; games[i].attributes && games[i].attributes[j]; j += 2) {
 			game_set_attribute_const(i,games[i].attributes[j], games[i].attributes[j+1]);
 		}
 	}
@@ -244,34 +240,29 @@ void init_games()
 				 "XQF documentation for more information.")));
 }
 
-void games_done()
-{
+void games_done() {
 	int i;
 
-	for (i = 0; i < GAMES_TOTAL; i++)
-	{
+	for (i = 0; i < GAMES_TOTAL; i++) {
 		g_free(games[i].real_home);
 	}
 }
 
 // retreive game specific value that belongs to key, do not free return value!
-const char* game_get_attribute(enum server_type type, const char* attr)
-{
+const char* game_get_attribute(enum server_type type, const char* attr) {
 	return g_datalist_get_data(&games[type].games_data,attr);
 }
 
 // set game specific key/value pair, value is _not_ copied and must not be
 // freed manually
-const char* game_set_attribute(enum server_type type, const char* attr, char* value)
-{
+const char* game_set_attribute(enum server_type type, const char* attr, char* value) {
 	g_datalist_set_data_full(&games[type].games_data,attr,value,g_free);
 	return value;
 }
 
 // set game specific key/value pair, value is _not_ copied and must not be
 // freed manually
-const char* game_set_attribute_const(enum server_type type, const char* attr, const char* value)
-{
+const char* game_set_attribute_const(enum server_type type, const char* attr, const char* value) {
 	g_datalist_set_data_full(&games[type].games_data,attr,(void*)value,NULL);
 	return value;
 }
@@ -293,8 +284,7 @@ enum server_type id2type (const char *id) {
 	}
 
 	// workaround for qstat beta
-	if (g_ascii_strcasecmp (id, "RWS" ) == 0)
-	{
+	if (g_ascii_strcasecmp (id, "RWS" ) == 0) {
 		return WO_SERVER;
 	}
 
@@ -488,7 +478,7 @@ static struct player *t2_parse_player (char *token[], int n, struct server *s) {
 
 	player->model = (char *) player + sizeof (struct player) + strlen(name)+1;
 	strcpy (player->model, player_type);
-	if( player_type[0] == 'B' ) ++s->curbots;
+	if ( player_type[0] == 'B' ) ++s->curbots;
 
 	return player;
 }
@@ -524,7 +514,7 @@ static struct player *descent3_parse_player (char *token[], int n, struct server
 
 	player->name = (char *) player + sizeof (struct player);
 	strcpy (player->name, token[0]);
-	if(token[0][0] == '-' && token[0][strlen(token[0])-1] == '-')
+	if (token[0][0] == '-' && token[0][strlen(token[0])-1] == '-')
 		++s->curbots;
 
 	return player;
@@ -538,17 +528,15 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 	if (n < 3)
 		return NULL;
 
-	if(n > 3 && strcmp(token[3], "0"))
-	{
+	if (n > 3 && strcmp(token[3], "0")) {
 		clan = token[3];
 		clanlen = strlen(clan)+1;
 	}
 
-	if(s->type == WARSOW_SERVER && clan)
-	{
+	if (s->type == WARSOW_SERVER && clan) {
 		static const char* colors[] = { "spectator", "", "red", "blue", "green", "yellow" };
 		unsigned i = atoi(clan);
-		if(i > 5) i = 1;
+		if (i > 5) i = 1;
 		clan = colors[i];
 		clanlen = 0;
 	}
@@ -564,14 +552,11 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 	q3_unescape (player->name, token[0]);
 
 	// show clan name in model column
-	if(clan)
-	{
-		if(s->type == WARSOW_SERVER)
-		{
+	if (clan) {
+		if (s->type == WARSOW_SERVER) {
 			player->model = (char*)clan;
 		}
-		else
-		{
+		else {
 			player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
 			q3_unescape(player->model, clan);
 		}
@@ -640,13 +625,11 @@ static struct player *un_parse_player (char *token[], int n, struct server *s) {
 	return player;
 }
 
-static struct player *savage_parse_player (char *token[], int n, struct server *s)
-{
+static struct player *savage_parse_player (char *token[], int n, struct server *s) {
 	return q2_parse_player(token, n, s);
 }
 
-static struct player *ottd_parse_player (char *token[], int n, struct server *s)
-{
+static struct player *ottd_parse_player (char *token[], int n, struct server *s) {
 	return q2_parse_player(token, n, s);
 }
 
@@ -662,7 +645,7 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 
 	if (poqs && n < 10)
 		return;
-	else if(n < 8)
+	else if (n < 8)
 		return;
 
 	if (*(token[2])) {      /* if name is not empty */
@@ -748,19 +731,16 @@ static void un_analyze_serverinfo (struct server *s) {
 		}
 		else if ((s->type == UT2004_SERVER || s->type == UT2_SERVER)
 				&& strcmp (*info_ptr, "ServerVersion") == 0
-				&& strlen(info_ptr[1]) == 4)
-		{
-			if(info_ptr[1][0] == '3')
+				&& strlen(info_ptr[1]) == 4) {
+			if (info_ptr[1][0] == '3')
 				s->type = UT2004_SERVER;
-			else if(info_ptr[1][0] == '2')
+			else if (info_ptr[1][0] == '2')
 				s->type = UT2_SERVER;
 		}
 		else if (strcmp (*info_ptr, "gamename") == 0) {
 			unsigned i;
-			for( i = 0 ; gsname2type[i].name ; ++i )
-			{
-				if(!strcmp(info_ptr[1],gsname2type[i].name))
-				{
+			for ( i = 0 ; gsname2type[i].name ; ++i ) {
+				if (!strcmp(info_ptr[1],gsname2type[i].name)) {
 					s->type = gsname2type[i].type;
 					break;
 				}
@@ -770,8 +750,7 @@ static void un_analyze_serverinfo (struct server *s) {
 		// password required?
 		// If not password=False or password=0, set SERVER_PASSWORD
 		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0 ) && 
-				( g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0") ) )
-		{
+				( g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0") ) ) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -779,10 +758,8 @@ static void un_analyze_serverinfo (struct server *s) {
 	}
 
 	// adjust port for unreal and rune
-	if(s->type != oldtype)
-	{
-		switch(s->type)
-		{
+	if (s->type != oldtype) {
+		switch(s->type) {
 			case UN_SERVER:
 			case UT2_SERVER:
 			case RUNE_SERVER:
@@ -796,15 +773,13 @@ static void un_analyze_serverinfo (struct server *s) {
 	}
 }
 
-static void bf1942_analyze_serverinfo (struct server *s)
-{
+static void bf1942_analyze_serverinfo (struct server *s) {
 	char **info_ptr;
 
 	/* Clear out the flags */
 	s->flags = 0;
 
-	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
-	{
+	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 		if (strcmp (*info_ptr, "gametype") == 0) {
 			s->gametype = info_ptr[1];
 		}
@@ -814,8 +789,7 @@ static void bf1942_analyze_serverinfo (struct server *s)
 		//password required?
 		// If not password=False or password=0, set SERVER_PASSWORD
 		else if (strcmp (*info_ptr, "_password") == 0
-				&& strcmp(info_ptr[1], "0"))
-		{
+				&& strcmp(info_ptr[1], "0")) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -824,8 +798,7 @@ static void bf1942_analyze_serverinfo (struct server *s)
 }
 
 
-static void savage_analyze_serverinfo (struct server *s)
-{
+static void savage_analyze_serverinfo (struct server *s) {
 	char **info_ptr;
 
 	/* Clear out the flags */
@@ -873,8 +846,7 @@ static void q2_analyze_serverinfo (struct server *s) {
 		}
 		// determine mod
 		else if (strcmp (*info_ptr, "gamename") == 0) {
-			switch (s->type)
-			{
+			switch (s->type) {
 				case Q2_SERVER:
 					/* We only set the mod if name is not baseq2 */
 					if (strcmp(info_ptr[1],"baseq2"))
@@ -909,8 +881,7 @@ static void q2_analyze_serverinfo (struct server *s) {
 
 	}
 	/* We only set the mod if gamedir is set */
-	if (!s->game)
-	{
+	if (!s->game) {
 		s->gametype=NULL;
 	}
 }
@@ -1004,8 +975,7 @@ static void hl_analyze_serverinfo (struct server *s) {
 	}
 
 	// unset Mod if gamedir is valve
-	if (s->game && !strcmp(s->game,"valve"))
-	{
+	if (s->game && !strcmp(s->game,"valve")) {
 		s->gametype=NULL;
 	}
 }
@@ -1605,14 +1575,13 @@ struct q3a_gametype_s zeq2lite_gametype_map[] =
 	}
 };
 
-void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
-{
+void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[]) {
 	char *endptr;
 	int n;
 	int found=0;
 	struct q3a_gametype_s* ptr;
 
-	if(!s->game) return;
+	if (!s->game) return;
 
 	n = strtol (s->gametype, &endptr, 10);
 
@@ -1621,13 +1590,11 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[])
 	if (s->gametype == endptr)
 		return;
 
-	for( ptr=map; !found && ptr && ptr->mod != NULL; ptr++ )
-	{
-		if( !strcasecmp (s->game, ptr->mod)
+	for ( ptr=map; !found && ptr && ptr->mod != NULL; ptr++ ) {
+		if ( !strcasecmp (s->game, ptr->mod)
 				&& n >=0
 				&& n < ptr->number
-				&& ptr->gametypes[n] )
-		{
+				&& ptr->gametypes[n] ) {
 			s->gametype = ptr->gametypes[n];
 			found=1;
 		}
@@ -1656,125 +1623,99 @@ static void q3_analyze_serverinfo (struct server *s) {
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 		if (strcmp (*info_ptr, "version") == 0) {
 			// Quake 3 Arena
-			if(!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5) || !strncmp(info_ptr[1],"ioQ3 ",5))
-			{
+			if (!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5) || !strncmp(info_ptr[1],"ioQ3 ",5)) {
 				s->type=Q3_SERVER;
 			}
 			// Open Arena
-			if(!strncmp(info_ptr[1],"ioq3+oa",7))
-			{
+			if (!strncmp(info_ptr[1],"ioq3+oa",7)) {
 				s->type=OPENARENA_SERVER;
 			}
 			// Wolfenstein
-			else if(!strncmp(info_ptr[1],"Wolf",4))
-			{
+			else if (!strncmp(info_ptr[1],"Wolf",4)) {
 				s->type=WO_SERVER;
 			}
 			// Wolfenstein: Enemy Territory
-			else if(!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ET 3",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4))
-			{
+			else if (!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ET 3",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4)) {
 				// play with Wolf:ET if ET:L is not installed
-				if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd)
-				{
+				if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd) {
 					s->type=WOET_SERVER;
 				}
-				else if (games[ETL_SERVER].cmd)
-				{
+				else if (games[ETL_SERVER].cmd) {
 					s->type=ETL_SERVER;
 				}
 			}
 			// Enemy Territory: Legacy
-			else if(!strncmp(info_ptr[1],"ET Legacy",9))
-			{
-				if (games[ETL_SERVER].cmd)
-				{
+			else if (!strncmp(info_ptr[1],"ET Legacy",9)) {
+				if (games[ETL_SERVER].cmd) {
 					s->type=ETL_SERVER;
 				}
 				// play with Wolf:ET if ET:L is not installed
-				else if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd)
-				{
+				else if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd) {
 					s->type=WOET_SERVER;
 				}
 			}
 			// Voyager: Elite Force
-			else if(!strncmp(info_ptr[1],"ST:V HM",7))
-			{
+			else if (!strncmp(info_ptr[1],"ST:V HM",7)) {
 				s->type=EF_SERVER;
 			}
 			// Medal of Honor: Allied Assault
-			else if(!strncmp(info_ptr[1],"Medal",5))
-			{
+			else if (!strncmp(info_ptr[1],"Medal",5)) {
 				s->type=MOHAA_SERVER;
 			}
 			// Soldier Of Fortune 2
-			else if(!strncmp(info_ptr[1],"SOF2MP",6))
-			{
+			else if (!strncmp(info_ptr[1],"SOF2MP",6)) {
 				s->type=SOF2S_SERVER;
 			}
 			// Tremulous 1.1, Tremulous GPP
-			else if(!strncmp(info_ptr[1],"tremulous",9))
-			{
-				if(!strncmp(info_ptr[1],"tremulous 1.1.0",15))
-				{
+			else if (!strncmp(info_ptr[1],"tremulous",9)) {
+				if (!strncmp(info_ptr[1],"tremulous 1.1.0",15)) {
 					s->type=TREMULOUS_SERVER;
 				}
-				else if(!strncmp(info_ptr[1],"tremulous gpp1",14))
-				{
+				else if (!strncmp(info_ptr[1],"tremulous gpp1",14)) {
 					s->type=TREMULOUSGPP_SERVER;
 				}
-				else
-				{
+				else {
 					s->type=TREMULOUS_SERVER;
 				}
 			}
 			// Tremulous 1.1 mod KoRx
-			else if(!strncmp(info_ptr[1],"KoRx",4))
-			{
+			else if (!strncmp(info_ptr[1],"KoRx",4)) {
 				s->type=TREMULOUS_SERVER;
 			}
 			// Tremfusion
-			else if(!strncmp(info_ptr[1],"tremfusion",10))
-			{
+			else if (!strncmp(info_ptr[1],"tremfusion",10)) {
 				s->type=TREMFUSION_SERVER;
 			}
 			// Unvanquished
-			else if(!strncmp(info_ptr[1],"Unvanquished",12))
-			{
+			else if (!strncmp(info_ptr[1],"Unvanquished",12)) {
 				s->type=UNVANQUISHED_SERVER;
 			}
 			// World of Padman
-			else if(!strncmp(info_ptr[1],"wop",3))
-			{
+			else if (!strncmp(info_ptr[1],"wop",3)) {
 				s->type=WOP_SERVER;
 			}
 			// Urban Terror
-			else if(games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1],"ioq3 1.35urt",12) || !strncmp(info_ptr[1],"ioq3-urt",8)))
-			{
+			else if (games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1],"ioq3 1.35urt",12) || !strncmp(info_ptr[1],"ioq3-urt",8))) {
 				s->type=IOURT_SERVER;
 			}
 			// Reaction
-			else if(!strncmp(info_ptr[1],"Reaction",8))
-			{
+			else if (!strncmp(info_ptr[1],"Reaction",8)) {
 				s->type=REACTION_SERVER;
 			}
 			// Q3 Rally
-			else if(!strncmp(info_ptr[1],"Q3Rally",7))
-			{
+			else if (!strncmp(info_ptr[1],"Q3Rally",7)) {
 				s->type=Q3RALLY_SERVER;
 			}
 			// Smokin' Guns
-			else if(!strncmp(info_ptr[1],"Smokin' Guns",12))
-			{
+			else if (!strncmp(info_ptr[1],"Smokin' Guns",12)) {
 				s->type=SMOKINGUNS_SERVER;
 			}
 			// ZEQ2 Lite
-			else if(!strncmp(info_ptr[1],"zeq2lite",8))
-			{
+			else if (!strncmp(info_ptr[1],"zeq2lite",8)) {
 				s->type=ZEQ2LITE_SERVER;
 			}
 			// Turtle Arena
-			else if(!strncmp(info_ptr[1],"Turtle Arena",12))
-			{
+			else if (!strncmp(info_ptr[1],"Turtle Arena",12)) {
 				s->type=TURTLEARENA_SERVER;
 			}
 			break;
@@ -1842,78 +1783,63 @@ static void q3_analyze_serverinfo (struct server *s) {
 		else if (!strcmp(*info_ptr, "protocol")) {
 			const char* masterprotocol = game_get_attribute(s->type,"masterprotocol");
 
-			if(masterprotocol && !strcmp(masterprotocol, "auto"))
+			if (masterprotocol && !strcmp(masterprotocol, "auto"))
 				masterprotocol = game_get_attribute(s->type, "_masterprotocol");
 
-			if(masterprotocol && strcmp(masterprotocol, info_ptr[1]))
+			if (masterprotocol && strcmp(masterprotocol, info_ptr[1]))
 				s->flags |= SERVER_INCOMPATIBLE;
 		}
 	}
 
-	if(fs_game)
-	{
+	if (fs_game) {
 		s->game=fs_game;
 	}
-	else if(game)
-	{
+	else if (game) {
 		s->game=game;
 
 		// since ioq3, many mods have same declaration (ioq3), we can discriminate with game or gamename
 		// also, some mods are played as mod or as standalone, prefer standalone to mods when standalone available
 		// but recognize standalone only if standalone is configured
-		if(games[REACTION_SERVER].cmd && !strncmp(game,"rq3",3))
-		{
+		if (games[REACTION_SERVER].cmd && !strncmp(game,"rq3",3)) {
 			s->type=REACTION_SERVER;
 		}
-		else if(games[IOURT_SERVER].cmd && !strncmp(game,"q3ut4",5))
-		{
+		else if (games[IOURT_SERVER].cmd && !strncmp(game,"q3ut4",5)) {
 			s->type=IOURT_SERVER;
 		}
 	}
-	else if(gamename)
-	{
+	else if (gamename) {
 		s->game=gamename;
 	}
 
-	if(s->gametype) {
-		if (s->type == Q3_SERVER)
-		{
+	if (s->gametype) {
+		if (s->type == Q3_SERVER) {
 			q3_decode_gametype( s, q3a_gametype_map );
 		}
-		else if (s->type == WO_SERVER)
-		{
+		else if (s->type == WO_SERVER) {
 			q3_decode_gametype( s, wolf_gametype_map );
 		}
-		else if (s->type == EF_SERVER)
-		{
+		else if (s->type == EF_SERVER) {
 			q3_decode_gametype( s, ef_gametype_map );
 		}
-		else if (s->type == WOET_SERVER || s->type == ETL_SERVER)
-		{
+		else if (s->type == WOET_SERVER || s->type == ETL_SERVER) {
 			q3_decode_gametype( s, wolfet_gametype_map );
 		}
-		else if (s->type == JK2_SERVER)
-		{
+		else if (s->type == JK2_SERVER) {
 			q3_decode_gametype( s, jk2_gametype_map );
 		}
-		else if (s->type == JK3_SERVER)
-		{
+		else if (s->type == JK3_SERVER) {
 			q3_decode_gametype( s, jk3_gametype_map );
 		}
-		else if (s->type == IOURT_SERVER)
-		{
+		else if (s->type == IOURT_SERVER) {
 			q3_decode_gametype( s, iourt_gametype_map );
 		}
-		else if (s->type == WOP_SERVER)
-		{
+		else if (s->type == WOP_SERVER) {
 			q3_decode_gametype( s, wop_gametype_map );
 		}
-		else if (s->type == SMOKINGUNS_SERVER)
-		{
+		else if (s->type == SMOKINGUNS_SERVER) {
 			q3_decode_gametype( s, smokinguns_gametype_map );
 		}
-		else if (s->type == ZEQ2LITE_SERVER)
-		{
+		else if (s->type == ZEQ2LITE_SERVER) {
 			q3_decode_gametype( s, zeq2lite_gametype_map );
 		}
 	}
@@ -1929,8 +1855,7 @@ static void doom3_analyze_serverinfo (struct server *s) {
 	if ((games[s->type].flags & GAME_SPECTATE) != 0)
 		s->flags |= SERVER_SPECTATE;
 
-	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
-	{
+	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 
 		if (strcmp (*info_ptr, "fs_game") == 0) {
 			fs_game  = info_ptr[1];
@@ -1962,8 +1887,7 @@ static void doom3_analyze_serverinfo (struct server *s) {
 		else if (strcmp (*info_ptr, "osmask") == 0) {
 			char* p;
 			unsigned long n = strtol(info_ptr[1], &p, 0);
-			if(info_ptr[1] != p && (n & 4) != 4)
-			{
+			if (info_ptr[1] != p && (n & 4) != 4) {
 				s->flags |= SERVER_INCOMPATIBLE;
 			}
 		}
@@ -1974,8 +1898,7 @@ static void doom3_analyze_serverinfo (struct server *s) {
 		}
 	}
 
-	if(fs_game)
-	{
+	if (fs_game) {
 		s->game=fs_game;
 	}
 }
@@ -1990,8 +1913,7 @@ static void ottd_analyze_serverinfo (struct server *s) {
 		s->flags |= SERVER_SPECTATE;
 
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-		if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1],"0") )
-		{
+		if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1],"0") ) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -2005,7 +1927,7 @@ static int quake_config_is_valid (struct server *s) {
 	char *path;
 	struct game *g = &games[s->type];
 
-	if(g->main_mod && g->main_mod[0])
+	if (g->main_mod && g->main_mod[0])
 		cfgdir = g->main_mod[0];
 	else
 		return FALSE;
@@ -2071,8 +1993,7 @@ static int config_is_valid_generic (struct server *s) {
 	return TRUE;
 }
 
-static int complain_launch_cant_write_file(const char* file)
-{
+static int complain_launch_cant_write_file(const char* file) {
 	return dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
 			//%s frontend.cfg
 			_("Cannot write to file \"%s\".\n\nLaunch client anyway?"), file);
@@ -2082,14 +2003,14 @@ static FILE *open_cfg (const char *filename, int private) {
 	FILE *f;
 	mode_t saved_umask;
 
-	if(private)
+	if (private)
 		saved_umask = umask(0077);
 
 	f = fopen (filename, "w");
 	if (f)
 		fprintf (f, "//\n// generated by XQF, do not modify\n//\n");
 
-	if(private)
+	if (private)
 		umask(saved_umask);
 
 	return f;
@@ -2128,7 +2049,7 @@ static int write_q1_vars (const struct condef *con) {
 	struct game *g = &games[con->s->type];
 	char* file = NULL;
 
-	if(g->main_mod && g->main_mod[0])
+	if (g->main_mod && g->main_mod[0])
 		file = g->main_mod[0];
 	else
 		return FALSE;
@@ -2136,8 +2057,7 @@ static int write_q1_vars (const struct condef *con) {
 	file = g_strjoin("/", g->real_dir, file, EXEC_CFG, NULL);
 
 	f = open_cfg (file, FALSE);
-	if (!f)
-	{ ret = FALSE; goto out; }
+	if (!f) { ret = FALSE; goto out; }
 
 	if (default_q1_name)
 		fprintf (f, "name \"%s\"\n", default_q1_name);
@@ -2154,7 +2074,7 @@ static int write_q1_vars (const struct condef *con) {
 
 out:
 
-	if(!ret)
+	if (!ret)
 		ret = complain_launch_cant_write_file(file);
 
 	g_free(file);
@@ -2168,7 +2088,7 @@ static int write_qw_vars (const struct condef *con) {
 	struct game *g = &games[con->s->type];
 	char* file = NULL;
 
-	if(g->main_mod && g->main_mod[0])
+	if (g->main_mod && g->main_mod[0])
 		file = g->main_mod[0];
 	else
 		return FALSE;
@@ -2176,8 +2096,7 @@ static int write_qw_vars (const struct condef *con) {
 	file = g_strjoin("/", g->real_dir, file, EXEC_CFG, NULL);
 
 	f = open_cfg (file, FALSE);
-	if (!f)
-	{ ret = FALSE; goto out; }
+	if (!f) { ret = FALSE; goto out; }
 
 	if (default_qw_name)
 		fprintf (f, "name \"%s\"\n", default_qw_name);
@@ -2232,7 +2151,7 @@ static int write_qw_vars (const struct condef *con) {
 
 out:
 
-	if(!ret)
+	if (!ret)
 		ret = complain_launch_cant_write_file(file);
 
 	g_free(file);
@@ -2245,7 +2164,7 @@ static int write_q2_vars (const struct condef *con) {
 	struct game *g = &games[con->s->type];
 	char* file = NULL;
 
-	if(g->main_mod && g->main_mod[0])
+	if (g->main_mod && g->main_mod[0])
 		file = g->main_mod[0];
 	else
 		return FALSE;
@@ -2253,8 +2172,7 @@ static int write_q2_vars (const struct condef *con) {
 	file = g_strjoin("/", g->real_dir, file, EXEC_CFG, NULL);
 
 	f = open_cfg (file, FALSE);
-	if (!f)
-	{ ret = FALSE; goto out; }
+	if (!f) { ret = FALSE; goto out; }
 
 	if (default_q2_name)
 		fprintf (f, "set name \"%s\"\n", default_q2_name);
@@ -2277,7 +2195,7 @@ static int write_q2_vars (const struct condef *con) {
 
 out:
 
-	if(!ret)
+	if (!ret)
 		ret = complain_launch_cant_write_file(file);
 
 	g_free(file);
@@ -2346,8 +2264,7 @@ static int q1_exec_generic (const struct condef *con, int forkit) {
 }
 
 
-static int qw_exec (const struct condef *con, int forkit)
-{
+static int qw_exec (const struct condef *con, int forkit) {
 	char *argv[32];
 	int argi = 0;
 	char *cmd;
@@ -2376,7 +2293,7 @@ static int qw_exec (const struct condef *con, int forkit)
 	if (con->password || con->rcon_password
 			|| real_password (con->spectator_password)) {
 
-		if(g->main_mod && g->main_mod[0])
+		if (g->main_mod && g->main_mod[0])
 			file = g_strjoin("/", g->real_dir, g->main_mod[0], PASSWORD_CFG, NULL);
 
 		if (file && !write_passwords (file, con)
@@ -2428,7 +2345,7 @@ static int q2_exec (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval=-1;
 
-	if(g->main_mod && g->main_mod[0])
+	if (g->main_mod && g->main_mod[0])
 		file = g_strjoin("/", g->real_dir, g->main_mod[0], PASSWORD_CFG, NULL);
 
 	cmd = strdup_strip (g->cmd);
@@ -2570,11 +2487,11 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	// struct quake_private* pd = NULL;
 
-	if(!con) return -1;
-	if(!con->s) return -1;
+	if (!con) return -1;
+	if (!con->s) return -1;
 
 	g = &games[con->s->type];
-	if(!g) return -1;
+	if (!g) return -1;
 
 	// pd = (struct quake_private*)games[con->s->type].pd;
 
@@ -2585,7 +2502,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	cmdtokens = g_strsplit(g->cmd," ",0);
 
-	if(cmdtokens && *cmdtokens[cmdi])
+	if (cmdtokens && *cmdtokens[cmdi])
 		cmd=cmdtokens[cmdi++];
 
 	/*
@@ -2595,8 +2512,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 	*/
 
 	protocol = strdup_strip(find_server_setting_for_key ("protocol", con->s->info));
-	if (cmd && protocol)
-	{
+	if (cmd && protocol) {
 		char* tmp = g_strdup_printf("%sproto%s",cmd,protocol);
 		char* tmp_cmd = expand_tilde(tmp);
 		g_free(tmp);
@@ -2609,20 +2525,16 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 		// Check to see if we can find that generated filename
 		// absolute path?
-		if(tmp_cmd[0]=='/')
-		{
-			if(!access(tmp_cmd,X_OK))
-			{
+		if (tmp_cmd[0]=='/') {
+			if (!access(tmp_cmd,X_OK)) {
 				cmd = protocmdtofree = strdup(tmp_cmd);
 				debug(1,"absolute path %s",cmd);
 			}
 		}
 		// no, check $PATH
-		else
-		{
+		else {
 			char* file = find_file_in_path(tmp_cmd);
-			if(file)
-			{
+			if (file) {
 				cmd = protocmdtofree = file;
 				debug(1,"use file %s in path",cmd);
 			}
@@ -2630,9 +2542,8 @@ static int q3_exec (const struct condef *con, int forkit) {
 		g_free(tmp_cmd);
 	}
 
-	while(cmd)
-	{
-		if(*cmd) // skip empty
+	while (cmd) {
+		if (*cmd) // skip empty
 		{
 			argv[argi++] = cmd;
 		}
@@ -2645,18 +2556,16 @@ static int q3_exec (const struct condef *con, int forkit) {
 		argv[argi++] = "0";
 	}
 
-	if (con->rcon_password)
-	{
+	if (con->rcon_password) {
 		const char* pwvarname = NULL;
-		if((pwvarname = game_get_attribute(con->s->type, "+rconpassword")))
+		if ((pwvarname = game_get_attribute(con->s->type, "+rconpassword")))
 			argv[argi++] = (char*)pwvarname;
 		else
 			argv[argi++] = "+rconpassword";
 		argv[argi++] = con->rcon_password;
 	}
 
-	if (con->password)
-	{
+	if (con->password) {
 		argv[argi++] = "+password";
 		argv[argi++] = con->password;
 	}
@@ -2671,7 +2580,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 		argv[argi++] = con->demo;
 	}
 
-	if(g->game_cfg) {
+	if (g->game_cfg) {
 		argv[argi++] = "+exec";
 		argv[argi++] = g->game_cfg;
 	}
@@ -2683,20 +2592,16 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	/* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
 	punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
-	if( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 )
-	{
-		if( set_punkbuster )
-		{
+	if ( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 ) {
+		if ( set_punkbuster ) {
 			argv[argi++] = "+set";
 			argv[argi++] = "cl_punkbuster";
 			argv[argi++] = "1";
 		}
-		else
-		{
+		else {
 			char* option = g_strdup_printf("/" CONFIG_FILE "/Game: %s/punkbuster dialog shown",type2id(g->type));
 			debug( 1, "Got %s for punkbuster\n", punkbuster );
-			if(!config_get_bool (option))
-			{
+			if (!config_get_bool (option)) {
 				dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
 				config_set_bool (option,TRUE);
 			}
@@ -2704,8 +2609,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 		}
 	}
 
-	if(enable_console)
-	{
+	if (enable_console) {
 		argv[argi++] = "+set";
 		argv[argi++] = "com_allowConsole";
 		argv[argi++] = "1";
@@ -2715,28 +2619,22 @@ static int q3_exec (const struct condef *con, int forkit) {
 	   If the s->game is set, we want to put fs_game on the command
 	   line so that the mod is loaded when we connect.
 	*/
-	if (setfs_game && con->s->game)
-	{
+	if (setfs_game && con->s->game) {
 		gboolean is_mainmod = FALSE;
-		for(i = 0; g->main_mod && g->main_mod[i]; ++i)
-		{
-			if(!g_ascii_strcasecmp(con->s->game, g->main_mod[i]))
-			{
+		for (i = 0; g->main_mod && g->main_mod[i]; ++i) {
+			if (!g_ascii_strcasecmp(con->s->game, g->main_mod[i])) {
 				is_mainmod = TRUE;
 				break;
 			}
 		}
 
-		if(!is_mainmod)
-		{
+		if (!is_mainmod) {
 			// Look in (e.g.) ~/.q3a first
-			if(g->real_home)
-			{
+			if (g->real_home) {
 				real_game_dir = find_game_dir(g->real_home, con->s->game, &game_match_result);
 			}
 
-			if (!real_game_dir)
-			{
+			if (!real_game_dir) {
 				// Didn't find in home directory so look in real directory if defined
 				real_game_dir = find_game_dir(g->real_dir, con->s->game, &game_match_result);
 			}
@@ -2747,8 +2645,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 		}
 	}
 
-	if(pass_memory_options == TRUE)
-	{
+	if (pass_memory_options == TRUE) {
 		memoryoptions = g_new0(char*,5); // must be null terminated => max four entries
 		argv[argi++] = "+set";
 		argv[argi++] = "com_hunkmegs";
@@ -2768,8 +2665,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 	i = 0;
 	additional_args = get_custom_arguments(g->type, con->s->game);
 
-	while(additional_args && additional_args[i] )
-	{
+	while (additional_args && additional_args[i] ) {
 		argv[argi++] = additional_args[i];
 
 		i++;
@@ -2818,8 +2714,7 @@ static int hl_exec (const struct condef *con, int forkit) {
 		argv[argi++] = con->password;
 	}
 
-	if (con->rcon_password)
-	{
+	if (con->rcon_password) {
 		argv[argi++] = "+rcon_password";
 		argv[argi++] = con->rcon_password;
 	}
@@ -2857,7 +2752,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 	// exec "./ut-bin" $* -log and not -log $* at the end
 	// otherwise XQF can not connect via the command line!
 
-	if(g->flags & GAME_LAUNCH_HOSTPORT) {
+	if (g->flags & GAME_LAUNCH_HOSTPORT) {
 		// go through all server rules
 		for (info_ptr = con->s->info; info_ptr && *info_ptr; info_ptr += 2) {
 			if (!strcmp (*info_ptr, "hostport")) {
@@ -2866,11 +2761,9 @@ static int ut_exec (const struct condef *con, int forkit) {
 		}
 	}
 
-	if (con->server)
-	{
+	if (con->server) {
 		// gamespy port can be different from game port
-		if(hostport)
-		{
+		if (hostport) {
 			real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
 		}
 		else
@@ -2878,7 +2771,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 
 		if (con->spectate) {
 			char* tmp = NULL;
-			if(real_password(con->spectator_password))
+			if (real_password(con->spectator_password))
 				tmp = g_strdup_printf("%s?spectatoronly=true?password=%s",real_server,con->spectator_password);
 			else
 				tmp = g_strdup_printf("%s?spectatoronly=true",real_server);
@@ -2894,8 +2787,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 		}
 	}
 
-	if(con->s)
-	{
+	if (con->s) {
 		// Append additional args if needed
 		i = 0;
 
@@ -2904,20 +2796,17 @@ static int ut_exec (const struct condef *con, int forkit) {
 		//    if (!(additional_args && additional_args[i]))
 		argv[argi++] = real_server;
 
-		while(additional_args && additional_args[i] )
-		{
+		while (additional_args && additional_args[i] ) {
 			argv[argi++] = additional_args[i];
 			/*
 			// append first argument to server address
-			if(i == 0)
-			{
+			if (i == 0) {
 				tmp = g_strconcat(real_server,additional_args[i],NULL);
 				g_free(real_server);
 				real_server=tmp;
 				argv[argi++] = real_server;
 			}
-			else
-			{
+			else {
 				argv[argi++] = additional_args[i];
 			}
 			*/
@@ -2935,12 +2824,11 @@ static int ut_exec (const struct condef *con, int forkit) {
 
 	g_free (cmd);
 	g_free (real_server);
-	if(additional_args) g_strfreev(additional_args);
+	if (additional_args) g_strfreev(additional_args);
 	return retval;
 }
 
-static int savage_exec(const struct condef *con, int forkit)
-{
+static int savage_exec(const struct condef *con, int forkit) {
 	char *argv[32];
 	int argi = 0;
 	char *cmd;
@@ -2960,14 +2848,12 @@ static int savage_exec(const struct condef *con, int forkit)
 
 		connect_arg = g_strdup_printf("connect %s",con->server);
 
-		if(con->password)
-		{
+		if (con->password) {
 			char* tmp = connect_arg;
 			connect_arg = g_strdup_printf("%s; set cl_password %s", connect_arg, con->password);
 			g_free(tmp);
 		}
-		if(con->rcon_password)
-		{
+		if (con->rcon_password) {
 			char* tmp = connect_arg;
 			connect_arg = g_strdup_printf("%s; set cl_adminpassword %s", connect_arg, con->rcon_password);
 			g_free(tmp);
@@ -3083,7 +2969,7 @@ static int gamespy_exec (const struct condef *con, int forkit) {
 	char* hostport=NULL;
 	char* real_server=NULL;
 
-	if(!con || !con->s)
+	if (!con || !con->s)
 		return 1;
 
 	g = &games[con->s->type];
@@ -3104,20 +2990,18 @@ static int gamespy_exec (const struct condef *con, int forkit) {
 		}
 	}
 
-	if(gamename)
+	if (gamename)
 		argv[argi++] = gamename;
 	else
 		argv[argi++] = "";
 
 	if (con->server) {
 		// gamespy port can be different from game port
-		if(hostport)
-		{
+		if (hostport) {
 			real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
 			argv[argi++] = real_server;
 		}
-		else
-		{
+		else {
 			argv[argi++] = con->server;
 		}
 	}
@@ -3147,7 +3031,7 @@ static int t2_exec (const struct condef *con, int forkit) {
 
 	if (con->server) {
 
-		if(default_t2_name && *default_t2_name) {   
+		if (default_t2_name && *default_t2_name) {   
 			argv[argi++] = "-login";
 			argv[argi++] = default_t2_name;
 		}
@@ -3177,7 +3061,7 @@ static int bf1942_exec (const struct condef *con, int forkit) {
 	char* hostport=NULL;
 	char* real_server=NULL;
 
-	if(!con || !con->s)
+	if (!con || !con->s)
 		return 1;
 
 	g = &games[con->s->type];
@@ -3201,8 +3085,7 @@ static int bf1942_exec (const struct condef *con, int forkit) {
 		}
 	}
 
-	if(gameid)
-	{
+	if (gameid) {
 		argv[argi++] = "+game";
 		argv[argi++] = gameid;
 	}
@@ -3212,13 +3095,11 @@ static int bf1942_exec (const struct condef *con, int forkit) {
 	if (con->server) {
 		argv[argi++] = "+joinServer";
 		// gamespy port can be different from game port
-		if(hostport)
-		{
+		if (hostport) {
 			real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
 			argv[argi++] = real_server;
 		}
-		else
-		{
+		else {
 			argv[argi++] = con->server;
 		}
 	}
@@ -3243,7 +3124,7 @@ static int descent3_exec (const struct condef *con, int forkit) {
 	char* hostport=NULL;
 	char* real_server=NULL;
 
-	if(!con || !con->s)
+	if (!con || !con->s)
 		return 1;
 
 	g = &games[con->s->type];
@@ -3264,13 +3145,11 @@ static int descent3_exec (const struct condef *con, int forkit) {
 	if (con->server) {
 		argv[argi++] = "--directip";
 		// gamespy port can be different from game port
-		if(hostport)
-		{
+		if (hostport) {
 			real_server = g_strdup_printf ("%s:%s", inet_ntoa (con->s->host->ip), hostport);
 			argv[argi++] = real_server;
 		}
-		else
-		{
+		else {
 			argv[argi++] = con->server;
 		}
 	}
@@ -3357,8 +3236,7 @@ static GList *custom_cfg_filter (GList *list) {
 }
 
 
-static GList *quake_custom_cfgs (struct game* this, const char *path, const char *mod)
-{
+static GList *quake_custom_cfgs (struct game* this, const char *path, const char *mod) {
 	GList *cfgs = NULL;
 	const char* dirs[2] = {0};
 	unsigned d, i;
@@ -3368,21 +3246,18 @@ static GList *quake_custom_cfgs (struct game* this, const char *path, const char
 	dirs[0] = path?path:this->real_dir;
 	dirs[1] = this->real_home;
 
-	for(d = 0; d < sizeof(dirs)/sizeof(dirs[0]); ++d)
-	{
-		if(!(dirs[d] && *dirs[d]))
+	for (d = 0; d < sizeof(dirs)/sizeof(dirs[0]); ++d) {
+		if (!(dirs[d] && *dirs[d]))
 			continue;
 
-		for(i = 0; this->main_mod && this->main_mod[i]; ++i)
-		{
+		for (i = 0; this->main_mod && this->main_mod[i]; ++i) {
 			char* dir = file_in_dir (dirs[d], this->main_mod[i]);
 			GList* tmp = dir_to_list (dir, dir_custom_cfg_filter);
 			cfgs = merge_sorted_string_lists (cfgs, tmp);
 			g_free (dir);
 		}
 
-		if(mod)
-		{
+		if (mod) {
 			char* dir = file_in_dir (dirs[d], mod);
 			GList* tmp = dir_to_list (dir, dir_custom_cfg_filter);
 			cfgs = merge_sorted_string_lists (cfgs, tmp);
@@ -3631,8 +3506,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 // returns a newly-allocated array of strings. Use g_strfreev() to free it. 
 // TODO use struct server instead of char* to be able to match any variable
 
-char **get_custom_arguments(enum server_type type, const char *gamestring)
-{
+char **get_custom_arguments(enum server_type type, const char *gamestring) {
 	struct game *g = &games[type];
 	char *arg = NULL;
 	int j;
@@ -3642,7 +3516,7 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
 	char ** ret = NULL;
 	GSList *temp;
 
-	if(!gamestring) return NULL;
+	if (!gamestring) return NULL;
 
 	temp = g_slist_nth(g->custom_args, 0);
 
@@ -3654,7 +3528,7 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
 		// n = tokenize (arg, token, 2, ",");
 		tokenize (arg, token, 2, ",");
 
-		if(!(strcasecmp(token[0],gamestring))) {
+		if (!(strcasecmp(token[0],gamestring))) {
 			ret = g_strsplit(token[1]," ",0);
 			debug(1, "found entry for:%s.  Returning argument:%s\n",gamestring,token[1]);
 			g_free(arg);
@@ -3670,8 +3544,7 @@ char **get_custom_arguments(enum server_type type, const char *gamestring)
 
 /** map functions */
 
-static void quake_init_maps(enum server_type type)
-{
+static void quake_init_maps(enum server_type type) {
 	struct quake_private* pd = NULL;
 
 	pd = (struct quake_private*)games[type].pd;
@@ -3682,14 +3555,12 @@ static void quake_init_maps(enum server_type type)
 
 	findquakemaps(pd->maphash,games[type].real_dir);
 
-	if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
-	{
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
 		findquakemaps(pd->maphash,games[type].real_home);
 	}
 }
 
-static void q3_init_maps(enum server_type type)
-{
+static void q3_init_maps(enum server_type type) {
 	struct quake_private* pd = NULL;
 
 	pd = (struct quake_private*)games[type].pd;
@@ -3699,14 +3570,12 @@ static void q3_init_maps(enum server_type type)
 	pd->maphash = q3_init_maphash();
 	findq3maps(pd->maphash,games[type].real_dir);
 
-	if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
-	{
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
 		findq3maps(pd->maphash,games[type].real_home);
 	}
 }
 
-static void doom3_init_maps(enum server_type type)
-{
+static void doom3_init_maps(enum server_type type) {
 	struct quake_private* pd = NULL;
 
 	pd = (struct quake_private*)games[type].pd;
@@ -3716,14 +3585,12 @@ static void doom3_init_maps(enum server_type type)
 	pd->maphash = q3_init_maphash();
 	finddoom3maps(pd->maphash,games[type].real_dir);
 
-	if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
-	{
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
 		finddoom3maps(pd->maphash, games[type].real_home);
 	}
 }
 
-static void quake4_init_maps(enum server_type type)
-{
+static void quake4_init_maps(enum server_type type) {
 	struct quake_private* pd = NULL;
 
 	pd = (struct quake_private*)games[type].pd;
@@ -3733,14 +3600,12 @@ static void quake4_init_maps(enum server_type type)
 	pd->maphash = q3_init_maphash();
 	findquake4maps(pd->maphash,games[type].real_dir);
 
-	if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
-	{
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
 		findquake4maps(pd->maphash, games[type].real_home);
 	}
 }
 
-static void etqw_init_maps(enum server_type type)
-{
+static void etqw_init_maps(enum server_type type) {
 	struct quake_private* pd = NULL;
 
 	pd = (struct quake_private*)games[type].pd;
@@ -3750,14 +3615,12 @@ static void etqw_init_maps(enum server_type type)
 	pd->maphash = q3_init_maphash();
 	findetqwmaps(pd->maphash,games[type].real_dir);
 
-	if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
-	{
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
 		findetqwmaps(pd->maphash, games[type].real_home);
 	}
 }
 
-static void unreal_init_maps(enum server_type type)
-{
+static void unreal_init_maps(enum server_type type) {
 	struct unreal_private* pd = NULL;
 
 	pd = (struct unreal_private*)games[type].pd;
@@ -3767,14 +3630,12 @@ static void unreal_init_maps(enum server_type type)
 	pd->maphash = ut_init_maphash();
 	findutmaps_dir(pd->maphash,games[type].real_dir,pd->suffix);
 
-	if(games[type].real_home && access(games[type].real_home, R_OK) == 0)
-	{
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
 		findutmaps_dir(pd->maphash,games[type].real_home,pd->suffix);
 	}
 }
 
-static gboolean quake_has_map(struct server* s)
-{
+static gboolean quake_has_map(struct server* s) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
@@ -3784,16 +3645,15 @@ static gboolean quake_has_map(struct server* s)
 	g_return_val_if_fail(pd!=NULL,TRUE);
 
 	hash = (GHashTable*)pd->maphash;
-	if(!hash) return TRUE;
+	if (!hash) return TRUE;
 
-	if(!s->map)
+	if (!s->map)
 		return FALSE;
 
 	return q3_lookup_map(hash,s->map);
 }
 
-static gboolean doom3_has_map(struct server* s)
-{
+static gboolean doom3_has_map(struct server* s) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
@@ -3803,21 +3663,19 @@ static gboolean doom3_has_map(struct server* s)
 	g_return_val_if_fail(pd!=NULL,TRUE);
 
 	hash = (GHashTable*)pd->maphash;
-	if(!hash) return TRUE;
+	if (!hash) return TRUE;
 
-	if(!s->map)
+	if (!s->map)
 		return FALSE;
 
 	return doom3_lookup_map(hash,s->map);
 }
 
-static gboolean quake4_has_map(struct server* s)
-{
+static gboolean quake4_has_map(struct server* s) {
 	return doom3_has_map(s);
 }
 
-static size_t q3_get_mapshot(struct server* s, guchar** buf)
-{
+static size_t q3_get_mapshot(struct server* s, guchar** buf) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
@@ -3827,16 +3685,15 @@ static size_t q3_get_mapshot(struct server* s, guchar** buf)
 	g_return_val_if_fail(pd!=NULL,TRUE);
 
 	hash = (GHashTable*)pd->maphash;
-	if(!hash) return TRUE;
+	if (!hash) return TRUE;
 
-	if(!s->map)
+	if (!s->map)
 		return FALSE;
 
 	return q3_lookup_mapshot(hash,s->map, buf);
 }
 
-static size_t doom3_get_mapshot(struct server* s, guchar** buf)
-{
+static size_t doom3_get_mapshot(struct server* s, guchar** buf) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
@@ -3846,21 +3703,19 @@ static size_t doom3_get_mapshot(struct server* s, guchar** buf)
 	g_return_val_if_fail(pd!=NULL,TRUE);
 
 	hash = (GHashTable*)pd->maphash;
-	if(!hash) return TRUE;
+	if (!hash) return TRUE;
 
-	if(!s->map)
+	if (!s->map)
 		return FALSE;
 
 	return doom3_lookup_mapshot(hash,s->map, buf);
 }
 
-static size_t quake4_get_mapshot(struct server* s, guchar** buf)
-{
+static size_t quake4_get_mapshot(struct server* s, guchar** buf) {
 	return doom3_get_mapshot(s, buf);
 }
 
-static gboolean unreal_has_map(struct server* s)
-{
+static gboolean unreal_has_map(struct server* s) {
 	struct unreal_private* pd = NULL;
 	GHashTable* hash = NULL;
 
@@ -3870,9 +3725,9 @@ static gboolean unreal_has_map(struct server* s)
 	g_return_val_if_fail(pd!=NULL,TRUE);
 
 	hash = (GHashTable*)pd->maphash;
-	if(!hash) return TRUE;
+	if (!hash) return TRUE;
 
-	if(!s->map)
+	if (!s->map)
 		return FALSE;
 
 	return ut_lookup_map(hash,s->map);

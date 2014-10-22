@@ -80,7 +80,7 @@ void history_free (struct history *h) {
 	char key[128];
 	int i;
 
-	if(!h) return;
+	if (!h) return;
 
 	g_snprintf (fmt, 128, "/" CONFIG_FILE "/History: %s/%%i", h->id);
 

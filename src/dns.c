@@ -333,11 +333,10 @@ static void worker_sigterm_handler (int signum) {
 	_exit (0);
 }
 
-static void sighandler_debug(int signum)
-{
-	if( signum == SIGUSR1)
+static void sighandler_debug(int signum) {
+	if ( signum == SIGUSR1)
 		set_debug_level(get_debug_level()+1);
-	else if( signum == SIGUSR2)
+	else if ( signum == SIGUSR2)
 		set_debug_level(get_debug_level()-1);
 }
 
@@ -418,7 +417,7 @@ static int fork_worker (int n, char *str) {
 			dns_workers[n].input = malloc (sizeof (struct dns_stream));
 
 		dns_workers[n].input->fd = fdset[0];
-		if(set_nonblock (dns_workers[n].input->fd) == -1)
+		if (set_nonblock (dns_workers[n].input->fd) == -1)
 			failed ("fcntl", NULL);
 		dns_workers[n].input->pos = 0;
 
@@ -559,7 +558,7 @@ static void dns_master_init (void) {
 	dns_master_input = malloc (sizeof (struct dns_stream));
 
 	dns_master_input->fd = 0;   /* stdin */
-	if(set_nonblock (dns_master_input->fd) == -1)
+	if (set_nonblock (dns_master_input->fd) == -1)
 		failed ("fcntl", NULL);
 
 	dns_master_input->pos = 0;
@@ -705,7 +704,7 @@ int dns_spawn_helper (void) {
 
 		dns_helper.input = malloc (sizeof (struct dns_stream));
 		dns_helper.input->fd  = fdset1[0];
-		if(set_nonblock (dns_helper.input->fd) == -1)
+		if (set_nonblock (dns_helper.input->fd) == -1)
 			failed("fcntl", NULL);
 
 		dns_helper.pid = pid;

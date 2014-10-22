@@ -72,7 +72,7 @@ foreach my $file (@ARGV)
 {
 	my %sectlist;
 	open (IN, "/usr/bin/readelf -W --sections $file|") or die;
-	while(<IN>)
+	while (<IN>)
 	{
 		next unless /^ +\[ *(\d+)\] *(\.rodata|\.data.rel.ro|\.data|\.bss)/;
 		$sectlist{$1} = $2;
@@ -80,7 +80,7 @@ foreach my $file (@ARGV)
 	close IN;
 
 	open (IN, "/usr/bin/readelf -W --symbols $file|") or die;
-	while(<IN>)
+	while (<IN>)
 	{
 		my ($size, $type, $bind, $visib, $sect, $sym, $ver, $at);
 		next unless s/^ +\d+: *//;
@@ -98,7 +98,7 @@ foreach my $file (@ARGV)
 		$sect = $f[5];
 		$sym = $f[6];
 
-		if($sym =~ /(.*?)(\@\@?)(.*)/)
+		if ($sym =~ /(.*?)(\@\@?)(.*)/)
 		{
 			$sym = $1;
 			$at = $2;
@@ -107,17 +107,17 @@ foreach my $file (@ARGV)
 
 		next if exists $except->{$sym};
 
-		if($visib eq 'PROTECTED') {
+		if ($visib eq 'PROTECTED') {
 			print OUT "__attribute__ ((visibility (\"protected\"))) ";
 		}
-		if($ver)
+		if ($ver)
 		{
 			my $vsym = sprintf "SEGV_%08X_%s",int(rand(0xffffffff)), $sym;
 			push @{$versions{$ver}}, $vsym;
 			print OUT "__asm__(\".symver $vsym,$sym$at$ver\");\n";
 			$sym=$vsym;
 		}
-		if($type eq 'FUNC')
+		if ($type eq 'FUNC')
 		{
 			print OUT "void $sym() { segv(); }\n" if $bind eq 'GLOBAL';;
 			print OUT "void $sym() __attribute__ ((weak, alias (\"segv\")));\n" if $bind eq 'WEAK';
@@ -126,7 +126,7 @@ foreach my $file (@ARGV)
 		{
 			print OUT "__attribute__ ((weak)) " if $bind eq 'WEAK';
 
-			if($sectlist{$sect} eq '.rodata')
+			if ($sectlist{$sect} eq '.rodata')
 			{
 				print OUT "const char $sym\[$size\]={1};\n";
 			}
@@ -150,7 +150,7 @@ close OUT;
 
 if(scalar keys %versions)
 {
-	if(!$versfile)
+	if (!$versfile)
 	{
 		print STDERR "no version file specified but versioned symbols found\n";
 		exit(1);

@@ -51,8 +51,7 @@ static GtkWidget *master_query_type_radios[MASTER_NUM_QUERY_TYPES];
 
 // get text from master address entry, check if prefix matches radio buttons,
 // modify and write back if needed
-static void master_check_master_addr_prefix(void)
-{
+static void master_check_master_addr_prefix(void) {
 	const gchar *pos;
 	const gchar *master_addr;
 	gchar *master_tmp_addr;
@@ -61,22 +60,18 @@ static void master_check_master_addr_prefix(void)
 
 	// Replace up to :// with master type selected from radio buttons  
 	if (g_ascii_strncasecmp(master_addr, master_prefixes[current_master_query_type],
-				strlen(master_prefixes[current_master_query_type])))
-	{
+				strlen(master_prefixes[current_master_query_type]))) {
 		pos = lowcasestrstr(master_addr,"://");
-		if(!pos)
-		{
+		if (!pos) {
 			pos = master_addr;
 		}
-		else
-		{
+		else {
 			// +"://"
 			pos+=3;
 		}
 
 		// Add lan://255.255.255.255 if user picks LAN and has not already entered an address
-		if(current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr)))
-		{
+		if (current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr))) {
 			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type], "255.255.255.255");
 			gtk_entry_set_text(
 					GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
@@ -92,8 +87,7 @@ static void master_check_master_addr_prefix(void)
 	}
 }
 
-static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window)
-{
+static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window) {
 	master_check_master_addr_prefix();
 
 	master_addr_result = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry)));
@@ -101,20 +95,17 @@ static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window)
 
 	config_set_string ("/" CONFIG_FILE "/Add Master/game", type2id (master_type));
 
-	if(!master_addr_result || !master_name_result)
-	{
+	if (!master_addr_result || !master_name_result) {
 		dialog_ok (NULL, _("You have to specify a name and an address."));
 		return;
 	}
 
 	master_to_add = add_master (master_addr_result, master_name_result, master_type, NULL, TRUE, FALSE);
-	if(!master_to_add)
-	{
+	if (!master_to_add) {
 		dialog_ok (NULL, _("Master address \"%s\" is not valid."),
 				master_addr_result);
 	}
-	else
-	{
+	else {
 
 		if (master_addr_result)
 			history_add (master_history_addr, master_addr_result);
@@ -125,32 +116,27 @@ static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window)
 	}
 }
 
-static void select_master_type_callback (GtkWidget *widget, enum server_type type)
-{
-	if(!master_query_type_radios[MASTER_NATIVE])
+static void select_master_type_callback (GtkWidget *widget, enum server_type type) {
+	if (!master_query_type_radios[MASTER_NATIVE])
 		return;
 
 	master_type = type;
 	gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
-	if(!games[type].default_master_port)
-	{
+	if (!games[type].default_master_port) {
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
-		if(current_master_query_type==MASTER_NATIVE)
-		{
+		if (current_master_query_type==MASTER_NATIVE) {
 			gtk_toggle_button_set_active
 				(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 		}
 	}
-	else
-	{
+	else {
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),TRUE);
 	}
 }
 
-static void master_type_radio_callback (GtkWidget *widget, enum master_query_type type)
-{
+static void master_type_radio_callback (GtkWidget *widget, enum master_query_type type) {
 	const gchar* master_name;
 
 	// This gets called when a button is made inactive AND when it's made active
@@ -161,27 +147,23 @@ static void master_type_radio_callback (GtkWidget *widget, enum master_query_typ
 
 		master_name = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (master_name_combo)->entry));
 
-		if(current_master_query_type==MASTER_LAN
-				&& (!master_name || !strlen(master_name)))
-		{
+		if (current_master_query_type==MASTER_LAN
+				&& (!master_name || !strlen(master_name))) {
 			gtk_entry_set_text(
 					GTK_ENTRY( GTK_COMBO( master_name_combo)->entry), _("LAN"));
 		}
 	}
 }
-static void master_activate_radio_for_type( enum master_query_type type )
-{
-	if( type < MASTER_NATIVE || type >= MASTER_NUM_QUERY_TYPES )
+static void master_activate_radio_for_type( enum master_query_type type ) {
+	if ( type < MASTER_NATIVE || type >= MASTER_NUM_QUERY_TYPES )
 		type=MASTER_NATIVE;
 
-	if(master_query_type_radios[type])
-	{
+	if (master_query_type_radios[type]) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(master_query_type_radios[type]),TRUE);
 	}
 }
 
-static void master_address_from_history_selected_callback (GtkWidget *widget, gpointer data)
-{
+static void master_address_from_history_selected_callback (GtkWidget *widget, gpointer data) {
 	const gchar* str = gtk_entry_get_text( GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
 	enum master_query_type type = get_master_query_type_from_address(str);
 	master_activate_radio_for_type(type);
@@ -214,13 +196,11 @@ struct master *add_master_dialog (struct master *m) {
 
 	master_to_edit = m;
 
-	if(master_to_edit)
-	{
+	if (master_to_edit) {
 		current_master_query_type = master_to_edit->master_type;
 		master_type = master_to_edit->type;
 	}
-	else
-	{
+	else {
 		// Get last game type added (stored in master_okbutton_callback)
 		typestr = config_get_string ("/" CONFIG_FILE "/Add Master/game");
 		if (typestr) {
@@ -232,12 +212,10 @@ struct master *add_master_dialog (struct master *m) {
 		}
 	}
 
-	if (master_to_edit)
-	{
+	if (master_to_edit) {
 		windowtitle=_("Rename Master");
 	}
-	else
-	{
+	else {
 		windowtitle=_("Add Master");
 	}
 	window = dialog_create_modal_transient_window(windowtitle, TRUE, FALSE, NULL);
@@ -281,8 +259,7 @@ struct master *add_master_dialog (struct master *m) {
 	if (master_history_name->items)
 		combo_set_vals (master_name_combo, master_history_name->items, "");
 
-	if(master_to_edit)
-	{
+	if (master_to_edit) {
 		gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_name_combo)->entry), master_to_edit->name);
 	}
 
@@ -293,8 +270,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 
-	if(master_to_edit)
-	{
+	if (master_to_edit) {
 		gtk_widget_set_state (option_menu, GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (GTK_WIDGET(option_menu),FALSE);
 	}
@@ -335,8 +311,7 @@ struct master *add_master_dialog (struct master *m) {
 	if (master_history_addr->items)
 		combo_set_vals (master_addr_combo, master_history_addr->items, "");
 
-	if(master_to_edit)
-	{
+	if (master_to_edit) {
 		char* url = master_to_url(master_to_edit);
 		gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry), url);
 		gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
@@ -348,14 +323,12 @@ struct master *add_master_dialog (struct master *m) {
 
 	/* query type */
 	hbox = gtk_hbox_new (TRUE, 8);
-	for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++)
-	{
+	for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++) {
 		master_query_type_radios[i] =
 			gtk_radio_button_new_with_label_from_widget(
 					i==MASTER_NATIVE?NULL:GTK_RADIO_BUTTON(master_query_type_radios[MASTER_NATIVE]),
 					_(master_designation[i]));
-		if(master_to_edit)
-		{
+		if (master_to_edit) {
 			gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);
 		}
 		gtk_signal_connect(GTK_OBJECT (master_query_type_radios[i]), "toggled",
@@ -364,13 +337,11 @@ struct master *add_master_dialog (struct master *m) {
 		gtk_widget_show (master_query_type_radios[i]);
 		gtk_box_pack_start (GTK_BOX (hbox),master_query_type_radios[i], FALSE, FALSE, 0);
 	}
-	if(master_to_edit)
-	{
+	if (master_to_edit) {
 		master_activate_radio_for_type(current_master_query_type);
 	}
-	else if(!games[master_type].default_master_port &&
-			current_master_query_type == MASTER_NATIVE)
-	{
+	else if (!games[master_type].default_master_port &&
+			current_master_query_type == MASTER_NATIVE) {
 		gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);

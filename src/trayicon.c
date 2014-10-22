@@ -150,8 +150,7 @@ static gboolean refresh_update=FALSE;
 static gint animation_timer=0;
 static gint animation_callback (gpointer nothing);
 
-gboolean tray_icon_work(void)
-{
+gboolean tray_icon_work(void) {
 	if (!tray_icon)
 		return FALSE;
 
@@ -159,14 +158,12 @@ gboolean tray_icon_work(void)
 }
 
 /* user close main window-> hide it */
-void tray_delete_event_hook(void)
-{
+void tray_delete_event_hook(void) {
 	gtk_window_get_position(GTK_WINDOW(window), &x_pos, &y_pos);
 	gtk_widget_hide(window);
 }
 
-void show_main_window_call(GtkWidget * button, void *data)
-{
+void show_main_window_call(GtkWidget * button, void *data) {
 	static gboolean first_call = TRUE;
 
 	if (first_call) {
@@ -179,28 +176,24 @@ void show_main_window_call(GtkWidget * button, void *data)
 	}
 }
 
-void hide_main_window_call(GtkWidget * button, void *data)
-{
+void hide_main_window_call(GtkWidget * button, void *data) {
 	gtk_window_get_position(GTK_WINDOW(window), &x_pos, &y_pos);
 	gtk_widget_hide(window);
 }
 
-void exit_call(GtkWidget * button, void *data)
-{
+void exit_call(GtkWidget * button, void *data) {
 	gtk_widget_destroy(GTK_WIDGET(tray_icon));
 	gtk_main_quit();
 }
 
-void set_menu_sens(void)
-{
+void set_menu_sens(void) {
 	gtk_widget_set_sensitive (show_item, !GTK_WIDGET_VISIBLE(window));
 	gtk_widget_set_sensitive (hide_item, GTK_WIDGET_VISIBLE(window));
 	gtk_widget_set_sensitive (stop_item, refresh_update);
 }
 
 	static void
-tray_icon_pressed(GtkWidget * button, GdkEventButton * event, EggTrayIcon * icon)
-{
+tray_icon_pressed(GtkWidget * button, GdkEventButton * event, EggTrayIcon * icon) {
 
 	/* right click */
 	if (event->button == 1) {
@@ -222,20 +215,18 @@ tray_icon_pressed(GtkWidget * button, GdkEventButton * event, EggTrayIcon * icon
 	}
 }
 
-void tray_icon_set_tooltip(gchar * tip)
-{
+void tray_icon_set_tooltip(gchar * tip) {
 	if (!tray_icon || !tray_icon->ready )
 		return;
 
-	if(!tray_icon_tips)
+	if (!tray_icon_tips)
 		tray_icon_tips = gtk_tooltips_new();
 
 	gtk_tooltips_set_tip(GTK_TOOLTIPS(tray_icon_tips),
 			GTK_WIDGET(tray_icon), tip, tip);
 }
 
-static gint animation_callback(gpointer _ani)
-{
+static gint animation_callback(gpointer _ani) {
 	animation *ani= _ani;
 
 	if (ani->frame_counter==0 && ani->time_counter==0) {
@@ -269,8 +260,7 @@ static gint animation_callback(gpointer _ani)
 	return TRUE;
 }
 
-void tray_icon_start_animation(void)
-{
+void tray_icon_start_animation(void) {
 
 	if (!tray_icon_work())
 		return;
@@ -288,8 +278,7 @@ void tray_icon_start_animation(void)
 	animation_running = TRUE;
 }
 
-void tray_icon_stop_animation(void)
-{
+void tray_icon_stop_animation(void) {
 	if (!tray_icon_work())
 		return;
 
@@ -307,8 +296,7 @@ void tray_icon_stop_animation(void)
 	}
 }
 
-static animation *tray_icon_load_animation (gchar *name, gboolean loop)
-{
+static animation *tray_icon_load_animation (gchar *name, gboolean loop) {
 
 	gint i=0;
 	gint line_number=0;
@@ -324,7 +312,7 @@ static animation *tray_icon_load_animation (gchar *name, gboolean loop)
 	animation *ani;
 	frame tmp_frame;
 
-	if(!name) return NULL;
+	if (!name) return NULL;
 
 	{
 		char* tmp = g_strconcat("trayicon", G_DIR_SEPARATOR_S, name, NULL);
@@ -332,8 +320,7 @@ static animation *tray_icon_load_animation (gchar *name, gboolean loop)
 		g_free(tmp);
 	}
 
-	if(!ani_file || !g_file_get_contents (ani_file, &content, NULL, NULL))
-	{
+	if (!ani_file || !g_file_get_contents (ani_file, &content, NULL, NULL)) {
 		xqf_warning("Could not load animation file '%s'", name);
 		g_free(ani_file);
 		return NULL;
@@ -427,8 +414,7 @@ static animation *tray_icon_load_animation (gchar *name, gboolean loop)
 	return ani;
 }
 
-void tray_create_menu (void)
-{
+void tray_create_menu (void) {
 
 	GtkWidget *separator1 = NULL;
 
@@ -468,8 +454,7 @@ void tray_create_menu (void)
 	gtk_widget_show_all(menu);
 }
 
-void tray_init(GtkWidget * main_window)
-{
+void tray_init(GtkWidget * main_window) {
 	gdk_pixbuf_xlib_init (GDK_DISPLAY(), DefaultScreen (GDK_DISPLAY()));
 
 	/* local copy */
@@ -484,11 +469,10 @@ void tray_init(GtkWidget * main_window)
 
 	frame_basic = load_pixmap_as_pixbuf("trayicon/frame_basic.png");
 
-	if(frame_basic)
+	if (frame_basic)
 		tray_icon = egg_tray_icon_new ("xqf", frame_basic);
 
-	if (tray_icon && tray_icon->ready)
-	{
+	if (tray_icon && tray_icon->ready) {
 		g_signal_connect(tray_icon, "button_press_event", G_CALLBACK(tray_icon_pressed),tray_icon);
 
 		gtk_widget_hide(window);
@@ -497,10 +481,8 @@ void tray_init(GtkWidget * main_window)
 		gtk_widget_show(window);
 }
 
-void tray_done (void)
-{
-	if (busy_ani)
-	{
+void tray_done (void) {
+	if (busy_ani) {
 		if (busy_ani->array)
 			g_array_free (busy_ani->array, TRUE);
 
@@ -518,8 +500,7 @@ void tray_done (void)
 }
 
 /* eggtrayicon stuff */
-GType egg_tray_icon_get_type (void)
-{
+GType egg_tray_icon_get_type (void) {
 	static GType our_type = 0;
 
 	our_type = g_type_from_name ("EggTrayIcon");
@@ -548,35 +529,29 @@ GType egg_tray_icon_get_type (void)
 	return our_type;
 }
 
-static void egg_tray_icon_init (EggTrayIcon *icon)
-{
+static void egg_tray_icon_init (EggTrayIcon *icon) {
 	icon->stamp = 1;
 	gtk_widget_add_events (GTK_WIDGET (icon), GDK_PROPERTY_CHANGE_MASK);
 }
 
-static void egg_tray_icon_class_init (EggTrayIconClass *klass)
-{
+static void egg_tray_icon_class_init (EggTrayIconClass *klass) {
 	GtkWidgetClass *widget_class = (GtkWidgetClass *)klass;
 
 	parent_class = g_type_class_peek_parent (klass);
 	widget_class->unrealize = egg_tray_icon_unrealize;
 }
 
-static GdkFilterReturn egg_tray_icon_manager_filter (GdkXEvent *xevent, GdkEvent *event, gpointer user_data)
-{
+static GdkFilterReturn egg_tray_icon_manager_filter (GdkXEvent *xevent, GdkEvent *event, gpointer user_data) {
 	EggTrayIcon *icon = user_data;
 	XEvent *xev = (XEvent *)xevent;
 
 	if (xev->xany.type == ClientMessage &&
 			xev->xclient.message_type == icon->manager_atom &&
-			xev->xclient.data.l[1] == icon->selection_atom)
-	{
+			xev->xclient.data.l[1] == icon->selection_atom) {
 		egg_tray_icon_update_manager_window (icon);
 	}
-	else if (xev->xany.window == icon->manager_window)
-	{
-		if (xev->xany.type == DestroyNotify)
-		{
+	else if (xev->xany.window == icon->manager_window) {
+		if (xev->xany.type == DestroyNotify) {
 			egg_tray_icon_update_manager_window (icon);
 		}
 	}
@@ -584,13 +559,11 @@ static GdkFilterReturn egg_tray_icon_manager_filter (GdkXEvent *xevent, GdkEvent
 	return GDK_FILTER_CONTINUE;
 }
 
-static void egg_tray_icon_unrealize (GtkWidget *widget)
-{
+static void egg_tray_icon_unrealize (GtkWidget *widget) {
 	EggTrayIcon *icon = EGG_TRAY_ICON (widget);
 	GdkWindow *root_window=NULL;
 
-	if (icon->manager_window != None)
-	{
+	if (icon->manager_window != None) {
 		gdk_window_remove_filter (root_window, egg_tray_icon_manager_filter, icon);
 
 		if (GTK_WIDGET_CLASS (parent_class)->unrealize)
@@ -603,8 +576,7 @@ static void egg_tray_icon_send_manager_message (EggTrayIcon *icon,
 		Window       window,
 		long         data1,
 		long         data2,
-		long         data3)
-{
+		long         data3) {
 	XClientMessageEvent ev;
 	Display *display;
 
@@ -629,8 +601,7 @@ static void egg_tray_icon_send_manager_message (EggTrayIcon *icon,
 	icon->ready=TRUE;
 }
 
-static void egg_tray_icon_send_dock_request (EggTrayIcon *icon)
-{
+static void egg_tray_icon_send_dock_request (EggTrayIcon *icon) {
 
 	egg_tray_icon_send_manager_message (icon,
 			SYSTEM_TRAY_REQUEST_DOCK,
@@ -640,8 +611,7 @@ static void egg_tray_icon_send_dock_request (EggTrayIcon *icon)
 }
 
 /* from gdk-pixbuf-xlib-drawabel.c */
-static gboolean xlib_window_is_viewable (Window w)
-{
+static gboolean xlib_window_is_viewable (Window w) {
 	XWindowAttributes wa;
 
 	while (w != 0) {
@@ -668,8 +638,7 @@ static gboolean xlib_window_is_viewable (Window w)
 	return FALSE;
 }
 
-gboolean kde_dock (EggTrayIcon *icon)
-{
+gboolean kde_dock (EggTrayIcon *icon) {
 
 	Window win;
 	Window data;
@@ -691,8 +660,7 @@ gboolean kde_dock (EggTrayIcon *icon)
 	return (xlib_window_is_viewable(win));
 }
 
-GdkPixbuf *kde_dock_background(EggTrayIcon *icon)
-{
+GdkPixbuf *kde_dock_background(EggTrayIcon *icon) {
 
 	Window win;
 	XWindowAttributes wa;
@@ -707,8 +675,7 @@ GdkPixbuf *kde_dock_background(EggTrayIcon *icon)
 	return background;
 }
 
-static void egg_tray_icon_update_manager_window (EggTrayIcon *icon)
-{
+static void egg_tray_icon_update_manager_window (EggTrayIcon *icon) {
 
 	static GdkPixbuf *background_pixbuf;
 	const gchar *window_manager=NULL;
@@ -780,8 +747,7 @@ static void egg_tray_icon_update_manager_window (EggTrayIcon *icon)
 	}
 }
 
-EggTrayIcon * egg_tray_icon_new (const char *name, GdkPixbuf *pix)
-{
+EggTrayIcon * egg_tray_icon_new (const char *name, GdkPixbuf *pix) {
 	EggTrayIcon *icon;
 	char buffer[256];
 	GdkWindow *root_window;
@@ -824,8 +790,7 @@ EggTrayIcon * egg_tray_icon_new (const char *name, GdkPixbuf *pix)
 guint egg_tray_icon_send_message (EggTrayIcon *icon,
 		gint timeout,
 		const gchar *message,
-		gint len)
-{
+		gint len) {
 	guint stamp;
 
 	g_return_val_if_fail (EGG_IS_TRAY_ICON (icon), 0);
@@ -845,8 +810,7 @@ guint egg_tray_icon_send_message (EggTrayIcon *icon,
 
 	/* Now to send the actual message */
 	gdk_error_trap_push ();
-	while (len > 0)
-	{
+	while (len > 0) {
 		XClientMessageEvent ev;
 		Display *xdisplay;
 
@@ -857,14 +821,12 @@ guint egg_tray_icon_send_message (EggTrayIcon *icon,
 		ev.format = 8;
 		ev.message_type = XInternAtom (xdisplay,
 				"_NET_SYSTEM_TRAY_MESSAGE_DATA", False);
-		if (len > 20)
-		{
+		if (len > 20) {
 			memcpy (&ev.data, message, 20);
 			len -= 20;
 			message += 20;
 		}
-		else
-		{
+		else {
 			memcpy (&ev.data, message, len);
 			len = 0;
 		}
@@ -877,8 +839,7 @@ guint egg_tray_icon_send_message (EggTrayIcon *icon,
 	return stamp;
 }
 
-void egg_tray_icon_cancel_message (EggTrayIcon *icon, guint id)
-{
+void egg_tray_icon_cancel_message (EggTrayIcon *icon, guint id) {
 	g_return_if_fail (EGG_IS_TRAY_ICON (icon));
 	g_return_if_fail (id > 0);
 

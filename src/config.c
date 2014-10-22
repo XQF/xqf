@@ -208,8 +208,7 @@ struct state_s
 	void* data;
 };
 
-static gboolean parse_line_file(char* buf, struct state_s* state)
-{
+static gboolean parse_line_file(char* buf, struct state_s* state) {
 	struct config_key *key = NULL;
 	char *p;
 	unsigned len;
@@ -266,19 +265,17 @@ static gboolean parse_line_file(char* buf, struct state_s* state)
 
 #define BEGIN_XQF_INFO  "### BEGIN XQF INFO"
 #define END_XQF_INFO    "### END XQF INFO"
-static gboolean parse_line_script(char* buf, struct state_s* state)
-{
-	switch(GPOINTER_TO_INT(state->data))
-	{
+static gboolean parse_line_script(char* buf, struct state_s* state) {
+	switch(GPOINTER_TO_INT(state->data)) {
 		case 0:
-			if(!strncmp(buf, BEGIN_XQF_INFO, strlen(BEGIN_XQF_INFO)))
+			if (!strncmp(buf, BEGIN_XQF_INFO, strlen(BEGIN_XQF_INFO)))
 				state->data = GINT_TO_POINTER(1);
 			return TRUE;
 
 		case 1:
-			if(!strncmp(buf, "# ", 2))
+			if (!strncmp(buf, "# ", 2))
 				return parse_line_file(buf+2, state);
-			else if(!strncmp(buf, END_XQF_INFO, strlen(END_XQF_INFO)))
+			else if (!strncmp(buf, END_XQF_INFO, strlen(END_XQF_INFO)))
 				return FALSE;
 	}
 	return FALSE;
@@ -297,11 +294,10 @@ static void load_file (const char *filename) {
 
 	debug (4, "%s", filename);
 
-	for(l = directories; l && !f; l = g_slist_next(l))
-	{
+	for (l = directories; l && !f; l = g_slist_next(l)) {
 		fn = file_in_dir (l->data, filename);
 		f = fopen (fn, "r");
-		if(f) debug(4, "loaded %s", fn);
+		if (f) debug(4, "loaded %s", fn);
 		g_free (fn);
 	}
 
@@ -317,8 +313,7 @@ static void load_file (const char *filename) {
 	state.filename = filename;
 
 	// XXX:
-	if(!strncmp(filename, "scripts/", strlen("scripts/")))
-	{
+	if (!strncmp(filename, "scripts/", strlen("scripts/"))) {
 		parse_line = parse_line_script;
 		file->read_only = 1;
 	}
@@ -396,10 +391,9 @@ static struct config_key *parse_path (const char *path,
 	filename = ptr = &buf[1];
 
 	// XXX:
-	if(!strncmp(buf, "/scripts", strlen("/scripts")))
-	{
+	if (!strncmp(buf, "/scripts", strlen("/scripts"))) {
 		ptr = strchr (ptr, '/');
-		if(ptr)
+		if (ptr)
 			++ptr;
 	}
 
@@ -671,10 +665,10 @@ static void dump_file (struct config_file *file) {
 	FILE *f;
 	char *fn;
 
-	if(!file->dirty)
+	if (!file->dirty)
 		return;
 
-	if(file->read_only)
+	if (file->read_only)
 		return;
 
 	if (!file->sections) {

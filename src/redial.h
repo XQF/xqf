@@ -25,4 +25,3 @@
 gboolean redial_dialog (struct server* s, struct server_props* props);
 
 #endif /* __ADDMASTER_H__ */
-

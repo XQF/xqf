@@ -39,21 +39,19 @@
 #include "debug.h"
 #endif
 
-static void data_free(guchar* pixels, gpointer data)
-{
+static void data_free(guchar* pixels, gpointer data) {
 		g_free(data);
 }
 
-GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
-{
+GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len) {
 		GdkPixbufLoader* loader = NULL;
 		gboolean ok = FALSE;
 		GdkPixbuf* pixbuf = NULL;
 
 		GError *err=NULL;
 
-		if(!mem) return NULL;
-		if(!len) return NULL;
+		if (!mem) return NULL;
+		if (!len) return NULL;
 
 #if 0
 		{
@@ -67,28 +65,25 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
 		g_return_val_if_fail(loader!=NULL, NULL);
 
 		ok = gdk_pixbuf_loader_write(loader, mem, len,&err);
-		if(err != NULL)
-		{
+		if (err != NULL) {
 				xqf_warning("%s", err->message);
 				g_error_free(err);
 		}
 		err = NULL;
 		gdk_pixbuf_loader_close(loader,&err);
-		if(err != NULL)
-		{
+		if (err != NULL) {
 				xqf_warning("%s", err->message);
 				g_error_free(err);
 		}
 
-		if(!ok)
-		{
+		if (!ok) {
 				unsigned h = 0, w = 0;
 				unsigned char* data;
 				g_object_unref(G_OBJECT(loader));
 				loader = NULL;
 
 				data = LoadTGA(mem, len, &w, &h);
-				if(!data)
+				if (!data)
 						return NULL;
 
 				//    printf("%dx%d\n", w, h);
@@ -103,8 +98,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
 								data_free,
 								data);
 		}
-		else
-		{
+		else {
 				pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
 				g_object_ref(pixbuf);
 				g_object_unref(G_OBJECT(loader));
@@ -114,19 +108,17 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len)
 }
 
 void renderMemToGtkPixmap(const guchar* mem, size_t len,
-				GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, unsigned char brightness)
-{
+				GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, unsigned char brightness) {
 		GdkPixbuf* pixbuf = renderMemToPixbuf(mem, len);
 
-		if(pixbuf)
-		{
+		if (pixbuf) {
 				GdkPixbuf* pixbuf_tmp = NULL;
 				pixbuf_tmp = pixbuf;
 				pixbuf = gdk_pixbuf_scale_simple(pixbuf,320,240,GDK_INTERP_TILES);
 				*height = gdk_pixbuf_get_height(pixbuf);
 				*width = gdk_pixbuf_get_width(pixbuf);
 
-				if(brightness && gdk_pixbuf_get_n_channels (pixbuf) >= 3) // brightness correction
+				if (brightness && gdk_pixbuf_get_n_channels (pixbuf) >= 3) // brightness correction
 				{
 						unsigned x, y;
 						unsigned w = gdk_pixbuf_get_width (pixbuf);
@@ -135,10 +127,8 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 						unsigned c = gdk_pixbuf_get_n_channels (pixbuf);
 						unsigned char* p = gdk_pixbuf_get_pixels (pixbuf);
 						register unsigned tmp;
-						for(y=0; y < h; ++y)
-						{
-								for(x=0; x < w; ++x, p+=c)
-								{
+						for (y=0; y < h; ++y) {
+								for (x=0; x < w; ++x, p+=c) {
 										tmp = p[0] + brightness;
 										p[0] = (tmp>0xFF)?0xFF:tmp;
 										tmp = p[1] + brightness;
@@ -146,8 +136,7 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 										tmp = p[2] + brightness;
 										p[2] = (tmp>0xFF)?0xFF:tmp;
 								}
-								if(x*c<rs)
-								{
+								if (x*c<rs) {
 										p += (rs - x*c);
 								}
 						}
@@ -158,8 +147,7 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 				g_object_unref(pixbuf);
 				g_object_unref(pixbuf_tmp);
 		}
-		else
-		{
+		else {
 				*width=0;
 				*height=0;
 		}
@@ -171,8 +159,7 @@ guchar* rgbbuf;
 		gboolean
 on_darea_expose (GtkWidget *widget,
 				GdkEventExpose *event,
-				GdkPixbuf* pixbuf)
-{
+				GdkPixbuf* pixbuf) {
 		gdk_draw_rgb_image (widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 						0, 0, gdk_pixbuf_get_width(pixbuf), gdk_pixbuf_get_height(pixbuf),
 						GDK_RGB_DITHER_MAX, rgbbuf, gdk_pixbuf_get_width(pixbuf) * 3);
@@ -180,8 +167,7 @@ on_darea_expose (GtkWidget *widget,
 		return TRUE;
 }
 
-void pixbuf2rgbbuf(GdkPixbuf* pixbuf)
-{
+void pixbuf2rgbbuf(GdkPixbuf* pixbuf) {
 		guchar* buf;
 		guchar* pos;
 		unsigned w;
@@ -200,32 +186,27 @@ void pixbuf2rgbbuf(GdkPixbuf* pixbuf)
 
 		pos = rgbbuf = g_new0(guchar, h*w*3);
 
-		if(c != 3 && c != 4)
-		{
+		if (c != 3 && c != 4) {
 				fprintf(stderr, "color depth %d not supported\n", c);
 				return;
 		}
 
 		buf = gdk_pixbuf_get_pixels (pixbuf);
-		for(y=0; y < h; ++y)
-		{
-				for(x=0; x < w; ++x)
-				{
+		for (y=0; y < h; ++y) {
+				for (x=0; x < w; ++x) {
 						*pos++ = *buf++;
 						*pos++ = *buf++;
 						*pos++ = *buf++;
-						if(c == 4)
+						if (c == 4)
 								buf++;
 				}
-				if(x*c<rs)
-				{
+				if (x*c<rs) {
 						buf += (rs - x*c);
 				}
 		}
 }
 
-int main (int argc, char* argv[])
-{
+int main (int argc, char* argv[]) {
 		int fd;
 		struct stat statbuf;
 		guchar* mem = NULL;
@@ -233,27 +214,24 @@ int main (int argc, char* argv[])
 
 		gtk_init (&argc, &argv);
 
-		if(argc < 2)
-		{
+		if (argc < 2) {
 				puts("need file");
 				return 1;
 		}
 
 		fd = open(argv[1], O_RDONLY);
-		if(fd < 0) return -1;
-		if(fstat(fd, &statbuf) == -1) return -1;
+		if (fd < 0) return -1;
+		if (fstat(fd, &statbuf) == -1) return -1;
 
 		mem = g_new0(guchar, statbuf.st_size);
-		if(read(fd, mem, statbuf.st_size) != statbuf.st_size) return -1;
+		if (read(fd, mem, statbuf.st_size) != statbuf.st_size) return -1;
 		close(fd);
 
 		main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-		gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-						GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+		gtk_signal_connect (GTK_OBJECT (main_window), "destroy", GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
 
 
-		if(0)
-		{
+		if (0) {
 				GtkWidget* widget = NULL;
 				GdkPixmap* pix = NULL;
 				GdkBitmap* mask = NULL;
@@ -265,8 +243,7 @@ int main (int argc, char* argv[])
 				gtk_container_add (GTK_CONTAINER (main_window), widget);
 				gtk_widget_show(widget);
 		}
-		else if(1)
-		{
+		else if (1) {
 				GdkPixbuf* pixbuf = renderMemToPixbuf(mem, statbuf.st_size);
 				GtkWidget* darea;
 
@@ -279,7 +256,7 @@ int main (int argc, char* argv[])
 
 				pixbuf2rgbbuf(pixbuf);
 		}
-		else
+		else {
 		{
 				unsigned w;
 				unsigned h;
@@ -294,8 +271,7 @@ int main (int argc, char* argv[])
 				gtk_preview_size(GTK_PREVIEW(preview), w, h);
 
 				pixbuf2rgbbuf(pixbuf);
-				for(y=0; y < h; ++y)
-				{
+				for (y=0; y < h; ++y) {
 						gtk_preview_draw_row(GTK_PREVIEW(preview), rgbbuf+y*w, 0, y, w);
 				}
 				gtk_container_add (GTK_CONTAINER (main_window), preview);

@@ -1446,7 +1446,7 @@ static int check_qstat_source_port() {
 			qstat_srcip_changed = TRUE;
 		}
 	}
-	else if(qstat_srcip) {
+	else if (qstat_srcip) {
 		g_free(qstat_srcip);
 		qstat_srcip = NULL;
 		qstat_srcip_changed = TRUE;
@@ -3333,7 +3333,7 @@ static void q3_set_memory_callback (GtkWidget *widget, int what) {
 		com_soundmegs       = 16;
 		cg_precachedmodels  = 6;
 	}
-	else if(what == 2) {
+	else if (what == 2) {
 		com_hunkmegs        = 96;
 		com_zonemegs        = 24;
 		com_soundmegs       = 16;

@@ -65,18 +65,21 @@ char *strdup_strip (const char *str) {
 	const char *end;
 	char *res;
 
-	if (!str)
+	if (!str) {
 		return NULL;
+	}
 
 	for (start = str; *start && isspace (*start); start++);
 
-	if (!strlen(str))
+	if (!strlen(str)) {
 		return NULL;
+	}
 
 	for (end = str + strlen (str) - 1; end >= start && isspace (*end); end--);
 
-	if (start > end)
+	if (start > end) {
 		return NULL;
+	}
 
 	res = g_malloc (end - start + 1 + 1);
 	strncpy (res, start, end - start + 1);
@@ -95,18 +98,22 @@ char *file_in_dir (const char *dir, const char *file) {
 	if (!dir || dir[0] == '\0') /* dir "" is current dir */
 		return (file)? g_strdup (file) : NULL;
 
-	if (!file)
+	if (!file) {
 		return g_strdup (dir);
+	}
 
-	if (dir[strlen (dir) - 1] != G_DIR_SEPARATOR)
+	if (dir[strlen (dir) - 1] != G_DIR_SEPARATOR) {
 		need_slash = 1;
+	}
 
 	tmp = res = g_malloc0 (strlen (dir) + strlen (file) + need_slash + 1);
 
 	strcpy (tmp, dir);
 	tmp += strlen (dir);
-	if (need_slash)
+	if (need_slash) {
 		*tmp++ = G_DIR_SEPARATOR;
+	}
+
 	strcpy (tmp, file);
 
 	return res;
@@ -114,12 +121,15 @@ char *file_in_dir (const char *dir, const char *file) {
 
 
 int str_isempty (const char *str) {
-	if (!str)
+	if (!str) {
 		return TRUE;
+	}
 
-	for (; *str; str++) 
-		if (!isspace (*str))
+	for (; *str; str++) {
+		if (!isspace (*str)) {
 			return FALSE;
+		}
+	}
 
 	return TRUE;
 }
@@ -144,22 +154,27 @@ char *expand_tilde (const char *path) {
 			}
 			else {
 				slash = strchr (&path[1], G_DIR_SEPARATOR);
-				if (slash)
+				if (slash) {
 					namelen = slash - &path[1];
-				else
+				}
+				else {
 					namelen = strlen (&path[1]);
+				}
 
-				if (namelen > MAXNAMELEN)
+				if (namelen > MAXNAMELEN) {
 					namelen = MAXNAMELEN - 1;
+				}
 
 				strncpy (name, &path[1], namelen);
 				name[namelen] = '\0';
 
 				pwd = getpwnam (name);
-				if (pwd)
+				if (pwd) {
 					res = file_in_dir (pwd->pw_dir, path + 2 + namelen);
-				else
+				}
+				else {
 					res = g_strdup (path);
+				}
 			}
 		}
 		else {
@@ -187,21 +202,26 @@ GList *dir_to_list (const char *dirname,
 	GList *list = NULL;
 	char *str;
 
-	if(!dirname)
+	if (!dirname) {
 		return NULL;
+	}
 
 	directory = opendir (dirname);
-	if (directory == NULL)
+	if (directory == NULL) {
 		return NULL;
+	}
 
 	while ((dirent_ptr = readdir (directory)) != NULL) {
-		if (filter)
+		if (filter) {
 			str = filter (dirname, dirent_ptr->d_name);
-		else
+		}
+		else {
 			str = g_strdup (dirent_ptr->d_name);
+		}
 
-		if (str)
+		if (str) {
 			list = g_list_prepend (list, str);
+		}
 	}
 
 	closedir (directory);
@@ -267,8 +287,9 @@ GSList *unique_strings (GSList *strings) {
 
 	while (strings) {
 		for (tmp = result; tmp; tmp = tmp->next) {
-			if (strcmp ((char *) tmp->data, (char *) strings->data))
+			if (strcmp ((char *) tmp->data, (char *) strings->data)) {
 				result = g_slist_prepend (result, strings->data);
+			}
 		}
 		strings = strings->next;
 	}
@@ -277,12 +298,10 @@ GSList *unique_strings (GSList *strings) {
 }
 
 // build GList from array of char*
-GList* createGListfromchar(char* strings[])
-{
+GList* createGListfromchar(char* strings[]) {
 	GList *list = NULL;
 	char** ptr = NULL;
-	for(ptr=strings;ptr&&*ptr;ptr++)
-	{
+	for (ptr=strings;ptr&&*ptr;ptr++) {
 		list = g_list_append (list, *ptr);
 	}
 
@@ -317,8 +336,9 @@ void ignore_sigpipe (void) {
 
 void print_dq_string (FILE *f, const char *ptr) {
 
-	if (!f)
+	if (!f) {
 		return;
+	}
 
 	putc ('\"', f);
 
@@ -352,10 +372,12 @@ void print_dq_string (FILE *f, const char *ptr) {
 				break;
 
 			default:
-				if (*ptr >= 0x20 && *ptr != 0x7F)
+				if (*ptr >= 0x20 && *ptr != 0x7F) {
 					putc (*ptr, f);
-				else
+				}
+				else {
 					fprintf (f, "\\%03o", *ptr);
+				}
 				break;
 
 		}
@@ -373,21 +395,24 @@ char *lowcasestrstr (const char *str, const char *substr) {
 	const char *end;
 	int i;
 
-	if (!str || !substr)
+	if (!str || !substr) {
 		return NULL;
+	}
 
 	slen = strlen (str);
 	sublen = strlen (substr);
 
-	if (slen < sublen)
+	if (slen < sublen) {
 		return NULL;
+	}
 
 	end = &str[slen - sublen + 1];
 
 	while (str < end) {
 		for (i = 0; i < sublen; i++) {
-			if (tolower (substr[i]) != tolower (str[i]))
+			if (tolower (substr[i]) != tolower (str[i])) {
 				goto loop;
+			}
 		}
 		return (char *) str;
 
@@ -409,18 +434,21 @@ int tokenize (char *str, char *token[], int max, const char *dlm) {
 	while (str && num < max) {
 		str += strspn (str, dlm);
 
-		if (*str == '\0')
+		if (*str == '\0') {
 			break;
+		}
 
 		token[num++] = str;
 
-		if (num == max)
+		if (num == max) {
 			break;
+		}
 
 		str += strcspn (str, dlm);
 
-		if (*str == '\0')
+		if (*str == '\0') {
 			break;
+		}
 
 		*str++ = '\0';
 	}
@@ -435,8 +463,9 @@ int safe_tokenize (const char *str, char *token[], int max, const char *dlm) {
 	while (str && num < max) {
 		str += strspn (str, dlm);
 
-		if (*str == '\0')
+		if (*str == '\0') {
 			break;
+		}
 
 		token[num++] = (char *) str;
 		str += strcspn (str, dlm);
@@ -449,14 +478,16 @@ int safe_tokenize (const char *str, char *token[], int max, const char *dlm) {
 int tokenize_bychar (char *str, char *token[], int max, char dlm) {
 	int num = 0;
 
-	if (!str || str[0] == '\0')
+	if (!str || str[0] == '\0') {
 		return 0;
+	}
 
 	while (str && num < max) {
 		token[num++] = str;
 		str = strchr (str, dlm);
-		if (str)
+		if (str) {
 			*str++ = '\0';
+		}
 	}
 
 	return num;
@@ -466,8 +497,9 @@ int tokenize_bychar (char *str, char *token[], int max, char dlm) {
 int hostname_is_valid (const char *hostname) {
 	const char *ptr;
 
-	if (!hostname)
+	if (!hostname) {
 		return FALSE;
+	}
 
 	for (ptr = hostname; *ptr; ptr++) {
 		if (*ptr != '.' && *ptr != '-' &&
@@ -487,10 +519,12 @@ int hostname_is_valid (const char *hostname) {
 char* find_server_setting_for_key (char *key, char **info_ptr){
 	char **ptr;
 
-	if (key == NULL || info_ptr == NULL) return (NULL);
+	if (key == NULL || info_ptr == NULL) {
+		return (NULL);
+	}
 
 	for (ptr = info_ptr; ptr && *ptr; ptr += 2) {
-		if( strcasecmp (*ptr, key) == 0){
+		if ( strcasecmp (*ptr, key) == 0){
 			debug( 3, "find_server_setting_for_key() -- Found key '%s' with value '%s'", key, *(ptr+1)  );
 			return (*(ptr+1));
 		} else {
@@ -501,22 +535,21 @@ char* find_server_setting_for_key (char *key, char **info_ptr){
 }
 
 // returns true if str is "true", false otherwise
-int str2bool(const char* str)
-{
-	if(!str) return FALSE;
+int str2bool(const char* str) {
+	if (!str) {
+		return FALSE;
+	}
 
-	if(!strcasecmp(str,"true"))
-	{
+	if (!strcasecmp(str,"true")) {
 		return TRUE;
 	}
+
 	return FALSE;
 }
 
 // return "false" if i == 0, "true" otherwise
-const char* bool2str(int i)
-{
-	if(!i)
-	{
+const char* bool2str(int i) {
+	if (!i) {
 		return "false";
 	}
 	return "true";
@@ -526,31 +559,26 @@ const char* bool2str(int i)
  * executables to search for. return name of first found file, NULL otherwise
  * must be freed manually
  */
-char* find_file_in_path(const char* files)
-{
+char* find_file_in_path(const char* files) {
 	return _find_file_in_path(files, FALSE);
 }
 
-char* find_file_in_path_relative(const char* files)
-{
+char* find_file_in_path_relative(const char* files) {
 	return _find_file_in_path(files, TRUE);
 }
 
-char* find_file_in_path_list(char** files)
-{
+char* find_file_in_path_list(char** files) {
 	return _find_file_in_path_list(files, FALSE);
 }
 
-char* find_file_in_path_list_relative(char** files)
-{
+char* find_file_in_path_list_relative(char** files) {
 	return _find_file_in_path_list(files, TRUE);
 }
 
 /**
   @param binaries NULL terminated list of strings
 */
-static char* _find_file_in_path_list(char** binaries, gboolean relative)
-{
+static char* _find_file_in_path_list(char** binaries, gboolean relative) {
 	char* path = NULL;
 	int i = 0, j = 0;
 	char** directories = NULL;
@@ -558,28 +586,33 @@ static char* _find_file_in_path_list(char** binaries, gboolean relative)
 
 	path = getenv("PATH");
 
-	if(!binaries) return NULL;
-	if(!path) return NULL;
+	if (!binaries) {
+		return NULL;
+	}
+	if (!path) {
+		return NULL;
+	}
 
 	directories = g_strsplit(path,":",0);
 
-	for(i=0; binaries[i] && !found; i++)
-	{
+	for (i=0; binaries[i] && !found; i++) {
 		//	debug(0,"search for %s",binaries[i]);
-		for(j=0; directories[j] && !found; j++)
-		{
+		for (j=0; directories[j] && !found; j++) {
 			//	    debug(0,"search in %s",directories[j]);
 			char *file = file_in_dir (directories[j], binaries[i]);
-			if(!file) continue;
+			if (!file) {
+				continue;
+			}
 
-			if(!access(file,X_OK))
-			{
+			if (!access(file,X_OK)) {
 				// If directory name is blank, don't add a / - happens if
 				// a complete path was passed
-				if (!relative && strlen(directories[j]))
+				if (!relative && strlen(directories[j])) {
 					found = g_strconcat(directories[j],"/",binaries[i],NULL);
-				else
+				}
+				else {
 					found = g_strdup(binaries[i]);
+				}
 				debug(3,"found %s in %s",binaries[i],directories[j]);
 			}
 			g_free(file);
@@ -591,8 +624,7 @@ static char* _find_file_in_path_list(char** binaries, gboolean relative)
 	return found;
 }
 
-static char* _find_file_in_path(const char* files, gboolean relative)
-{
+static char* _find_file_in_path(const char* files, gboolean relative) {
 	char** binaries = NULL;
 	char* found = NULL;
 
@@ -611,23 +643,22 @@ static char* _find_file_in_path(const char* files, gboolean relative)
  * @param match_result output: 0 = not found, 1 = exact match, 2 = differnet case match
  * @returns name of found directory or NULL, must be freed manually
  */
-char *find_game_dir (const char *basegamedir, const char *game, int *match_result)
-{
+char *find_game_dir (const char *basegamedir, const char *game, int *match_result) {
 	DIR *dp = NULL;
 	struct stat buf = {0};
 	char *path = NULL;
 	char* ret = NULL;
 	int result = 0;
 
-	if(!game || !basegamedir)
+	if (!game || !basegamedir) {
 		return NULL;
+	}
 
 	debug( 3, "Looking for subdir %s in %s", game, basegamedir);
 
 	// Look for exact match
 	path = file_in_dir (basegamedir, game);
-	if (!stat (path, &buf) && S_ISDIR(buf.st_mode))
-	{
+	if (!stat (path, &buf) && S_ISDIR(buf.st_mode)) {
 		debug( 3, "Found exact match for subdir %s in %s", game, basegamedir);
 		result = 1; // Exact match
 		ret = g_strdup(game);
@@ -635,41 +666,37 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 	g_free (path);
 
 	// Did not find exact match, perform search
-	if(!ret)
-	{
+	if (!ret) {
 		debug( 3, "Did not find exact match for subdir %s in %s", game, basegamedir);
 		debug( 3, "Searching for subdir %s in %s ignoring case", game, basegamedir);
 
 		dp = opendir (basegamedir);
-		if(!dp)
-		{
+		if (!dp) {
 			debug( 3, "Could not open base directory %s!", basegamedir);
 		}
-		else
-		{
+		else {
 			struct dirent *ep;
-			while ((ep = readdir (dp)))
-			{
+			while ((ep = readdir (dp))) {
 				char* name = ep->d_name;
 
-				if (!strcmp(name, ".") || !strcmp(name,".."))
+				if (!strcmp(name, ".") || !strcmp(name,"..")) {
 					continue;
+				}
 
 				path = file_in_dir(basegamedir, name);
 
-				if(stat(path, &buf) == -1)
-				{
+				if (stat(path, &buf) == -1) {
 					g_free(path);
 					continue;
 				}
 
 				g_free(path);
 
-				if (!S_ISDIR(buf.st_mode))
+				if (!S_ISDIR(buf.st_mode)) {
 					continue;
+				}
 
-				if (!g_ascii_strcasecmp(name, game))
-				{
+				if (!g_ascii_strcasecmp(name, game)) {
 					debug( 3, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir, game);
 					result = 2; // Different case match
 					ret = g_strdup (name);
@@ -680,11 +707,13 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 		}
 	}
 
-	if(!ret)
+	if (!ret) {
 		debug( 3, "Could not find any match for subdir %s in %s.",game, basegamedir);
+	}
 
-	if(match_result)
+	if (match_result) {
 		*match_result = result;
+	}
 
 	return ret;
 }
@@ -695,36 +724,32 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
  * @unref_func function to call for each deleted entry
  * @return sorted list without duplicates
  */
-GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*unref_func)(void*))
-{
+GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*unref_func)(void*)) {
 	int i;
 	GSList* serverlist = NULL;
 	GSList* serverlistnext = NULL;
 
-	if(!list)
+	if (!list) {
 		return NULL;
+	}
 
 	list = serverlist = g_slist_sort (list, compare_func);
 
 	i = 0;
-	while(serverlist)
-	{
+	while (serverlist) {
 		serverlistnext=serverlist->next;
-		if(!serverlistnext)
-		{
+		if (!serverlistnext) {
 			// last element, quit loop
 			serverlist = serverlistnext;
 		}
-		else if(!compare_func(serverlist->data,serverlistnext->data))
-		{
+		else if (!compare_func(serverlist->data,serverlistnext->data)) {
 			GSList* dup = serverlistnext;
 			serverlistnext = g_slist_remove_link(serverlistnext, dup);
 			serverlist->next = serverlistnext;
-			if(unref_func) unref_func(dup->data);
+			if (unref_func) unref_func(dup->data);
 			g_slist_free_1(dup);
 		}
-		else
-		{
+		else {
 			serverlist= serverlistnext;
 		}
 		i++;
@@ -768,8 +793,7 @@ GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*u
  * @returns game direcory or NULL. must be freed
  */
 
-char* resolve_path(const char* path)
-{
+char* resolve_path(const char* path) {
 
 	struct stat statbuf;
 	int length = 0;
@@ -778,46 +802,42 @@ char* resolve_path(const char* path)
 	char *dir = NULL;
 	char* tmp = NULL;
 
-	if(!path || !*path)
+	if (!path || !*path) {
 		return NULL;
+	}
 
-	if(path[0] == '~')
-	{
+	if (path[0] == '~') {
 		tmp = expand_tilde(path);
 		path = tmp;
 	}
-	else if(path[0] != '/')
-	{
+	else if (path[0] != '/') {
 		tmp = find_file_in_path(path);
-		if(!tmp)
-		{
+		if (!tmp) {
 			debug(3, "%s not found in $PATH", path);
 			return NULL;
 		}
 		path = tmp;
 	}
 
-	if(lstat(path, &statbuf) == -1)
-	{
+	if (lstat(path, &statbuf) == -1) {
 		debug(3, "lstat on %s failed", path);
 		g_free(tmp);
 		return NULL;
 	}
 
-	if ( S_ISLNK(statbuf.st_mode) == 1)
-	{
+	if ( S_ISLNK(statbuf.st_mode) == 1) {
 		// Grab directory from sym link of cmd_entry
 
 		debug(3, "path is a sym link");    
 
 		length = readlink (path, buf, sizeof(buf) - 1);
 
-		if (length > 0)
-		{
+		if (length > 0) {
 			buf[length]='\0';
 
-			if(buf[length-1] == '/')
+			if (buf[length-1] == '/') {
 				buf[length-1] = '\0';
+			}
 
 			ptr = strrchr(buf, '/');
 
@@ -834,8 +854,7 @@ char* resolve_path(const char* path)
 			}
 		}
 	}
-	else
-	{
+	else {
 		// Grab directory from cmd_entry
 
 		debug(3,"path is NOT a sym link");
@@ -849,16 +868,13 @@ char* resolve_path(const char* path)
 
 			// ignore direcory if it is in $PATH. It doesn't make sense to suggest
 			// /usr/bin as game direcory
-			if(PATH)
-			{
+			if (PATH) {
 				int i;
 				char** directories = g_strsplit(PATH,":",0);
 				char* basedir = g_strndup(path, ptr-path);
 
-				for(i=0; directories[i]; ++i)
-				{
-					if(!strcmp(directories[i], basedir))
-					{
+				for (i=0; directories[i]; ++i) {
+					if (!strcmp(directories[i], basedir)) {
 						dir_is_path = TRUE;
 						break;
 					}
@@ -868,13 +884,13 @@ char* resolve_path(const char* path)
 				g_free(basedir);
 			}
 
-			if(!dir_is_path)
-			{
+			if (!dir_is_path) {
 				dir = tmp;
 				tmp = NULL;
 			}
-			else
+			else {
 				debug(3, "found directory %s in $PATH, ignoring", tmp);
+			}
 		}
 	}  
 
@@ -889,32 +905,29 @@ static inline size_t my_strftime(char *s, size_t max, const char *fmt, const str
 }
 
 // return locale's string representation of t. must be freed manually
-char* timet2string(const time_t* t)
-{
+char* timet2string(const time_t* t) {
 	enum { timebuf_len = 128 };
 	char timebuf[timebuf_len] = {0};
 	struct tm tm_s;
 	char* str;
 
 	gmtime_r(t,&tm_s);
-	if(!my_strftime(timebuf,timebuf_len,"%c",&tm_s))
-	{
+	if (!my_strftime(timebuf,timebuf_len,"%c",&tm_s)) {
 		// error converting time to string representation, shouldn't happen
 		str=_("<error>");
 	}
-	else
+	else {
 		str = timebuf;
+	}
 
 	return strdup(str);
 }
 
-int set_nonblock (int fd)
-{
+int set_nonblock (int fd) {
 	int flags;
 
 	flags = fcntl (fd, F_GETFL, 0);
-	if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0)
-	{
+	if (flags < 0 || fcntl (fd, F_SETFL, flags | O_NONBLOCK) < 0) {
 		return -1;
 	}
 	return 0;
@@ -923,20 +936,17 @@ int set_nonblock (int fd)
 // TODO: code is generic enough to move into separate file
 
 #if !defined(RCON_STANDALONE)
-int start_prog_and_return_fd(char *const argv[], pid_t *pid)
-{
+int start_prog_and_return_fd(char *const argv[], pid_t *pid) {
 	int pipefds[2];
 
 	*pid = -1;
 
-	if (pipe (pipefds) < 0)
-	{
+	if (pipe (pipefds) < 0) {
 		xqf_error("error creating pipe: %s",strerror(errno));
 		return -1;
 	}
 	*pid = fork();
-	if (*pid < (pid_t) 0)
-	{
+	if (*pid < (pid_t) 0) {
 		xqf_error("fork failed: %s",strerror(errno));
 		return -1;
 	}
@@ -963,11 +973,11 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 
 	close (pipefds[1]);
 
-	if (set_nonblock(pipefds[0]) == -1)
-	{
+	if (set_nonblock(pipefds[0]) == -1) {
 		close (pipefds[1]);
-		if(*pid > 0)
+		if (*pid > 0) {
 			kill(*pid,SIGTERM);
+		}
 		xqf_error("fcntl failed: %s", strerror(errno));
 		return -1;
 	}
@@ -975,25 +985,26 @@ int start_prog_and_return_fd(char *const argv[], pid_t *pid)
 	return pipefds[0];
 }
 
-void external_program_close_input(struct external_program_connection* conn)
-{
-	if(!conn) return;
+void external_program_close_input(struct external_program_connection* conn) {
+	if (!conn) {
+		return;
+	}
 	gdk_input_remove(conn->tag);
 	close(conn->fd);
-	if(conn->pid > 0) kill(conn->pid,SIGTERM);
-	if(conn->do_quit) gtk_main_quit();
+	if (conn->pid > 0) kill(conn->pid,SIGTERM);
+	if (conn->do_quit) gtk_main_quit();
 }
 
-void external_program_input_callback(struct external_program_connection* conn, int fd, GIOCondition condition)
-{
+void external_program_input_callback(struct external_program_connection* conn, int fd, GIOCondition condition) {
 	int bytes;
 	char* sol; // start of line pointer
 	char* eol; // end of line pointer
 
-	if(!conn) return;
+	if (!conn) {
+		return;
+	}
 
-	if(conn->pos >= conn->bufsize )
-	{
+	if (conn->pos >= conn->bufsize ) {
 		xqf_error("line %d too long",conn->linenr+1);
 		external_program_close_input(conn);
 		return;
@@ -1001,10 +1012,8 @@ void external_program_input_callback(struct external_program_connection* conn, i
 
 	bytes = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
 
-	if (bytes < 0)
-	{
-		if (errno == EAGAIN || errno == EWOULDBLOCK)
-		{
+	if (bytes < 0) {
+		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			return;
 		}
 
@@ -1024,34 +1033,31 @@ void external_program_input_callback(struct external_program_connection* conn, i
 	bytes = conn->pos;
 
 	// buffer can contain multiple lines
-	for(;(eol = memchr(eol,'\n',bytes-(eol-sol))) != NULL;bytes-=eol-sol+1,sol= ++eol)
-	{
+	for (;(eol = memchr(eol,'\n',bytes-(eol-sol))) != NULL;bytes-=eol-sol+1,sol= ++eol) {
 		*eol = '\0';
 		// debug(0,"%4d, line(%4d,%4d-%4d)>%s<",bytes, eol-sol,sol-conn->buf,eol-conn->buf,sol);
 		++conn->linenr;
 		conn->current_line = sol;
-		if(conn->linefunc) (conn->linefunc)(conn);
+		if (conn->linefunc) (conn->linefunc)(conn);
 	}
 	// sol now points to begin of next line, if any
 
-	if(sol-conn->buf)
-	{
-		if(bytes)
-		{
+	if (sol-conn->buf) {
+		if (bytes) {
 			memmove(conn->buf,sol,bytes);
 		}
 		conn->pos = bytes;
 	}
 }
 
-int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data)
-{
+int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data) {
 	struct external_program_connection conn = {0};
 
 	conn.fd = start_prog_and_return_fd(argv,&conn.pid);
 
-	if (conn.fd<0||conn.pid<=0)
+	if (conn.fd<0||conn.pid<=0) {
 		return FALSE;
+	}
 
 	conn.bufsize = 1024;
 	conn.buf = g_new0(char,conn.bufsize);
@@ -1071,33 +1077,29 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
 	return conn.result;
 }
 
-int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer data)
-{
+int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer data) {
 	int status = -1;
 	pid_t pid;
 
 	pid = fork();
 	if ( pid == 0) {
-		if(child_callback)
+		if (child_callback) {
 			child_callback(data);
+		 }
 		execvp(argv[0],(void*)argv);
 		_exit(EXIT_FAILURE);
 	}     
-	else if(pid > 0)
-	{
+	else if (pid > 0) {
 		waitpid(pid,&status,0);
 
-		if(WIFEXITED(status))
-		{
+		if (WIFEXITED(status)) {
 			debug(3,"%s exited normally", argv[0]);
 		}
-		else
-		{
+		else {
 			debug(3,"%s exited with status %d", argv[0], WEXITSTATUS(status));
 		}
 
-		if(WIFSIGNALED(status))
-		{
+		if (WIFSIGNALED(status)) {
 			debug(3,"%s was killed by signal %d", argv[0], WTERMSIG(status));
 		}
 	}
@@ -1105,104 +1107,101 @@ int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer
 	return status;
 }
 
-int run_program_sync(const char* argv[])
-{
+int run_program_sync(const char* argv[]) {
 	return _run_program_sync(argv, NULL, NULL);
 }
 
-int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), gpointer data)
-{
+int run_program_sync_callback(const char* argv[], void(*child_callback)(void*), gpointer data) {
 	return _run_program_sync(argv, child_callback, data);
 }
 
-const char* copy_file(const char* src, const char* dest)
-{
+const char* copy_file(const char* src, const char* dest) {
 	char buf[4*4096];
 	const char* msg = NULL;
 	int fdin = -1, fdout = -1;
 	int ret;
 
 	fdin = open(src, O_RDONLY);
-	if(fdin == -1)
-	{
+	if (fdin == -1) {
 		msg = _("Can't open source file for reading");
 		goto error_out;
 	}
 
 	fdout = open(dest, O_CREAT|O_WRONLY|O_TRUNC, 0777);
-	if(fdout == -1)
-	{
+	if (fdout == -1) {
 		msg = _("Can't open destination file for writing");
 		goto error_out;
 	}
 
-	while((ret = read(fdin, buf, sizeof(buf))) > 0)
-	{
-		if(write(fdout, buf, ret) == -1)
-		{
+	while ((ret = read(fdin, buf, sizeof(buf))) > 0) {
+		if (write(fdout, buf, ret) == -1) {
 			msg = _("write error on destination file");
 			goto error_out;
 		}
 	}
 
-	if(ret == -1)
-	{
+	if (ret == -1) {
 		msg = _("read error on source file");
 		goto error_out;
 	}
 
 error_out:
-	if(fdin != -1)
+	if (fdin != -1) {
 		close(fdin);
-	if(fdout != -1)
+	}
+	if (fdout != -1) {
 		close(fdout);
+	}
 
-	if(msg)
+	if (msg) {
 		unlink(dest);
+	}
 
 	return msg;
 }
 
-char* load_file_mem(const char* name, size_t* size)
-{
+char* load_file_mem(const char* name, size_t* size) {
 	char* buf = NULL;
 	struct stat stb;
 	int fd;
 
 	fd = open(name, O_RDONLY);
-	if(fd == -1)
+	if (fd == -1) {
 		goto out;
+	}
 
-	if(fstat(fd, &stb) == -1)
+	if (fstat(fd, &stb) == -1) {
 		goto out;
+	}
 
 	buf = g_malloc(stb.st_size);
 
-	if(read(fd, buf, stb.st_size) != stb.st_size)
-	{
+	if (read(fd, buf, stb.st_size) != stb.st_size) {
 		g_free(buf);
 		buf = NULL;
 		goto out;
 	}
 
 out:
-	if(fd != -1)
+	if (fd != -1) {
 		close(fd);
+	}
 
-	if(buf)
+	if (buf) {
 		*size = stb.st_size;
+	}
 
 	return buf;
 }
 #endif  // ! RCON_STANDALONE
 
-void close_fds(int exclude)
-{
+void close_fds(int exclude) {
 	unsigned i;
 	int maxfd = sysconf(_SC_OPEN_MAX);
-	for (i = 3; i < maxfd; ++i)
-	{
-		if(i == exclude) continue;
+	for (i = 3; i < maxfd; ++i) {
+		if (i == exclude) {
+			continue;
+		}
 		close(i);
 	}
 }

@@ -282,8 +282,7 @@ static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef,
 		g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name), 
 				(clist->sort_type == GTK_SORT_DESCENDING)? '>' : '<');
 
-		if(name)
-		{
+		if (name) {
 			snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), " (%s)", _(name));
 		}
 		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), buf);
@@ -362,10 +361,9 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 void clist_set_sort_column (GtkCList *clist, int column, 
 		struct clist_def *cldef) {
 	if (column == clist->sort_column) {
-		if(clist->sort_type == GTK_SORT_DESCENDING)
-		{
+		if (clist->sort_type == GTK_SORT_DESCENDING) {
 			cldef->cols[column].current_sort_mode = ++cldef->cols[column].current_sort_mode%DIMOF(cldef->cols[column].sort_mode);
-			if(cldef->cols[column].sort_mode[cldef->cols[column].current_sort_mode] == -1)
+			if (cldef->cols[column].sort_mode[cldef->cols[column].current_sort_mode] == -1)
 				cldef->cols[column].current_sort_mode = 0;
 		}
 
@@ -542,8 +540,7 @@ static void fill_source_ctree (GtkWidget *ctree) {
 		if (group->masters) {
 			// If set to display only configured games, and game is not configured,
 			// don't update the display with the master.
-			if (games[group->type].cmd || !default_show_only_configured_games)
-			{
+			if (games[group->type].cmd || !default_show_only_configured_games) {
 				source_ctree_enable_master_group (ctree, group, FALSE);
 				parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
 
@@ -811,12 +808,10 @@ void restore_main_window_geometry (void) {
 	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_clist_def.height + 4);
 }
 
-GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name)
-{
+GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {
 	GtkWidget *parent, *found_widget;
 
-	for (;;)
-	{
+	for (;;) {
 		if (GTK_IS_MENU (widget))
 			parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
 		else
@@ -833,8 +828,7 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name)
 }
 
 // Skip a game if it's not configured and show only configured is enabled
-gboolean create_server_type_menu_filter_configured(enum server_type type)
-{
+gboolean create_server_type_menu_filter_configured(enum server_type type) {
 	if (!games[type].cmd && default_show_only_configured_games)
 		return FALSE;
 	else
@@ -843,8 +837,7 @@ gboolean create_server_type_menu_filter_configured(enum server_type type)
 
 GtkWidget *create_server_type_menu (int active_type,
 		gboolean (*filterfunc)(enum server_type),
-		GtkSignalFunc callback)
-{
+		GtkSignalFunc callback) {
 	GtkWidget *option_menu = NULL;
 	GtkWidget *menu = NULL;
 	GtkWidget *menu_item = NULL;
@@ -857,16 +850,14 @@ GtkWidget *create_server_type_menu (int active_type,
 
 	menu = gtk_menu_new ();
 
-	for (i = 0; i < GAMES_TOTAL; ++i)
-	{
+	for (i = 0; i < GAMES_TOTAL; ++i) {
 
-		if(filterfunc && !filterfunc(i))
+		if (filterfunc && !filterfunc(i))
 			continue;
 
 		menu_item = gtk_menu_item_new ();
 
-		if (i == active_type)
-		{
+		if (i == active_type) {
 			first_menu_item = menu_item;
 			menu_type = j;
 		}
@@ -877,7 +868,7 @@ GtkWidget *create_server_type_menu (int active_type,
 
 		gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
 
-		if(callback)
+		if (callback)
 			gtk_signal_connect (GTK_OBJECT (menu_item), "activate", GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER(i));
 
 		gtk_widget_show (menu_item);
@@ -888,8 +879,7 @@ GtkWidget *create_server_type_menu (int active_type,
 	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
 
 	// initiates callback to set servertype to first configured game
-	if(active_type != -1 && first_menu_item)
-	{
+	if (active_type != -1 && first_menu_item) {
 		gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
 		gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
 	}

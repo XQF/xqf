@@ -37,24 +37,22 @@
 static GtkWidget* splashscreen;
 static guint current_progress;
 
-void destroy_splashscreen(void)
-{
-	if(!splashscreen) return;
+void destroy_splashscreen(void) {
+	if (!splashscreen) return;
 
 	gtk_widget_destroy(splashscreen);
 	splashscreen = NULL;
 }
 
-void create_splashscreen (void)
-{
+void create_splashscreen (void) {
 	GtkWidget *vbox1;
 	GtkWidget *logo;
 	GtkWidget *entry;
 	GtkWidget *progress;
 
-	if(splashscreen) return;
+	if (splashscreen) return;
 
-	if(!default_show_splash) return;
+	if (!default_show_splash) return;
 
 	splashscreen = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_object_set_data (GTK_OBJECT (splashscreen), "splashscreen", splashscreen);
@@ -115,8 +113,7 @@ void create_splashscreen (void)
 }
 
 /* set percentage on splash screen, thanks to lopster for this code */
-void splash_set_progress(const char* message, guint per)
-{
+void splash_set_progress(const char* message, guint per) {
 	GtkProgressBar* progress;
 	GtkEntry* entry;
 
@@ -136,8 +133,7 @@ void splash_set_progress(const char* message, guint per)
 		gtk_main_iteration();
 }
 
-void splash_increase_progress(const char* message, guint per)
-{
-	if(!splashscreen) return;
+void splash_increase_progress(const char* message, guint per) {
+	if (!splashscreen) return;
 	splash_set_progress(message,current_progress+per);
 }

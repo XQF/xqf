@@ -19,12 +19,10 @@
 
 #include <GeoIP.h>
 
-GEOIP_API GeoIP* GeoIP_new(int flags)
-{
+GEOIP_API GeoIP* GeoIP_new(int flags) {
 	return 0;
 }
 
-GEOIP_API GeoIP* GeoIP_open(const char * filename, int flags)
-{
+GEOIP_API GeoIP* GeoIP_open(const char * filename, int flags) {
 	return 0;
 }

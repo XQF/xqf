@@ -89,8 +89,7 @@ struct pixmap* pix2array[] = {
 	&locked_punkbuster_pix
 };
 
-static struct pixmap* get_server_pixmap2(struct server* s)
-{
+static struct pixmap* get_server_pixmap2(struct server* s) {
 	unsigned flags = 0;
 
 	if (s->flags & SERVER_PASSWORD )
@@ -176,10 +175,10 @@ static int server_clist_refresh_row (struct server *s, int row) {
 	text[3] = text[4] = NULL;
 
 	players = s->curplayers;
-	if(serverlist_countbots && s->curbots <= players)
+	if (serverlist_countbots && s->curbots <= players)
 		players-=s->curbots;
 
-	if(s->private_client)
+	if (s->private_client)
 		g_snprintf (buf4, 32, "%d/%d(-%d)", players, s->maxplayers,s->private_client);
 	else
 		g_snprintf (buf4, 32, "%d/%d", players, s->maxplayers);
@@ -247,7 +246,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 	{
 		struct pixmap* pix = get_server_pixmap2(s);
-		if(pix && pix->pix)
+		if (pix && pix->pix)
 			gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask );
 	}
 
@@ -258,24 +257,21 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 #ifdef USE_GEOIP
 	countrypix = get_pixmap_for_country_with_fallback(s->country_id);
-	if(countrypix)
+	if (countrypix)
 		gtk_clist_set_pixtext (server_clist, row, 1, 
 				text[1], 2, countrypix->pix, countrypix->mask);
 #endif
 
 	// if map not available
-	if(games[s->type].has_map && games[s->type].has_map(s) == FALSE)
-	{
+	if (games[s->type].has_map && games[s->type].has_map(s) == FALSE) {
 		gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask );
 	}
 
-	if(s->flags & SERVER_INCOMPATIBLE)
-	{
+	if (s->flags & SERVER_INCOMPATIBLE) {
 		GtkStyle *style;
 
 		style = gtk_widget_get_style(GTK_WIDGET(server_clist));
-		if(style)
-		{
+		if (style) {
 			gtk_clist_set_foreground(server_clist,row,&style->fg[GTK_STATE_INSENSITIVE]);
 		}
 	}
@@ -418,7 +414,7 @@ void player_clist_redraw (void) {
 void server_clist_sync_selection (void) {
 	GList *selection;
 
-	if(!server_clist)
+	if (!server_clist)
 		return;
 
 	debug (7, "server_clist_sync_selection() --");
@@ -552,7 +548,7 @@ void server_clist_selection_visible (void) {
 
 	debug (7, "server_clist_selection_visible() -- ");
 
-	if(!server_clist)
+	if (!server_clist)
 		return;
 
 	rows = server_clist->selection;
@@ -744,7 +740,7 @@ a GtkDestroyNotify event.
 	// prevent segfault on some systems if server list is empty due to a player
 	// filter that finds no servers that match by clearing the list if rows is 0.
 	// Fix by 'slashdev'
-	if(server_clist->rows==0)
+	if (server_clist->rows==0)
 		gtk_clist_clear(server_clist);
 
 	gtk_clist_sort (server_clist);

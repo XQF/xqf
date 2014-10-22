@@ -70,8 +70,9 @@ static int failed (gchar *name, gchar *arg) {
 static void stat_free_conn (struct stat_conn *conn) {
 	struct stat_job *job;
 
-	if (!conn || !conn->job)
+	if (!conn || !conn->job) {
 		return;
+	}
 
 	debug (3, "stat_free_conn() -- Conn %lx", conn);
 
@@ -91,25 +92,30 @@ static void stat_free_conn (struct stat_conn *conn) {
 		close (conn->fd);
 	}
 
-	if (conn->pid > 0)
+	if (conn->pid > 0) {
 		kill (conn->pid, SIGTERM);
+	}
 
 	if (conn->tmpfile) {
 		unlink (conn->tmpfile);
 		g_free (conn->tmpfile);
 	}
 
-	if (conn->buf)
+	if (conn->buf) {
 		g_free (conn->buf);
+	}
 
-	if (conn->strings)
+	if (conn->strings) {
 		g_slist_free (conn->strings);
+	}
 
-	if (conn->servers)
+	if (conn->servers) {
 		server_list_free (conn->servers);
+	}
 
-	if (conn->uservers)
+	if (conn->uservers) {
 		userver_list_free (conn->uservers);
+	}
 
 	g_free (conn);
 }
@@ -136,34 +142,32 @@ static void stat_master_update_done(
  *
  */
 
-static void parse_savage_master_output (struct stat_conn *conn)
-{
+static void parse_savage_master_output (struct stat_conn *conn) {
 	struct stat_job *job = conn->job;
 	gsize res = 0;
 	GError *err = NULL;
 	GIOStatus status;
 
 	conn->bufsize = 17;
-	debug(3,"conn->first %d",conn->first);
+	debug(3, "conn->first %d",conn->first);
 
 	/* if this function is called for the first time on this conn */
-	if(conn->first)
-	{
-		debug(3,"parse_savage_master_output -- first time");
+	if (conn->first) {
+		debug(3, "parse_savage_master_output -- first time");
 		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, &res, &err);
 
 		if (status == G_IO_STATUS_EOF) {
-			debug(3,"parse_savage_master_output -- eof");
+			debug(3, "parse_savage_master_output -- eof");
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
 			return;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
-			debug(3,"parse_savage_master_output -- unavailable");
+			debug(3, "parse_savage_master_output -- unavailable");
 			return;
 		}
 		else if (status != G_IO_STATUS_ERROR) {
-			debug(3,"parse_savage_master_output -- error");
+			debug(3, "parse_savage_master_output -- error");
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
@@ -173,8 +177,8 @@ static void parse_savage_master_output (struct stat_conn *conn)
 		/* G_IO_STATUS_NORMAL */
 		conn->pos += res;
 
-		if(conn->pos < 5) { // we need five bytes
-			debug(3,"parse_savage_master_output -- too short");
+		if (conn->pos < 5) { // we need five bytes
+			debug(3, "parse_savage_master_output -- too short");
 			return;
 		}
 
@@ -184,40 +188,38 @@ static void parse_savage_master_output (struct stat_conn *conn)
 		conn->pos = 0;
 
 		/* check the signature of the first five bytes */
-		if(!memcmp(conn->buf,savage_master_header,5))
-		{
-			debug(3,"parse_savage_master_output -- detected savage format");
+		if (!memcmp(conn->buf,savage_master_header,5)) {
+			debug(3, "parse_savage_master_output -- detected savage format");
 			conn->is_savage = TRUE;
 		}
 		else { /* savage not detected */
-			debug(3,"parse_savage_master_output -- savage not detected");
+			debug(3, "parse_savage_master_output -- savage not detected");
 			return;
 		}
 	}
 	/* if this function is not called for the first time on this conn, check if savage was previously detected */
-	else if(!conn->is_savage) {
-		debug(3,"parse_savage_master_output -- not savage");
+	else if (!conn->is_savage) {
+		debug(3, "parse_savage_master_output -- not savage");
 		return;
 	}
 
 	/* if you are here, savage is detected: do your job */
 	/* return when there is nothing (more) to do */
-	while(1)
-	{
+	while (TRUE) {
 		size_t off = 0;
 		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
 		if (status == G_IO_STATUS_EOF) {
-			debug(3,"parse_savage_master_output -- eof");
+			debug(3, "parse_savage_master_output -- eof");
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
 			return;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
-			debug(3,"parse_savage_master_output -- unavailable");
+			debug(3, "parse_savage_master_output -- unavailable");
 			return;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
-			debug(3,"parse_savage_master_output -- error");
+			debug(3, "parse_savage_master_output -- error");
 			failed ("read", NULL);
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
@@ -225,12 +227,11 @@ static void parse_savage_master_output (struct stat_conn *conn)
 		}
 
 		/* G_IO_STATUS_NORMAL */
-		debug(3,"parse_savage_master_output -- chars read");
+		debug(3, "parse_savage_master_output -- chars read");
 		conn->pos += res;
 
 		// we always need six bytes
-		for(off=0; off + 6 <= conn->pos; off+=6 )
-		{
+		for (off=0; off + 6 <= conn->pos; off+=6 ) {
 			struct server *s;
 			struct host *h;
 			enum server_type type = UNKNOWN_SERVER;
@@ -238,15 +239,18 @@ static void parse_savage_master_output (struct stat_conn *conn)
 			unsigned port = 0;
 			struct in_addr in;
 			port = (ip[5]<<8)+ip[4];
-			if(!port) continue;
-			if(!ip[0]) continue;
+			if (!port) {
+				continue;
+			}
+			if (!ip[0]) {
+				continue;
+			}
 			debug(5,"%hhu.%hhu.%hhu.%hhu:%u",ip[0],ip[1],ip[2],ip[3],port);
 
 			in.s_addr = 0;
 			memcpy(&in.s_addr,ip,4);
 
-			if(conn->master)
-			{
+			if (conn->master) {
 				type = conn->master->type;
 			}
 
@@ -255,8 +259,7 @@ static void parse_savage_master_output (struct stat_conn *conn)
 				host_ref (h);
 				if ((s = server_add (h, port, type)) != NULL) {
 
-					if(s->type != type )
-					{
+					if (s->type != type ) {
 						server_free_info(s);
 						s->type = type;
 					}
@@ -267,13 +270,11 @@ static void parse_savage_master_output (struct stat_conn *conn)
 				host_unref (h);
 			}
 		}
-		debug(3,"parse_savage_master_output -- continue");
-		if(off >= conn->pos)
-		{
+		debug(3, "parse_savage_master_output -- continue");
+		if (off >= conn->pos) {
 			conn->pos=0;
 		}
-		else
-		{
+		else {
 			memmove (conn->buf, conn->buf + conn->pos - conn->pos%6, conn->pos%6);
 			conn->pos = conn->pos%6;
 		}
@@ -314,8 +315,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	// inside str so malloc/free is not necessary. It is guaranteed
 	// that token[0] has enough space as there is at least a
 	// whitespace character where the colon is placed now.
-	if(conn->master->type == UT2_SERVER && conn->master->master_type == MASTER_HTTP && n == 3)
-	{
+	if (conn->master->type == UT2_SERVER && conn->master->master_type == MASTER_HTTP && n == 3) {
 		int off = strlen(token[0]);
 		token[0][off]=':';
 		strcpy(token[0]+off+1,token[1]);
@@ -326,10 +326,10 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	// output from broadcast, last line contains
 	// <servertype> <bcastaddr> <number>
 	// this line is skipped by n <= 3
-	if(conn->master->master_type == MASTER_LAN)
-	{
-		if( n <= 3 )
+	if (conn->master->master_type == MASTER_LAN) {
+		if ( n <= 3 ) {
 			return TRUE;
+		}
 		type = id2type (token[0]);
 		n = 2; // we only need type and ip
 	}
@@ -340,12 +340,15 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 		strtol (token[2], &endptr, 10); /* Is it a decimal number? */
 
 		if (endptr == token[2]) {
-			if (strcmp (token[2], "DOWN") == 0)
+			if (strcmp (token[2], "DOWN") == 0) {
 				conn->master->state = SOURCE_DOWN;
-			else if (strcmp (token[2], "TIMEOUT") == 0)
+			}
+			else if (strcmp (token[2], "TIMEOUT") == 0) {
 				conn->master->state = SOURCE_TIMEOUT;
-			else
+			}
+			else {
 				conn->master->state = SOURCE_ERROR;
+			}
 			return FALSE;
 		}
 	}
@@ -368,9 +371,8 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 		}
 	}
-	else
-	{
-		debug(3,"parse_master_output() -- unknown string %s",str);
+	else {
+		debug(3, "parse_master_output() -- unknown string %s",str);
 		return TRUE;
 	}
 
@@ -393,8 +395,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 					server_free_info (s);
 				}
 #else
-				if(s->type != type )
-				{
+				if (s->type != type ) {
 					server_free_info(s);
 					s->type = type;
 				}
@@ -419,8 +420,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 			g_free(tmp);
 
 			port += conn->master->options.portadjust;
-			if ((us = userver_add (addr, port, type)) != NULL)
-			{
+			if ((us = userver_add (addr, port, type)) != NULL) {
 				// conn->uservers = userver_list_add (conn->uservers, us);
 				conn->uservers = g_slist_prepend (conn->uservers, us);
 				userver_ref(us);
@@ -443,18 +443,18 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 	GSList *strings, *current;
 
 	debug_increase_indent();
-	debug(3,"stat_master_input_callback(%p,%d,...)",conn,chan);
+	debug(3, "stat_master_input_callback(%p,%d,...)",conn,chan);
 
 #if 0
 #warning ugly hack for savage, make master handling more generic!
-	if(conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP) {
+	if (conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP) {
 		/* if first time, check it */
 		if (conn->first) {
-			debug(3,"stat_master_input_callback -- check first for savage");
+			debug(3, "stat_master_input_callback -- check first for savage");
 			parse_savage_master_output(conn);
 			/* if savage, do it */
 			if (conn->is_savage) {
-				debug(3,"stat_master_input_callback -- parse savage");
+				debug(3, "stat_master_input_callback -- parse savage");
 				parse_savage_master_output(conn);
 				/* when there is nothing (more) to read, return */
 				return TRUE;
@@ -480,7 +480,8 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 		strncpy(conn->buf + (conn->bufsize - res), buf, res);
 		
 		if (status == G_IO_STATUS_EOF) {
-			debug(3,"stat_master_input_callback -- eof");
+			debug(3, "stat_master_input_callback -- eof");
+			debug(6, "conn->buf: [%d]", buf);
 
 			strings = stat_buffer_to_strings(conn->buf, conn->bufsize);
 			current = strings;
@@ -499,13 +500,15 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			return FALSE;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
-			debug(3,"stat_master_input_callback -- unavailable");
+			debug(3, "stat_master_input_callback -- unavailable");
 			debug_decrease_indent();
 			return TRUE;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
-			debug(3,"stat_master_input_callback -- error");
+			debug(3, "stat_master_input_callback -- error");
+			debug(6, "conn->buf: [%d]", buf);
 			failed ("read", NULL);
+
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			debug_decrease_indent();
@@ -513,7 +516,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 		}
 
 		/* G_IO_STATUS_NORMAL */
-		debug(3,"stat_master_input_callback -- chars read");
+		debug(3, "stat_master_input_callback -- chars read");
 		/* loop */
 	}
 	// infinite loop end, next lines are never read
@@ -526,8 +529,9 @@ static char **parse_serverinfo (char *token[], int n) {
 	int i, j;
 	char *ptr, *info_ptr;
 
-	if (n == 0)
+	if (n == 0) {
 		return NULL;
+	}
 
 	for (size = 0, i = 0; i < n; i++) {
 		size += strlen (token[i]) + 1;
@@ -539,8 +543,9 @@ static char **parse_serverinfo (char *token[], int n) {
 	for (i = 0, j = 0; i < n; i++) {
 		ptr = strchr (token[i], '=');
 
-		if (ptr)
+		if (ptr) {
 			*ptr++ = '\0';
+		}
 
 		info [j++] = strcpy (info_ptr, token[i]);
 		info_ptr += strlen (token[i]) + 1;
@@ -567,21 +572,25 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 	char *addr;
 	unsigned short port;
 
-	if (n < 3)
+	if (n < 3) {
 		return NULL;
+	}
 
 	type = id2type (token[0]);
 
-	if (type == UNKNOWN_SERVER)
+	if (type == UNKNOWN_SERVER) {
 		return NULL;
+	}
 
-	if (!parse_address (token[1], &addr, &port))
+	if (!parse_address (token[1], &addr, &port)) {
 		return NULL;
+	}
 
 	h = host_add (addr);
 	g_free (addr);
-	if (!h)
+	if (!h) {
 		return NULL;
+	}
 
 	server = server_add (h, port, type);
 
@@ -614,8 +623,9 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 	}
 	else {
 		/* We did get some information */
-		if (server->type == QW_SERVER || type == QW_SERVER)
+		if (server->type == QW_SERVER || type == QW_SERVER) {
 			server->type = type;        /* the real type of server (QW <-> Q2) */
+		}
 
 		if (games[server->type].parse_server) {
 			/* 
@@ -636,28 +646,27 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 			(*games[server->type].parse_server) (token, n, server);
 
 			if (server->ping > MAX_PING) {
-				if (!saved || server->ping != MAX_PING + 1)
+				if (!saved || server->ping != MAX_PING + 1) {
 					server->ping = MAX_PING;
+				}
 			}
 
-			if (server->retries > maxretries)
+			if (server->retries > maxretries) {
 				server->retries = maxretries;
+			}
 		}
 
-		if(server->name && !g_utf8_validate(server->name,-1,NULL))
-		{
+		if (server->name && !g_utf8_validate(server->name,-1,NULL)) {
 			// don't care about conversion errors
 			char* convd = g_convert(server->name,-1,"UTF-8","iso-8859-1",NULL,NULL,NULL);
-			if(convd)
-			{
+			if (convd) {
 				g_free(server->name);
 				server->name = convd;
 			}
 		}
 	}
 
-	if(!saved && server->ping<MAX_PING)
-	{
+	if (!saved && server->ping<MAX_PING) {
 		server->last_answer = server->refreshed;
 	}
 
@@ -680,59 +689,52 @@ static void q3parseteams(struct server* s,
 	struct player *p  = NULL;
 	char** teamnames_fromrules = NULL;
 
-	if(!s || !playerteamrules || numteams<2) return;
+	if (!s || !playerteamrules || numteams<2) return;
 
 	teams = g_malloc0(sizeof(long)*numteams);
-	if(!teams) return;
+	if (!teams) return;
 
 	teamnames_fromrules = g_malloc0(sizeof(char*)*numteams);
-	if(!teamnames_fromrules) return;
+	if (!teamnames_fromrules) return;
 
-	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
-	{
-		for(i = 0; i < numteams; ++i)
-		{
-			if (strcmp (*info_ptr, playerteamrules[i]) == 0)
-			{
+	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+		for (i = 0; i < numteams; ++i) {
+			if (strcmp (*info_ptr, playerteamrules[i]) == 0) {
 				team = i;
 				break;
 			}
-			if (teamnamesrules && teamnamesrules[i] &&strcmp (*info_ptr, teamnamesrules[i]) == 0)
-			{
+			if (teamnamesrules && teamnamesrules[i] &&strcmp (*info_ptr, teamnamesrules[i]) == 0) {
 				teamnames_fromrules[i]=info_ptr[1];
 			}
 		}
 
-		if(team != numteams )
-		{
+		if (team != numteams ) {
 			char* e = NULL;
 			char* p = info_ptr[1];
-			for(;; p = e, e = NULL)
-			{
+			for (;; p = e, e = NULL) {
 				long pnr = strtol(p,&e,10);
-				if(p == e || (e && !*e))
+				if (p == e || (e && !*e)) {
 					break;
-				if(pnr != LONG_MIN && pnr != LONG_MAX
+				}
+				if (pnr != LONG_MIN && pnr != LONG_MAX
 						&& pnr <= (long)(sizeof(teams[team])*8)
-						&& pnr > 0)
-				{
+						&& pnr > 0) {
 					teams[team] |= 2<<(pnr-1);
 				}
 			}
 			team = numteams;
 		}
 	}
-	for(plist = s->players, n = 0 ; plist ; plist=plist->next, ++n)
-	{
-		for(team=0;team != numteams; ++team)
-		{
-			if(teams[team]&(2<<n))
-			{
+	for (plist = s->players, n = 0 ; plist ; plist=plist->next, ++n) {
+		for (team=0;team != numteams; ++team) {
+			if (teams[team]&(2<<n)) {
 				p = plist->data;
-				if(teamnames_fromrules[team])
+				if (teamnames_fromrules[team]) {
 					p->model = teamnames_fromrules[team];
-				else
+				}
+				else {
 					p->model = teamnames[team];
+				}
 			}
 		}
 	}
@@ -748,14 +750,16 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
 	GSList *plist = NULL;
 
 	if (!strings) {
-		if (games[s->type].analyze_serverinfo)
+		if (games[s->type].analyze_serverinfo) {
 			(*games[s->type].analyze_serverinfo) (s);
+		}
 		return;
 	}
 
 	n = tokenize_bychar ((char *) strings->data, token, 256, QSTAT_DELIM);
-	if (n == 0)
+	if (n == 0) {
 		return;
+	}
 
 	s->info = parse_serverinfo (token, n);
 
@@ -775,17 +779,14 @@ static void parse_qstat_record_part2 (GSList *strings, struct server *s) {
 		s->players = g_slist_reverse (plist);
 	}
 
-	if (games[s->type].analyze_serverinfo)
-		(*games[s->type].analyze_serverinfo) (s);
+	if (games[s->type].analyze_serverinfo) (*games[s->type].analyze_serverinfo) (s);
 
-	if(s->type == WO_SERVER || s->type == WOET_SERVER)
-	{
+	if (s->type == WO_SERVER || s->type == WOET_SERVER) {
 		static char* teamnames[2] = { N_("Allies"), N_("Axis") };
 		static char* playerteamrules[2] = { "Players_Allies", "Players_Axis" };
 		q3parseteams(s,2,playerteamrules,teamnames,NULL);
 	}
-	else if(s->type == Q3_SERVER)
-	{
+	else if (s->type == Q3_SERVER) {
 		static char* teamnames[2] = { N_("Red"), N_("Blue") };
 		static char* playerteamrules[2] = { "Players_Red", "Players_Blue" };
 		static char* teamnamesrules[2] = { "g_TeamRed", "g_TeamBlue" };
@@ -801,8 +802,9 @@ static void parse_qstat_record (struct stat_conn *conn) {
 	GSList *list;
 	struct stat_job *job;
 
-	if (!conn || !conn->strings)
+	if (!conn || !conn->strings) {
 		return; /* error, try to recover */
+	}
 
 	job = conn->job;
 
@@ -810,8 +812,9 @@ static void parse_qstat_record (struct stat_conn *conn) {
 	debug (4, "parse_qstat_record() -- Conn %lx: %s", conn, conn->strings->data);
 
 	n = tokenize_bychar ((char *) conn->strings->data, token, 16, QSTAT_DELIM);
-	if (n < 3)
+	if (n < 3) {
 		return;     /* error, try to recover */
+	}
 
 	server = parse_server (token, n, time (NULL), FALSE);
 	if (server) {
@@ -847,14 +850,14 @@ void parse_saved_server (GSList *strings) {
 	char *endptr;
 	char** refreshdata = NULL;
 
-	if (!strings || !strings->next)
+	if (!strings || !strings->next) {
 		return;
+	}
 
 	// first line contains seconds of last refresh and last answer
 	refreshdata = g_strsplit(strings->data," ",2);
 
-	if(!refreshdata || !refreshdata[0])
-	{
+	if (!refreshdata || !refreshdata[0]) {
 		debug(0,"refreshdata empty");
 		return;
 	}
@@ -864,7 +867,7 @@ void parse_saved_server (GSList *strings) {
 	if (endptr == refreshdata[0])       /* It's not a number */
 		return;
 
-	if(refreshdata[1]) // post 0.9.10 format
+	if (refreshdata[1]) // post 0.9.10 format
 	{
 		last_answer = strtoul (refreshdata[1], &endptr, 10);
 
@@ -877,11 +880,12 @@ void parse_saved_server (GSList *strings) {
 
 	strings = strings->next;
 
-	if(!strings) return;
+	if (!strings) return;
 
 	n = tokenize_bychar ((char *) strings->data, token, 16, QSTAT_DELIM);
-	if (n < 3)
+	if (n < 3) {
 		return;
+	}
 
 	server = parse_server (token, n, refreshed, TRUE);
 	// unref newly created server since it is already referenced once
@@ -963,6 +967,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 
 		if (status == G_IO_STATUS_EOF) {
 			debug(3, "stat_servers_input_callback -- eof");
+			debug(6, "conn->buf: [%d]", buf);
 			debug(3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
 			
 			strings = stat_buffer_to_strings(conn->buf, conn->bufsize);
@@ -989,21 +994,21 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 			return FALSE;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
-			debug(3,"stat_servers_input_callback -- unavailable");
+			debug(3, "stat_servers_input_callback -- unavailable");
 			return TRUE;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
-			debug(3,"stat_servers_input_callback -- error");
-
-
+			debug(3, "stat_servers_input_callback -- error");
+			debug(6, "conn->buf: [%d]", buf);
 			failed ("read", NULL);
+
 			stat_servers_update_done (conn);
 			stat_next (job);
 			return TRUE;
 		}
 
 		/* G_IO_STATUS_NORMAL */
-		debug(3,"stat_master_input_callback -- chars read");
+		debug(3, "stat_servers_input_callback -- chars read");
 		/* loop	*/
 	}
 	// infinite loop end, next lines are never read
@@ -1012,8 +1017,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 /**
   return connection to local file
 */
-static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, GIOFunc input_callback, struct master *m)
-{
+static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, GIOFunc input_callback, struct master *m) {
 	struct stat_conn *conn;
 	char *file2;
 
@@ -1022,15 +1026,15 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
 	file2 = expand_tilde(file);
 
 	fd = open(file2,O_RDONLY);
-	if(fd == -1)
-	{
+	if (fd == -1) {
 		perror(__FUNCTION__);
 		return NULL;
 	}
 
 	conn = g_malloc (sizeof (struct stat_conn));
-	if(!conn)
+	if (!conn) {
 		return NULL;
+	}
 
 	conn->buf = g_malloc (BUFFER_MINSIZE);
 	conn->bufsize = BUFFER_MINSIZE;
@@ -1057,8 +1061,9 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
 	conn->tag = g_io_add_watch (conn->chan, G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI, input_callback, conn);
 	conn->input_callback = input_callback;
 
-	if (file2)
+	if (file2) {
 		g_free(file2);
+	}
 
 	return conn;
 }
@@ -1094,8 +1099,9 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFun
 	if (pid) {  /* parent */
 		close (pipefds[1]);
 
-		if(set_nonblock (pipefds[0]) == -1)
+		if (set_nonblock (pipefds[0]) == -1) {
 			failed("fcntl", NULL);
+		}
 
 		conn = g_malloc (sizeof (struct stat_conn));
 
@@ -1149,25 +1155,28 @@ static void stat_close (struct stat_job *job, int killed) {
 	dns_cancel_requests ();
 	debug (3, "stat_close() -- Job %lx  Killed? %d", job, killed);
 
-	while (job->cons)
+	while (job->cons) {
 		stat_free_conn ((struct stat_conn *) job->cons->data);
+	}
 
-	if (job->delayed.refresh_handler)
+	if (job->delayed.refresh_handler) {
 		gtk_timeout_remove (job->delayed.timeout_id);
+	}
 
-	for (tmp = job->close_handlers; tmp; tmp = tmp->next)
+	for (tmp = job->close_handlers; tmp; tmp = tmp->next) {
 		(* (close_func) tmp->data) (job, killed);
+	}
 
 	stat_job_free (job);
 
-	if(event_type == EVENT_REFRESH_SELECTED) {
+	if (event_type == EVENT_REFRESH_SELECTED) {
 		debug (1, "refresh selected done\n");
 	}
-	if(event_type == EVENT_REFRESH) {
+	if (event_type == EVENT_REFRESH) {
 		debug (1, "refresh done.\n");
 		play_sound(sound_refresh_done, 0);
 	}
-	if(event_type == EVENT_UPDATE) {
+	if (event_type == EVENT_UPDATE) {
 		debug (1, "update done.\n");
 		play_sound(sound_update_done, 0);
 	}
@@ -1193,107 +1202,105 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 	short startprog = 1;
 
 	debug (3, "stat_update_master_qstat(%p,%p)", job, m);
-	if (!m)
+	if (!m) {
 		return NULL;
+	}
 
 	if (m->url) {
 
-		if(m->master_type == MASTER_GSLIST)
-		{
+		if (m->master_type == MASTER_GSLIST) {
 			int ret = 0;
 			startprog = 1;
 
-			while(current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
-			{
+			while (current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK)) {
 				struct server_filter_vars* filter =
 					g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
 				size_t bufsize = 2048;
 				char* pos;
 
-				if(!filter)
-				{
+				if (!filter) {
 					xqf_error("filter is NULL");
 					return NULL;
 				}
 
 				pos = arg_type = g_new0(char, bufsize);
-				if(filter->game_contains&&*filter->game_contains)
-				{
+				if (filter->game_contains&&*filter->game_contains) {
 					ret = snprintf(pos, bufsize,"(gametype LIKE '%%%s%%')", filter->game_contains);
-					if(ret == -1)
+					if (ret == -1) {
 						break;
+					}
 					pos += ret;
 					bufsize -= ret;
 				}
 
-				if(filter->map_contains&&*filter->map_contains)
-				{
-					if(pos != arg_type)
-					{
+				if (filter->map_contains&&*filter->map_contains) {
+					if (pos != arg_type) {
 						ret = snprintf(pos, bufsize," AND ");
-						if(ret == -1)
+						if (ret == -1) {
 							break;
+						}
 						pos += ret;
 						bufsize -= ret;
 					}
 
 					ret = snprintf(pos, bufsize,"(mapname LIKE '%%%s%%')", filter->map_contains);
-					if(ret == -1)
+					if (ret == -1) {
 						break;
+					}
 					pos += ret;
 					bufsize -= ret;
 				}
 
-				if(filter->server_name_contains&&*filter->server_name_contains)
-				{
-					if(pos != arg_type)
-					{
+				if (filter->server_name_contains&&*filter->server_name_contains) {
+					if (pos != arg_type) {
 						ret = snprintf(pos, bufsize," AND ");
-						if(ret == -1)
+						if (ret == -1) {
 							break;
+						}
 						pos += ret;
 						bufsize -= ret;
 					}
 
 					ret = snprintf(pos, bufsize,"(hostname LIKE '%%%s%%')", filter->server_name_contains);
-					if(ret == -1)
+					if (ret == -1) {
 						break;
+					}
 					pos += ret;
 					bufsize -= ret;
 				}
 
-				if(filter->filter_not_empty)
-				{
-					if(pos != arg_type)
-					{
+				if (filter->filter_not_empty) {
+					if (pos != arg_type) {
 						ret = snprintf(pos, bufsize," AND ");
-						if(ret == -1)
+						if (ret == -1) {
 							break;
+						}
 						pos += ret;
 						bufsize -= ret;
 					}
 
 					ret = snprintf(pos, bufsize,"(numplayers > 0)");
-					if(ret == -1)
+					if (ret == -1) {
 						break;
+					}
 					pos += ret;
 					bufsize -= ret;
 				}
 
-				if(filter->filter_not_full)
-				{
-					if(pos != arg_type)
-					{
+				if (filter->filter_not_full) {
+					if (pos != arg_type) {
 						ret = snprintf(pos, bufsize," AND ");
-						if(ret == -1)
+						if (ret == -1) {
 							break;
+						}
 						pos += ret;
 						bufsize -= ret;
 					}
 
 					ret = snprintf(pos, bufsize,"(numplayers < maxplayers)");
-					if(ret == -1)
+					if (ret == -1) {
 						break;
+					}
 					pos += ret;
 					bufsize -= ret;
 				}
@@ -1301,8 +1308,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 				break;
 			}
 
-			if(ret == -1)
-			{
+			if (ret == -1) {
 				g_free(arg_type);
 				arg_type = NULL;
 			}
@@ -1312,8 +1318,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			argv[argi++] = "-q";
 			argv[argi++] = "-o";
 			argv[argi++] = "5";
-			if(arg_type)
-			{
+			if (arg_type) {
 				argv[argi++] = "-f";
 				argv[argi++] = arg_type;
 				debug(3, "%s", arg_type);
@@ -1322,18 +1327,17 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			argv[argi++] = m->options.gsmtype;
 			argv[argi] = NULL;
 		}
-		else if(!strncmp(m->url,master_prefixes[MASTER_FILE],strlen(master_prefixes[MASTER_FILE])))
-		{
+		else if (!strncmp(m->url,master_prefixes[MASTER_FILE],strlen(master_prefixes[MASTER_FILE]))) {
 			startprog = 0;
 			file=strdup_strip(m->url + strlen(master_prefixes[MASTER_FILE]));
 		}
-		else
-		{
+		else {
 			cmd = strdup_strip (HTTP_HELPER);
 
 			argv[argi++] = strtok (cmd, delim);
-			while ((argv[argi] = strtok (NULL, delim)) != NULL)
+			while ((argv[argi] = strtok (NULL, delim)) != NULL) {
 				argi++;
+			}
 
 			argv[argi++] = m->url;
 			argv[argi] = NULL;
@@ -1341,27 +1345,25 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 	}
 	else {
 
-		if (m->master_type!=MASTER_LAN && m->master_type != MASTER_GAMESPY && !master_qstat_option(m))
+		if (m->master_type!=MASTER_LAN && m->master_type != MASTER_GAMESPY && !master_qstat_option(m)) {
 			return NULL;
+		}
 
 		argv[argi++] = QSTAT_EXEC;
 		argv[argi++] = "-errors";
 
-		if( access(qstat_configfile, R_OK) == 0 )
-		{
+		if ( access(qstat_configfile, R_OK) == 0 ) {
 			argv[argi++] = "-cfg";
 			argv[argi++] = qstat_configfile;
 		}
 
-		if(qstat_srcport_low)
-		{
+		if (qstat_srcport_low) {
 			snprintf(srcport, sizeof(srcport), "%hu-%hu", qstat_srcport_low, qstat_srcport_high);
 			argv[argi++] = "-srcport";
 			argv[argi++] = srcport;
 		}
 
-		if(qstat_srcip)
-		{
+		if (qstat_srcip) {
 			argv[argi++] = "-srcip";
 			argv[argi++] = qstat_srcip;
 		}
@@ -1373,39 +1375,34 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 		argv[argi++] = buf1;
 		g_snprintf (buf1, 64, "%d", maxretries + 2);
 
-		if(m->master_type==MASTER_LAN)
-		{
+		if (m->master_type==MASTER_LAN) {
 			debug (3, "stat_update_master_qstat() -- MASTER_LAN");
 			arg_type = g_strdup_printf("%s,outfile", games[m->type].qstat_option);
 		}
-		else if (m->master_type == MASTER_GAMESPY && !master_qstat_option(m))
-		{
+		else if (m->master_type == MASTER_GAMESPY && !master_qstat_option(m)) {
 			arg_type = g_strdup_printf("-gsm,%s,outfile", games[m->type].qstat_str);
 		}
 		// add master arguments
-		else if( games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL )
-		{
+		else if ( games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL ) {
 			// TODO: master protocol should be server specific
 			const char* masterprotocol = game_get_attribute(m->type,"masterprotocol");
 
-			if(masterprotocol && !strcmp(masterprotocol, "auto"))
+			if (masterprotocol && !strcmp(masterprotocol, "auto")) {
 				masterprotocol = game_get_attribute(m->type, "_masterprotocol");
-
-			if(masterprotocol)
+			}
+			if (masterprotocol) {
 				arg_type = g_strdup_printf("%s,%s,outfile", master_qstat_option(m),masterprotocol);
-			else
-			{
+			}
+			else {
 				xqf_warning("GAME_QUAKE3_MASTERPROTOCOL flag set, but no protocol specified");
 				arg_type = g_strdup_printf("%s,outfile", master_qstat_option(m));
 			}
 		}
-		else if( (games[m->type].flags & GAME_MASTER_STEAM) && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
-		{
+		else if ( (games[m->type].flags & GAME_MASTER_STEAM) && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK)) {
 			struct server_filter_vars* filter =
 				g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
 
-			if(!filter)
-			{
+			if (!filter) {
 				xqf_error("filter is NULL");
 				return NULL;
 			}
@@ -1423,12 +1420,10 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 					filter->filter_not_full?"notfull":"",
 					NULL);
 		}
-		else if( m->type == UT2004_SERVER )
-		{
+		else if ( m->type == UT2004_SERVER ) {
 			GString* str = NULL;
 			const char* cdkey = game_get_attribute(m->type,"cdkey");
-			if(!cdkey)
-			{
+			if (!cdkey) {
 				xqf_error(_("UT2004 CD Key not found, cannot query master '%s'.\n"
 							"Make sure the working directory is set correctly."), m->name);
 				goto out;
@@ -1437,46 +1432,42 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			str = g_string_new(NULL);
 			g_string_sprintf(str, "%s,outfile,cdkey=%s", master_qstat_option(m), cdkey);
 
-			if(current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK))
-			{
-				struct server_filter_vars* filter =
-					g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
+			if (current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK)) {
+				struct server_filter_vars* filter = g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
 
-				if(filter)
-				{
+				if (filter) {
 					GString* status = g_string_new(NULL);
 
-					if(filter->filter_not_empty)
+					if (filter->filter_not_empty) {
 						status = g_string_append(status, "notempty");
+					}
 
-					if(filter->filter_not_full)
+					if (filter->filter_not_full) {
 						status = g_string_append(status, "notfull");
+					}
 
-					if(filter->filter_no_password)
+					if (filter->filter_no_password) {
 						status = g_string_append(status, "nopassword");
+					}
 
-					if(filter->game_contains&&*filter->game_contains)
-					{
+					if (filter->game_contains&&*filter->game_contains) {
 						g_string_sprintfa(str, ",gametype=%s", filter->game_contains);
 					}
 
-					if(status->str && *status->str)
-					{
+					if (status->str && *status->str) {
 						g_string_sprintfa(str, ",status=%s", status->str);
 					}
 					g_string_free(status, TRUE);
 				}
 			}
-			else
-			{
+			else {
 				str = g_string_append(str, ",status=nostandard");
 			}
 
 			arg_type = str->str;
 			g_string_free(str, FALSE);
 		}
-		else
-		{
+		else {
 			arg_type = g_strdup_printf ("%s,outfile", master_qstat_option(m));
 		}
 
@@ -1490,23 +1481,23 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 
 	}   /*  if (m->url)  */
 
-	if(argi >= sizeof(argv))
+	if (argi >= sizeof(argv)) {
 		xqf_error("FIXME: argi too big, stack corrupt");
+	}
 
-	if(startprog)
-	{
+	if (startprog) {
 		if (get_debug_level() > 3){
 			char **argptr = argv;
 			fprintf (stderr, "stat_update_master_qstat: EXEC> ");
-			while (*argptr)
+			while (*argptr) {
 				fprintf (stderr, "%s ", *argptr++);
+			}
 			fprintf (stderr, "\n");
 		}
 
 		conn = start_qstat (job, argv, (GIOFunc) stat_master_input_callback, m);
 	}
-	else if(file)
-	{
+	else if (file) {
 		conn = new_file_conn (job, file, (GIOFunc) stat_master_input_callback, m);
 		g_free (file);
 	}
@@ -1532,8 +1523,9 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	struct stat_conn *conn;
 	char srcport[12] = {0};
 
-	if (!job->servers)
+	if (!job->servers) {
 		return NULL;
+	}
 
 	/*
 	   The g_slist_reverse does not allocate any new 
@@ -1547,21 +1539,18 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	argv[argi++] = QSTAT_EXEC;
 	argv[argi++] = "-errors";
 
-	if( access(qstat_configfile, R_OK) == 0 )
-	{
+	if (access(qstat_configfile, R_OK) == 0 ) {
 		argv[argi++] = "-cfg";
 		argv[argi++] = qstat_configfile;
 	}
 
-	if(qstat_srcport_low)
-	{
+	if (qstat_srcport_low) {
 		snprintf(srcport, sizeof(srcport), "%hu-%hu", qstat_srcport_low, qstat_srcport_high);
 		argv[argi++] = "-srcport";
 		argv[argi++] = srcport;
 	}
 
-	if(qstat_srcip)
-	{
+	if (qstat_srcip) {
 		argv[argi++] = "-srcip";
 		argv[argi++] = qstat_srcip;
 	}
@@ -1594,8 +1583,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 			bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%s:%d", inet_ntoa (s->host->ip), s->port);
 		}
 	}
-	else
-	{
+	else {
 		int fd = -1;
 		FILE* f = NULL;
 
@@ -1622,26 +1610,30 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
 	argv[argi] = NULL;
 
-	if(argi >= sizeof(argv))
+	if (argi >= sizeof(argv)) {
 		xqf_error("FIXME: argi too big, stack corrupt");
+	}
 
 	conn = start_qstat (job, argv, (GIOFunc) stat_servers_input_callback, NULL);
-	if (conn && fn)
+	if (conn && fn) {
 		conn->tmpfile = g_strdup (fn);
+	}
 
 	return conn;
 }
 
 
 // compare pointers
-static gint compare_ptr (gconstpointer s1, gconstpointer s2)
-{
-	if(s1==s2)
+static gint compare_ptr (gconstpointer s1, gconstpointer s2) {
+	if (s1 == s2) {
 		return 0;
-	else if(s1<s2)
+	}
+	else if (s1 < s2) {
 		return -1;
-	else
+	}
+	else {
 		return 1;
+	}
 }
 
 static void stat_master_update_done (struct stat_conn *conn,
@@ -1667,12 +1659,14 @@ static void stat_master_update_done (struct stat_conn *conn,
 		m->uservers = slist_sort_remove_dups(conn->uservers,compare_ptr,(userver_unref_void)userver_unref);
 		conn->uservers = NULL;
 
-		if (default_refresh_on_update)
+		if (default_refresh_on_update) {
 			job->need_refresh = TRUE;
+		}
 	}
 
-	if (conn)
+	if (conn) {
 		stat_free_conn (conn);
+	}
 
 	job->need_redraw = TRUE;
 	/*
@@ -1681,16 +1675,14 @@ static void stat_master_update_done (struct stat_conn *conn,
 	   job->servers = server_list_append_list (job->servers, m->servers, UNKNOWN_SERVER);
 	   job->names = userver_list_append_list (job->names, m->uservers, UNKNOWN_SERVER);
 	*/
-	for (tmp = m->servers; tmp; tmp = tmp->next)
-	{
+	for (tmp = m->servers; tmp; tmp = tmp->next) {
 		struct server* s = tmp->data;
 		job->delayed.queued_servers = g_slist_prepend(job->delayed.queued_servers, s);
 		job->servers = g_slist_prepend(job->servers, s);
 		server_ref(s);
 		server_ref(s);
 	}
-	for (tmp = m->uservers; tmp; tmp = tmp->next)
-	{
+	for (tmp = m->uservers; tmp; tmp = tmp->next) {
 		struct userver *us = tmp->data;
 		job->names = g_slist_prepend(job->names,us);
 		userver_ref(us);
@@ -1703,13 +1695,15 @@ static void stat_master_update_done (struct stat_conn *conn,
 	job->names = slist_sort_remove_dups(job->names,compare_ptr,(userver_unref_void)userver_unref);
 
 	debug (3, "stat_master_update_done -- job->master_handlers = %p",job->master_handlers);
-	for (tmp = job->master_handlers; tmp; tmp = tmp->next)
+	for (tmp = job->master_handlers; tmp; tmp = tmp->next) {
 		(* (master_func) tmp->data) (job, m);
+	}
 
 	job->progress.done++;
 
-	if (m->type == Q2_SERVER && !m->url)
+	if (m->type == Q2_SERVER && !m->url) {
 		job->q2_masters--;
+	}
 }
 
 
@@ -1746,10 +1740,12 @@ static void stat_update_masters (struct stat_job *job) {
 
 			tmp = job->masters = g_slist_remove (job->masters, m);
 
-			if (!stat_update_master_qstat (job, m))
+			if (!stat_update_master_qstat (job, m)) {
 				stat_master_update_done (NULL, job, m, SOURCE_ERROR);
-			else
+			}
+			else {
 				freecons--;
+			}
 
 			continue;
 		}
@@ -1757,8 +1753,9 @@ static void stat_update_masters (struct stat_job *job) {
 		tmp = tmp->next;
 	}
 
-	if (job->masters == NULL && job->cons == NULL)
+	if (job->masters == NULL && job->cons == NULL) {
 		stat_next (job);
+	}
 }
 
 
@@ -1770,8 +1767,9 @@ static void stat_master_resolved_callback (char *id, struct host *h, enum dns_st
 
 	debug (3, "stat_master_resolved_callback(%s,%p,%d,%p)", id, h,status,data);
 
-	if (!job || !id)
+	if (!job || !id) {
 		return;
+	}
 
 	job->masters_to_resolve--;
 	job->progress.done++;
@@ -1789,10 +1787,12 @@ static void stat_master_resolved_callback (char *id, struct host *h, enum dns_st
 			else {
 				list = job->masters = g_slist_remove (job->masters, m);
 
-				if (status == DNS_STATUS_TIMEOUT || status == DNS_STATUS_ERROR)
+				if (status == DNS_STATUS_TIMEOUT || status == DNS_STATUS_ERROR) {
 					state = SOURCE_TIMEOUT;
-				else    /* DNS_STATUS_NOTFOUND, etc... */
+				}
+				else {  /* DNS_STATUS_NOTFOUND, etc... */
 					state = SOURCE_ERROR;
+				}
 
 				stat_master_update_done (NULL, job, m, state);
 				continue;
@@ -1814,15 +1814,17 @@ static void stat_name_resolved_callback (char *id, struct host *h, enum dns_stat
 
 	debug (6, "%s,%p,%d,%p",id,h,status,data);
 
-	if (!job || !id)
+	if (!job || !id) {
 		return;
+	}
 
 	list = job->names;
 	while (list) {
 		us = (struct userver *) list->data;
 		if (strcmp (us->hostname, id) == 0) {
-			if (h)
+			if (h) {
 				userver_set_host (us, h);
+			}
 
 			/* automatically add it to the list of servers to refresh */
 
@@ -1841,8 +1843,9 @@ static void stat_name_resolved_callback (char *id, struct host *h, enum dns_stat
 				job->servers = server_list_prepend (job->servers, us->s);
 			}
 
-			for (tmp = job->name_handlers; tmp; tmp = tmp->next)
+			for (tmp = job->name_handlers; tmp; tmp = tmp->next) {
 				(* (name_func) tmp->data) (job, us, status);
+			}
 
 			// TODO optimizable, no need to start from start of list. on the other
 			// hand, it's unlikely that the list is big anyway...
@@ -1864,8 +1867,9 @@ static void stat_host_resolved_callback (char *id, struct host *h, enum dns_stat
 	struct stat_job *job = (struct stat_job *) data;
 	GSList *tmp;
 
-	if (!job || !id || !h)
+	if (!job || !id || !h) {
 		return;
+	}
 
 	if (status == DNS_STATUS_OK) {
 		job->need_redraw = TRUE;
@@ -1873,8 +1877,9 @@ static void stat_host_resolved_callback (char *id, struct host *h, enum dns_stat
 		job->progress.done++;
 	}
 
-	for (tmp = job->host_handlers; tmp; tmp = tmp->next)
+	for (tmp = job->host_handlers; tmp; tmp = tmp->next) {
 		(* (host_func) tmp->data) (job, h, status);
+	}
 
 	job->hosts = g_slist_remove (job->hosts, h);
 	host_unref (h);
@@ -1889,8 +1894,9 @@ static void stat_host_resolved_callback (char *id, struct host *h, enum dns_stat
 static void change_state (struct stat_job *job, enum stat_state state) {
 	GSList *tmp;
 
-	for (tmp = job->state_handlers; tmp; tmp = tmp->next)
+	for (tmp = job->state_handlers; tmp; tmp = tmp->next) {
 		(* (state_func) tmp->data) (job, state);
+	}
 }
 
 
@@ -1912,8 +1918,7 @@ static void move_q2masters_to_top (GSList **list) {
 	*list = g_slist_concat (q2masters, *list);
 }
 
-static void stat_next_masters (struct stat_job *job)
-{
+static void stat_next_masters (struct stat_job *job) {
 	GSList *list = NULL;
 	GSList *tmp = NULL;
 	GSList *hostnames = NULL;
@@ -1931,8 +1936,9 @@ static void stat_next_masters (struct stat_job *job)
 
 		if (!m->host && m->hostname) {
 			for (tmp = hostnames; tmp; tmp = tmp->next) {
-				if (strcmp (tmp->data, m->hostname) == 0)
+				if (strcmp (tmp->data, m->hostname) == 0) {
 					break;
+				}
 			}
 			if (tmp == NULL) {
 				hostnames = g_slist_prepend (hostnames, m->hostname);
@@ -1947,8 +1953,9 @@ static void stat_next_masters (struct stat_job *job)
 	if (hostnames) {
 		dns_set_callback (stat_master_resolved_callback, job);
 
-		for (list = hostnames; list; list = list->next)
+		for (list = hostnames; list; list = list->next) {
 			dns_lookup ((char *) list->data);
+		}
 
 		g_slist_free (hostnames);
 		hostnames = NULL;
@@ -1959,8 +1966,7 @@ static void stat_next_masters (struct stat_job *job)
 	return;
 }
 
-static void stat_next_names (struct stat_job *job)
-{
+static void stat_next_names (struct stat_job *job) {
 	GSList *list = NULL;
 	GSList *tmp = NULL;
 	GSList *hostnames = NULL;
@@ -1973,8 +1979,9 @@ static void stat_next_names (struct stat_job *job)
 		us = (struct userver *) list->data;
 
 		for (tmp = hostnames; tmp; tmp = tmp->next) {
-			if (strcmp (tmp->data, us->hostname) == 0)
+			if (strcmp (tmp->data, us->hostname) == 0) {
 				break;
+			}
 		}
 		if (tmp == NULL) {
 			hostnames = g_slist_prepend (hostnames, us->hostname);
@@ -1985,8 +1992,9 @@ static void stat_next_names (struct stat_job *job)
 	job->progress.tasks = g_slist_length (hostnames);
 	change_state (job, STAT_RESOLVE_NAMES);
 
-	for (list = hostnames; list; list = list->next)
+	for (list = hostnames; list; list = list->next) {
 		dns_lookup ((char *) list->data);
+	}
 
 	g_slist_free (hostnames);
 	hostnames = NULL;
@@ -1994,8 +2002,7 @@ static void stat_next_names (struct stat_job *job)
 	return;
 }
 
-static void stat_next_servers (struct stat_job *job)
-{
+static void stat_next_servers (struct stat_job *job) {
 	debug (3, "Servers:  Job %lx  server list %lx", job, job->servers );
 	if (!job->need_refresh) {
 		stat_close (job, FALSE);
@@ -2004,14 +2011,14 @@ static void stat_next_servers (struct stat_job *job)
 
 	job->state = STAT_REFRESH_SERVERS;
 
-	if (default_resolve_on_update)
+	if (default_resolve_on_update) {
 		job->hosts = merge_hosts_to_resolve (job->hosts, job->servers);
+	}
 
 	job->progress.tasks = g_slist_length (job->servers);
 	change_state (job, STAT_REFRESH_SERVERS);
 
 	if (!stat_open_conn_qstat (job)) {
-
 		/* It's very bad, stop everything. */
 		xqf_error ("Error! Could not stat_open_conn_qstat()");
 		stat_close (job, TRUE);
@@ -2019,8 +2026,7 @@ static void stat_next_servers (struct stat_job *job)
 	return;
 }
 
-static void stat_next_hosts (struct stat_job *job)
-{
+static void stat_next_hosts (struct stat_job *job) {
 	GSList *list = NULL;
 	struct host *h = NULL;
 
@@ -2041,8 +2047,7 @@ static void stat_next_hosts (struct stat_job *job)
 	return;
 }
 
-static void stat_next (struct stat_job *job)
-{
+static void stat_next (struct stat_job *job) {
 	debug_increase_indent();
 	debug (3, "Job %p",job);
 	job->progress.done = 0;
@@ -2080,8 +2085,7 @@ void stat_start (struct stat_job *job) {
 }
 
 
-void stat_stop (struct stat_job *job)
-{
+void stat_stop (struct stat_job *job) {
 	debug (3, "Job %lx", job);
 	stat_close (job, TRUE);
 }
@@ -2145,11 +2149,13 @@ void stat_job_free (struct stat_job *job) {
 	g_slist_free (job->state_handlers);
 	g_slist_free (job->close_handlers);
 
-	if (job->delayed.queued_servers)
+	if (job->delayed.queued_servers) {
 		server_list_free (job->delayed.queued_servers);
+	}
 
-	if (job->delayed.queued_hosts)
+	if (job->delayed.queued_hosts) {
 		host_list_free (job->delayed.queued_hosts);
+	}
 
 #ifdef DEBUG
 	if (job->data) {

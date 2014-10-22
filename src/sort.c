@@ -75,8 +75,8 @@ int compare_servers (const struct server *s1, const struct server *s2,
 		enum ssort_mode mode) {
 	int res;
 
-	if(!s1) return 0;
-	if(!s2) return 0;
+	if (!s1) return 0;
+	if (!s2) return 0;
 
 	switch (mode) {
 
@@ -128,7 +128,7 @@ int compare_servers (const struct server *s1, const struct server *s2,
 			break;
 
 		case SORT_SERVER_PRIVATE:
-			if( (s1->flags & SERVER_PASSWORD ) && ( s2->flags & SERVER_PASSWORD ))
+			if ( (s1->flags & SERVER_PASSWORD ) && ( s2->flags & SERVER_PASSWORD ))
 				res = 0;
 			else if (s1->flags & SERVER_PASSWORD )
 				res = 1;
@@ -139,7 +139,7 @@ int compare_servers (const struct server *s1, const struct server *s2,
 			break;
 
 		case SORT_SERVER_ANTICHEAT:
-			if( (s1->flags & SERVER_PUNKBUSTER ) && ( s2->flags & SERVER_PUNKBUSTER ))
+			if ( (s1->flags & SERVER_PUNKBUSTER ) && ( s2->flags & SERVER_PUNKBUSTER ))
 				res = 0;
 			else if (s1->flags & SERVER_PUNKBUSTER )
 				res = 1;
@@ -190,9 +190,9 @@ int compare_servers (const struct server *s1, const struct server *s2,
 #endif
 
 		case SORT_SERVER_TYPE:
-			if(s1->type > s2->type)
+			if (s1->type > s2->type)
 				res = 1;
-			else if(s1->type == s2->type)
+			else if (s1->type == s2->type)
 				res = 0;
 			else
 				res = -1;
@@ -211,8 +211,8 @@ int compare_players (const struct player *p1, const struct player *p2,
 		enum psort_mode mode) {
 	int res;
 
-	if(!p1) return 0;
-	if(!p2) return 0;
+	if (!p1) return 0;
+	if (!p2) return 0;
 
 	switch (mode) {
 
@@ -255,8 +255,8 @@ int compare_players (const struct player *p1, const struct player *p2,
 int compare_srvinfo (const char **i1, const char **i2, enum isort_mode mode) {
 	int res;
 
-	if(!i1) return 0;
-	if(!i2) return 0;
+	if (!i1) return 0;
+	if (!i2) return 0;
 
 	switch (mode) {
 

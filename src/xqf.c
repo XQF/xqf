@@ -227,19 +227,19 @@ static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to a
 
 static int redialserver = 0;
 
-static void sighandler_debug(int signum)
-{
-	if( signum == SIGUSR1)
+static void sighandler_debug(int signum) {
+	if ( signum == SIGUSR1) {
 		set_debug_level(get_debug_level()+1);
-	else if( signum == SIGUSR2)
+	}
+	else if ( signum == SIGUSR2) {
 		set_debug_level(get_debug_level()-1);
+	}
 
 	debug(0,"debug level now at %d", get_debug_level());
 }
 
 // returns 0 if equal, -1 if too old, 1 if have > expected
-int compare_qstat_version ( const char* have, const char* expected )
-{
+int compare_qstat_version ( const char* have, const char* expected ) {
 	int have_major, expected_major;
 	int have_minor, expected_minor;
 	char have_pl=0, expected_pl=0;
@@ -249,13 +249,16 @@ int compare_qstat_version ( const char* have, const char* expected )
 
 	debug(3,"compare_qstat_version(%s,%s)",have,expected);
 
-	if(!strcmp(have,expected)) return 0;
+	if (!strcmp(have,expected)) {
+		return 0;
+	}
 
 	have_pos1 = strchr(have,'.');
 	expected_pos1 = strchr(expected,'.');
 
-	if(!have_pos1 || !expected_pos1)
+	if (!have_pos1 || !expected_pos1) {
 		return -1;
+	}
 
 	buf = g_strndup(have,have_pos1-have);
 	have_major = atoi(buf);
@@ -265,16 +268,20 @@ int compare_qstat_version ( const char* have, const char* expected )
 	g_free(buf);
 
 	debug(3,"compare_qstat_version -- compare major %d %d",have_major,expected_major);
-	if(have_major < expected_major) return -1;
-	if(have_major > expected_major) return 1;
+	if (have_major < expected_major) {
+		return -1;
+	}
+	if (have_major > expected_major) {
+		return 1;
+	}
 
 	have_pos1++;
 	expected_pos1++;
 
-	for(have_pos2=have_pos1;
+	for (have_pos2=have_pos1;
 			have_pos2 && *have_pos2 && isdigit(*have_pos2);
 			have_pos2++);
-	for(expected_pos2=expected_pos1;
+	for (expected_pos2=expected_pos1;
 			expected_pos2 && *expected_pos2 && isdigit(*expected_pos2);
 			expected_pos2++);
 
@@ -286,58 +293,69 @@ int compare_qstat_version ( const char* have, const char* expected )
 	g_free(buf);
 
 	debug(3,"compare_qstat_version -- compare minor %d %d",have_minor,expected_minor);
-	if(have_minor < expected_minor) return -1;
-	if(have_minor > expected_minor) return 1;
+	if (have_minor < expected_minor) {
+		return -1;
+	}
+	if (have_minor > expected_minor) {
+		return 1;
+	}
 
-	if(have_pos2 && *have_pos2) have_pl=*have_pos2;
-	if(expected_pos2 && *expected_pos2) expected_pl=*expected_pos2;
+	if (have_pos2 && *have_pos2) have_pl=*have_pos2;
+	if (expected_pos2 && *expected_pos2) expected_pl=*expected_pos2;
 
 	debug(3,"compare_qstat_version -- compare pl %c %c",have_pl,expected_pl);
-	if(!have_pl && expected_pl) return -1;
-	if(have_pl && expected_pl && have_pl < expected_pl) return -1;
+	if (!have_pl && expected_pl) {
+		return -1;
+	}
+	if (have_pl && expected_pl && have_pl < expected_pl) {
+		return -1;
+	}
 
 	return 1;
 }
 
-void qstat_version_string(struct external_program_connection* conn)
-{
+void qstat_version_string(struct external_program_connection* conn) {
 	static const char search_for[] = "qstat version";
 	const char *ptr, *version_end;
 	char* found_version = NULL;
 
-	if(!conn) return;
+	if (!conn) {
+		return;
+	}
 
 	// we already found a valid version string
-	if(conn->result) return;
-	if(!conn->current_line) return;
+	if (conn->result) {
+		return;
+	}
+	if (!conn->current_line) {
+		return;
+	}
 
-	if(!strncmp(conn->current_line,search_for,strlen(search_for)))
-	{
+	if (!strncmp(conn->current_line,search_for,strlen(search_for))) {
 		ptr = conn->current_line + strlen(search_for);
 		// skip whitespace
-		for(;isspace(*ptr);++ptr);
-		if(!*ptr)
-		{
+		for (;isspace(*ptr);++ptr);
+		if (!*ptr) {
 			conn->result = FALSE;
 			return;
 		}
 		// skip until end of version string
-		for(version_end=ptr;
+		for (version_end=ptr;
 				version_end &&
 				*version_end != '\0' && !isspace(*version_end);
 				++version_end);
 		found_version=g_strndup(ptr,version_end-ptr);
 		// debug(0,"found version <%s>",found_version);
 
-		if(compare_qstat_version(found_version,required_qstat_version)>=0)
+		if (compare_qstat_version(found_version,required_qstat_version)>=0) {
 			conn->result=TRUE;
+		}
 
 		g_free(found_version);
 	}
 }
 
-int check_qstat_version()
-{
+int check_qstat_version() {
 	char* cmd[] = {QSTAT_EXEC,NULL};
 
 	return external_program_foreach_line(cmd, qstat_version_string, NULL);
@@ -494,12 +512,14 @@ void set_widgets_sensitivity (void) {
 	sens = (stat_process == NULL);
 
 	for (i = 0; i < FILTERS_TOTAL; i++) {
-		if(!filter_buttons[i])
+		if (!filter_buttons[i]) {
 			continue;
+		}
 		gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (filter_buttons[i], sens);
-		if(GTK_IS_TOGGLE_BUTTON(filter_buttons[i]) && GTK_TOGGLE_BUTTON(filter_buttons[i])->active)
+		if (GTK_IS_TOGGLE_BUTTON(filter_buttons[i]) && GTK_TOGGLE_BUTTON(filter_buttons[i])->active) {
 			gtk_widget_set_state(filter_buttons[ i ],GTK_STATE_ACTIVE);
+		}
 	}
 #if 0
 	// grey out button if not redialing
@@ -542,18 +562,14 @@ static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
 
 // iterate through radio buttons and activate the one for the current server
 // filter
-static void filter_menu_activate_current()
-{
+static void filter_menu_activate_current() {
 	unsigned int count = 0;
 	GSList* rbgroup = filter_menu_radio_buttons;
 	GtkWidget* widget = NULL;
 
-	while(rbgroup)
-	{
-		if(GTK_IS_CHECK_MENU_ITEM(rbgroup->data))
-		{
-			if(count == current_server_filter)
-			{
+	while (rbgroup) {
+		if (GTK_IS_CHECK_MENU_ITEM(rbgroup->data)) {
+			if (count == current_server_filter) {
 				widget = GTK_WIDGET(rbgroup->data);
 				break;
 			}
@@ -562,8 +578,7 @@ static void filter_menu_activate_current()
 		rbgroup=rbgroup->next;
 	}
 
-	if(widget)
-	{
+	if (widget) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), TRUE);
 	}
 }
@@ -592,36 +607,43 @@ void set_server_filter_menu_list_text( void ){
 #if 0
 	for (i = 0; i < MAX_SERVER_FILTERS; i++) {
 
-		if( i == 0 ){
-			if( current_server_filter == i )
+		if ( i == 0 ){
+			if ( current_server_filter == i ) {
 				//server filter
 				snprintf( buf, 64, _("None <--"));
-			else 
+			}
+			else {
 				snprintf( buf, 64, _("None"));
+			}
+		}
+		else {
+			if ( server_filters[i].filter_name && strlen( server_filters[i].filter_name ) ){
 
-		} else {
-			if( server_filters[i].filter_name && strlen( server_filters[i].filter_name ) ){
-
-				if( current_server_filter == i )
+				if ( current_server_filter == i ) {
 					snprintf( buf, 64, "%s <--", server_filters[i].filter_name );
-				else 
+				}
+				else {
 					snprintf( buf, 64, "%s", server_filters[i].filter_name );
+				}
 
-			} else {
+			}
+			else {
 
-				if( current_server_filter == i )
+				if ( current_server_filter == i ) {
 					snprintf( buf, 64, _("Filter %d <--"), i );
-				else 
+				}
+				else {
 					snprintf( buf, 64, _("Filter %d"), i );
+				}
 
 			}
 		}
 
-		if( server_filter_widget[i + filter_start_index ] && GTK_BIN (server_filter_widget[i + filter_start_index])->child )
-		{
+		if ( server_filter_widget[i + filter_start_index ] && GTK_BIN (server_filter_widget[i + filter_start_index])->child ) 		{
 			GtkWidget *child = GTK_BIN (server_filter_widget[i + filter_start_index ])->child;
-			if (GTK_IS_LABEL (child))
+			if (GTK_IS_LABEL (child)) {
 				gtk_label_set (GTK_LABEL (child), buf );
+			}
 		}
 	}
 
@@ -631,19 +653,15 @@ void set_server_filter_menu_list_text( void ){
 	/* Show the active filter on the status bar 
 	   -- Add code to indicate if the filter button is checked.
 	*/
-	if( current_server_filter == 0 )
-	{
+	if ( current_server_filter == 0 ) {
 		snprintf( status_buf, 64, _("No Server Filter Active"));
 	}
-	else
-	{
+	else {
 		name = g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1)->filter_name;
-		if(name)
-		{
+		if (name) {
 			snprintf( status_buf, 64, _("Server Filter: %s"), name);
 		}
-		else
-		{
+		else {
 			snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
 			xqf_error("this is a bug");
 		}
@@ -658,14 +676,12 @@ void set_server_filter_menu_list_text( void ){
 
 static void server_filter_select_callback (GtkWidget *widget, int number) {
 
-	if(!GTK_IS_CHECK_MENU_ITEM(widget))
-	{
+	if (!GTK_IS_CHECK_MENU_ITEM(widget)) {
 		g_warning("no check menu item");
 		return;
 	}
 
-	if(GTK_CHECK_MENU_ITEM(widget)->active == 0)
-	{
+	if (GTK_CHECK_MENU_ITEM(widget)->active == 0) {
 		// signal was triggered for deactivation
 		return;
 	}
@@ -760,8 +776,7 @@ static int stat_lists_refresh (struct stat_job *job) {
 
 	debug (6, "stat_lists_refresh() -- Job %lx, items %d", job,items);
 
-	if(items>100)
-	{
+	if (items>100) {
 		update_server_lists_from_selected_source ();
 		server_clist_build_filtered (cur_server_list, TRUE);
 		job->delayed.queued_servers = NULL;
@@ -770,8 +785,9 @@ static int stat_lists_refresh (struct stat_job *job) {
 	else if (items) {
 		freeze = (items > 1) || default_refresh_sorts;
 
-		if (freeze)
+		if (freeze) {
 			gtk_clist_freeze (server_clist);
+		}
 
 		g_slist_foreach (job->delayed.queued_servers, (GFunc) server_clist_refresh_server, NULL);
 		server_list_free (job->delayed.queued_servers);
@@ -781,11 +797,13 @@ static int stat_lists_refresh (struct stat_job *job) {
 		host_list_free (job->delayed.queued_hosts);
 		job->delayed.queued_hosts = NULL;
 
-		if (default_refresh_sorts)
+		if (default_refresh_sorts) {
 			gtk_clist_sort (server_clist);
+		}
 
-		if (freeze)
+		if (freeze) {
 			gtk_clist_thaw (server_clist);
+		}
 	}
 
 	// print_status (main_status_bar, (progress_bar_str)? progress_bar_str : "", job->progress.done, job->progress.tasks);
@@ -798,15 +816,17 @@ static int stat_lists_refresh (struct stat_job *job) {
 
 
 static void stat_lists_state_handler (struct stat_job *job, enum stat_state state) {
-	if (!main_window)
+	if (!main_window) {
 		return;
+	}
 
 	switch (state) {
 
 		case STAT_UPDATE_SOURCE:
 			progress_bar_str = _("Updating lists...");
-			if (default_show_tray_icon)
+			if (default_show_tray_icon) {
 				tray_icon_start_animation ();
+			}
 			break;
 
 		case STAT_RESOLVE_NAMES:
@@ -815,8 +835,9 @@ static void stat_lists_state_handler (struct stat_job *job, enum stat_state stat
 
 		case STAT_REFRESH_SERVERS:
 			progress_bar_str = _("Refreshing: %d/%d");
-			if (default_show_tray_icon)
+			if (default_show_tray_icon) {
 				tray_icon_start_animation ();
+			}
 			break;
 
 		case STAT_RESOLVE_HOSTS:
@@ -836,15 +857,16 @@ static void stat_lists_state_handler (struct stat_job *job, enum stat_state stat
 
 static void stat_lists_close_handler (struct stat_job *job, int killed) {
 
-	if (!main_window)
+	if (!main_window) {
 		return;
+	}
 
 	if (job->need_redraw) {
 		update_server_lists_from_selected_source ();
 		server_clist_build_filtered (cur_server_list, TRUE);
 	}
 	/*
-	if(redialserver == 1) {
+	if (redialserver == 1) {
 		print_status (main_status_bar, _("Waiting to redial server(s)..."));
 	else {
 	}
@@ -862,8 +884,9 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
 
 static void stat_lists_server_handler (struct stat_job *job, struct server *s) {
 	if (s == cur_server) {
-		if (job->delayed.refresh_handler)
+		if (job->delayed.refresh_handler) {
 			(*job->delayed.refresh_handler) (job);
+		}
 		player_clist_set_server (s);
 		srvinf_ctree_set_server (s);
 	}
@@ -877,8 +900,9 @@ static void stat_lists_master_handler (struct stat_job *job, struct master *m) {
 
 static void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList *hosts) {
 
-	if (stat_process || (!masters && !names && !servers && !hosts))
+	if (stat_process || (!masters && !names && !servers && !hosts)) {
 		return;
+	}
 	debug_increase_indent();
 	debug (7, "stat_lists() -- Server List %p", servers);
 
@@ -886,15 +910,11 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList 
 
 	stat_process->delayed.refresh_handler = (GtkFunction) stat_lists_refresh;
 
-	stat_process->state_handlers = g_slist_prepend (
-			stat_process->state_handlers, stat_lists_state_handler);
-	stat_process->close_handlers = g_slist_prepend (
-			stat_process->close_handlers, stat_lists_close_handler);
+	stat_process->state_handlers = g_slist_prepend (stat_process->state_handlers, stat_lists_state_handler);
+	stat_process->close_handlers = g_slist_prepend (stat_process->close_handlers, stat_lists_close_handler);
 
-	stat_process->server_handlers = g_slist_append (
-			stat_process->server_handlers, stat_lists_server_handler);
-	stat_process->master_handlers = g_slist_append (
-			stat_process->master_handlers, stat_lists_master_handler);
+	stat_process->server_handlers = g_slist_append (stat_process->server_handlers, stat_lists_server_handler);
+	stat_process->master_handlers = g_slist_append (stat_process->master_handlers, stat_lists_master_handler);
 
 	stat_start (stat_process);
 	set_widgets_sensitivity ();
@@ -912,8 +932,7 @@ static void stat_one_server (struct server *server) {
 	}
 }
 
-static void launch_close_handler (struct stat_job *job, int killed)
-{
+static void launch_close_handler (struct stat_job *job, int killed) {
 	struct condef* con;
 
 	con = (struct condef *) job->data;
@@ -928,28 +947,25 @@ static void launch_close_handler (struct stat_job *job, int killed)
 }
 
 /** called from inside timer, always return FALSE to stop it */
-static gboolean check_launch (struct condef* con)
-{
+static gboolean check_launch (struct condef* con) {
 	struct server_props *props;
 	gboolean launch = FALSE;
 
 	struct server *s;
 
-	if (!con)
+	if (!con) {
 		return FALSE;
+	}
 
 	s = con->s;
 	props = properties (s);
 
-	if (props && props->sucks)
-	{
+	if (props && props->sucks) {
 		char* comment = props->comment;
-		if(comment && strlen(comment))
-		{
+		if (comment && strlen(comment)) {
 			comment = g_strdup_printf(_("\n\nThe server sucks for the following reason:\n%s"), props->comment);
 		}
-		else
-		{
+		else {
 			comment = NULL;
 		}
 		launch = dialog_yesno (NULL, 1, _("Yes"), _("No"),
@@ -958,21 +974,18 @@ static gboolean check_launch (struct condef* con)
 
 		g_free(comment);
 
-		if (!launch)
-		{
+		if (!launch) {
 			condef_free (con);
 			return FALSE;
 		}
 	}
 
-	if(s->flags & SERVER_INCOMPATIBLE)
-	{
+	if (s->flags & SERVER_INCOMPATIBLE) {
 		launch = dialog_yesno (NULL, 1, _("Yes"), _("No"),
 				_("This server is not compatible with the version of %s you have"
 					" installed.\nLaunch client anyway?"), games[s->type].name);
 
-		if (!launch)
-		{
+		if (!launch) {
 			condef_free (con);
 			return FALSE;
 		}
@@ -990,8 +1003,7 @@ static gboolean check_launch (struct condef* con)
 		}
 	}
 
-	if (!launch && !con->spectate && server_need_redial(s, props))
-	{
+	if (!launch && !con->spectate && server_need_redial(s, props)) {
 		launch = dialog_yesnoredial (NULL, 1, _("Launch"), _("Cancel"), _("Redial"), 
 				_("Server %s:%d is full.\n\nLaunch client anyway?"),
 				(s->host->name)? s->host->name : inet_ntoa (s->host->ip),
@@ -1006,8 +1018,7 @@ static gboolean check_launch (struct condef* con)
 
 			launch = redial_dialog(con->s, props);
 
-			if(launch == FALSE)
-			{
+			if (launch == FALSE) {
 				condef_free (con);
 				return FALSE;
 			}
@@ -1022,18 +1033,17 @@ static gboolean check_launch (struct condef* con)
 }
 
 // stop XMMS if running
-static void stopxmms()
-{
+static void stopxmms() {
 	char* xmmssocket = NULL;
 	pid_t pid;
 
-	if (!default_stopxmms)
+	if (!default_stopxmms) {
 		return;
+	}
 
 	xmmssocket = g_strdup_printf("/tmp/xmms_%s.0",g_get_user_name());
 
-	if(access(xmmssocket,R_OK))
-	{
+	if (access(xmmssocket,R_OK)) {
 		debug(3,"xmms not running");
 		g_free(xmmssocket);
 		return;
@@ -1048,28 +1058,25 @@ static void stopxmms()
 		execvp(argv[0],argv);
 		_exit(EXIT_FAILURE);
 	}
-	else if(pid > 0)
-	{
+	else if (pid > 0) {
 		int status;
 		waitpid(pid,&status,0);
 
-		if(WIFEXITED(status))
-		{
+		if (WIFEXITED(status)) {
 			debug(3,"xmms exited normally");
 		}
-		else
-		{
+		else {
 			debug(3,"xmms exited with status %d",WEXITSTATUS(status));
 		}
-		if(WIFSIGNALED(status))
+		if (WIFSIGNALED(status)) {
 			debug(3,"xmms was killed by signal %d",WTERMSIG(status));
+		}
 	}
 
 	g_free(xmmssocket);
 }
 
-static void launch_close_handler_part2(struct condef *con)
-{
+static void launch_close_handler_part2(struct condef *con) {
 	struct server_props *props;
 	int launch = FALSE; 
 	int save = 0;
@@ -1112,8 +1119,9 @@ static void launch_close_handler_part2(struct condef *con)
 					return;
 				}
 				if (save) {
-					if (!props)
+					if (!props) {
 						props = properties_new (s->host, s->port);
+					}
 					props->spectator_password = g_strdup (con->spectator_password);
 					props_save ();
 				}
@@ -1132,8 +1140,9 @@ static void launch_close_handler_part2(struct condef *con)
 				return;
 			}
 			if (save) {
-				if (!props)
+				if (!props) {
 					props = properties_new (s->host, s->port);
+				}
 				props->server_password = g_strdup (con->password);
 				props_save ();
 			}
@@ -1144,18 +1153,21 @@ static void launch_close_handler_part2(struct condef *con)
 	con->server = g_strdup_printf ("%s:%d", inet_ntoa (s->host->ip), s->port);
 	con->gamedir = g_strdup (s->game);
 
-	if (props && props->rcon_password)
+	if (props && props->rcon_password) {
 		con->rcon_password = g_strdup (props->rcon_password);
+	}
 
-	if (props && props->custom_cfg)
+	if (props && props->custom_cfg) {
 		con->custom_cfg = g_strdup (props->custom_cfg);
+	}
 
 
 	launch = client_launch (con, TRUE);
 	condef_free (con);
 
-	if (!launch)
+	if (!launch) {
 		return;
+	}
 
 	// Save address etc to LaunchInfo.txt
 	if (default_launchinfo) {
@@ -1168,8 +1180,9 @@ static void launch_close_handler_part2(struct condef *con)
 			temp_game = s->game;
 			temp_mod = s->gametype;
 
-			if (!temp_name)
+			if (!temp_name) {
 				temp_name = "";
+			}
 
 			fprintf (f, "GameType %s\n", games[s->type].name);
 			fprintf (f, "ServerName %s\n", temp_name);
@@ -1177,16 +1190,13 @@ static void launch_close_handler_part2(struct condef *con)
 					s->port);
 
 			fprintf (f, "ServerMod ");  
-			if(temp_game)
-			{
+			if (temp_game) {
 				fprintf (f, "%s", temp_game);
 			}
-			if(temp_game&&temp_mod)
-			{
+			if (temp_game&&temp_mod) {
 				fprintf (f, ", ");  
 			}
-			if(temp_mod)
-			{
+			if (temp_mod) {
 				fprintf (f, "%s", temp_mod);
 			}
 			fprintf (f, "\n");  
@@ -1210,11 +1220,13 @@ static void launch_close_handler_part2(struct condef *con)
 		}     
 	}
 
-	if (main_window && default_iconify && !default_terminate)
+	if (main_window && default_iconify && !default_terminate) {
 		iconify_window (main_window->window);
+	}
 
-	if (main_window && default_terminate)
+	if (main_window && default_terminate) {
 		gtk_widget_destroy (main_window);
+	}
 }
 
 
@@ -1229,8 +1241,7 @@ static void launch_server_handler (struct stat_job *job, struct server *s) {
 
 	// no connection defined, maybe because of a hostname instead of ip specified
 	// on command line. just take first server to launch
-	if(!job->data)
-	{
+	if (!job->data) {
 		job->data = condef_new (s);
 	}
 
@@ -1266,15 +1277,17 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
 			break;
 
 		case LAUNCH_SPECTATE:
-			if ((cur_server->flags & SERVER_SPECTATE) == 0)
+			if ((cur_server->flags & SERVER_SPECTATE) == 0) {
 				return;
+			}
 
 			spectate = TRUE;
 			break;
 
 		case LAUNCH_RECORD:
-			if ((games[cur_server->type].flags & GAME_RECORD) == 0)
+			if ((games[cur_server->type].flags & GAME_RECORD) == 0) {
 				return;
+			}
 
 			if ((games[cur_server->type].flags & GAME_SPECTATE) != 0) {
 				demo = enter_string_with_option_dialog (TRUE, _("Spectator"), &spectate, _("Demo name:"));
@@ -1283,8 +1296,9 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
 				demo = enter_string_dialog (TRUE, _("Demo name:"));
 			}
 
-			if (!demo)
+			if (!demo) {
 				return;
+			}
 
 			break;
 
@@ -1315,8 +1329,7 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
 
 static int server_clist_sort_mode = SORT_SERVER_PING;
 
-void server_clist_set_sort_mode(enum ssort_mode mode)
-{
+void server_clist_set_sort_mode(enum ssort_mode mode) {
 	server_clist_sort_mode = mode;
 }
 
@@ -1332,8 +1345,7 @@ static int server_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gcons
 	res = compare_servers (s1, s2, mode);
 
 	// fallback
-	if(res == 0 && mode != SORT_SERVER_PING)
-	{
+	if (res == 0 && mode != SORT_SERVER_PING) {
 		res = compare_servers(s1, s2, SORT_SERVER_PING);
 	}
 
@@ -1370,8 +1382,9 @@ void update_source_callback (GtkWidget *widget, gpointer data) {
 
 	debug_increase_indent();
 	debug (6, "update_source_callback() -- ");
-	if (stat_process || !cur_source)
+	if (stat_process || !cur_source) {
 		return;
+	}
 
 	master_selection_to_lists (cur_source, &masters, &servers, &uservers);
 	if (masters || servers || uservers) {
@@ -1385,8 +1398,7 @@ void update_source_callback (GtkWidget *widget, gpointer data) {
 static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
 	GSList *list;
 
-	if (stat_process)
-	{
+	if (stat_process) {
 		debug(1,"nope");
 		return;
 	}
@@ -1395,8 +1407,9 @@ static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
 
 	list = server_clist_selected_servers ();
 
-	if (list)
+	if (list) {
 		stat_lists (NULL, NULL, list, NULL);
+	}
 }
 
 
@@ -1404,8 +1417,9 @@ static void refresh_callback (GtkWidget *widget, gpointer data) {
 	GSList *servers;
 	GSList *uservers;
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	event_type=EVENT_REFRESH;
 
@@ -1421,8 +1435,7 @@ static void refresh_callback (GtkWidget *widget, gpointer data) {
 	}
 }
 
-void refresh_n_server (GtkWidget * button, gpointer *data)
-{
+void refresh_n_server (GtkWidget * button, gpointer *data) {
 	GSList *list;
 	gint number;
 
@@ -1434,8 +1447,9 @@ void refresh_n_server (GtkWidget * button, gpointer *data)
 
 	list = server_clist_get_n_servers(number);
 
-	if (list)
+	if (list) {
 		stat_lists(NULL, NULL, list, NULL);
+	}
 }
 
 void stop_callback (GtkWidget *widget, gpointer data) {
@@ -1461,8 +1475,9 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 	int server_list_size;
 
 	debug (7, "add_to_favorites_callback() -- ");
-	if (stat_process || !selected)
+	if (stat_process || !selected) {
 		return;
+	}
 
 	list = server_clist_selected_servers ();
 	if (list) {
@@ -1470,7 +1485,7 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 			server_list_size = g_slist_length (favorites->servers );
 			favorites->servers = 
 				server_list_append (favorites->servers, (struct server *) tmp->data);
-			if( server_list_size < g_slist_length (favorites->servers )){
+			if ( server_list_size < g_slist_length (favorites->servers )){
 				snprintf( buf, buflen, "Added Server #%d: '%s'",
 						g_slist_length (favorites->servers ),
 						((struct server *)tmp->data)->name);
@@ -1499,8 +1514,9 @@ static void new_server_to_favorites (struct stat_job *job, struct server *s) {
 
 	if (cur_filter != 0) {
 		set_filters (0);    /* turn off filters */
-		if (job)
+		if (job) {
 			job->need_redraw = FALSE;
+		}
 	}
 
 	row = gtk_clist_find_row_from_data (server_clist, s);
@@ -1526,16 +1542,16 @@ static void add_server_name_handler (struct stat_job *job, struct userver *us,
  * finally call new_server_to_favorites
  * calls free(str)!!!
  */
-static void prepare_new_server_to_favorites(enum server_type type, char* str, gboolean dolaunch)
-{
+static void prepare_new_server_to_favorites(enum server_type type, char* str, gboolean dolaunch) {
 	char *addr;
 	unsigned short port;
 	struct host *h;
 	struct server *s = NULL;
 	struct userver *us = NULL;
 
-	if (!str || !*str)
+	if (!str || !*str) {
 		return;
+	}
 
 	if (!parse_address (str, &addr, &port)) {
 		dialog_ok (NULL, _("\"%s\" is not valid host[:port] combination."), str);
@@ -1549,8 +1565,9 @@ static void prepare_new_server_to_favorites(enum server_type type, char* str, gb
 	if (h) {    /* IP address */
 		host_ref (h);
 		s = server_add (h, port, type);
-		if (s)
+		if (s) {
 			new_server_to_favorites (NULL, s);
+		}
 		host_unref (h);
 	}
 	else {  /* hostname */
@@ -1574,10 +1591,8 @@ static void prepare_new_server_to_favorites(enum server_type type, char* str, gb
 		stat_process->name_handlers = g_slist_prepend (
 				stat_process->name_handlers, add_server_name_handler);
 
-		if(dolaunch)
-		{
-			if(s)
-			{
+		if (dolaunch) {
+			if (s) {
 				struct condef* con = condef_new (s);
 				stat_process->data = con;
 			}
@@ -1598,20 +1613,22 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
 	char *str = NULL;
 	enum server_type type  = UNKNOWN_SERVER;
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	str = add_server_dialog (&type, NULL);
 
-	if(!str) return;
+	if (!str) {
+		return;
+	}
 
 	prepare_new_server_to_favorites(type, str, FALSE);
 
 	return;
 }
 
-static void del_server_callback (GtkWidget *widget, gpointer data)
-{
+static void del_server_callback (GtkWidget *widget, gpointer data) {
 	GSList *selected;
 	GSList *l, *c;
 	int is_favorites = 0;
@@ -1619,40 +1636,37 @@ static void del_server_callback (GtkWidget *widget, gpointer data)
 
 	debug(3, "--");
 
-	if (stat_process || !cur_source)
+	if (stat_process || !cur_source) {
 		return;
+	}
 
 	selected = server_clist_selected_servers();
 
-	if(!selected)
+	if (!selected) {
 		return;
+	}
 
-	for (c = cur_source; c; c = c->next )
-	{
+	for (c = cur_source; c; c = c->next ) {
 		struct master* m = (struct master *) c->data;
 
-		if(m == favorites)
+		if (m == favorites) {
 			is_favorites = 1;
+		}
 
-		if(!delete_from_all && m->isgroup)
-		{
+		if (!delete_from_all && m->isgroup) {
 			delete_from_all = dialog_yesno (NULL, 1, _("Yes"), _("No"), _("Remove selected servers from all lists?"));
 		}
 	}
 
-	for (l = selected; l; l = l->next)
-	{
+	for (l = selected; l; l = l->next) {
 		struct server* s = (struct server*) l->data;
 
-		if(delete_from_all)
-		{
+		if (delete_from_all) {
 			server_remove_from_all(s);
 			master_remove_server(favorites, s);
 		}
-		else
-		{
-			for (c = cur_source; c; c = c->next )
-			{
+		else {
+			for (c = cur_source; c; c = c->next ) {
 				struct master* m = (struct master *) c->data;
 
 				master_remove_server(m, s);
@@ -1660,8 +1674,9 @@ static void del_server_callback (GtkWidget *widget, gpointer data)
 		}
 	}
 
-	if(is_favorites)
+	if (is_favorites) {
 		save_favorites();
+	}
 
 	g_slist_free(selected);
 
@@ -1704,14 +1719,11 @@ static void copy_server_info_callback (GtkWidget *widget, gpointer data) {
 
 	gtk_editable_delete_text (selection_manager, 0, -1);
 
-	if(!g_list_length (selection))
-	{
+	if (!g_list_length (selection)) {
 		gtk_editable_select_region (selection_manager, 0, 0);
 	}
-	else
-	{
-		for (; selection; selection = selection->next)
-		{
+	else {
+		for (; selection; selection = selection->next) {
 			GtkCTreeNode* node = GTK_CTREE_NODE(selection->data);
 			char* txt = NULL;
 
@@ -1723,12 +1735,10 @@ static void copy_server_info_callback (GtkWidget *widget, gpointer data) {
 	gtk_editable_copy_clipboard(selection_manager);
 }
 
-static void copy_text_to_clipboard(const char* text)
-{
+static void copy_text_to_clipboard(const char* text) {
 	int pos = 0;
 	gtk_editable_delete_text (selection_manager, 0, -1);
-	if(text && *text)
-	{
+	if (text && *text) {
 		gtk_editable_insert_text (selection_manager, text, strlen (text), &pos);
 	}
 	gtk_editable_select_region (selection_manager, 0, pos);
@@ -1755,8 +1765,9 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
 				s = (struct server *) gtk_clist_get_row_data (
 						server_clist, GPOINTER_TO_INT(selection->data));
 				players = s->curplayers;
-				if(serverlist_countbots && s->curbots <= players)
+				if (serverlist_countbots && s->curbots <= players) {
 					players-=s->curbots;
+				}
 
 				g_snprintf (buf, 256, "%i  %s:%d  %s  %s  %i of %i%s", s->ping, inet_ntoa
 						(s->host->ip), s->port, s->name, s->map, players, s->maxplayers, selection->next?"\n":"");
@@ -1776,10 +1787,8 @@ static void update_master_builtin_callback (GtkWidget *widget, gpointer data) {
 
 }
 
-static void update_master_gslist_callback (GtkWidget *widget, gpointer data)
-{
-	if(!have_gslist_installed())
-	{
+static void update_master_gslist_callback (GtkWidget *widget, gpointer data) {
+	if (!have_gslist_installed()) {
 		// translator: %s == url
 		dialog_ok(NULL, _("For Gslist support you must install the 'gslist' program available from\n%s\n"
 					"Don't forget that you need to run 'gslist -u' before you can use it."), gslisthome);
@@ -1792,8 +1801,9 @@ static void update_master_gslist_callback (GtkWidget *widget, gpointer data)
 static void add_master_callback (GtkWidget *widget, gpointer data) {
 	struct master *m;
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	m = add_master_dialog(NULL);
 
@@ -1807,7 +1817,9 @@ static void add_master_callback (GtkWidget *widget, gpointer data) {
 static void edit_master_callback (GtkWidget *widget, gpointer data) {
 	struct master *master_to_edit, *master_to_add;
 
-	if(!cur_source) return;
+	if (!cur_source) {
+		return;
+	}
 
 	master_to_edit = (struct master *) cur_source->data;
 	source_ctree_select_source (master_to_edit);
@@ -1827,8 +1839,9 @@ static void del_master_callback (GtkWidget *widget, gpointer data) {
 	char *s1;
 	char *s2;
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	for (list = cur_source; list; list = list->next) {
 		m = (struct master *) list->data;
@@ -1850,8 +1863,7 @@ static void del_master_callback (GtkWidget *widget, gpointer data) {
 		}
 	}
 
-	if (!masters)
-	{
+	if (!masters) {
 		dialog_ok(NULL,_("You have to select the server you want to delete"));
 		return;
 	}
@@ -1892,30 +1904,28 @@ static void find_player_callback (GtkWidget *widget, int find_next) {
 
 static void show_hostnames_callback (GtkWidget *widget, gpointer data) {
 
-	if (stat_process || !server_clist || server_clist->rows == 0)
+	if (stat_process || !server_clist || server_clist->rows == 0) {
 		return;
+	}
 
-	if (GTK_CHECK_MENU_ITEM (view_hostnames_menu_item)->active != 
-			show_hostnames) {
+	if (GTK_CHECK_MENU_ITEM (view_hostnames_menu_item)->active != show_hostnames) {
 		show_hostnames = GTK_CHECK_MENU_ITEM (view_hostnames_menu_item)->active;
 		server_clist_redraw ();
-		config_set_bool ("/" CONFIG_FILE "/Appearance/show hostnames", 
-				show_hostnames);
+		config_set_bool ("/" CONFIG_FILE "/Appearance/show hostnames",  show_hostnames);
 	}
 }
 
 
 static void show_default_port_callback (GtkWidget *widget, gpointer data) {
 
-	if (stat_process || !server_clist || server_clist->rows == 0)
+	if (stat_process || !server_clist || server_clist->rows == 0) {
 		return;
+	}
 
-	if (GTK_CHECK_MENU_ITEM (view_defport_menu_item)->active != 
-			show_default_port) {
+	if (GTK_CHECK_MENU_ITEM (view_defport_menu_item)->active != show_default_port) {
 		show_default_port = GTK_CHECK_MENU_ITEM (view_defport_menu_item)->active;
 		server_clist_redraw ();
-		config_set_bool ("/" CONFIG_FILE "/Appearance/show default port", 
-				show_default_port);
+		config_set_bool ("/" CONFIG_FILE "/Appearance/show default port", show_default_port);
 	}
 }
 
@@ -1926,8 +1936,9 @@ static void resolve_callback (GtkWidget *widget, gpointer data) {
 	struct server *s;
 
 	debug (7, "resolve_callback() --");
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	if (!show_hostnames) {
 		gtk_check_menu_item_set_active (
@@ -1935,8 +1946,9 @@ static void resolve_callback (GtkWidget *widget, gpointer data) {
 	}
 
 	selected = server_clist_selected_servers ();
-	if (!selected)
+	if (!selected) {
 		return;
+	}
 
 	if (selected->next) {
 		hosts = merge_hosts_to_resolve (NULL, selected);
@@ -1957,8 +1969,9 @@ static void resolve_callback (GtkWidget *widget, gpointer data) {
 
 static void properties_callback (GtkWidget *widget, gpointer data) {
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	if (cur_server) {
 		properties_dialog (cur_server);
@@ -1969,8 +1982,9 @@ static void properties_callback (GtkWidget *widget, gpointer data) {
 #if 0
 static void cancelredial_callback (GtkWidget *widget, gpointer data) {
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	redialserver = 0;
 	print_status (main_status_bar, _("Done."));
@@ -1999,8 +2013,9 @@ static void rcon_callback (GtkWidget *widget, gpointer data) {
 			return;
 
 		if (save) {
-			if (!sp)
+			if (!sp) {
 				sp = properties_new (cur_server->host, cur_server->port);
+			}
 			sp->rcon_password = passwd;
 			props_save ();
 			passwd = NULL;
@@ -2009,8 +2024,9 @@ static void rcon_callback (GtkWidget *widget, gpointer data) {
 
 	rcon_dialog (cur_server, (passwd)? passwd : sp->rcon_password);
 
-	if (passwd)
+	if (passwd) {
 		g_free (passwd);
+	}
 }
 
 
@@ -2036,9 +2052,7 @@ static void server_clist_unselect_callback (GtkWidget *widget, int row,
 
 
 /* Deal with key-presses in the server pane */
-static gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event)
-
-{
+static gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event) {
 
 	debug (7, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval ); 
 	if (event->keyval == GDK_Delete) {
@@ -2080,15 +2094,12 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 					if (!g_list_find (selection, GINT_TO_POINTER(row)) && 
 							(bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) == 0) {
 						node_under_mouse = gtk_ctree_node_nth(GTK_CTREE (source_ctree),row);
-						if(node_under_mouse)
-						{
+						if (node_under_mouse) {
 							// go through all selected masters and search if the one under the
 							// cursor is among them
-							while(selection)
-							{
+							while (selection) {
 								node = GTK_CTREE_NODE(selection->data);
-								if(node == node_under_mouse)
-								{
+								if (node == node_under_mouse) {
 									node_is_in_selection = 1;
 									break;
 								}
@@ -2096,8 +2107,7 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 							}
 
 							// clear selection and only select the one under the curser
-							if(!node_is_in_selection)
-							{
+							if (!node_is_in_selection) {
 								gtk_ctree_unselect_recursive(GTK_CTREE(source_ctree),NULL);
 								gtk_ctree_select (GTK_CTREE (source_ctree), node_under_mouse);
 							}
@@ -2121,8 +2131,7 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 static GtkWidget *server_mapshot_popup = NULL;
 static GtkWidget *server_mapshot_popup_pixmap = NULL;
 
-static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y)
-{
+static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y) {
 	GtkWidget *frame;
 	int win_x, win_y, scr_w, scr_h;
 	guint w = 0, h = 0;
@@ -2131,10 +2140,9 @@ static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, in
 
 	renderMemToGtkPixmap(imagedata,len,&pix,&mask,&w,&h, 64);
 
-	if(!pix || !w || !h)
-	{
-		if(pix) gdk_pixmap_unref(pix);
-		if(mask) gdk_bitmap_unref(mask);
+	if (!pix || !w || !h) {
+		if (pix) gdk_pixmap_unref(pix);
+		if (mask) gdk_bitmap_unref(mask);
 		pix=stop_pix.pix;
 		mask=stop_pix.mask;
 	}
@@ -2172,8 +2180,7 @@ static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, in
 	gtk_widget_show(server_mapshot_popup);
 }
 
-static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
-{
+static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	GList *selection;
 	int row, column;
@@ -2185,11 +2192,9 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 		switch (bevent->button) {
 			case 1:
 				if (gtk_clist_get_selection_info (server_clist, 
-							bevent->x, bevent->y, &row, &column))
-				{
+							bevent->x, bevent->y, &row, &column)) {
 					server_clist_select_one (row);
-					if ((column == 6) && cur_server && (games[cur_server->type].get_mapshot))
-					{
+					if ((column == 6) && cur_server && (games[cur_server->type].get_mapshot)) {
 						size_t buflen;
 						guchar* buf = NULL;
 
@@ -2244,8 +2249,7 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 	return FALSE;
 }
 
-static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event)
-{
+static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	GList *selection;
 	GtkCTreeNode *node, *node_under_mouse;
@@ -2261,15 +2265,12 @@ static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 			selection = GTK_CLIST(srvinf_ctree)->selection;
 			if (!g_list_find (selection, GINT_TO_POINTER(row)) && (bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) == 0) {
 				node_under_mouse = gtk_ctree_node_nth(GTK_CTREE (srvinf_ctree),row);
-				if(node_under_mouse)
-				{
+				if (node_under_mouse) {
 					// go through all selected masters and search if the one under the
 					// cursor is among them
-					while(selection)
-					{
+					while (selection) {
 						node = GTK_CTREE_NODE(selection->data);
-						if(node == node_under_mouse)
-						{
+						if (node == node_under_mouse) {
 							node_is_in_selection = 1;
 							break;
 						}
@@ -2277,8 +2278,7 @@ static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 					}
 
 					// clear selection and only select the one under the curser
-					if(!node_is_in_selection)
-					{
+					if (!node_is_in_selection) {
 						gtk_ctree_unselect_recursive(GTK_CTREE(srvinf_ctree),NULL);
 						gtk_ctree_select (GTK_CTREE (srvinf_ctree), node_under_mouse);
 					}
@@ -2334,8 +2334,9 @@ static void source_selection_clear_master_servers (void) {
 	for (source = cur_source; source; source=source->next) {
 		m = (struct master *) source->data;
 
-		if (m == favorites || m->isgroup)
+		if (m == favorites || m->isgroup) {
 			continue;
+		}
 
 		server_list_free(m->servers);
 		m->servers = NULL;
@@ -2357,8 +2358,9 @@ static void add_to_player_filter_callback (GtkWidget *widget, unsigned mask) {
 	struct player *p;
 	int row;
 
-	if (!selection || !cur_server || stat_process)
+	if (!selection || !cur_server || stat_process) {
 		return;
+	}
 
 	row = GPOINTER_TO_INT(selection->data);
 	p = (struct player *) gtk_clist_get_row_data (player_clist, row);
@@ -2435,8 +2437,9 @@ static int player_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 									NULL, NULL, bevent->time);
 
 							player_skin_preview_popup_show (skindata, p->shirt, p->pants, bevent->x, bevent->y);
-							if (skindata)
+							if (skindata) {
 								g_free (skindata);
+							}
 
 							return TRUE;
 
@@ -2475,8 +2478,9 @@ static int player_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 
 static void statistics_callback (GtkWidget *widget, gpointer data) {
 
-	if (stat_process)
+	if (stat_process) {
 		return;
+	}
 
 	statistics_dialog ();
 }
@@ -3174,8 +3178,7 @@ static const struct menuitem preferences_menu_items[] = {
 	},
 	{
 		MENU_ITEM,
-		N_("_QStat")
-		,
+		N_("_QStat"),
 		0,
 		0,
 		GTK_SIGNAL_FUNC (start_preferences_dialog),
@@ -3473,10 +3476,8 @@ static void populate_main_toolbar (void) {
 	 *  Filter buttons
 	 */
 
-	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1)
-	{
-		if(!filters[i].pix)
-		{
+	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
+		if (!filters[i].pix) {
 			filter_buttons[i] = NULL;
 			continue;
 		}
@@ -3539,8 +3540,7 @@ static void populate_main_toolbar (void) {
 
 /** build server filter menu for menubar */
 #if 0 
-static GtkWidget* create_filter_menu_toolbar()
-{
+static GtkWidget* create_filter_menu_toolbar() {
 	unsigned int i;
 	GtkWidget *menu;
 	GtkWidget *menu_item;
@@ -3550,16 +3550,13 @@ static GtkWidget* create_filter_menu_toolbar()
 	menu = gtk_menu_new();
 
 
-	for (i = 0;i<=server_filters->len;i++)
-	{
+	for (i = 0;i<=server_filters->len;i++) {
 		char* name = NULL;
-		if(i == 0)
-		{
+		if (i == 0) {
 			filter = NULL;
 			name = _("None");
 		}
-		else
-		{
+		else {
 			filter = g_array_index (server_filters, struct server_filter_vars*, i-1);
 			name = filter->filter_name;
 		}
@@ -3578,8 +3575,7 @@ static GtkWidget* create_filter_menu_toolbar()
 #endif
 
 /** build server filter menu for toolbar */
-static GtkWidget* create_filter_menu()
-{
+static GtkWidget* create_filter_menu() {
 	unsigned int i;
 	GtkWidget *menu;
 	GtkWidget *menu_item;
@@ -3601,16 +3597,13 @@ static GtkWidget* create_filter_menu()
 	gtk_menu_append (GTK_MENU (menu), menu_item);
 	gtk_widget_show (menu_item);
 
-	for (i = 0;i<=server_filters->len;i++)
-	{
+	for (i = 0;i<=server_filters->len;i++) {
 		char* name = NULL;
-		if(i == 0)
-		{
+		if (i == 0) {
 			filter = NULL;
 			name = _("None");
 		}
-		else
-		{
+		else {
 			filter = g_array_index (server_filters, struct server_filter_vars*, i-1);
 			name = filter->filter_name;
 		}
@@ -3628,8 +3621,7 @@ static GtkWidget* create_filter_menu()
 
 		/*
 		// add separator
-		if(i == 0)
-		{
+		if (i == 0) {
 			menu_item = gtk_menu_item_new ();
 			gtk_widget_set_sensitive (menu_item, FALSE);
 			gtk_menu_append (GTK_MENU (menu), menu_item);
@@ -3642,25 +3634,20 @@ static GtkWidget* create_filter_menu()
 	return menu;
 }
 
-static void quick_filter_entry_changed(GtkWidget* entry, gpointer data)
-{
+static void quick_filter_entry_changed(GtkWidget* entry, gpointer data) {
 	const char* text = gtk_entry_get_text(GTK_ENTRY(entry));
 	int mask = 0;
 
 	debug(3,"%d <%s>", strlen(text), text);
 
-	if(!text || !*text)
-	{
-		if(filter_quick_get())
-		{
+	if (!text || !*text) {
+		if (filter_quick_get()) {
 			mask = FILTER_QUICK_MASK;
 		}
 		filter_quick_set(NULL);
 	}
-	else
-	{
-		if (!filter_quick_get())
-		{
+	else {
+		if (!filter_quick_get()) {
 			mask = FILTER_QUICK_MASK;
 		}
 		filter_quick_set(text);
@@ -3671,14 +3658,12 @@ static void quick_filter_entry_changed(GtkWidget* entry, gpointer data)
 	filter_toggle_callback(NULL, mask);
 }
 
-void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry)
-{
+void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 	gtk_editable_delete_text(GTK_EDITABLE(entry), 0, -1);
 	gtk_widget_grab_focus(entry);
 }
 
-static void create_main_window (void)
-{
+static void create_main_window (void) {
 	main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
 			GTK_SIGNAL_FUNC (window_delete_event_callback), NULL);
@@ -3693,8 +3678,7 @@ static void create_main_window (void)
 	gtk_widget_realize (main_window);
 }
 
-static void populate_main_window (void)
-{
+static void populate_main_window (void) {
 	GtkWidget *main_vbox;
 	GtkWidget *vbox;
 	GtkWidget *vbox2;
@@ -3762,7 +3746,7 @@ static void populate_main_window (void)
 		i++; 
 		j++;
 
-		for( ; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++ ){
+		for ( ; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++ ){
 			buf = g_malloc( sizeof( char ) * ( 16 )); 
 			sprintf( buf, "Filter %d", j );
 			server_filter_menu_items[i].type       = MENU_ITEM;
@@ -4014,55 +3998,49 @@ static void populate_main_window (void)
 
 	// Set tooltips - also in prefs_load
 	tooltips = gtk_tooltips_new ();
-	if (default_toolbar_tips)
+	if (default_toolbar_tips) {
 		gtk_tooltips_enable(tooltips);
-	else
+	}
+	else {
 		gtk_tooltips_disable(tooltips);
+	}
 
 	gtk_widget_grab_focus(entry);
 }
 
-void play_sound (const char *sound, gboolean override)
-{
+void play_sound (const char *sound, gboolean override) {
 	play_sound_with(sound_player, sound, override);
 }
 
-void play_sound_with (const char* player, const char *sound, gboolean override)
-{
+void play_sound_with (const char* player, const char *sound, gboolean override) {
 	int pid;
 
-	if(!sound || !*sound)
-	{
+	if (!sound || !*sound) {
 		return;
 	}
 
-	if(!sound_enable && !override)
-	{
+	if (!sound_enable && !override) {
 		debug(2,"sound disabled - not playing");
 		return;
 	}
 
-	if(!player || !*player)
-	{
+	if (!player || !*player) {
 		xqf_warning(_("no sound player configured"));
 		return;
 	}
 
 	pid = fork();
-	if (pid == 0)
-	{
+	if (pid == 0) {
 		char *argv[3];
 
 		argv[0] = g_strdup(player);
 
-		if(sound[0] != '/')
-		{
+		if (sound[0] != '/') {
 			// Does not start with a / so prepend user_rcdir
 			debug(1,"Prepending user_rcdir to sound file");
 			argv[1] = file_in_dir(user_rcdir, sound);
 		}
-		else
-		{
+		else {
 			argv[1] = g_strdup(sound);
 		}    
 
@@ -4078,8 +4056,7 @@ void play_sound_with (const char* player, const char *sound, gboolean override)
 	}
 }
 
-static void cmdlinehelp()
-{
+static void cmdlinehelp() {
 	puts("XQF Version " PACKAGE_VERSION);
 	puts(_(
 				"Usage:\n"
@@ -4098,14 +4075,15 @@ static gboolean cmdline_launch = FALSE;
 static gboolean cmdline_newversion = FALSE;
 
 // must always return FALSE to stop g_timeout
-gboolean check_cmdline_launch(gpointer nothing)
-{
+gboolean check_cmdline_launch(gpointer nothing) {
 	char* token[2] = {0};
 	enum server_type type = UNKNOWN_SERVER;
 	unsigned n = 0;
 	char* addrstring = NULL; // must point to a copy
 
-	if(!cmdline_add_server) return FALSE;
+	if (!cmdline_add_server) {
+		return FALSE;
+	}
 
 	n = tokenize_bychar(cmdline_add_server, token, 2, ' ');
 
@@ -4113,12 +4091,10 @@ gboolean check_cmdline_launch(gpointer nothing)
 	{
 		type = id2type(token[0]);
 
-		if (type == UNKNOWN_SERVER)
-		{
+		if (type == UNKNOWN_SERVER) {
 			addrstring = add_server_dialog (&type, token[1]);
 		}
-		else
-		{
+		else {
 			addrstring = g_strdup(token[1]);
 		}
 	}
@@ -4128,32 +4104,27 @@ gboolean check_cmdline_launch(gpointer nothing)
 		unsigned short port;
 		unsigned matches = 0;
 
-		if (!parse_address (token[0], &addr, &port))
-		{
+		if (!parse_address (token[0], &addr, &port)) {
 			dialog_ok (NULL, _("\"%s\" is not valid host[:port] combination."), token[0]);
 			g_free(cmdline_add_server);
 			return FALSE;
 		}
 
-		if(port) // guess the type from the port
+		if (port) // guess the type from the port
 		{
 			unsigned i = 0;
-			for (i = 0; i < GAMES_TOTAL; i++)
-			{
-				if (games[i].default_port == port)
-				{
+			for (i = 0; i < GAMES_TOTAL; i++) {
+				if (games[i].default_port == port) {
 					++matches;
 					if (type == UNKNOWN_SERVER) type = i;
 				}
 			}
 		}
 
-		if(!port || type == UNKNOWN_SERVER || matches > 1)
-		{
+		if (!port || type == UNKNOWN_SERVER || matches > 1) {
 			addrstring = add_server_dialog (&type, token[0]);
 		}
-		else
-		{
+		else {
 			addrstring = g_strdup(cmdline_add_server);
 		}
 	}
@@ -4177,19 +4148,17 @@ static struct option long_options[] =
 	{0, 0, 0, 0}
 };
 
-static void parse_commandline(int argc, char* argv[])
-{
-	while (1)
-	{
+static void parse_commandline(int argc, char* argv[]) {
+	while (1) {
 		int c;
 		int option_index = 0;
 
 		c = getopt_long (argc, argv, "d:l:h", long_options, &option_index);
-		if (c == -1)
+		if (c == -1) {
 			break;
+		}
 
-		switch(c)
-		{
+		switch(c) {
 			case 'd':
 				set_debug_level(atoi(optarg));
 				break;
@@ -4229,8 +4198,7 @@ static void parse_commandline(int argc, char* argv[])
 	}
 }
 
-void add_pixmap_path_for_theme(const char* theme)
-{
+void add_pixmap_path_for_theme(const char* theme) {
 	char dir[PATH_MAX];
 	snprintf(dir, sizeof(dir), "%s/%s", xqf_PACKAGE_DATA_DIR, theme);
 	add_pixmap_directory (dir);
@@ -4238,8 +4206,7 @@ void add_pixmap_path_for_theme(const char* theme)
 	add_pixmap_directory (dir);
 }
 
-static void init_config_path()
-{
+static void init_config_path() {
 	char dir[PATH_MAX];
 	config_add_dir (xqf_PACKAGE_DATA_DIR);
 	snprintf(dir, sizeof(dir), "%s/.local/share/xqf", g_get_home_dir());
@@ -4247,8 +4214,7 @@ static void init_config_path()
 	config_add_dir (user_rcdir);
 }
 
-static void init_scripts_path()
-{
+static void init_scripts_path() {
 	char dir[PATH_MAX];
 	snprintf(dir, sizeof(dir), "%s/scripts", xqf_PACKAGE_DATA_DIR);
 	scripts_add_dir (dir);
@@ -4268,12 +4234,14 @@ int main (int argc, char *argv[]) {
 	redialserver=0;
 
 	var = getenv("xqf_PACKAGE_DATA_DIR");
-	if(var)
+	if (var) {
 		xqf_PACKAGE_DATA_DIR = var;
+	}
 
 	var = getenv("xqf_LOCALEDIR");
-	if(var)
+	if (var) {
 		xqf_LOCALEDIR = var;
+	}
 
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
@@ -4330,8 +4298,9 @@ int main (int argc, char *argv[]) {
 
 	newversion = prefs_load () | cmdline_newversion;
 
-	if(default_icontheme)
+	if (default_icontheme) {
 		add_pixmap_path_for_theme(default_icontheme);
+	}
 
 	init_scripts_path();
 	scripts_load();
@@ -4360,8 +4329,7 @@ int main (int argc, char *argv[]) {
 	psearch_init ();
 	rcon_init ();
 
-	if(check_qstat_version() == FALSE)
-	{
+	if (check_qstat_version() == FALSE) {
 		dialog_ok(NULL, _("You need at least qstat version %s for xqf to function properly"), required_qstat_version);
 	}
 
@@ -4379,10 +4347,12 @@ int main (int argc, char *argv[]) {
 
 	populate_main_window();
 
-	if (default_show_tray_icon) 
+	if (default_show_tray_icon) {
 		tray_init(main_window);
-	else
+	}
+	else {
 		gtk_widget_show (main_window);
+	}
 
 	source_ctree_select_source (favorites);
 	filter_menu_activate_current();
@@ -4404,14 +4374,16 @@ int main (int argc, char *argv[]) {
 	play_sound(sound_xqf_quit, 0);
 	script_action_quit();
 
-	if (default_show_tray_icon)
+	if (default_show_tray_icon) {
 		tray_done();
+	}
 
 	unregister_window (main_window);
 	main_window = NULL;
 
-	if (stat_process)
+	if (stat_process) {
 		stop_callback (NULL, NULL);
+	}
 
 	debug (1, "total servers: %d", servers_total ());
 	debug (1, "total uservers: %d", uservers_total ());

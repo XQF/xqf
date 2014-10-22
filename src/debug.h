@@ -22,7 +22,7 @@
 #define DEFAULT_DEBUG_LEVEL 0
 
 #define debug(level,fmt,rest...) \
-	if( level <= get_debug_level() ) \
+	if ( level <= get_debug_level() ) \
 		debug_int(__FILE__,__LINE__,__FUNCTION__,level,fmt,##rest)
 
 #define xqf_informal(fmt,rest...) \

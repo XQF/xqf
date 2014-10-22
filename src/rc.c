@@ -394,7 +394,7 @@ int rc_parse (void) {
 	rc_open (fn);
 	g_free (fn);
 
-	if(!rc)
+	if (!rc)
 		return -1;
 
 	while ((token = rc_next_token ()) != TOKEN_EOF) {
@@ -482,8 +482,7 @@ int rc_migrate_dir (void) {
 	xdg_user_rcdir = file_in_dir (xdg_user_dir, XDG_RC_DIR);
 
 	/* if ~/.qf exists and ~/.config/xqf does not exists */
-	if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) == -1)
-	{
+	if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) == -1) {
 		/* if ~/.config does not exists, create it */
 		if (stat (xdg_user_dir, &st_buf) == -1) {
 			res = mkdir (xdg_user_dir, 0755);

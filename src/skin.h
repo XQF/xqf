@@ -45,4 +45,3 @@ extern GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top,
 
 
 #endif /* __SKIN_H__ */
-

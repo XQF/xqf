@@ -287,11 +287,10 @@ void userver_unref (struct userver *s) {
 
 // change the server port to newport. this function is required as the server
 // needs to get a new position in the servers hash
-struct server* server_change_port (struct server* s, int newport)
-{
+struct server* server_change_port (struct server* s, int newport) {
 	int node;
 
-	if(!newport || !s)
+	if (!newport || !s)
 		return s;
 
 	node = server_hash_func (s->host, s->port);
@@ -364,8 +363,7 @@ int servers_total (void) {
 	if (!servers.nodes)
 		return 0;
 
-	for (i = 0; i < servers.num; i++)
-	{
+	for (i = 0; i < servers.num; i++) {
 		len = g_slist_length (servers.nodes[i]);
 		size += len;
 		if (min == -1 || len < min) min=len;
@@ -424,7 +422,7 @@ int parse_address (char *str, char **addr, unsigned short *port) {
 	char *ptr;
 	char *endptr;
 
-	if(!str || !addr || !port)
+	if (!str || !addr || !port)
 		return FALSE;
 
 	*port = 0;
@@ -566,25 +564,24 @@ void userver_list_fprintf (FILE *f, GSList *uservers) {
 	}
 }
 
-void server_set_env(const struct server* s)
-{
+void server_set_env(const struct server* s) {
 	char buf[256];
 
-	if(!s) return;
+	if (!s) return;
 
-	if(s->flags & SERVER_PUNKBUSTER)
+	if (s->flags & SERVER_PUNKBUSTER)
 		setenv("XQF_SERVER_ANTICHEAT", "1", 1);
 
-	if(s->name)
+	if (s->name)
 		setenv("XQF_SERVER_NAME", s->name, 1);
 
-	if(s->map)
+	if (s->map)
 		setenv("XQF_SERVER_MAP", s->map, 1);
 
-	if(s->host->name)
+	if (s->host->name)
 		setenv("XQF_SERVER_HOSTNAME", s->host->name, 1);
 
-	if(s->game)
+	if (s->game)
 		setenv("XQF_SERVER_GAME", s->game, 1);
 
 	setenv("XQF_SERVER_IP", inet_ntoa (s->host->ip), 1);
@@ -594,7 +591,7 @@ void server_set_env(const struct server* s)
 
 	setenv("XQF_GAME_TYPE", games[s->type].id, 1);
 
-	if(games[s->type].flags & GAME_LAUNCH_HOSTPORT) {
+	if (games[s->type].flags & GAME_LAUNCH_HOSTPORT) {
 		char **info_ptr;
 		// go through all server rules
 		for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {

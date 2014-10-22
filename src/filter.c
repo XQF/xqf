@@ -165,10 +165,9 @@ static GtkWidget *country_clear_button;
 static GtkWidget *country_show_all_check_button;
 #endif
 
-static struct server_filter_vars* server_filter_vars_new()
-{
+static struct server_filter_vars* server_filter_vars_new() {
 	struct server_filter_vars* f = g_malloc( sizeof( struct server_filter_vars ));
-	if(!f) return NULL;
+	if (!f) return NULL;
 
 	f->filter_retries = 2;
 	f->filter_ping = 9999;
@@ -189,9 +188,8 @@ static struct server_filter_vars* server_filter_vars_new()
 	return f;
 }
 
-static void server_filter_vars_free(struct server_filter_vars* v)
-{
-	if(!v) return;
+static void server_filter_vars_free(struct server_filter_vars* v) {
+	if (!v) return;
 
 	g_free(v->filter_name);
 	g_free(v->game_contains);
@@ -206,15 +204,14 @@ static void server_filter_vars_free(struct server_filter_vars* v)
 }
 
 // deep copy of server_filter_vars
-static struct server_filter_vars* server_filter_vars_copy(struct server_filter_vars* v)
-{
+static struct server_filter_vars* server_filter_vars_copy(struct server_filter_vars* v) {
 	struct server_filter_vars* f;
 	unsigned i;
 
-	if(!v) return NULL;
+	if (!v) return NULL;
 
 	f = server_filter_vars_new();
-	if(!f) return NULL;
+	if (!f) return NULL;
 
 	f->filter_retries       = v->filter_retries;
 	f->filter_ping          = v->filter_ping;
@@ -239,8 +236,7 @@ static struct server_filter_vars* server_filter_vars_copy(struct server_filter_v
 	return f;
 }
 
-void server_filter_print(struct server_filter_vars* f)
-{
+void server_filter_print(struct server_filter_vars* f) {
 #ifdef USE_GEOIP 
 	unsigned i;
 #endif
@@ -342,7 +338,7 @@ static int server_pass_filter (struct server *s){
 	int players = s->curplayers;
 
 	/* Filter Zero is No Filter */
-	if( current_server_filter == 0 ){ return TRUE; }
+	if ( current_server_filter == 0 ){ return TRUE; }
 
 	filter = g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
 
@@ -351,54 +347,50 @@ static int server_pass_filter (struct server *s){
 	if (s->ping == -1)  /* no information */
 		return FALSE;
 
-	if(s->retries >= filter->filter_retries)
+	if (s->retries >= filter->filter_retries)
 		return FALSE;
 
-	if(s->ping >= filter->filter_ping)
+	if (s->ping >= filter->filter_ping)
 		return FALSE;
 
-	if(serverlist_countbots && s->curbots <= players)
+	if (serverlist_countbots && s->curbots <= players)
 		players-=s->curbots;
 
-	if(filter->filter_not_full && (players >= s->maxplayers))
+	if (filter->filter_not_full && (players >= s->maxplayers))
 		return FALSE;
 
-	if(filter->filter_not_empty && (players == 0))
+	if (filter->filter_not_empty && (players == 0))
 		return FALSE;
 
-	if(filter->filter_no_cheats && ((s->flags & SERVER_CHEATS) != 0))
+	if (filter->filter_no_cheats && ((s->flags & SERVER_CHEATS) != 0))
 		return FALSE;
 
-	if(filter->filter_no_password && ((s->flags & SERVER_PASSWORD) != 0))
+	if (filter->filter_no_password && ((s->flags & SERVER_PASSWORD) != 0))
 		return FALSE;
 
-	if( filter->game_contains && *filter->game_contains )
-	{
-		if(!s->game)
+	if ( filter->game_contains && *filter->game_contains ) {
+		if (!s->game)
 			return FALSE;
-		else if(!lowcasestrstr(s->game,filter->game_contains))
+		else if (!lowcasestrstr(s->game,filter->game_contains))
 			return FALSE;
 	}
 
-	if( filter->game_type && *filter->game_type )
-	{
-		if( !s->gametype )
+	if ( filter->game_type && *filter->game_type ) {
+		if ( !s->gametype )
 			return FALSE;
-		else if(!lowcasestrstr(s->gametype, filter->game_type))
+		else if (!lowcasestrstr(s->gametype, filter->game_type))
 			return FALSE;
 	}
 
-	if( filter->map_contains && *filter->map_contains )
-	{
-		if( !s->map )
+	if ( filter->map_contains && *filter->map_contains ) {
+		if ( !s->map )
 			return FALSE;
-		else if(!lowcasestrstr(s->map, filter->map_contains))
+		else if (!lowcasestrstr(s->map, filter->map_contains))
 			return FALSE;
 	}
 
 
-	if( filter->version_contains && *filter->version_contains)
-	{
+	if ( filter->version_contains && *filter->version_contains) {
 		const char* version = NULL;
 		/* Filter for the version */
 		for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
@@ -406,9 +398,9 @@ static int server_pass_filter (struct server *s){
 				version=info_ptr[1];
 			}
 		}
-		if(!version)
+		if (!version)
 			return FALSE;
-		else if(!lowcasestrstr( version, filter->version_contains )){
+		else if (!lowcasestrstr( version, filter->version_contains )){
 			return FALSE;
 		}
 	}   /*end version check */
@@ -432,11 +424,10 @@ static int server_pass_filter (struct server *s){
 
 #endif
 
-	if( filter->server_name_contains && *filter->server_name_contains )
-	{
-		if( !s->name )
+	if ( filter->server_name_contains && *filter->server_name_contains ) {
+		if ( !s->name )
 			return FALSE;
-		else if(!lowcasestrstr(s->name, filter->server_name_contains))
+		else if (!lowcasestrstr(s->name, filter->server_name_contains))
 			return FALSE;
 	}
 
@@ -463,7 +454,7 @@ static void server_filter_init (void) {
 	   we cannot set the filter names in the pulldown yet. */
 
 	server_filters = g_array_new( FALSE,FALSE, sizeof(struct server_filter_vars*));
-	if(!server_filters) return;
+	if (!server_filters) return;
 
 	i = 1;  
 	snprintf( config_section, 64, "/" CONFIG_FILE "/Server Filter/%d", i );
@@ -471,10 +462,9 @@ static void server_filter_init (void) {
 
 	filtername = config_get_string_with_default ("filter_name",&isdefault);
 
-	while(!isdefault)
-	{
+	while (!isdefault) {
 		filter = server_filter_vars_new();
-		if(!filter) break;
+		if (!filter) break;
 
 		filter->filter_name             = filtername;
 		filter->filter_retries          = config_get_int  ("retries=2");
@@ -492,16 +482,14 @@ static void server_filter_init (void) {
 
 		/*country filter ids*/
 		str = config_get_string("server_country_contains");
-		if(str)
-		{
+		if (str) {
 			int nr;
 			gchar **buf = NULL;
 			buf = g_strsplit(str," ",0);
 
-			for(nr = 0; buf && buf[nr]; ++nr)
-			{
+			for (nr = 0; buf && buf[nr]; ++nr) {
 				int flag_nr = geoip_id_by_code(buf[nr]);
-				if(flag_nr > 0)
+				if (flag_nr > 0)
 					g_array_append_val (filter->countries,flag_nr);
 			}
 
@@ -534,14 +522,12 @@ static void server_filter_init (void) {
 	config_pop_prefix ();
 }
 
-static void server_filter_on_cancel()
-{
+static void server_filter_on_cancel() {
 	// restore server filter array
 	unsigned i;
 	struct server_filter_vars* filter;
 
-	for(i=0;i<server_filters->len;++i)
-	{
+	for (i=0;i<server_filters->len;++i) {
 		filter = g_array_index (server_filters, struct server_filter_vars*, i);
 		server_filter_vars_free(filter);
 	}
@@ -554,15 +540,14 @@ static void server_filter_on_cancel()
 }
 
 // query widgets and put values in a new struct
-static struct server_filter_vars* server_filter_new_from_widgets()
-{
+static struct server_filter_vars* server_filter_new_from_widgets() {
 #ifdef USE_GEOIP
 	int country_nr;
 	int i;
 #endif
 
 	struct server_filter_vars* filter = server_filter_vars_new();
-	if(!filter) return NULL;
+	if (!filter) return NULL;
 
 	filter->filter_retries = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_retries_spinner));
 	filter->filter_ping = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_ping_spinner));
@@ -588,19 +573,17 @@ static struct server_filter_vars* server_filter_new_from_widgets()
 	return filter;
 }
 
-static void server_filter_on_ok ()
-{
+static void server_filter_on_ok () {
 //  struct server_filter_vars** oldfilter = NULL;
 //  struct server_filter_vars* newfilter = NULL;
 
 	unsigned i;
 	struct server_filter_vars* filter;
 
-	if( server_filter_dialog_current_filter == 0 && server_filter_deleted == FALSE ){ return; }
+	if ( server_filter_dialog_current_filter == 0 && server_filter_deleted == FALSE ){ return; }
 /*
 	oldfilter = &g_array_index (server_filters, struct server_filter_vars*, server_filter_dialog_current_filter-1);
-	if(!oldfilter || !*oldfilter)
-	{
+	if (!oldfilter || !*oldfilter) {
 		debug(0,"Bug: filter is NULL");
 		return;
 	}
@@ -609,7 +592,7 @@ static void server_filter_on_ok ()
 
 /*
 	newfilter = server_filter_vars_new();
-	if(!newfilter)
+	if (!newfilter)
 		return;
 
 	filters[FILTER_SERVER].changed = FILTER_CHANGED;
@@ -622,7 +605,7 @@ static void server_filter_on_ok ()
 	server_filter_vars_free(*oldfilter);
 	*oldfilter = newfilter;
 
-	if(server_filter_deleted == TRUE)
+	if (server_filter_deleted == TRUE)
 */
 
 	{ /* as some filter in the middle could have changed, clear all of them and
@@ -631,8 +614,7 @@ static void server_filter_on_ok ()
 		guint i;
 		config_clean_section("/" CONFIG_FILE "/Server Filter");
 
-		for(i=0;i<server_filters->len;i++)
-		{
+		for (i=0;i<server_filters->len;i++) {
 			struct server_filter_vars* newfilter = NULL;
 			struct server_filter_vars* oldfilter = server_filter_vars_new();
 
@@ -649,8 +631,7 @@ static void server_filter_on_ok ()
 	{
 		unsigned i;
 		struct server_filter_vars* filter = NULL;
-		for(i=0;i<server_filters->len;i++)
-		{
+		for (i=0;i<server_filters->len;i++) {
 			filter = g_array_index (server_filters, struct server_filter_vars*, i);
 			server_filter_print(filter);
 		}
@@ -667,8 +648,7 @@ static void server_filter_on_ok ()
 	}
 
 
-	for(i=0;i<backup_server_filters->len;i++)
-	{
+	for (i=0;i<backup_server_filters->len;i++) {
 		filter = g_array_index (backup_server_filters, struct server_filter_vars*, i);
 		server_filter_vars_free(filter);
 	}
@@ -681,13 +661,12 @@ static void server_filter_on_ok ()
  */
 static void server_filter_save_settings (int number,
 		struct server_filter_vars* oldfilter,
-		struct server_filter_vars* newfilter)
-{
+		struct server_filter_vars* newfilter) {
 	int text_changed;
 	enum { buflen = 64 };
 	char config_section[buflen];
 
-	if( number == 0 ){ return; }
+	if ( number == 0 ){ return; }
 
 	snprintf( config_section, buflen, "/" CONFIG_FILE "/Server Filter/%d", number );
 	config_push_prefix (config_section );
@@ -707,13 +686,13 @@ static void server_filter_save_settings (int number,
 
 	/* GAMECONTAINS string values -- baa */
 	text_changed = 0;
-	if(newfilter->game_contains && strlen(newfilter->game_contains )){
+	if (newfilter->game_contains && strlen(newfilter->game_contains )){
 		/*
 		   First case, the user entered something.  See if the value
 		   is different 
 		*/
 		if (oldfilter->game_contains){
-			if( strcmp(newfilter->game_contains, oldfilter->game_contains )) text_changed = 1;
+			if ( strcmp(newfilter->game_contains, oldfilter->game_contains )) text_changed = 1;
 			g_free( oldfilter->game_contains );
 		} else {
 			text_changed = 1;
@@ -736,13 +715,13 @@ static void server_filter_save_settings (int number,
 
 	/* Version string values -- baa */
 	text_changed = 0;
-	if( newfilter->version_contains && strlen( newfilter->version_contains )){
+	if ( newfilter->version_contains && strlen( newfilter->version_contains )){
 		/*
 		   First case, the user entered something.  See if the value
 		   is different 
 		*/
 		if (oldfilter->version_contains){
-			if( strcmp( newfilter->version_contains, oldfilter->version_contains )) text_changed = 1;
+			if ( strcmp( newfilter->version_contains, oldfilter->version_contains )) text_changed = 1;
 			g_free( oldfilter->version_contains );
 		} else {
 			text_changed = 1;
@@ -765,13 +744,13 @@ static void server_filter_save_settings (int number,
 
 	/* GAMETYPE string values -- baa */
 	text_changed = 0;
-	if( newfilter->game_type && strlen( newfilter->game_type )){
+	if ( newfilter->game_type && strlen( newfilter->game_type )){
 		/*
 		   First case, the user entered something.  See if the value
 		   is different
 		*/
 		if (oldfilter->game_type){
-			if( strcmp( newfilter->game_type, oldfilter->game_type )) text_changed = 1;
+			if ( strcmp( newfilter->game_type, oldfilter->game_type )) text_changed = 1;
 			g_free( oldfilter->game_type );
 		} else {
 			text_changed = 1;
@@ -795,13 +774,13 @@ static void server_filter_save_settings (int number,
   
 	/* map string values */
 	text_changed = 0;
-	if( newfilter->map_contains && strlen( newfilter->map_contains )){
+	if ( newfilter->map_contains && strlen( newfilter->map_contains )){
 		/*
 		   First case, the user entered something.  See if the value
 		   is different
 		*/
 		if (oldfilter->map_contains){
-			if( strcmp( newfilter->map_contains, oldfilter->map_contains )) text_changed = 1;
+			if ( strcmp( newfilter->map_contains, oldfilter->map_contains )) text_changed = 1;
 			g_free( oldfilter->map_contains);
 		} else {
 			text_changed = 1;
@@ -823,13 +802,13 @@ static void server_filter_save_settings (int number,
 
 	/* servername string values */
 	text_changed = 0;
-	if( newfilter->server_name_contains && strlen( newfilter->server_name_contains )){
+	if ( newfilter->server_name_contains && strlen( newfilter->server_name_contains )){
 		/*
 		   First case, the user entered something.  See if the value
 		   is different
 		*/
 		if (oldfilter->server_name_contains){
-			if( strcmp( newfilter->server_name_contains, oldfilter->server_name_contains )) text_changed = 1;
+			if ( strcmp( newfilter->server_name_contains, oldfilter->server_name_contains )) text_changed = 1;
 			g_free( oldfilter->server_name_contains);
 		} else {
 			text_changed = 1;
@@ -853,16 +832,14 @@ static void server_filter_save_settings (int number,
 
 	/* country string values */
 
-	if (newfilter->countries->len > 0)
-	{
+	if (newfilter->countries->len > 0) {
 		unsigned i;
 		char* buf = NULL;
 		buf = g_new(char,newfilter->countries->len*3);
 
-		for (i = 0; i < newfilter->countries->len; ++i)
-		{
+		for (i = 0; i < newfilter->countries->len; ++i) {
 			const char* code = geoip_code_by_id(g_array_index(newfilter->countries,int,i));
-			if(strlen(code)!=2) code = "  "; // may not happen
+			if (strlen(code)!=2) code = "  "; // may not happen
 			buf[i*3]=code[0];
 			buf[i*3+1]=code[1];
 			buf[i*3+2]=' ';
@@ -900,16 +877,13 @@ static void server_filter_save_settings (int number,
 	}
 #if 0
 	/* This from the Gtk FAQ, mostly. */
-	if( server_filter_widget[current_server_filter + filter_start_index] &&
-		GTK_BIN (server_filter_widget[current_server_filter + filter_start_index])->child)
-	{
+	if ( server_filter_widget[current_server_filter + filter_start_index] &&
+		GTK_BIN (server_filter_widget[current_server_filter + filter_start_index])->child) {
 		GtkWidget *child = GTK_BIN (server_filter_widget[current_server_filter + filter_start_index])->child;
 
 		/* do stuff with child */
-		if (GTK_IS_LABEL (child))
-		{
-			if( filter->filter_name != NULL && strlen( filter->filter_name ))
-			{
+		if (GTK_IS_LABEL (child)) {
+			if ( filter->filter_name != NULL && strlen( filter->filter_name )) {
 				gtk_label_set (GTK_LABEL (child), filter->filter_name );
 			} else {
 				/* Reuse the config_secion var */
@@ -927,20 +901,17 @@ static void server_filter_save_settings (int number,
 }
 
 // store changed widget values
-static void filter_select_callback (GtkWidget *widget, guint number)
-{
+static void filter_select_callback (GtkWidget *widget, guint number) {
 	struct server_filter_vars** filter = NULL;
 	char* name;
 
-	if(server_filter_changed && server_filter_dialog_current_filter > 0 )
-	{
+	if (server_filter_changed && server_filter_dialog_current_filter > 0 ) {
 		/*
 		int cont = dialog_yesno(_("Server filter changed"), 1,
 				_("Continue"),
 				_("Cancel"),
 				_("Your changes will be lost if you change server filters now"));
-		if(!cont)
-		{
+		if (!cont) {
 			gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu), server_filter_dialog_current_filter-1);
 			return FALSE;
 		}
@@ -957,8 +928,7 @@ static void filter_select_callback (GtkWidget *widget, guint number)
 	return;
 }
 
-static GtkWidget *create_filter_menu()
-{
+static GtkWidget *create_filter_menu() {
 	GtkWidget *menu;
 	GtkWidget *menu_item;
 	guint i;
@@ -969,11 +939,9 @@ static GtkWidget *create_filter_menu()
 	//  gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 	//                 GTK_SIGNAL_FUNC (callback), (gpointer) 0);
 
-	for (i = 0;i<server_filters->len;i++)
-	{
+	for (i = 0;i<server_filters->len;i++) {
 		filter = g_array_index (server_filters, struct server_filter_vars*, i);
-		if(!filter)
-		{
+		if (!filter) {
 			debug(0,"Bug: filter is NULL");
 			continue;
 		}
@@ -992,37 +960,32 @@ static GtkWidget *create_filter_menu()
 
 /** create new filter if number == 0, rename current filter number if number >0
  */
-static void filter_new_rename_callback (int number)
-{
+static void filter_new_rename_callback (int number) {
 	char *str = NULL;
 	struct server_filter_vars* filter = NULL;
 
 	debug(3,"%s %d",str, number);
 
 	// renaming the none filter is not possible
-	if(number && server_filter_dialog_current_filter < 1) return;
+	if (number && server_filter_dialog_current_filter < 1) return;
 
 	// remember changes
-	if(!number)
-	{
+	if (!number) {
 		filter_select_callback(NULL,server_filter_dialog_current_filter);
 	}
 
 	str = enter_string_dialog(TRUE,_("Enter filter name"));
 
-	if(str && *str)
-	{
+	if (str && *str) {
 		filters[FILTER_SERVER].changed = FILTER_CHANGED;
-		if(!number)
-		{
+		if (!number) {
 			filter = server_filter_vars_new();
 			filter->filter_name = str;
 			g_array_append_val(server_filters,filter);
 			server_filter_dialog_current_filter = server_filters->len;
 			gtk_widget_grab_focus (GTK_WIDGET (game_contains_entry));
 		}
-		else
-		{
+		else {
 			filter = g_array_index (server_filters, struct server_filter_vars*, server_filter_dialog_current_filter-1);
 			filter->filter_name = str;
 		}
@@ -1036,22 +999,21 @@ static void filter_new_rename_callback (int number)
 	}
 }
 
-static void filter_delete_callback (void* dummy)
-{
+static void filter_delete_callback (void* dummy) {
 	struct server_filter_vars* filter = NULL;
 	int cont = 0;
 
-	if(server_filter_dialog_current_filter == 0) return;
+	if (server_filter_dialog_current_filter == 0) return;
 
 	filter = g_array_index (server_filters, struct server_filter_vars*, server_filter_dialog_current_filter-1);
-	if(!filter) return;
+	if (!filter) return;
 
 	cont = dialog_yesno(_("Delete server filter"), 1,
 			_("Yes"),
 			_("No"),
 			_("Really delete server filter \"%s\"?"),filter->filter_name);
 
-	if(!cont)
+	if (!cont)
 		return;
 
 	filters[FILTER_SERVER].changed = FILTER_CHANGED;
@@ -1066,8 +1028,7 @@ static void filter_delete_callback (void* dummy)
 	gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu), server_filter_dialog_current_filter-1);
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 /*
-	for(cont=0;cont<server_filters->len;cont++)
-	{
+	for (cont=0;cont<server_filters->len;cont++) {
 		filter = g_array_index (server_filters, struct server_filter_vars*, cont);
 		server_filter_print(filter);
 	}
@@ -1076,8 +1037,7 @@ static void filter_delete_callback (void* dummy)
 
 /** set all server filter widgets sensitive
  */
-static void server_filter_set_widgets_sensitive(gboolean sensitive)
-{
+static void server_filter_set_widgets_sensitive(gboolean sensitive) {
 	gtk_widget_set_sensitive(filter_game_type_entry,sensitive);
 	gtk_widget_set_sensitive(version_contains_entry,sensitive);
 	gtk_widget_set_sensitive(game_contains_entry,sensitive);
@@ -1103,8 +1063,7 @@ static void server_filter_set_widgets_sensitive(gboolean sensitive)
 #endif
 }
 
-static void server_filter_fill_widgets(guint num)
-{
+static void server_filter_fill_widgets(guint num) {
 	struct server_filter_vars* filter = NULL;
 
 	gboolean dofree = FALSE;
@@ -1115,19 +1074,16 @@ static void server_filter_fill_widgets(guint num)
 	struct pixmap* countrypix = NULL;
 #endif
 
-	if(num > 0)
-	{
+	if (num > 0) {
 		filter = g_array_index (server_filters, struct server_filter_vars*, num-1);
-		if(!filter)
-		{
+		if (!filter) {
 			debug(0,"Bug: filter is NULL");
 			filter = server_filter_vars_new();
 			dofree = TRUE;
 		}
 		server_filter_set_widgets_sensitive(TRUE);
 	}
-	else
-	{
+	else {
 		server_filter_set_widgets_sensitive(FALSE);
 		filter = server_filter_vars_new();
 		dofree = TRUE;
@@ -1159,8 +1115,7 @@ static void server_filter_fill_widgets(guint num)
 				strncpy(buf,geoip_name_by_id(f_number),sizeof(buf));
 				gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
 				countrypix = get_pixmap_for_country_with_fallback(f_number);
-				if(countrypix)
-				{
+				if (countrypix) {
 					gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), rw, 0,geoip_name_by_id(f_number), 4,
 							countrypix->pix, countrypix->mask);
 				}
@@ -1190,13 +1145,12 @@ static void server_filter_fill_widgets(guint num)
 
 	server_filter_changed = FALSE;
 
-	if(dofree == TRUE)
+	if (dofree == TRUE)
 		server_filter_vars_free(filter);
 }
 
 // set changed flag to status
-static void server_filter_set_changed_callback(int status)
-{
+static void server_filter_set_changed_callback(int status) {
 	server_filter_changed = status;
 }
 
@@ -1221,13 +1175,11 @@ static void server_filter_page (GtkWidget *notebook) {
 	cleaned_up = FALSE;
 
 	/* One cannot edit the "None" filter */
-	if( current_server_filter < 0 )
-	{
+	if ( current_server_filter < 0 ) {
 		current_server_filter = 0;
 		debug(0,"invalid filter nr %d", server_filter_dialog_current_filter );
 	}
-	else if ( current_server_filter > server_filters->len )
-	{
+	else if ( current_server_filter > server_filters->len ) {
 		current_server_filter = 1;
 		debug(0,"invalid filter nr %d", server_filter_dialog_current_filter );
 	}
@@ -1242,8 +1194,7 @@ static void server_filter_page (GtkWidget *notebook) {
 		backup_server_filters = g_array_new( FALSE,FALSE, sizeof(struct server_filter_vars*));
 		// g_array_set_size(backup_server_filters,server_filters->len);
 
-		for(i=0;i<server_filters->len;i++)
-		{
+		for (i=0;i<server_filters->len;i++) {
 			filter = server_filter_vars_copy(g_array_index (server_filters, struct server_filter_vars*, i));
 			g_array_append_val(backup_server_filters, filter );
 		}
@@ -1550,8 +1501,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 }
 
-static void filters_on_ok (void)
-{
+static void filters_on_ok (void) {
 	int i;
 	cleaned_up = TRUE;
 	for (i = 0; i < FILTERS_TOTAL; i++) {
@@ -1560,12 +1510,11 @@ static void filters_on_ok (void)
 	}
 }
 
-static void filters_on_cancel (void)
-{
+static void filters_on_cancel (void) {
 	int i;
 
 	// ok was pressed 
-	if(cleaned_up) return;
+	if (cleaned_up) return;
 
 	for (i = 0; i < FILTERS_TOTAL; i++) {
 		if (filters[i].filter_on_cancel)
@@ -1701,8 +1650,7 @@ void filters_done (void) {
 void country_selection_left_list(GtkWidget * list,
 		gint row_select,
 		gint column,
-		GdkEventButton * event, gpointer data)
-{
+		GdkEventButton * event, gpointer data) {
 	selected_row_left_list = row_select;
 	return;
 }
@@ -1711,8 +1659,7 @@ void country_selection_left_list(GtkWidget * list,
 void country_selection_right_list(GtkWidget * list,
 		gint row_select,
 		gint column,
-		GdkEventButton * event, gpointer data)
-{
+		GdkEventButton * event, gpointer data) {
 	selected_row_right_list = row_select;
 	return;
 }
@@ -1721,28 +1668,24 @@ void country_selection_right_list(GtkWidget * list,
 void country_unselection_right_list(GtkWidget * list,
 		gint row_select,
 		gint column,
-		GdkEventButton * event, gpointer data)
-{
+		GdkEventButton * event, gpointer data) {
 	selected_row_right_list = -1;
 	return;
 }
 
 /* show the country selection popup window*/
-static void country_select_button_pressed(GtkWidget * widget, gpointer data)
-{
+static void country_select_button_pressed(GtkWidget * widget, gpointer data) {
 	country_create_popup_window();
 }
 
 /* callback: clear button*/
-static void country_clear_list(GtkWidget * widget, gpointer data)
-{
+static void country_clear_list(GtkWidget * widget, gpointer data) {
 	gtk_clist_clear(GTK_CLIST(country_filter_list));
 	last_row_country_list=0;
 }
 
 /** add the country selected in the left list to the right list */
-static void country_add_selection_to_right_list()
-{
+static void country_add_selection_to_right_list() {
 	gint i;
 	gint flag_id;
 	gchar buf[64] = {0};
@@ -1765,8 +1708,7 @@ static void country_add_selection_to_right_list()
 	// gtk_clist_insert third parameter is not const!
 	strncpy(buf,geoip_name_by_id(flag_id),sizeof(buf));
 	gtk_clist_append(GTK_CLIST(country_right_list), text);
-	if(countrypix)
-	{
+	if (countrypix) {
 		gtk_clist_set_pixtext(GTK_CLIST(country_right_list), last_row_right_list, 0,
 				geoip_name_by_id(flag_id), 4, countrypix->pix, countrypix->mask);
 	}
@@ -1778,14 +1720,12 @@ static void country_add_selection_to_right_list()
 }
 
 /* callback: >> button*/
-static void country_add_button(GtkWidget * widget, gpointer data)
-{
+static void country_add_button(GtkWidget * widget, gpointer data) {
 	country_add_selection_to_right_list();
 }
 
 /* callback: << button*/
-static void country_delete_button(GtkWidget * widget, gpointer data)
-{
+static void country_delete_button(GtkWidget * widget, gpointer data) {
 
 	if ((selected_row_right_list != -1) && (last_row_right_list > 0)) {
 		gtk_clist_remove(GTK_CLIST(country_right_list), selected_row_right_list);
@@ -1797,10 +1737,8 @@ static void country_delete_button(GtkWidget * widget, gpointer data)
 /** callback: double click on row */
 gint country_mouse_click_left_list(GtkWidget * widget,
 		GdkEventButton * event,
-		gpointer func_data)
-{
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1))
-	{
+		gpointer func_data) {
+	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1)) {
 		country_add_selection_to_right_list();
 	}
 
@@ -1810,11 +1748,9 @@ gint country_mouse_click_left_list(GtkWidget * widget,
 /** callback: double click on row*/
 gint country_mouse_click_right_list(GtkWidget * widget,
 		GdkEventButton * event,
-		gpointer func_data)
-{
+		gpointer func_data) {
 
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1))
-	{
+	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1)) {
 		country_delete_button(NULL,NULL);
 	}
 
@@ -1822,8 +1758,7 @@ gint country_mouse_click_right_list(GtkWidget * widget,
 }
 
 /* callback: ready with country selection*/
-static void country_selection_on_ok(void)
-{
+static void country_selection_on_ok(void) {
 	int i;
 	gint country_nr;
 	gchar buf[64] = {0};
@@ -1835,8 +1770,7 @@ static void country_selection_on_ok(void)
 	gtk_clist_freeze(GTK_CLIST(country_filter_list));
 	gtk_clist_clear(GTK_CLIST(country_filter_list));
 
-	for (i = 0; i < last_row_right_list; ++i)
-	{
+	for (i = 0; i < last_row_right_list; ++i) {
 		country_nr = GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_right_list), i));
 
 		countrypix = get_pixmap_for_country(country_nr);
@@ -1844,8 +1778,7 @@ static void country_selection_on_ok(void)
 		// gtk_clist_insert third parameter is not const!
 		strncpy(buf,geoip_name_by_id(country_nr),sizeof(buf));
 		gtk_clist_insert(GTK_CLIST(country_filter_list), i, text);
-		if(countrypix)
-		{
+		if (countrypix) {
 			gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), i, 0,
 					text[0], 4,countrypix->pix,countrypix->mask);
 		}
@@ -1856,8 +1789,7 @@ static void country_selection_on_ok(void)
 	last_row_country_list=last_row_right_list;
 }
 
-static void country_selection_on_cancel(void)
-{
+static void country_selection_on_cancel(void) {
 	selected_row_right_list=-1;
 }
 
@@ -1865,8 +1797,7 @@ static void country_selection_on_cancel(void)
  * @param clist the clist
  * @param all if false only show countries that have a flag
  */
-static void populate_country_clist(GtkWidget* clist, gboolean all)
-{
+static void populate_country_clist(GtkWidget* clist, gboolean all) {
 	struct pixmap* countrypix = NULL;
 	int row_number = -1;
 	unsigned i;
@@ -1879,9 +1810,8 @@ static void populate_country_clist(GtkWidget* clist, gboolean all)
 
 	gtk_clist_clear(GTK_CLIST(clist));
 
-	for (i = 0; i <= geoip_num_countries(); ++i)
-	{
-		if(all)
+	for (i = 0; i <= geoip_num_countries(); ++i) {
+		if (all)
 			countrypix = get_pixmap_for_country_with_fallback(i);
 		else
 			countrypix = get_pixmap_for_country(i);
@@ -1894,8 +1824,7 @@ static void populate_country_clist(GtkWidget* clist, gboolean all)
 		// gtk_clist_insert third parameter is not const!
 		strncpy(buf,geoip_name_by_id(i),sizeof(buf));
 		gtk_clist_insert(GTK_CLIST(clist), row_number, text);
-		if(countrypix)
-		{
+		if (countrypix) {
 			gtk_clist_set_pixtext(GTK_CLIST(clist), row_number, 0,
 					geoip_name_by_id(i), 4,
 					countrypix->pix,
@@ -1910,14 +1839,12 @@ static void populate_country_clist(GtkWidget* clist, gboolean all)
 	gtk_clist_thaw(GTK_CLIST(clist));
 }
 
-static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *clist)
-{
+static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *clist) {
 	populate_country_clist(clist,gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
 }
 
 /* country selection window */
-static void country_create_popup_window(void)
-{
+static void country_create_popup_window(void) {
 	GtkWidget *country_popup_window;
 	GtkWidget *vbox1;
 	GtkWidget *vbox2;
@@ -2066,8 +1993,7 @@ static void country_create_popup_window(void)
 		// gtk_clist_insert third parameter is not const!
 		strncpy(buf,geoip_name_by_id(flag_nr),sizeof(buf));
 		gtk_clist_insert(GTK_CLIST(country_right_list),i, text);
-		if(countrypix)
-		{
+		if (countrypix) {
 			gtk_clist_set_pixtext(GTK_CLIST(country_right_list),i, 0,
 					geoip_name_by_id(flag_nr), 4,
 					countrypix->pix,countrypix->mask);
@@ -2136,16 +2062,13 @@ static void country_create_popup_window(void)
 }
 #endif
 
-unsigned filter_time_inc()
-{
+unsigned filter_time_inc() {
 	++filter_current_time;
-	if(!filter_current_time)
-	{
+	if (!filter_current_time) {
 		struct server* s;
 		GSList* list = all_servers();
 		printf("CONGRATULATION! You managed to filter more than %u times\n", UINT_MAX);
-		for(;list; list = list->next)
-		{
+		for (;list; list = list->next) {
 			s = (struct server *) list->data;
 			s->flt_last = 0;
 		}
@@ -2154,42 +2077,38 @@ unsigned filter_time_inc()
 	return filter_current_time;
 }
 
-static int quick_filter (struct server *s)
-{
+static int quick_filter (struct server *s) {
 	unsigned i;
 	size_t max = sizeof(quick_filter_token)/sizeof(quick_filter_token[0]);
 
-	if(!s || !*quick_filter_str) return TRUE;
+	if (!s || !*quick_filter_str) return TRUE;
 
-	for(i = 0; i < max && quick_filter_token[i]; ++i)
-	{
-		if(s->map && strstr(s->map, quick_filter_token[i]))
+	for (i = 0; i < max && quick_filter_token[i]; ++i) {
+		if (s->map && strstr(s->map, quick_filter_token[i]))
 			continue;
 
-		if(s->game && lowcasestrstr(s->game, quick_filter_token[i]))
+		if (s->game && lowcasestrstr(s->game, quick_filter_token[i]))
 			continue;
 
-		if(s->gametype && lowcasestrstr(s->gametype, quick_filter_token[i]))
+		if (s->gametype && lowcasestrstr(s->gametype, quick_filter_token[i]))
 			continue;
 
-		if(s->name && lowcasestrstr(s->name, quick_filter_token[i]))
+		if (s->name && lowcasestrstr(s->name, quick_filter_token[i]))
 			continue;
 
-		if(s->host && s->host->name && lowcasestrstr(s->host->name, quick_filter_token[i]))
+		if (s->host && s->host->name && lowcasestrstr(s->host->name, quick_filter_token[i]))
 			continue;
 
 		{
 			gboolean match = FALSE;
 			char **info_ptr;
-			for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2)
-			{
-				if(lowcasestrstr(info_ptr[1], quick_filter_token[i]))
-				{
+			for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+				if (lowcasestrstr(info_ptr[1], quick_filter_token[i])) {
 					match = TRUE;
 					break;
 				}
 			}
-			if(!match)
+			if (!match)
 				return FALSE;
 		}
 	}
@@ -2197,33 +2116,28 @@ static int quick_filter (struct server *s)
 	return TRUE;
 }
 
-void filter_quick_set (const char* str)
-{
-	if(str)
-	{
+void filter_quick_set (const char* str) {
+	if (str) {
 		unsigned num;
 		size_t max = sizeof(quick_filter_token)/sizeof(quick_filter_token[0]);
 		strncpy(quick_filter_str, str, sizeof(quick_filter_str));
 		num = tokenize(quick_filter_str, quick_filter_token, max, " ");
-		if(num < max)
+		if (num < max)
 			quick_filter_token[num] = NULL;
 	}
-	else
-	{
+	else {
 		quick_filter_str[0] = '\0';
 		quick_filter_token[0] = NULL;
 	}
 }
 
-const char* filter_quick_get(void)
-{
-	if(!*quick_filter_token)
+const char* filter_quick_get(void) {
+	if (!*quick_filter_token)
 		return NULL;
 	return quick_filter_str;
 }
 
-void filter_quick_unset (void)
-{
+void filter_quick_unset (void) {
 	quick_filter_str[0] = '\0';
 	quick_filter_token[0] = NULL;
 }

@@ -43,8 +43,7 @@ static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
 	return FALSE;
 }
 
-static int unregister_window_callback (GtkWidget *widget, GdkEventKey *event)
-{
+static int unregister_window_callback (GtkWidget *widget, GdkEventKey *event) {
 	unregister_window(widget);
 	return FALSE;
 }
@@ -535,8 +534,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 /* glade generated */
 
 	GtkWidget*
-create_AboutWindow (void)
-{
+create_AboutWindow (void) {
 	GtkWidget *AboutWindow;
 	GtkWidget *AboutVBox;
 	GtkWidget *scrolledwindow1;
@@ -621,8 +619,7 @@ create_AboutWindow (void)
 /** ok callback for file_dialog that sets the selected filename in the
  * textentry that was passed as user data to file_dialog()
  */
-static void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry)
-{
+static void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry) {
 	const char *filename = NULL;
 	GtkWidget* filesel = topmost_parent(widget);
 
@@ -634,13 +631,12 @@ static void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry)
 	gtk_entry_set_text (GTK_ENTRY (textentry), filename);
 }
 
-GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer data)
-{
+GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer data) {
 	GtkFileSelection* file_selector;
 
 	file_selector = GTK_FILE_SELECTION(gtk_file_selection_new (title));
 
-	if(!file_selector)
+	if (!file_selector)
 		return NULL;
 
 	gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
@@ -664,12 +660,10 @@ GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer da
 	return GTK_WIDGET(file_selector);
 }
 
-GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry)
-{
+GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry) {
 	GtkWidget* filesel = file_dialog(title, GTK_SIGNAL_FUNC(file_dialog_ok_set_textentry), entry);
 	const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
-	if(text && *text)
-	{
+	if (text && *text) {
 		gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), text);
 	}
 	return filesel;

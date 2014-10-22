@@ -100,8 +100,7 @@ static void rcon_print (char *fmt, ...) {
 }
 
 
-static int wait_read_timeout(int fd, long sec, long usec)
-{
+static int wait_read_timeout(int fd, long sec, long usec) {
 	fd_set rfds;
 	struct timeval tv;
 
@@ -156,14 +155,12 @@ static int open_connection (struct in_addr *ip, unsigned short port) {
 }
 
 
-static int rcon_send(const char* cmd)
-{
+static int rcon_send(const char* cmd) {
 	char* buf = NULL;
 	size_t bufsize = 0;
 	int ret = -1;
 
-	if(rcon_servertype == HL_SERVER && rcon_challenge == NULL)
-	{
+	if (rcon_servertype == HL_SERVER && rcon_challenge == NULL) {
 		enum { cbufsize = 1024 };
 		char cbuf[cbufsize];
 		char* msg = NULL;
@@ -173,24 +170,21 @@ static int rcon_send(const char* cmd)
 		bufsize = strlen(buf)+1;
 		send (rcon_fd, buf, bufsize, 0);
 
-		if (wait_read_timeout(rcon_fd, 5, 0) <= 0)
-		{
+		if (wait_read_timeout(rcon_fd, 5, 0) <= 0) {
 			rcon_print ("*** timeout waiting for challenge\n");
 			errno = ETIMEDOUT;
 			return -1;
 		}
 
 		size = recv (rcon_fd, cbuf, cbufsize, 0);
-		if(size < 0)
-		{
+		if (size < 0) {
 			rcon_print ("*** error in challenge response\n");
 			return -1;
 		}
 
 		msg = msg_terminate(cbuf, size);
 
-		if(strlen(msg) < strlen(mustresponse) || strncmp(msg,mustresponse,strlen(mustresponse)))
-		{
+		if (strlen(msg) < strlen(mustresponse) || strncmp(msg,mustresponse,strlen(mustresponse))) {
 			rcon_print ("*** error in challenge response\n");
 			return -1;
 		}
@@ -198,10 +192,8 @@ static int rcon_send(const char* cmd)
 		rcon_challenge = g_strstrip(msg+strlen(mustresponse));
 	}
 
-	if(rcon_servertype == HL_SERVER)
-	{
-		if(!rcon_challenge || !*rcon_challenge)
-		{
+	if (rcon_servertype == HL_SERVER) {
+		if (!rcon_challenge || !*rcon_challenge) {
 			rcon_print ("*** invalid challenge\n");
 			return -1;
 		}
@@ -209,8 +201,7 @@ static int rcon_send(const char* cmd)
 		buf = g_strdup_printf("\377\377\377\377rcon %s %s %s",rcon_challenge, rcon_password, cmd);
 		bufsize = strlen(buf)+1;
 	}
-	else if (rcon_servertype == DOOM3_SERVER || rcon_servertype == Q4_SERVER)
-	{
+	else if (rcon_servertype == DOOM3_SERVER || rcon_servertype == Q4_SERVER) {
 		const char prefix[] = "\377\377rcon";
 		bufsize = sizeof(prefix) +strlen(rcon_password) +1 +strlen(cmd) +1;
 		buf = g_new0(char, bufsize);
@@ -218,8 +209,7 @@ static int rcon_send(const char* cmd)
 		strcpy(buf+sizeof(prefix), rcon_password);
 		strcpy(buf+sizeof(prefix)+strlen(rcon_password)+1, cmd);
 	}
-	else
-	{
+	else {
 		buf = g_strdup_printf("\377\377\377\377rcon %s %s",rcon_password, cmd);
 		bufsize = strlen(buf)+1;
 	}
@@ -239,8 +229,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	cmd = strdup_strip (
 			gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry)));
 
-	if (cmd)
-	{
+	if (cmd) {
 		res = rcon_send(cmd);
 
 		if (res < 0) {
@@ -261,8 +250,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
  * ensure msg is terminated by \n\0. return string that fullfilles this
  * criteria. returned string must be freed afterwards
  */
-static char* msg_terminate (char *msg, int size)
-{
+static char* msg_terminate (char *msg, int size) {
 
 	char *newmsg = NULL;
 	int newsize = size;
@@ -271,49 +259,43 @@ static char* msg_terminate (char *msg, int size)
 	if (!msg || size <= 0)
 		return g_strdup("\n");
 
-	if(size == 1)
-	{
-		if(msg[0] != '\0')
+	if (size == 1) {
+		if (msg[0] != '\0')
 			what |= append_0;
-		if(msg[0] != '\n')
+		if (msg[0] != '\n')
 			what |= append_nl;
 	}
-	else if(msg[size-1] != '\0')
-	{
+	else if (msg[size-1] != '\0') {
 		// not null terminated, check for newline
-		if(msg[size-1] != '\n')
+		if (msg[size-1] != '\n')
 			what |= append_nl;
 
 		what |= append_0;
 	}
-	else if(msg[size-2] != '\n')
-	{
+	else if (msg[size-2] != '\n') {
 		// null terminated but no newline
 		what |= append_nl;
 	}
 
-	if( what & append_0 )
+	if ( what & append_0 )
 		newsize++;
-	if( what & append_nl )
+	if ( what & append_nl )
 		newsize++;
 
 	newmsg = (char*)g_malloc(newsize);
 	newmsg = strncpy(newmsg,msg,size);
 
-	if((what & append_0) || (what & append_nl) )
-	{
+	if ((what & append_0) || (what & append_nl) ) {
 		newmsg[newsize-1] = '\0';
 	}
-	if( what & append_nl )
-	{
+	if ( what & append_nl ) {
 		newmsg[newsize-2] = '\n';
 	}
 
 	return newmsg;
 }
 
-static char* rcon_receive()
-{
+static char* rcon_receive() {
 	char *msg = "\n";
 	ssize_t t;
 	ssize_t size;
@@ -322,12 +304,10 @@ static char* rcon_receive()
 		packet = g_malloc (PACKET_MAXSIZE);
 
 	size = recv (rcon_fd, packet, PACKET_MAXSIZE, 0);
-	if (size < 0)
-	{
-		if(errno != EWOULDBLOCK) failed("recv");
+	if (size < 0) {
+		if (errno != EWOULDBLOCK) failed("recv");
 	}
-	else
-	{
+	else {
 		switch (rcon_servertype) {
 
 			case QW_SERVER:
@@ -337,22 +317,21 @@ static char* rcon_receive()
 				msg = packet + 4 + 1;
 				size = size - 4 - 1;
 
-				for(t = 0; t < size && msg[t]; t++)      // filter QW KTPRO status list
+				for (t = 0; t < size && msg[t]; t++)      // filter QW KTPRO status list
 				{
-					if((unsigned char)msg[t] == 141)
+					if ((unsigned char)msg[t] == 141)
 						msg[t] = '>';
 
 					msg[t]&=0x7f;
 
-					if(msg[t] < 32)
-					{
-						if(msg[t] >= 0x12 && msg[t] <= 0x12 + 9)
+					if (msg[t] < 32) {
+						if (msg[t] >= 0x12 && msg[t] <= 0x12 + 9)
 							msg[t]+='0' - 0x12;    // yellow numbers
-						else if(msg[t] == 16)
+						else if (msg[t] == 16)
 							msg[t] = '[';
-						else if(msg[t] == 17)
+						else if (msg[t] == 17)
 							msg[t] = ']';
-						else if(msg[t] != '\n' && msg[t] != '\r')
+						else if (msg[t] != '\n' && msg[t] != '\r')
 							msg[t] = '.';        // unprintable
 					}
 				}
@@ -361,15 +340,12 @@ static char* rcon_receive()
 			case DOOM3_SERVER:
 			case Q4_SERVER:
 				// "\377\377print\0????\0"
-				if(size > 2+6+4+1)
-				{
+				if (size > 2+6+4+1) {
 					char* ptr = msg = packet+2+6+4;
-					while(ptr && ptr < packet + size - 1)
-					{
-						if(*ptr == '\n' || isprint(*ptr))
+					while (ptr && ptr < packet + size - 1) {
+						if (*ptr == '\n' || isprint(*ptr))
 							++ptr;
-						else
-						{
+						else {
 							*ptr = '.';
 							++ptr;
 						}
@@ -475,7 +451,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	if (!s || !passwd)
 		return;
 
-	if(rcon_challenge)
+	if (rcon_challenge)
 		g_free(rcon_challenge);
 	rcon_challenge = NULL;
 	rcon_password = passwd;
@@ -484,7 +460,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	if (rcon_fd < 0)
 		return;
 
-	if(set_nonblock(rcon_fd) == -1)
+	if (set_nonblock(rcon_fd) == -1)
 		failed("fcntl");
 
 	assemble_server_address (srv, 256, s);
@@ -667,8 +643,7 @@ void rcon_done (void) {
 }
 
 #ifdef RCON_STANDALONE
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	struct in_addr ip;
 	int argpos = 1;
 	unsigned short port = 0;
@@ -688,32 +663,26 @@ int main(int argc, char* argv[])
 
 	rcon_servertype = Q3_SERVER;
 
-	if(argc>1)
-	{
-		if(!strcmp(argv[argpos],"--qws"))
-		{
+	if (argc>1) {
+		if (!strcmp(argv[argpos],"--qws")) {
 			rcon_servertype = QW_SERVER;
 			argpos++;
 		}
-		else if(!strcmp(argv[argpos],"--hls"))
-		{
+		else if (!strcmp(argv[argpos],"--hls")) {
 			rcon_servertype = HL_SERVER;
 			argpos++;
 		}
-		else if(!strcmp(argv[argpos],"--hws"))
-		{
+		else if (!strcmp(argv[argpos],"--hws")) {
 			rcon_servertype = HW_SERVER;
 			argpos++;
 		}
-		else if(!strcmp(argv[argpos],"--dm3s"))
-		{
+		else if (!strcmp(argv[argpos],"--dm3s")) {
 			rcon_servertype = DOOM3_SERVER;
 			argpos++;
 		}
 	}
 
-	if( argc-argpos<2 || !strcmp(argv[argpos],"--help"))
-	{
+	if ( argc-argpos<2 || !strcmp(argv[argpos],"--help")) {
 		printf(_("Usage: %s [server type] <ip> <port>\n"),argv[0]);
 		printf(_("  server type is either --qws, --hws, --hls or --dm3s.\n"));
 		printf(_("  If no server type is specified, Q3 style rcon is assumed.\n"));
@@ -723,35 +692,29 @@ int main(int argc, char* argv[])
 	arg_ip = argv[argpos++];
 	arg_port = argv[argpos++];
 
-	if(!inet_aton(arg_ip,&ip))
-	{
+	if (!inet_aton(arg_ip,&ip)) {
 		printf("invalid ip: %s\n",arg_ip);
 		return 1;
 	}
 
-	if((port = atoi(arg_port)) == 0)
-	{
+	if ((port = atoi(arg_port)) == 0) {
 		printf("invalid port: %s\n",arg_port);
 		return 1;
 	}
 
 	rcon_fd = open_connection(&ip,port);
-	if(rcon_fd < 0)
-	{
+	if (rcon_fd < 0) {
 		return 1;
 	}
 
-	if(set_nonblock(rcon_fd) == -1)
+	if (set_nonblock(rcon_fd) == -1)
 		failed("fcntl");
 
-	if(getenv("XQF_RCON_PASSWORD"))
-	{
+	if (getenv("XQF_RCON_PASSWORD")) {
 		rcon_password = g_strdup(getenv("XQF_RCON_PASSWORD"));
 	}
-	else
-	{
-		while(!buf || !*buf)
-		{
+	else {
+		while (!buf || !*buf) {
 			// translator: readline prompt
 			buf = readline(_("Password: "));
 		}
@@ -759,31 +722,26 @@ int main(int argc, char* argv[])
 	}
 
 	buf = readline(prompt);
-	while(buf)
-	{
+	while (buf) {
 		res = rcon_send(buf);
 		if (res < 0) {
 			failed("send");
 		}
-		else
-		{
-			if (wait_read_timeout(rcon_fd, 5, 0) <= 0)
-			{
+		else {
+			if (wait_read_timeout(rcon_fd, 5, 0) <= 0) {
 				printf ("*** timeout waiting for reply\n");
 			}
-			else
-			{
+			else {
 				char* msg;
 				/* see if more packets arrive within a short interval */
-				while(wait_read_timeout(rcon_fd, 0, 50000) > 0)
-				{
+				while (wait_read_timeout(rcon_fd, 0, 50000) > 0) {
 					msg = rcon_receive();
 					printf("%s", msg);
 					g_free(msg);
 				}
 			}
 		}
-		if(*buf)
+		if (*buf)
 			add_history(buf);
 		free(buf);
 		buf = readline(prompt);

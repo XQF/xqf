@@ -22,15 +22,13 @@
 unsigned int gdk_pixbuf_major_version;
 unsigned int gdk_pixbuf_minor_version;
 
-void *gdk_pixbuf_new_from_file (const char *filename)
-{
+void *gdk_pixbuf_new_from_file (const char *filename) {
 	return NULL;
 }
 
 void gdk_pixbuf_render_pixmap_and_mask(void *pixbuf,
 		void **pixmap_return, void **mask_return,
-		int alpha_threshold)
-{
+		int alpha_threshold) {
 	*pixmap_return = NULL;
 	*mask_return = NULL;
 }

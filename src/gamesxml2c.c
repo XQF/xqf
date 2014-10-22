@@ -95,15 +95,13 @@ typedef struct
 
 static Tag tags[TAG_count+1];
 
-static void add_tag(GameTag nr, TagInherit inherit, TagType type, const char* name)
-{
+static void add_tag(GameTag nr, TagInherit inherit, TagType type, const char* name) {
 	tags[nr].inherit = inherit;
 	tags[nr].type = type;
 	tags[nr].name = name;
 }
 
-static void tags_init()
-{
+static void tags_init() {
 	add_tag(TAG_type,                   Tag_no_inherit, Tag_type_literal, "type");
 	add_tag(TAG_flags,                  Tag_do_inherit, Tag_type_literal, "flags");
 	add_tag(TAG_name,                   Tag_no_inherit, Tag_type_string,  "name");
@@ -141,25 +139,22 @@ static void tags_init()
 	add_tag(TAG_invalid,                Tag_no_inherit, Tag_type_literal, NULL);
 }
 
-const xmlChar* tag_name(GameTag tag)
-{
-	if(tag < TAG_start_basic || tag >= TAG_invalid)
+const xmlChar* tag_name(GameTag tag) {
+	if (tag < TAG_start_basic || tag >= TAG_invalid)
 		return NULL;
 
 	return tags[tag].name;
 }
 
-TagInherit tag_inherit(GameTag tag)
-{
-	if(tag < TAG_start_basic || tag >= TAG_invalid)
+TagInherit tag_inherit(GameTag tag) {
+	if (tag < TAG_start_basic || tag >= TAG_invalid)
 		return 0;
 
 	return tags[tag].inherit;
 }
 
-TagType tag_type(GameTag tag)
-{
-	if(tag < TAG_start_basic || tag >= TAG_invalid)
+TagType tag_type(GameTag tag) {
+	if (tag < TAG_start_basic || tag >= TAG_invalid)
 		return 0;
 
 	return tags[tag].type;
@@ -186,15 +181,12 @@ typedef struct _GameList
 	struct _GameList* next;
 } GameList;
 
-GameTag getGameTag(const xmlChar* str)
-{
+GameTag getGameTag(const xmlChar* str) {
 	unsigned i;
 	GameTag tag = TAG_invalid;
 
-	for ( i = 0; i < TAG_count; ++i)
-	{
-		if(!xmlStrcmp(str, tag_name(i)))
-		{
+	for ( i = 0; i < TAG_count; ++i) {
+		if (!xmlStrcmp(str, tag_name(i))) {
 			tag = i;
 			break;
 		}
@@ -205,36 +197,30 @@ GameTag getGameTag(const xmlChar* str)
 
 #define MALLOC(var, type) var = malloc(sizeof(type)); if(!var) abort(); memset(var, 0, sizeof(type));
 
-RawGame* parseGame(xmlDocPtr doc, xmlNodePtr node)
-{
+RawGame* parseGame(xmlDocPtr doc, xmlNodePtr node) {
 	GameTag tag;
 	xmlChar* val = NULL;
 	RawGame* rawgame;
 
 	MALLOC(rawgame, RawGame);
 
-	for (node = node->xmlChildrenNode; node; node = node->next)
-	{
-		if(node->type != XML_ELEMENT_NODE) continue;
+	for (node = node->xmlChildrenNode; node; node = node->next) {
+		if (node->type != XML_ELEMENT_NODE) continue;
 
 		tag = getGameTag(node->name);
 
-		if(tag == TAG_invalid)
-		{
+		if (tag == TAG_invalid) {
 			fprintf(stderr,"invalid tag: %s\n", node->name); 
 			continue;
 		}
 
 		val = xmlNodeListGetString(doc, node->xmlChildrenNode, 1);
 
-		if(tag <= TAG_end_basic )
-		{
+		if (tag <= TAG_end_basic ) {
 			rawgame->basic[tag] = val;
 		}
-		else if(tag >= TAG_start_multi && tag <= TAG_end_multi )
-		{
-			if(val)
-			{
+		else if (tag >= TAG_start_multi && tag <= TAG_end_multi ) {
+			if (val) {
 				struct MultiTag* mt;
 				MALLOC(mt, struct MultiTag);
 				mt->val = val;
@@ -242,8 +228,7 @@ RawGame* parseGame(xmlDocPtr doc, xmlNodePtr node)
 				rawgame->multi[tag-TAG_start_multi] = mt;
 			}
 		}
-		else if (tag == TAG_base)
-		{
+		else if (tag == TAG_base) {
 			rawgame->basestr = val;
 		}
 	}
@@ -251,8 +236,7 @@ RawGame* parseGame(xmlDocPtr doc, xmlNodePtr node)
 	return rawgame;
 }
 
-GameList* parseGames(const char* filename)
-{
+GameList* parseGames(const char* filename) {
 	xmlDocPtr doc;
 	xmlNodePtr node;
 	GameList* list = NULL;
@@ -273,14 +257,11 @@ GameList* parseGames(const char* filename)
 		return(NULL);
 	}
 
-	for (node = node->xmlChildrenNode; node; node = node->next)
-	{
-		if ((!xmlStrcmp(node->name, (const xmlChar *) "game")))
-		{
+	for (node = node->xmlChildrenNode; node; node = node->next) {
+		if ((!xmlStrcmp(node->name, (const xmlChar *) "game"))) {
 			RawGame* rawgame;
 			rawgame = parseGame(doc, node);
-			if(rawgame)
-			{
+			if (rawgame) {
 				GameList* rg = NULL;
 				MALLOC(rg, GameList);
 				rg->game = rawgame;
@@ -293,25 +274,22 @@ GameList* parseGames(const char* filename)
 	return list;
 }
 
-void printGame(FILE* f, RawGame* rg, RawGame* template)
-{
+void printGame(FILE* f, RawGame* rg, RawGame* template) {
 	GameTag tag;
 
 	fputs("\t{\n", f);
-	for ( tag = TAG_start_basic; tag <= TAG_end_basic; ++tag)
-	{
+	for ( tag = TAG_start_basic; tag <= TAG_end_basic; ++tag) {
 		xmlChar* val = rg->basic[tag];
 
-		if(!val && rg->base && tag_inherit(tag))
+		if (!val && rg->base && tag_inherit(tag))
 			val = rg->base->basic[tag];
 
-		if(!val)
+		if (!val)
 			val = template->basic[tag];
 
-		if(!val || !xmlStrcmp(val, "NULL")) continue;
+		if (!val || !xmlStrcmp(val, "NULL")) continue;
 
-		switch(tag_type(tag))
-		{
+		switch(tag_type(tag)) {
 			case Tag_type_string:
 				fprintf(f, "\t\t%-20s: \"%s\",\n", tag_name(tag), val);
 				break;
@@ -326,17 +304,16 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
 		}
 	}
 
-	for ( tag = TAG_start_multi; tag <= TAG_end_multi; ++tag)
-	{
+	for ( tag = TAG_start_multi; tag <= TAG_end_multi; ++tag) {
 		struct MultiTag* m = rg->multi[tag - TAG_start_multi];
 
-		if(!m && rg->base && tag_inherit(tag))
+		if (!m && rg->base && tag_inherit(tag))
 			m = rg->base->multi[tag - TAG_start_multi];
 
-		if(!m)
+		if (!m)
 			m = template->multi[tag - TAG_start_multi];
 
-		if(!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
+		if (!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
 
 		fprintf(f, "\t\t%-20s: stringlist%03u,\n", tag_name(tag), rg->num_multitags++ );
 	}
@@ -344,8 +321,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template)
 	fputs("\t},\n", f);
 }
 
-int main (int argc, char* argv[])
-{
+int main (int argc, char* argv[]) {
 	GameList* list = NULL;
 	GameList* ptr = NULL;
 	GameList* next = NULL;
@@ -354,22 +330,20 @@ int main (int argc, char* argv[])
 
 	FILE* f = stdout;
 
-	if(argc < 2) return 1;
+	if (argc < 2) return 1;
 
 	tags_init();
 
 	list = parseGames(argv[1]);
 
-	if(!list) return 2;
+	if (!list) return 2;
 
 	// reverse list and find template
 	ptr = list;
 	list = NULL;
-	for(; ptr; ptr = next)
-	{
+	for (; ptr; ptr = next) {
 		next = ptr->next;
-		if(!template && !xmlStrcmp(ptr->game->basic[TAG_type], "DEFAULT"))
-		{
+		if (!template && !xmlStrcmp(ptr->game->basic[TAG_type], "DEFAULT")) {
 			template = ptr->game;
 			// free(ptr);
 			continue;
@@ -380,15 +354,12 @@ int main (int argc, char* argv[])
 
 	// FIXME: this is O(n^2), use hash table
 	// fill in base links for derived servers
-	for(ptr = list; ptr; ptr = ptr->next)
-	{
+	for (ptr = list; ptr; ptr = ptr->next) {
 		GameList* l = NULL;
-		if(!ptr->game->basestr) continue;
-		for(l = list; l; l = l->next)
-		{
-			if(!xmlStrcmp(l->game->basic[TAG_type], ptr->game->basestr))
-			{
-				if(l->game->base)
+		if (!ptr->game->basestr) continue;
+		for (l = list; l; l = l->next) {
+			if (!xmlStrcmp(l->game->basic[TAG_type], ptr->game->basestr)) {
+				if (l->game->base)
 					fprintf(stderr,"%s: base server must not base on another one\n", ptr->game->basic[TAG_type]);
 				ptr->game->base = l->game;
 				xmlFree(ptr->game->basestr);
@@ -399,26 +370,23 @@ int main (int argc, char* argv[])
 
 	fputs("// DO NOT EDIT THIS FILE, AUTOMATICALLY GENERATED\n", f);
 
-	for(ptr = list; ptr; ptr = ptr->next)
-	{
+	for (ptr = list; ptr; ptr = ptr->next) {
 		RawGame* rg = ptr->game;
 		GameTag tag;
 
-		for ( tag = TAG_start_multi; tag <= TAG_end_multi; ++tag)
-		{
+		for ( tag = TAG_start_multi; tag <= TAG_end_multi; ++tag) {
 			struct MultiTag* m = rg->multi[tag - TAG_start_multi];
 
-			if(!m && rg->base && tag_inherit(tag))
+			if (!m && rg->base && tag_inherit(tag))
 				m = rg->base->multi[tag - TAG_start_multi];
 
-			if(!m)
+			if (!m)
 				m = template->multi[tag - TAG_start_multi];
 
-			if(!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
+			if (!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
 
 			fprintf(f, "static char* stringlist%03u[] = {", i);
-			for(; m; m = m->next)
-			{
+			for (; m; m = m->next) {
 				fprintf(f, " \"%s\",", m->val);
 			}
 			fputs(" NULL };\n", f);
@@ -430,8 +398,7 @@ int main (int argc, char* argv[])
 	fputs("struct game games[] = {\n", f);
 
 	i = 0;
-	for(ptr = list; ptr; ptr = ptr->next)
-	{
+	for (ptr = list; ptr; ptr = ptr->next) {
 		RawGame* rg = ptr->game;
 		rg->num_multitags = i;
 		printGame(f, rg, template);

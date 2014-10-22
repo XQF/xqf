@@ -53,14 +53,16 @@ static int host_hash_func (const struct in_addr *ip) {
 	return (ptr[0] + (ptr[1] << 2) + (ptr[2] << 4) + (ptr[3] << 6)) % hosts.num;
 }
 
-static gint host_sorting_helper (const struct host *h1, 
-		const struct host *h2) {
-	if(h1==h2)
+static gint host_sorting_helper (const struct host *h1, const struct host *h2) {
+	if (h1==h2) {
 		return 0;
-	else if(h1<h2)
+	}
+	else if (h1<h2) {
 		return -1;
-	else
+	}
+	else {
 		return 1;
+	}
 }
 
 
@@ -172,8 +174,7 @@ GSList *merge_hosts_to_resolve (GSList *hosts, GSList *servers) {
 
 	for (; servers; servers = servers->next) {
 		h = ((struct server *) servers->data)->host;
-		if (h->refreshed == 0 || h->refreshed >= curtime + HOST_CACHE_MAX_AGE)
-		{
+		if (h->refreshed == 0 || h->refreshed >= curtime + HOST_CACHE_MAX_AGE) {
 			//      hosts = host_list_add (hosts, h);
 			hosts = g_slist_prepend (hosts, h);
 			host_ref(h);

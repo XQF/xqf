@@ -25,25 +25,23 @@
 static int indent_level;
 static int debug_level;
 
-void debug_int(const char* file, int line, const char* function, int level, const char* fmt, ...)
-{
+void debug_int(const char* file, int line, const char* function, int level, const char* fmt, ...) {
 	va_list argp;
 	int i;
 	char buf[9];
 	time_t now;
 
-	for (i=0;i<indent_level;i++)
-	{
+	for (i=0;i<indent_level;i++) {
 		fprintf(stderr, " ");
 	}
 	now = time(NULL);
 	strftime(buf,9,"%T",localtime(&now));
 
-	if(level == -3)
+	if (level == -3)
 		fprintf(stderr, "ERROR! %s %s:%d %s() - ", buf, file, line, function);
-	else if(level == -2)
+	else if (level == -2)
 		fprintf(stderr, "WARNING %s %s:%d %s() - ", buf, file, line, function);
-	else if(level == -1)
+	else if (level == -1)
 		fprintf(stderr, "note %s %s:%d %s() - ", buf, file, line, function);
 	else
 		fprintf(stderr, "debug(%d) %s %s:%d %s() - ", level, buf, file, line, function);
@@ -54,11 +52,10 @@ void debug_int(const char* file, int line, const char* function, int level, cons
 	fprintf(stderr, "\n");
 }
 
-void debug_cmd(int level, char *argv[], char *fmt, ...)
-{
+void debug_cmd(int level, char *argv[], char *fmt, ...) {
 	va_list argp;
 	int i;
-	if( level > debug_level ) return;
+	if ( level > debug_level ) return;
 	fprintf(stderr, "debug(%d): ", level);
 	va_start(argp, fmt);
 	vfprintf(stderr, fmt, argp);
@@ -70,24 +67,20 @@ void debug_cmd(int level, char *argv[], char *fmt, ...)
 }
 
 
-void set_debug_level (int level)
-{
+void set_debug_level (int level) {
 	debug_level = level;
 }
 
-inline int get_debug_level (void)
-{
+inline int get_debug_level (void) {
 	return (debug_level);
 }
 
-int debug_increase_indent()
-{
+int debug_increase_indent() {
 	indent_level++;
 	return indent_level;
 }
 
-int debug_decrease_indent()
-{
-	if(indent_level>0)indent_level--;
+int debug_decrease_indent() {
+	if (indent_level>0)indent_level--;
 	return indent_level;
 }

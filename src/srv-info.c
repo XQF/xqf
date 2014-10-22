@@ -486,16 +486,14 @@ static void show_extended_flags (const char *str, char *names[], int size,
 	}
 }
 
-static void show_split_value (const char *str, const char* separator, GtkCTreeNode *parent)
-{
+static void show_split_value (const char *str, const char* separator, GtkCTreeNode *parent) {
 	char** values;
 	char* text[2];
 	unsigned i;
 
 	values = g_strsplit(str, separator, 0);
 
-	for(i=0; values && values[i]; ++i)
-	{
+	for (i=0; values && values[i]; ++i) {
 		text[0] = values[i];
 		text[1] = NULL;
 		gtk_ctree_insert_node (srvinf_ctree, parent, NULL, text, 4,
@@ -612,8 +610,7 @@ void srvinf_ctree_set_server (struct server *s) {
 					else if (s->game && !g_ascii_strcasecmp (s->game, "freeze")) {
 						show_extended_flags (info[1], q3_freeze_dmflags, Q3_FREEZE_DMFLAGS, FALSE, node);
 					}
-					else
-					{
+					else {
 						show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
 					}
 				}
@@ -635,23 +632,20 @@ void srvinf_ctree_set_server (struct server *s) {
 				break;
 
 			case WO_SERVER:
-				if (info[0] && !g_ascii_strcasecmp (info[0], "g_voteFlags"))
-				{
+				if (info[0] && !g_ascii_strcasecmp (info[0], "g_voteFlags")) {
 					show_extended_flags (info[1], rtcw_voteflags, RTCW_VOTEFLAGS, FALSE, node);
 				}
 				break;
 
 			case WOET_SERVER:
-				if (info[0] && !g_ascii_strcasecmp (info[0], "voteflags"))
-				{
+				if (info[0] && !g_ascii_strcasecmp (info[0], "voteflags")) {
 					show_extended_flags (info[1], woet_voteflags, WOET_VOTEFLAGS, FALSE, node);
 				}
 				break;
 
 			case UT2_SERVER:
 			case UT2004_SERVER:
-				if (info[0] && !g_ascii_strcasecmp (info[0], "mutator"))
-				{
+				if (info[0] && !g_ascii_strcasecmp (info[0], "mutator")) {
 					show_split_value(info[1], "|", node);
 				}
 				break;

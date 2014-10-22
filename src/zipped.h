@@ -37,4 +37,3 @@ extern void zstream_unlink (const char *name);
 
 
 #endif /* __ZIPPED_H__ */
-

@@ -49,27 +49,22 @@ static int currentFile = 0;
 
 #define BASEDIR "/tmp/xqf_test_util/"
 
-static void popFile(int nr)
-{
-	for( ; nr > 0 && currentFile > 0 ; --nr)
-	{
+static void popFile(int nr) {
+	for ( ; nr > 0 && currentFile > 0 ; --nr) {
 		File* entry = tempfiles[--currentFile];
 
-		if(!entry)
+		if (!entry)
 			continue;
 
-		switch(entry->type)
-		{
+		switch(entry->type) {
 			case tFile:
 			case tSymlink:
-				if(unlink(entry->name) == -1)
-				{
+				if (unlink(entry->name) == -1) {
 					ERROR("unlink %s", entry->name);
 				}
 				break;
 			case tDirecory:
-				if(rmdir(entry->name) == -1)
-				{
+				if (rmdir(entry->name) == -1) {
 					ERROR("rmdir %s", entry->name);
 				}
 				break;
@@ -77,20 +72,18 @@ static void popFile(int nr)
 		g_free(entry);
 	}
 
-	if(currentFile < 0)
+	if (currentFile < 0)
 		currentFile = 0;
 }
 
-static void cleanup()
-{
+static void cleanup() {
 	popFile(currentFile);
 }
 
-static const char* newFile(FileType type, const char* name)
-{
+static const char* newFile(FileType type, const char* name) {
 	File* f = NULL;
 
-	if(currentFile >= MaxFiles)
+	if (currentFile >= MaxFiles)
 		exit(1);
 
 	f = tempfiles[currentFile] = g_malloc0(sizeof(File));
@@ -104,40 +97,33 @@ static const char* newFile(FileType type, const char* name)
 }
 
 
-static void doMkdir(const char* dir)
-{
+static void doMkdir(const char* dir) {
 	dir = newFile(tDirecory, dir);
-	if(mkdir(dir, 0755) == -1)
-	{
+	if (mkdir(dir, 0755) == -1) {
 		ERROR("mkdir %s", dir);
 		exit(1);
 	}
 }
 
-static void doSymlink(const char* oldpath, const char* newpath)
-{
+static void doSymlink(const char* oldpath, const char* newpath) {
 	newpath = newFile(tSymlink, newpath);
-	if(symlink(oldpath, newpath) == -1)
-	{
+	if (symlink(oldpath, newpath) == -1) {
 		ERROR("symlink %s -> %s", newpath, oldpath);
 		exit(1);
 	}
 }
 
-static void doFile(const char* name)
-{
+static void doFile(const char* name) {
 	int fd = -1;
 	name = newFile(tFile, name);
-	if((fd = open(name, O_CREAT|O_EXCL|O_RDWR, 0755)) == -1)
-	{
+	if ((fd = open(name, O_CREAT|O_EXCL|O_RDWR, 0755)) == -1) {
 		ERROR("open %s", name);
 		exit(1);
 	}
 	close(fd);
 }
 
-void test_find_game_dir()
-{
+void test_find_game_dir() {
 	const char* targets[] =
 	{
 		"westernq3",
@@ -160,8 +146,7 @@ void test_find_game_dir()
 	doSymlink("q3ut2", "Q3UT2");
 	doSymlink("q3ut3", "Q3UT3");
 
-	for(; targets[i]; ++i)
-	{
+	for (; targets[i]; ++i) {
 		result = find_game_dir(BASEDIR, targets[i], &type);
 		PRINT("search %s, result %s, type %d", targets[i], result, type);
 		g_free(result);
@@ -170,8 +155,7 @@ void test_find_game_dir()
 	popFile(6);
 }
 
-void test_file_in_dir()
-{
+void test_file_in_dir() {
 	const char* dirs[] =
 	{
 		"/a", "b",
@@ -187,16 +171,14 @@ void test_file_in_dir()
 	};
 	int i = 0;
 
-	for(; dirs[i] || dirs[i+1]; i+=2)
-	{
+	for (; dirs[i] || dirs[i+1]; i+=2) {
 		char* dir = file_in_dir(dirs[i], dirs[i+1]);
 		PRINT("'%s' + '%s' = '%s'", dirs[i], dirs[i+1], dir);
 		g_free(dir);
 	}
 }
 
-void test_resolve_path()
-{
+void test_resolve_path() {
 	char buf[PATH_MAX] = {0};
 	char* oldpath = NULL;
 	const char* files[] =
@@ -224,13 +206,12 @@ void test_resolve_path()
 	doSymlink(BASEDIR "game/binary", "bin/absolute");
 
 	oldpath = getenv("PATH");
-	if(!oldpath)
+	if (!oldpath)
 		exit(1);
 	snprintf(buf, sizeof(buf), "%s%s:%s", BASEDIR, "bin", oldpath);
 	setenv("PATH", buf, 1);
 
-	for(; files[i]; ++i)
-	{
+	for (; files[i]; ++i) {
 		char* path = resolve_path(files[i]);
 		PRINT("'%s' -> '%s'", files[i], path);
 		g_free(path);
@@ -239,8 +220,7 @@ void test_resolve_path()
 	setenv("PATH", oldpath, 1);
 }
 
-int main (int argc, char* argv[])
-{
+int main (int argc, char* argv[]) {
 	atexit(cleanup);
 
 	doMkdir("");

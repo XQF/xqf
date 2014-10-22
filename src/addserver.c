@@ -70,8 +70,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 
 	enter_server_result = NULL;
 
-	if(*type == UNKNOWN_SERVER)
-	{
+	if (*type == UNKNOWN_SERVER) {
 		char *typestr;
 
 		// Get last game type added (stored in server_combo_activate_callback)

@@ -506,7 +506,7 @@ static void pattern_clist_select_row_callback (GtkWidget *widget,
 
 	// for some reason this function is called when a row gets deleted, would
 	// segfault later when row was the last one
-	if(row>=g_slist_length(curplrs)) return;
+	if (row>=g_slist_length(curplrs)) return;
 
 	current_row = row;
 

@@ -167,19 +167,16 @@ void props_save (void) {
 			if (p->sucks)
 				fprintf (f, "sucks %d\n", p->sucks);
 
-			if (p->comment && strlen(p->comment))
-			{
+			if (p->comment && strlen(p->comment)) {
 				char* s = p->comment;
 
 				// strip trailing \n, otherwise one is added each time the server is saved
-				while(s[strlen(s)-1] == '\n')
+				while (s[strlen(s)-1] == '\n')
 					s[strlen(s)-1] = '\0';
 
 				fputs("comment ", f);
-				while(*s)
-				{
-					switch(*s)
-					{
+				while (*s) {
+					switch(*s) {
 						case '\n':
 							fputs("\\n", f);
 							break;
@@ -286,32 +283,27 @@ void props_load (void) {
 			else if (strcmp (buf, "sucks") == 0) {
 				p->sucks = atoi(ptr);
 			}
-			else if (strcmp (buf, "comment") == 0)
-			{
+			else if (strcmp (buf, "comment") == 0) {
 				unsigned di, si;
 				size_t slen = strlen(ptr);
 				int quote = 0;
 
 				g_free (p->comment);
 				p->comment = g_malloc0 (slen + 1);
-				for( si = 0, di = 0; si < slen; ++si )
-				{
-					if(quote)
-					{
+				for ( si = 0, di = 0; si < slen; ++si ) {
+					if (quote) {
 						quote = 0;
-						if(ptr[si] == 'n')
+						if (ptr[si] == 'n')
 							p->comment[di++] = '\n';
-						else if(ptr[si] == '\\')
+						else if (ptr[si] == '\\')
 							p->comment[di++] = '\\';
 						else
 							xqf_warning("unknown control sequence \\%c", ptr[si]);
 					}
-					else if(ptr[si] == '\\')
-					{
+					else if (ptr[si] == '\\') {
 						quote = 1;
 					}
-					else
-					{
+					else {
 						p->comment[di++] = ptr[si];
 					}
 				}
@@ -467,8 +459,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	if (geoip_name_by_id(s->country_id)) {
 		GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
 		struct pixmap* pix = get_pixmap_for_country(s->country_id);
-		if(pix)
-		{
+		if (pix) {
 			GtkWidget *pixmap = gtk_pixmap_new(pix->pix,pix->mask);
 			gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
 			gtk_widget_show (pixmap);
@@ -520,8 +511,7 @@ static GtkWidget *server_info_page (struct server *s) {
 		gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 		gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
 
-		if(s->last_answer + max_days*24*60*60 < s->refreshed)
-		{
+		if (s->last_answer + max_days*24*60*60 < s->refreshed) {
 			// XXX: I don't know if that is the correct way, it's undocumented :-(
 			style = gtk_widget_get_style(label);
 			gdk_color_parse("red",&color);
@@ -716,8 +706,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	char* comment = NULL;
 
 	props = properties (s);
-	if (props)
-	{
+	if (props) {
 		sucks = props->sucks;
 		comment = props->comment;
 	}
@@ -740,8 +729,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	gtk_widget_show (comment_text);
 
 	gtk_text_freeze (GTK_TEXT (comment_text));
-	if (comment)
-	{
+	if (comment) {
 		gtk_text_insert (GTK_TEXT (comment_text), NULL, NULL, NULL,
 				comment, strlen (comment));
 		gtk_text_set_point (GTK_TEXT (comment_text), 0);
@@ -894,8 +882,7 @@ void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
 		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), str);
 		gtk_entry_set_position (GTK_ENTRY (GTK_COMBO (combo)->entry), 0);
 	}
-	else
-	{
+	else {
 		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), "");
 	}
 }

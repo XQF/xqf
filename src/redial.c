@@ -46,19 +46,17 @@ static void stat_redial_close_handler (struct stat_job *job, int killed);
 static void stat_redial_server_handler (struct stat_job *job, struct server *s);
 static void set_redial_label(const char* name, gboolean waiting);
 
-static void on_launchbutton_clicked (GtkButton *button, gpointer user_data)
-{
+static void on_launchbutton_clicked (GtkButton *button, gpointer user_data) {
 	launchnow = TRUE;
-	if(timeoutid!=-1)
+	if (timeoutid!=-1)
 		gtk_timeout_remove(timeoutid);
 	gtk_widget_destroy(redial_window);
 }
 
 
-static void on_cancelbutton_clicked (GtkButton *button, gpointer user_data)
-{
+static void on_cancelbutton_clicked (GtkButton *button, gpointer user_data) {
 	launchnow = FALSE;
-	if(timeoutid!=-1)
+	if (timeoutid!=-1)
 		gtk_timeout_remove(timeoutid);
 	gtk_widget_destroy(redial_window);
 }
@@ -67,13 +65,11 @@ static void on_cancelbutton_clicked (GtkButton *button, gpointer user_data)
  * called on every gtk_timeout, updates progressbar until default_redial_wait
  * is reached, starts a new stat_process then
  */
-static gboolean redial_countdown (struct server* s)
-{
+static gboolean redial_countdown (struct server* s) {
 	void* blub = gtk_object_get_data(GTK_OBJECT(redial_window),"secondsprogress");
 	struct condef* con;
 	countdown++;
-	if(countdown>default_redial_wait)
-	{
+	if (countdown>default_redial_wait) {
 		countdown=0;
 		gtk_progress_set_value (GTK_PROGRESS (blub), countdown);
 		debug(3,"countdown 0, querying server");
@@ -94,15 +90,13 @@ static gboolean redial_countdown (struct server* s)
 		timeoutid=-1;
 		return FALSE;
 	}
-	else
-	{
+	else {
 		gtk_progress_set_value (GTK_PROGRESS (blub), countdown);
 		return TRUE;
 	}
 }
 
-static void stat_redial_server_handler (struct stat_job *job, struct server *s)
-{
+static void stat_redial_server_handler (struct stat_job *job, struct server *s) {
 	/* Don't spend time on host name lookups */
 
 	debug(3,"server %s refreshed",s->name);
@@ -115,11 +109,10 @@ static void stat_redial_server_handler (struct stat_job *job, struct server *s)
 
 
 /** set server name for redial dialog */
-static void set_redial_label(const char* name, gboolean waiting)
-{
+static void set_redial_label(const char* name, gboolean waiting) {
 	GtkWidget* label = gtk_object_get_data(GTK_OBJECT(redial_window),"label");
 	char* text;
-	if(waiting)
+	if (waiting)
 		text = g_strdup_printf(_("Waiting for free slots on\n%s"),name);
 	else
 		text = g_strdup_printf(_("Refreshing\n%s"),name);
@@ -128,8 +121,7 @@ static void set_redial_label(const char* name, gboolean waiting)
 }
 
 /** stat_process finished, check if slots are free otherwise setup new timeout */
-static void stat_redial_close_handler (struct stat_job *job, int killed)
-{
+static void stat_redial_close_handler (struct stat_job *job, int killed) {
 	struct condef* con = (struct condef *) job->data;
 	job->data = NULL;
 
@@ -140,22 +132,18 @@ static void stat_redial_close_handler (struct stat_job *job, int killed)
 	if (!con)
 		return;
 
-	if (!killed)
-	{
-		if (!server_need_redial(con->s, srv_props))
-		{
+	if (!killed) {
+		if (!server_need_redial(con->s, srv_props)) {
 			// ok, free slot. launch!
 			launchnow = TRUE;
 			gtk_widget_destroy(redial_window);
 		}
-		else
-		{
+		else {
 			timeoutid = gtk_timeout_add (1000, (GtkFunction)redial_countdown, (gpointer)con->s);
 			set_redial_label(con->s->name, TRUE);
 		}
 	}
-	else
-	{
+	else {
 		launchnow = FALSE;
 		gtk_widget_destroy(redial_window);
 	}
@@ -165,8 +153,7 @@ static void stat_redial_close_handler (struct stat_job *job, int killed)
 }
 
 /** glade function */
-static GtkWidget* create_redialwindow (void)
-{
+static GtkWidget* create_redialwindow (void) {
 	GtkWidget *redialwindow;
 	GtkWidget *vbox1;
 	GtkWidget *label;
@@ -238,11 +225,10 @@ static GtkWidget* create_redialwindow (void)
 
 /** open redial dialog, return true if game should be launched, false otherwise */
 
-gboolean redial_dialog (struct server* s, struct server_props* props)
-{
+gboolean redial_dialog (struct server* s, struct server_props* props) {
 	GtkWidget* progress;
 
-	if(!s)
+	if (!s)
 		return FALSE;
 
 	launchnow = FALSE;

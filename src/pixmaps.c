@@ -199,12 +199,10 @@ void free_pixmap (struct pixmap *pixmap) {
 }
 
 
-static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *pix)
-{
+static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *pix) {
 	load_pixmap_as_pixmap(widget, file, pix);
 
-	if(!pix->pix)
-	{
+	if (!pix->pix) {
 		pix->pix = error_pix.pix;
 		pix->mask = error_pix.mask;
 		gdk_pixmap_ref(pix->pix);
@@ -212,8 +210,7 @@ static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *p
 	}
 }
 
-void free_pixmaps (void)
-{
+void free_pixmaps (void) {
 	unsigned i;
 
 	free_pixmap (&update_pix);
@@ -254,8 +251,7 @@ void free_pixmaps (void)
 	free_pixmap (&punkbuster_pix);
 	free_pixmap (&locked_punkbuster_pix);
 
-	for (i = 0; i < GAMES_TOTAL; i++)
-	{
+	for (i = 0; i < GAMES_TOTAL; i++) {
 		free_pixmap(games[i].pix);
 		g_free(games[i].pix);
 		games[i].pix = NULL;
@@ -281,8 +277,7 @@ void free_pixmaps (void)
  * @param s2 second pixmap
  * @returns dest for convenience
  */
-struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixmap* s1, struct pixmap* s2)
-{
+struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixmap* s1, struct pixmap* s2) {
 	GdkGC *white_gc;
 	int h1, w1, h2, w2;
 
@@ -326,8 +321,7 @@ struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixma
 }
 
 
-void init_pixmaps (GtkWidget *window)
-{
+void init_pixmaps (GtkWidget *window) {
 	unsigned i = 0;
 
 	free_pixmaps ();
@@ -377,14 +371,12 @@ void init_pixmaps (GtkWidget *window)
 	create_pixmap (window, "punkbuster.xpm", &punkbuster_pix);
 	cat_pixmaps(window, &locked_punkbuster_pix, &punkbuster_pix, &locked_pix);
 
-	for (i = 0; i < GAMES_TOTAL; i++)
-	{
+	for (i = 0; i < GAMES_TOTAL; i++) {
 		struct pixmap* pix = NULL;
 
 		pix = g_malloc0(sizeof(struct pixmap));
 
-		if(games[i].icon)
-		{
+		if (games[i].icon) {
 			create_pixmap(window, games[i].icon, pix);
 		}
 

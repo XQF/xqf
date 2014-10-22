@@ -130,8 +130,7 @@ static void client_sigchild_handler (int signum) {
 
 	while ((pid = waitpid (WAIT_ANY, &status, WNOHANG)) > 0) {
 		// debug(4,"client_sigchild_handler() -- pid %d, status %d",pid,WEXITSTATUS(status));
-		if(WIFSIGNALED(status)&& WTERMSIG(status)==SIGSEGV)
-		{
+		if (WIFSIGNALED(status)&& WTERMSIG(status)==SIGSEGV) {
 			// debug(0,"*** SEGFAULT pid %d ***",pid);
 		}
 		for (list = clients; list; list = list->next) {
@@ -198,7 +197,7 @@ static void client_input_callback (struct running_client *cl, int fd, GdkInputCo
 
 			pid = cl->pid;                  /* save PID value */
 			client_detach (cl);
-			if(pid) kill (pid, SIGTERM);    // kill(0) would kill this process too!
+			if (pid) kill (pid, SIGTERM);    // kill(0) would kill this process too!
 		}
 		else {
 			client_detach (cl);
@@ -232,8 +231,7 @@ int client_launch_exec (int forkit, char *dir, char* argv[], struct server *s) {
 	int flags;
 	char msg[CLIENT_ERROR_BUFFER];
 
-	if (get_debug_level() || dontlaunch)
-	{
+	if (get_debug_level() || dontlaunch) {
 		char* cmdline = g_strjoinv(" # ",argv);
 		debug(0,"%s",cmdline);
 		g_free(cmdline);
