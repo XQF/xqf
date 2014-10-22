@@ -436,11 +436,11 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 /* the function should return FALSE if the event source should be removed */
 static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condition, struct stat_conn *conn) {
 	struct stat_job *job = conn->job;
-	int first_used = 0;
-	char *tmp;
+	gchar *buf = g_malloc(sizeof(gchar*) * BUFFER_MINSIZE);
 	gsize res = 0;
 	GError *err = NULL;
 	GIOStatus status;
+	GSList *strings, *current;
 
 	debug_increase_indent();
 	debug(3,"stat_master_input_callback(%p,%d,...)",conn,chan);
@@ -464,21 +464,35 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 
 	/* if you are here, savage is NOT detected, do your job */
 #endif
-	/* return TRUE when there is nothing (more) to do */
-	while (1) {
-		first_used = 0;
+	/* return FALSE when there is nothing (more) to do */
+	while (TRUE) {
+		status = g_io_channel_read_chars(chan, buf, BUFFER_MINSIZE, &res, &err);
 
-		if (conn->pos >= conn->bufsize - 1) {
-			xqf_error ("server address string is too long\n");
-			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
-			stat_update_masters (job);
-			debug_decrease_indent();
-			return FALSE;
+		conn->bufsize += res;
+
+		if (conn->buf == NULL) {
+			conn->buf = g_malloc(sizeof(gchar*) * conn->bufsize);
+		}
+		else {
+			conn->buf = g_realloc(conn->buf, sizeof(gchar*) * conn->bufsize);
 		}
 
-		status = g_io_channel_read_chars(chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
+		strncpy(conn->buf + (conn->bufsize - res), buf, res);
+		
 		if (status == G_IO_STATUS_EOF) {
 			debug(3,"stat_master_input_callback -- eof");
+
+			strings = stat_buffer_to_strings(conn->buf, conn->bufsize);
+			current = strings;
+
+			while (current) {
+				if (strlen(current->data)) {
+					debug(6, "parse_master_output: [%s]", current->data);
+					parse_master_output(current->data, conn);
+				}
+				current = current->next;
+			}
+
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
 			debug_decrease_indent();
@@ -487,7 +501,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 		else if (status == G_IO_STATUS_AGAIN) {
 			debug(3,"stat_master_input_callback -- unavailable");
 			debug_decrease_indent();
-			return FALSE;
+			return TRUE;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
 			debug(3,"stat_master_input_callback -- error");
@@ -500,36 +514,9 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 
 		/* G_IO_STATUS_NORMAL */
 		debug(3,"stat_master_input_callback -- chars read");
-		tmp = conn->buf + conn->pos;
-		conn->pos += res;
-
-		while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
-			debug(3,"stat_master_input_callback -- parse new line");
-			*tmp++ = '\0';
-
-			// debug(0,"%s",conn->buf + first_used);
-
-			if (!parse_master_output (conn->buf + first_used, conn)) {
-				debug(3,"stat_master_input_callback -- end parse");
-				stat_master_update_done (conn, job, conn->master, conn->master->state);
-				stat_update_masters (job);
-				debug_decrease_indent();
-				return FALSE;
-			}
-
-			first_used = tmp - conn->buf;
-			res = conn->buf + conn->pos - tmp;
-		}
-
-		if (first_used > 0) {
-			if (first_used != conn->pos) {
-				memmove (conn->buf, conn->buf + first_used, conn->pos - first_used);
-			}
-			conn->pos = conn->pos - first_used;
-		}
+		/* loop */
 	}
 	// infinite loop end, next lines are never read
-	// debug_decrease_indent();
 }
 
 
@@ -921,12 +908,14 @@ static void stat_servers_update_done (struct stat_conn *conn) {
 
 static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 	GSList *strings = NULL;
+	// FIXME: this code assume that a qstat output line can't exceed 4096 bytes
 	gchar token[4096];
 	gsize i, last;
 
 	for (i = 0, last = 0; i < bufsize; i++) {
 		if (i - last == 4096) {
-			return strings; // error : too long line
+			printf("error: too long line\n");
+			return strings;
 		}
 		else if (buffer[i] == '\n' || buffer[i] == '\0') {
 			token[i - last] = '\0';
@@ -956,6 +945,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 	GIOStatus status;
 	GSList *strings, *current;
 
+	/* return FALSE when there is nothing (more) to do */
 	debug (3, "stat_servers_input_callback() -- Conn %lx", conn);
 	while (TRUE) {
 		status = g_io_channel_read_chars(chan, buf, BUFFER_MINSIZE, &res, &err);
@@ -1013,6 +1003,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 		}
 
 		/* G_IO_STATUS_NORMAL */
+		debug(3,"stat_master_input_callback -- chars read");
 		/* loop	*/
 	}
 	// infinite loop end, next lines are never read
@@ -1187,8 +1178,7 @@ static void stat_close (struct stat_job *job, int killed) {
 static const char delim[] = " \t\n\r";
 
 
-static struct stat_conn *stat_update_master_qstat (struct stat_job *job, 
-		struct master *m) {
+static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct master *m) {
 	char *argv[16];
 	int argi = 0;
 	char buf1[64];
@@ -1529,8 +1519,7 @@ out:
 }
 
 
-// THD #define MAX_SERVERS_IN_CMDLINE	8
-#define MAX_SERVERS_IN_CMDLINE	1
+#define MAX_SERVERS_IN_CMDLINE	8
 
 static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	struct server *s = NULL;
