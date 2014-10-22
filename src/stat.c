@@ -932,7 +932,21 @@ static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 			last = i + 1;
 		}
 		else {
-			token[i - last] = buffer[i];
+
+			/* FIXME: workaround to replace non ascii character from binary buffer
+			 * because qstat uses ISO-8859-1 encoding for raw ouput
+			 */
+
+			if (buffer[i] >= '\0' || buffer [i] <= '~') {
+				token[i - last] = buffer[i];
+			}
+			else {
+				token[i - last] = '_';
+			}
+
+			/* FIXME: without workaround, only use this:
+			 * token[i - last] = buffer[i];
+			 */
 		}
 	}
 	g_free(token);
@@ -1045,6 +1059,13 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
 	conn->pid = 0;
 	conn->fd = fd; 
 	conn->chan = g_io_channel_unix_new (conn->fd);
+
+	/* FIXME: workaround to read the channel as binary (and exclude non ascii character elsewhere)
+	 * because qstat uses ISO-8859-1 encoding for raw ouput
+	 */
+
+	g_io_channel_set_encoding(conn->chan, NULL, NULL);
+
 	conn->pos = 0;
 	conn->lastnl = 0;
 #if 0
@@ -1114,6 +1135,13 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFun
 		conn->pid = pid;
 		conn->fd = pipefds[0];
 		conn->chan = g_io_channel_unix_new (conn->fd);
+
+		/* FIXME: workaround to read the channel as binary (and exclude non ascii character elsewhere)
+		 * because qstat uses ISO-8859-1 encoding for raw ouput
+		 */
+
+		g_io_channel_set_encoding(conn->chan, NULL, NULL);
+
 		conn->pos = 0;
 		conn->lastnl = 0;
 #if 0
