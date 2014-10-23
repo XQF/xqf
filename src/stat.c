@@ -923,7 +923,7 @@ static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 			token = g_realloc(token, (token_mul * BUFFER_MINSIZE * sizeof(gchar*)));
 		}
 
-		if (buffer[i] == '\n' || buffer[i] == '\0') {
+		if (buffer[i] == '\n' || buffer[i] == '\0' || i == bufsize - 1) {
 			token[i - last] = '\0';
 
 			debug(6, "stat_buffer_to_strings - token: %s", token);
