@@ -378,7 +378,7 @@ static void q3_unescape (char *dst, const char *src) {
 					int i;
 					// 8 because P000000o, don't count more
 					for (i=2; src[i] != '\0' && src[i] != 'O' && src[i] != 'o' && i < 8; i++) {
-						// 'for' only have to increment i
+						// 'for' increments i
 					}
 					// if multichar color code ends, skip 5 because P000o, 8 because P000000o
 					if ((src[i] == 'O' || src[i] == 'o') && (i == 5 || i == 8)) {

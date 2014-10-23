@@ -3,23 +3,27 @@ XQF 1.0.5.2-git -- Currently
 
 Changes since 1.0.5:
 
-* New games: Unvanquished, Tremulous GPP, TremFusion, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Enemy Territory: Quake Wars, Enemy Territory: Legacy, ZEQ2 Lite, Jedi Outcast
-* Recognize Unvanquished extended color codes and prevent for printing
+* New games: Unvanquished, Tremulous GPP, TremFusion, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Enemy Territory: Quake Wars, Enemy Territory: Legacy, ZEQ2 Lite, Jedi Outcast, Turtle Arena
 * Add LAN broadcast for many games
-* Drop disabled master servers (like id master server for Quake 3)
 * Add or substitute new master servers (like ioquake3 master substitute id master)
 * Add Warsow protocol numbers
 * Add Hexen World master server support
-* Enhance Steam applaunch support
-* Drop GTK+1 support
 * Add scalable SVG icon
+* Filter Unvanquished extended color codes
+* Reuse game descriptions for similar games (like Western Q3 and Smokin'Guns, or Wolfenstein: Ennemy Territory and Ennemy Territory: Legacy).
+* Drop disabled master servers (like id master server for Quake 3)
+* Drop GTK+1 support
+* Enhance Steam applaunch support
 * Follow XDG Base Directory Specification for user configuration directory and migrate previously created directory
-* Add x11 libs to pkg_modules
+* Workaround non ASCII characters in servers strings
+* Rewrite the master and servers input callbacks with GIOChannel
+* Rewrite many deprecated calls (like old strings functions)
 * Fix build with newer linker versions
 * Fix autotools, intltool
+* Fix x11 build dependency
 * Fix readline check
 * Fix crash with 24 bit images
-* Fix a string length routine that was broken since at least the year 2000 so reloading master server may result in segfault
+* Fix the q3_unescape routine that was broken since at least the year 2000, so refreshing servers may result in segfault
 * Fix a string table of Quake 2 game properties that was broken since at least the year 2000, too
 * Determine number of GeoIP countries at runtime
 * Complete French translation

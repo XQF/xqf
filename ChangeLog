@@ -1,10 +1,24 @@
-Oct 13, 2014: Thomas DEBESSE <xqf@illwieckz.net>
-- fix another 14+ years old bug, a comma was missing in a string table of
-  some Quake 2 game properties
+Oct 23, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- fix an overflow in q3_unescape (14+ years old bug)
 
-Oct 12, 2014: Thomas DEBESSE <xqf@illwieckz.net>
-- fix a 14+ years old malloc bug, a sum of strings (therefor a sum of chars)
-  was used as instead of a sum of string lengths
+Oct 22, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- workaround non ASCII characters in servers strings
+- rewrite stat_master_input_callback and stat_servers_input_callback
+
+Oct 16, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- use Gstatus to check GIOChannel reads
+
+Oct 15, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- reuse mod and gametype descriptions for similar games
+- rewrite deprecated gdk_pixbuf_*ref calls
+
+Oct 14, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- add the Turtle Arena game (thanks to Zack Middleton help)
+- rewrite deprecated g_str* calls, and g_basename calls
+
+Oct 13, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+- fix a 14+ years old bug, a comma was missing in a string table of some
+  Quake 2 game properties
 
 Oct 11, 2014: Thomas DEBESSE <xqf@ilwieckz.net>
 - port obsolete fd handling code to GIOChannel (many thanks to Chris Vine for
@@ -28,7 +42,7 @@ Sep 28, 2014: Thomas DEBESSE <xqf@illwieckz.net>
 - distinguish Tremulous, Tremulous GPP and TremFusion
 - some cleaning (id tech 3 derivatives are not described as tremulous anymore)
 - rename tremulous server qstat variable to 'gamename'+'s' like others
-- master server for UrbanTerror updated
+- master server for Urban Terror updated
 
 Nov 11, 2013: Thomas Debesse <xqf@illwieckz.net>
 - follow XDG Base Directory Specification for user configuration directory
