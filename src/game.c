@@ -1229,12 +1229,12 @@ static char *jk2_gametypes[MAX_JK2_TYPES] = {
 	"FFA",                  // 0 - Free For All
 	"Holocron",             // 1 - Holocron
 	"Jedi Master",          // 2 - Jedi Master
-	"Duell",                // 3 - Duell
+	"Duel",                 // 3 - Duel
 	"FFA",                  // 4 - Free For All
 	"TFFA",                 // 5 - Team Free For All
 	NULL,                   // 6 - Unknown
 	"CTF",                  // 7 - Capture the Flag
-	"Capture the Ysalimari" // 8 - Capture the Ysalimari
+	"CTY"                   // 8 - Capture the Ysalimari
 };
 
 #define MAX_JK3_TYPES 9
@@ -1605,6 +1605,35 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[]) {
 	}
 }
 
+void q3_decode_gametype_fallback (struct server *s, struct q3a_gametype_s map[]) {
+	char *endptr;
+	int n;
+	struct q3a_gametype_s* ptr;
+
+	if (!s->game) return;
+
+	n = strtol (s->gametype, &endptr, 10);
+
+	// strtol returns a pointer to the first invalid digit, if both pointers
+	// are equal there was no number at all
+	if (s->gametype == endptr || n < 0)
+		return;
+
+	// Exact match not found - use the first one in the list
+	// which should be the game's original game types
+	if ( n < map->number && map->gametypes[n] )
+		s->gametype = map->gametypes[n];
+
+	for ( ptr=map; ptr && ptr->mod; ptr++ ) {
+		if ( !strcasecmp (s->game, ptr->mod)
+				&& n < ptr->number
+				&& ptr->gametypes[n] ) {
+			s->gametype = ptr->gametypes[n];
+			break;
+		}
+	}
+}
+
 static void q3_analyze_serverinfo (struct server *s) {
 	char **info_ptr;
 	long n;
@@ -1825,7 +1854,8 @@ static void q3_analyze_serverinfo (struct server *s) {
 			q3_decode_gametype( s, wolfet_gametype_map );
 		}
 		else if (s->type == JK2_SERVER) {
-			q3_decode_gametype( s, jk2_gametype_map );
+			// There is a ton of mods and they all use default gametype numbers
+			q3_decode_gametype_fallback( s, jk2_gametype_map );
 		}
 		else if (s->type == JK3_SERVER) {
 			q3_decode_gametype( s, jk3_gametype_map );
