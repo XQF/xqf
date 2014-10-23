@@ -12,14 +12,14 @@ Coding guidelines
 
 **Indentation**
 
-Please use tabulation to indent your code, and white space to draw ascii art.
+Please use tabulations to indent your code, and white spaces to draw ascii art.
 
 It means that if you want to align something to the left you must use tabulation, and if you want to aligne something to the right you must use white space.
 
 
 _Good:_
 
-```c
+```
 void function (void) {
 ⇨gint integer;␣␣␣␣/* some comment
 ⇨gchar character;␣␣* here */
@@ -32,7 +32,7 @@ void function (void) {
 
 _Wrong:_
 
-```c
+```
 void function (void) {
 ␣␣gint integer;⇨⇨⇨⇨/* some comment
 ␣␣gchar character;␣␣* here */
@@ -60,10 +60,10 @@ _Good:_
 
 **Braces**
 
-Please put the opening left brace at the end of the previous line.
-Never write a ``for``, ``while``, ``if``, and ``else`` block without braces.
-Never write an ``for``, ``while``, ``if``, ``else`` block in only one line.
-If a for statement has an empty block, please write a block with a comment in the empty block;
+Please put the opening left brace at the end of the previous line.  
+Never write a ``for``, ``while``, ``if``, and ``else`` block without braces.  
+Never write an ``for``, ``while``, ``if``, ``else`` block in only one line.  
+If a for statement has an empty block, please write a block with a comment in the empty block.
 
 _Good:_
 
@@ -108,7 +108,8 @@ void function (void)
 
 **Parenthesis and spacing**
 
-Leave a white space before ``if``, ``for`` and ``while`` and the opening left parenthesis, but do not write white space between a function name and the opening left parenthesisi, unless this is a declaration.
+Leave a white space before ``if``, ``for`` and ``while`` and the opening left parenthesis.  
+Please do not write white space between a function name and the opening left parenthesis, unless this is a declaration.  
 Please do not put extra white space inside parenthesis.
 
 Please write a white space to the left and the right of an operator.
@@ -118,7 +119,7 @@ _Good:_
 ```c
 void function (gint it) {
 	gpointer n = NULL;
-	int m = 0;
+	gint m = 0;
 
 	if (this && that) {
 		do(it);
@@ -162,7 +163,7 @@ long_function_name(something very long, and this,
 	and that, and this is very very longer than long,
 	and this is another very long line);
 
-this_very_long_variable = "has a long value";
+this_long_variable = "has a not a very very long value";
 ```
 
 _Wrong:_
@@ -171,8 +172,8 @@ _Wrong:_
 function_name(
 	something not very long);
 
-this_very_long_variable =
-	"has a long value";
+this_long_variable =
+	"has not a very very long value";
 ```
 
 **Good to know**
