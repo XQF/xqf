@@ -335,8 +335,10 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 }
 
 
+/*
+ * you MUST allocate dst with g_malloc0 before, this function and others assumes that dst is filled with zeros
+ */
 static void q3_unescape (char *dst, const char *src) {
-
 	/*
 	 * skip color codes and extended color codes
 	 * for extended color codes,
@@ -344,47 +346,56 @@ static void q3_unescape (char *dst, const char *src) {
 	 * or https://github.com/Unvanquished/Unvanquished/blob/master/src/engine/qcommon/q_math.c
 	 * or https://github.com/Unvanquished/Osavul/blob/master/unv.cpp
 	 */
-	while (*src) {
-		if (src[0] == '^') {
-			if (src[1] != '\0') {
+
+	gint idst = 0;
+	gint isrc = 0;
+
+	while (src[isrc]) {
+		if (src[isrc] == '^') {
+			if (src[isrc + 1] != '\0') {
 				// if '^^'
-				if (src[1] == '^') {
+				if (src[isrc + 1] == '^') {
 					// only skip one '^', display only one '^'
-					src += 1;
+					isrc += 1;
 				}
-				// if onechar color code, skip
-				else if ((src[1] >= '0' && src[1] <= '9')
-						|| (src[1] >= 'A' && src[1] <= 'O')
-						|| (src[1] >= 'a' && src[1] <= 'o')
-						|| src[1] == ':'
-						|| src[1] == ';'
-						|| src[1] == '<'
-						|| src[1] == '>'
-						|| src[1] == '='
-						|| src[1] == '?'
-						|| src[1] == '@'
-						|| src[1] == '*') {
-					src += 2;
+				// if onechar color code
+				else if ((src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
+						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
+						|| src[isrc + 1] == ':'
+						|| src[isrc + 1] == ';'
+						|| src[isrc + 1] == '<'
+						|| src[isrc + 1] == '>'
+						|| src[isrc + 1] == '='
+						|| src[isrc + 1] == '?'
+						|| src[isrc + 1] == '@'
+						|| src[isrc + 1] == '*') {
+					// skip '^' and the next char
+					isrc += 1;
 				}
 				// if multichar color code begins, verify if it ends
 				else if (src[1] == 'P' || src[1] == 'p') {
 					int i;
-					// 8 because P000000o, don(t count more
+					// 8 because P000000o, don't count more
 					for (i=2; src[i] != '\0' && src[i] != 'O' && src[i] != 'o' && i < 8; i++) {
 						// 'for' only have to increment i
 					}
-					// if multichar color code ends, skip
-					// 5 because P000o, 8 because P000000o
+					// if multichar color code ends, skip 5 because P000o, 8 because P000000o
 					if ((src[i] == 'O' || src[i] == 'o') && (i == 5 || i == 8)) {
-						src += i;
+						isrc += i;
 					}
 				}
 			}
 		}
 		// the next caracter is used, will be printed
-		*dst++ = *src++;
+
+		dst[idst] = src[isrc];
+		debug(6, "isrc: %d, idst: %d", isrc, idst);
+		debug(6, "src: [%s], dst: [%s]", src, dst);
+		isrc += 1;
+		idst += 1;
 	}
-	*dst = '\0';
+	// when finished, do nothing more, the remaining allocated space is already filled with zeros
 }
 
 
@@ -653,7 +664,8 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 			server->name = g_strdup (token[2]);
 		}
 		else {
-			server->name = g_malloc (strlen (token[2]) + 1);
+			server->name = g_malloc0 (strlen (token[2]) + 1);
+			debug(6, "maxsize:%d", (int) (strlen (token[2]) + 1));
 			q3_unescape (server->name, token[2]);
 		}
 	}
