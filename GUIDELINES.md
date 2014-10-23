@@ -10,7 +10,7 @@ The best way to contribute is to fork this project and to request pulls.
 Coding guidelines
 -----------------
 
-** Indentation **
+**Indentation**
 
 Please use tabulations to indent your code, and white spaces to draw ascii art.
 
@@ -44,7 +44,7 @@ void function (void) {
 }
 ```
 
-** Comments **
+**Comments**
 
 CPlusPlus-like comments beginning with ``//`` are tolerated.
 
@@ -114,7 +114,7 @@ for (i = 0; i < max; i++)
 		return i;
 ```
 
-** Parenthesis and spacing **
+**Parenthesis and spacing**
 
 Please leave a white space before ``if``, ``for`` and ``while`` and the opening left parenthesis.  
 Please do not write white space between a function name and the opening left parenthesis, unless this is a declaration.  
@@ -164,7 +164,7 @@ void function (gint it) {
 }
 ```
 
-** Commas, semicolons and spacing **
+**Commas, semicolons and spacing**
 
 Please leave white space before a comma or a semicolon, but please no write any white spaces before them.
 
@@ -184,7 +184,7 @@ for (i = 0 ;i < max ;i++ {
 }
 ```
 
-** Incrementation **
+**Incrementation**
 
 Please write different lines for incrementation and affectation.
 
@@ -220,7 +220,7 @@ _Very very bad:_
 This previous line was real and has corrupted memory during 14 years.
 
 
-** Splitted lines **
+**Splitted lines**
 
 Please do not split lines if they are not too long to be splitted two times or more (three lines or more).
 
@@ -244,7 +244,7 @@ this_long_variable =
 	"has not a very very long value";
 ```
 
-** Good to know **
+**Good to know**
 
 All the bad examples presented here were real before a large clean-up was done.
 
