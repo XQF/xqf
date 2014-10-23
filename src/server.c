@@ -447,7 +447,7 @@ int parse_address (char *str, char **addr, unsigned short *port) {
 
 	*port = (unsigned short) tmp;
 
-	/* malloc( strlen("addr:port") - strlen(":port") + strlen("\0") ); */
+	/* malloc(strlen("addr:port") - strlen(":port") + strlen("\0")); */
 	*addr = g_malloc (strlen(str) - strlen(ptr) + 1);
 	strncpy (*addr, str, ptr - str);
 	(*addr) [ptr - str] = '\0';

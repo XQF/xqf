@@ -277,18 +277,18 @@ static char* msg_terminate (char *msg, int size) {
 		what |= append_nl;
 	}
 
-	if ( what & append_0 )
+	if (what & append_0)
 		newsize++;
-	if ( what & append_nl )
+	if (what & append_nl)
 		newsize++;
 
 	newmsg = (char*)g_malloc(newsize);
 	newmsg = strncpy(newmsg,msg,size);
 
-	if ((what & append_0) || (what & append_nl) ) {
+	if ((what & append_0) || (what & append_nl)) {
 		newmsg[newsize-1] = '\0';
 	}
-	if ( what & append_nl ) {
+	if (what & append_nl) {
 		newmsg[newsize-2] = '\n';
 	}
 
@@ -682,7 +682,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	if ( argc-argpos<2 || !strcmp(argv[argpos],"--help")) {
+	if (argc-argpos<2 || !strcmp(argv[argpos],"--help")) {
 		printf(_("Usage: %s [server type] <ip> <port>\n"),argv[0]);
 		printf(_("  server type is either --qws, --hws, --hls or --dm3s.\n"));
 		printf(_("  If no server type is specified, Q3 style rcon is assumed.\n"));

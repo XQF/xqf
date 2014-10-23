@@ -304,7 +304,7 @@ extern struct server *cur_server;
 extern struct stat_job *stat_process;
 
 
-int compare_qstat_version ( const char* have, const char* expected );
+int compare_qstat_version (const char* have, const char* expected);
 int start_prog_and_return_fd(char *const argv[], pid_t *pid);
 int check_qstat_version(void);
 

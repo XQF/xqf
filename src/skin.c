@@ -215,7 +215,7 @@ void draw_q2_skin (GtkWidget *preview, guchar *data, int scale) {
 	buf = g_malloc (32*scale*3);
 
 	if (data) {
-		for (i = 0; i < 32*scale; ) {
+		for (i = 0; i < 32*scale;) {
 			ptr = buf;
 			for (j = 0; j < 32; j++) {
 				for (k = 0; k < scale; k++) {

@@ -13,8 +13,15 @@ XQF is a front-end to [QStat](http://qstat.sourceforge.net/), a program by Steve
 See the file [NEWS.md](NEWS.md) and the [ChangeLog](ChangeLog) for updated information.
 
 
-INSTALLATION / USAGE
---------------------
+BUILD / INSTALLATION / USAGE
+----------------------------
+
+1. ``git clone https://github.com/XQF/xqf.git``; ``cd xqf``
+2. ``./autogen.sh``
+3. ``./configure`` (if you use Debian or Ubuntu, do ``./configure --with-qstat=quakestat --prefix=/usr``)
+4. ``make``
+5. ``make install`` (or ``fakeroot checkinstall --fstrans=yes make install``)
+6. ``xqf``
 
 Please see the ``docs/xqfdocs.html`` file for more information. Warning, this page is not up to date!
 
@@ -30,7 +37,7 @@ AVAILABILITY
 CONTRIBUTE
 ----------
 
-You can fork this project, please read the [Guidelines](GUIDELINES.md).
+The best way to contribute is to fork this project, please read the [GUIDELINES.md](GUIDELINES.md) for further information.
 
 
 COPYRIGHT

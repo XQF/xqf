@@ -284,7 +284,7 @@ enum server_type id2type (const char *id) {
 	}
 
 	// workaround for qstat beta
-	if (g_ascii_strcasecmp (id, "RWS" ) == 0) {
+	if (g_ascii_strcasecmp (id, "RWS") == 0) {
 		return WO_SERVER;
 	}
 
@@ -479,7 +479,7 @@ static struct player *t2_parse_player (char *token[], int n, struct server *s) {
 	if (!strcmp(team_name,"TEAM"))
 		player_type=team_name;
 
-	player = g_malloc0 (sizeof (struct player) + strlen(name)+1 + strlen(player_type)+1 );
+	player = g_malloc0 (sizeof (struct player) + strlen(name)+1 + strlen(player_type)+1);
 	player->time  = -1;
 	player->frags = strtosh (frags);
 	player->ping  = -1;
@@ -489,7 +489,7 @@ static struct player *t2_parse_player (char *token[], int n, struct server *s) {
 
 	player->model = (char *) player + sizeof (struct player) + strlen(name)+1;
 	strcpy (player->model, player_type);
-	if ( player_type[0] == 'B' ) ++s->curbots;
+	if (player_type[0] == 'B') ++s->curbots;
 
 	return player;
 }
@@ -556,8 +556,8 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 	player->time  = -1;
 	player->frags = strtosh (token[1]);
 	player->ping  = strtosh (token[2]);
-	/* FIXME if ( dedicated == 0 ) s->curbots-- */
-	if ( player->ping == 0 ) ++s->curbots;
+	/* FIXME if (dedicated == 0) s->curbots-- */
+	if (player->ping == 0) ++s->curbots;
 
 	player->name = (char *) player + sizeof (struct player);
 	q3_unescape (player->name, token[0]);
@@ -690,7 +690,7 @@ static void qw_analyze_serverinfo (struct server *server) {
 	/* Clear out the flags */
 	server->flags = 0;
 
-	/* debug( 6, "qw_analyze_serverinfo: Analyze %s", server->name ); */
+	/* debug(6, "qw_analyze_serverinfo: Analyze %s", server->name); */
 	if ((games[server->type].flags & GAME_SPECTATE) != 0)
 		server->flags |= SERVER_SPECTATE;
 
@@ -751,7 +751,7 @@ static void un_analyze_serverinfo (struct server *s) {
 		}
 		else if (strcmp (*info_ptr, "gamename") == 0) {
 			unsigned i;
-			for ( i = 0 ; gsname2type[i].name ; ++i ) {
+			for (i = 0 ; gsname2type[i].name ; ++i) {
 				if (!strcmp(info_ptr[1],gsname2type[i].name)) {
 					s->type = gsname2type[i].type;
 					break;
@@ -761,8 +761,8 @@ static void un_analyze_serverinfo (struct server *s) {
 
 		// password required?
 		// If not password=False or password=0, set SERVER_PASSWORD
-		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0 ) && 
-				( g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0") ) ) {
+		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0) && 
+				(g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0"))) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -1602,11 +1602,11 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[]) {
 	if (s->gametype == endptr)
 		return;
 
-	for ( ptr=map; !found && ptr && ptr->mod != NULL; ptr++ ) {
-		if ( !strcasecmp (s->game, ptr->mod)
+	for (ptr=map; !found && ptr && ptr->mod != NULL; ptr++) {
+		if (!strcasecmp (s->game, ptr->mod)
 				&& n >=0
 				&& n < ptr->number
-				&& ptr->gametypes[n] ) {
+				&& ptr->gametypes[n]) {
 			s->gametype = ptr->gametypes[n];
 			found=1;
 		}
@@ -1633,13 +1633,13 @@ void q3_decode_gametype_fallback (struct server *s, struct q3a_gametype_s map[])
 
 	// Exact match not found - use the first one in the list
 	// which should be the game's original game types
-	if ( n < map->number && map->gametypes[n] )
+	if (n < map->number && map->gametypes[n])
 		s->gametype = map->gametypes[n];
 
-	for ( ptr=map; ptr && ptr->mod; ptr++ ) {
-		if ( !strcasecmp (s->game, ptr->mod)
+	for (ptr=map; ptr && ptr->mod; ptr++) {
+		if (!strcasecmp (s->game, ptr->mod)
 				&& n < ptr->number
-				&& ptr->gametypes[n] ) {
+				&& ptr->gametypes[n]) {
 			s->gametype = ptr->gametypes[n];
 			break;
 		}
@@ -1782,12 +1782,12 @@ static void q3_analyze_serverinfo (struct server *s) {
 			game  = info_ptr[1];
 		}
 
-		else if (strcmp (*info_ptr, "version" ) == 0) {
+		else if (strcmp (*info_ptr, "version") == 0) {
 			if (strstr (info_ptr[1], "linux")) {
 				s->sv_os = 'L';
-			} else if (strstr (info_ptr[1], "win" )) {
+			} else if (strstr (info_ptr[1], "win")) {
 				s->sv_os = 'W';
-			} else if (strstr (info_ptr[1], "Mac" )) {
+			} else if (strstr (info_ptr[1], "Mac")) {
 				s->sv_os = 'M';
 			} else {
 				s->sv_os = '?';
@@ -1854,35 +1854,35 @@ static void q3_analyze_serverinfo (struct server *s) {
 
 	if (s->gametype) {
 		if (s->type == Q3_SERVER) {
-			q3_decode_gametype( s, q3a_gametype_map );
+			q3_decode_gametype(s, q3a_gametype_map);
 		}
 		else if (s->type == WO_SERVER) {
-			q3_decode_gametype( s, wolf_gametype_map );
+			q3_decode_gametype(s, wolf_gametype_map);
 		}
 		else if (s->type == EF_SERVER) {
-			q3_decode_gametype( s, ef_gametype_map );
+			q3_decode_gametype(s, ef_gametype_map);
 		}
 		else if (s->type == WOET_SERVER || s->type == ETL_SERVER) {
-			q3_decode_gametype( s, wolfet_gametype_map );
+			q3_decode_gametype(s, wolfet_gametype_map);
 		}
 		else if (s->type == JK2_SERVER) {
 			// There is a ton of mods and they all use default gametype numbers
-			q3_decode_gametype_fallback( s, jk2_gametype_map );
+			q3_decode_gametype_fallback(s, jk2_gametype_map);
 		}
 		else if (s->type == JK3_SERVER) {
-			q3_decode_gametype( s, jk3_gametype_map );
+			q3_decode_gametype(s, jk3_gametype_map);
 		}
 		else if (s->type == IOURT_SERVER) {
-			q3_decode_gametype( s, iourt_gametype_map );
+			q3_decode_gametype(s, iourt_gametype_map);
 		}
 		else if (s->type == WOP_SERVER) {
-			q3_decode_gametype( s, wop_gametype_map );
+			q3_decode_gametype(s, wop_gametype_map);
 		}
 		else if (s->type == SMOKINGUNS_SERVER) {
-			q3_decode_gametype( s, smokinguns_gametype_map );
+			q3_decode_gametype(s, smokinguns_gametype_map);
 		}
 		else if (s->type == ZEQ2LITE_SERVER) {
-			q3_decode_gametype( s, zeq2lite_gametype_map );
+			q3_decode_gametype(s, zeq2lite_gametype_map);
 		}
 	}
 }
@@ -1903,12 +1903,12 @@ static void doom3_analyze_serverinfo (struct server *s) {
 			fs_game  = info_ptr[1];
 		}
 
-		else if (strcmp (*info_ptr, "si_version" ) == 0) {
+		else if (strcmp (*info_ptr, "si_version") == 0) {
 			if (strstr (info_ptr[1], "linux")) {
 				s->sv_os = 'L';
-			} else if (strstr (info_ptr[1], "win" )) {
+			} else if (strstr (info_ptr[1], "win")) {
 				s->sv_os = 'W';
-			} else if (strstr (info_ptr[1], "Mac" )) {
+			} else if (strstr (info_ptr[1], "Mac")) {
 				s->sv_os = 'M';
 			} else {
 				s->sv_os = '?';
@@ -1955,7 +1955,7 @@ static void ottd_analyze_serverinfo (struct server *s) {
 		s->flags |= SERVER_SPECTATE;
 
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-		if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1],"0") ) {
+		if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1],"0")) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -2634,15 +2634,15 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	/* The 1.32 release of Q3A needs +set cl_punkbuster 1 on the command line. */
 	punkbuster = find_server_setting_for_key ("sv_punkbuster", con->s->info);
-	if ( punkbuster != NULL && strcmp( punkbuster, "1" ) == 0 ) {
-		if ( set_punkbuster ) {
+	if (punkbuster != NULL && strcmp(punkbuster, "1") == 0) {
+		if (set_punkbuster) {
 			argv[argi++] = "+set";
 			argv[argi++] = "cl_punkbuster";
 			argv[argi++] = "1";
 		}
 		else {
 			char* option = g_strdup_printf("/" CONFIG_FILE "/Game: %s/punkbuster dialog shown",type2id(g->type));
-			debug( 1, "Got %s for punkbuster\n", punkbuster );
+			debug(1, "Got %s for punkbuster\n", punkbuster);
 			if (!config_get_bool (option)) {
 				dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
 				config_set_bool (option,TRUE);
@@ -2707,7 +2707,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 	i = 0;
 	additional_args = get_custom_arguments(g->type, con->s->game);
 
-	while (additional_args && additional_args[i] ) {
+	while (additional_args && additional_args[i]) {
 		argv[argi++] = additional_args[i];
 
 		i++;
@@ -2835,10 +2835,10 @@ static int ut_exec (const struct condef *con, int forkit) {
 
 		additional_args = get_custom_arguments(con->s->type, con->s->game);
 
-		//    if (!(additional_args && additional_args[i]))
+		//  if (!(additional_args && additional_args[i]))
 		argv[argi++] = real_server;
 
-		while (additional_args && additional_args[i] ) {
+		while (additional_args && additional_args[i]) {
 			argv[argi++] = additional_args[i];
 			/*
 			// append first argument to server address

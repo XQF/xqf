@@ -74,7 +74,7 @@ static void master_check_master_addr_prefix(void) {
 		if (current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr))) {
 			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type], "255.255.255.255");
 			gtk_entry_set_text(
-					GTK_ENTRY( GTK_COMBO( master_addr_combo)->entry), txt);
+					GTK_ENTRY(GTK_COMBO(master_addr_combo)->entry), txt);
 			g_free(txt);
 		}
 
@@ -150,12 +150,12 @@ static void master_type_radio_callback (GtkWidget *widget, enum master_query_typ
 		if (current_master_query_type==MASTER_LAN
 				&& (!master_name || !strlen(master_name))) {
 			gtk_entry_set_text(
-					GTK_ENTRY( GTK_COMBO( master_name_combo)->entry), _("LAN"));
+					GTK_ENTRY(GTK_COMBO(master_name_combo)->entry), _("LAN"));
 		}
 	}
 }
-static void master_activate_radio_for_type( enum master_query_type type ) {
-	if ( type < MASTER_NATIVE || type >= MASTER_NUM_QUERY_TYPES )
+static void master_activate_radio_for_type(enum master_query_type type) {
+	if (type < MASTER_NATIVE || type >= MASTER_NUM_QUERY_TYPES)
 		type=MASTER_NATIVE;
 
 	if (master_query_type_radios[type]) {
@@ -164,7 +164,7 @@ static void master_activate_radio_for_type( enum master_query_type type ) {
 }
 
 static void master_address_from_history_selected_callback (GtkWidget *widget, gpointer data) {
-	const gchar* str = gtk_entry_get_text( GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
+	const gchar* str = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
 	enum master_query_type type = get_master_query_type_from_address(str);
 	master_activate_radio_for_type(type);
 }

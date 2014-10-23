@@ -135,7 +135,7 @@ unsigned char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *wi
 	if (targa_header.id_length != 0)
 		buf_p += targa_header.id_length;    // skip TARGA image comment
 
-	if (targa_header.image_type==2) {           // Uncompressed, RGB images
+	if (targa_header.image_type==2) {       // Uncompressed, RGB images
 		for (row=rows-1; row>=0; row--) {
 			pixbuf = targa_rgba + row*columns*4;
 			for (column=0; column<columns; column++) {
@@ -167,11 +167,11 @@ unsigned char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *wi
 			}
 		}
 	}
-	else if (targa_header.image_type==10) {             // Runlength encoded RGB images
+	else if (targa_header.image_type==10) { // Runlength encoded RGB images
 		unsigned char red,green,blue,alphabyte,packetHeader,packetSize,j;
 		for (row=rows-1; row>=0; row--) {
 			pixbuf = targa_rgba + row*columns*4;
-			for (column=0; column<columns; ) {
+			for (column=0; column<columns;) {
 				CHECK(1);
 				packetHeader= *buf_p++;
 				packetSize = 1 + (packetHeader & 0x7f);
@@ -215,7 +215,7 @@ unsigned char* LoadTGA (const unsigned char* buffer, size_t length, unsigned *wi
 						}
 					}
 				}
-				else {                                  // non run-length packet
+				else {                          // non run-length packet
 					for (j=0;j<packetSize;j++) {
 						switch (targa_header.pixel_size) {
 							case 24:

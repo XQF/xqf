@@ -55,7 +55,7 @@ void debug_int(const char* file, int line, const char* function, int level, cons
 void debug_cmd(int level, char *argv[], char *fmt, ...) {
 	va_list argp;
 	int i;
-	if ( level > debug_level ) return;
+	if (level > debug_level) return;
 	fprintf(stderr, "debug(%d): ", level);
 	va_start(argp, fmt);
 	vfprintf(stderr, fmt, argp);

@@ -95,7 +95,7 @@ static int read_pcx_line (FILE *f, char *buf, int len) {
 	int cnt;
 	int c;
 
-	for (ptr = buf; ptr < buf + len; ) {
+	for (ptr = buf; ptr < buf + len;) {
 		if ((c = getc (f)) == EOF) {
 #ifdef DEBUG
 			fprintf (stderr, "Unexpected EOF\n");

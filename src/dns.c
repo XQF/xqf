@@ -334,9 +334,9 @@ static void worker_sigterm_handler (int signum) {
 }
 
 static void sighandler_debug(int signum) {
-	if ( signum == SIGUSR1)
+	if (signum == SIGUSR1)
 		set_debug_level(get_debug_level()+1);
-	else if ( signum == SIGUSR2)
+	else if (signum == SIGUSR2)
 		set_debug_level(get_debug_level()-1);
 }
 
@@ -806,7 +806,7 @@ char *dns_lookup_by_name (char *name) {
 
 	h = gethostbyname (name);
 	if (h) {
-		ip = inet_ntoa ( *((struct in_addr *) h->h_addr_list[0]) );
+		ip = inet_ntoa (*((struct in_addr *) h->h_addr_list[0]));
 		if (ip)
 			return g_strdup (ip);
 	}

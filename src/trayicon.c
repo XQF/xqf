@@ -216,7 +216,7 @@ tray_icon_pressed(GtkWidget * button, GdkEventButton * event, EggTrayIcon * icon
 }
 
 void tray_icon_set_tooltip(gchar * tip) {
-	if (!tray_icon || !tray_icon->ready )
+	if (!tray_icon || !tray_icon->ready)
 		return;
 
 	if (!tray_icon_tips)
@@ -336,9 +336,9 @@ static animation *tray_icon_load_animation (gchar *name, gboolean loop) {
 
 	while (!eof) {
 
-		if ((content[i] == '\n') || (content[i] == '\0') ) {
+		if ((content[i] == '\n') || (content[i] == '\0')) {
 
-			if ( content[i-1] != '\n') {
+			if (content[i-1] != '\n') {
 
 				line_number++;
 
@@ -397,7 +397,7 @@ static animation *tray_icon_load_animation (gchar *name, gboolean loop) {
 
 			}
 
-			if (content[i] == '\0' || (content[i] == '\n' && content[i+1] == '\0' ))
+			if (content[i] == '\0' || (content[i] == '\n' && content[i+1] == '\0'))
 				eof=TRUE;
 			else 
 				begin=&content[i]+1;
@@ -702,7 +702,7 @@ static void egg_tray_icon_update_manager_window (EggTrayIcon *icon) {
 
 	window_manager=gdk_x11_screen_get_window_manager_name (gdk_screen_get_default());
 
-	if ( !g_ascii_strcasecmp(window_manager, kde_window_manger) && kde_dock (icon)) {
+	if (!g_ascii_strcasecmp(window_manager, kde_window_manger) && kde_dock (icon)) {
 
 		if ((background_pixbuf=kde_dock_background(icon)) !=NULL) {
 

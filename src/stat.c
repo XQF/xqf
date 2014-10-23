@@ -231,7 +231,7 @@ static void parse_savage_master_output (struct stat_conn *conn) {
 		conn->pos += res;
 
 		// we always need six bytes
-		for (off=0; off + 6 <= conn->pos; off+=6 ) {
+		for (off=0; off + 6 <= conn->pos; off+=6) {
 			struct server *s;
 			struct host *h;
 			enum server_type type = UNKNOWN_SERVER;
@@ -259,7 +259,7 @@ static void parse_savage_master_output (struct stat_conn *conn) {
 				host_ref (h);
 				if ((s = server_add (h, port, type)) != NULL) {
 
-					if (s->type != type ) {
+					if (s->type != type) {
 						server_free_info(s);
 						s->type = type;
 					}
@@ -327,7 +327,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	// <servertype> <bcastaddr> <number>
 	// this line is skipped by n <= 3
 	if (conn->master->master_type == MASTER_LAN) {
-		if ( n <= 3 ) {
+		if (n <= 3) {
 			return TRUE;
 		}
 		type = id2type (token[0]);
@@ -395,7 +395,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 					server_free_info (s);
 				}
 #else
-				if (s->type != type ) {
+				if (s->type != type) {
 					server_free_info(s);
 					s->type = type;
 				}
@@ -708,7 +708,7 @@ static void q3parseteams(struct server* s,
 			}
 		}
 
-		if (team != numteams ) {
+		if (team != numteams) {
 			char* e = NULL;
 			char* p = info_ptr[1];
 			for (;; p = e, e = NULL) {
@@ -1383,7 +1383,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 		argv[argi++] = QSTAT_EXEC;
 		argv[argi++] = "-errors";
 
-		if ( access(qstat_configfile, R_OK) == 0 ) {
+		if (access(qstat_configfile, R_OK) == 0) {
 			argv[argi++] = "-cfg";
 			argv[argi++] = qstat_configfile;
 		}
@@ -1414,7 +1414,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			arg_type = g_strdup_printf("-gsm,%s,outfile", games[m->type].qstat_str);
 		}
 		// add master arguments
-		else if ( games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL ) {
+		else if (games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL) {
 			// TODO: master protocol should be server specific
 			const char* masterprotocol = game_get_attribute(m->type,"masterprotocol");
 
@@ -1429,7 +1429,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 				arg_type = g_strdup_printf("%s,outfile", master_qstat_option(m));
 			}
 		}
-		else if ( (games[m->type].flags & GAME_MASTER_STEAM) && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK)) {
+		else if ((games[m->type].flags & GAME_MASTER_STEAM) && current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK)) {
 			struct server_filter_vars* filter =
 				g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
 
@@ -1451,7 +1451,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 					filter->filter_not_full?"notfull":"",
 					NULL);
 		}
-		else if ( m->type == UT2004_SERVER ) {
+		else if (m->type == UT2004_SERVER) {
 			GString* str = NULL;
 			const char* cdkey = game_get_attribute(m->type,"cdkey");
 			if (!cdkey) {
@@ -1563,14 +1563,14 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	   lists or memory.  However, it means that job->servers
 	   will point to a different member.
 	*/
-	debug (6, "stat_open_conn_qstat() -- server list was %lx", job->servers );
+	debug (6, "stat_open_conn_qstat() -- server list was %lx", job->servers);
 	job->servers = g_slist_reverse (job->servers);
-	debug (6, "stat_open_conn_qstat() -- server list now %lx", job->servers );
+	debug (6, "stat_open_conn_qstat() -- server list now %lx", job->servers);
 
 	argv[argi++] = QSTAT_EXEC;
 	argv[argi++] = "-errors";
 
-	if (access(qstat_configfile, R_OK) == 0 ) {
+	if (access(qstat_configfile, R_OK) == 0) {
 		argv[argi++] = "-cfg";
 		argv[argi++] = qstat_configfile;
 	}
@@ -1956,7 +1956,7 @@ static void stat_next_masters (struct stat_job *job) {
 	struct master *m = NULL;
 
 	debug_increase_indent();
-	debug (3, "Job %lx  Have job->masters", job );
+	debug (3, "Job %lx  Have job->masters", job);
 	job->state = STAT_UPDATE_SOURCE;
 
 	move_q2masters_to_top (&job->masters);
@@ -2003,7 +2003,7 @@ static void stat_next_names (struct stat_job *job) {
 	GSList *hostnames = NULL;
 	struct userver *us = NULL;
 
-	debug (3, "Job %lx  job->names", job );
+	debug (3, "Job %lx  job->names", job);
 	job->state = STAT_RESOLVE_NAMES;
 
 	for (list = job->names; list; list = list->next) {
@@ -2034,7 +2034,7 @@ static void stat_next_names (struct stat_job *job) {
 }
 
 static void stat_next_servers (struct stat_job *job) {
-	debug (3, "Servers:  Job %lx  server list %lx", job, job->servers );
+	debug (3, "Servers:  Job %lx  server list %lx", job, job->servers);
 	if (!job->need_refresh) {
 		stat_close (job, FALSE);
 		return;

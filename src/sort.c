@@ -128,22 +128,22 @@ int compare_servers (const struct server *s1, const struct server *s2,
 			break;
 
 		case SORT_SERVER_PRIVATE:
-			if ( (s1->flags & SERVER_PASSWORD ) && ( s2->flags & SERVER_PASSWORD ))
+			if ((s1->flags & SERVER_PASSWORD) && (s2->flags & SERVER_PASSWORD))
 				res = 0;
-			else if (s1->flags & SERVER_PASSWORD )
+			else if (s1->flags & SERVER_PASSWORD)
 				res = 1;
-			else if (s2->flags & SERVER_PASSWORD )
+			else if (s2->flags & SERVER_PASSWORD)
 				res = -1;
 			else
 				res = 0;
 			break;
 
 		case SORT_SERVER_ANTICHEAT:
-			if ( (s1->flags & SERVER_PUNKBUSTER ) && ( s2->flags & SERVER_PUNKBUSTER ))
+			if ((s1->flags & SERVER_PUNKBUSTER) && (s2->flags & SERVER_PUNKBUSTER))
 				res = 0;
-			else if (s1->flags & SERVER_PUNKBUSTER )
+			else if (s1->flags & SERVER_PUNKBUSTER)
 				res = 1;
-			else if (s2->flags & SERVER_PUNKBUSTER )
+			else if (s2->flags & SERVER_PUNKBUSTER)
 				res = -1;
 			else
 				res = 0;

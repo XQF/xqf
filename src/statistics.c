@@ -527,7 +527,7 @@ gboolean create_server_type_menu_filter_hasharch(enum server_type type) {
 }
 
 static void select_server_type_callback(GtkWidget *widget, enum server_type type) {
-	gtk_notebook_set_page (GTK_NOTEBOOK (arch_notebook), srv_archs[type].notebookpage );
+	gtk_notebook_set_page (GTK_NOTEBOOK (arch_notebook), srv_archs[type].notebookpage);
 	selected_type = type;
 }
 
@@ -657,7 +657,7 @@ static void country_notebook_page (GtkWidget *notebook,
 }
 
 static void select_country_server_type_callback(GtkWidget *widget, enum server_type type) {
-	gtk_notebook_set_page (GTK_NOTEBOOK (country_notebook), srv_countries[type].notebookpage );
+	gtk_notebook_set_page (GTK_NOTEBOOK (country_notebook), srv_countries[type].notebookpage);
 	selected_country = type;
 }
 

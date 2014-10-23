@@ -341,7 +341,7 @@ gboolean quake_contains_dir(const char* name, int level, GHashTable* maphash) {
 	return FALSE;
 }
 
-void quake_contains_file( const char* name, int level, GHashTable* maphash) {
+void quake_contains_file(const char* name, int level, GHashTable* maphash) {
 	// printf("%s at level %d\n",name,level);
 	if (strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4,".pak") && level == 1) {
 		findmaps_pak(name,maphash);
@@ -361,7 +361,7 @@ void quake_contains_file( const char* name, int level, GHashTable* maphash) {
 
 void q3_contains_file(const char* name, int level, GHashTable* maphash) {
 	// printf("%s at level %d\n",name,level);
-	if ( level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4,".pk3") && strlen(name) > 4) {
+	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4,".pk3") && strlen(name) > 4) {
 		findq3maps_zip(name, maphash, is_q3_map, is_q3_mapshot);
 	}
 	else if (level == 2 && if_map_insert(name, maphash, is_q3_map)) {
@@ -374,7 +374,7 @@ static void _doom3_contains_file(const char* name, int level, GHashTable* maphas
 		char* (*is_map_func)(const char* name),
 		gboolean (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n",name,level);
-	if ( level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4,".pk4") && strlen(name) > 4) {
+	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4,".pk4") && strlen(name) > 4) {
 		findq3maps_zip(name, maphash, is_map_func, is_mapshot_func);
 	}
 }
@@ -611,7 +611,7 @@ static void process_levelshots(GHashTable* maphash) {
 		const gchar* mapbase = NULL;
 		char* origkey = NULL;
 		gboolean found = FALSE;
-		if (!mi->levelshot || strlen(mi->levelshot) <= 4 ) { g_free(mi); continue; }
+		if (!mi->levelshot || strlen(mi->levelshot) <= 4) { g_free(mi); continue; }
 		mapbase = g_path_get_basename(mi->levelshot);
 		mapname = g_ascii_strdown(mapbase, strlen(mapbase)-4);  /* g_ascii_strdown does implicit strndup */
 		found = g_hash_table_lookup_extended(maphash,mapname,(gpointer)&origkey,(gpointer)&mih);

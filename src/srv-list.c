@@ -92,7 +92,7 @@ struct pixmap* pix2array[] = {
 static struct pixmap* get_server_pixmap2(struct server* s) {
 	unsigned flags = 0;
 
-	if (s->flags & SERVER_PASSWORD )
+	if (s->flags & SERVER_PASSWORD)
 		flags |= PIX_PASSWORD;
 	if (s->flags & SERVER_PUNKBUSTER)
 		flags |= PIX_PUNKBUSTER;
@@ -232,22 +232,22 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 	if (players >= (s->maxplayers-slots_buffer))
 		gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
-				man_red_pix.pix, man_red_pix.mask );
+				man_red_pix.pix, man_red_pix.mask);
 
-	else if ( (players + s->private_client ) >= s->maxplayers)
+	else if ((players + s->private_client) >= s->maxplayers)
 		gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
-				man_yellow_pix.pix, man_yellow_pix.mask );
+				man_yellow_pix.pix, man_yellow_pix.mask);
 
 	else if (players)
 		gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
-				man_black_pix.pix, man_black_pix.mask );
+				man_black_pix.pix, man_black_pix.mask);
 
 
 
 	{
 		struct pixmap* pix = get_server_pixmap2(s);
 		if (pix && pix->pix)
-			gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask );
+			gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask);
 	}
 
 	get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap, 
@@ -264,7 +264,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 	// if map not available
 	if (games[s->type].has_map && games[s->type].has_map(s) == FALSE) {
-		gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask );
+		gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask);
 	}
 
 	if (s->flags & SERVER_INCOMPATIBLE) {
@@ -444,14 +444,14 @@ void server_clist_sync_selection (void) {
 int server_clist_refresh_server (struct server *s) {
 	int row;
 
-	debug (6, "server_clist_refresh_server() -- Server %lx", s );
+	debug (6, "server_clist_refresh_server() -- Server %lx", s);
 
 	apply_filters (cur_filter | FILTER_PLAYER_MASK, s);
 
 	row = gtk_clist_find_row_from_data (server_clist, s);
 
 	if (row >= 0) {
-		debug (6, "server_clist_refresh_server() -- Server %lx is at row %d", s, row );
+		debug (6, "server_clist_refresh_server() -- Server %lx is at row %d", s, row);
 
 		if (default_refresh_sorts && (s->filters & cur_filter) != cur_filter) {
 			gtk_clist_remove (server_clist, row);

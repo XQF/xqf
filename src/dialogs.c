@@ -644,7 +644,7 @@ GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer da
 	// gtk_signal_connect (GTK_OBJECT (file_selector), "destroy", (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
 
 	gtk_signal_connect (GTK_OBJECT (file_selector->ok_button),
-			"clicked", ok_callback, data );
+			"clicked", ok_callback, data);
 
 	gtk_signal_connect_object (GTK_OBJECT (file_selector->ok_button),
 			"clicked", (GtkSignalFunc) gtk_widget_destroy,

@@ -228,10 +228,10 @@ static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to a
 static int redialserver = 0;
 
 static void sighandler_debug(int signum) {
-	if ( signum == SIGUSR1) {
+	if (signum == SIGUSR1) {
 		set_debug_level(get_debug_level()+1);
 	}
-	else if ( signum == SIGUSR2) {
+	else if (signum == SIGUSR2) {
 		set_debug_level(get_debug_level()-1);
 	}
 
@@ -239,7 +239,7 @@ static void sighandler_debug(int signum) {
 }
 
 // returns 0 if equal, -1 if too old, 1 if have > expected
-int compare_qstat_version ( const char* have, const char* expected ) {
+int compare_qstat_version (const char* have, const char* expected) {
 	int have_major, expected_major;
 	int have_minor, expected_minor;
 	char have_pl=0, expected_pl=0;
@@ -481,7 +481,7 @@ void set_widgets_sensitivity (void) {
 	// you can only edit one server a time, no groups and no favorites
 	sens = (cur_source && cur_source->next == NULL
 			&& ! ((struct master *) cur_source->data)->isgroup
-			&& ! source_is_favorites );
+			&& ! source_is_favorites);
 
 	gtk_widget_set_sensitive (source_edit_master_menu_item, sens);
 	gtk_widget_set_sensitive (edit_edit_master_menu_item, sens);
@@ -595,7 +595,7 @@ void set_filter_option_menu_toolbar (void) {
 }
 
 
-void set_server_filter_menu_list_text( void ){
+void set_server_filter_menu_list_text(void){
 
 	/* baa -- Set the names of the filters if they have been set in
 	   the config file. The server_filters is defined in filter.h
@@ -607,42 +607,42 @@ void set_server_filter_menu_list_text( void ){
 #if 0
 	for (i = 0; i < MAX_SERVER_FILTERS; i++) {
 
-		if ( i == 0 ){
-			if ( current_server_filter == i ) {
+		if (i == 0){
+			if (current_server_filter == i) {
 				//server filter
-				snprintf( buf, 64, _("None <--"));
+				snprintf(buf, 64, _("None <--"));
 			}
 			else {
-				snprintf( buf, 64, _("None"));
+				snprintf(buf, 64, _("None"));
 			}
 		}
 		else {
-			if ( server_filters[i].filter_name && strlen( server_filters[i].filter_name ) ){
+			if (server_filters[i].filter_name && strlen(server_filters[i].filter_name)){
 
-				if ( current_server_filter == i ) {
-					snprintf( buf, 64, "%s <--", server_filters[i].filter_name );
+				if (current_server_filter == i) {
+					snprintf(buf, 64, "%s <--", server_filters[i].filter_name);
 				}
 				else {
-					snprintf( buf, 64, "%s", server_filters[i].filter_name );
+					snprintf(buf, 64, "%s", server_filters[i].filter_name);
 				}
 
 			}
 			else {
 
-				if ( current_server_filter == i ) {
-					snprintf( buf, 64, _("Filter %d <--"), i );
+				if (current_server_filter == i) {
+					snprintf(buf, 64, _("Filter %d <--"), i);
 				}
 				else {
-					snprintf( buf, 64, _("Filter %d"), i );
+					snprintf(buf, 64, _("Filter %d"), i);
 				}
 
 			}
 		}
 
-		if ( server_filter_widget[i + filter_start_index ] && GTK_BIN (server_filter_widget[i + filter_start_index])->child ) 		{
+		if (server_filter_widget[i + filter_start_index ] && GTK_BIN (server_filter_widget[i + filter_start_index])->child) 		{
 			GtkWidget *child = GTK_BIN (server_filter_widget[i + filter_start_index ])->child;
 			if (GTK_IS_LABEL (child)) {
-				gtk_label_set (GTK_LABEL (child), buf );
+				gtk_label_set (GTK_LABEL (child), buf);
 			}
 		}
 	}
@@ -653,16 +653,16 @@ void set_server_filter_menu_list_text( void ){
 	/* Show the active filter on the status bar 
 	   -- Add code to indicate if the filter button is checked.
 	*/
-	if ( current_server_filter == 0 ) {
-		snprintf( status_buf, 64, _("No Server Filter Active"));
+	if (current_server_filter == 0) {
+		snprintf(status_buf, 64, _("No Server Filter Active"));
 	}
 	else {
 		name = g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1)->filter_name;
 		if (name) {
-			snprintf( status_buf, 64, _("Server Filter: %s"), name);
+			snprintf(status_buf, 64, _("Server Filter: %s"), name);
 		}
 		else {
-			snprintf( status_buf, 64, _("Server Filter: %d"), current_server_filter );
+			snprintf(status_buf, 64, _("Server Filter: %d"), current_server_filter);
 			xqf_error("this is a bug");
 		}
 	}
@@ -698,7 +698,7 @@ static void server_filter_select_callback (GtkWidget *widget, int number) {
 
 	set_filter_option_menu_toolbar();
 
-	config_push_prefix ( "/" CONFIG_FILE "/Server Filter" );
+	config_push_prefix ("/" CONFIG_FILE "/Server Filter");
 	config_set_int ("current_server_filter", current_server_filter);
 	config_pop_prefix ();
 
@@ -1050,7 +1050,7 @@ static void stopxmms() {
 	}
 
 	pid = fork();
-	if ( pid == 0) {
+	if (pid == 0) {
 		char *argv[3];
 		argv[0] = "xmms";
 		argv[1] = "-s";
@@ -1482,18 +1482,18 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 	list = server_clist_selected_servers ();
 	if (list) {
 		for (tmp = list; tmp; tmp = tmp->next) {
-			server_list_size = g_slist_length (favorites->servers );
+			server_list_size = g_slist_length (favorites->servers);
 			favorites->servers = 
 				server_list_append (favorites->servers, (struct server *) tmp->data);
-			if ( server_list_size < g_slist_length (favorites->servers )){
-				snprintf( buf, buflen, "Added Server #%d: '%s'",
-						g_slist_length (favorites->servers ),
+			if (server_list_size < g_slist_length (favorites->servers)){
+				snprintf(buf, buflen, "Added Server #%d: '%s'",
+						g_slist_length (favorites->servers),
 						((struct server *)tmp->data)->name);
 			} else {
-				snprintf( buf, buflen, "Server '%s' Already In Favorites",
+				snprintf(buf, buflen, "Server '%s' Already In Favorites",
 						((struct server *)tmp->data)->name);
 			}
-			print_status (main_status_bar, buf );
+			print_status (main_status_bar, buf);
 
 		}
 		debug (7, "add_to_favorites_callback() -- Saving To Favorites");
@@ -1646,7 +1646,7 @@ static void del_server_callback (GtkWidget *widget, gpointer data) {
 		return;
 	}
 
-	for (c = cur_source; c; c = c->next ) {
+	for (c = cur_source; c; c = c->next) {
 		struct master* m = (struct master *) c->data;
 
 		if (m == favorites) {
@@ -1666,7 +1666,7 @@ static void del_server_callback (GtkWidget *widget, gpointer data) {
 			master_remove_server(favorites, s);
 		}
 		else {
-			for (c = cur_source; c; c = c->next ) {
+			for (c = cur_source; c; c = c->next) {
 				struct master* m = (struct master *) c->data;
 
 				master_remove_server(m, s);
@@ -2054,19 +2054,19 @@ static void server_clist_unselect_callback (GtkWidget *widget, int row,
 /* Deal with key-presses in the server pane */
 static gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event) {
 
-	debug (7, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval ); 
+	debug (7, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval); 
 	if (event->keyval == GDK_Delete) {
-		del_server_callback( widget, event );
+		del_server_callback(widget, event);
 		return TRUE;
-	} else if (event->keyval == GDK_Insert ) {
-		if (event->state & GDK_SHIFT_MASK ){
-			add_to_favorites_callback( widget, event );
+	} else if (event->keyval == GDK_Insert) {
+		if (event->state & GDK_SHIFT_MASK){
+			add_to_favorites_callback(widget, event);
 		} else {
 			add_server_callback (widget, event);
 		}
 		return TRUE;
-	} else if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ) {
-		launch_callback( widget, LAUNCH_NORMAL );
+	} else if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter) {
+		launch_callback(widget, LAUNCH_NORMAL);
 		return TRUE;
 	}
 	return FALSE;
@@ -2835,7 +2835,7 @@ static const struct menuitem edit_menu_items[] = {
 	},
 	{
 		MENU_ITEM,
-		N_("Add Default Masters" ),
+		N_("Add Default Masters"),
 		0,
 		GDK_CONTROL_MASK,
 		GTK_SIGNAL_FUNC (update_master_builtin_callback),
@@ -2844,7 +2844,7 @@ static const struct menuitem edit_menu_items[] = {
 	},
 	{
 		MENU_ITEM,
-		N_("Add Gslist Masters" ),
+		N_("Add Gslist Masters"),
 		0,
 		GDK_CONTROL_MASK,
 		GTK_SIGNAL_FUNC (update_master_gslist_callback),
@@ -3518,19 +3518,19 @@ static void populate_main_toolbar (void) {
 	/* filter option menu for toolbar */
 
 	filter_toolbar_label = gtk_label_new ("Filter: ");
-	gtk_toolbar_append_widget( GTK_TOOLBAR (main_toolbar),
+	gtk_toolbar_append_widget(GTK_TOOLBAR (main_toolbar),
 			filter_toolbar_label,
 			"Select a server filter",
-			"Private" );
+			"Private");
 	gtk_widget_show(filter_toolbar_label);
 
 	filter_option_menu_toolbar = gtk_option_menu_new ();
 	gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu_toolbar), create_filter_menu_toolbar());
 
-	gtk_toolbar_append_widget( GTK_TOOLBAR (main_toolbar),
+	gtk_toolbar_append_widget(GTK_TOOLBAR (main_toolbar),
 			filter_option_menu_toolbar,
 			"Select a server filter",
-			"Private" );
+			"Private");
 
 	gtk_widget_show (filter_option_menu_toolbar);
 #endif
@@ -3712,7 +3712,7 @@ static void populate_main_window (void) {
 	*/
 
 #if 0
-	if ((server_filter_menu_items = g_malloc( sizeof( struct menuitem ) *  ( MAX_SERVER_FILTERS + 4 )))) {
+	if ((server_filter_menu_items = g_malloc(sizeof(struct menuitem) *  (MAX_SERVER_FILTERS + 4)))) {
 		i = 0;
 		j = 0;
 		server_filter_menu_items[i].type       = MENU_ITEM;
@@ -3746,9 +3746,9 @@ static void populate_main_window (void) {
 		i++; 
 		j++;
 
-		for ( ; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++ ){
-			buf = g_malloc( sizeof( char ) * ( 16 )); 
-			sprintf( buf, "Filter %d", j );
+		for (; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++){
+			buf = g_malloc(sizeof(char) * (16)); 
+			sprintf(buf, "Filter %d", j);
 			server_filter_menu_items[i].type       = MENU_ITEM;
 			server_filter_menu_items[i].label      = buf;
 			server_filter_menu_items[i].accel_key  = 0;
@@ -4399,13 +4399,13 @@ int main (int argc, char *argv[]) {
 
 
 	if (server_menu) {
-		debug( 6, "EXIT: destroy server_menu");
+		debug(6, "EXIT: destroy server_menu");
 		gtk_widget_destroy (server_menu);
 		server_menu = NULL;
 	}
 
 	if (player_menu) {
-		debug( 6, "EXIT: destroy player_menu");
+		debug(6, "EXIT: destroy player_menu");
 		gtk_widget_destroy (player_menu);
 		player_menu = NULL;
 	}
@@ -4427,7 +4427,7 @@ int main (int argc, char *argv[]) {
 	filters_done ();
 	props_free_all ();
 
-	debug( 6, "EXIT: Free Server Lists");
+	debug(6, "EXIT: Free Server Lists");
 	g_slist_free (cur_source);
 	server_list_free (cur_server_list);
 	userver_list_free (cur_userver_list);
@@ -4440,10 +4440,10 @@ int main (int argc, char *argv[]) {
 	host_cache_save ();
 	host_cache_clear ();
 
-	debug( 6, "EXIT: Free Master Lists");
+	debug(6, "EXIT: Free Master Lists");
 	free_masters ();
 
-	debug( 6, "EXIT: Call rcon_done.");
+	debug(6, "EXIT: Call rcon_done.");
 	rcon_done ();
 	psearch_done ();
 	add_server_done ();
@@ -4462,7 +4462,7 @@ int main (int argc, char *argv[]) {
 
 	games_done();
 
-	debug( 6, "EXIT: Done.");
+	debug(6, "EXIT: Done.");
 
 	return 0;
 }

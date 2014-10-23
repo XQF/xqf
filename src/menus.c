@@ -44,11 +44,11 @@ static void create_menu_recursive (GtkWidget *menu,
 			/* This does not work, I need to figure out how to       
 			   add some sort of indicator as to the active filter */
 			case MENU_RADIO_ITEM:
-				if ( button == NULL ){
-					button = gtk_radio_button_new_with_label( NULL, items->label );
+				if (button == NULL){
+					button = gtk_radio_button_new_with_label(NULL, items->label);
 					gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
 				} else {
-					group =  gtk_radio_button_group (GTK_RADIO_BUTTON ( button ));
+					group =  gtk_radio_button_group (GTK_RADIO_BUTTON (button));
 					button = gtk_radio_button_new_with_label(group, "button2");
 				}
 

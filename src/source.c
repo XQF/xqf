@@ -80,7 +80,7 @@ static void save_list (FILE *f, struct master *m) {
 
 	if (!m->servers)
 		return;
-	debug (6, "save_list() -- Saving Server List \"%s\"", m->name );
+	debug (6, "save_list() -- Saving Server List \"%s\"", m->name);
 
 #ifdef DEBUG
 	fprintf (stderr, "Saving server list \"%s\"...\n", m->name);
@@ -284,7 +284,7 @@ static char *unify_url (const char *url) {
 
 	strcpy (unified + (ptr2 - url), ptr3);
 
-	while ( (len = strlen (unified)) > 0 && unified[len - 1] == '/' )
+	while ((len = strlen (unified)) > 0 && unified[len - 1] == '/')
 		unified[len - 1] = '\0';
 
 #ifdef DEBUG
@@ -702,7 +702,7 @@ static gboolean master_options_compare(QFMasterOptions* lhs, QFMasterOptions* rh
 	if (!lhs || !rhs)
 		return FALSE;
 
-	if (lhs->portadjust != rhs->portadjust )
+	if (lhs->portadjust != rhs->portadjust)
 		return FALSE;
 
 	if (lhs->gsmtype && rhs->gsmtype && strcmp(lhs->gsmtype, rhs->gsmtype))
@@ -750,13 +750,13 @@ char* master_to_string(QFMaster* m) {
 }
 #endif
 
-char *master_to_url( QFMaster* m ) {
+char *master_to_url(QFMaster* m) {
 	char *query_type;
 	char *address;
 	char buf[1024] = {0};
 
-	if ( m->master_type >= MASTER_NATIVE
-			&& m->master_type < MASTER_NUM_QUERY_TYPES ) {
+	if (m->master_type >= MASTER_NATIVE
+			&& m->master_type < MASTER_NUM_QUERY_TYPES) {
 		query_type = master_prefixes[m->master_type];
 	}
 	else
@@ -820,7 +820,7 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
 	debug(6,"%s,%s,%d,%d,%d",path,name,type,user,lookup_only);
 
 	query_type = get_master_query_type_from_address(path);
-	if ( query_type == MASTER_INVALID_TYPE ) {
+	if (query_type == MASTER_INVALID_TYPE) {
 		debug(1,"Invalid Master %s",path);
 		return NULL;
 	}
@@ -841,7 +841,7 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
 				// if no port was specified, add default master port if available or fail
 				if (!port) {
 					// use default_port instead of default_master_port for lan broadcasts
-					if ( query_type == MASTER_LAN ) {
+					if (query_type == MASTER_LAN) {
 						port = games[type].default_port;
 						/* no longer necessary as of qstat 2.5c
 						// unreal needs one port higher
@@ -1675,7 +1675,7 @@ enum master_query_type get_master_query_type_from_address(const gchar* address) 
 	// check for known master prefix
 	debug(6,"get_master_query_type_from_address(%s)",address);
 	for (type=MASTER_NATIVE;type<MASTER_NUM_QUERY_TYPES;type++) {
-		if (!g_ascii_strncasecmp( address, master_prefixes[type],
+		if (!g_ascii_strncasecmp(address, master_prefixes[type],
 					strlen(master_prefixes[type]))) {
 			debug(6,"get_master_query_type_from_address: found %s",master_prefixes[type]);
 			return type;

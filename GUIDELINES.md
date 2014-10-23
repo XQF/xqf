@@ -10,7 +10,7 @@ The best way to contribute is to fork this project and to request pulls.
 Coding guidelines
 -----------------
 
-**Indentation**
+** Indentation **
 
 Please use tabulations to indent your code, and white spaces to draw ascii art.
 
@@ -31,7 +31,7 @@ void function (void) {
 }
 ```
 
-_Wrong:_
+_Bad:_
 
 ```
 void function (void) {
@@ -44,10 +44,9 @@ void function (void) {
 }
 ```
 
-**Comments**
+** Comments **
 
 CPlusPlus-like comments beginning with ``//`` are tolerated.
-
 
 _Good:_
 
@@ -63,7 +62,7 @@ _Good:_
 
 Please put the opening left brace at the end of the previous line.  
 Never write a ``for``, ``while``, ``if``, and ``else`` block without braces.  
-Never write an ``for``, ``while``, ``if``, ``else`` block in only one line.  
+Never write a ``for``, ``while``, ``if``, ``else`` block in only one line.
 If a for statement has an empty block, please write a block with a comment in the empty block.
 
 _Good:_
@@ -87,7 +86,7 @@ void function (void) {
 }
 ```
 
-_Wrong:_
+_Bad:_
 
 ```c
 void function (void)
@@ -100,14 +99,22 @@ void function (void)
 	}
 	else if (another_test)
 		do_somethingelse();
-	else return;
+	else { return };
 
 	for (it = 0; do(&it); it++);
 }	
   
 ```
 
-**Parenthesis and spacing**
+_Very very bad:_
+
+```c
+for (i = 0; i < max; i++)
+	if (i == j)
+		return i;
+```
+
+** Parenthesis and spacing **
 
 Please leave a white space before ``if``, ``for`` and ``while`` and the opening left parenthesis.  
 Please do not write white space between a function name and the opening left parenthesis, unless this is a declaration.  
@@ -136,7 +143,7 @@ void function (gint it) {
 }
 ```
 
-_Wrong:_
+_Bad:_
 
 ```c
 void function (gint it) {
@@ -157,6 +164,26 @@ void function (gint it) {
 }
 ```
 
+** Commas, semicolons and spacing **
+
+Please leave white space before a comma or a semicolon, but please no write any white spaces before them.
+
+_Good:_
+
+```
+for (i = 0; i < max; i++ {
+	function(i, j, k);
+}
+```
+
+_Bad:_
+
+```
+for (i = 0 ;i < max ;i++ {
+	function(i,j,k);
+}
+```
+
 ** Incrementation **
 
 Please write different lines for incrementation and affectation.
@@ -174,7 +201,7 @@ c = a;
 a += b;
 ```
 
-_Wrong:_
+_Bad:_
 
 ```c
 do(++it);
@@ -184,15 +211,16 @@ do(more--);
 c = a += b;
 ```
 
-_Very very wrong:_
+_Very very bad:_
 
 ```c
 *dst++ = *src++;
 ```
 
-This previous line was real and causes memory errors during 14 years.
+This previous line was real and has corrupted memory during 14 years.
 
-**Splitted lines**
+
+** Splitted lines **
 
 Please do not split lines if they are not too long to be splitted two times or more (three lines or more).
 
@@ -206,7 +234,7 @@ long_function_name(something very long, and this,
 this_long_variable = "has a not a very very long value";
 ```
 
-_Wrong:_
+_Bad:_
 
 ```c
 function_name(
@@ -216,7 +244,9 @@ this_long_variable =
 	"has not a very very long value";
 ```
 
-**Good to know**
+** Good to know **
+
+All the bad examples presented here were real before a large clean-up was done.
 
 All the code does not currently follow these guidelines, if you change something in the code and if this part does not follow these guidelines, do not hesitate to fix the appearance too.
 

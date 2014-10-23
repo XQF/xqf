@@ -524,11 +524,11 @@ char* find_server_setting_for_key (char *key, char **info_ptr){
 	}
 
 	for (ptr = info_ptr; ptr && *ptr; ptr += 2) {
-		if ( strcasecmp (*ptr, key) == 0){
-			debug( 3, "find_server_setting_for_key() -- Found key '%s' with value '%s'", key, *(ptr+1)  );
+		if (strcasecmp (*ptr, key) == 0){
+			debug(3, "find_server_setting_for_key() -- Found key '%s' with value '%s'", key, *(ptr+1));
 			return (*(ptr+1));
 		} else {
-			debug( 8, "Key '%s' w/val '%s' did not match '%s'", *ptr, *(ptr+1), key);
+			debug(8, "Key '%s' w/val '%s' did not match '%s'", *ptr, *(ptr+1), key);
 		}
 	}
 	return (NULL);
@@ -654,12 +654,12 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 		return NULL;
 	}
 
-	debug( 3, "Looking for subdir %s in %s", game, basegamedir);
+	debug(3, "Looking for subdir %s in %s", game, basegamedir);
 
 	// Look for exact match
 	path = file_in_dir (basegamedir, game);
 	if (!stat (path, &buf) && S_ISDIR(buf.st_mode)) {
-		debug( 3, "Found exact match for subdir %s in %s", game, basegamedir);
+		debug(3, "Found exact match for subdir %s in %s", game, basegamedir);
 		result = 1; // Exact match
 		ret = g_strdup(game);
 	}
@@ -667,12 +667,12 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 
 	// Did not find exact match, perform search
 	if (!ret) {
-		debug( 3, "Did not find exact match for subdir %s in %s", game, basegamedir);
-		debug( 3, "Searching for subdir %s in %s ignoring case", game, basegamedir);
+		debug(3, "Did not find exact match for subdir %s in %s", game, basegamedir);
+		debug(3, "Searching for subdir %s in %s ignoring case", game, basegamedir);
 
 		dp = opendir (basegamedir);
 		if (!dp) {
-			debug( 3, "Could not open base directory %s!", basegamedir);
+			debug(3, "Could not open base directory %s!", basegamedir);
 		}
 		else {
 			struct dirent *ep;
@@ -697,7 +697,7 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 				}
 
 				if (!g_ascii_strcasecmp(name, game)) {
-					debug( 3, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir, game);
+					debug(3, "Found subdir %s in %s that matches %s", ep->d_name, basegamedir, game);
 					result = 2; // Different case match
 					ret = g_strdup (name);
 					break;
@@ -708,7 +708,7 @@ char *find_game_dir (const char *basegamedir, const char *game, int *match_resul
 	}
 
 	if (!ret) {
-		debug( 3, "Could not find any match for subdir %s in %s.",game, basegamedir);
+		debug(3, "Could not find any match for subdir %s in %s.",game, basegamedir);
 	}
 
 	if (match_result) {
@@ -825,7 +825,7 @@ char* resolve_path(const char* path) {
 		return NULL;
 	}
 
-	if ( S_ISLNK(statbuf.st_mode) == 1) {
+	if (S_ISLNK(statbuf.st_mode) == 1) {
 		// Grab directory from sym link of cmd_entry
 
 		debug(3, "path is a sym link");    
@@ -1004,7 +1004,7 @@ void external_program_input_callback(struct external_program_connection* conn, i
 		return;
 	}
 
-	if (conn->pos >= conn->bufsize ) {
+	if (conn->pos >= conn->bufsize) {
 		xqf_error("line %d too long",conn->linenr+1);
 		external_program_close_input(conn);
 		return;
@@ -1082,7 +1082,7 @@ int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer
 	pid_t pid;
 
 	pid = fork();
-	if ( pid == 0) {
+	if (pid == 0) {
 		if (child_callback) {
 			child_callback(data);
 		 }

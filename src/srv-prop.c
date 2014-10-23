@@ -290,7 +290,7 @@ void props_load (void) {
 
 				g_free (p->comment);
 				p->comment = g_malloc0 (slen + 1);
-				for ( si = 0, di = 0; si < slen; ++si ) {
+				for (si = 0, di = 0; si < slen; ++si) {
 					if (quote) {
 						quote = 0;
 						if (ptr[si] == 'n')
@@ -325,7 +325,7 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
 	int   sucks;
 	char* comment = NULL;
 
-	customcfg = strdup_strip ( gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry)));
+	customcfg = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry)));
 
 	srvpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (password_entry)));
 	spectpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (spectator_entry)));

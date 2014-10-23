@@ -358,7 +358,7 @@ int client_launch (const struct condef *con, int forkit) {
 	}
 
 	if (games[con->s->type].exec_client) {
-		if ( (*games[con->s->type].exec_client) (con, forkit) < 0)
+		if ((*games[con->s->type].exec_client) (con, forkit) < 0)
 			return FALSE;
 	}
 

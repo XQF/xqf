@@ -122,7 +122,7 @@ static inline GSList *userver_list_remove (GSList *list, struct userver *us) {
 
 static inline void server_list_free (GSList *list) {
 	if (list) {
-		debug (6, "server_list_free() -- list %lx", list );
+		debug (6, "server_list_free() -- list %lx", list);
 		g_slist_foreach (list, (GFunc) server_unref, NULL);
 		g_slist_free (list);
 	}

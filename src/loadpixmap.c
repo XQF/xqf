@@ -155,14 +155,14 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 			char* p;
 			p = found_filename = g_strdup(filename);
 
-			if (  (*p >= 'a' && *p <= 'z')
+			if ((*p >= 'a' && *p <= 'z')
 					|| (*p >= 'A' && *p <= 'Z'))
 				++p;
 			else
 				*p++ = '_';
 
 			while (*p) {
-				if (  (*p >= 'a' && *p <= 'z')
+				if ((*p >= 'a' && *p <= 'z')
 						|| (*p >= 'A' && *p <= 'Z')
 						|| (*p >= '0' && *p <= '9')) {
 					++p;

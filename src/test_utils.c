@@ -50,7 +50,7 @@ static int currentFile = 0;
 #define BASEDIR "/tmp/xqf_test_util/"
 
 static void popFile(int nr) {
-	for ( ; nr > 0 && currentFile > 0 ; --nr) {
+	for (; nr > 0 && currentFile > 0 ; --nr) {
 		File* entry = tempfiles[--currentFile];
 
 		if (!entry)
