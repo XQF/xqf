@@ -16,17 +16,18 @@ Please use tabulations to indent your code, and white spaces to draw ascii art.
 
 It means that if you want to align something to the left you must use tabulation, and if you want to aligne something to the right you must use white space.
 
+Please _never_ mixes tabulations and white spaces for indentation.
 
 _Good:_
 
 ```
 void function (void) {
-⇨gint integer;␣␣␣␣/* some comment
-⇨gchar character;␣␣* here */
+ ⇨gint integer;␣␣␣␣/* some comment
+ ⇨gchar character;␣␣* here */
 
-⇨while (test) {
-⇨⇨do_something();
-⇨}
+ ⇨while (test) {
+ ⇨ ⇨do_something();
+ ⇨}
 }
 ```
 
@@ -34,11 +35,11 @@ _Wrong:_
 
 ```
 void function (void) {
-␣␣gint integer;⇨⇨⇨⇨/* some comment
+␣␣gint integer; ⇨ ⇨/* some comment
 ␣␣gchar character;␣␣* here */
 
 ␣␣while (test) {
-⇨⇨⇨⇨do_something();
+ ⇨ ⇨do_something();
 ␣␣}
 }
 ```
@@ -108,11 +109,11 @@ void function (void)
 
 **Parenthesis and spacing**
 
-Leave a white space before ``if``, ``for`` and ``while`` and the opening left parenthesis.  
+Please leave a white space before ``if``, ``for`` and ``while`` and the opening left parenthesis.  
 Please do not write white space between a function name and the opening left parenthesis, unless this is a declaration.  
 Please do not put extra white space inside parenthesis.
 
-Please write a white space to the left and the right of an operator.
+Please write a white space to the left and the right of an operator. There is an exception for ``++`` and ``--``.
 
 _Good:_
 
@@ -120,6 +121,7 @@ _Good:_
 void function (gint it) {
 	gpointer n = NULL;
 	gint m = 0;
+	gint p;
 
 	if (this && that) {
 		do(it);
@@ -129,7 +131,8 @@ void function (gint it) {
 	}
 
 	n = f(it)->well;
-	m = 5 + 2
+	m = 5 + 2;
+	p++;
 }
 ```
 
@@ -139,8 +142,9 @@ _Wrong:_
 void function (gint it) {
 	gpointer n=NULL;
 	gint m=0;
+	gint p;
 
-	if(this && thaht) {
+	if(this && that) {
 		do (it);
 	}
 	else if (i<j) {
@@ -149,8 +153,44 @@ void function (gint it) {
 
 	n=f (it)->well;
 	m = 5+2;
+	p++;
 }
 ```
+
+** Incrementation **
+
+Please write different lines for incrementation and affectation.
+
+_Good:_
+
+```c
+it++;
+do(it);
+
+do(more);
+more--;
+
+c = a;
+a += b;
+```
+
+_Wrong:_
+
+```c
+do(++it);
+
+do(more--);
+
+c = a += b;
+```
+
+_Very very wrong:_
+
+```c
+*dst++ = *src++;
+```
+
+This previous line was real and causes memory errors during 14 years.
 
 **Splitted lines**
 
