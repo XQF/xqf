@@ -15,6 +15,7 @@ Significant contributors
 Other contributors
 ------------------
 
+* Witold Piłat <witold.pilat@gmail.com>
 * Jochen Baier <email@jochen-baier.de>
 * Jo Shields <directhex@apebox.org>
 * Sven Joachim <svenjoac@gmx.de>
@@ -46,9 +47,10 @@ Translators
 * Miłosz Kosobucki
 * Morten Brix Pedersen
 
-Special thanks (reports, ideas, help…)
---------------------------------
+Special thanks (reports, review, ideas, help…)
+----------------------------------------------
 
+* Zack Middleton <zturtleman@gmail.com>
 * Chris Vine <chris@cvine.freeserve.co.uk>
 * Tomasz Kalkosiński
 * Timothée Besset

@@ -3,7 +3,7 @@ XQF 1.0.5.2-git -- Currently
 
 Changes since 1.0.5:
 
-* New games: Unvanquished, Tremulous GPP, TremFusion, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Enemy Territory: Quake Wars, Enemy Territory: Legacy, ZEQ2 Lite, Jedi Outcast, Turtle Arena
+* New games: Unvanquished, Tremulous GPP, TremFusion, Xonotic, Smokin'Guns, Urban Terror, Alien Arena, Reaction, Q3 Rally, World of Padman, OpenArena, OpenTTD, Ennemy Territory: Quake Wars, Ennemy Territory: Legacy, ZEQ2 Lite, Jedi Outcast, Turtle Arena
 * Add LAN broadcast for many games
 * Add or substitute new master servers (like ioquake3 master substitute id master)
 * Add Warsow protocol numbers

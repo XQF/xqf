@@ -18,9 +18,9 @@ BUILD / INSTALLATION / USAGE
 
 1. ``git clone https://github.com/XQF/xqf.git``; ``cd xqf``
 2. ``./autogen.sh``
-3. ``./configure`` (if you use Debian or Ubuntu, do ``./configure --with-qstat=quakestat --prefix=/usr``)
+3. ``./configure`` (with Debian or Ubuntu, add ``--with-qstat=quakestat --prefix=/usr``)
 4. ``make``
-5. ``make install`` (or ``fakeroot checkinstall --fstrans=yes make install``)
+5. ``make install`` (or ``fakeroot checkinstall --fstrans=yes``)
 6. ``xqf``
 
 Please see the ``docs/xqfdocs.html`` file for more information. Warning, this page is not up to date!
@@ -34,8 +34,8 @@ AVAILABILITY
 * http://sourceforge.net/projects/xqf/ (previously published files and old SVN repository)
 
 
-CONTRIBUTE
-----------
+HOW TO CONTRIBUTE
+-----------------
 
 The best way to contribute is to fork this project, please read the [GUIDELINES.md](GUIDELINES.md) for further information.
 
