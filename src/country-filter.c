@@ -114,6 +114,7 @@ const char* geoip_name_by_id(int id) {
 
 	if (id == LAN_GeoIPid) {
 		return "LAN";
+	}
 	else {
 		return xqf_geoip_country_name[id];
 	}
