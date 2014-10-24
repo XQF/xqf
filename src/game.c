@@ -391,13 +391,15 @@ static void q3_unescape (char *dst, const char *src) {
 				}
 			}
 		}
-		// the next caracter is used, will be printed
-		dst[idst] = src[isrc];
+		// the next caracter is used if not null, will be printed
+		if (src[isrc]) {
+			dst[idst] = src[isrc];
 
-		debug(6, "isrc: %d, idst: %d", isrc, idst);
-		debug(6, "src: [%s], dst: [%s]", src, dst);
-		isrc += 1;
-		idst += 1;
+			debug(6, "isrc: %d, idst: %d", isrc, idst);
+			debug(6, "src: [%s], dst: [%s]", src, dst);
+			isrc += 1;
+			idst += 1;
+		}
 	}
 	// when finished, do nothing more, the remaining allocated space is already filled with zeros
 }
