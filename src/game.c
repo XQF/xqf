@@ -370,26 +370,30 @@ static void q3_unescape (char *dst, const char *src) {
 						|| src[isrc + 1] == '?'
 						|| src[isrc + 1] == '@'
 						|| src[isrc + 1] == '*') {
-					// skip '^' and the next char
-					isrc += 2;
-				}
-				// if multichar color code begins, verify if it ends
-				else if (src[1] == 'P' || src[1] == 'p') {
-					int i;
-					// 8 because P000000o, don't count more
-					for (i=2; src[i] != '\0' && src[i] != 'O' && src[i] != 'o' && i < 8; i++) {
-						// 'for' increments i
+					// if multichar color code begins, verify if it ends
+					if (src[1] == 'P' || src[1] == 'p') {
+						gint i;
+						// 8 because P000000o, don't count more
+						for (i=2; (src[i] != '\0' && src[i] != 'O' && src[i] != 'o')
+									&& (src[i] >= '0' && src[i] <= '9')
+									&& (i < 8); i++) {
+							// 'for' increments i
+						}
+						// if multichar color code ends, skip 5 because P000o, 8 because P000000o
+						if ((src[i] == 'O' || src[i] == 'o') && (i == 5 || i == 8)) {
+							isrc += i;
+						}
 					}
-					// if multichar color code ends, skip 5 because P000o, 8 because P000000o
-					if ((src[i] == 'O' || src[i] == 'o') && (i == 5 || i == 8)) {
-						isrc += i;
+					else {
+						// skip '^' and the next char
+						isrc += 2;
 					}
 				}
 			}
 		}
 		// the next caracter is used, will be printed
-
 		dst[idst] = src[isrc];
+
 		debug(6, "isrc: %d, idst: %d", isrc, idst);
 		debug(6, "src: [%s], dst: [%s]", src, dst);
 		isrc += 1;
