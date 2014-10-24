@@ -3780,5 +3780,3 @@ static gboolean unreal_has_map(struct server* s) {
 
 	return ut_lookup_map(hash,s->map);
 }
-
-// vim: sw=2
