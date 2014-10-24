@@ -371,7 +371,7 @@ static void q3_unescape (char *dst, const char *src) {
 						|| src[isrc + 1] == '@'
 						|| src[isrc + 1] == '*') {
 					// skip '^' and the next char
-					isrc += 1;
+					isrc += 2;
 				}
 				// if multichar color code begins, verify if it ends
 				else if (src[1] == 'P' || src[1] == 'p') {
