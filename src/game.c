@@ -360,8 +360,8 @@ static void q3_unescape (char *dst, const char *src) {
 				}
 				// if onechar color code
 				else if ((src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
-						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
-						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
+						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')
 						|| src[isrc + 1] == ':'
 						|| src[isrc + 1] == ';'
 						|| src[isrc + 1] == '<'
