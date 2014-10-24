@@ -937,7 +937,7 @@ static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 			 * because qstat uses ISO-8859-1 encoding for raw ouput
 			 */
 
-			if (buffer[i] >= '\0' || buffer [i] <= '~') {
+			if (buffer[i] >= '\0' && buffer [i] <= '~') {
 				token[i - last] = buffer[i];
 			}
 			else {
