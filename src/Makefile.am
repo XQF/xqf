@@ -146,6 +146,9 @@ test_utils_LDADD = $(xqf_LDADD)
 gamesxml2c_LDFLAGS := $(shell xml2-config --libs)
 gamesxml2c_CFLAGS := $(shell xml2-config --cflags) 
 
+gamesxml2c_SOURCES = \
+gamesxml2c.c
+
 pkglibexec_PROGRAMS =
 
 if DUMMY_LIBGEOIP
