@@ -51,64 +51,64 @@ GtkWidget *pane3_widget;
 static struct clist_column server_columns[] =
 {
 	{
-		name:      N_("Name"),
-		width:     180,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_SERVER_NAME, SORT_SERVER_TYPE, -1 },
-		sort_name: { NULL, N_("Type") },
+		.name =      N_("Name"),
+		.width =     180,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_SERVER_NAME, SORT_SERVER_TYPE, -1 },
+		.sort_name = { NULL, N_("Type") },
 	},
 	{
-		name:      N_("Address"),
-		width:     140,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_SERVER_ADDRESS, SORT_SERVER_COUNTRY, -1 },
-		sort_name: { NULL, N_("Country") },
+		.name =      N_("Address"),
+		.width =     140,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_SERVER_ADDRESS, SORT_SERVER_COUNTRY, -1 },
+		.sort_name = { NULL, N_("Country") },
 	},
 	{
-		name:      N_("Ping"),
-		width:     45,
-		justify:   GTK_JUSTIFY_RIGHT,
-		sort_mode: { SORT_SERVER_PING, -1 }
+		.name =      N_("Ping"),
+		.width =     45,
+		.justify =   GTK_JUSTIFY_RIGHT,
+		.sort_mode = { SORT_SERVER_PING, -1 }
 	},
 	{
-		name:      N_("TO"),
-		width:     35,
-		justify:   GTK_JUSTIFY_RIGHT,
-		sort_mode: { SORT_SERVER_TO, -1 }
+		.name =      N_("TO"),
+		.width =     35,
+		.justify =   GTK_JUSTIFY_RIGHT,
+		.sort_mode = { SORT_SERVER_TO, -1 }
 	},
 	{
-		name:      N_("Priv"),
-		width:     35,
-		justify:   GTK_JUSTIFY_RIGHT,
-		sort_mode: { SORT_SERVER_PRIVATE, SORT_SERVER_ANTICHEAT, -1 },
-		// Translator: "PunkBuster"
-		sort_name: { NULL, N_("PB") },
+		.name =      N_("Priv"),
+		.width =     35,
+		.justify =   GTK_JUSTIFY_RIGHT,
+		.sort_mode = { SORT_SERVER_PRIVATE, SORT_SERVER_ANTICHEAT, -1 },
+		// .Translator = "PunkBuster"
+		.sort_name = { NULL, N_("PB") },
 	},
 	{
-		name:      N_("Players"),
-		width:     65,
-		justify:   GTK_JUSTIFY_RIGHT,
-		sort_mode: { SORT_SERVER_PLAYERS, SORT_SERVER_MAXPLAYERS, -1 },
-		// Translator: Max as in max players
-		sort_name: { NULL, N_("Max") },
+		.name =      N_("Players"),
+		.width =     65,
+		.justify =   GTK_JUSTIFY_RIGHT,
+		.sort_mode = { SORT_SERVER_PLAYERS, SORT_SERVER_MAXPLAYERS, -1 },
+		// .Translator = Max as in max players
+		.sort_name = { NULL, N_("Max") },
 	},
 	{
-		name:      N_("Map"),
-		width:     55,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_SERVER_MAP, -1 }
+		.name =      N_("Map"),
+		.width =     55,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_SERVER_MAP, -1 }
 	},
 	{
-		name:      N_("Game"),
-		width:     55,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_SERVER_GAME, -1 }
+		.name =      N_("Game"),
+		.width =     55,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_SERVER_GAME, -1 }
 	},
 	{
-		name:      N_("GameType"),
-		width:     55,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_SERVER_GAMETYPE, -1 }
+		.name =      N_("GameType"),
+		.width =     55,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_SERVER_GAMETYPE, -1 }
 	},
 };
 
@@ -126,40 +126,40 @@ struct clist_def server_clist_def = {
 static struct clist_column player_columns[] =
 {
 	{
-		name:      N_("Name"),
-		width:     100,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_PLAYER_NAME, -1 },
+		.name =      N_("Name"),
+		.width =     100,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_PLAYER_NAME, -1 },
 	},
 	{
-		name:      N_("Frags"),
-		width:     50,
-		justify:   GTK_JUSTIFY_RIGHT,
-		sort_mode: { SORT_PLAYER_FRAGS, -1 },
+		.name =      N_("Frags"),
+		.width =     50,
+		.justify =   GTK_JUSTIFY_RIGHT,
+		.sort_mode = { SORT_PLAYER_FRAGS, -1 },
 	},
 	{
-		name:      N_("Colors"),
-		width:     60,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_PLAYER_COLOR, -1 },
+		.name =      N_("Colors"),
+		.width =     60,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_PLAYER_COLOR, -1 },
 	},
 	{
-		name:      N_("Skin"),
-		width:     50,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_PLAYER_SKIN, -1 },
+		.name =      N_("Skin"),
+		.width =     50,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_PLAYER_SKIN, -1 },
 	},
 	{
-		name:      N_("Ping"),
-		width:     45,
-		justify:   GTK_JUSTIFY_RIGHT,
-		sort_mode: { SORT_PLAYER_PING, -1 },
+		.name =      N_("Ping"),
+		.width =     45,
+		.justify =   GTK_JUSTIFY_RIGHT,
+		.sort_mode = { SORT_PLAYER_PING, -1 },
 	},
 	{
-		name:      N_("Time"),
-		width:     45,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_PLAYER_TIME, -1 },
+		.name =      N_("Time"),
+		.width =     45,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_PLAYER_TIME, -1 },
 	}
 };
 
@@ -176,16 +176,16 @@ struct clist_def player_clist_def = {
 static struct clist_column srvinf_columns[] =
 {
 	{
-		name:      N_("Rule"),
-		width:     90,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_INFO_RULE, -1 },
+		.name =      N_("Rule"),
+		.width =     90,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_INFO_RULE, -1 },
 	},
 	{
-		name:      N_("Value"),
-		width:     80,
-		justify:   GTK_JUSTIFY_LEFT,
-		sort_mode: { SORT_INFO_VALUE, -1 },
+		.name =      N_("Value"),
+		.width =     80,
+		.justify =   GTK_JUSTIFY_LEFT,
+		.sort_mode = { SORT_INFO_VALUE, -1 },
 	}
 };
 

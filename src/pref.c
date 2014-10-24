@@ -296,9 +296,9 @@ static const char* q3_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s q3_prefs = {
-	protocols: q3_masterprotocols,
-	defproto : "68",
-	flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+	.protocols = q3_masterprotocols,
+	.defproto  = "68",
+	.flags     = Q3_PREF_SETFS_GAME | Q3_PREF_PB,
 };
 
 static GtkWidget *pass_memory_options_button;
@@ -320,9 +320,9 @@ static const char* wo_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s wo_prefs = {
-	protocols: wo_masterprotocols,
-	defproto : "60",
-	flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+	.protocols = wo_masterprotocols,
+	.defproto  = "60",
+	.flags     = Q3_PREF_SETFS_GAME | Q3_PREF_PB,
 };
 
 // change config_get_string below too!
@@ -335,9 +335,9 @@ static const char* woet_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s woet_prefs = {
-	protocols: woet_masterprotocols,
-	defproto : "84",
-	flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+	.protocols = woet_masterprotocols,
+	.defproto  = "84",
+	.flags     = Q3_PREF_SETFS_GAME | Q3_PREF_PB,
 };
 
 static const char* etl_masterprotocols[] = {
@@ -346,9 +346,9 @@ static const char* etl_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s etl_prefs = {
-	protocols: etl_masterprotocols,
-	defproto : "84",
-	flags    : Q3_PREF_SETFS_GAME | Q3_PREF_PB,
+	.protocols = etl_masterprotocols,
+	.defproto  = "84",
+	.flags     = Q3_PREF_SETFS_GAME | Q3_PREF_PB,
 };
 
 static const char* ef_masterprotocols[] = {
@@ -357,8 +357,8 @@ static const char* ef_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s ef_prefs = {
-	protocols: ef_masterprotocols,
-	defproto : "24",
+	.protocols = ef_masterprotocols,
+	.defproto  = "24",
 };
 
 static const char* cod_masterprotocols[] = {
@@ -369,8 +369,8 @@ static const char* cod_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s cod_prefs = {
-	protocols: cod_masterprotocols,
-	defproto : "5",
+	.protocols = cod_masterprotocols,
+	.defproto  = "5",
 };
 
 static const char* jk2_masterprotocols[] = {
@@ -386,13 +386,13 @@ static const char* jk3_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s jk2_prefs = {
-	protocols: jk2_masterprotocols,
-	defproto : "16",
+	.protocols = jk2_masterprotocols,
+	.defproto  = "16",
 };
 
 static struct q3_common_prefs_s jk3_prefs = {
-	protocols: jk3_masterprotocols,
-	defproto : "26",
+	.protocols = jk3_masterprotocols,
+	.defproto  = "26",
 };
 
 static const char* sof2_masterprotocols[] = {
@@ -403,8 +403,8 @@ static const char* sof2_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s sof2_prefs = {
-	protocols: sof2_masterprotocols,
-	defproto : "2004",
+	.protocols = sof2_masterprotocols,
+	.defproto  = "2004",
 };
 
 static const char* doom3_masterprotocols[] = {
@@ -416,9 +416,9 @@ static const char* doom3_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s doom3_prefs = {
-	protocols: doom3_masterprotocols,
-	defproto : "auto",
-	flags    : Q3_PREF_PB,
+	.protocols = doom3_masterprotocols,
+	.defproto  = "auto",
+	.flags     = Q3_PREF_PB,
 };
 
 static const char* quake4_masterprotocols[] = {
@@ -434,9 +434,9 @@ static const char* quake4_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s q4_prefs = {
-	protocols: quake4_masterprotocols,
-	defproto : "auto",
-	flags    : Q3_PREF_PB | Q3_PREF_CONSOLE,
+	.protocols = quake4_masterprotocols,
+	.defproto  = "auto",
+	.flags     = Q3_PREF_PB | Q3_PREF_CONSOLE,
 };
 
 static const char* etqw_masterprotocols[] = {
@@ -448,9 +448,9 @@ static const char* etqw_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s etqw_prefs = {
-	protocols: etqw_masterprotocols,
-	defproto : "auto",
-	flags    : Q3_PREF_PB | Q3_PREF_CONSOLE,
+	.protocols = etqw_masterprotocols,
+	.defproto  = "auto",
+	.flags     = Q3_PREF_PB | Q3_PREF_CONSOLE,
 };
 
 static const char* nexuiz_masterprotocols[] = {
@@ -459,8 +459,8 @@ static const char* nexuiz_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s nexuiz_prefs = {
-	protocols: nexuiz_masterprotocols,
-	defproto : "3",
+	.protocols = nexuiz_masterprotocols,
+	.defproto  = "3",
 };
 
 static const char* xonotic_masterprotocols[] = {
@@ -469,8 +469,8 @@ static const char* xonotic_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s xonotic_prefs = {
-	protocols: xonotic_masterprotocols,
-	defproto : "3",
+	.protocols = xonotic_masterprotocols,
+	.defproto  = "3",
 };
 
 static const char* warsow_masterprotocols[] = {
@@ -485,8 +485,8 @@ static const char* warsow_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s warsow_prefs = {
-	protocols: warsow_masterprotocols,
-	defproto : "15",
+	.protocols = warsow_masterprotocols,
+	.defproto  = "15",
 };
 
 static const char* tremulous_masterprotocols[] = {
@@ -496,8 +496,8 @@ static const char* tremulous_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s tremulous_prefs = {
-	protocols: tremulous_masterprotocols,
-	defproto : "69",
+	.protocols = tremulous_masterprotocols,
+	.defproto  = "69",
 };
 
 static const char* tremulousgpp_masterprotocols[] = {
@@ -507,8 +507,8 @@ static const char* tremulousgpp_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s tremulousgpp_prefs = {
-	protocols: tremulousgpp_masterprotocols,
-	defproto : "70",
+	.protocols = tremulousgpp_masterprotocols,
+	.defproto  = "70",
 };
 
 static const char* tremfusion_masterprotocols[] = {
@@ -518,8 +518,8 @@ static const char* tremfusion_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s tremfusion_prefs = {
-	protocols: tremfusion_masterprotocols,
-	defproto : "69",
+	.protocols = tremfusion_masterprotocols,
+	.defproto  = "69",
 };
 
 static const char* unvanquished_masterprotocols[] = {
@@ -529,8 +529,8 @@ static const char* unvanquished_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s unvanquished_prefs = {
-	protocols: unvanquished_masterprotocols,
-	defproto : "86",
+	.protocols = unvanquished_masterprotocols,
+	.defproto  = "86",
 };
 
 static const char* openarena_masterprotocols[] = {
@@ -541,8 +541,8 @@ static const char* openarena_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s openarena_prefs = {
-	protocols: openarena_masterprotocols,
-	defproto : "71",
+	.protocols = openarena_masterprotocols,
+	.defproto  = "71",
 };
 
 static const char* q3rally_masterprotocols[] = {
@@ -552,8 +552,8 @@ static const char* q3rally_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s q3rally_prefs = {
-	protocols: q3rally_masterprotocols,
-	defproto : "71",
+	.protocols = q3rally_masterprotocols,
+	.defproto  = "71",
 };
 
 static const char* wop_masterprotocols[] = {
@@ -566,8 +566,8 @@ static const char* wop_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s wop_prefs = {
-	protocols: wop_masterprotocols,
-	defproto : "71",
+	.protocols = wop_masterprotocols,
+	.defproto  = "71",
 };
 
 static const char* iourt_masterprotocols[] = {
@@ -577,8 +577,8 @@ static const char* iourt_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s iourt_prefs = {
-	protocols: iourt_masterprotocols,
-	defproto : "68",
+	.protocols = iourt_masterprotocols,
+	.defproto  = "68",
 };
 
 static const char* reaction_masterprotocols[] = {
@@ -588,8 +588,8 @@ static const char* reaction_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s reaction_prefs = {
-	protocols: reaction_masterprotocols,
-	defproto : "68",
+	.protocols = reaction_masterprotocols,
+	.defproto  = "68",
 };
 
 static const char* smokinguns_masterprotocols[] = {
@@ -599,8 +599,8 @@ static const char* smokinguns_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s smokinguns_prefs = {
-	protocols: smokinguns_masterprotocols,
-	defproto : "68",
+	.protocols = smokinguns_masterprotocols,
+	.defproto  = "68",
 };
 
 static const char* zeq2lite_masterprotocols[] = {
@@ -610,8 +610,8 @@ static const char* zeq2lite_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s zeq2lite_prefs = {
-	protocols: zeq2lite_masterprotocols,
-	defproto : "75",
+	.protocols = zeq2lite_masterprotocols,
+	.defproto  = "75",
 };
 
 static const char* turtlearena_masterprotocols[] = {
@@ -621,8 +621,8 @@ static const char* turtlearena_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s turtlearena_prefs = {
-	protocols: turtlearena_masterprotocols,
-	defproto : "9",
+	.protocols = turtlearena_masterprotocols,
+	.defproto  = "9",
 };
 
 static const char* alienarena_masterprotocols[] = {
@@ -632,8 +632,8 @@ static const char* alienarena_masterprotocols[] = {
 };
 
 static struct q3_common_prefs_s alienarena_prefs = {
-	protocols: alienarena_masterprotocols,
-	defproto : "34",
+	.protocols = alienarena_masterprotocols,
+	.defproto  = "34",
 };
 
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type);

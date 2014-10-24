@@ -291,13 +291,13 @@ void printGame(FILE* f, RawGame* rg, RawGame* template) {
 
 		switch(tag_type(tag)) {
 			case Tag_type_string:
-				fprintf(f, "\t\t%-20s: \"%s\",\n", tag_name(tag), val);
+				fprintf(f, "\t\t.%-20s = \"%s\",\n", tag_name(tag), val);
 				break;
 			case Tag_type_address:
-				fprintf(f, "\t\t%-20s: &%s,\n", tag_name(tag), val);
+				fprintf(f, "\t\t.%-20s = &%s,\n", tag_name(tag), val);
 				break;
 			case Tag_type_literal:
-				fprintf(f, "\t\t%-20s: %s,\n", tag_name(tag), val);
+				fprintf(f, "\t\t.%-20s = %s,\n", tag_name(tag), val);
 				break;
 			case Tag_type_invalid:
 				break;
@@ -315,7 +315,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template) {
 
 		if (!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
 
-		fprintf(f, "\t\t%-20s: stringlist%03u,\n", tag_name(tag), rg->num_multitags++);
+		fprintf(f, "\t\t.%-20s = stringlist%03u,\n", tag_name(tag), rg->num_multitags++);
 	}
 
 	fputs("\t},\n", f);
