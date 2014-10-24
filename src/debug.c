@@ -71,7 +71,7 @@ void set_debug_level (int level) {
 	debug_level = level;
 }
 
-inline int get_debug_level (void) {
+int get_debug_level (void) {
 	return (debug_level);
 }
 
