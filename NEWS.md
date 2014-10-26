@@ -25,6 +25,9 @@ Changes since 1.0.5:
 * Fix crash with 24 bit images
 * Fix the q3_unescape routine that was broken since at least the year 2000, so refreshing servers may result in segfault
 * Fix a string table of Quake 2 game properties that was broken since at least the year 2000, too
+* Fix gamesxml2c compilation
+* Fix compilation using clang
+* Use a new Savage hack to query Savage master server
 * Determine number of GeoIP countries at runtime
 * Complete French translation
 

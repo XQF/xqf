@@ -1,44 +1,62 @@
-Oct 23, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 26, 2014: Thomas Debesse <xqf@illwieckz.net>
+- use a new Savage hack to query Savage master server
+
+Oct 25, 2014: Zack Middleton <zturtleman@gmail.com>
+- fix some errors with TurtleArena, a mismatch of server_type enum and games
+  array, plus missing qstat config
+
+Oct 24, 2014: Zack Middleton <zturtleman@gmail.com>
+- fix debug build compiling using clang
+- fix gamesxml2c compilation
+
+Oct 24, 2014: Thomas Debesse <xqf@illwieckz.net>
+- fix another overflow in q3_unescape when the string ends with an escape code
+- filter more escape code from Wolfenstein: Enemy Territory
+
+Oct 23, 2014: Witold Piłat <witold.pilat@gmail.com>
+- fix Jedi Outcast support
+
+Oct 23, 2014: Thomas Debesse <xqf@illwieckz.net>
 - fix an overflow in q3_unescape (14+ years old bug)
 
-Oct 22, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 22, 2014: Thomas Debesse <xqf@illwieckz.net>
 - workaround non ASCII characters in servers strings
 - rewrite stat_master_input_callback and stat_servers_input_callback
 
-Oct 16, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 16, 2014: Thomas Debesse <xqf@illwieckz.net>
 - use Gstatus to check GIOChannel reads
 
-Oct 15, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 15, 2014: Thomas Debesse <xqf@illwieckz.net>
 - reuse mod and gametype descriptions for similar games
 - rewrite deprecated gdk_pixbuf_*ref calls
 
-Oct 14, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 14, 2014: Thomas Debesse <xqf@illwieckz.net>
 - add the Turtle Arena game (thanks to Zack Middleton help)
 - rewrite deprecated g_str* calls, and g_basename calls
 
-Oct 13, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 13, 2014: Thomas Debesse <xqf@illwieckz.net>
 - fix a 14+ years old bug, a comma was missing in a string table of some
   Quake 2 game properties
 
-Oct 11, 2014: Thomas DEBESSE <xqf@ilwieckz.net>
+Oct 11, 2014: Thomas Debesse <xqf@ilwieckz.net>
 - port obsolete fd handling code to GIOChannel (many thanks to Chris Vine for
   his precious and generous help)
 - fix the "source id not found" bug due to "g_source_remove" duplication
 
-Oct 10, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 10, 2014: Thomas Debesse <xqf@illwieckz.net>
 - add ZEQ2 Lite game
 
-Oct 02, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 02, 2014: Thomas Debesse <xqf@illwieckz.net>
 - add Jedi Outcast (JK2) game (VictorBE patch)
 
-Oct 01, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Oct 01, 2014: Thomas Debesse <xqf@illwieckz.net>
 - fix Unvanquished status packet
 - detect some Wolf:ET server with unusual version name
 
-Sep 30, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Sep 30, 2014: Thomas Debesse <xqf@illwieckz.net>
 - add Enemy Territory:Legacy game
 
-Sep 28, 2014: Thomas DEBESSE <xqf@illwieckz.net>
+Sep 28, 2014: Thomas Debesse <xqf@illwieckz.net>
 - distinguish Tremulous, Tremulous GPP and TremFusion
 - some cleaning (id tech 3 derivatives are not described as tremulous anymore)
 - rename tremulous server qstat variable to 'gamename'+'s' like others

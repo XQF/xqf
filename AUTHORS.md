@@ -15,6 +15,7 @@ Significant contributors
 Other contributors
 ------------------
 
+* Zack Middleton <zturtleman@gmail.com>
 * Witold Piłat <witold.pilat@gmail.com>
 * Jochen Baier <email@jochen-baier.de>
 * Jo Shields <directhex@apebox.org>
@@ -50,7 +51,6 @@ Translators
 Special thanks (reports, review, ideas, help…)
 ----------------------------------------------
 
-* Zack Middleton <zturtleman@gmail.com>
 * Chris Vine <chris@cvine.freeserve.co.uk>
 * Tomasz Kalkosiński
 * Timothée Besset
