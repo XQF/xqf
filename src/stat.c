@@ -48,8 +48,6 @@
 #include "dns.h"
 #include "debug.h"
 
-static const char savage_master_header[5] = { 0x7E, 0x41, 0x03, 0x00, 0x00 };
-
 static void stat_next (struct stat_job *job);
 static void parse_qstat_record (struct stat_conn *conn);
 
@@ -127,161 +125,6 @@ static void stat_master_update_done(
 			 struct stat_job *job,
 			 struct master *m,
 			 enum master_state state);
-
-
-// check if master output is in savage format, if yes parse it and return true.
-// otherwise return false so the normal parse function can do the work
-#if 0
-/*
- * needs
- * 	conn->buf = g_malloc (BUFFER_MINSIZE);
- * 	conn->bufsize = BUFFER_MINSIZE;
- * but currently
- *	conn->buf = NULL;
- *	conn->bufsize = 0;
- *
- */
-
-static void parse_savage_master_output (struct stat_conn *conn) {
-	struct stat_job *job = conn->job;
-	gsize res = 0;
-	GError *err = NULL;
-	GIOStatus status;
-
-	conn->bufsize = 17;
-	debug(3, "conn->first %d",conn->first);
-
-	/* if this function is called for the first time on this conn */
-	if (conn->first) {
-		debug(3, "parse_savage_master_output -- first time");
-		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, 5 - conn->pos, &res, &err);
-
-		if (status == G_IO_STATUS_EOF) {
-			debug(3, "parse_savage_master_output -- eof");
-			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
-			stat_update_masters (job);
-			return;
-		}
-		else if (status == G_IO_STATUS_AGAIN) {
-			debug(3, "parse_savage_master_output -- unavailable");
-			return;
-		}
-		else if (status != G_IO_STATUS_ERROR) {
-			debug(3, "parse_savage_master_output -- error");
-			failed ("read", NULL);
-			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
-			stat_update_masters (job);
-			return;
-		}
-
-		/* G_IO_STATUS_NORMAL */
-		conn->pos += res;
-
-		if (conn->pos < 5) { // we need five bytes
-			debug(3, "parse_savage_master_output -- too short");
-			return;
-		}
-
-		conn->first = 0;
-
-		/* we know we have five bytes, reset buffer for further processing */
-		conn->pos = 0;
-
-		/* check the signature of the first five bytes */
-		if (!memcmp(conn->buf,savage_master_header,5)) {
-			debug(3, "parse_savage_master_output -- detected savage format");
-			conn->is_savage = TRUE;
-		}
-		else { /* savage not detected */
-			debug(3, "parse_savage_master_output -- savage not detected");
-			return;
-		}
-	}
-	/* if this function is not called for the first time on this conn, check if savage was previously detected */
-	else if (!conn->is_savage) {
-		debug(3, "parse_savage_master_output -- not savage");
-		return;
-	}
-
-	/* if you are here, savage is detected: do your job */
-	/* return when there is nothing (more) to do */
-	while (TRUE) {
-		size_t off = 0;
-		status = g_io_channel_read_chars(conn->chan, conn->buf + conn->pos, conn->bufsize - conn->pos, &res, &err);
-		if (status == G_IO_STATUS_EOF) {
-			debug(3, "parse_savage_master_output -- eof");
-			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
-			stat_update_masters (job);
-			return;
-		}
-		else if (status == G_IO_STATUS_AGAIN) {
-			debug(3, "parse_savage_master_output -- unavailable");
-			return;
-		}
-		else if (status == G_IO_STATUS_ERROR) {
-			debug(3, "parse_savage_master_output -- error");
-			failed ("read", NULL);
-			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
-			stat_update_masters (job);
-			return;
-		}
-
-		/* G_IO_STATUS_NORMAL */
-		debug(3, "parse_savage_master_output -- chars read");
-		conn->pos += res;
-
-		// we always need six bytes
-		for (off=0; off + 6 <= conn->pos; off+=6) {
-			struct server *s;
-			struct host *h;
-			enum server_type type = UNKNOWN_SERVER;
-			char* ip = conn->buf+off;
-			unsigned port = 0;
-			struct in_addr in;
-			port = (ip[5]<<8)+ip[4];
-			if (!port) {
-				continue;
-			}
-			if (!ip[0]) {
-				continue;
-			}
-			debug(5,"%hhu.%hhu.%hhu.%hhu:%u",ip[0],ip[1],ip[2],ip[3],port);
-
-			in.s_addr = 0;
-			memcpy(&in.s_addr,ip,4);
-
-			if (conn->master) {
-				type = conn->master->type;
-			}
-
-			h = host_add_in (in);
-			if (h) {    /* IP address */
-				host_ref (h);
-				if ((s = server_add (h, port, type)) != NULL) {
-
-					if (s->type != type) {
-						server_free_info(s);
-						s->type = type;
-					}
-
-					conn->servers = g_slist_prepend (conn->servers, s);
-					server_ref(s);
-				}
-				host_unref (h);
-			}
-		}
-		debug(3, "parse_savage_master_output -- continue");
-		if (off >= conn->pos) {
-			conn->pos=0;
-		}
-		else {
-			memmove (conn->buf, conn->buf + conn->pos - conn->pos%6, conn->pos%6);
-			conn->pos = conn->pos%6;
-		}
-	}
-	// infinite loop end, next lines are never reached
-}
-#endif
 
 /**
   parse qstat output line str, in ip:port format. return true if
@@ -445,25 +288,6 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 	debug_increase_indent();
 	debug(3, "stat_master_input_callback(%p,%d,...)",conn,chan);
 
-#if 0
-#warning ugly hack for savage, make master handling more generic!
-	if (conn->master->type == SAS_SERVER && conn->master->master_type == MASTER_HTTP) {
-		/* if first time, check it */
-		if (conn->first) {
-			debug(3, "stat_master_input_callback -- check first for savage");
-			parse_savage_master_output(conn);
-			/* if savage, do it */
-			if (conn->is_savage) {
-				debug(3, "stat_master_input_callback -- parse savage");
-				parse_savage_master_output(conn);
-				/* when there is nothing (more) to read, return */
-				return TRUE;
-			}
-		}
-	}
-
-	/* if you are here, savage is NOT detected, do your job */
-#endif
 	/* return FALSE when there is nothing (more) to do */
 	while (TRUE) {
 		status = g_io_channel_read_chars(chan, buf, BUFFER_MINSIZE, &res, &err);
@@ -512,7 +336,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			debug_decrease_indent();
-			return TRUE;
+			return FALSE;
 		}
 
 		/* G_IO_STATUS_NORMAL */
@@ -1068,10 +892,6 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
 
 	conn->pos = 0;
 	conn->lastnl = 0;
-#if 0
-	conn->first = TRUE;
-	conn->is_savage = FALSE;
-#endif
 
 	conn->strings = NULL;
 	conn->servers = NULL;
@@ -1144,10 +964,6 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFun
 
 		conn->pos = 0;
 		conn->lastnl = 0;
-#if 0
-		conn->first = TRUE;
-		conn->is_savage = FALSE;
-#endif
 
 		conn->strings = NULL;
 		conn->servers = NULL;
@@ -1239,7 +1055,13 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 
 	if (m->url) {
 
-		if (m->master_type == MASTER_GSLIST) {
+		/* savage hack */
+		if (m->type == SAS_SERVER) {
+			argv[argi++] = "sh";
+			argv[argi++] = QSTAT_SAVAGE_SCRIPT;
+			argv[argi++] = m->url;	
+		}
+		else if (m->master_type == MASTER_GSLIST) {
 			int ret = 0;
 			startprog = 1;
 

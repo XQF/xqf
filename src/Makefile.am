@@ -16,6 +16,9 @@ INCLUDES = -I$(top_srcdir)/intl \
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
 
+qstatsavagedir = $(pkgdatadir)
+qstatsavage_DATA = qstat_savage.sh
+
 EXTRA_DIST = qstat.cfg games.xml games.c $(noinst_SCRIPTS) xqf.map
 
 bin_PROGRAMS = xqf
@@ -35,6 +38,8 @@ xqf_LDADD = $(INTLLIBS) \
 	    -lz -ldl
 
 xqf_LDFLAGS = -Wl,-rpath,$(pkglibdir) -Wl,--export-dynamic -Wl,--version-script=$(top_srcdir)/src/xqf.map
+
+xqf_CFLAGS = -DQSTAT_SAVAGE_SCRIPT=\"$(qstatsavagedir)/$(qstatsavage_DATA)\"
 
 # we need to specify all deps manually due to dummy libs
 xqf_DEPENDENCIES = \
