@@ -19,7 +19,13 @@ qstatcfg_DATA = qstat.cfg
 qstatsavagedir = $(pkgdatadir)
 qstatsavage_DATA = qstat_savage.sh
 
-EXTRA_DIST = qstat.cfg games.xml games.c $(noinst_SCRIPTS) xqf.map
+EXTRA_DIST = \
+	games.xml \
+	games.c \
+	qstat.cfg \
+	qstat_savage.sh \
+	xqf.map \
+	$(noinst_SCRIPTS)
 
 bin_PROGRAMS = xqf
 if BUILD_XQFRCON
