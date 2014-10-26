@@ -349,22 +349,24 @@ static void q3_unescape (char *dst, const char *src) {
 
 	gint idst = 0;
 	gint isrc = 0;
+	gint step;
 	gboolean savage_clan_identifier = FALSE;
 
 	while (src[isrc] != '\0') {
+		step = 0;
 		if (src[isrc] == '^') {
 			// if ending of Savage clan identifier with the form ^clan number^
 			if (savage_clan_identifier == TRUE) {
 				savage_clan_identifier = FALSE;
 				dst[idst] = ']';
-				isrc += 1;
+				step = 1;
 				idst += 1;
 			}
 			else if (src[isrc + 1] != '\0') {
 				// if '^^'
 				if (src[isrc + 1] == '^') {
 					// only skip one '^', display only one '^'
-					isrc += 1;
+					step = 1;
 				}
 				else if ((src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
 						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
@@ -382,8 +384,11 @@ static void q3_unescape (char *dst, const char *src) {
 						if (src[isrc + 2] != '\0' && src[isrc + 2] >= '0' && src[isrc + 2] <= '9') {
 							if (src[isrc + 3] != '\0' && src[isrc + 3] >= '0' && src[isrc + 3] <= '9') {
 								// 4 because ^000
-								isrc += 4;
+								step = 4;
 							}
+						}
+						else {
+							step = 2;
 						}
 					}
 					// if beginning of Savage clan identifier with the form ^clan number^
@@ -395,7 +400,7 @@ static void q3_unescape (char *dst, const char *src) {
 										savage_clan_identifier = TRUE;
 										// write brackets around the clan code like http://masterserver.savage.s2games.com/
 										dst[idst] = '[';
-										isrc += 6;
+										step = 6;
 										idst += 1;
 									}
 								}
@@ -413,19 +418,20 @@ static void q3_unescape (char *dst, const char *src) {
 						}
 						// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
 						if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
-							isrc += i;
+							step = i;
 						}
 					}
 					else {
 						// if legacy one char color code
 						// skip '^' and the next char
-						isrc += 2;
+						step = 2;
 					}
 				}
 			}
 		}
 
 		// the next caracter is used if not null, will be printed
+		isrc += step;
 		if (src[isrc]) {
 			dst[idst] = src[isrc];
 
