@@ -321,11 +321,13 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			stat_update_masters (job);
 			debug_decrease_indent();
+			g_free(buf);
 			return FALSE;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
 			debug(3, "stat_master_input_callback -- unavailable");
 			debug_decrease_indent();
+			g_free(buf);
 			return TRUE;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
@@ -336,6 +338,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			stat_master_update_done (conn, job, conn->master, SOURCE_ERROR);
 			stat_update_masters (job);
 			debug_decrease_indent();
+			g_free(buf);
 			return FALSE;
 		}
 
@@ -832,10 +835,12 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 			
 			stat_servers_update_done (conn);
 			stat_next (job);
+			g_free(buf);
 			return FALSE;
 		}
 		else if (status == G_IO_STATUS_AGAIN) {
 			debug(3, "stat_servers_input_callback -- unavailable");
+			g_free(buf);
 			return TRUE;
 		}
 		else if (status == G_IO_STATUS_ERROR) {
@@ -845,6 +850,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 
 			stat_servers_update_done (conn);
 			stat_next (job);
+			g_free(buf);
 			return TRUE;
 		}
 
