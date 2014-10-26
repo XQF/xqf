@@ -9,7 +9,7 @@ Changes since 1.0.5:
 * Add Warsow protocol numbers
 * Add Hexen World master server support
 * Add scalable SVG icon
-* Filter Unvanquished extended color codes
+* Filter Unvanquished, Wolfenstein: Enemy Territory and Savage extended color codes
 * Reuse game descriptions for similar games (like Western Q3 and Smokin'Guns, or Wolfenstein: Enemy Territory and Enemy Territory: Legacy).
 * Drop disabled master servers (like id master server for Quake 3)
 * Drop GTK+1 support

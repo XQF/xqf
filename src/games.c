@@ -863,7 +863,7 @@ struct game games[] = {
 	},
 	{
 		.type                 = SAS_SERVER,
-		.flags                = GAME_CONNECT | GAME_PASSWORD | GAME_ADMIN,
+		.flags                = GAME_CONNECT | GAME_PASSWORD | GAME_ADMIN | GAME_Q3COLORS,
 		.name                 = "Savage",
 		.default_port         = 11235,
 		.id                   = "SAS",

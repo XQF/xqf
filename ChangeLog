@@ -1,5 +1,6 @@
 Oct 26, 2014: Thomas Debesse <xqf@illwieckz.net>
 - use a new Savage hack to query Savage master server
+- filter Savage color codes
 
 Oct 25, 2014: Zack Middleton <zturtleman@gmail.com>
 - fix some errors with TurtleArena, a mismatch of server_type enum and games
@@ -11,7 +12,7 @@ Oct 24, 2014: Zack Middleton <zturtleman@gmail.com>
 
 Oct 24, 2014: Thomas Debesse <xqf@illwieckz.net>
 - fix another overflow in q3_unescape when the string ends with an escape code
-- filter more escape code from Wolfenstein: Enemy Territory
+- filter more color codes from Wolfenstein: Enemy Territory
 
 Oct 23, 2014: Witold Piłat <witold.pilat@gmail.com>
 - fix Jedi Outcast support
@@ -70,7 +71,7 @@ Nov 10, 2013: Thomas Debesse <xqf@illwieckz.net>
 - add World of Padman game
 
 Nov 06, 2013: Thomas Debesse <xqf@illwieckz.net>
-- recognize Unvanquished extended color codes to prevent printing
+- filter Unvanquished extended color codes
 
 Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
 - complete french translation (100%)

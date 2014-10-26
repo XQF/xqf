@@ -349,16 +349,23 @@ static void q3_unescape (char *dst, const char *src) {
 
 	gint idst = 0;
 	gint isrc = 0;
+	gboolean savage_clan_identifier = FALSE;
 
-	while (src[isrc]) {
+	while (src[isrc] != '\0') {
 		if (src[isrc] == '^') {
-			if (src[isrc + 1] != '\0') {
+			// if ending of Savage clan identifier with the form ^clan number^
+			if (savage_clan_identifier == TRUE) {
+				savage_clan_identifier = FALSE;
+				dst[idst] = ']';
+				isrc += 1;
+				idst += 1;
+			}
+			else if (src[isrc + 1] != '\0') {
 				// if '^^'
 				if (src[isrc + 1] == '^') {
 					// only skip one '^', display only one '^'
 					isrc += 1;
 				}
-				// if onechar color code
 				else if ((src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
 						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
 						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')
@@ -370,27 +377,54 @@ static void q3_unescape (char *dst, const char *src) {
 						|| src[isrc + 1] == '?'
 						|| src[isrc + 1] == '@'
 						|| src[isrc + 1] == '*') {
-					// if multichar color code begins, verify if it ends
-					if (src[1] == 'P' || src[1] == 'p') {
+					// if Savage three chars color code
+					if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
+						if (src[isrc + 2] != '\0' && src[isrc + 2] >= '0' && src[isrc + 2] <= '9') {
+							if (src[isrc + 3] != '\0' && src[isrc + 3] >= '0' && src[isrc + 3] <= '9') {
+								// 4 because ^000
+								isrc += 4;
+							}
+						}
+					}
+					// if beginning of Savage clan identifier with the form ^clan number^
+					else if (src[isrc + 1] == 'c') {
+						if (src[isrc + 2] == 'l' && src[isrc + 2] != '\0') {
+							if (src[isrc + 3] == 'a' && src[isrc + 3] != '\0') {
+								if (src[isrc + 4] == 'n' && src[isrc + 4] != '\0') {
+									if (src[isrc + 5] == ' ' && src[isrc + 5] != '\0') {
+										savage_clan_identifier = TRUE;
+										// write brackets around the clan code like http://masterserver.savage.s2games.com/
+										dst[idst] = '[';
+										isrc += 6;
+										idst += 1;
+									}
+								}
+							}
+						}
+					}
+					// if Unvanquished extendended multichar color code, verify if it ends
+					else if (src[1] == 'P' || src[1] == 'p') {
 						gint i;
 						// 8 because P000000o, don't count more
-						for (i=2; (src[i] != '\0' && src[i] != 'O' && src[i] != 'o')
-									&& (src[i] >= '0' && src[i] <= '9')
-									&& (i < 8); i++) {
+						for (i = 2; (src[isrc + i] != '\0' && src[isrc + i] != 'O' && src[isrc + i] != 'o')
+								&& (src[isrc + i] >= '0' && src[isrc + i] <= '8')
+								&& (i < 8); i++) {
 							// 'for' increments i
 						}
-						// if multichar color code ends, skip 5 because P000o, 8 because P000000o
-						if ((src[i] == 'O' || src[i] == 'o') && (i == 5 || i == 8)) {
+						// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
+						if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
 							isrc += i;
 						}
 					}
 					else {
+						// if legacy one char color code
 						// skip '^' and the next char
 						isrc += 2;
 					}
 				}
 			}
 		}
+
 		// the next caracter is used if not null, will be printed
 		if (src[isrc]) {
 			dst[idst] = src[isrc];
