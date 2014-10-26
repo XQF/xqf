@@ -359,8 +359,8 @@ static void q3_unescape (char *dst, const char *src) {
 			if (savage_clan_identifier == TRUE) {
 				savage_clan_identifier = FALSE;
 				dst[idst] = ']';
-				step = 1;
 				idst += 1;
+				step = 1;
 			}
 			else if (src[isrc + 1] != '\0') {
 				// if '^^'
@@ -386,6 +386,9 @@ static void q3_unescape (char *dst, const char *src) {
 								// 4 because ^000
 								step = 4;
 							}
+							else {
+								step = 2;
+							}
 						}
 						else {
 							step = 2;
@@ -400,8 +403,8 @@ static void q3_unescape (char *dst, const char *src) {
 										savage_clan_identifier = TRUE;
 										// write brackets around the clan code like http://masterserver.savage.s2games.com/
 										dst[idst] = '[';
-										step = 6;
 										idst += 1;
+										step = 6;
 									}
 								}
 							}
@@ -433,12 +436,14 @@ static void q3_unescape (char *dst, const char *src) {
 		// the next caracter is used if not null, will be printed
 		isrc += step;
 		if (src[isrc]) {
-			dst[idst] = src[isrc];
+			if (src[isrc] != '^') {
+				dst[idst] = src[isrc];
+				idst += 1;
+			}
 
 			debug(6, "isrc: %d, idst: %d", isrc, idst);
 			debug(6, "src: [%s], dst: [%s]", src, dst);
 			isrc += 1;
-			idst += 1;
 		}
 	}
 	// when finished, do nothing more, the remaining allocated space is already filled with zeros
