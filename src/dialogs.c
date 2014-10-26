@@ -488,7 +488,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 	/* translators can use the copyright symbol instead of (C) */
 	char *author = _("Copyright (C) 1998-2002 Roman Pozlevich");
 	char *urls = "http://www.linuxgames.com/xqf\n"
-		"http://sourceforge.net/projects/xqf\n";
+		"https://github.com/XQF/xqf\n";
 	char *contrib1 = _("Maintainers:");
 	char *contrib2 =
 		"Thomas Debesse <xqf@illwieckz.net>\n"
