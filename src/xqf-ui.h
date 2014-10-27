@@ -21,7 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <xqf.h>
+#include "xqf.h"
 
 
 struct clist_column {
