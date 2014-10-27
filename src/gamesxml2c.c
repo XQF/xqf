@@ -95,47 +95,47 @@ typedef struct
 
 static Tag tags[TAG_count+1];
 
-static void add_tag(GameTag nr, TagInherit inherit, TagType type, const char* name) {
+static void add_tag(GameTag nr, TagInherit inherit, TagType type, const xmlChar* name) {
 	tags[nr].inherit = inherit;
 	tags[nr].type = type;
 	tags[nr].name = name;
 }
 
 static void tags_init() {
-	add_tag(TAG_type,                   Tag_no_inherit, Tag_type_literal, "type");
-	add_tag(TAG_flags,                  Tag_do_inherit, Tag_type_literal, "flags");
-	add_tag(TAG_name,                   Tag_no_inherit, Tag_type_string,  "name");
-	add_tag(TAG_default_port,           Tag_do_inherit, Tag_type_literal, "default_port");
-	add_tag(TAG_default_master_port,    Tag_do_inherit, Tag_type_literal, "default_master_port");
-	add_tag(TAG_id,                     Tag_no_inherit, Tag_type_string,  "id");
-	add_tag(TAG_qstat_str,              Tag_do_inherit, Tag_type_string,  "qstat_str");
-	add_tag(TAG_qstat_option,           Tag_do_inherit, Tag_type_string,  "qstat_option");
-	add_tag(TAG_qstat_master_option,    Tag_do_inherit, Tag_type_string,  "qstat_master_option");
-	add_tag(TAG_pix,                    Tag_do_inherit, Tag_type_string,  "icon");
-	add_tag(TAG_parse_player,           Tag_do_inherit, Tag_type_literal, "parse_player");
-	add_tag(TAG_parse_server,           Tag_do_inherit, Tag_type_literal, "parse_server");
-	add_tag(TAG_analyze_serverinfo,     Tag_do_inherit, Tag_type_literal, "analyze_serverinfo");
-	add_tag(TAG_config_is_valid,        Tag_do_inherit, Tag_type_literal, "config_is_valid");
-	add_tag(TAG_write_config,           Tag_do_inherit, Tag_type_literal, "write_config");
-	add_tag(TAG_exec_client,            Tag_do_inherit, Tag_type_literal, "exec_client");
-	add_tag(TAG_custom_cfgs,            Tag_do_inherit, Tag_type_literal, "custom_cfgs");
-	add_tag(TAG_save_info,              Tag_do_inherit, Tag_type_literal, "save_info");
-	add_tag(TAG_init_maps,              Tag_do_inherit, Tag_type_literal, "init_maps");
-	add_tag(TAG_has_map,                Tag_do_inherit, Tag_type_literal, "has_map");
-	add_tag(TAG_get_mapshot,            Tag_do_inherit, Tag_type_literal, "get_mapshot");
-	add_tag(TAG_arch_identifier,        Tag_do_inherit, Tag_type_string,  "arch_identifier");
-	add_tag(TAG_identify_cpu,           Tag_do_inherit, Tag_type_literal, "identify_cpu");
-	add_tag(TAG_identify_os,            Tag_do_inherit, Tag_type_literal, "identify_os");
-	add_tag(TAG_cmd_or_dir_changed,     Tag_do_inherit, Tag_type_literal, "cmd_or_dir_changed");
-	add_tag(TAG_prefs_load,             Tag_no_inherit, Tag_type_literal, "prefs_load");
-	add_tag(TAG_update_prefs,           Tag_no_inherit, Tag_type_literal, "update_prefs");
-	add_tag(TAG_default_home,           Tag_no_inherit, Tag_type_string,  "default_home");
-	add_tag(TAG_pd,                     Tag_no_inherit, Tag_type_address, "pd");
-	add_tag(TAG_data,                   Tag_no_inherit, Tag_type_literal, "data");
-	add_tag(TAG_main_mod,               Tag_no_inherit, Tag_type_string,  "main_mod");
-	add_tag(TAG_command,                Tag_no_inherit, Tag_type_string,  "command");
-	add_tag(TAG_attributes,             Tag_no_inherit, Tag_type_string,  "attributes");
-	add_tag(TAG_base,                   Tag_no_inherit, Tag_type_literal, "base");
+	add_tag(TAG_type,                   Tag_no_inherit, Tag_type_literal, (xmlChar*) "type");
+	add_tag(TAG_flags,                  Tag_do_inherit, Tag_type_literal, (xmlChar*) "flags");
+	add_tag(TAG_name,                   Tag_no_inherit, Tag_type_string,  (xmlChar*) "name");
+	add_tag(TAG_default_port,           Tag_do_inherit, Tag_type_literal, (xmlChar*) "default_port");
+	add_tag(TAG_default_master_port,    Tag_do_inherit, Tag_type_literal, (xmlChar*) "default_master_port");
+	add_tag(TAG_id,                     Tag_no_inherit, Tag_type_string,  (xmlChar*) "id");
+	add_tag(TAG_qstat_str,              Tag_do_inherit, Tag_type_string,  (xmlChar*) "qstat_str");
+	add_tag(TAG_qstat_option,           Tag_do_inherit, Tag_type_string,  (xmlChar*) "qstat_option");
+	add_tag(TAG_qstat_master_option,    Tag_do_inherit, Tag_type_string,  (xmlChar*) "qstat_master_option");
+	add_tag(TAG_pix,                    Tag_do_inherit, Tag_type_string,  (xmlChar*) "icon");
+	add_tag(TAG_parse_player,           Tag_do_inherit, Tag_type_literal, (xmlChar*) "parse_player");
+	add_tag(TAG_parse_server,           Tag_do_inherit, Tag_type_literal, (xmlChar*) "parse_server");
+	add_tag(TAG_analyze_serverinfo,     Tag_do_inherit, Tag_type_literal, (xmlChar*) "analyze_serverinfo");
+	add_tag(TAG_config_is_valid,        Tag_do_inherit, Tag_type_literal, (xmlChar*) "config_is_valid");
+	add_tag(TAG_write_config,           Tag_do_inherit, Tag_type_literal, (xmlChar*) "write_config");
+	add_tag(TAG_exec_client,            Tag_do_inherit, Tag_type_literal, (xmlChar*) "exec_client");
+	add_tag(TAG_custom_cfgs,            Tag_do_inherit, Tag_type_literal, (xmlChar*) "custom_cfgs");
+	add_tag(TAG_save_info,              Tag_do_inherit, Tag_type_literal, (xmlChar*) "save_info");
+	add_tag(TAG_init_maps,              Tag_do_inherit, Tag_type_literal, (xmlChar*) "init_maps");
+	add_tag(TAG_has_map,                Tag_do_inherit, Tag_type_literal, (xmlChar*) "has_map");
+	add_tag(TAG_get_mapshot,            Tag_do_inherit, Tag_type_literal, (xmlChar*) "get_mapshot");
+	add_tag(TAG_arch_identifier,        Tag_do_inherit, Tag_type_string,  (xmlChar*) "arch_identifier");
+	add_tag(TAG_identify_cpu,           Tag_do_inherit, Tag_type_literal, (xmlChar*) "identify_cpu");
+	add_tag(TAG_identify_os,            Tag_do_inherit, Tag_type_literal, (xmlChar*) "identify_os");
+	add_tag(TAG_cmd_or_dir_changed,     Tag_do_inherit, Tag_type_literal, (xmlChar*) "cmd_or_dir_changed");
+	add_tag(TAG_prefs_load,             Tag_no_inherit, Tag_type_literal, (xmlChar*) "prefs_load");
+	add_tag(TAG_update_prefs,           Tag_no_inherit, Tag_type_literal, (xmlChar*) "update_prefs");
+	add_tag(TAG_default_home,           Tag_no_inherit, Tag_type_string,  (xmlChar*) "default_home");
+	add_tag(TAG_pd,                     Tag_no_inherit, Tag_type_address, (xmlChar*) "pd");
+	add_tag(TAG_data,                   Tag_no_inherit, Tag_type_literal, (xmlChar*) "data");
+	add_tag(TAG_main_mod,               Tag_no_inherit, Tag_type_string,  (xmlChar*) "main_mod");
+	add_tag(TAG_command,                Tag_no_inherit, Tag_type_string,  (xmlChar*) "command");
+	add_tag(TAG_attributes,             Tag_no_inherit, Tag_type_string,  (xmlChar*) "attributes");
+	add_tag(TAG_base,                   Tag_no_inherit, Tag_type_literal, (xmlChar*) "base");
 	add_tag(TAG_invalid,                Tag_no_inherit, Tag_type_literal, NULL);
 }
 
@@ -287,7 +287,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template) {
 		if (!val)
 			val = template->basic[tag];
 
-		if (!val || !xmlStrcmp(val, "NULL")) continue;
+		if (!val || !xmlStrcmp(val, (xmlChar*) "NULL")) continue;
 
 		switch(tag_type(tag)) {
 			case Tag_type_string:
@@ -313,7 +313,7 @@ void printGame(FILE* f, RawGame* rg, RawGame* template) {
 		if (!m)
 			m = template->multi[tag - TAG_start_multi];
 
-		if (!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
+		if (!m || !m->val || !xmlStrcmp(m->val, (xmlChar*) "NULL")) continue;
 
 		fprintf(f, "\t\t.%-20s = stringlist%03u,\n", tag_name(tag), rg->num_multitags++);
 	}
@@ -343,7 +343,7 @@ int main (int argc, char* argv[]) {
 	list = NULL;
 	for (; ptr; ptr = next) {
 		next = ptr->next;
-		if (!template && !xmlStrcmp(ptr->game->basic[TAG_type], "DEFAULT")) {
+		if (!template && !xmlStrcmp(ptr->game->basic[TAG_type], (xmlChar*) "DEFAULT")) {
 			template = ptr->game;
 			// free(ptr);
 			continue;
@@ -383,7 +383,7 @@ int main (int argc, char* argv[]) {
 			if (!m)
 				m = template->multi[tag - TAG_start_multi];
 
-			if (!m || !m->val || !xmlStrcmp(m->val, "NULL")) continue;
+			if (!m || !m->val || !xmlStrcmp(m->val, (xmlChar*) "NULL")) continue;
 
 			fprintf(f, "static char* stringlist%03u[] = {", i);
 			for (; m; m = m->next) {
