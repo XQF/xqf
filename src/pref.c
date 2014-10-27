@@ -2480,16 +2480,18 @@ static void pref_suggest_command(enum server_type type) {
 	return;
 }
 
-
-#warning FIXME: memleak, use strchr instead
 static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
 	// ptr1 = entire string
 	// ptr2 = game
-	char *temp[2];
+	gchar *token[2];
+	gchar *tmpstr;
 
-	tokenize(g_strdup((char *)ptr1), temp, 2, ",");
 
-	if (strcasecmp(temp[0], ptr2) == 0) {
+	tmpstr = g_strdup((gchar *)ptr1);
+	tokenize(tmpstr, token, 2, ",");
+	g_free(tmpstr);
+
+	if (strcasecmp(token[0], ptr2) == 0) {
 		return (0);
 	}
 	else {
