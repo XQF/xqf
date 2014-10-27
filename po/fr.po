@@ -897,7 +897,7 @@ msgstr "Trier les serveurs en temps réel pendant le rafraichissement"
 
 #: ../src/pref.c:3758
 msgid "Refresh on update"
-msgstr "Rafraichir aussi lors d’une mise à jour"
+msgstr "Actualiser aussi lors d’une mise à jour"
 
 #: ../src/pref.c:3774
 msgid "Resolve hostnames on update"
@@ -1105,7 +1105,7 @@ msgstr "Mise à jour terminée"
 #. Sound Refresh Done
 #: ../src/pref.c:4475
 msgid "Refresh Done"
-msgstr "Rafraichissement terminé"
+msgstr "Actualisation terminée"
 
 #. Sound Stop
 #: ../src/pref.c:4508 ../src/xqf.c:3071 ../src/trayicon.c:462
@@ -1115,7 +1115,7 @@ msgstr "Arrêt"
 #. Sound Server Connect
 #: ../src/pref.c:4541
 msgid "Server Connect"
-msgstr "Connection réussie"
+msgstr "Connexion réussie"
 
 #. Sound Redial Success Start
 #: ../src/pref.c:4574
@@ -1188,7 +1188,7 @@ msgstr "Choisissez un son pour la fin de la mise à jour"
 
 #: ../src/pref.c:5315
 msgid "Refresh Done Sound Selection"
-msgstr "Choisissez un son pour la fin du rafraichissement"
+msgstr "Choisissez un son pour la fin de l’actualisation"
 
 #: ../src/pref.c:5320
 msgid "Stop Sound Selection"
@@ -1196,7 +1196,7 @@ msgstr "Choisissez un son pour l’arrêt d’une opération"
 
 #: ../src/pref.c:5325
 msgid "Server Connect Sound Selection"
-msgstr "Choisissez un son pour la connection au serveur"
+msgstr "Choisissez un son pour la connexion au serveur"
 
 #: ../src/pref.c:5330
 msgid "Redial Success Sound Selection"
@@ -1295,7 +1295,7 @@ msgid ""
 "Refreshing\n"
 "%s"
 msgstr ""
-"Rafraichissement en cours\n"
+"Actualisation en cours\n"
 "%s"
 
 #. * window code modified from glade
@@ -1776,7 +1776,7 @@ msgstr "Terminé."
 
 #: ../src/xqf.c:2525 ../src/xqf.c:3081
 msgid "Connect"
-msgstr "Connection"
+msgstr "Connexion"
 
 #: ../src/xqf.c:2530 ../src/xqf.c:3090
 msgid "Observe"
