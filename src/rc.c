@@ -23,7 +23,6 @@
 #include <unistd.h>     /* stat, mkdir, unlink */
 #include <sys/types.h>  /* mkdir */
 #include <fcntl.h>      /* mkdir */
-#include <stdlib.h>     /* free */
 
 #include "xqf.h"
 #include "game.h"
