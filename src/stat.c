@@ -737,6 +737,19 @@ static void stat_servers_update_done (struct stat_conn *conn) {
 	stat_free_conn (conn);
 }
 
+static gchar asciification(gchar c) {
+			/* FIXME: workaround to replace non ascii character from binary buffer
+			 * because qstat uses ISO-8859-1 encoding for raw ouput
+			 */
+
+			if (c >= '\0' && c <= '~') {
+				return c;
+			}
+			else {
+				return '_';
+			}
+}
+
 static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 	GSList *strings = NULL;
 	gsize token_mul = 1;
@@ -759,21 +772,8 @@ static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 			last = i + 1;
 		}
 		else {
-
-			/* FIXME: workaround to replace non ascii character from binary buffer
-			 * because qstat uses ISO-8859-1 encoding for raw ouput
-			 */
-
-			if (buffer[i] >= '\0' && buffer [i] <= '~') {
-				token[i - last] = buffer[i];
-			}
-			else {
-				token[i - last] = '_';
-			}
-
-			/* FIXME: without workaround, only use this:
-			 * token[i - last] = buffer[i];
-			 */
+			/* FIXME: workaround to replace non ascii character from binary buffer */
+			token[i - last] = asciification(buffer[i]);
 		}
 	}
 	g_free(token);
