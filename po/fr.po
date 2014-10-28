@@ -310,7 +310,7 @@ msgid ""
 "\n"
 "%s."
 msgstr ""
-"Erreur dans l'expression régulière !\n"
+"Erreur dans l’expression régulière !\n"
 "\n"
 "%s\n"
 "\n"
@@ -350,7 +350,7 @@ msgid ""
 msgstr ""
 "Note: Soldier of Fortune ne se connectera pas correctement\n"
 "au serveur sans créer un script de démarrage pour le jeu.\n"
-"Consultez la documentation de XQF pour plus d'informations."
+"Consultez la documentation de XQF pour plus d’informations."
 
 #: ../src/game.c:216
 msgid ""
@@ -360,7 +360,7 @@ msgid ""
 msgstr ""
 "Note: Unreal Tournament ne démarrera pas correctement sans\n"
 "modification du script de démarrage du jeu.\n"
-"Consultez la documentation de XQF pour plus d'informations."
+"Consultez la documentation de XQF pour plus d’informations."
 
 #: ../src/game.c:220
 msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
@@ -376,7 +376,7 @@ msgid ""
 msgstr ""
 "Note:  Savage ne démarrera pas correctement sans\n"
 "modification du script de démarrage du jeu.\n"
-"Consultez la documentation de XQF pour plus d'informations."
+"Consultez la documentation de XQF pour plus d’informations."
 
 #. %s = game name e.g. QuakeWorld
 #: ../src/game.c:1691
@@ -392,7 +392,7 @@ msgid ""
 "\"%s\" is not a directory\n"
 "Please specify correct %s working directory."
 msgstr ""
-"\"%s\" n'est pas un répertoire\n"
+"\"%s\" n’est pas un répertoire\n"
 "Entrez un répertoire de travail valide pour %s."
 
 #. game name
@@ -420,7 +420,7 @@ msgid ""
 "Please run %s client at least once before running XQF\n"
 "or specify correct %s working directory."
 msgstr ""
-"Le répertoire ~/.q3a n'existe pas ou ne contient pas\n"
+"Le répertoire ~/.q3a n’existe pas ou ne contient pas\n"
 "le sous-répertoire \"baseq3\" (\"demoq3\").\n"
 "Lancez le client %s au moins une fois avant de démarrer\n"
 "XQF ou spécifiez un répertoire de travail valide pour %s."
@@ -434,7 +434,7 @@ msgid ""
 "Please specify correct %s working directory\n"
 "or leave it empty (~/.q3a is used by default)"
 msgstr ""
-"Le répertoire \"%s\" n'existe pas ou ne contient pas le sous-répertoire\n"
+"Le répertoire \"%s\" n’existe pas ou ne contient pas le sous-répertoire\n"
 "\"baseq3\" (\"demoq3\") \n"
 "Spécifiez un répertoire de travail valide pour %s ou laissez\n"
 "ce champ vide (~/.q3a sera utilisé par défaut"
@@ -451,7 +451,7 @@ msgid ""
 "\n"
 "Launch client anyway?"
 msgstr ""
-"Impossible d'écrire dans le fichier \"%s\".\n"
+"Impossible d’écrire dans le fichier \"%s\".\n"
 "\n"
 "Lancer le jeu malgré tout ?"
 
@@ -464,7 +464,7 @@ msgid ""
 msgstr ""
 "Punkbuster est activé sur le serveur mais ne peut pas\n"
 "être spécifié dans la ligne de commande du jeu.\n"
-"Vous pourriez avoir des problèmes de connection.\n"
+"Vous pourriez avoir des problèmes de connexion.\n"
 "Vous pouvez activer Punkbuster dans les préférences du jeu."
 
 #: ../src/launch.c:70 ../src/launch.c:195
@@ -626,7 +626,7 @@ msgstr ""
 "Une entrée existe déjà pour le jeu %s.\n"
 "Une entrée par défaut pour ce jeu ne sera pas ajoutée. \n"
 "\n"
-"Effacez l'entrée et réessayez"
+"Effacez l’entrée et réessayez"
 
 #: ../src/pref.c:2375
 msgid "There are no defaults for this game"
@@ -748,11 +748,11 @@ msgstr "Version du protocole serveur maître"
 
 #: ../src/pref.c:3136
 msgid "set fs_game on connect"
-msgstr "Spécifier fs_game lors de la connection"
+msgstr "Spécifier fs_game lors de la connexion"
 
 #: ../src/pref.c:3145
 msgid "set cl_punkbuster on connect"
-msgstr "Spécifier cl_punkbuster lors de la connection"
+msgstr "Spécifier cl_punkbuster lors de la connexion"
 
 #: ../src/pref.c:3154
 msgid "enable console"
@@ -893,7 +893,7 @@ msgstr "Ne pas compter les bots comme des joueurs"
 
 #: ../src/pref.c:3743
 msgid "Sort servers real-time during refresh"
-msgstr "Trier les serveurs en temps réel pendant le rafraichissement"
+msgstr "Trier les serveurs en temps réel pendant la réactualisation"
 
 #: ../src/pref.c:3758
 msgid "Refresh on update"
@@ -901,7 +901,7 @@ msgstr "Actualiser aussi lors d’une mise à jour"
 
 #: ../src/pref.c:3774
 msgid "Resolve hostnames on update"
-msgstr "Recherche le nom des serveurs lors du raffraichissement"
+msgstr "Recherche le nom des serveurs lors de la réactualisation"
 
 #: ../src/pref.c:3778
 msgid "Enable or disable DNS resolution of IP addresses"
@@ -922,8 +922,8 @@ msgid ""
 "engines package."
 msgstr ""
 "Utiliser les couleurs personnalisées de XQF au lieu des couleurs systême."
-"Vous devez redémarrer XQF pour que cette option prenne effet. Notez qu'il "
-"vous faudra peut-être installer le paquet gtk-engine."
+"Vous devez redémarrer XQF pour que cette option prenne effet. Notez qu’il "
+"vous faudra peut-être installer le paquet « gtk-engines »."
 
 #. Toolbar
 #: ../src/pref.c:3831
@@ -1031,10 +1031,10 @@ msgid ""
 "Stopping XMMS will release /dev/dsp. Activate this option if you use XMMS "
 "and have a cheap soundcard that allows only one application to open /dev/dsp."
 msgstr ""
-"Le fait d'arrêter la lecture dans XMMS libère le périphérique /dev/dsp. Cela "
+"Le fait d’arrêter la lecture dans XMMS libère le périphérique /dev/dsp. Cela "
 "permettra au jeu de démarrer sans problème. Activez cette option si vous "
-"utilisez un lecteur de musique (tel qu'XMMS) et que votre périphérique son "
-"ne supporte qu'une application à la fois (i.e.: la plupart des cartes sons "
+"utilisez un lecteur de musique (tel qu’XMMS) et que votre périphérique son "
+"ne supporte qu’une application à la fois (i.e.: la plupart des cartes sons "
 "bon marché)."
 
 #. QStat preferences -- maxsimultaneous & maxretries
@@ -1120,7 +1120,7 @@ msgstr "Connexion réussie"
 #. Sound Redial Success Start
 #: ../src/pref.c:4574
 msgid "Redial Success"
-msgstr "Reconnection réussie"
+msgstr "Reconnexion réussie"
 
 #: ../src/pref.c:4702
 msgid "XQF: Preferences"
@@ -1153,7 +1153,7 @@ msgstr ""
 #: ../src/pref.c:4895
 msgid "Unable to get user name/home/tmpdir"
 msgstr ""
-"Impossible de déterminer le nom d'utilisateur, son répertoire ou un "
+"Impossible de déterminer le nom d’utilisateur, son répertoire ou un "
 "répertoire temporaire"
 
 #. translator: %s = game name, e.g. Quake 3 Arena
@@ -1200,7 +1200,7 @@ msgstr "Choisissez un son pour la connexion au serveur"
 
 #: ../src/pref.c:5330
 msgid "Redial Success Sound Selection"
-msgstr "Choisissez un son pour la reconnection réussie"
+msgstr "Choisissez un son pour la reconnexion réussie"
 
 #: ../src/psearch.c:51
 msgid "Exact Match"
@@ -1273,7 +1273,7 @@ msgstr "  le type de serveur est soit --qws, soit --hws, soit --hls.\n"
 #, c-format
 msgid "  If no server type is specified, Q3 style rcon is assumed.\n"
 msgstr ""
-"  Si aucun type de serveur n'est spécifié, un rcon de style Q3 est utilisé.\n"
+"  Si aucun type de serveur n’est spécifié, un rcon de style Q3 est utilisé.\n"
 
 #. translator: readline prompt
 #: ../src/rcon.c:756
@@ -1301,7 +1301,7 @@ msgstr ""
 #. * window code modified from glade
 #: ../src/redial.c:179 ../src/redial.c:184
 msgid "XQF: Redialing"
-msgstr "XQF : Reconnection en cours"
+msgstr "XQF : Reconnexion en cours"
 
 #: ../src/redial.c:196
 msgid ""
@@ -1345,7 +1345,7 @@ msgid ""
 "Cannot write to file %s\n"
 "System Error: %s\n"
 msgstr ""
-"Impossible d'écrire dans le fichier %s\n"
+"Impossible d’écrire dans le fichier %s\n"
 "Erreur Système: %s\n"
 
 #. translator: %s == url, eg gmaster://bla.blub.org
@@ -1532,7 +1532,7 @@ msgstr "Ne peut ouvrir en écriture le fichier de destination"
 
 #: ../src/utils.c:1141
 msgid "write error on destination file"
-msgstr "erreur d'écriture sur le fichier destination"
+msgstr "erreur d’écriture sur le fichier destination"
 
 #: ../src/utils.c:1148
 msgid "read error on source file"
@@ -1670,7 +1670,7 @@ msgid ""
 "You said this servers sucks.\n"
 "Do you want to risk a game this time?"
 msgstr ""
-"Vous aviez dit qu'il fallait éviter ce serveur.\n"
+"Vous aviez dit qu’il fallait éviter ce serveur.\n"
 "Voulez vous risquer une partie cette fois-ci ?"
 
 #: ../src/xqf.c:970
@@ -1748,7 +1748,7 @@ msgid ""
 msgstr ""
 "Pour le support GSlist il faut que vous installiez le programme "
 "« gslist » disponible à %s\n"
-"N’oubliez pas qu'il vous faut exécuter « gslist -u » avant de pouvoir l'utiliser"
+"N’oubliez pas qu’il vous faut exécuter « gslist -u » avant de pouvoir l’utiliser"
 
 #: ../src/xqf.c:1862
 msgid "You have to select the server you want to delete"
@@ -2142,7 +2142,7 @@ msgstr "Quitter"
 #~ msgstr ""
 #~ "Note: Vous devez créer un fichier de configuration pour \n"
 #~ "qstat pour que ce jeu puisse fonctionner.\n"
-#~ "Consultez la documentation de XQF pour plus d'informations."
+#~ "Consultez la documentation de XQF pour plus d’informations."
 
 #~ msgid "Guess"
 #~ msgstr "Deviner"
