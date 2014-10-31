@@ -28,7 +28,7 @@ msgstr "Trouver des serveurs de jeu et s’y connecter"
 
 #: ../xqf.desktop.in.h:3 ../src/dialogs.c:492
 msgid "XQF Game Server Browser"
-msgstr "XQF Explorateur de serveur de jeu"
+msgstr "Explorateur de serveur de jeu XQF"
 
 #: ../src/addmaster.c:111
 msgid "You have to specify a name and an address."
@@ -241,7 +241,7 @@ msgstr "la carte contient l’expression"
 
 #: ../src/filter.c:1441
 msgid "cheats are not allowed"
-msgstr "les tricheurs ne sont pas admis"
+msgstr "les tricheries ne sont pas permises"
 
 #. Server name filter
 #: ../src/filter.c:1450
@@ -279,23 +279,23 @@ msgstr "Montrer tous les pays"
 
 #: ../src/flt-player.c:69 ../src/flt-player.c:75
 msgid "string"
-msgstr "string"
+msgstr "chaîne"
 
 #: ../src/flt-player.c:70
 msgid "substr"
-msgstr "substr"
+msgstr "sousch"
 
 #: ../src/flt-player.c:71
 msgid "regexp"
-msgstr "regexp"
+msgstr "exprat"
 
 #: ../src/flt-player.c:76
 msgid "substring"
-msgstr "substring"
+msgstr "sous-chaîne"
 
 #: ../src/flt-player.c:77
 msgid "regular expression"
-msgstr "expression régulière"
+msgstr "expression rationnelle"
 
 #: ../src/flt-player.c:448 ../src/psearch.c:116
 msgid "XQF: Error"
@@ -310,7 +310,7 @@ msgid ""
 "\n"
 "%s."
 msgstr ""
-"Erreur dans l’expression régulière !\n"
+"Erreur dans l’expression rationnelle !\n"
 "\n"
 "%s\n"
 "\n"
@@ -1208,11 +1208,11 @@ msgstr "Correspondance exacte"
 
 #: ../src/psearch.c:52
 msgid "Substring"
-msgstr "Sous-chaine"
+msgstr "Sous-chaîne"
 
 #: ../src/psearch.c:53
 msgid "Regular Expression"
-msgstr "Expression régulière"
+msgstr "Expression rationnelle"
 
 #: ../src/psearch.c:174
 msgid "Find Player"
