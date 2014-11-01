@@ -1,3 +1,12 @@
+Oct 31, 2014: Thomas Debesse <xqf@illwieckz.net>
+- improve french translation
+
+Oct 27, 2014: Thomas Debesse <xqf@illwieckz.net>
+- fix gamesxml2c compilation warnings
+
+Oct 26, 2014: Jordi Mallach <jordi@sindominio.net>
+- fix a build issue related to the Savage hack
+
 Oct 26, 2014: Thomas Debesse <xqf@illwieckz.net>
 - use a new Savage hack to query Savage master server
 - filter Savage color codes

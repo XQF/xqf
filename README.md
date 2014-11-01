@@ -54,7 +54,7 @@ HISTORY
 -------
 
 2013-2014 Thomas Debesse <xqf@illwieckz.net>  
-2001-2013 Jordi Mallach <jordi@debian.org>  
+2001-2014 Jordi Mallach <jordi@debian.org>  
 2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>  
 2000-2003 Alex Burger <alex_b@users.sf.net>  
 2000-2002 Bill Adams <bill@evilbill.org>  
