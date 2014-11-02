@@ -715,6 +715,7 @@
 		<base>Q3_SERVER</base>
 		<type>NEXUIZ_SERVER</type>
 		<name>Nexuiz</name>
+		<default_port>26000</default_port>
 		<id>NEXUIZS</id>
 		<qstat_str>NEXUIZS</qstat_str>
 		<qstat_option>-nexuizs</qstat_option>
@@ -734,6 +735,7 @@
 		<base>Q3_SERVER</base>
 		<type>XONOTIC_SERVER</type>
 		<name>Xonotic</name>
+		<default_port>26000</default_port>
 		<id>XONOTICS</id>
 		<qstat_str>XONOTICS</qstat_str>
 		<qstat_option>-xonotics</qstat_option>
@@ -993,6 +995,7 @@
 		<base>Q3_SERVER</base>
 		<type>TURTLEARENA_SERVER</type>
 		<name>Turtle Arena</name>
+		<default_port>27960</default_port>
 		<id>TURTLEARENAS</id>
 		<qstat_str>TURTLEARENAS</qstat_str>
 		<qstat_option>-turtlearenas</qstat_option>
