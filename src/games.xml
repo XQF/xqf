@@ -832,7 +832,7 @@
 		<base>Q3_SERVER</base>
 		<type>UNVANQUISHED_SERVER</type>
 		<name>Unvanquished</name>
-		<default_port>27950</default_port>
+		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>
 		<id>UNVANQUISHEDS</id>
 		<qstat_str>UNVANQUISHEDS</qstat_str>
