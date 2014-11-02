@@ -1332,6 +1332,11 @@ struct q3a_gametype_s q3a_gametype_map[] =
 		MAX_Q3A_TYPES
 	},
 	{
+		"Quake3Arena",
+		q3a_gametypes,
+		MAX_Q3A_TYPES
+	},
+	{
 		"osp",
 		q3a_osp_gametypes,
 		MAX_Q3A_OSP_TYPES
@@ -1543,6 +1548,11 @@ struct q3a_gametype_s ef_gametype_map[] =
 {
 	{
 		"baseEF",
+		q3a_gametypes,
+		MAX_Q3A_TYPES
+	},
+	{
+		"EliteForce",
 		q3a_gametypes,
 		MAX_Q3A_TYPES
 	}
@@ -1853,7 +1863,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 			s->gametype = info_ptr[1];
 		}
 		else if (s->type == WARSOW_SERVER &&
-				strcmp (*info_ptr, "g_gametype_name") == 0) {
+				strcmp (*info_ptr, "gametype") == 0) {
 			s->gametype = info_ptr[1];
 		}
 		else if (strcmp (*info_ptr, "g_needpass") == 0) {
@@ -1934,6 +1944,9 @@ static void q3_analyze_serverinfo (struct server *s) {
 		}
 		else if (s->type == ZEQ2LITE_SERVER) {
 			q3_decode_gametype(s, zeq2lite_gametype_map);
+		}
+		else if (s->type == OPENARENA_SERVER) {
+			q3_decode_gametype(s, oa_gametype_map);
 		}
 	}
 }
