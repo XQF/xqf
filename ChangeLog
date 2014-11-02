@@ -98,12 +98,12 @@ Oct 30, 2013: Thomas Debesse <xqf@illwieckz.net>
 Oct 27, 2013: Thomas Debesse <xqf@illwieckz.net>
 - add Alien Arena, Reaction and Q3 Rally games
 - add LAN broadcast for Nexuiz, Xonotic, Warsow, Tremulous, Unvanquished,
-  OpenArena, Q3 Rally, Urban Terror, Reaction, Smokin'Guns and Alien Arena
+  OpenArena, Q3 Rally, Urban Terror, Reaction, Smokin' Guns and Alien Arena
 - update Warsow protocol version and improve Warsow icon
 - detect ioQuake3 server as Quake3 server
 
 Oct 26, 2013: Thomas Debesse <xqf@illwieckz.net>
-- add Unvanquished, Xonotic and Smokin'Guns games
+- add Unvanquished, Xonotic and Smokin' Guns games
 
 Oct 25, 2013: Thomas Debesse <xqf@illwieckz.net>
 - fix "dlsym" compilation problem

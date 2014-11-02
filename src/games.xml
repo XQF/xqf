@@ -960,7 +960,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>SMOKINGUNS_SERVER</type>
-		<name>Smokin'Guns</name>
+		<name>Smokin' Guns</name>
 		<id>SMOKINGUNSS</id>
 		<qstat_str>SMOKINGUNSS</qstat_str>
 		<qstat_option>-smokingunss</qstat_option>

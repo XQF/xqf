@@ -1360,7 +1360,7 @@ struct game games[] = {
 	{
 		.type                 = SMOKINGUNS_SERVER,
 		.flags                = GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-		.name                 = "Smokin'Guns",
+		.name                 = "Smokin' Guns",
 		.default_port         = 27960,
 		.default_master_port  = 27950,
 		.id                   = "SMOKINGUNSS",
