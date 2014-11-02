@@ -12,7 +12,7 @@ Oct 26, 2014: Thomas Debesse <xqf@illwieckz.net>
 - filter Savage color codes
 
 Oct 25, 2014: Zack Middleton <zturtleman@gmail.com>
-- fix some errors with TurtleArena, a mismatch of server_type enum and games
+- fix some errors with Turtle Arena, a mismatch of server_type enum and games
   array, plus missing qstat config
 
 Oct 24, 2014: Zack Middleton <zturtleman@gmail.com>
