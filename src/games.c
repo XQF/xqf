@@ -230,7 +230,7 @@ struct game games[] = {
 	{
 		.type                 = WO_SERVER,
 		.flags                = GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS,
-		.name                 = "Wolfenstein",
+		.name                 = "Return to Castle Wolfenstein",
 		.default_port         = 27960,
 		.default_master_port  = 27950,
 		.id                   = "WOS",

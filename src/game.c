@@ -1732,7 +1732,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 			if (!strncmp(info_ptr[1],"ioq3+oa",7)) {
 				s->type=OPENARENA_SERVER;
 			}
-			// Wolfenstein
+			// Return to Castle Wolfenstein
 			else if (!strncmp(info_ptr[1],"Wolf",4)) {
 				s->type=WO_SERVER;
 			}

@@ -181,7 +181,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>WO_SERVER</type>
-		<name>Wolfenstein</name>
+		<name>Return to Castle Wolfenstein</name>
 		<id>WOS</id>
 		<qstat_str>RWS</qstat_str>
 		<qstat_option>-rws</qstat_option>
