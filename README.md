@@ -16,7 +16,7 @@ See the file [NEWS.md](NEWS.md) and the [ChangeLog](ChangeLog) for updated infor
 BUILD / INSTALLATION / USAGE
 ----------------------------
 
-Build status: [![Build status](https://travis-ci.org/XQF/xqf.svg?branch=master)](https://travis-ci.org/XQF/xqf)
+[![Build status](https://travis-ci.org/XQF/xqf.svg?branch=master)](https://travis-ci.org/XQF/xqf)
 
 1. ``git clone https://github.com/XQF/xqf.git``; ``cd xqf``
 2. ``./autogen.sh``
