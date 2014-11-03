@@ -51,7 +51,6 @@ static inline int compare_strings (const char *str1, const char *str2) {
 }
 
 static inline int compare_server_ping(const struct server* s1, const struct server* s2) {
-
 	int res = 0;
 
 	if (s1->ping >= 0) {
@@ -211,8 +210,8 @@ int compare_players (const struct player *p1, const struct player *p2,
 		enum psort_mode mode) {
 	int res;
 
-	if (!p1) return 0;
-	if (!p2) return 0;
+	if (!p1 || !p2)
+		return 0;
 
 	switch (mode) {
 
@@ -255,8 +254,8 @@ int compare_players (const struct player *p1, const struct player *p2,
 int compare_srvinfo (const char **i1, const char **i2, enum isort_mode mode) {
 	int res;
 
-	if (!i1) return 0;
-	if (!i2) return 0;
+	if (!i1 || !i2)
+		return 0;
 
 	switch (mode) {
 

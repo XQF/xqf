@@ -83,13 +83,7 @@ void geoip_done(void) {
 }
 
 gboolean geoip_is_working (void) {
-
-	if (gi) {
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+	return gi;
 }
 
 const char* geoip_code_by_id(int id) {
@@ -101,9 +95,8 @@ const char* geoip_code_by_id(int id) {
 	if (id == LAN_GeoIPid) {
 		return "00";
 	}
-	else {
-		return &xqf_geoip_country_code[id*3];
-	}
+	
+	return &xqf_geoip_country_code[id*3];
 }
 
 
@@ -115,9 +108,8 @@ const char* geoip_name_by_id(int id) {
 	if (id == LAN_GeoIPid) {
 		return "LAN";
 	}
-	else {
-		return xqf_geoip_country_name[id];
-	}
+	
+	return xqf_geoip_country_name[id];
 }
 
 int geoip_id_by_code(const char *country) {
@@ -142,32 +134,15 @@ int geoip_id_by_code(const char *country) {
 /*Checks for RFC1918 private addresses; returns TRUE if is a private address. */
 /*from the napshare source*/
 static gboolean is_private_ip(guint32 ip) {
-	/* 127.0.0.0 -- (localhost) */
-	if ((ip & 0xff000000) == 0x7f000000) {
-		return TRUE;
-	}
-
-	/* 10.0.0.0 -- (10/8 prefix) */
-	if ((ip & 0xff000000) == 0xa000000) {
-		return TRUE;
-	}
-
-	/* 172.16.0.0 -- (172.16/12 prefix) */
-	if ((ip & 0xfff00000) == 0xac100000) {
-		return TRUE;
-	}
-
-	/* 192.168.0.0 -- (192.168/16 prefix) */
-	if ((ip & 0xffff0000) == 0xc0a80000) {
-		return TRUE;
-	}
-
-	return FALSE;
+	
+	return (ip & 0xff000000) == 0x7f000000 /* 127.0.0.0 -- (localhost) */
+		|| (ip & 0xff000000) == 0xa000000 /* 10.0.0.0 -- (10/8 prefix) */
+		|| (ip & 0xfff00000) == 0xac100000 /* 172.16.0.0 -- (172.16/12 prefix) */
+		|| (ip & 0xffff0000) == 0xc0a80000; /* 192.168.0.0 -- (192.168/16 prefix) */
 }
 
 
 int geoip_id_by_ip(struct in_addr in) {
-
 	if (!gi) {
 		return -1;
 	}
@@ -176,9 +151,8 @@ int geoip_id_by_ip(struct in_addr in) {
 	if (is_private_ip(htonl(in.s_addr))) {
 		return LAN_GeoIPid;
 	}
-	else {
-		return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
-	}
+	
+	return GeoIP_country_id_by_addr(gi, inet_ntoa (in));
 }
 
 static char* find_flag_file(int id) {

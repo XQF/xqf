@@ -57,12 +57,11 @@ static gint host_sorting_helper (const struct host *h1, const struct host *h2) {
 	if (h1==h2) {
 		return 0;
 	}
-	else if (h1<h2) {
+	if (h1<h2) {
 		return -1;
 	}
-	else {
-		return 1;
-	}
+	
+	return 1;
 }
 
 
@@ -325,4 +324,3 @@ void host_cache_clear (void) {
 		host_cache = NULL;
 	}
 }
-

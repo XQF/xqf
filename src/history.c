@@ -102,4 +102,3 @@ void history_free (struct history *h) {
 		g_free (h);
 	}
 }
-

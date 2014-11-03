@@ -515,11 +515,10 @@ int rc_check_dir (void) {
 	if (stat (user_rcdir, &st_buf) == -1) {
 		return mkdir (user_rcdir, 0755);
 	}
-	else {
-		if (!S_ISDIR (st_buf.st_mode)) {
-			fprintf (stderr, "%s is not a directory\n", user_rcdir);
-			return -1;
-		}
+	
+	if (!S_ISDIR (st_buf.st_mode)) {
+		fprintf (stderr, "%s is not a directory\n", user_rcdir);
+		return -1;
 	}
 
 	return 0;
