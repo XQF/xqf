@@ -67,7 +67,7 @@
 #define QWM_DEFAULT_PORT        27000   /* QuakeWorld */
 #define Q2M_DEFAULT_PORT        27900   /* Quake2 master */
 #define Q3M_DEFAULT_PORT        27950   /* Quake3 master */
-#define RTCW_DEFAULT_PORT       27950   /* Return to Castle Wolfenstein master */
+#define RTCWM_DEFAULT_PORT      27950   /* Return to Castle Wolfenstein master */
 #define HLM_DEFAULT_PORT        27010   /* Half-Life master */
 #define D3M_DEFAULT_PORT        3445    /* Descent 3 master */
 #define EFM_DEFAULT_PORT        27953   /* Elite Force master */
