@@ -119,14 +119,14 @@ static char* script_filter(const char* dir, const char* name) {
 static enum script_option_type scriptoption_get_type(const char* str) {
 	if (!strcmp(str, "string"))
 		return SCRIPT_OPTION_TYPE_STRING;
-	else if (!strcmp(str, "int"))
+	if (!strcmp(str, "int"))
 		return SCRIPT_OPTION_TYPE_INT;
-	else if (!strcmp(str, "bool"))
+	if (!strcmp(str, "bool"))
 		return SCRIPT_OPTION_TYPE_BOOL;
-	else if (!strcmp(str, "list"))
+	if (!strcmp(str, "list"))
 		return SCRIPT_OPTION_TYPE_LIST;
-	else
-		return SCRIPT_OPTION_TYPE_INVALID;
+	
+	return SCRIPT_OPTION_TYPE_INVALID;
 }
 
 static ScriptOption* scriptoption_new(const char* typestr) {

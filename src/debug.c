@@ -31,7 +31,7 @@ void debug_int(const char* file, int line, const char* function, int level, cons
 	char buf[9];
 	time_t now;
 
-	for (i=0;i<indent_level;i++) {
+	for (i=0; i < indent_level; ++i) {
 		fprintf(stderr, " ");
 	}
 	now = time(NULL);
@@ -72,15 +72,15 @@ void set_debug_level (int level) {
 }
 
 int get_debug_level (void) {
-	return (debug_level);
+	return debug_level;
 }
 
 int debug_increase_indent() {
-	indent_level++;
-	return indent_level;
+	return ++indent_level;
 }
 
 int debug_decrease_indent() {
-	if (indent_level>0)indent_level--;
+	if (indent_level > 0)
+		--indent_level;
 	return indent_level;
 }

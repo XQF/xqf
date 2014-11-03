@@ -424,4 +424,3 @@ GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top,
 
 	return pixmap;
 }
-

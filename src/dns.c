@@ -108,7 +108,7 @@ static void dns_master_reset (void);
 int str_is_ip_address (char *str) {
 	struct in_addr dummy;
 
-	return (str)? inet_aton (worker_arg, &dummy) : FALSE;
+	return str ? inet_aton (worker_arg, &dummy) : FALSE;
 }
 
 
