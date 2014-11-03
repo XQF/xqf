@@ -104,27 +104,34 @@ static char* script_filter(const char* dir, const char* name) {
 
 	snprintf(buf, sizeof(buf), "%s/%s", dir, name);
 
-	if (!strcmp(buf, ".") || !strcmp(buf, ".."))
+	if (!strcmp(buf, ".") || !strcmp(buf, "..")) {
 		return NULL;
+	}
 
-	if (stat(buf, &stb) == -1)
+	if (stat(buf, &stb) == -1) {
 		return NULL;
+	}
 
-	if (S_ISREG(stb.st_mode) && (stb.st_mode & 0111))
+	if (S_ISREG(stb.st_mode) && (stb.st_mode & 0111)) {
 		return strdup(name);
+	}
 
 	return NULL;
 }
 
 static enum script_option_type scriptoption_get_type(const char* str) {
-	if (!strcmp(str, "string"))
+	if (!strcmp(str, "string")) {
 		return SCRIPT_OPTION_TYPE_STRING;
-	if (!strcmp(str, "int"))
+	}
+	if (!strcmp(str, "int")) {
 		return SCRIPT_OPTION_TYPE_INT;
-	if (!strcmp(str, "bool"))
+	}
+	if (!strcmp(str, "bool")) {
 		return SCRIPT_OPTION_TYPE_BOOL;
-	if (!strcmp(str, "list"))
+	}
+	if (!strcmp(str, "list")) {
 		return SCRIPT_OPTION_TYPE_LIST;
+	}
 	
 	return SCRIPT_OPTION_TYPE_INVALID;
 }
@@ -133,13 +140,15 @@ static ScriptOption* scriptoption_new(const char* typestr) {
 	ScriptOption* opt;
 	enum script_option_type type;
 
-	if (!typestr)
+	if (!typestr) {
 		return NULL;
+	}
 
 	type = scriptoption_get_type(typestr);
 
-	if (type == SCRIPT_OPTION_TYPE_INVALID)
+	if (type == SCRIPT_OPTION_TYPE_INVALID) {
 		return NULL;
+	}
 
 	opt = g_new0(ScriptOption, 1);
 	opt->type = type;
@@ -176,8 +185,9 @@ void scripts_load() {
 	unsigned i;
 	char path[PATH_MAX];
 
-	if (!scriptdata)
+	if (!scriptdata) {
 		g_datalist_init(&scriptdata);
+	}
 
 	/*
 	   g_datalist_get_data(&scriptdata, "foo");
@@ -197,8 +207,9 @@ void scripts_load() {
 		char* errtitle = _("Script error");
 
 		// already known?
-		if (g_datalist_get_data(&scriptdata, filename))
+		if (g_datalist_get_data(&scriptdata, filename)) {
 			continue;
+		}
 
 		script = script_new();
 
@@ -242,8 +253,9 @@ void scripts_load() {
 
 		for (i = 0; i < NUM_ACTIONS; ++i) {
 			gboolean on = config_get_bool(action_key[i]);
-			if (on)
+			if (on) {
 				action[i] = g_slist_prepend(action[i], script);
+			}
 		}
 
 		config_pop_prefix();
@@ -303,8 +315,9 @@ void scripts_load() {
 
 							it = config_init_iterator(path);
 
-							if (!opt->list)
+							if (!opt->list) {
 								opt->list = g_ptr_array_new();
+							}
 
 							while (it) {
 								char* key = NULL;
@@ -352,10 +365,12 @@ void scripts_load() {
 							defval = config_get_bool("default=false");
 							curval = config_get_bool_with_default(settings_path, &is_deflt);
 
-							if (is_deflt)
+							if (is_deflt) {
 								opt->enable = defval;
-							else
+							}
+							else {
 								opt->enable = curval;
+							}
 						}
 						break;
 
@@ -616,8 +631,9 @@ GtkWidget *scripts_config_page () {
 		script = g_datalist_get_data(&scriptdata, filename);
 
 		item = gtk_list_item_new();
-		if (s == scripts)
+		if (s == scripts) {
 			gtk_list_item_select(GTK_LIST_ITEM(item));
+		}
 
 		gtk_container_add (GTK_CONTAINER (item), gtk_label_new(filename));
 
@@ -681,8 +697,9 @@ void save_script_prefs() {
 				case SCRIPT_OPTION_TYPE_LIST:
 					val = gtk_entry_get_text(GTK_ENTRY(opt->widget));
 
-					if (!strlen(val))
+					if (!strlen(val)) {
 						val = NULL;
+					}
 
 					if ((!val && opt->defval) || (val && !opt->defval) || (val && opt->defval && strcmp(opt->defval, val))) {
 						g_free(opt->defval);
@@ -740,8 +757,9 @@ void script_set_env(void* data) {
 			case SCRIPT_OPTION_TYPE_STRING:
 			case SCRIPT_OPTION_TYPE_INT:
 			case SCRIPT_OPTION_TYPE_LIST:
-				if (opt->defval)
+				if (opt->defval) {
 					setenv(buf, opt->defval, 1);
+				}
 				break;
 			case SCRIPT_OPTION_TYPE_BOOL:
 				setenv(buf, opt->enable?"true":"false", 1);
@@ -764,15 +782,17 @@ static void run_scripts(ScriptActionType type, struct game* g, struct server* s)
 		Script* script = l->data;
 		GSList* dir;
 
-		if (!((ScriptOption*)(script->options->data))->enable)
+		if (!((ScriptOption*)(script->options->data))->enable) {
 			continue;
+		}
 
 		for (dir = scriptdirs; dir; dir = g_slist_next(dir)) {
 			snprintf(path, sizeof(path), "%s/%s", (char*)dir->data, script->name);
 			debug(4, "check %s", path);
 			if (access(path, X_OK)) {
-				if (access(path, R_OK) == 0)
+				if (access(path, R_OK) == 0) {
 					xqf_warning("%s not executable, not running it", path);
+				}
 				path[0] = '\0';
 			}
 			else
@@ -820,16 +840,18 @@ void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data) {
 
 	filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
 
-	if (!filename)
+	if (!filename) {
 		return;
+	}
 
 	mkdir((const char*)scriptdirs->data, 0777);
 
 	snprintf(dest, sizeof(dest), "%s/%s", (const char*)scriptdirs->data, g_path_get_basename(filename));
 
 	if (!access(dest, F_OK)) {
-		if (!dialog_yesno(NULL, 0, NULL, NULL, _("Script %s already exists, overwrite?"), dest))
+		if (!dialog_yesno(NULL, 0, NULL, NULL, _("Script %s already exists, overwrite?"), dest)) {
 			return;
+		}
 	}
 
 	if ((msg = copy_file(filename, dest))) {

@@ -134,9 +134,8 @@ int geoip_id_by_code(const char *country) {
 /*Checks for RFC1918 private addresses; returns TRUE if is a private address. */
 /*from the napshare source*/
 static gboolean is_private_ip(guint32 ip) {
-	
 	return (ip & 0xff000000) == 0x7f000000 /* 127.0.0.0 -- (localhost) */
-		|| (ip & 0xff000000) == 0xa000000 /* 10.0.0.0 -- (10/8 prefix) */
+		|| (ip & 0xff000000) == 0xa000000 /* 10.0.0.0 -- (10/8 prefix) */
 		|| (ip & 0xfff00000) == 0xac100000 /* 172.16.0.0 -- (172.16/12 prefix) */
 		|| (ip & 0xffff0000) == 0xc0a80000; /* 192.168.0.0 -- (192.168/16 prefix) */
 }
