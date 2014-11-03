@@ -206,7 +206,9 @@ static void server_filter_vars_free(struct server_filter_vars* v) {
 // deep copy of server_filter_vars
 static struct server_filter_vars* server_filter_vars_copy(struct server_filter_vars* v) {
 	struct server_filter_vars* f;
+#ifdef USE_GEOIP
 	unsigned i;
+#endif
 
 	if (!v) return NULL;
 
