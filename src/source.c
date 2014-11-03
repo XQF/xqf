@@ -1016,7 +1016,7 @@ static char *builtin_masters_update_info[] = {
 	"DELETE Q2S master://q2master.mondial.net.au:27900 Australia",                  // doesn't work (26.09.2004)
 	"DELETE Q2S master://q2master.gxp.de:27900 gXp (Germany)",                      // doesn't work (26.09.2004)
 	"ADD Q2S http://www.gameaholic.com/servers/qspy-quake2 gameaholic.com",
-	"ADD Q2S http://www.lithium.com/quake2/gamespy.txt Lithium",
+	"DELETE Q2S http://www.lithium.com/quake2/gamespy.txt Lithium",                 // doesn't work (03.11.2014)
 	"ADD Q2S master://masterserver.exhale.de exhale.de",
 	"ADD Q2S master://netdome.biz netdome.biz",
 	"ADD Q2S master://master.planetgloom.com gloom",
@@ -1038,7 +1038,7 @@ static char *builtin_masters_update_info[] = {
 	//  "ADD HWS master://santa.quakeforge.net:26900 QuakeForge",
 
 	"ADD SNS http://www.gameaholic.com/servers/qspy-sin gameaholic.com",
-	"ADD SNS http://asp.planetquake.com/sinserverlist/servers.txt PlanetQuake",
+	"DELETE SNS http://asp.planetquake.com/sinserverlist/servers.txt PlanetQuake",  // doesn't work (03.11.2014)
 
 	"DELETE HLS master://half-life.east.won.net WON East",                          // switched off
 	"DELETE HLS master://half-life.west.won.net WON West",                          // switched off
@@ -1053,7 +1053,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD A2S,-stma2s master://69.28.151.178:27011 Valve 1",
 
 	"ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin gameaholic.com",
-	"ADD Q2S:KP http://www.ogn.org:6666 OGN",
+	"DELETE Q2S:KP http://www.ogn.org:6666 OGN",                                    // doesn't work (03.11.2014)
 
 	"ADD Q2S:HR http://www.gameaholic.com/servers/qspy-heretic2 gameaholic.com",
 
@@ -1079,7 +1079,7 @@ static char *builtin_masters_update_info[] = {
 
 	"ADD DM3S master://idnet.ua-corp.com:27650 idnet.ua-corp.com:",
 
-	"ADD ETQWS http://etqw-ipgetter.demonware.net/ipgetter/ demonware",
+	"DELETE ETQWS http://etqw-ipgetter.demonware.net/ipgetter/ demonware",          // doesn't work (03.11.2014)
 
 	"ADD EFS http://www.gameaholic.com/servers/qspy-startrekeliteforce gameaholic.com",
 	"ADD EFS master://master.stef1.ravensoft.com:27953  Ravensoft",
@@ -1104,7 +1104,7 @@ static char *builtin_masters_update_info[] = {
 	"DELETE MHS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=MOHAA&hostport=1 multiplay.co.uk - MOHAA",              // does no longer work
 	"DELETE EFS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=EF&hostport=1 multiplay.co.uk - Elite Force",           // does no longer work
 
-	"ADD AMS http://simplembs.armygame.com/sparse.txt armygame.com",
+	"DELETE AMS http://simplembs.armygame.com/sparse.txt armygame.com",                 // doesn't work (03.11.2014)
 
 	// version 2.0 not listed here
 	"DELETE AMS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=AA&hostport=1 multiplay.co.uk - Army Ops",              // does no longer work
