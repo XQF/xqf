@@ -1017,9 +1017,9 @@ static char *builtin_masters_update_info[] = {
 	"DELETE Q2S master://q2master.gxp.de:27900 gXp (Germany)",                      // doesn't work (26.09.2004)
 	"ADD Q2S http://www.gameaholic.com/servers/qspy-quake2 gameaholic.com",
 	"DELETE Q2S http://www.lithium.com/quake2/gamespy.txt Lithium",                 // doesn't work (03.11.2014)
-	"ADD Q2S master://masterserver.exhale.de exhale.de",
+	"DELETE Q2S master://masterserver.exhale.de exhale.de",                         // doesn't work (03.11.2014)
 	"ADD Q2S master://netdome.biz netdome.biz",
-	"ADD Q2S master://master.planetgloom.com gloom",
+	"DELETE Q2S master://master.planetgloom.com gloom",                             // doesn't work (03.11.2014)
 
 	"DELETE Q3S master://master3.idsoftware.com id",                                // switched off
 	"ADD Q3S master://master.ioquake3.org master.ioquake3.org",
@@ -1043,14 +1043,14 @@ static char *builtin_masters_update_info[] = {
 	"DELETE HLS master://half-life.east.won.net WON East",                          // switched off
 	"DELETE HLS master://half-life.west.won.net WON West",                          // switched off
 
-	"ADD HLS,-stm master://steam1.steampowered.com Steam 1",
-	"ADD HLS,-stm master://steam2.steampowered.com Steam 2",
+	"DELETE HLS,-stm master://steam1.steampowered.com Steam 1",                     // doesn't work (03.11.2014)
+	"DELETE HLS,-stm master://steam2.steampowered.com Steam 2",                     // doesn't work (03.11.2014)
 
-	"ADD HLA2S master://steam1.steampowered.com Steam 1",
+	"DELETE HLA2S master://steam1.steampowered.com Steam 1",                        // doesn't work (03.11.2014)
 
-	"ADD A2S,-stma2s master://steam1.steampowered.com:27011 Steam 1",
-	"ADD A2S,-stma2s master://steam2.steampowered.com:27011 Steam 2",
-	"ADD A2S,-stma2s master://69.28.151.178:27011 Valve 1",
+	"DELETE A2S,-stma2s master://steam1.steampowered.com:27011 Steam 1",            // doesn't work (03.11.2014)
+	"DELETE A2S,-stma2s master://steam2.steampowered.com:27011 Steam 2",            // doesn't work (03.11.2014)
+	"DELETE A2S,-stma2s master://69.28.151.178:27011 Valve 1",                      // doesn't work (03.11.2014)
 
 	"ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin gameaholic.com",
 	"DELETE Q2S:KP http://www.ogn.org:6666 OGN",                                    // doesn't work (03.11.2014)
@@ -1127,7 +1127,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD UT2004S master://ut2004master1.epicgames.com:28902 Epic 1",
 	"ADD UT2004S master://ut2004master2.epicgames.com:28902 Epic 2",
 
-	"ADD NETP master://netpanzer.dyndns.org netpanzer.dyndns.org",
+	"DELETE NETP master://netpanzer.dyndns.org netpanzer.dyndns.org",                   // doesn't work (03.11.2014)
 
 	"ADD NEXUIZS master://ghdigital.com ghdigital.com",
 	"ADD NEXUIZS master://dpmaster.deathmask.net dpmaster.deathmask.net",
