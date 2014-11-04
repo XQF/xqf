@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -45,7 +45,7 @@ GtkWidget *pane2_widget;
 GtkWidget *pane3_widget;
 
 /* If you add a column here to appear in the server
-   list, you need to also add an entry in sort.h and sort.c 
+   list, you need to also add an entry in sort.h and sort.c
 */
 
 static struct clist_column server_columns[] =
@@ -231,8 +231,7 @@ void print_status (GtkWidget *sbar, char *fmt, ...) {
 
 
 int window_delete_event_callback (GtkWidget *widget, gpointer data) {
-
-	if (default_show_tray_icon && tray_icon_work())  {
+	if (default_show_tray_icon && tray_icon_work()) {
 		tray_delete_event_hook();
 	}
 	else {
@@ -245,7 +244,7 @@ int window_delete_event_callback (GtkWidget *widget, gpointer data) {
 
 void register_window (GtkWidget *window) {
 	xqf_windows = g_slist_prepend (xqf_windows, window);
-	debug(6, "%p", window);
+	debug (6, "%p", window);
 }
 
 
@@ -261,7 +260,7 @@ void unregister_window (GtkWidget *window) {
 	else
 		target_window = NULL;
 
-	debug(6, "%p", window);
+	debug (6, "%p", window);
 }
 
 
@@ -273,22 +272,21 @@ GtkWidget *top_window (void) {
 }
 
 
-static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef, 
-		int set_mark) {
+static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef, int set_mark) {
 	char buf[256];
 
 	if (set_mark) {
 		const char* name = cldef->cols[clist->sort_column].sort_name[cldef->cols[clist->sort_column].current_sort_mode];
-		g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name), 
+		g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name),
 				(clist->sort_type == GTK_SORT_DESCENDING)? '>' : '<');
 
 		if (name) {
-			snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), " (%s)", _(name));
+			snprintf (buf+strlen(buf), sizeof(buf)-strlen(buf), " (%s)", _(name));
 		}
 		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), buf);
 	}
 	else {
-		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), 
+		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget),
 				_(cldef->cols[clist->sort_column].name));
 	}
 }
@@ -302,7 +300,6 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 	int i;
 
 	switch (cldef->type) {
-
 		case CWIDGET_CLIST:
 			clist = gtk_clist_new (cldef->columns);
 			break;
@@ -316,7 +313,6 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 
 		default:
 			return NULL;
-
 	}
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -331,8 +327,7 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 				cldef->name, cldef->cols[i].name, cldef->cols[i].width);
 		gtk_clist_set_column_width (GTK_CLIST (clist), i, config_get_int (buf));
 		if (cldef->cols[i].justify != GTK_JUSTIFY_LEFT) {
-			gtk_clist_set_column_justification (GTK_CLIST (clist), i, 
-					cldef->cols[i].justify);
+			gtk_clist_set_column_justification (GTK_CLIST (clist), i, cldef->cols[i].justify);
 		}
 
 		alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
@@ -358,8 +353,7 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 
 #define DIMOF(arr) (sizeof(arr)/sizeof(arr[0]))
 
-void clist_set_sort_column (GtkCList *clist, int column, 
-		struct clist_def *cldef) {
+void clist_set_sort_column (GtkCList *clist, int column, struct clist_def *cldef) {
 	if (column == clist->sort_column) {
 		if (clist->sort_type == GTK_SORT_DESCENDING) {
 			cldef->cols[column].current_sort_mode = ++cldef->cols[column].current_sort_mode%DIMOF(cldef->cols[column].sort_mode);
@@ -375,7 +369,7 @@ void clist_set_sort_column (GtkCList *clist, int column,
 		gtk_clist_set_sort_column (clist, column);
 	}
 
-	debug(3, "%d %hhd", column, cldef->cols[column].current_sort_mode);
+	debug (3, "%d %hhd", column, cldef->cols[column].current_sort_mode);
 
 	clist_column_set_title (clist, cldef, TRUE);
 	gtk_clist_sort (clist);
@@ -517,8 +511,7 @@ void source_ctree_delete_master (GtkWidget *ctree, struct master *m) {
 
 	if (m->type != UNKNOWN_SERVER) {
 		group = (struct master *) g_slist_nth_data (master_groups, m->type);
-		if (group && (group->masters == NULL || 
-					(g_slist_length (group->masters) == 1 && group->masters->data == m))) {
+		if (group && (group->masters == NULL || (g_slist_length (group->masters) == 1 && group->masters->data == m))) {
 			source_ctree_remove_master_group (ctree, group);
 		}
 	}
@@ -559,16 +552,15 @@ GtkWidget *create_source_ctree (GtkWidget *scrollwin) {
 	char *titles[1] = { _("Source") };
 	GtkWidget *ctree;
 
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
+/*	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+*/
 	ctree = gtk_ctree_new_with_titles (1, 0, titles);
 	gtk_container_add (GTK_CONTAINER (scrollwin), ctree);
 
 	gtk_clist_set_selection_mode (GTK_CLIST (ctree), GTK_SELECTION_EXTENDED);
 
 	gtk_ctree_set_line_style (GTK_CTREE (ctree), GTK_CTREE_LINES_NONE);
-	gtk_ctree_set_expander_style (GTK_CTREE (ctree), 
-			GTK_CTREE_EXPANDER_TRIANGLE);
+	gtk_ctree_set_expander_style (GTK_CTREE (ctree), GTK_CTREE_EXPANDER_TRIANGLE);
 	gtk_ctree_set_indent (GTK_CTREE (ctree), 10);
 
 	fill_source_ctree (ctree);
@@ -605,26 +597,11 @@ int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
 
 
 void set_toolbar_appearance (GtkToolbar *toolbar, int style, int tips) {
-
 	switch (style) {
-
-		case 0:
-			gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_ICONS);
-
-			break;
-
-		case 1:
-			gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_TEXT);
-
-			break;
-
-		case 2:
-			gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_BOTH);
-
-			break;
-
-		default:
-			break;
+		case 0: gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_ICONS); break;
+		case 1: gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_TEXT);  break;
+		case 2: gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_BOTH);  break;
+		default: break;
 	}
 
 	gtk_toolbar_set_tooltips (toolbar, tips);
@@ -772,7 +749,7 @@ void ui_done (void) {
 		if (m->isgroup) {
 			node = gtk_ctree_find_by_row_data (GTK_CTREE (source_ctree), NULL, m);
 			if (node) {
-				gtk_ctree_get_node_info (GTK_CTREE (source_ctree), node, 
+				gtk_ctree_get_node_info (GTK_CTREE (source_ctree), node,
 						NULL, NULL, NULL, NULL, NULL, NULL, NULL, &expanded);
 				if (!expanded) {
 					g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", m->name);
@@ -828,7 +805,7 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {
 }
 
 // Skip a game if it's not configured and show only configured is enabled
-gboolean create_server_type_menu_filter_configured(enum server_type type) {
+gboolean create_server_type_menu_filter_configured (enum server_type type) {
 	if (!games[type].cmd && default_show_only_configured_games)
 		return FALSE;
 	else
@@ -851,8 +828,7 @@ GtkWidget *create_server_type_menu (int active_type,
 	menu = gtk_menu_new ();
 
 	for (i = 0; i < GAMES_TOTAL; ++i) {
-
-		if (filterfunc && !filterfunc(i))
+		if (filterfunc && !filterfunc (i))
 			continue;
 
 		menu_item = gtk_menu_item_new ();
@@ -869,7 +845,7 @@ GtkWidget *create_server_type_menu (int active_type,
 		gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
 
 		if (callback)
-			gtk_signal_connect (GTK_OBJECT (menu_item), "activate", GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER(i));
+			gtk_signal_connect (GTK_OBJECT (menu_item), "activate", GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER (i));
 
 		gtk_widget_show (menu_item);
 
@@ -880,7 +856,7 @@ GtkWidget *create_server_type_menu (int active_type,
 
 	// initiates callback to set servertype to first configured game
 	if (active_type != -1 && first_menu_item) {
-		gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item)); 
+		gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item));
 		gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
 	}
 
