@@ -43,36 +43,6 @@
 #define MAX_PING        9999
 #define MAX_RETRIES     10
 
-#define Q1_DEFAULT_PORT         26000   /* Quake */
-#define QW_DEFAULT_PORT         27500   /* QuakeWorld */
-#define Q2_DEFAULT_PORT         27910   /* Quake2 */
-#define Q3_DEFAULT_PORT         27960   /* Quake3 Arena */
-#define RTCW_DEFAULT_PORT       27960   /* Return to Castle Wolfenstein */
-#define EF_DEFAULT_PORT         27960   /* Voyager Elite Force */
-#define H2_DEFAULT_PORT         26900   /* Hexen2 */
-#define HW_DEFAULT_PORT         26950   /* HexenWorld */
-#define SN_DEFAULT_PORT         22450   /* Sin */
-#define HL_DEFAULT_PORT         27015   /* Half-Life */
-#define KP_DEFAULT_PORT         31510   /* Kingpin */
-#define SFS_DEFAULT_PORT        28910   /* Soldier of Fortune */
-#define SOF2S_DEFAULT_PORT      20100   /* Soldier of Fortune 2 */
-#define T2_DEFAULT_PORT         28000   /* Tribes 2 */
-#define HR_DEFAULT_PORT         28910   /* Heretic2 */
-#define UN_DEFAULT_PORT         7777    /* Unreal */
-#define AAO_DEFAULT_PORT        1716    /* AAO */
-#define UT2_DEFAULT_PORT        7777    /* Unreal Tournament 2003 */
-#define GPS_DEFAULT_PORT        27888   /* Gamespy Generic */
-#define DESCENT3_DEFAULT_PORT   2092    /* Descent 3 */
-
-#define QWM_DEFAULT_PORT        27000   /* QuakeWorld */
-#define Q2M_DEFAULT_PORT        27900   /* Quake2 master */
-#define Q3M_DEFAULT_PORT        27950   /* Quake3 master */
-#define RTCWM_DEFAULT_PORT      27950   /* Return to Castle Wolfenstein master */
-#define HLM_DEFAULT_PORT        27010   /* Half-Life master */
-#define D3M_DEFAULT_PORT        3445    /* Descent 3 master */
-#define EFM_DEFAULT_PORT        27953   /* Elite Force master */
-#define T2M_DEFAULT_PORT        28000   /* Tribes 2 */
-#define SOF2M_DEFAULT_PORT      20110   /* Soldier of Fortune 2 */
 
 /* max 0x8000, server->flags is unsigned */
 enum server_flags {
