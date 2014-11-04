@@ -30,7 +30,7 @@
 #include <glib.h>
 
 #define RC_DIR          ".qf"               /* legacy config dir, before 1.0.6 */
-#define XDG_RC_DIR      "xqf"                /* new config dir, since 1.0.6 */
+#define XDG_RC_DIR      "xqf"               /* new config dir, since 1.0.6 */
 #define RC_FILE         "qfrc"
 #define CONFIG_FILE     "config"
 #define SERVERS_FILE    "servers"

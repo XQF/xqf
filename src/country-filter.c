@@ -83,7 +83,8 @@ void geoip_done(void) {
 }
 
 gboolean geoip_is_working (void) {
-	return gi;
+	/* gi is a (static GeoIP*), thus do not return a pointer but a boolean */
+	return !!gi;
 }
 
 const char* geoip_code_by_id(int id) {
