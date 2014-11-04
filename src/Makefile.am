@@ -16,6 +16,9 @@ INCLUDES = -I$(top_srcdir)/intl \
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
 
+uidir = $(pkgdatadir)/ui
+ui_DATA = xqf.ui
+
 qstatsavagedir = $(pkgdatadir)
 qstatsavage_DATA = qstat_savage.sh
 
