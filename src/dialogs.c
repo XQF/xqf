@@ -480,140 +480,47 @@ char *enter_string_with_option_dialog (int visible, char *optstr, int *optval,
 static GtkWidget* create_AboutWindow (void);
 
 void about_dialog (GtkWidget *widget, gpointer data) {
-	GtkWidget* aboutwindow = NULL;
-	GtkWidget* w = NULL, *w2 = NULL;
-	char *intro = _("XQF Game Server Browser");
-	char *version = g_strdup_printf(_("Version %s"),XQF_VERSION);
+	const gchar *authors[] = {
+		_("Maintainers:"),
+		"   Thomas Debesse <xqf@illwieckz.net>",
+		"   Ludwig Nussel <ludwig.nussel@suse.de>",
+		"   Alex Burger <alex_b@users.sourceforge.net>",
+		"   Jordi Mallach <jordi@sindominio.net>",
+		"   Bill Adams <bill@evilbill.org>",
+		_("Contributors:"),
+		"   Jochen Baier <email@jochen-baier.de>",
+		"   Luca Camillo <kamy@tutorials.it>",
+		/* FIXME hacky, limit to the "website" entry & infos in configure.in */
+		_("Bug reports and feature requests:"),
+		"   http://github.com/XQF/xqf",		/* https do not create link */
+		"   mainling list <xqf-developer@lists.sourceforge.net>",
+		"   http://sourceforge.net/projects/xqf",
+	NULL};
 
-	/* translators can use the copyright symbol instead of (C) */
-	char *author = _("Copyright (C) 1998-2002 Roman Pozlevich");
-	char *urls = "http://www.linuxgames.com/xqf\n"
-		"https://github.com/XQF/xqf\n";
-	char *contrib1 = _("Maintainers:");
-	char *contrib2 =
-		"Thomas Debesse <xqf@illwieckz.net>\n"
-		"Ludwig Nussel <ludwig.nussel@suse.de>\n"
-		"Alex Burger <alex_b@users.sourceforge.net>\n"
-		"Jordi Mallach <jordi@sindominio.net>\n"
-		"Bill Adams <bill@evilbill.org>\n";
-	char *contrib3 = _("Contributors:");
-	char *contrib4 = 
-		"Jochen Baier <email@jochen-baier.de>\n"
-		"Luca Camillo <kamy@tutorials.it>\n";
-	char *bugs1 = _("Bug reports and feature requests:");
-	char *bugs2 = "http://sourceforge.net/projects/xqf\n"
-		"xqf-developer@lists.sourceforge.net\n";
+/*	const gchar *artists[] = {
+		"",
+	NULL};
 
-	char *text = NULL;//  dialog_ok (_("About XQF"), "%s", text);
-	aboutwindow = create_AboutWindow();
-
-	w2 = load_pixmap(aboutwindow, "splash.png");
-
-	w = gtk_object_get_data(GTK_OBJECT(aboutwindow),"AboutVBox");
-	gtk_box_pack_start (GTK_BOX (w), w2, FALSE, FALSE, 0);
-	gtk_box_reorder_child(GTK_BOX(w), w2, 0);
-	gtk_widget_show(w2);
-
-	w = gtk_object_get_data(GTK_OBJECT(aboutwindow),"AboutLabel");
-
-	text = g_strjoin("\n", intro, version, author, urls, contrib1, contrib2,
-			contrib3, contrib4, bugs1, bugs2, NULL);
-	g_free(version);
-
-	gtk_label_set_text(GTK_LABEL(w), text);
-
-	g_free(text);
-
-	gtk_window_set_transient_for (GTK_WINDOW (aboutwindow), GTK_WINDOW (top_window()));
-
-	register_window(aboutwindow);
-
-	gtk_widget_show(aboutwindow);
-}
-
-/* glade generated */
-
-	GtkWidget*
-create_AboutWindow (void) {
-	GtkWidget *AboutWindow;
-	GtkWidget *AboutVBox;
-	GtkWidget *scrolledwindow1;
-	GtkWidget *viewport1;
-	GtkWidget *AboutLabel;
-	GtkWidget *hbuttonbox1;
-	GtkWidget *OKButton;
-
-	AboutWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_object_set_data (GTK_OBJECT (AboutWindow), "AboutWindow", AboutWindow);
-	gtk_widget_set_usize (AboutWindow, 400, 440);
-	gtk_window_set_title (GTK_WINDOW (AboutWindow), _("About XQF"));
-	gtk_window_set_position (GTK_WINDOW (AboutWindow), GTK_WIN_POS_CENTER);
-	gtk_window_set_modal (GTK_WINDOW (AboutWindow), TRUE);
-
-	AboutVBox = gtk_vbox_new (FALSE, 0);
-	gtk_widget_ref (AboutVBox);
-	gtk_object_set_data_full (GTK_OBJECT (AboutWindow), "AboutVBox", AboutVBox,
-			(GtkDestroyNotify) gtk_widget_unref);
-	gtk_widget_show (AboutVBox);
-	gtk_container_add (GTK_CONTAINER (AboutWindow), AboutVBox);
-
-	scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-	gtk_widget_ref (scrolledwindow1);
-	gtk_object_set_data_full (GTK_OBJECT (AboutWindow), "scrolledwindow1", scrolledwindow1,
-			(GtkDestroyNotify) gtk_widget_unref);
-	gtk_widget_show (scrolledwindow1);
-	gtk_box_pack_start (GTK_BOX (AboutVBox), scrolledwindow1, TRUE, TRUE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 4);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-	viewport1 = gtk_viewport_new (NULL, NULL);
-	gtk_widget_ref (viewport1);
-	gtk_object_set_data_full (GTK_OBJECT (AboutWindow), "viewport1", viewport1,
-			(GtkDestroyNotify) gtk_widget_unref);
-	gtk_widget_show (viewport1);
-	gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
-
-	AboutLabel = gtk_label_new (_("[placeholder, do not translate]"));
-	gtk_widget_ref (AboutLabel);
-	gtk_object_set_data_full (GTK_OBJECT (AboutWindow), "AboutLabel", AboutLabel,
-			(GtkDestroyNotify) gtk_widget_unref);
-	gtk_widget_show (AboutLabel);
-	gtk_container_add (GTK_CONTAINER (viewport1), AboutLabel);
-	gtk_label_set_justify (GTK_LABEL (AboutLabel), GTK_JUSTIFY_LEFT);
-	gtk_label_set_line_wrap (GTK_LABEL (AboutLabel), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (AboutLabel), 0, 0);
-
-	hbuttonbox1 = gtk_hbutton_box_new ();
-	gtk_widget_ref (hbuttonbox1);
-	gtk_object_set_data_full (GTK_OBJECT (AboutWindow), "hbuttonbox1", hbuttonbox1,
-			(GtkDestroyNotify) gtk_widget_unref);
-	gtk_widget_show (hbuttonbox1);
-	gtk_box_pack_start (GTK_BOX (AboutVBox), hbuttonbox1, FALSE, TRUE, 4);
-
-	OKButton = gtk_button_new_with_label (_("OK"));
-	gtk_widget_ref (OKButton);
-	gtk_object_set_data_full (GTK_OBJECT (AboutWindow), "OKButton", OKButton,
-			(GtkDestroyNotify) gtk_widget_unref);
-	gtk_widget_show (OKButton);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), OKButton);
-	GTK_WIDGET_SET_FLAGS (OKButton, GTK_CAN_DEFAULT);
-
-	gtk_signal_connect (GTK_OBJECT (AboutWindow), "destroy_event",
-			GTK_SIGNAL_FUNC (gtk_main_quit),
-			NULL);
-	gtk_signal_connect (GTK_OBJECT (AboutWindow), "key_press_event",
-			GTK_SIGNAL_FUNC (destroy_on_escape),
-			NULL);
-	gtk_signal_connect (GTK_OBJECT (AboutWindow), "destroy",
-			GTK_SIGNAL_FUNC (unregister_window_callback),
-			NULL);
-	gtk_signal_connect_object (GTK_OBJECT (OKButton), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			GTK_OBJECT (AboutWindow));
-
-	gtk_widget_grab_focus (OKButton);
-	gtk_widget_grab_default (OKButton);
-	return AboutWindow;
+	const gchar *documenters[] = {
+		"",
+	NULL};
+*/
+	gtk_show_about_dialog (
+		NULL, //GTK_WINDOW (window),
+		"program-name", _("XQF"),
+		"version", XQF_VERSION,
+		/* translators can use the copyright symbol instead of (C) */
+		"copyright", _("Copyright (C) 1998-2002 Roman Pozlevich"),
+//		"license-type", GTK_LICENSE_GPL_2_0,			// TODO
+		"comments", _("XQF Game Server Browser"),
+		"authors", authors,
+//		"documenters", documenters,
+//		"artists", artists,
+		"translator-credits", _("translator-credits"),
+//		"logo", "splash.png",	// old splash [don't work], isn't icon better?
+		"logo-icon-name", "xqf",
+		"website", "http://www.linuxgames.com/xqf",
+	NULL);
 }
 
 /** ok callback for file_dialog that sets the selected filename in the
