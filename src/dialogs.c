@@ -493,7 +493,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		/* FIXME hacky, limit to the "website" entry & infos in configure.in */
 		_("Bug reports and feature requests:"),
 		"   http://github.com/XQF/xqf",		/* https do not create link */
-		"   mainling list <xqf-developer@lists.sourceforge.net>",
+		"   mailing list <xqf-developer@lists.sourceforge.net>",
 		"   http://sourceforge.net/projects/xqf",
 	NULL};
 
@@ -517,7 +517,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 //		"documenters", documenters,
 //		"artists", artists,
 		"translator-credits", _("translator-credits"),
-//		"logo", "splash.png",	// old splash [don't work], isn't icon better?
+//		"logo", "splash.png",	// old splash [doesn't work], isn't icon better?
 		"logo-icon-name", "xqf",
 		"website", "http://www.linuxgames.com/xqf",
 	NULL);
