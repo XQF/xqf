@@ -103,11 +103,12 @@ char* xqf_LOCALEDIR = LOCALEDIR;
 
 char* qstat_configfile = NULL;
 
-GtkWidget *main_window = NULL;
-GtkWidget *source_ctree = NULL;
-GtkCList  *server_clist = NULL;
-GtkCList  *player_clist = NULL;
-GtkCTree  *srvinf_ctree = NULL;
+GtkBuilder *builder = NULL;
+GtkWidget  *main_window = NULL;
+GtkWidget  *source_ctree = NULL;
+GtkCList   *server_clist = NULL;
+GtkCList   *player_clist = NULL;
+GtkCTree   *srvinf_ctree = NULL;
 
 GtkEditable *selection_manager = NULL;
 
@@ -3655,7 +3656,17 @@ void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 }
 
 static void create_main_window (void) {
-	main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	GError *error = NULL;
+
+	builder = gtk_builder_new ();
+	gtk_builder_add_from_file (builder, g_strconcat (xqf_PACKAGE_DATA_DIR, "/ui", "/xqf.ui", NULL), &error);
+	if (G_UNLIKELY (error != NULL)) {
+		fprintf (stderr, "Could not load UI: %s\n", error->message);
+		g_clear_error (&error);
+		return;
+	}
+
+	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "main-window"));	// gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
 			GTK_SIGNAL_FUNC (window_delete_event_callback), NULL);
 	gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
@@ -3671,17 +3682,11 @@ static void create_main_window (void) {
 
 static void populate_main_window (void) {
 	GtkWidget *main_vbox;
-	GtkWidget *vbox;
-	GtkWidget *vbox2;
 	GtkWidget *hbox;
-	GtkWidget *hpaned;
-	GtkWidget *hpaned2;
-	GtkWidget *vpaned;
 	GtkWidget *menu_bar;
 	GtkWidget *handlebox;
 	GtkWidget *scrollwin;
 	GtkWidget *entry;
-	GtkWidget *label;
 	GtkWidget *button;
 	GtkWidget *pixmap;
 	GtkAccelGroup *accel_group;
@@ -3703,7 +3708,7 @@ static void populate_main_window (void) {
 	*/
 
 #if 0
-	if ((server_filter_menu_items = g_malloc(sizeof(struct menuitem) *  (MAX_SERVER_FILTERS + 4)))) {
+	if ((server_filter_menu_items = g_malloc (sizeof (struct menuitem) * (MAX_SERVER_FILTERS + 4)))) {
 		i = 0;
 		j = 0;
 		server_filter_menu_items[i].type       = MENU_ITEM;
@@ -3738,8 +3743,8 @@ static void populate_main_window (void) {
 		j++;
 
 		for (; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++){
-			buf = g_malloc(sizeof(char) * (16));
-			sprintf(buf, "Filter %d", j);
+			buf = g_malloc (sizeof (char) * (16));
+			sprintf (buf, "Filter %d", j);
 			server_filter_menu_items[i].type       = MENU_ITEM;
 			server_filter_menu_items[i].label      = buf;
 			server_filter_menu_items[i].accel_key  = 0;
@@ -3778,8 +3783,7 @@ static void populate_main_window (void) {
 
 	player_menu = create_player_menu (accel_group);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (main_window), main_vbox);
+	main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
 
 	/*  Lazy way to get `copy to clipboard' feature working.
 	 *  Don't gtk_widget_show() selection_manager widget!
@@ -3795,8 +3799,8 @@ static void populate_main_window (void) {
 	menu_bar = create_menubar (menubar_menu_items, accel_group);
 
 	// add server filters to menu
-	server_filter_menu_items = g_array_new(FALSE,FALSE,sizeof(GtkWidget*));
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu());
+	server_filter_menu_items = g_array_new (FALSE, FALSE, sizeof (GtkWidget*));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu ());
 
 	gtk_signal_connect_object (GTK_OBJECT (file_quit_menu_item), "activate", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (main_window));
 
@@ -3809,32 +3813,18 @@ static void populate_main_window (void) {
 
 	gtk_widget_show (handlebox);
 
-	vbox = gtk_vbox_new (FALSE, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
-
-	main_toolbar = gtk_toolbar_new ();
-	gtk_toolbar_set_orientation (GTK_TOOLBAR(main_toolbar),GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR(main_toolbar),GTK_TOOLBAR_BOTH);
-	gtk_box_pack_start (GTK_BOX (main_vbox), main_toolbar, FALSE, FALSE, 0);
-
-	// FIXME GTK2
-	gtk_box_reorder_child(GTK_BOX (main_vbox), main_toolbar, 2);
+	main_toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "main-toolbar"));
 	populate_main_toolbar ();
-	gtk_widget_show (main_toolbar);
 
-	pane1_widget = hpaned = gtk_hpaned_new ();
-	gtk_box_pack_start (GTK_BOX (vbox), hpaned, TRUE, TRUE, 0);
+	pane1_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned"));
 
 	/*
 	 *  Sources CTree
 	 */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_paned_add1 (GTK_PANED (hpaned), scrollwin);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources"));
 
 	source_ctree = create_source_ctree (scrollwin);
-
 	gtk_widget_show (source_ctree);
 
 	gtk_signal_connect (GTK_OBJECT (source_ctree), "tree_select_row", GTK_SIGNAL_FUNC (source_ctree_selection_changed_callback), NULL);
@@ -3843,44 +3833,25 @@ static void populate_main_window (void) {
 
 	gtk_widget_show (scrollwin);
 
-	pane2_widget = vpaned = gtk_vpaned_new ();
-	gtk_paned_add2 (GTK_PANED (hpaned), vpaned);
+	pane2_widget = GTK_WIDGET (gtk_builder_get_object (builder, "vpaned"));
 
 	/*
 	 *  Server CList
 	 */
 
-	vbox2 = gtk_vbox_new (FALSE, 4);
-	gtk_paned_add1 (GTK_PANED (vpaned), vbox2);
+	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox"));
 
-	hbox = gtk_hbox_new (FALSE, 4);
-
-	button = gtk_button_new();
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+	button = GTK_WIDGET (gtk_builder_get_object (builder, "button"));
 	pixmap = gtk_pixmap_new (delete_pix.pix, delete_pix.mask);
-	gtk_container_add(GTK_CONTAINER(button), pixmap);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (button), pixmap);
+	gtk_widget_show_all (button);
 
-	gtk_widget_show_all(button);
-
-	label = gtk_label_new(_("Quick Filter:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	entry = gtk_entry_new();
-	gtk_signal_connect(GTK_OBJECT(entry), "changed", G_CALLBACK(quick_filter_entry_changed), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
-	gtk_widget_show (entry);
+	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
+	gtk_signal_connect (GTK_OBJECT (entry), "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
 
 	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (quickfilter_delete_button_clicked), entry);
 
-	gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
-	gtk_widget_show (hbox);
-
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-
-	gtk_box_pack_start (GTK_BOX (vbox2), scrollwin, TRUE, TRUE, 0);
-	gtk_widget_show (vbox2);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server"));
 
 	server_clist = GTK_CLIST (create_cwidget (scrollwin, &server_clist_def));
 
@@ -3893,17 +3864,14 @@ static void populate_main_window (void) {
 	gtk_clist_set_compare_func (server_clist, (GtkCListCompareFunc) server_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (server_clist));
-	gtk_widget_show (scrollwin);
 
-	pane3_widget = hpaned2 = gtk_hpaned_new ();
-	gtk_paned_add2 (GTK_PANED (vpaned), hpaned2);
+	pane3_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned2"));
 
 	/*
 	 *  Player CList
 	 */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_paned_add1 (GTK_PANED (hpaned2), scrollwin);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player"));
 
 	player_clist = GTK_CLIST (create_cwidget (scrollwin, &player_clist_def));
 
@@ -3913,29 +3881,21 @@ static void populate_main_window (void) {
 	gtk_clist_set_compare_func (player_clist, (GtkCListCompareFunc) player_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (player_clist));
-	gtk_widget_show (scrollwin);
 
 	/*
 	 *  Server Info CList
 	 */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_paned_add2 (GTK_PANED (hpaned2), scrollwin);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info"));
 
 	srvinf_ctree = GTK_CTREE (create_cwidget (scrollwin, &srvinf_clist_def));
 
 	gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "click_column", GTK_SIGNAL_FUNC (clist_set_sort_column), &srvinf_clist_def);
-
 	gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "event", GTK_SIGNAL_FUNC (server_info_clist_event_callback), NULL);
 
 	gtk_clist_set_compare_func (GTK_CLIST (srvinf_ctree), (GtkCListCompareFunc) srvinf_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (srvinf_ctree));
-	gtk_widget_show (scrollwin);
-
-	gtk_widget_show (hpaned2);
-	gtk_widget_show (vpaned);
-	gtk_widget_show (hpaned);
 
 	gtk_widget_ensure_style (GTK_WIDGET (server_clist));
 	i = calculate_clist_row_height (GTK_WIDGET (server_clist), games[Q1_SERVER].pix->pix);
@@ -3948,19 +3908,11 @@ static void populate_main_window (void) {
 	 *  Status Bar & Progress Bar
 	 */
 
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox-status-bar"));
+	main_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar"));
+	main_filter_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-filter-status-bar"));
 
-	main_status_bar = gtk_statusbar_new ();
-	gtk_box_pack_start (GTK_BOX (hbox), main_status_bar, TRUE, TRUE, 0);
-	gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_status_bar), FALSE);
-	gtk_widget_show (main_status_bar);
-
-	main_filter_status_bar = gtk_statusbar_new ();
-	gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_filter_status_bar), FALSE);
-	gtk_widget_set_usize (main_filter_status_bar, 100, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), main_filter_status_bar, TRUE, TRUE, 0);
-	gtk_widget_show (main_filter_status_bar);
+	gtk_widget_set_usize (main_filter_status_bar, 100, -1);         // ???
 
 	main_progress_bar = create_progress_bar ();
 	gtk_widget_set_usize (main_progress_bar, 200, -1);
@@ -3972,17 +3924,11 @@ static void populate_main_window (void) {
 
 	/* Refresh optionmenu on toolbar */
 
-	set_filter_option_menu_toolbar();
-
-	gtk_widget_show (hbox);
-
-	gtk_widget_show (vbox);
-
-	gtk_widget_show (main_vbox);
+	set_filter_option_menu_toolbar ();
 
 	restore_main_window_geometry ();
 
-	window_set_icon(main_window);
+	window_set_icon (main_window);
 
 	gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
 	gtk_accel_group_unref (accel_group);
@@ -3990,13 +3936,13 @@ static void populate_main_window (void) {
 	// Set tooltips - also in prefs_load
 	tooltips = gtk_tooltips_new ();
 	if (default_toolbar_tips) {
-		gtk_tooltips_enable(tooltips);
+		gtk_tooltips_enable (tooltips);
 	}
 	else {
-		gtk_tooltips_disable(tooltips);
+		gtk_tooltips_disable (tooltips);
 	}
 
-	gtk_widget_grab_focus(entry);
+	gtk_widget_grab_focus (entry);
 }
 
 void play_sound (const char *sound, gboolean override) {
