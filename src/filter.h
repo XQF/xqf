@@ -82,6 +82,7 @@ struct filter {
 
 	struct pixmap* pix;
 	struct pixmap* cfg_pix;
+	char *icon_name;
 };
 
 extern struct filter filters[];
