@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- <requires lib="gtk+" version="X.XX"/> -->
+  <!-- <object class="GtkTreeModel" id="treemodel-sources">
+  </object> -->
   <object class="GtkWindow" id="main-window">
     <property name="type">toplevel</property>
     <child>
@@ -9,18 +11,153 @@
         <property name="visible">True</property>
         <property name="homogeneous">False</property>
         <property name="spacing">0</property>
-        <child>
-          <placeholder/>
+<!--        <child>
+          <object class="GtkMenuBar" id="main-menubar">
+            <property name="visible">True</property>
+--><!--             <child>
+              <object class="GtkMenuItem" id="first-menuitem">
+                <property name="visible">True</property>
+                <property name="label">test1</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="first-menu">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkMenuItem" id="second-menuitem">
+                        <property name="visible">True</property>
+                        <property name="label">test2</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child> -->
+<!--          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">0</property>
+          </packing>
         </child>
-        <child>
+-->        <child>
           <object class="GtkToolbar" id="main-toolbar">
             <property name="visible">True</property>
             <property name="orientation">horizontal</property>
             <property name="toolbar-style">both</property>
+            <child>
+              <object class="GtkToolButton" id="update-button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Update</property>
+                <property name="tooltip-text" translatable="yes">Update from master</property>
+                <property name="icon-widget">update-image</property>
+                <child>
+                  <object class="GtkImage" id="update-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                    <!-- <property name="file">/path/to/jhbuild/slash/share/xqf/xpm/xxxx.xpm</property> works -->
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="refresh-button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Refresh</property>
+                <property name="tooltip-text" translatable="yes">Refresh current list</property>
+                <property name="icon-widget">refresh-image</property>
+                <child>
+                  <object class="GtkImage" id="refresh-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="refrsel-button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Ref.Sel.</property>
+                <property name="tooltip-text" translatable="yes">Refresh selected servers</property>
+                <property name="icon-widget">refrsel-image</property>
+                <child>
+                  <object class="GtkImage" id="refrsel-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="stop-button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Stop</property>
+                <property name="tooltip-text" translatable="yes">Stop</property><!-- TODO better tooltip -->
+                <property name="icon-widget">stop-image</property>
+                <child>
+                  <object class="GtkImage" id="stop-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="first-separator">
+                <property name="visible">True</property>
+                <property name="draw">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="connect-button">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Connect</property>
+                <property name="tooltip-text" translatable="yes">Connect</property><!-- TODO better tooltip -->
+                <property name="icon-widget">connect-image</property>
+                <child>
+                  <object class="GtkImage" id="connect-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="observe-button">
+                <property name="visible">False</property>
+                <property name="label" translatable="yes">Observe</property>
+                <property name="tooltip-text" translatable="yes">Observe</property><!-- TODO better tooltip -->
+                <property name="icon-widget">observe-image</property>
+                <child>
+                  <object class="GtkImage" id="observe-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="record-button">
+                <property name="visible">False</property>
+                <property name="label" translatable="yes">Record</property>
+                <property name="tooltip-text" translatable="yes">Record Demo</property>
+                <property name="icon-widget">record-image</property>
+                <child>
+                  <object class="GtkImage" id="record-image">
+                    <property name="visible">True</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="second-separator">
+                <property name="visible">True</property>
+                <property name="draw">True</property>
+              </object>
+            </child>
           </object>
           <packing>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
+            <property name="pack-type">end</property>   <!-- remove when menubar is here -->
+            <property name="position">1</property>      <!-- remove when menubar is here -->
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="padding">0</property>
@@ -40,6 +177,16 @@
                     <property name="visible">True</property>
                     <!-- <property name="hadjustment">null</property>
                     <property name="vadjustment">null</property> -->
+                    <property name="hscrollbar-policy">automatic</property>
+                    <property name="vscrollbar-policy">automatic</property>
+                    <!-- <child>
+                      <object class="GtkTreeView" id="treeview-sources">
+                        <property name="visible">True</property>
+                        <property name="activate-on-single-click">True</property>   <!- TODO test -->
+                    <!--    <property name="headers-visible">False</property>   <!- there is only one column, called initially "Sources" -->
+                    <!--    <property name="model">treemodel-sources</property>
+                      </object>
+                    </child> -->
                   </object>
                 </child>
                 <child>
@@ -168,8 +315,8 @@
             </child>
           </object>
           <packing>
-            <property name="pack-type">end</property>
-            <property name="position">0</property>
+            <property name="pack-type">end</property>   <!-- remove when menubar is here -->
+            <property name="position">0</property>      <!-- remove when menubar is here -->
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="padding">0</property>

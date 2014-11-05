@@ -104,6 +104,7 @@ struct filter filters[FILTERS_TOTAL] = {
 		FILTER_NOT_CHANGED,
 		&sfilter_pix,
 		&sfilter_cfg_pix,
+		"sfilter.xpm",
 	},
 	{ 
 		N_("Player"),
@@ -118,6 +119,7 @@ struct filter filters[FILTERS_TOTAL] = {
 		FILTER_NOT_CHANGED,
 		&pfilter_pix,
 		&pfilter_cfg_pix,
+		"pfilter.xpm",
 	},
 	{ 
 		"not visible",
@@ -132,6 +134,7 @@ struct filter filters[FILTERS_TOTAL] = {
 		FILTER_NOT_CHANGED,
 		NULL,
 		NULL,
+		"not visible",
 	}
 };
 
