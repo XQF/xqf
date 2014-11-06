@@ -1032,6 +1032,7 @@ static char *builtin_masters_update_info[] = {
 	"DELETE Q3S master://q3master.barrysworld.com:27950 BarrysWorld",               // doesn't work (26.09.2004)
 	"ADD Q3S http://www.gameaholic.com/servers/qspy-quake3 gameaholic.com",
 	"ADD Q3S master://dpmaster.deathmask.net dpmaster.deathmask.net",
+	"ADD Q3S master://master.maverickservers.com maverickservers.com",
 
 	"ADD Q4S master://q4master.idsoftware.com id",
 
