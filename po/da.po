@@ -1452,7 +1452,7 @@ msgstr "Kør nu"
 
 #: src/game.c:227
 msgid ""
-"Note:  Soldier of Fortune will not connect to a server correctly\n"
+"Note: Soldier of Fortune will not connect to a server correctly\n"
 "without creating a startup script for the game.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
@@ -1462,7 +1462,7 @@ msgstr ""
 
 #: src/game.c:231
 msgid ""
-"Note:  Unreal Tournament will not launch correctly without\n"
+"Note: Unreal Tournament will not launch correctly without\n"
 "modifications to the game's startup script.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
@@ -1476,7 +1476,7 @@ msgstr "Eksempel på kommandolinje: wine hl.exe -- hl.exe -console"
 
 #: src/game.c:238
 msgid ""
-"Note:  Savage will not launch correctly without\n"
+"Note: Savage will not launch correctly without\n"
 "modifications to the game's startup script. Please see the\n"
 "XQF documentation for more information."
 msgstr ""

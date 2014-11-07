@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: XQF 1.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-07 12:44+0100\n"
-"PO-Revision-Date: 2014-11-07 12:45+0100\n"
+"PO-Revision-Date: 2014-11-07 13:01+0100\n"
 "Last-Translator: Thomas Debesse <dev@illwieckz.net>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -33,6 +33,7 @@ msgstr "Trouver des serveurs de jeu et s’y connecter"
 #: ../xqf.desktop.in.h:3 ../src/dialogs.c:485
 msgid "XQF Game Server Browser"
 msgstr "Explorateur de serveur de jeu XQF"
+
 #: src/xqf.c:367
 #, c-format
 msgid "%d server"
@@ -1467,21 +1468,21 @@ msgstr "Lancer maintenant"
 
 #: src/game.c:227
 msgid ""
-"Note:  Soldier of Fortune will not connect to a server correctly\n"
+"Note: Soldier of Fortune will not connect to a server correctly\n"
 "without creating a startup script for the game.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
-"Note: Soldier of Fortune ne se connectera pas correctement\n"
+"Note : Soldier of Fortune ne se connectera pas correctement\n"
 "au serveur sans créer un script de démarrage pour le jeu.\n"
 "Consultez la documentation de XQF pour plus d’informations."
 
 #: src/game.c:231
 msgid ""
-"Note:  Unreal Tournament will not launch correctly without\n"
+"Note: Unreal Tournament will not launch correctly without\n"
 "modifications to the game's startup script.  Please see the\n"
 "XQF documentation for more information."
 msgstr ""
-"Note: Unreal Tournament ne démarrera pas correctement sans\n"
+"Note : Unreal Tournament ne démarrera pas correctement sans\n"
 "modification du script de démarrage du jeu.\n"
 "Consultez la documentation de XQF pour plus d’informations."
 
@@ -1493,11 +1494,11 @@ msgstr ""
 
 #: src/game.c:238
 msgid ""
-"Note:  Savage will not launch correctly without\n"
+"Note: Savage will not launch correctly without\n"
 "modifications to the game's startup script. Please see the\n"
 "XQF documentation for more information."
 msgstr ""
-"Note:  Savage ne démarrera pas correctement sans\n"
+"Note : Savage ne démarrera pas correctement sans\n"
 "modification du script de démarrage du jeu.\n"
 "Consultez la documentation de XQF pour plus d’informations."
 
