@@ -4,19 +4,23 @@
 # This file is distributed under the same license as the package XQF.
 # Alex Burger <alex_b@users.sourceforge.net>, 2003
 # Michel Briand <michelbriand@free.fr>, 2003
-# Thomas Debesse <xqf@illwieckz.net>, 2014
+# Thomas Debesse <dev@illwieckz.net>, 2014
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: XQF 1.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-10-28 13:56+0200\n"
-"PO-Revision-Date: 2014-11-07 09:28+0100\n"
-"Last-Translator: Thomas Debesse <xqf@illwieckz.net>\n"
+"PO-Revision-Date: 2014-11-07 11:19+0100\n"
+"Last-Translator: Thomas Debesse <dev@illwieckz.net>\n"
 "Language-Team: French\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-Basepath: src/\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #: ../xqf.desktop.in.h:1
 msgid "Game Server Browser"

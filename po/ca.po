@@ -5,15 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xqf 1.0.1\n"
+"Project-Id-Version: XQF 1.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-10-28 13:56+0200\n"
-"PO-Revision-Date: 2005-09-20 01:57+0200\n"
+"PO-Revision-Date: 2014-11-07 11:19+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-Basepath: src/\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #: ../xqf.desktop.in.h:1
 msgid "Game Server Browser"
@@ -1449,8 +1453,8 @@ msgid ""
 "UT2004 CD Key not found, cannot query master '%s'.\n"
 "Make sure the working directory is set correctly."
 msgstr ""
-"No s'ha trobat la clau del CD de l'UT2004, no es pot consultar el mestre «%"
-"s».\n"
+"No s'ha trobat la clau del CD de l'UT2004, no es pot consultar el mestre "
+"«%s».\n"
 "Assegureu-vos que el directori de treball està establert correctament."
 
 #: ../src/stat.c:1559
