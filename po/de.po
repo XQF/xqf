@@ -1,6 +1,6 @@
 # translation of de.po to Deutsch
 # Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
-# Ludwig Nussel <l-n@users.sourceforge.net>>, 2003, 2004, 2005.
+# Ludwig Nussel <l-n@users.sourceforge.net>, 2003, 2004, 2005.
 #
 msgid ""
 msgstr ""
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-07 12:44+0100\n"
 "PO-Revision-Date: 2014-11-07 12:44+0100\n"
-"Last-Translator: Thomas Debesse <dev@illwieckz.net>\n"
+"Last-Translator: Ludwig Nussel <l-n@users.sourceforge.net>\n"
 "Language-Team: Deutsch <xqf-developer@lists.sourceforge.net>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
