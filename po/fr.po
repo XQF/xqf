@@ -415,34 +415,6 @@ msgstr ""
 "Le répertoire « %s » ne contient pas le sous-répertoire « %s ».\n"
 "Entrez un répertoire de travail valide pour « %s »."
 
-#. %s Quake3
-#: ../src/game.c:1773
-#, c-format
-msgid ""
-"~/.q3a directory doesn't exist or doesn't contain\n"
-"\"baseq3\" (\"demoq3\") subdirectory.\n"
-"Please run %s client at least once before running XQF\n"
-"or specify correct %s working directory."
-msgstr ""
-"Le répertoire ~/.q3a n’existe pas ou ne contient pas\n"
-"le sous-répertoire « baseq3 » (« demoq3 »).\n"
-"Lancez le client %s au moins une fois avant de démarrer\n"
-"XQF ou spécifiez un répertoire de travail valide pour %s."
-
-#. %s directory, Quake3
-#: ../src/game.c:1782
-#, c-format
-msgid ""
-"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-"subdirectory.\n"
-"Please specify correct %s working directory\n"
-"or leave it empty (~/.q3a is used by default)"
-msgstr ""
-"Le répertoire « %s » n’existe pas ou ne contient pas le sous-répertoire\n"
-"« baseq3 » (« demoq3 ») \n"
-"Spécifiez un répertoire de travail valide pour %s ou laissez\n"
-"ce champ vide (~/.q3a sera utilisé par défaut"
-
 #: ../src/game.c:1819 ../src/launch.c:339 ../src/xqf.c:981 ../src/xqf.c:994
 msgid "Launch"
 msgstr "Lancer"
@@ -1014,10 +986,10 @@ msgstr "Créer un fichier LaunchInfo.txt"
 
 #: ../src/pref.c:4095
 msgid ""
-"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
 msgstr ""
-"Créer le fichier ~/.qf/LaunchInfo.txt avec: ping ip:port nom carte "
+"Créer le fichier ~/.config/xqf/LaunchInfo.txt avec: ping ip:port nom carte "
 "curplayers maxplayers"
 
 #: ../src/pref.c:4101
@@ -1025,8 +997,8 @@ msgid "Execute prelaunch"
 msgstr "Exécuter le fichier Prelaunch"
 
 #: ../src/pref.c:4107
-msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Exécuter ~/.qf/PreLaunch (s’il existe) avant de lancer le jeu"
+msgid "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
+msgstr "Exécuter ~/.config/xqf/PreLaunch (s’il existe) avant de lancer le jeu"
 
 #: ../src/pref.c:4116
 msgid "Stop current song in XMMS"
@@ -1157,7 +1129,7 @@ msgid "Scripts"
 msgstr ""
 
 #: ../src/pref.c:4895
-msgid "Unable to get user name/home/tmpdir"
+msgid "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr ""
 "Impossible de déterminer le nom d’utilisateur, son répertoire ou un "
 "répertoire temporaire"
@@ -1672,12 +1644,13 @@ msgid "Resolving host addresses: %d/%d"
 msgstr "Résolution des adresses des hôtes : %d/%d"
 
 #: ../src/xqf.c:958
+#, c-format
 msgid ""
 "You said this servers sucks.\n"
-"Do you want to risk a game this time?"
+"Do you want to risk a game this time?%s"
 msgstr ""
 "Vous aviez dit qu’il fallait éviter ce serveur.\n"
-"Voulez vous risquer une partie cette fois-ci ?"
+"Voulez vous risquer une partie cette fois-ci ?%s"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -2238,3 +2211,31 @@ msgstr "Quitter"
 #~ "Demandes de fonctionnalités\n"
 #~ "\n"
 #~ "http://www.linuxgames.com/xqf Forums section\n"
+
+#~ #. %s Quake3
+#~ #: ../src/game.c:1773
+#~ #, c-format
+#~ msgid ""
+#~ "~/.q3a directory doesn't exist or doesn't contain\n"
+#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
+#~ "Please run %s client at least once before running XQF\n"
+#~ "or specify correct %s working directory."
+#~ msgstr ""
+#~ "Le répertoire ~/.q3a n’existe pas ou ne contient pas\n"
+#~ "le sous-répertoire « baseq3 » (« demoq3 »).\n"
+#~ "Lancez le client %s au moins une fois avant de démarrer\n"
+#~ "XQF ou spécifiez un répertoire de travail valide pour %s."
+
+#~ #. %s directory, Quake3
+#~ #: ../src/game.c:1782
+#~ #, c-format
+#~ msgid ""
+#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+#~ "subdirectory.\n"
+#~ "Please specify correct %s working directory\n"
+#~ "or leave it empty (~/.q3a is used by default)"
+#~ msgstr ""
+#~ "Le répertoire « %s » n’existe pas ou ne contient pas le sous-répertoire\n"
+#~ "« baseq3 » (« demoq3 ») \n"
+#~ "Spécifiez un répertoire de travail valide pour %s ou laissez\n"
+#~ "ce champ vide (~/.q3a sera utilisé par défaut"

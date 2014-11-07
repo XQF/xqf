@@ -410,34 +410,6 @@ msgstr ""
 "Mappe \"%s\" indeholder ikke \"%s\" undermappe.\n"
 "Venligst specificer en korrekt %s arbejdsmappe."
 
-#. %s Quake3
-#: ../src/game.c:1773
-#, c-format
-msgid ""
-"~/.q3a directory doesn't exist or doesn't contain\n"
-"\"baseq3\" (\"demoq3\") subdirectory.\n"
-"Please run %s client at least once before running XQF\n"
-"or specify correct %s working directory."
-msgstr ""
-"~/.q3a mappen eksisterer ikke eller indeholder ikke\n"
-"\"baseq3\" (\"demoq3\") undermappen.\n"
-"Kør %s klient mindst en gang før du kører XQF\n"
-"eller angiv en korrekt %s arbejdsmappe"
-
-#. %s directory, Quake3
-#: ../src/game.c:1782
-#, c-format
-msgid ""
-"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-"subdirectory.\n"
-"Please specify correct %s working directory\n"
-"or leave it empty (~/.q3a is used by default)"
-msgstr ""
-"\"%s\" eksisterer ikke, eller indeholder ikke \"baseq3\" (\"demoq3\") "
-"undermappen.\n"
-"Angiv en korrekt %s arbejdsmappe\n"
-"eller lad den være tom (~/.q3a) er brugt som standard)"
-
 #: ../src/game.c:1819 ../src/launch.c:339 ../src/xqf.c:981 ../src/xqf.c:994
 msgid "Launch"
 msgstr "Kør"
@@ -1004,10 +976,10 @@ msgstr "Opret LaunchInfo.txt"
 
 #: ../src/pref.c:4095
 msgid ""
-"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
 msgstr ""
-"Opretter filen ~/.qf/LaunchInfo.txt med: ping ip:port name map curplayers "
+"Opretter filen ~/.config/xqf/LaunchInfo.txt med: ping ip:port name map curplayers "
 "maxplayers"
 
 #: ../src/pref.c:4101
@@ -1015,8 +987,8 @@ msgid "Execute prelaunch"
 msgstr "Eksekver pre-start fil"
 
 #: ../src/pref.c:4107
-msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Eksekverer ~/.qf/PreLaunch (hvis eksisterer) før spillet starter"
+msgid "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
+msgstr "Eksekverer ~/.config/xqf/PreLaunch (hvis eksisterer) før spillet starter"
 
 #: ../src/pref.c:4116
 msgid "Stop current song in XMMS"
@@ -1145,7 +1117,7 @@ msgid "Scripts"
 msgstr ""
 
 #: ../src/pref.c:4895
-msgid "Unable to get user name/home/tmpdir"
+msgid "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr "Kunne ikke få bruger navn/hjemmemappe/tmpmappe"
 
 #. translator: %s = game name, e.g. Quake 3 Arena
@@ -1659,12 +1631,13 @@ msgid "Resolving host addresses: %d/%d"
 msgstr "Finder værtsnavne: %d/%d"
 
 #: ../src/xqf.c:958
+#, c-format
 msgid ""
 "You said this servers sucks.\n"
-"Do you want to risk a game this time?"
+"Do you want to risk a game this time?%s"
 msgstr ""
 "Du sagde at denne server stinker.\n"
-"Vil du risikere et spil nu?"
+"Vil du risikere et spil nu?%s"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -2157,3 +2130,31 @@ msgstr "Afslut"
 
 #~ msgid "QuakeForge workaround (uses base/ instead of id1/)"
 #~ msgstr "QuakeForge \"workaround\" (bruger base/ istedet for id1/)"
+
+#~ #. %s Quake3
+#~ #: ../src/game.c:1773
+#~ #, c-format
+#~ msgid ""
+#~ "~/.q3a directory doesn't exist or doesn't contain\n"
+#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
+#~ "Please run %s client at least once before running XQF\n"
+#~ "or specify correct %s working directory."
+#~ msgstr ""
+#~ "~/.q3a mappen eksisterer ikke eller indeholder ikke\n"
+#~ "\"baseq3\" (\"demoq3\") undermappen.\n"
+#~ "Kør %s klient mindst en gang før du kører XQF\n"
+#~ "eller angiv en korrekt %s arbejdsmappe"
+
+#~ #. %s directory, Quake3
+#~ #: ../src/game.c:1782
+#~ #, c-format
+#~ msgid ""
+#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+#~ "subdirectory.\n"
+#~ "Please specify correct %s working directory\n"
+#~ "or leave it empty (~/.q3a is used by default)"
+#~ msgstr ""
+#~ "\"%s\" eksisterer ikke, eller indeholder ikke \"baseq3\" (\"demoq3\") "
+#~ "undermappen.\n"
+#~ "Angiv en korrekt %s arbejdsmappe\n"
+#~ "eller lad den være tom (~/.q3a) er brugt som standard)"

@@ -4159,7 +4159,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
 	gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled", GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
 	gtk_table_attach_defaults(GTK_TABLE(table),launchinfo_check_button, 0, 1, 1, 2);
-	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
+	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
 	gtk_widget_show (launchinfo_check_button);
 
 	/* Prelaunchinfo */
@@ -4167,7 +4167,7 @@ static GtkWidget *general_options_page (void) {
 	prelaunchexec_check_button = gtk_check_button_new_with_label (_("Execute prelaunch"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
 	gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled", GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
-	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.qf/PreLaunch (if it exists) before launching the game"), NULL);
+	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"), NULL);
 	gtk_widget_show (prelaunchexec_check_button);
 
 	gtk_table_attach_defaults(GTK_TABLE(table),prelaunchexec_check_button, 1, 2, 1, 2);

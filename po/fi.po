@@ -406,34 +406,6 @@ msgstr ""
 "Hakemisto \"%s\" ei sisällä alihakemistoa \"%s\".\n"
 "Määritä oikea %s työhakemisto."
 
-#. %s Quake3
-#: ../src/game.c:1773
-#, c-format
-msgid ""
-"~/.q3a directory doesn't exist or doesn't contain\n"
-"\"baseq3\" (\"demoq3\") subdirectory.\n"
-"Please run %s client at least once before running XQF\n"
-"or specify correct %s working directory."
-msgstr ""
-"Hakemistoa ~/.q3a ei ole olemassa tai se ei sisällä\n"
-"alihakemistoa \"baseq3\" (\"demoq3\").\n"
-"Käynnistä %s vähintään kerran ennen XQF:n ajamista\n"
-"tai määritä oikea %s työhakemisto."
-
-#. %s directory, Quake3
-#: ../src/game.c:1782
-#, c-format
-msgid ""
-"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-"subdirectory.\n"
-"Please specify correct %s working directory\n"
-"or leave it empty (~/.q3a is used by default)"
-msgstr ""
-"Hakemistoa \"%s\" ei ole olemassa tai ei sisällä alihakemistoa "
-"\"baseq3\" (\"demoq3\").\n"
-"Aseta oikea %s työhakemisto\n"
-"tai jätä se tyhjäksi (~/.q3a on oletusarvona)"
-
 #: ../src/game.c:1819 ../src/launch.c:339 ../src/xqf.c:981 ../src/xqf.c:994
 msgid "Launch"
 msgstr "Käynnistä"
@@ -1005,10 +977,10 @@ msgstr "Luo Launchinfo.txt"
 
 #: ../src/pref.c:4095
 msgid ""
-"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
 msgstr ""
-"Luo tiedoston ~/.qf/LaunchInfo.txt sisältäen: vasteaika ip:portti nimi "
+"Luo tiedoston ~/.config/xqf/LaunchInfo.txt sisältäen: vasteaika ip:portti nimi "
 "kartta pelaajienmäärä maksimipelaajat"
 
 #: ../src/pref.c:4101
@@ -1016,8 +988,8 @@ msgid "Execute prelaunch"
 msgstr "Aja esikäynnistys"
 
 #: ../src/pref.c:4107
-msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Aja ~/.qf/PreLaunch (jos on olemassa) ennen pelin käynnistämistä"
+msgid "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
+msgstr "Aja ~/.config/xqf/PreLaunch (jos on olemassa) ennen pelin käynnistämistä"
 
 #: ../src/pref.c:4116
 msgid "Stop current song in XMMS"
@@ -1146,7 +1118,7 @@ msgid "Scripts"
 msgstr "Skriptit"
 
 #: ../src/pref.c:4895
-msgid "Unable to get user name/home/tmpdir"
+msgid "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr "Ei onnistunut saamaan käyttäjänimeä/kotia/väliaikaishakemistoa"
 
 #. translator: %s = game name, e.g. Quake 3 Arena
@@ -1659,12 +1631,13 @@ msgid "Resolving host addresses: %d/%d"
 msgstr "Selvitetään isäntäosoitteet: %d/%d"
 
 #: ../src/xqf.c:958
+#, c-format
 msgid ""
 "You said this servers sucks.\n"
-"Do you want to risk a game this time?"
+"Do you want to risk a game this time?%s"
 msgstr ""
 "Sanoit, että tämä palvelin imee.\n"
-"Haluatko riskeerata pelin tällä kertaa?"
+"Haluatko riskeerata pelin tällä kertaa?%s"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -2147,3 +2120,31 @@ msgstr "Poistu"
 
 #~ msgid "_Sound Options"
 #~ msgstr "Ää_nivalinnat"
+
+#~ #. %s Quake3
+#~ #: ../src/game.c:1773
+#~ #, c-format
+#~ msgid ""
+#~ "~/.q3a directory doesn't exist or doesn't contain\n"
+#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
+#~ "Please run %s client at least once before running XQF\n"
+#~ "or specify correct %s working directory."
+#~ msgstr ""
+#~ "Hakemistoa ~/.q3a ei ole olemassa tai se ei sisällä\n"
+#~ "alihakemistoa \"baseq3\" (\"demoq3\").\n"
+#~ "Käynnistä %s vähintään kerran ennen XQF:n ajamista\n"
+#~ "tai määritä oikea %s työhakemisto."
+
+#~ #. %s directory, Quake3
+#~ #: ../src/game.c:1782
+#~ #, c-format
+#~ msgid ""
+#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+#~ "subdirectory.\n"
+#~ "Please specify correct %s working directory\n"
+#~ "or leave it empty (~/.q3a is used by default)"
+#~ msgstr ""
+#~ "Hakemistoa \"%s\" ei ole olemassa tai ei sisällä alihakemistoa "
+#~ "\"baseq3\" (\"demoq3\").\n"
+#~ "Aseta oikea %s työhakemisto\n"
+#~ "tai jätä se tyhjäksi (~/.q3a on oletusarvona)"

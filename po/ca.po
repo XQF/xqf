@@ -410,34 +410,6 @@ msgstr ""
 "El directori «%s» no conté el subdirectori «%s».\n"
 "Especifiqueu un directori de treball de %s correcte."
 
-#. %s Quake3
-#: ../src/game.c:1773
-#, c-format
-msgid ""
-"~/.q3a directory doesn't exist or doesn't contain\n"
-"\"baseq3\" (\"demoq3\") subdirectory.\n"
-"Please run %s client at least once before running XQF\n"
-"or specify correct %s working directory."
-msgstr ""
-"El directori ~/.q3a no existeix o no conté\n"
-"el subdirectori «baseq3» (o «demoq3»).\n"
-"Executeu el client de %s al menys una vegada abans d'utilitzar\n"
-"XQF o especifiqueu un directori de treball de %s correcte."
-
-#. %s directory, Quake3
-#: ../src/game.c:1782
-#, c-format
-msgid ""
-"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-"subdirectory.\n"
-"Please specify correct %s working directory\n"
-"or leave it empty (~/.q3a is used by default)"
-msgstr ""
-"El directori «%s» no existeix o no conté el subdirectori «baseq3» (o "
-"«demoq3»).\n"
-"Especifique un directori de treball de %s correcte\n"
-" o deixeu-ho en blanc (s'utilitzarà ~/.q3a per defecte)"
-
 #: ../src/game.c:1819 ../src/launch.c:339 ../src/xqf.c:981 ../src/xqf.c:994
 msgid "Launch"
 msgstr "Llança"
@@ -1010,10 +982,10 @@ msgstr "Crea un LaunchInfo.txt"
 
 #: ../src/pref.c:4095
 msgid ""
-"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
 msgstr ""
-"Crea el fitxer ~/.qf/LaunchInfo.txt amb: ping ip:port nom mapa jugactuals "
+"Crea el fitxer ~/.config/xqf/LaunchInfo.txt amb: ping ip:port nom mapa jugactuals "
 "jugmax"
 
 #: ../src/pref.c:4101
@@ -1021,8 +993,8 @@ msgid "Execute prelaunch"
 msgstr "Executa prelaunch"
 
 #: ../src/pref.c:4107
-msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Executa ~/.qf/PreLaunch (si existeix) abans de llançar el joc"
+msgid "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
+msgstr "Executa ~/.config/xqf/PreLaunch (si existeix) abans de llançar el joc"
 
 #: ../src/pref.c:4116
 msgid "Stop current song in XMMS"
@@ -1151,7 +1123,7 @@ msgid "Scripts"
 msgstr "Seqüències"
 
 #: ../src/pref.c:4895
-msgid "Unable to get user name/home/tmpdir"
+msgid "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr "No s'ha pogut obtindre el nom/directori de l'usuari/directori temporal"
 
 #. translator: %s = game name, e.g. Quake 3 Arena
@@ -1665,12 +1637,13 @@ msgid "Resolving host addresses: %d/%d"
 msgstr "S'estan resolguent les adreces dels servidors: %d/%d"
 
 #: ../src/xqf.c:958
+#, c-format
 msgid ""
 "You said this servers sucks.\n"
-"Do you want to risk a game this time?"
+"Do you want to risk a game this time?%s"
 msgstr ""
 "Heu dit que aquest servidor és dolent.\n"
-"Esteu segur de voler avorrir-vos de nou?"
+"Esteu segur de voler avorrir-vos de nou?%s"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -2262,3 +2235,27 @@ msgstr "Surt"
 
 #~ msgid "Filter Name (For Menu):"
 #~ msgstr "Nom del filtre (per al menú):"
+
+#~ #. %s Quake3
+#~ msgid ""
+#~ "~/.q3a directory doesn't exist or doesn't contain\n"
+#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
+#~ "Please run %s client at least once before running XQF\n"
+#~ "or specify correct %s working directory."
+#~ msgstr ""
+#~ "El directori ~/.q3a no existeix o no conté\n"
+#~ "el subdirectori «baseq3» (o «demoq3»).\n"
+#~ "Executeu el client de %s al menys una vegada abans d'utilitzar\n"
+#~ "XQF o especifiqueu un directori de treball de %s correcte."
+
+#~ #. %s directory, Quake3
+#~ msgid ""
+#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+#~ "subdirectory.\n"
+#~ "Please specify correct %s working directory\n"
+#~ "or leave it empty (~/.q3a is used by default)"
+#~ msgstr ""
+#~ "El directori «%s» no existeix o no conté el subdirectori «baseq3» (o "
+#~ "«demoq3»).\n"
+#~ "Especifique un directori de treball de %s correcte\n"
+#~ " o deixeu-ho en blanc (s'utilitzarà ~/.q3a per defecte)"

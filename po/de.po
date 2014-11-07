@@ -410,34 +410,6 @@ msgstr ""
 "\"%s\" enthält kein \"%s\" Unterverzeichnis.\n"
 "Bitte korrektes Arbeitsverzeichnis für %s angeben."
 
-#. %s Quake3
-#: ../src/game.c:1773
-#, c-format
-msgid ""
-"~/.q3a directory doesn't exist or doesn't contain\n"
-"\"baseq3\" (\"demoq3\") subdirectory.\n"
-"Please run %s client at least once before running XQF\n"
-"or specify correct %s working directory."
-msgstr ""
-"Das Verzeichnis ~/.q3a existiert nicht oder enthält\n"
-"kein \"baseq3\" (\"demoq3\") Unterverzeichnis\n"
-"Bitte rufen Sie %s mindestens einmal auf bevor Sie XQF aufrufen,\n"
-"oder geben Sie ein korrektes Arbeitsverzeichnis für %s an."
-
-#. %s directory, Quake3
-#: ../src/game.c:1782
-#, c-format
-msgid ""
-"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-"subdirectory.\n"
-"Please specify correct %s working directory\n"
-"or leave it empty (~/.q3a is used by default)"
-msgstr ""
-"Das Verzeichnis \"%s\" existiert nicht oder enthält kein "
-"\"baseq3\" (\"demoq3\") Unterverzeichnis\n"
-"Bitte geben Sie ein korrektes Arbeitsverzeichnis für %s an,\n"
-"oder lassen Sie es leer (~/.q3a wird Standardmäßig benutzt)"
-
 #: ../src/game.c:1819 ../src/launch.c:339 ../src/xqf.c:981 ../src/xqf.c:994
 msgid "Launch"
 msgstr "Starten"
@@ -1012,10 +984,10 @@ msgstr "LaunchInfo.txt anlegen"
 
 #: ../src/pref.c:4095
 msgid ""
-"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
 msgstr ""
-"Erstellt die Datei ~/.qf/LaunchInfo.txt mit: Ping IP:Port Name Karte Spieler "
+"Erstellt die Datei ~/.config/xqf/LaunchInfo.txt mit: Ping IP:Port Name Karte Spieler "
 "Max.Spieler"
 
 #: ../src/pref.c:4101
@@ -1023,9 +995,9 @@ msgid "Execute prelaunch"
 msgstr "'prelaunch' ausführen"
 
 #: ../src/pref.c:4107
-msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
+msgid "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
 msgstr ""
-"Führt ~/.qf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
+"Führt ~/.config/xqf/PreLaunch vor dem Start eines Spiels aus (wenn es existiert)"
 
 #: ../src/pref.c:4116
 msgid "Stop current song in XMMS"
@@ -1155,7 +1127,7 @@ msgid "Scripts"
 msgstr "Skripte"
 
 #: ../src/pref.c:4895
-msgid "Unable to get user name/home/tmpdir"
+msgid "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr "Konnte Benutzername, Heimatverzeichnis oder tmpdir nicht ermitteln"
 
 #. translator: %s = game name, e.g. Quake 3 Arena
@@ -1667,12 +1639,13 @@ msgid "Resolving host addresses: %d/%d"
 msgstr "Löse Hostnamen auf: %d/%d"
 
 #: ../src/xqf.c:958
+#, c-format
 msgid ""
 "You said this servers sucks.\n"
-"Do you want to risk a game this time?"
+"Do you want to risk a game this time?%s"
 msgstr ""
 "Sie sagten dieser Server stinkt.\n"
-"Wollen Sie trotzdem ein Spiel riskieren?"
+"Wollen Sie trotzdem ein Spiel riskieren?%s"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -2264,3 +2237,31 @@ msgstr "Beenden"
 
 #~ msgid "_Add Server"
 #~ msgstr "Server _hinzufügen"
+
+#~ #. %s Quake3
+#~ #: ../src/game.c:1773
+#~ #, c-format
+#~ msgid ""
+#~ "~/.q3a directory doesn't exist or doesn't contain\n"
+#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
+#~ "Please run %s client at least once before running XQF\n"
+#~ "or specify correct %s working directory."
+#~ msgstr ""
+#~ "Das Verzeichnis ~/.q3a existiert nicht oder enthält\n"
+#~ "kein \"baseq3\" (\"demoq3\") Unterverzeichnis\n"
+#~ "Bitte rufen Sie %s mindestens einmal auf bevor Sie XQF aufrufen,\n"
+#~ "oder geben Sie ein korrektes Arbeitsverzeichnis für %s an."
+
+#~ #. %s directory, Quake3
+#~ #: ../src/game.c:1782
+#~ #, c-format
+#~ msgid ""
+#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+#~ "subdirectory.\n"
+#~ "Please specify correct %s working directory\n"
+#~ "or leave it empty (~/.q3a is used by default)"
+#~ msgstr ""
+#~ "Das Verzeichnis \"%s\" existiert nicht oder enthält kein "
+#~ "\"baseq3\" (\"demoq3\") Unterverzeichnis\n"
+#~ "Bitte geben Sie ein korrektes Arbeitsverzeichnis für %s an,\n"
+#~ "oder lassen Sie es leer (~/.q3a wird Standardmäßig benutzt)"

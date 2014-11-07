@@ -412,34 +412,6 @@ msgstr ""
 "Katalog \"%s\" nie zawiera podkatalogu \"%s\".\n"
 "Podaj prawidłowy katalog %s."
 
-#. %s Quake3
-#: ../src/game.c:1773
-#, c-format
-msgid ""
-"~/.q3a directory doesn't exist or doesn't contain\n"
-"\"baseq3\" (\"demoq3\") subdirectory.\n"
-"Please run %s client at least once before running XQF\n"
-"or specify correct %s working directory."
-msgstr ""
-"Katalog ~/.q3a nie istnieje lub\n"
-"nie zawiera podkatalogów \"baseq3\" (\"demoq3\")\n"
-"Uruchom %s przynajmniej raz przed uruchomieniem XQF,\n"
-"lub podaj prawidłowy katalog %s."
-
-#. %s directory, Quake3
-#: ../src/game.c:1782
-#, c-format
-msgid ""
-"\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-"subdirectory.\n"
-"Please specify correct %s working directory\n"
-"or leave it empty (~/.q3a is used by default)"
-msgstr ""
-"Katalog \"%s\" nie istnieje lub nie zawiera podkatalogów "
-"\"baseq3\" (\"demoq3\")\n"
-"Podaj prawidłowy katalog %s,\n"
-"lub zostaw puste (~/.q3a będzie użyte domyślnie)"
-
 #: ../src/game.c:1819 ../src/launch.c:339 ../src/xqf.c:981 ../src/xqf.c:994
 msgid "Launch"
 msgstr "Uruchom"
@@ -1012,10 +984,10 @@ msgstr "Stwórz LaunchInfo.txt"
 
 #: ../src/pref.c:4095
 msgid ""
-"Creates the file ~/.qf/LaunchInfo.txt with: ping ip:port name map curplayers "
+"Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers "
 "maxplayers"
 msgstr ""
-"Tworzy plik ~/.qf/LaunchInfo.txt z: Pingiem IP:Port Nazwa_gracza Mapa "
+"Tworzy plik ~/.config/xqf/LaunchInfo.txt z: Pingiem IP:Port Nazwa_gracza Mapa "
 "ilość_graczy max_ilość_graczy"
 
 #: ../src/pref.c:4101
@@ -1023,8 +995,8 @@ msgid "Execute prelaunch"
 msgstr "Wykonaj 'prelaunch'"
 
 #: ../src/pref.c:4107
-msgid "Executes ~/.qf/PreLaunch (if it exists) before launching the game"
-msgstr "Wykonuje ~/.qf/PreLaunch przed startem gry (jeśli istnieje)"
+msgid "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
+msgstr "Wykonuje ~/.config/xqf/PreLaunch przed startem gry (jeśli istnieje)"
 
 #: ../src/pref.c:4116
 msgid "Stop current song in XMMS"
@@ -1154,7 +1126,7 @@ msgid "Scripts"
 msgstr "Skrypty"
 
 #: ../src/pref.c:4895
-msgid "Unable to get user name/home/tmpdir"
+msgid "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr ""
 "Nie można uzyskać nazwy użytkownika, katalogu domowego lub tymczasowego"
 
@@ -1670,12 +1642,13 @@ msgid "Resolving host addresses: %d/%d"
 msgstr "Uzyskiwanie adresu hosta: %d/%d"
 
 #: ../src/xqf.c:958
+#, c-format
 msgid ""
 "You said this servers sucks.\n"
-"Do you want to risk a game this time?"
+"Do you want to risk a game this time?%s"
 msgstr ""
 "Zaznaczyłeś że ten serwer jest do kitu.\n"
-"Czy pomimo tego chcesz zaryzykować grę na nim?"
+"Czy pomimo tego chcesz zaryzykować grę na nim?%s"
 
 #: ../src/xqf.c:970
 #, c-format
@@ -2155,3 +2128,31 @@ msgstr "Wyjdź"
 
 #~ msgid "_Remove from Favorites"
 #~ msgstr "Usuń z Ulubionych"
+
+#~ #. %s Quake3
+#~ #: ../src/game.c:1773
+#~ #, c-format
+#~ msgid ""
+#~ "~/.q3a directory doesn't exist or doesn't contain\n"
+#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
+#~ "Please run %s client at least once before running XQF\n"
+#~ "or specify correct %s working directory."
+#~ msgstr ""
+#~ "Katalog ~/.q3a nie istnieje lub\n"
+#~ "nie zawiera podkatalogów \"baseq3\" (\"demoq3\")\n"
+#~ "Uruchom %s przynajmniej raz przed uruchomieniem XQF,\n"
+#~ "lub podaj prawidłowy katalog %s."
+
+#~ #. %s directory, Quake3
+#~ #: ../src/game.c:1782
+#~ #, c-format
+#~ msgid ""
+#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
+#~ "subdirectory.\n"
+#~ "Please specify correct %s working directory\n"
+#~ "or leave it empty (~/.q3a is used by default)"
+#~ msgstr ""
+#~ "Katalog \"%s\" nie istnieje lub nie zawiera podkatalogów "
+#~ "\"baseq3\" (\"demoq3\")\n"
+#~ "Podaj prawidłowy katalog %s,\n"
+#~ "lub zostaw puste (~/.q3a będzie użyte domyślnie)"
