@@ -4,14 +4,14 @@
 # This file is distributed under the same license as the package XQF.
 # Alex Burger <alex_b@users.sourceforge.net>, 2003
 # Michel Briand <michelbriand@free.fr>, 2003
-# Thomas Debesse <xqf@illwieckz.net>, 2013
-# 
+# Thomas Debesse <xqf@illwieckz.net>, 2014
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: XQF 1.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-10-28 13:56+0200\n"
-"PO-Revision-Date: 2003-10-22 19:09+0200\n"
+"PO-Revision-Date: 2014-11-07 09:28+0100\n"
 "Last-Translator: Thomas Debesse <xqf@illwieckz.net>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "Vous devez spécifier un nom et une adresse."
 #: ../src/addmaster.c:118
 #, c-format
 msgid "Master address \"%s\" is not valid."
-msgstr "L’adresse du serveur maître \"%s\" est invalide."
+msgstr "L’adresse du serveur maître « %s » est invalide."
 
 #: ../src/addmaster.c:174 ../src/source.c:69
 msgid "LAN"
@@ -392,7 +392,7 @@ msgid ""
 "\"%s\" is not a directory\n"
 "Please specify correct %s working directory."
 msgstr ""
-"\"%s\" n’est pas un répertoire\n"
+"« %s » n’est pas un répertoire\n"
 "Entrez un répertoire de travail valide pour %s."
 
 #. game name
@@ -408,8 +408,8 @@ msgid ""
 "Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
 "Please specify correct %s working directory."
 msgstr ""
-"Le répertoire \"%s\" ne contient pas le sous-répertoire \"%s\".\n"
-"Entrez un répertoire de travail valide pour \"%s\"."
+"Le répertoire « %s » ne contient pas le sous-répertoire « %s ».\n"
+"Entrez un répertoire de travail valide pour « %s »."
 
 #. %s Quake3
 #: ../src/game.c:1773
@@ -421,7 +421,7 @@ msgid ""
 "or specify correct %s working directory."
 msgstr ""
 "Le répertoire ~/.q3a n’existe pas ou ne contient pas\n"
-"le sous-répertoire \"baseq3\" (\"demoq3\").\n"
+"le sous-répertoire « baseq3 » (« demoq3 »).\n"
 "Lancez le client %s au moins une fois avant de démarrer\n"
 "XQF ou spécifiez un répertoire de travail valide pour %s."
 
@@ -434,8 +434,8 @@ msgid ""
 "Please specify correct %s working directory\n"
 "or leave it empty (~/.q3a is used by default)"
 msgstr ""
-"Le répertoire \"%s\" n’existe pas ou ne contient pas le sous-répertoire\n"
-"\"baseq3\" (\"demoq3\") \n"
+"Le répertoire « %s » n’existe pas ou ne contient pas le sous-répertoire\n"
+"« baseq3 » (« demoq3 ») \n"
 "Spécifiez un répertoire de travail valide pour %s ou laissez\n"
 "ce champ vide (~/.q3a sera utilisé par défaut"
 
@@ -451,7 +451,7 @@ msgid ""
 "\n"
 "Launch client anyway?"
 msgstr ""
-"Impossible d’écrire dans le fichier \"%s\".\n"
+"Impossible d’écrire dans le fichier « %s ».\n"
 "\n"
 "Lancer le jeu malgré tout ?"
 
@@ -970,7 +970,9 @@ msgstr "Réduire dans la zone de notification"
 
 #: ../src/pref.c:3971
 msgid "Enable xqf tray icon. You need to restart xqf for this to take effect."
-msgstr "Active l’icône de notification XQF. Il faut redémarrer XQF pour que cette option prenne effet."
+msgstr ""
+"Active l’icône de notification XQF. Il faut redémarrer XQF pour que cette "
+"option prenne effet."
 
 #. On Exit
 #: ../src/pref.c:3984
@@ -1679,7 +1681,8 @@ msgid ""
 "This server is not compatible with the version of %s you have installed.\n"
 "Launch client anyway?"
 msgstr ""
-"Ce serveur n’est pas compatible avec la version de %s que vous avez installé.\n"
+"Ce serveur n’est pas compatible avec la version de %s que vous avez "
+"installé.\n"
 "Lancer le client tout de même ?"
 
 #: ../src/xqf.c:982
@@ -1746,9 +1749,10 @@ msgid ""
 "%s\n"
 "Don't forget that you need to run 'gslist -u' before you can use it."
 msgstr ""
-"Pour le support GSlist il faut que vous installiez le programme "
-"« gslist » disponible à %s\n"
-"N’oubliez pas qu’il vous faut exécuter « gslist -u » avant de pouvoir l’utiliser"
+"Pour le support GSlist il faut que vous installiez le programme « gslist » "
+"disponible à %s\n"
+"N’oubliez pas qu’il vous faut exécuter « gslist -u » avant de pouvoir "
+"l’utiliser"
 
 #: ../src/xqf.c:1862
 msgid "You have to select the server you want to delete"
@@ -2075,7 +2079,8 @@ msgstr ""
 "OPTIONS :\n"
 "\t--launch \"[TYPE_DE_SERVEUR] IP\"\tLance directement un jeu sur le serveur "
 "spécifié.\n"
-"\t--add    \"[TYPE_DE_SERVEUR] IP\"\tAjouter le serveur spécifié aux favoris.\n"
+"\t--add    \"[TYPE_DE_SERVEUR] IP\"\tAjouter le serveur spécifié aux "
+"favoris.\n"
 "\t--debug <level>\t\t\tActive les messages de debug au niveau spécifié.\n"
 "\t--version\t\t\tAffiche la version et quitte.\n"
 
