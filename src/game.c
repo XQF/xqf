@@ -1264,15 +1264,17 @@ static char *wolf_gametypes[MAX_WOLF_TYPES] = {
 	NULL            // 8+ ???
 };
 
-#define MAX_WOLFET_TYPES 7
+#define MAX_WOLFET_TYPES 9
 static char *wolfet_gametypes[MAX_WOLFET_TYPES] = {
-	NULL,           // 0 - Unknown
-	NULL,           // 1 - Unknown
-	"Obj",          // 2 - Single-Map Objective
-	"SW",           // 3 - Stopwatch
-	"Cmpgn",        // 4 - Campaign
-	"LMS",          // 5 - Last Man Standing
-	NULL            // 6+ ???
+	NULL,                   // 0 - Single player        - unused
+	NULL,                   // 1 - Cooperative          - unused
+	"Objective",            // 2 - Single-Map Objective - standard
+	"Stop Watch",           // 3 - Stopwatch            - standard
+	"Campaign",             // 4 - Campaign             - standard
+	"Last Man Standing",    // 5 - Last Man Standing    - standard
+	"Map Voting",           // 6 - Map Voting           - de facto standard
+	"Team Death Match",     // 7 - Team Death Match     - only a few mods (like Silent mod)
+	NULL                    // 8+ ???
 };
 
 #define MAX_WOLFET_TCETEST_TYPES 8
@@ -1560,33 +1562,8 @@ struct q3a_gametype_s ef_gametype_map[] =
 
 struct q3a_gametype_s wolfet_gametype_map[] =
 {
-	{
+	{ // this one is also a fallback for mods not described here
 		"et",
-		wolfet_gametypes,
-		MAX_WOLFET_TYPES
-	},
-	{
-		"etmain",
-		wolfet_gametypes,
-		MAX_WOLFET_TYPES
-	},
-	{
-		"legacy",
-		wolfet_gametypes,
-		MAX_WOLFET_TYPES
-	},
-	{
-		"ettest",
-		wolfet_gametypes,
-		MAX_WOLFET_TYPES
-	},
-	{
-		"etpro",
-		wolfet_gametypes,
-		MAX_WOLFET_TYPES
-	},
-	{
-		"shrubet",
 		wolfet_gametypes,
 		MAX_WOLFET_TYPES
 	},
@@ -1599,7 +1576,7 @@ struct q3a_gametype_s wolfet_gametype_map[] =
 
 struct q3a_gametype_s jk2_gametype_map[] =
 {
-	{
+	{ // this one is also a fallback for mods not described here
 		"basejk",
 		jk2_gametypes,
 		MAX_JK2_TYPES
@@ -1924,7 +1901,8 @@ static void q3_analyze_serverinfo (struct server *s) {
 			q3_decode_gametype(s, ef_gametype_map);
 		}
 		else if (s->type == WOET_SERVER || s->type == ETL_SERVER) {
-			q3_decode_gametype(s, wolfet_gametype_map);
+			// There is a ton of mods and many of them use default gametype numbers
+			q3_decode_gametype_fallback(s, wolfet_gametype_map);
 		}
 		else if (s->type == JK2_SERVER) {
 			// There is a ton of mods and they all use default gametype numbers
