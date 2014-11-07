@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: XQF 1.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-10-28 13:56+0200\n"
-"PO-Revision-Date: 2014-11-07 11:19+0100\n"
+"PO-Revision-Date: 2014-11-07 11:24+0100\n"
 "Last-Translator: Dan Korostelev <dan@ats.energo.ru>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -397,7 +397,7 @@ msgid ""
 "Please specify correct %s working directory."
 msgstr ""
 "\"%s\" не является каталогом\n"
-"Пожалуйста, укажите правильный рабочий каталог."
+"Пожалуйста, укажите правильный %s рабочий каталог."
 
 #. game name
 #: ../src/game.c:1710
@@ -1763,7 +1763,10 @@ msgid ""
 "Master%s to delete:\n"
 "\n"
 "%s"
-msgstr "Следующие мастер-серверы будут удалены"
+msgstr ""
+"Следующие мастер-серверы %s будут удалены:\n"
+"\n"
+"%s"
 
 #: ../src/xqf.c:1891
 #, c-format
