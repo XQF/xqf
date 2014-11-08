@@ -1713,25 +1713,9 @@ static void q3_analyze_serverinfo (struct server *s) {
 			else if (!strncmp(info_ptr[1],"Wolf",4)) {
 				s->type=WO_SERVER;
 			}
-			// Wolfenstein: Enemy Territory
-			else if (!strncmp(info_ptr[1],"ET 2",4) || !strncmp(info_ptr[1],"ET 3",4) || !strncmp(info_ptr[1],"ETTV ",5) || !strncmp(info_ptr[1],"ET  ",4)) {
-				// play with Wolf:ET if ET:L is not installed
-				if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd) {
-					s->type=WOET_SERVER;
-				}
-				else if (games[ETL_SERVER].cmd) {
-					s->type=ETL_SERVER;
-				}
-			}
-			// Enemy Territory: Legacy
-			else if (!strncmp(info_ptr[1],"ET Legacy",9)) {
-				if (games[ETL_SERVER].cmd) {
-					s->type=ETL_SERVER;
-				}
-				// play with Wolf:ET if ET:L is not installed
-				else if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd) {
-					s->type=WOET_SERVER;
-				}
+			// Wolfenstein: Enemy Territory or Enemy Territory: Legacy, recognize as Wolf:ET, discriminate later
+			else if (!strncmp(info_ptr[1],"ET",2)) {
+				s->type=WOET_SERVER;
 			}
 			// Voyager: Elite Force
 			else if (!strncmp(info_ptr[1],"ST:V HM",7)) {
@@ -1888,6 +1872,35 @@ static void q3_analyze_serverinfo (struct server *s) {
 	}
 	else if (gamename) {
 		s->game=gamename;
+	}
+
+	// discriminate Wolfenstein: Enemy Territory and Enemy Territory: Legacy
+	if (s->type == WOET_SERVER) {
+		// play with Wolf:ET if ET:L is not installed
+		if (games[WOET_SERVER].cmd && !games[ETL_SERVER].cmd) {
+			s->type = WOET_SERVER;
+		}
+		// play with ET:L if Wolf:ET is not installed
+		else if (!games[WOET_SERVER].cmd && games[ETL_SERVER].cmd) {
+			s->type = ETL_SERVER;
+		}
+		// if both are installed
+		else if (games[WOET_SERVER].cmd && games[ETL_SERVER].cmd) {
+			// use ETL by default
+			s->type = ETL_SERVER;
+
+			// if etpro mod or punkbuster server, use Wolf:ET
+			if (s->game) {
+				if (strcmp (s->game, "etpro") == 0) {
+					s->type = WOET_SERVER;
+				}
+			}
+			if (s->flags) {
+				if (s->flags & SERVER_PUNKBUSTER) {
+					s->type = WOET_SERVER;
+				}
+			}
+		}
 	}
 
 	if (s->gametype) {
