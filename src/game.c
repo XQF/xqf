@@ -715,8 +715,8 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 			server->name = g_strdup (token[2]);
 		}
 		else {
-			server->name = g_malloc0 (strlen (token[2]) + 1);
-			debug(6, "maxsize:%d", (int) (strlen (token[2]) + 1));
+			server->name = g_malloc0 (sizeof(char*) * strlen (token[2]));
+			debug(6, "maxsize:%d", (int) (sizeof(char*) * strlen (token[2])));
 			q3_unescape (server->name, token[2]);
 		}
 	}
@@ -1642,8 +1642,9 @@ void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[]) {
 
 	// strtol returns a pointer to the first invalid digit, if both pointers
 	// are equal there was no number at all
-	if (s->gametype == endptr)
+	if (s->gametype == endptr) {
 		return;
+	}
 
 	for (ptr=map; !found && ptr && ptr->mod != NULL; ptr++) {
 		if (!strcasecmp (s->game, ptr->mod)
@@ -1671,8 +1672,9 @@ void q3_decode_gametype_fallback (struct server *s, struct q3a_gametype_s map[])
 
 	// strtol returns a pointer to the first invalid digit, if both pointers
 	// are equal there was no number at all
-	if (s->gametype == endptr || n < 0)
+	if (s->gametype == endptr || n < 0) {
 		return;
+	}
 
 	// Exact match not found - use the first one in the list
 	// which should be the game's original game types
@@ -1832,6 +1834,18 @@ static void q3_analyze_serverinfo (struct server *s) {
 				strcmp (*info_ptr, "gametype") == 0) {
 			s->gametype = info_ptr[1];
 		}
+
+		// unescape gametype (there is escape code in CoD gametype, if other games do it too, add here)
+		if (s->type == COD_SERVER) {
+			if (s->gametype) {
+				// unescape in place, for backward compatibility
+				gchar* tmp_gametype = g_malloc0 (sizeof(gchar*) * strlen (s->gametype));
+				q3_unescape(tmp_gametype, s->gametype);
+				strcpy(s->gametype, tmp_gametype);
+				g_free(tmp_gametype);
+			}
+		}
+
 		else if (strcmp (*info_ptr, "g_needpass") == 0) {
 			n = strtol (info_ptr[1], NULL, 10);
 			if ((n & 1) != 0)
