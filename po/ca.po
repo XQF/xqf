@@ -1375,7 +1375,7 @@ msgstr "Seqüències"
 
 #: src/scripts.c:227
 #, c-format
-msgid "Script %s has version %d, xqf only supports version %d."
+msgid "Script %s has version %d, XQF only supports version %d."
 msgstr ""
 
 #: src/scripts.c:234
@@ -1399,7 +1399,7 @@ msgid "Enabled"
 msgstr "Habilita el so"
 
 #: src/scripts.c:606
-msgid "Install ..."
+msgid "Install..."
 msgstr ""
 
 #: src/scripts.c:655

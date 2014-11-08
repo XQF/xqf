@@ -224,7 +224,7 @@ void scripts_load() {
 		config_pop_prefix();
 
 		if (version > MAX_SCRIPT_VERSION) {
-			dialog_ok(errtitle, _("Script %s has version %d, xqf only supports version %d."),
+			dialog_ok(errtitle, _("Script %s has version %d, XQF only supports version %d."),
 					filename, version, MAX_SCRIPT_VERSION);
 			script_free(script);
 			continue;
@@ -603,7 +603,7 @@ GtkWidget *scripts_config_page () {
 	gtk_container_add (GTK_CONTAINER (frame), scrollwin);
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	button = gtk_button_new_with_label(_("Install ..."));
+	button = gtk_button_new_with_label(_("Install..."));
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
 	gtk_signal_connect (GTK_OBJECT (button),

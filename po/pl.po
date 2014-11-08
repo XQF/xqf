@@ -1380,7 +1380,7 @@ msgstr "Skrypty"
 
 #: src/scripts.c:227
 #, c-format
-msgid "Script %s has version %d, xqf only supports version %d."
+msgid "Script %s has version %d, XQF only supports version %d."
 msgstr ""
 
 #: src/scripts.c:234
@@ -1404,7 +1404,7 @@ msgid "Enabled"
 msgstr "Włącz dźwięki"
 
 #: src/scripts.c:606
-msgid "Install ..."
+msgid "Install..."
 msgstr "Instaluj ..."
 
 #: src/scripts.c:655

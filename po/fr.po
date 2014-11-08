@@ -1389,7 +1389,7 @@ msgstr "Erreur de script"
 
 #: src/scripts.c:227
 #, c-format
-msgid "Script %s has version %d, xqf only supports version %d."
+msgid "Script %s has version %d, XQF only supports version %d."
 msgstr ""
 "Le script %s a la version %d, XQF prend seulement en charge la version %d"
 
@@ -1413,8 +1413,8 @@ msgid "Enabled"
 msgstr "Activé"
 
 #: src/scripts.c:606
-msgid "Install ..."
-msgstr "Install ..."
+msgid "Install..."
+msgstr "Install..."
 
 #: src/scripts.c:655
 msgid "Invalid script"
