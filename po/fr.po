@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: XQF 1.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-07 12:44+0100\n"
-"PO-Revision-Date: 2014-11-07 13:01+0100\n"
+"PO-Revision-Date: 2014-11-08 11:40+0100\n"
 "Last-Translator: Thomas Debesse <dev@illwieckz.net>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -106,6 +106,10 @@ msgid ""
 "The server sucks for the following reason:\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"Ce serveur est à éviter pour les raisons suivantes :\n"
+"%s"
 
 #: src/xqf.c:970 src/xqf.c:983 src/xqf.c:1652 src/psearch.c:397
 #: src/dialogs.c:218 src/dialogs.c:298 src/filter.c:1021
@@ -562,6 +566,8 @@ msgstr ""
 #: src/xqf.c:4269
 msgid "gdk-pixbuf is not installed. Some icons may not be displayed"
 msgstr ""
+"gdk-pixbuf n’est pas installé. Certaines icônes peuvent ne pas êtres "
+"affichées"
 
 #: src/xqf.c:4309
 msgid "Reading server lists"
@@ -1379,46 +1385,45 @@ msgstr "Choisissez un son pour la reconnexion réussie"
 
 #: src/scripts.c:207
 msgid "Script error"
-msgstr ""
+msgstr "Erreur de script"
 
 #: src/scripts.c:227
 #, c-format
 msgid "Script %s has version %d, xqf only supports version %d."
 msgstr ""
+"Le script %s a la version %d, XQF prend seulement en charge la version %d"
 
 #: src/scripts.c:234
 #, c-format
 msgid "Script %s missing summary."
-msgstr ""
+msgstr "Résumé manquant pour le script %s"
 
 #: src/scripts.c:239
 #, c-format
 msgid "Script %s missing author."
-msgstr ""
+msgstr "Auteur manquant pour le script %s"
 
 #: src/scripts.c:244
 #, c-format
 msgid "Script %s missing license."
-msgstr ""
+msgstr "Licence manquante pour le script %s"
 
 #: src/scripts.c:272
-#, fuzzy
 msgid "Enabled"
-msgstr "Activer le son"
+msgstr "Activé"
 
 #: src/scripts.c:606
 msgid "Install ..."
-msgstr ""
+msgstr "Install ..."
 
 #: src/scripts.c:655
-#, fuzzy
 msgid "Invalid script"
-msgstr "Intervale de port source invalide"
+msgstr "Script invalide"
 
 #: src/scripts.c:852
 #, c-format
 msgid "Script %s already exists, overwrite?"
-msgstr ""
+msgstr "Le script %s existe déjà, remplacer ?"
 
 #: src/scripts.c:865
 #, c-format
@@ -1427,10 +1432,13 @@ msgid ""
 "%s\n"
 "Please close and reopen the preferences dialog"
 msgstr ""
+"Script enregistré sous\n"
+"%s\n"
+"Veillez fermer et rouvrir la fenêtre de préférences"
 
 #: src/scripts.c:869
 msgid "Select Script"
-msgstr ""
+msgstr "Sélectionner un script"
 
 #: src/redial.c:116
 #, c-format
