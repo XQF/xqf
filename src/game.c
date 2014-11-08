@@ -1571,6 +1571,11 @@ struct q3a_gametype_s wolfet_gametype_map[] =
 		"tcetest",
 		wolfet_tcetest_gametypes,
 		MAX_WOLFET_TCETEST_TYPES
+	},
+	{
+		"cqbtest",
+		wolfet_tcetest_gametypes,
+		MAX_WOLFET_TCETEST_TYPES
 	}
 };
 
