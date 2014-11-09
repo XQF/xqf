@@ -715,8 +715,8 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 			server->name = g_strdup (token[2]);
 		}
 		else {
-			server->name = g_malloc0 (sizeof(char*) * strlen (token[2]));
-			debug(6, "maxsize:%d", (int) (sizeof(char*) * strlen (token[2])));
+			server->name = g_malloc0 (sizeof (char) * strlen (token[2]) + 1);
+			debug(6, "maxsize:%d", (int) (sizeof (char) * strlen (token[2]) + 1));
 			q3_unescape (server->name, token[2]);
 		}
 	}
@@ -1317,7 +1317,7 @@ static char *jk3_gametypes[MAX_JK3_TYPES] = {
 
 #define MAX_ZEQ2LITE_TYPES 1
 static char *zeq2lite_gametypes[MAX_ZEQ2LITE_TYPES] = {
-	"Struggle"     // 0 - Struggle
+	"Struggle"      // 0 - Struggle
 };
 
 struct q3a_gametype_s {
@@ -1839,7 +1839,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 		if (s->type == COD_SERVER) {
 			if (s->gametype) {
 				// unescape in place, for backward compatibility
-				gchar* tmp_gametype = g_malloc0 (sizeof(gchar*) * strlen (s->gametype));
+				gchar* tmp_gametype = g_malloc0 (sizeof (gchar) * strlen (s->gametype) + 1);
 				q3_unescape(tmp_gametype, s->gametype);
 				strcpy(s->gametype, tmp_gametype);
 				g_free(tmp_gametype);
