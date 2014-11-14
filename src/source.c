@@ -1021,8 +1021,10 @@ static char *builtin_masters_update_info[] = {
 	"ADD Q2S master://netdome.biz netdome.biz",
 	"DELETE Q2S master://master.planetgloom.com gloom",                             // doesn't work (03.11.2014)
 
-	"DELETE Q3S master://master3.idsoftware.com id",                                // switched off
+	"ADD Q3S master://master3.idsoftware.com master3.idsoftware.com",
+	"ADD Q3S master://master.quake3arena.com master.quake3arena.com",
 	"ADD Q3S master://master.ioquake3.org master.ioquake3.org",
+
 	/* removed, because it's added as IOURT_Master and all q3ut4 servers are also in IDs Q3 Master by default
 	 * "ADD Q3S master://master.urbanterror.net Urban Terror",
 	 */
@@ -1159,8 +1161,10 @@ static char *builtin_masters_update_info[] = {
 
 	"ADD WOPS master://master.worldofpadman.com:27955 master.worldofpadman.com",
 
-	"DELETE IOURTS master://master.urbanterror.net:27900 master.urbanterror.net",
+	"DELETE IOURTS master://master.urbanterror.net:27900 master.urbanterror.net",  // doesn't work (2014-11-14)
+	"DELETE IOURTS master://master2.urbanterror.net:27900 master.urbanterror.net", // doesn't work (2014-11-14)
 	"ADD IOURTS master://master.urbanterror.info:27900 master.urbanterror.info",
+	"ADD IOURTS master://master2.urbanterror.info:27900 master2.urbanterror.info",
 
 	"ADD REACTIONS master://master.rq3.com master.rq3.com",
 	// "ADD REACTIONS master://master.ioquake3.org master.ioquake3.org",        // not used anymore
