@@ -1922,14 +1922,26 @@ static void q3_analyze_serverinfo (struct server *s) {
 		}
 	}
 
-	// Launch Quake III Arena games hosted by OpenArena Servers with Quake III Arena if installed
-	if (s->type == OPENARENA_SERVER) {
-		// if both OpenArena and Quake III Arena are installed
+	// launch Quake III Arena games hosted by OpenArena Servers with Quake III Arena if installed
+	// if server detected as an OpenArena server
+	else if (s->type == OPENARENA_SERVER) {
+		// if Quake III Arena is installed
 		if (games[Q3_SERVER].cmd) {
 			// if game is Quake III Arena
 			if (s->game) {
 				if (strcmp (s->game, "baseq3") == 0 || strcmp (s->game, "Quake3Arena") == 0) {
 					s->type = Q3_SERVER;
+				}
+			}
+		}
+	}
+
+	// detect well known OpenArena mods hosted by badly detected OpenArena servers
+	else if (s->type == Q3_SERVER) {
+		if (games[OPENARENA_SERVER].cmd) {
+			if (s->game) {
+				if (strcmp (s->game, "baseoa") == 0 || strcmp(s->game, "oaplus") == 0) {
+					s->type = OPENARENA_SERVER;
 				}
 			}
 		}
