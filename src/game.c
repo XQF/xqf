@@ -1922,6 +1922,19 @@ static void q3_analyze_serverinfo (struct server *s) {
 		}
 	}
 
+	// Launch Quake III Arena games hosted by OpenArena Servers with Quake III Arena if installed
+	if (s->type == OPENARENA_SERVER) {
+		// if both OpenArena and Quake III Arena are installed
+		if (games[Q3_SERVER].cmd) {
+			// if game is Quake III Arena
+			if (s->game) {
+				if (strcmp (s->game, "baseq3") == 0 || strcmp (s->game, "Quake3Arena") == 0) {
+					s->type = Q3_SERVER;
+				}
+			}
+		}
+	}
+
 	if (s->gametype) {
 		if (s->type == Q3_SERVER) {
 			q3_decode_gametype(s, q3a_gametype_map);
