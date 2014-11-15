@@ -224,18 +224,18 @@ void init_games() {
 	}
 
 	game_set_attribute(SFS_SERVER,"game_notes",strdup(_
-				("Note:  Soldier of Fortune will not connect to a server correctly\n"\
+				("Note: Soldier of Fortune will not connect to a server correctly\n"\
 				 "without creating a startup script for the game.  Please see the\n"\
 				 "XQF documentation for more information."))); 
 	game_set_attribute(UN_SERVER,"game_notes",strdup(_
-				("Note:  Unreal Tournament will not launch correctly without\n"\
+				("Note: Unreal Tournament will not launch correctly without\n"\
 				 "modifications to the game's startup script.  Please see the\n"\
 				 "XQF documentation for more information.")));
 	game_set_attribute(HL_SERVER_OLD,"game_notes",strdup(_
 				("Sample Command Line:  wine hl.exe -- hl.exe -console")));
 
 	game_set_attribute(SAS_SERVER,"game_notes",strdup(_
-				("Note:  Savage will not launch correctly without\n"\
+				("Note: Savage will not launch correctly without\n"\
 				 "modifications to the game's startup script. Please see the\n"\
 				 "XQF documentation for more information.")));
 }

@@ -24,6 +24,7 @@ src/gamesxml2c
 .*.swp
 *.o
 *.a
+*.mo
 intl
 intltool-extract.in
 intltool-merge.in

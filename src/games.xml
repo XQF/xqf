@@ -122,7 +122,7 @@
 	<game>
 		<type>Q3_SERVER</type>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS</flags>
-		<name>Quake Ⅲ Arena</name>
+		<name>Quake III Arena</name>
 		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>
 		<id>Q3S</id>
