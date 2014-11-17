@@ -1327,6 +1327,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/pref.c:4931
+#, fuzzy
 msgid ""
 "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr "Konnte Benutzername, Heimatverzeichnis oder tmpdir nicht ermitteln"

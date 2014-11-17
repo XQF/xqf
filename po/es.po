@@ -1331,6 +1331,7 @@ msgid "OK"
 msgstr "Aceptar"
 
 #: src/pref.c:4931
+#, fuzzy
 msgid ""
 "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr "No se ha podido obtener el nombre/home/dirtmp del usuario"
