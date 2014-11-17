@@ -219,7 +219,7 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: src/xqf.c:1867
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Master%s to delete:\n"
 "\n"
@@ -1500,7 +1500,7 @@ msgid "%s command line is empty."
 msgstr "Командная строка %s пуста."
 
 #: src/game.c:2050 src/game.c:2092
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "\"%s\" is not a directory\n"
 "Please specify correct %s working directory."
