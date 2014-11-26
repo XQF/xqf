@@ -1320,6 +1320,19 @@ static char *zeq2lite_gametypes[MAX_ZEQ2LITE_TYPES] = {
 	"Struggle"      // 0 - Struggle
 };
 
+#define MAX_Q3RALLY_TYPES 9
+static char *q3rally_gametypes[MAX_Q3RALLY_TYPES] = {
+	"Race",         // 0 = Racing
+	"Race DM",      // 1 = Racing Deathmatch
+	NULL,           // 2 = Single Player
+	"Derby",        // 3 = Demolition Derby
+	"DM",           // 4 = Deathmatch
+	"Team DM",      // 5 = Team Deathmatch
+	"Team Race",    // 6 = Team Racing
+	"Team Race DM", // 7 = Team Racing Deathmatch
+	"CTF"           // 8 = Capture the Flag
+};
+
 struct q3a_gametype_s {
 	char* mod;
 	char** gametypes;
@@ -1629,6 +1642,21 @@ struct q3a_gametype_s zeq2lite_gametype_map[] =
 		MAX_ZEQ2LITE_TYPES
 	}
 };
+
+struct q3a_gametype_s q3rally_gametype_map[] =
+{
+	{
+		"baseq3r",
+		q3rally_gametypes,
+		MAX_Q3RALLY_TYPES
+	},
+	{
+		"Q3Rally",
+		q3rally_gametypes,
+		MAX_Q3RALLY_TYPES
+	}
+};
+
 
 void q3_decode_gametype (struct server *s, struct q3a_gametype_s map[]) {
 	char *endptr;
@@ -1982,6 +2010,9 @@ static void q3_analyze_serverinfo (struct server *s) {
 		}
 		else if (s->type == OPENARENA_SERVER) {
 			q3_decode_gametype(s, oa_gametype_map);
+		}
+		else if (s->type == Q3RALLY_SERVER) {
+			q3_decode_gametype(s, q3rally_gametype_map);
 		}
 	}
 }
