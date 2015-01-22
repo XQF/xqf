@@ -99,7 +99,6 @@ redial.c \
 q3maps.c \
 utmaps.c \
 loadpixmap.c \
-splash.c \
 scripts.c \
 addmaster.h \
 addserver.h \
@@ -143,7 +142,6 @@ q3maps.h \
 utmaps.h \
 i18n.h \
 loadpixmap.h \
-splash.h \
 scripts.h
 
 noinst_SCRIPTS = gensyms.pl
