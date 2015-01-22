@@ -1,17 +1,17 @@
 SUBDIRS = xpm zip tga
 
 localedir = $(datadir)/locale
-INCLUDES = -I$(top_srcdir)/intl \
+AM_CPPFLAGS = -I$(top_srcdir)/intl \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \
 	-DPIXMAPSDIR=\"$(datadir)/pixmaps\" \
 	$(GTK_CFLAGS) \
+	-DGTK_ENABLE_BROKEN \
 	$(QSTAT23) \
 	$(DEBUG) \
 	$(COMPRESSION) \
 	$(GDK_PIXBUF_CFLAGS) \
-	$(PACKAGE_CFLAGS) \
-	$(OLD_GTK_SUPPORT)
+	$(PACKAGE_CFLAGS)
 
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
@@ -57,7 +57,7 @@ xqf_rcon_SOURCES = \
     rcon.c rcon.h \
     debug.c debug.h \
     utils.c utils.h
-xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS) $(OLD_GTK_SUPPORT)
+xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS) -DGTK_ENABLE_BROKEN
 
 xqf_SOURCES =  \
 addmaster.c \
@@ -99,7 +99,6 @@ redial.c \
 q3maps.c \
 utmaps.c \
 loadpixmap.c \
-splash.c \
 scripts.c \
 addmaster.h \
 addserver.h \
@@ -143,7 +142,6 @@ q3maps.h \
 utmaps.h \
 i18n.h \
 loadpixmap.h \
-splash.h \
 scripts.h
 
 noinst_SCRIPTS = gensyms.pl
