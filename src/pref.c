@@ -46,7 +46,6 @@
 #include "debug.h"
 #include "sort.h"
 #include "q3maps.h"
-#include "splash.h"
 #include "srv-list.h"
 #include "scripts.h"
 
@@ -101,7 +100,6 @@ int default_save_lists;
 int default_save_srvinfo;
 int default_save_plrinfo;
 int default_auto_favorites;
-int default_show_splash;
 int default_auto_maps;
 int skip_startup_mapscan;
 int default_show_tray_icon;
@@ -179,7 +177,6 @@ static GtkWidget *save_lists_check_button;
 static GtkWidget *save_srvinfo_check_button;
 static GtkWidget *save_plrinfo_check_button;
 static GtkWidget *auto_favorites_check_button;
-static GtkWidget *show_splash_button;
 static GtkWidget *auto_maps_check_button;
 
 /*Tray Icon*/
@@ -1297,11 +1294,6 @@ static void get_new_defaults (void) {
 	i = GTK_TOGGLE_BUTTON (auto_favorites_check_button)->active;
 	if (i != default_auto_favorites) {
 		config_set_bool ("refresh favorites", default_auto_favorites = i);
-	}
-
-	i = GTK_TOGGLE_BUTTON (show_splash_button)->active;
-	if (i != default_show_splash) {
-		config_set_bool ("splash screen", default_show_splash = i);
 	}
 
 	i = GTK_TOGGLE_BUTTON (auto_maps_check_button)->active;
@@ -3965,13 +3957,9 @@ static GtkWidget *appearance_options_page (void) {
 static void scan_maps_callback (GtkWidget *widget, gpointer data) {
 	int i;
 
-	create_splashscreen();
-
 	for (i = 0; i < GAMES_TOTAL; i++) {
 		scan_maps_for(i);
 	}
-
-	destroy_splashscreen();
 
 	server_clist_set_list (cur_server_list);
 }
@@ -4009,11 +3997,6 @@ static GtkWidget *general_options_page (void) {
 
 	hbox = gtk_hbox_new (FALSE, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
-	show_splash_button = gtk_check_button_new_with_label (_("Show splash screen"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_splash_button), default_show_splash);
-	gtk_box_pack_start (GTK_BOX (hbox), show_splash_button, FALSE, FALSE, 0);
-	gtk_widget_show (show_splash_button);
 
 	gtk_widget_show (hbox);
 
@@ -5167,7 +5150,6 @@ int prefs_load (void) {
 	default_save_srvinfo =      config_get_bool("save srvinfo=true");
 	default_save_plrinfo =      config_get_bool("save players=false");
 	default_auto_favorites =    config_get_bool("refresh favorites=false");
-	default_show_splash =       config_get_bool("splash screen=true");
 	default_auto_maps =         config_get_bool("search maps=false");
 	default_show_tray_icon =    config_get_bool("showtray=false");
 
@@ -5206,8 +5188,6 @@ int prefs_load (void) {
 	fprintf (stderr, "prefs_load(): program version %s\n", (newversion)? "changed" : "not changed");
 #endif
 
-	create_splashscreen();
-
 	/* Convert "dir" -> "real_dir" for all game types */
 
 	for (i = 0; i < GAMES_TOTAL; i++) {
@@ -5230,7 +5210,6 @@ static void scan_maps_for(enum server_type type) {
 	char* msg = g_strdup_printf(_("Searching for %s maps"),games[type].name);
 	guint per = 100/GAMES_TOTAL;
 
-	splash_increase_progress(msg,per);
 	if (games[type].init_maps) {
 		games[type].init_maps(games[type].type);
 	}

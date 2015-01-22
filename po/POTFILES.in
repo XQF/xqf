@@ -36,7 +36,6 @@ src/xqf-ui.c
 src/xqf.c
 #src/xutils.c
 #src/zipped.c
-src/splash.c
 src/country-filter.c
 src/loadpixmap.c
 src/trayicon.c

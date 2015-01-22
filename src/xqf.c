@@ -78,7 +78,6 @@
 #include "config.h"
 #include "debug.h"
 #include "redial.h"
-#include "splash.h"
 #include "loadpixmap.h"
 #include "trayicon.h"
 #include "scripts.h"
@@ -4306,7 +4305,6 @@ int main (int argc, char *argv[]) {
 	filters_init ();
 
 	host_cache_load ();
-	splash_increase_progress (_("Reading server lists"),10);
 	init_masters (newversion);
 
 	client_init ();
@@ -4324,13 +4322,9 @@ int main (int argc, char *argv[]) {
 		dialog_ok (NULL, _("You need at least qstat version %s for xqf to function properly"), required_qstat_version);
 	}
 
-	splash_increase_progress (_("Loading icons ..."),10);
-
 	create_main_window ();
 
 	init_pixmaps (main_window);
-
-	splash_set_progress (_("Starting ..."),100);
 
 	play_sound (sound_xqf_start, 0);
 
@@ -4351,8 +4345,6 @@ int main (int argc, char *argv[]) {
 	print_status (main_status_bar, NULL);
 
 	if (default_auto_favorites && !cmdline_add_server) refresh_callback (NULL, NULL);
-
-	destroy_splashscreen ();
 
 	g_timeout_add (0, check_cmdline_launch, NULL);
 
