@@ -11,7 +11,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/intl \
 	$(COMPRESSION) \
 	$(GDK_PIXBUF_CFLAGS) \
 	$(PACKAGE_CFLAGS) \
-	$(OLD_GTK_SUPPORT)
+	-DGTK_ENABLE_BROKEN
 
 qstatcfgdir = $(pkgdatadir)
 qstatcfg_DATA = qstat.cfg
@@ -57,7 +57,7 @@ xqf_rcon_SOURCES = \
     rcon.c rcon.h \
     debug.c debug.h \
     utils.c utils.h
-xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS) $(OLD_GTK_SUPPORT)
+xqf_rcon_CFLAGS = -DRCON_STANDALONE $(GLIB_CFLAGS) -DGTK_ENABLE_BROKEN
 
 xqf_SOURCES =  \
 addmaster.c \
