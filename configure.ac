@@ -7,7 +7,7 @@ AC_INIT([XQF],[1.0.6.2],[xqf-developer@lists.sourceforge.net], [xqf])
 AC_CONFIG_SRCDIR([src/xqf.c])
 AC_PREREQ(2.52)
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign])
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
@@ -34,10 +34,6 @@ if test "x$with_rpm_release" != "x" ; then
 	RELEASE="$with_rpm_release"
 fi
 AC_SUBST(RELEASE)
-
-dnl GTK2 support
-OLD_GTK_SUPPORT="-DGTK_ENABLE_BROKEN=1"
-AC_SUBST(OLD_GTK_SUPPORT)
 
 pkg_modules="gtk+-2.0 >= 2.0.0 gdk-pixbuf-xlib-2.0 x11"
 PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
@@ -223,7 +219,6 @@ AC_CONFIG_FILES([
 	pixmaps/Makefile
 	pixmaps/flags/Makefile
 	pixmaps/trayicon/Makefile
-	xqf.spec
 	po/Makefile.in
 ])
 AC_OUTPUT

@@ -17,26 +17,6 @@ test -z "$srcdir" && srcdir=.
 (
 cd $srcdir
 
-# For autotools compatibility
-if ! test -e README; then
-	ln -s README.md README
-fi
-
-# For autotools compatibility
-if ! test -e NEWS; then
-	ln -s NEWS.md NEWS
-fi
-
-# For autotools compatibility
-if ! test -e AUTHORS; then
-	ln -s AUTHORS.md AUTHORS
-fi
-
-if ! gtk-config --version >/dev/null 2>&1; then
-	mkdir m4
-	ln -s ../xqf-acinclude-nogtk1.m4 m4/gtk.m4
-fi
-
 # extract flag icons
 rm pixmaps/flags/*.png
 tar -C pixmaps -xzf pixmaps/flags.tar.gz
@@ -66,14 +46,6 @@ if test $gettext_ver -ge 01100; then
   glib-gettextize --copy --force || exit 1
   intltoolize --copy --force --automake || exit 1
 
-  if test -f Makefile.am~; then
-     rm -rf Makefile.am
-     mv Makefile.am~ Makefile.am
-  fi
-  if test -f configure.in~ ; then
-    rm -rf configure.in
-    mv configure.in~ configure.in
-  fi
   for i in po/Rules-quot po/boldquot.sed po/en@boldquot.header \
 	   po/en@quot.header po/insert-header.sin po/quot.sed \
 	   po/remove-potcdate.sin po/Makefile.in.in
@@ -99,10 +71,6 @@ EOF
   fi
 else
   $GETTEXTIZE --copy --force >tmpout || exit 1
-  if test -f po/ChangeLog~; then
-    rm -f po/ChangeLog
-    mv po/ChangeLog~ po/ChangeLog
-  fi
 fi
 
 rm -f aclocal.m4

@@ -7,4 +7,4 @@ Icon=xqf
 StartupNotify=true
 Terminal=false
 Type=Application
-Categories=GTK;Game;ActionGame;X-SuSE-Core-Game;
+Categories=GTK;Game;ActionGame;

@@ -10,17 +10,11 @@ DESKTOP_FILES = $(DESKTOP_IN_FILES:.desktop.in=.desktop)
 desktopdir= $(datadir)/applications
 desktop_DATA = $(DESKTOP_FILES)
 
-gtkrcdir = $(pkgdatadir)/default
-gtkrc_DATA = gtkrc
-
 EXTRA_DIST =			\
-	BUGS			\
 	autogen.sh		\
 	clean.sh		\
 	$(man_MANS)		\
-	xqf.spec		\
 	$(DESKTOP_IN_FILES)	\
-	$(gtkrc_DATA)		\
 	intltool-merge.in	\
 	intltool-update.in	\
 	intltool-extract.in
