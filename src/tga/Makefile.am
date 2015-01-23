@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/intl \
+AM_CPPFLAGS = -I$(top_srcdir)/intl \
 	-I$(top_srcdir)/src \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \

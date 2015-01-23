@@ -1,7 +1,7 @@
 SUBDIRS = xpm zip tga
 
 localedir = $(datadir)/locale
-INCLUDES = -I$(top_srcdir)/intl \
+AM_CPPFLAGS = -I$(top_srcdir)/intl \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \
 	-DPIXMAPSDIR=\"$(datadir)/pixmaps\" \
