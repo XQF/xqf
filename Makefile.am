@@ -14,11 +14,9 @@ gtkrcdir = $(pkgdatadir)/default
 gtkrc_DATA = gtkrc
 
 EXTRA_DIST =			\
-	BUGS			\
 	autogen.sh		\
 	clean.sh		\
 	$(man_MANS)		\
-	xqf.spec		\
 	$(DESKTOP_IN_FILES)	\
 	$(gtkrc_DATA)		\
 	intltool-merge.in	\

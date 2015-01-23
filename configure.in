@@ -7,7 +7,7 @@ AC_INIT([XQF],[1.0.6.2],[xqf-developer@lists.sourceforge.net], [xqf])
 AC_CONFIG_SRCDIR([src/xqf.c])
 AC_PREREQ(2.52)
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign])
 dnl AM_CONFIG_HEADER(src/gnuconfig.h:src/gnuconfig.h.in)
 AM_CONFIG_HEADER(src/gnuconfig.h)
 
@@ -223,7 +223,6 @@ AC_CONFIG_FILES([
 	pixmaps/Makefile
 	pixmaps/flags/Makefile
 	pixmaps/trayicon/Makefile
-	xqf.spec
 	po/Makefile.in
 ])
 AC_OUTPUT
