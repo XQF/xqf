@@ -35,10 +35,6 @@ if test "x$with_rpm_release" != "x" ; then
 fi
 AC_SUBST(RELEASE)
 
-dnl GTK2 support
-OLD_GTK_SUPPORT="-DGTK_ENABLE_BROKEN=1"
-AC_SUBST(OLD_GTK_SUPPORT)
-
 pkg_modules="gtk+-2.0 >= 2.0.0 gdk-pixbuf-xlib-2.0 x11"
 PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
 AC_SUBST(PACKAGE_CFLAGS)
