@@ -1,9 +1,0 @@
-Need to find a good format for this file.  Would like to record who entered
-the bug, the date it was entered, who fixed it and when.
-
-??/??/????
-- If XQF queries a master server and it has no entries, it will wipe out
-  the existing list for that master.
-- rcon for half-life is broken
-
-- In Player Filter, reported crashes. Up/Down buttons are plain whacky. (FIXED)
