@@ -1,702 +1,410 @@
-# Danish translation of XQF.
-# Copyright (C) 2002-2005 Free Software Foundation, Inc.
-# Morten Brix Pedersen <morten@wtf.dk>, 2002-2005.
-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# Thomas DEBESSE <dev@illwieckz.net>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: XQF 1.0.6\n"
+"Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-07 12:43+0100\n"
-"PO-Revision-Date: 2014-11-07 12:43+0100\n"
-"Last-Translator: Morten Brix Pedersen <morten@wtf.dk>\n"
-"Language-Team: Danish <dansk@klid.dk>\n"
-"Language: da\n"
+"POT-Creation-Date: 2015-01-22 22:20+0300\n"
+"PO-Revision-Date: 2015-02-07 10:10+0000\n"
+"Last-Translator: Thomas DEBESSE <dev@illwieckz.net>\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/xqf/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-Basepath: src/\n"
-"X-Poedit-SearchPath-0: .\n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../xqf.desktop.in.h:1
-#, fuzzy
+#: xqf.desktop.in.h:1
 msgid "Game Server Browser"
-msgstr "XQF spilserver browser"
+msgstr ""
 
-#: ../xqf.desktop.in.h:2
+#: xqf.desktop.in.h:2
 msgid "Locate and connect to game servers"
-msgstr "Find og forbind til spilservere"
+msgstr ""
 
-#: ../xqf.desktop.in.h:3 ../src/dialogs.c:485
+#: xqf.desktop.in.h:3 src/dialogs.c:485
 msgid "XQF Game Server Browser"
 msgstr "XQF spilserver browser"
-#: src/xqf.c:367
+
+#: src/addmaster.c:99
+msgid "You have to specify a name and an address."
+msgstr "Du skal angive et navn og en adresse."
+
+#: src/addmaster.c:105
 #, c-format
-msgid "%d server"
-msgstr "%d server"
+msgid "Master address \"%s\" is not valid."
+msgstr "Master adresse \"%s\" er ikke gyldig."
 
-#: src/xqf.c:367
-#, c-format
-msgid "%d servers"
-msgstr "%d servere"
-
-#: src/xqf.c:613
-#, c-format
-msgid "None <--"
-msgstr "Ingen <--"
-
-#: src/xqf.c:616 src/xqf.c:3548 src/xqf.c:3595 src/xqf.c:3730
-#, c-format
-msgid "None"
-msgstr "Ingen"
-
-#: src/xqf.c:633
-#, c-format
-msgid "Filter %d <--"
-msgstr "Filter %d <--"
-
-#: src/xqf.c:636
-#, c-format
-msgid "Filter %d"
-msgstr "Filter %d"
-
-#: src/xqf.c:657
-#, c-format
-msgid "No Server Filter Active"
-msgstr "Ingen Server Filtre Aktive"
-
-#: src/xqf.c:662
-#, c-format
-msgid "Server Filter: %s"
-msgstr "Server Filter: %s"
-
-#: src/xqf.c:665
-#, c-format
-msgid "Server Filter: %d"
-msgstr "Server Filter: %d"
-
-#: src/xqf.c:825
-msgid "Updating lists..."
-msgstr "Opdaterer lister..."
-
-#: src/xqf.c:832
-#, c-format
-msgid "Resolving host names: %d/%d"
-msgstr "Finder værtsnavne: %d/%d"
-
-#: src/xqf.c:836
-#, c-format
-msgid "Refreshing: %d/%d"
-msgstr "Opdaterer: %d/%d"
-
-#: src/xqf.c:843
-#, c-format
-msgid "Resolving host addresses: %d/%d"
-msgstr "Finder værtsnavne: %d/%d"
-
-#: src/xqf.c:965
-#, c-format
-msgid ""
-"\n"
-"\n"
-"The server sucks for the following reason:\n"
-"%s"
-msgstr ""
-
-#: src/xqf.c:970 src/xqf.c:983 src/xqf.c:1652 src/psearch.c:397
-#: src/dialogs.c:218 src/dialogs.c:298 src/filter.c:1021
-msgid "Yes"
-msgstr "Ja"
-
-#: src/xqf.c:970 src/xqf.c:983 src/xqf.c:1652 src/psearch.c:397
-#: src/dialogs.c:230 src/dialogs.c:310 src/filter.c:1022
-msgid "No"
-msgstr "Nej"
-
-#: src/xqf.c:972
-#, c-format
-msgid ""
-"You said this servers sucks.\n"
-"Do you want to risk a game this time?%s"
-msgstr ""
-"Du sagde at denne server stinker.\n"
-"Vil du risikere et spil nu?%s"
-
-#: src/xqf.c:984
-#, c-format
-msgid ""
-"This server is not compatible with the version of %s you have installed.\n"
-"Launch client anyway?"
-msgstr ""
-
-#: src/xqf.c:994 src/xqf.c:1006 src/game.c:2103 src/launch.c:338
-msgid "Launch"
-msgstr "Kør"
-
-#: src/xqf.c:994 src/xqf.c:1006 src/xqf.c:1866 src/pref.c:4825
-#: src/redial.c:209 src/game.c:2103 src/psearch.c:223 src/dialogs.c:414
-#: src/addserver.c:150 src/launch.c:338 src/srv-prop.c:829 src/addmaster.c:369
-#: src/filter.c:1567 src/filter.c:2047
-msgid "Cancel"
-msgstr "Annullér"
-
-#: src/xqf.c:995
-#, c-format
-msgid ""
-"Server %s:%d is %s.\n"
-"\n"
-"Launch client anyway?"
-msgstr ""
-"Server %s:%d er %s.\n"
-"\n"
-"Kør klient alligevel?"
-
-#: src/xqf.c:1006 src/dialogs.c:320
-msgid "Redial"
-msgstr "Ring op igen"
-
-#: src/xqf.c:1007
-#, c-format
-msgid ""
-"Server %s:%d is full.\n"
-"\n"
-"Launch client anyway?"
-msgstr ""
-"Server %s:%d er fuld.\n"
-"\n"
-"Kør klient alligevel?"
-
-#: src/xqf.c:1115 src/xqf.c:1136 src/xqf.c:2003
-msgid "Save Password"
-msgstr "Gem adgangskode"
-
-#: src/xqf.c:1115
-msgid "Spectator Password:"
-msgstr "Tilskuer adgangskode::"
-
-#: src/xqf.c:1136 src/xqf.c:2003
-msgid "Server Password:"
-msgstr "Server adgangskode:"
-
-#: src/xqf.c:1290
-msgid "Spectator"
-msgstr "Tilskuer"
-
-#: src/xqf.c:1290 src/xqf.c:1293
-msgid "Demo name:"
-msgstr "Demo navn:"
-
-#: src/xqf.c:1532
-#, c-format
-msgid "Host %s not found"
-msgstr "Værtsnavn %s blev ikke fundet"
-
-#: src/xqf.c:1552 src/xqf.c:4099
-#, c-format
-msgid "\"%s\" is not valid host[:port] combination."
-msgstr "\"%s\" er ikke en gyldig værtsnavn[:port] kombination."
-
-#: src/xqf.c:1652
-#, fuzzy
-msgid "Remove selected servers from all lists?"
-msgstr "Opdater valgte servere"
-
-#: src/xqf.c:1787
-#, c-format
-msgid ""
-"For Gslist support you must install the 'gslist' program available from\n"
-"%s\n"
-"Don't forget that you need to run 'gslist -u' before you can use it."
-msgstr ""
-
-#: src/xqf.c:1861
-msgid "You have to select the server you want to delete"
-msgstr "Du skal vælge en server du vil slette"
-
-#: src/xqf.c:1866 src/pref.c:3001 src/flt-player.c:817 src/filter.c:1239
-msgid "Delete"
-msgstr "Slet"
-
-#: src/xqf.c:1867
-#, c-format
-msgid ""
-"Master%s to delete:\n"
-"\n"
-"%s"
-msgstr ""
-"Master%s der skal slettes:\n"
-"\n"
-"%s"
-
-#: src/xqf.c:1890
-#, c-format
-msgid "Find Player: %s"
-msgstr "Find spiller: %s"
-
-#: src/xqf.c:1984
-msgid "Done."
-msgstr "Færdig."
-
-#: src/xqf.c:2496 src/xqf.c:3443
-msgid "Connect"
-msgstr "Forbind"
-
-#: src/xqf.c:2505 src/xqf.c:3452
-msgid "Observe"
-msgstr "Observer"
-
-#: src/xqf.c:2514 src/xqf.c:3460
-msgid "Record Demo"
-msgstr "Optag demo"
-
-#: src/xqf.c:2543
-msgid "Add new Server"
-msgstr "Tilføj ny server"
-
-#: src/xqf.c:2552
-msgid "Add to Favorites"
-msgstr "Tilføj til favoritter"
-
-#: src/xqf.c:2561 src/scripts.c:613
-#, fuzzy
-msgid "Remove"
-msgstr "Omdøb"
-
-#: src/xqf.c:2570 src/xqf.c:2671
-msgid "Copy"
-msgstr "Kopiér"
-
-#: src/xqf.c:2579
-msgid "Copy+"
-msgstr "Kopiér+"
-
-#: src/xqf.c:2596 src/xqf.c:3417 src/trayicon.c:423
-msgid "Refresh"
-msgstr "Genindlæs"
-
-#: src/xqf.c:2605
-msgid "Refresh Selected"
-msgstr "Opdatér valgte"
-
-#: src/xqf.c:2623
-msgid "DNS Lookup"
-msgstr "DNS opslag"
-
-#: src/xqf.c:2641
-msgid "RCon"
-msgstr "RCon"
-
-#: src/xqf.c:2650 src/xqf.c:2919 src/srv-prop.c:759
-msgid "Properties"
-msgstr "Egenskaber"
-
-#: src/xqf.c:2690
-msgid "_Statistics"
-msgstr "_Statistikker"
-
-#: src/xqf.c:2708
-msgid "_Exit"
-msgstr "_Afslut"
-
-#: src/xqf.c:2730 src/xqf.c:2847
-msgid "Add _Master"
-msgstr "Tilføj master"
-
-#: src/xqf.c:2739 src/xqf.c:2856
-msgid "_Rename Master"
-msgstr "Omdøb master"
-
-#: src/xqf.c:2748 src/xqf.c:2865
-msgid "D_elete Master"
-msgstr "Sl_et master"
-
-#: src/xqf.c:2756 src/xqf.c:2874
-msgid "_Clear Servers"
-msgstr "_Ryd servere"
-
-#: src/xqf.c:2775 src/xqf.c:3070
-msgid "_Add new Server"
-msgstr "_Tilføj ny server"
-
-#: src/xqf.c:2784 src/xqf.c:3079
-msgid "Add to _Favorites"
-msgstr "Tilføj til _favoritter"
-
-#: src/xqf.c:2793 src/xqf.c:3088
-#, fuzzy
-msgid "_Remove"
-msgstr "Omdøb"
-
-#: src/xqf.c:2802
-msgid "_Copy"
-msgstr "_Kopiér"
-
-#: src/xqf.c:2811
-msgid "_Copy+"
-msgstr "_Kopiér+"
-
-#: src/xqf.c:2829
-msgid "Add Default Masters"
-msgstr "Tilføj standard masters"
-
-#: src/xqf.c:2838
-msgid "Add Gslist Masters"
-msgstr "Tilføj Gslist masters"
-
-#: src/xqf.c:2892
-msgid "_Find Player"
-msgstr "_Find spiller"
-
-#: src/xqf.c:2901
-msgid "Find A_gain"
-msgstr "Find i_gen"
-
-#: src/xqf.c:2940
-msgid "_Refresh"
-msgstr "_Opdatér"
-
-#: src/xqf.c:2947
-msgid "Refresh _Selected"
-msgstr "Opdater _valgte"
-
-#: src/xqf.c:2955
-msgid "_Update From Master"
-msgstr "_Opdatér fra master"
-
-#: src/xqf.c:2973
-msgid "Show _Host Names"
-msgstr "Vis værtsnavne"
-
-#: src/xqf.c:2982
-msgid "Show Default _Port"
-msgstr "Vis standard _port"
-
-#: src/xqf.c:3023
-msgid "_Connect"
-msgstr "_Forbind"
-
-#: src/xqf.c:3032
-msgid "_Observe"
-msgstr "_Observer"
-
-#: src/xqf.c:3041
-msgid "Record _Demo"
-msgstr "Optag _demo"
-
-#: src/xqf.c:3097
-msgid "DNS _Lookup"
-msgstr "DNS _opslag"
-
-#: src/xqf.c:3115
-msgid "_RCon"
-msgstr "_RCon"
-
-#: src/xqf.c:3124
-msgid "_Properties"
-msgstr "_Egenskaber"
-
-#: src/xqf.c:3145
-msgid "_General"
-msgstr "_Generelt"
-
-#: src/xqf.c:3154
-msgid "_Games"
-msgstr "_Spil"
-
-#: src/xqf.c:3163
-msgid "_Appearance"
-msgstr "_Udseende"
-
-#: src/xqf.c:3172
-#, fuzzy
-msgid "_QStat"
-msgstr "QStat"
-
-#: src/xqf.c:3181
-#, fuzzy
-msgid "_Sounds"
-msgstr "Lyde"
-
-#: src/xqf.c:3190
-msgid "S_cripts"
-msgstr ""
-
-#: src/xqf.c:3208
-msgid "_Server Filter"
-msgstr "_Server filter"
-
-#: src/xqf.c:3217
-msgid "Player _Filter"
-msgstr "Spiller _filter"
-
-#: src/xqf.c:3238
-msgid "_About"
-msgstr "_Om"
-
-#: src/xqf.c:3260
-msgid "_File"
-msgstr "_Fil"
-
-#: src/xqf.c:3269
-msgid "_Edit"
-msgstr "_Redigér"
-
-#: src/xqf.c:3278
-msgid "_View"
-msgstr "_Vis"
-
-#: src/xqf.c:3287
-msgid "_Server"
-msgstr "_Server"
-
-#: src/xqf.c:3296
-msgid "_Preferences"
-msgstr "_Præferencer"
-
-#: src/xqf.c:3305
-msgid "_Server Filters"
-msgstr "_Server Filtre"
-
-#: src/xqf.c:3314
-msgid "_Help"
-msgstr "_Hjælp"
-
-#: src/xqf.c:3367
-msgid "Mark as Red"
-msgstr "Markér som rød"
-
-#: src/xqf.c:3374
-msgid "Mark as Green"
-msgstr "Markér som grøn"
-
-#: src/xqf.c:3381
-msgid "Mark as Blue"
-msgstr "Markér som blå"
-
-#: src/xqf.c:3388
-msgid "Add to Player Filter"
-msgstr "Tilføj til spiller filter"
-
-#: src/xqf.c:3409 src/trayicon.c:427
-msgid "Update"
-msgstr "Opdatér"
-
-#: src/xqf.c:3409
-msgid "Update from master"
-msgstr "Opdater fra master"
-
-#: src/xqf.c:3417
-msgid "Refresh current list"
-msgstr "Opdater nuværende liste"
-
-#: src/xqf.c:3425
-msgid "Ref.Sel."
-msgstr "Opd. valg."
-
-#: src/xqf.c:3425
-msgid "Refresh selected servers"
-msgstr "Opdater valgte servere"
-
-#: src/xqf.c:3433 src/trayicon.c:431 src/pref.c:4547
-msgid "Stop"
-msgstr "Stop"
-
-#: src/xqf.c:3460
-msgid "Record"
-msgstr "Optag"
-
-#: src/xqf.c:3476
-#, c-format
-msgid "%s Filter Enable / Disable"
-msgstr "%s Filter Aktiver / Deaktiver"
-
-#: src/xqf.c:3496
-#, c-format
-msgid "%s Filter Configuration"
-msgstr "%s filter opsætning"
-
-#: src/xqf.c:3580
-msgid "Configure"
-msgstr "Konfigurér"
-
-#: src/xqf.c:3710
-msgid "Filters"
-msgstr "Filtre"
-
-#: src/xqf.c:3866
-msgid "Quick Filter:"
-msgstr "Hurtigt filter:"
-
-#: src/xqf.c:4019
-msgid "no sound player configured"
-msgstr "ingen lydspiller konfigureret"
-
-#: src/xqf.c:4053
-msgid ""
-"Usage:\n"
-"\txqf [OPTIONS]\n"
-"\n"
-"OPTIONS:\n"
-"\t--launch \"[SERVERTYPE] IP\"\tlaunch game on specified server\n"
-"\t--add    \"[SERVERTYPE] IP\"\tadd specified server to favorites\n"
-"\t--debug <level>\t\t\tset debug level\n"
-"\t--version\t\t\tprint version and exit\n"
-msgstr ""
-"Brug:\n"
-"\txqf [TILVALG]\n"
-"\n"
-"TILVALG:\n"
-"\t--launch \"[SERVERTYPE] IP\"\tstart spil på angivet server\n"
-"\t--add    \"[SERVERTYPE] IP\"\ttilføj angivet server til favoritter\n"
-"\t--debug <level>\t\t\tsæt fejlsøgnings niveau\n"
-"\t--version\t\t\tudskriv version og afslut\n"
-
-#: src/xqf.c:4269
-msgid "gdk-pixbuf is not installed. Some icons may not be displayed"
-msgstr ""
-
-#: src/xqf.c:4309
-msgid "Reading server lists"
-msgstr "Læser server lister"
-
-#: src/xqf.c:4324
-#, c-format
-msgid "You need at least qstat version %s for xqf to function properly"
-msgstr "Du skal have mindst qstat version %s før at xqf virker ordentligt"
-
-#: src/xqf.c:4327
-#, fuzzy
-msgid "Loading icons ..."
-msgstr "Indlæser ..."
-
-#: src/xqf.c:4333
-msgid "Starting ..."
-msgstr "Starter ..."
-
-#: src/loadpixmap.c:191 src/loadpixmap.c:207 src/loadpixmap.c:227
-#: src/loadpixmap.c:234 src/country-filter.c:213
-#, c-format
-msgid "Error loading pixmap file: %s"
-msgstr "Fejl ved indlæsning af pixmap fil: %s"
-
-#: src/utils.c:917
-msgid "<error>"
-msgstr "<fejl>"
-
-#: src/utils.c:1126
-msgid "Can't open source file for reading"
-msgstr ""
-
-#: src/utils.c:1132
-msgid "Can't open destination file for writing"
-msgstr ""
-
-#: src/utils.c:1138
-msgid "write error on destination file"
-msgstr ""
-
-#: src/utils.c:1144
-msgid "read error on source file"
-msgstr ""
-
-#: src/trayicon.c:349 src/trayicon.c:355 src/trayicon.c:363 src/trayicon.c:369
-#: src/trayicon.c:382
-#, c-format
-msgid "Error in file: %s line: %d\n"
-msgstr "Fejl i fil: %s linje %d\n"
-
-#: src/trayicon.c:441
-msgid "Show"
-msgstr "Vis"
-
-#: src/trayicon.c:446
-msgid "Hide"
-msgstr "Skjul"
-
-#: src/trayicon.c:450
-msgid "Exit"
-msgstr "Afslut"
-
-#: src/stat.c:612
-msgid "Allies"
-msgstr "Allierede"
-
-#: src/stat.c:612
-msgid "Axis"
-msgstr "Akse"
-
-#: src/stat.c:617
-msgid "Red"
-msgstr "Rød"
-
-#: src/stat.c:617
-msgid "Blue"
-msgstr "Blå"
-
-#: src/stat.c:1286
-#, c-format
-msgid ""
-"UT2004 CD Key not found, cannot query master '%s'.\n"
-"Make sure the working directory is set correctly."
-msgstr ""
-"UT2004 CD Key ikke fundet, kan ikke forespørge master '%s'.\n"
-"Sørg for at arbejdsmappen er sat korrekt."
-
-#: src/stat.c:1458
-#, c-format
-msgid "Failed to create a temporary file %s: %s"
-msgstr "Fejlede ved oprettelse af midlertidig fil %s: %s"
-
-#: src/source.c:66
-msgid "Standard"
-msgstr "Standard"
-
-#: src/source.c:67
-msgid "Gamespy"
-msgstr "Gamespy"
-
-#: src/source.c:68
-msgid "http"
-msgstr "http"
-
-#: src/source.c:69 src/addmaster.c:153
+#: src/addmaster.c:153 src/source.c:69
 msgid "LAN"
 msgstr "LAN"
 
-#: src/source.c:70
-msgid "File"
-msgstr "Fil"
+#: src/addmaster.c:216
+msgid "Rename Master"
+msgstr "Omdøb master"
 
-#: src/source.c:122
-msgid "Retry"
-msgstr "Forsøg"
+#: src/addmaster.c:219
+msgid "Add Master"
+msgstr "Tilføj master"
 
-#: src/source.c:122
-msgid "Skip"
-msgstr "Spring over"
+#: src/addmaster.c:233
+msgid "Master Name"
+msgstr "Master navn"
 
-#: src/source.c:123
+#: src/addmaster.c:284
+msgid "Master Address"
+msgstr "Master adresse"
+
+#: src/addmaster.c:369 src/addserver.c:150 src/dialogs.c:414 src/filter.c:1567
+#: src/filter.c:2047 src/game.c:2169 src/launch.c:338 src/pref.c:4825
+#: src/psearch.c:223 src/redial.c:209 src/srv-prop.c:829 src/xqf.c:994
+#: src/xqf.c:1006 src/xqf.c:1866
+msgid "Cancel"
+msgstr "Annullér"
+
+#: src/addserver.c:90 src/addserver.c:186
+msgid "Add Server"
+msgstr "Tilføj server"
+
+#: src/addserver.c:100
+msgid "Server:"
+msgstr "Server:"
+
+#: src/dialogs.c:118 src/dialogs.c:193 src/dialogs.c:273
+msgid "XQF: Warning!"
+msgstr "XQF: Advarsel!"
+
+#: src/dialogs.c:143 src/dialogs.c:403 src/dialogs.c:593 src/filter.c:1578
+#: src/filter.c:2035 src/pref.c:4832 src/psearch.c:212 src/srv-prop.c:837
+msgid "OK"
+msgstr "OK"
+
+#: src/dialogs.c:218 src/dialogs.c:298 src/filter.c:1021 src/psearch.c:397
+#: src/xqf.c:970 src/xqf.c:983 src/xqf.c:1652
+msgid "Yes"
+msgstr "Ja"
+
+#: src/dialogs.c:230 src/dialogs.c:310 src/filter.c:1022 src/psearch.c:397
+#: src/xqf.c:970 src/xqf.c:983 src/xqf.c:1652
+msgid "No"
+msgstr "Nej"
+
+#: src/dialogs.c:320 src/xqf.c:1006
+msgid "Redial"
+msgstr "Ring op igen"
+
+#: src/dialogs.c:486
+#, c-format
+msgid "Version %s"
+msgstr "Version %s"
+
+#: src/dialogs.c:489
+msgid "Copyright (C) 1998-2002 Roman Pozlevich"
+msgstr "Ophavsret (C) 1998-2002 Roman Pozlevich"
+
+#: src/dialogs.c:492
+msgid "Maintainers:"
+msgstr "Vedligeholdere:"
+
+#: src/dialogs.c:499
+msgid "Contributors:"
+msgstr "Bidragsydere:"
+
+#: src/dialogs.c:503
+msgid "Bug reports and feature requests:"
+msgstr "Fejlrapporter og feature forslag:"
+
+#: src/dialogs.c:549
+msgid "About XQF"
+msgstr "Om XQF"
+
+#: src/dialogs.c:576
+msgid "[placeholder, do not translate]"
+msgstr "[placeholder, do not translate]"
+
+#: src/filter.c:95
+msgid "Server"
+msgstr "Server"
+
+#: src/filter.c:96
+msgid "S Filter"
+msgstr "S Filter"
+
+#: src/filter.c:97
+msgid "SF Cfg"
+msgstr "SF Cfg"
+
+#: src/filter.c:109
+msgid "Player"
+msgstr "Spiller"
+
+#: src/filter.c:110
+msgid "P Filter"
+msgstr "P Filter"
+
+#: src/filter.c:111
+msgid "PF Cfg"
+msgstr "PF Cfg"
+
+#: src/filter.c:986
+msgid "Enter filter name"
+msgstr "Indtast filter navn"
+
+#: src/filter.c:1020
+msgid "Delete server filter"
+msgstr "Slet server filter"
+
+#: src/filter.c:1023
+#, c-format
+msgid "Really delete server filter \"%s\"?"
+msgstr "Vil du virkelig slette server filter \"%s\"?"
+
+#: src/filter.c:1211
+msgid "Server Filter"
+msgstr "Server filter"
+
+#: src/filter.c:1225 src/flt-player.c:811 src/pref.c:2994
+msgid "New"
+msgstr "Ny"
+
+#: src/filter.c:1232
+msgid "Rename"
+msgstr "Omdøb"
+
+#: src/filter.c:1239 src/flt-player.c:817 src/pref.c:3001 src/xqf.c:1866
+msgid "Delete"
+msgstr "Slet"
+
+#: src/filter.c:1246
+msgid "Server would pass filter if"
+msgstr "Server vil passere filter hvis"
+
+#: src/filter.c:1267
+msgid "ping is less than"
+msgstr "ping er mindre end"
+
+#: src/filter.c:1287
+msgid "the game contains the string"
+msgstr "spillet indeholder strengen"
+
+#: src/filter.c:1305
+msgid "the number of retries is fewer than"
+msgstr "antallet af forsøg er mindre end"
+
+#: src/filter.c:1324
+msgid "the game type contains the string"
+msgstr "spil typen indeholder strengen"
+
+#: src/filter.c:1341
+msgid "it is not full"
+msgstr "er ikke fuld"
+
+#: src/filter.c:1348
+msgid "the version contains the string"
+msgstr "versions nummeret indeholder strengen"
+
+#: src/filter.c:1367
+msgid "it is not empty"
+msgstr "er ikke tom"
+
+#: src/filter.c:1376
+msgid "the map contains the string"
+msgstr "banen indeholder strengen"
+
+#: src/filter.c:1394
+msgid "cheats are not allowed"
+msgstr "snydekoder er ikke tilladt"
+
+#: src/filter.c:1402
+msgid "the server name contains the string"
+msgstr "server navnet indeholder strengen"
+
+#: src/filter.c:1420
+msgid "no password required"
+msgstr "ingen adgangskode krævet"
+
+#: src/filter.c:1430 src/filter.c:1884
+msgid "Country filter:"
+msgstr "Landefilter:"
+
+#: src/filter.c:1470
+msgid "select..."
+msgstr "vælg..."
+
+#: src/filter.c:1483
+msgid "clear"
+msgstr "ryd"
+
+#: src/filter.c:1539
+msgid "XQF: Filters"
+msgstr "XQF: Filtre"
+
+#: src/filter.c:1875
+msgid "Configure Country Filter"
+msgstr "Opsæt landefilter"
+
+#: src/filter.c:2016
+msgid "Show all countries"
+msgstr "Vis alle lande"
+
+#: src/flt-player.c:69 src/flt-player.c:75
+msgid "string"
+msgstr "streng"
+
+#: src/flt-player.c:70
+msgid "substr"
+msgstr "del af streng"
+
+#: src/flt-player.c:71
+msgid "regexp"
+msgstr "regulært udtryk"
+
+#: src/flt-player.c:76
+msgid "substring"
+msgstr "del af streng"
+
+#: src/flt-player.c:77
+msgid "regular expression"
+msgstr "regulært udtryk"
+
+#: src/flt-player.c:447 src/psearch.c:116
+msgid "XQF: Error"
+msgstr "XQF: Fejl"
+
+#: src/flt-player.c:447 src/psearch.c:117
 #, c-format
 msgid ""
-"Cannot write to file %s\n"
-"System Error: %s\n"
-msgstr ""
-"Kan ikke skrive til fil %s\n"
-"System Fejl: %s\n"
+"Regular Expression Error!\n"
+"\n"
+"%s\n"
+"\n"
+"%s."
+msgstr "Fejl i Regulært Udtryk!\n\n%s\n\n%s."
 
-#: src/source.c:862
+#: src/flt-player.c:665 src/flt-player.c:753
+msgid "Pattern"
+msgstr "Mønster"
+
+#: src/flt-player.c:700
+msgid "Pattern Comment"
+msgstr "Mønster Kommentar"
+
+#: src/flt-player.c:753
+msgid "Mode"
+msgstr "Mode"
+
+#: src/flt-player.c:759
+msgid "Player Filter"
+msgstr "Spiller Filter"
+
+#: src/flt-player.c:829
+msgid "Up"
+msgstr "Op"
+
+#: src/flt-player.c:835
+msgid "Down"
+msgstr "Ned"
+
+#: src/game.c:227
+msgid ""
+"Note: Soldier of Fortune will not connect to a server correctly\n"
+"without creating a startup script for the game.  Please see the\n"
+"XQF documentation for more information."
+msgstr "Bemærk: Soldier of Fortune vil ikke forbinde til en server korrekt\nfør du opretter et opstarts skript til spillet. Se XQF dokumentationen\nfor flere oplysninger."
+
+#: src/game.c:231
+msgid ""
+"Note: Unreal Tournament will not launch correctly without\n"
+"modifications to the game's startup script.  Please see the\n"
+"XQF documentation for more information."
+msgstr "Bemærk: Unreal Tournament vil ikke starte korrekt uden\nændringer i spillets opstarts skript. Se XQF dokumentationen\nfor flere oplysninger."
+
+#: src/game.c:235
+msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
+msgstr "Eksempel på kommandolinje: wine hl.exe -- hl.exe -console"
+
+#: src/game.c:238
+msgid ""
+"Note: Savage will not launch correctly without\n"
+"modifications to the game's startup script. Please see the\n"
+"XQF documentation for more information."
+msgstr "Bemærk: Savage Tournament vil ikke starte korrekt uden\nændringer i spillets opstarts skript. Se XQF dokumentationen\nfor flere oplysninger."
+
+#: src/game.c:2109
 #, c-format
-msgid "You have to specify a port number for %s."
-msgstr "Du skal specificere et port nummer for %s."
+msgid "%s command line is empty."
+msgstr "%s kommando linje er tom."
 
-#: src/source.c:875
+#: src/game.c:2116 src/game.c:2158
 #, c-format
-msgid "'gsmtype' options missing for master %s."
-msgstr "'gsmtype' indstillinger mangler for master %s."
+msgid ""
+"\"%s\" is not a directory\n"
+"Please specify correct %s working directory."
+msgstr "\"%s\" er ikke en mappe\nVenligst specificer en korrekt %s arbejdsmappe."
 
-#: src/source.c:1483
-msgid "Favorites"
-msgstr "Favoritter"
+#: src/game.c:2128
+#, c-format
+msgid "Please specify correct %s working directory."
+msgstr "Venligst specificer en korrekt %s arbejdsmappe."
+
+#: src/game.c:2134
+#, c-format
+msgid ""
+"Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
+"Please specify correct %s working directory."
+msgstr "Mappe \"%s\" indeholder ikke \"%s\" undermappe.\nVenligst specificer en korrekt %s arbejdsmappe."
+
+#: src/game.c:2169 src/launch.c:338 src/xqf.c:994 src/xqf.c:1006
+msgid "Launch"
+msgstr "Kør"
+
+#: src/game.c:2171
+#, c-format
+msgid ""
+"Cannot write to file \"%s\".\n"
+"\n"
+"Launch client anyway?"
+msgstr "Kan ikke skrive til fil \"%s\".\n\nKør klient alligevel?"
+
+#: src/game.c:2777
+msgid ""
+"The server has Punkbuster enabled but it is not going\n"
+"to be set on the command line.\n"
+"You may have problems connecting.\n"
+"You can fix this in the game preferences."
+msgstr "Serveren har Punkbuster sat til, men det bliver ikke sat på kommandolinjen\nDu vil måske opleve problemer.\nDu kan rette dette i spillets præferencer."
+
+#: src/launch.c:69 src/launch.c:195
+msgid "XQF: ERROR!"
+msgstr "XQF: Fejl!"
+
+#: src/launch.c:69
+#, c-format
+msgid ""
+"ERROR!\n"
+"\n"
+"%s(%s) failed: %s"
+msgstr "FEJL!\n\n%s(%s) fejlede: %s"
+
+#: src/launch.c:195
+#, c-format
+msgid ""
+"ERROR!\n"
+"\n"
+"%s"
+msgstr "FEJL!\n\n%s"
+
+#: src/launch.c:339
+#, c-format
+msgid ""
+"There is %s client running.\n"
+"\n"
+"Launch %s client?"
+msgstr "Der er %s klienter kørende.\n\nKør %s klient?"
 
 #: src/pref.c:820
 msgid "com_soundmegs and com_zonemegs must be lower than com_hunkmegs"
@@ -812,12 +520,7 @@ msgid ""
 "A default entry for this game will not be added.\n"
 "\n"
 "Delete the entry and try again."
-msgstr ""
-"En post eksisterer allerede for spillet %s.\n"
-"\n"
-"En standard post kunne ikke blive tilføjet.\n"
-"\n"
-"Slet posten og prøv igen."
+msgstr "En post eksisterer allerede for spillet %s.\n\nEn standard post kunne ikke blive tilføjet.\n\nSlet posten og prøv igen."
 
 #: src/pref.c:2574
 msgid "There are no defaults for this game"
@@ -829,11 +532,7 @@ msgid ""
 "\n"
 "To modify it, select it from the list, modify it\n"
 "and then click Add/Update."
-msgstr ""
-"Der er allerede en post for dette spil.\n"
-"\n"
-"For at redigere det, så vælg det fra listen, rediger det<nog klik så på "
-"Tilføj/Opdater."
+msgstr "Der er allerede en post for dette spil.\n\nFor at redigere det, så vælg det fra listen, rediger det<nog klik så på Tilføj/Opdater."
 
 #: src/pref.c:2637
 msgid "You must enter both a game and at least one argument."
@@ -895,10 +594,6 @@ msgstr "Indtast spilnavnet fra spil kolonnen"
 msgid "Enter the arguments separated by spaces"
 msgstr "Indtast parametrene separeret af mellemrum"
 
-#: src/pref.c:2994 src/flt-player.c:811 src/filter.c:1225
-msgid "New"
-msgstr "Ny"
-
 #: src/pref.c:3008
 msgid "Add Defaults"
 msgstr "Tilføj Standardværdier"
@@ -944,9 +639,8 @@ msgid "set cl_punkbuster on connect"
 msgstr "sæt cl_punkbuster når der forbindes"
 
 #: src/pref.c:3315
-#, fuzzy
 msgid "enable console"
-msgstr "Aktiver lyd"
+msgstr ""
 
 #: src/pref.c:3369
 msgid "Pass memory settings on command line"
@@ -988,7 +682,7 @@ msgstr "128MB"
 msgid ">256MB"
 msgstr ">256MB"
 
-#: src/pref.c:3500 src/pref.c:3717 src/pref.c:3722 src/scripts.c:537
+#: src/pref.c:3500 src/pref.c:3717 src/pref.c:3722
 msgid "Options"
 msgstr "Indstillinger"
 
@@ -1102,8 +796,8 @@ msgstr ""
 
 #: src/pref.c:3914
 msgid ""
-"Use XQF's color settings instead of the system ones. You need to restart XQF "
-"for this setting to take effect. Note that you may need to install the gtk-"
+"Use XQF's color settings instead of the system ones. You need to restart XQF"
+" for this setting to take effect. Note that you may need to install the gtk-"
 "engines package."
 msgstr ""
 
@@ -1135,9 +829,7 @@ msgstr "Skan efter kort/baner"
 msgid ""
 "Scan game directories for installed maps. xqf will take longer to start up "
 "when enabled."
-msgstr ""
-"Skan spil mapperne efter installerede kort/baner. xqf vil tage længere tid "
-"om at starte op, når denne er slået til"
+msgstr "Skan spil mapperne efter installerede kort/baner. xqf vil tage længere tid om at starte op, når denne er slået til"
 
 #: src/pref.c:4034
 msgid "scan now"
@@ -1187,9 +879,7 @@ msgstr "Opret LaunchInfo.txt"
 msgid ""
 "Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map "
 "curplayers maxplayers"
-msgstr ""
-"Opretter filen ~/.config/xqf/LaunchInfo.txt med: ping ip:port name map "
-"curplayers maxplayers"
+msgstr "Opretter filen ~/.config/xqf/LaunchInfo.txt med: ping ip:port name map curplayers maxplayers"
 
 #: src/pref.c:4167
 msgid "Execute prelaunch"
@@ -1198,8 +888,7 @@ msgstr "Eksekver pre-start fil"
 #: src/pref.c:4170
 msgid ""
 "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
-msgstr ""
-"Eksekverer ~/.config/xqf/PreLaunch (hvis eksisterer) før spillet starter"
+msgstr "Eksekverer ~/.config/xqf/PreLaunch (hvis eksisterer) før spillet starter"
 
 #: src/pref.c:4178
 msgid "Stop current song in XMMS"
@@ -1208,11 +897,9 @@ msgstr "Stop nuværende sang i XMMS"
 #: src/pref.c:4180
 msgid ""
 "Stopping XMMS will release /dev/dsp. Activate this option if you use XMMS "
-"and have a cheap soundcard that allows only one application to open /dev/dsp."
-msgstr ""
-"Ved at stoppe XMMS, vil /dev/dsp blive frigivet. Aktiver denne indstilling "
-"hvis du bruger XMMS og har et billigt lydkort der kun tillader ét program at "
-"åbne /dev/dsp."
+"and have a cheap soundcard that allows only one application to open "
+"/dev/dsp."
+msgstr "Ved at stoppe XMMS, vil /dev/dsp blive frigivet. Aktiver denne indstilling hvis du bruger XMMS og har et billigt lydkort der kun tillader ét program at åbne /dev/dsp."
 
 #: src/pref.c:4219
 msgid "QStat Options"
@@ -1270,6 +957,10 @@ msgstr "Opdatering færdig"
 msgid "Refresh Done"
 msgstr "Opdatering færdig"
 
+#: src/pref.c:4547 src/xqf.c:3433 src/trayicon.c:431
+msgid "Stop"
+msgstr "Stop"
+
 #: src/pref.c:4576
 msgid "Server Connect"
 msgstr "Server forbindelse"
@@ -1306,16 +997,10 @@ msgstr "Lyde"
 msgid "Scripts"
 msgstr ""
 
-#: src/pref.c:4832 src/psearch.c:212 src/dialogs.c:143 src/dialogs.c:403
-#: src/dialogs.c:593 src/srv-prop.c:837 src/filter.c:1578 src/filter.c:2035
-msgid "OK"
-msgstr "OK"
-
 #: src/pref.c:4931
-#, fuzzy
 msgid ""
 "Unable to get user name/home directory/XDG config directory/tmp directory"
-msgstr "Kunne ikke få bruger navn/hjemmemappe/tmpmappe"
+msgstr ""
 
 #: src/pref.c:5230
 #, c-format
@@ -1362,179 +1047,6 @@ msgstr "Serverforbindelse lydvalg"
 msgid "Redial Success Sound Selection"
 msgstr "Genopkald succes lydvalg"
 
-#: src/scripts.c:207
-msgid "Script error"
-msgstr ""
-
-#: src/scripts.c:227
-#, c-format
-msgid "Script %s has version %d, XQF only supports version %d."
-msgstr ""
-
-#: src/scripts.c:234
-#, c-format
-msgid "Script %s missing summary."
-msgstr ""
-
-#: src/scripts.c:239
-#, c-format
-msgid "Script %s missing author."
-msgstr ""
-
-#: src/scripts.c:244
-#, c-format
-msgid "Script %s missing license."
-msgstr ""
-
-#: src/scripts.c:272
-#, fuzzy
-msgid "Enabled"
-msgstr "Aktiver lyd"
-
-#: src/scripts.c:606
-msgid "Install..."
-msgstr ""
-
-#: src/scripts.c:655
-#, fuzzy
-msgid "Invalid script"
-msgstr "Ugyldig kilde port område"
-
-#: src/scripts.c:852
-#, c-format
-msgid "Script %s already exists, overwrite?"
-msgstr ""
-
-#: src/scripts.c:865
-#, c-format
-msgid ""
-"Script saved as\n"
-"%s\n"
-"Please close and reopen the preferences dialog"
-msgstr ""
-
-#: src/scripts.c:869
-msgid "Select Script"
-msgstr ""
-
-#: src/redial.c:116
-#, c-format
-msgid ""
-"Waiting for free slots on\n"
-"%s"
-msgstr ""
-"Venter på frie plads på\n"
-"%s"
-
-#: src/redial.c:118
-#, c-format
-msgid ""
-"Refreshing\n"
-"%s"
-msgstr ""
-"Opdaterer\n"
-"%s"
-
-#: src/redial.c:166 src/redial.c:171
-msgid "XQF: Redialing"
-msgstr "XQF: Ringer op igen"
-
-#: src/redial.c:182
-msgid ""
-"***\n"
-"***"
-msgstr ""
-"***\n"
-"***"
-
-#: src/redial.c:202
-msgid "Launch now"
-msgstr "Kør nu"
-
-#: src/game.c:227
-msgid ""
-"Note: Soldier of Fortune will not connect to a server correctly\n"
-"without creating a startup script for the game.  Please see the\n"
-"XQF documentation for more information."
-msgstr ""
-"Bemærk: Soldier of Fortune vil ikke forbinde til en server korrekt\n"
-"før du opretter et opstarts skript til spillet. Se XQF dokumentationen\n"
-"for flere oplysninger."
-
-#: src/game.c:231
-msgid ""
-"Note: Unreal Tournament will not launch correctly without\n"
-"modifications to the game's startup script.  Please see the\n"
-"XQF documentation for more information."
-msgstr ""
-"Bemærk: Unreal Tournament vil ikke starte korrekt uden\n"
-"ændringer i spillets opstarts skript. Se XQF dokumentationen\n"
-"for flere oplysninger."
-
-#: src/game.c:235
-msgid "Sample Command Line:  wine hl.exe -- hl.exe -console"
-msgstr "Eksempel på kommandolinje: wine hl.exe -- hl.exe -console"
-
-#: src/game.c:238
-msgid ""
-"Note: Savage will not launch correctly without\n"
-"modifications to the game's startup script. Please see the\n"
-"XQF documentation for more information."
-msgstr ""
-"Bemærk: Savage Tournament vil ikke starte korrekt uden\n"
-"ændringer i spillets opstarts skript. Se XQF dokumentationen\n"
-"for flere oplysninger."
-
-#: src/game.c:2043
-#, c-format
-msgid "%s command line is empty."
-msgstr "%s kommando linje er tom."
-
-#: src/game.c:2050 src/game.c:2092
-#, c-format
-msgid ""
-"\"%s\" is not a directory\n"
-"Please specify correct %s working directory."
-msgstr ""
-"\"%s\" er ikke en mappe\n"
-"Venligst specificer en korrekt %s arbejdsmappe."
-
-#: src/game.c:2062
-#, c-format
-msgid "Please specify correct %s working directory."
-msgstr "Venligst specificer en korrekt %s arbejdsmappe."
-
-#: src/game.c:2068
-#, c-format
-msgid ""
-"Directory \"%s\" doesn't contain \"%s\" subdirectory.\n"
-"Please specify correct %s working directory."
-msgstr ""
-"Mappe \"%s\" indeholder ikke \"%s\" undermappe.\n"
-"Venligst specificer en korrekt %s arbejdsmappe."
-
-#: src/game.c:2105
-#, c-format
-msgid ""
-"Cannot write to file \"%s\".\n"
-"\n"
-"Launch client anyway?"
-msgstr ""
-"Kan ikke skrive til fil \"%s\".\n"
-"\n"
-"Kør klient alligevel?"
-
-#: src/game.c:2711
-msgid ""
-"The server has Punkbuster enabled but it is not going\n"
-"to be set on the command line.\n"
-"You may have problems connecting.\n"
-"You can fix this in the game preferences."
-msgstr ""
-"Serveren har Punkbuster sat til, men det bliver ikke sat på kommandolinjen\n"
-"Du vil måske opleve problemer.\n"
-"Du kan rette dette i spillets præferencer."
-
 #: src/psearch.c:51
 msgid "Exact Match"
 msgstr "Præcist match"
@@ -1546,25 +1058,6 @@ msgstr "Delstreng"
 #: src/psearch.c:53
 msgid "Regular Expression"
 msgstr "Regulært udtryk"
-
-#: src/psearch.c:116 src/flt-player.c:447
-msgid "XQF: Error"
-msgstr "XQF: Fejl"
-
-#: src/psearch.c:117 src/flt-player.c:447
-#, c-format
-msgid ""
-"Regular Expression Error!\n"
-"\n"
-"%s\n"
-"\n"
-"%s."
-msgstr ""
-"Fejl i Regulært Udtryk!\n"
-"\n"
-"%s\n"
-"\n"
-"%s."
 
 #: src/psearch.c:173
 msgid "Find Player"
@@ -1586,202 +1079,6 @@ msgstr "XQF: Slutningen af serverlisten blev nået"
 msgid "Continue search from beginning?"
 msgstr "Fortsæt søgning fra begyndelsen?"
 
-#: src/dialogs.c:118 src/dialogs.c:193 src/dialogs.c:273
-msgid "XQF: Warning!"
-msgstr "XQF: Advarsel!"
-
-#: src/dialogs.c:486
-#, c-format
-msgid "Version %s"
-msgstr "Version %s"
-
-#: src/dialogs.c:489
-msgid "Copyright (C) 1998-2002 Roman Pozlevich"
-msgstr "Ophavsret (C) 1998-2002 Roman Pozlevich"
-
-#: src/dialogs.c:492
-msgid "Maintainers:"
-msgstr "Vedligeholdere:"
-
-#: src/dialogs.c:499
-msgid "Contributors:"
-msgstr "Bidragsydere:"
-
-#: src/dialogs.c:503
-msgid "Bug reports and feature requests:"
-msgstr "Fejlrapporter og feature forslag:"
-
-#: src/dialogs.c:549
-msgid "About XQF"
-msgstr "Om XQF"
-
-#: src/dialogs.c:576
-msgid "[placeholder, do not translate]"
-msgstr "[placeholder, do not translate]"
-
-#: src/statistics.c:82 src/statistics.c:93
-msgid "Servers"
-msgstr "Servere"
-
-#: src/statistics.c:82
-msgid "Up "
-msgstr "Op "
-
-#: src/statistics.c:82
-msgid "Timeout"
-msgstr "Tidsudløb"
-
-#: src/statistics.c:82
-msgid "Down "
-msgstr "Ned "
-
-#: src/statistics.c:82
-msgid "Info n/a"
-msgstr "Info ikke tilgængelig"
-
-#: src/statistics.c:82 src/statistics.c:495 src/xqf-ui.c:88
-msgid "Players"
-msgstr "Spillere"
-
-#: src/statistics.c:86 src/statistics.c:90
-msgid "unknown"
-msgstr "ukendt"
-
-#: src/statistics.c:94
-msgid "OS/CPU"
-msgstr "OS/CPU"
-
-#: src/statistics.c:95 src/xqf-ui.c:65
-msgid "Country"
-msgstr "Land"
-
-#: src/statistics.c:441 src/statistics.c:489 src/statistics.c:494
-msgid "Total"
-msgstr "Total"
-
-#: src/statistics.c:484
-msgid "CPU  \\  OS"
-msgstr "CPU  \\  OS"
-
-#: src/statistics.c:701
-msgid "All Games"
-msgstr "Alle spil"
-
-#: src/statistics.c:781 src/statistics.c:790
-msgid "Statistics"
-msgstr "Statistikker"
-
-#: src/statistics.c:827 src/rcon.c:593
-msgid "Close"
-msgstr "Luk"
-
-#: src/addserver.c:90 src/addserver.c:186
-msgid "Add Server"
-msgstr "Tilføj server"
-
-#: src/addserver.c:100
-msgid "Server:"
-msgstr "Server:"
-
-#: src/xqf-ui.c:58
-#, fuzzy
-msgid "Type"
-msgstr "Spiltype"
-
-#: src/xqf-ui.c:61
-msgid "Address"
-msgstr "Adresse"
-
-#: src/xqf-ui.c:68 src/xqf-ui.c:153
-msgid "Ping"
-msgstr "Ping"
-
-#: src/xqf-ui.c:74
-msgid "TO"
-msgstr "Til"
-
-#: src/xqf-ui.c:80
-msgid "Priv"
-msgstr "Priv"
-
-#: src/xqf-ui.c:85
-msgid "PB"
-msgstr ""
-
-#: src/xqf-ui.c:93
-#, fuzzy
-msgid "Max"
-msgstr "Bane"
-
-#: src/xqf-ui.c:96
-msgid "Map"
-msgstr "Bane"
-
-#: src/xqf-ui.c:108
-msgid "GameType"
-msgstr "Spiltype"
-
-#: src/xqf-ui.c:135
-msgid "Frags"
-msgstr ""
-
-#: src/xqf-ui.c:147
-msgid "Skin"
-msgstr ""
-
-#: src/xqf-ui.c:159
-msgid "Time"
-msgstr "Tid"
-
-#: src/xqf-ui.c:179
-msgid "Rule"
-msgstr "Regel"
-
-#: src/xqf-ui.c:185
-msgid "Value"
-msgstr "Værdi"
-
-#: src/xqf-ui.c:552
-msgid "Source"
-msgstr "Kilde"
-
-#: src/launch.c:69 src/launch.c:195
-msgid "XQF: ERROR!"
-msgstr "XQF: Fejl!"
-
-#: src/launch.c:69
-#, c-format
-msgid ""
-"ERROR!\n"
-"\n"
-"%s(%s) failed: %s"
-msgstr ""
-"FEJL!\n"
-"\n"
-"%s(%s) fejlede: %s"
-
-#: src/launch.c:195
-#, c-format
-msgid ""
-"ERROR!\n"
-"\n"
-"%s"
-msgstr ""
-"FEJL!\n"
-"\n"
-"%s"
-
-#: src/launch.c:339
-#, c-format
-msgid ""
-"There is %s client running.\n"
-"\n"
-"Launch %s client?"
-msgstr ""
-"Der er %s klienter kørende.\n"
-"\n"
-"Kør %s klient?"
-
 #: src/rcon.c:526
 msgid "Cmd:"
 msgstr "Kommando:"
@@ -1798,15 +1095,19 @@ msgstr "Status"
 msgid "Clear"
 msgstr "Ryd"
 
+#: src/rcon.c:593 src/statistics.c:827
+msgid "Close"
+msgstr "Luk"
+
 #: src/rcon.c:686
 #, c-format
 msgid "Usage: %s [server type] <ip> <port>\n"
 msgstr "Brug: %s [server type] <ip> <port>\n"
 
 #: src/rcon.c:687
-#, fuzzy, c-format
+#, c-format
 msgid "  server type is either --qws, --hws, --hls or --dm3s.\n"
-msgstr "  server type er enten --qwes, --hws eller --hls\n"
+msgstr ""
 
 #: src/rcon.c:688
 #, c-format
@@ -1816,6 +1117,79 @@ msgstr "  Hvis ingen server type er angivet, vil Q3-stil rcon blive antaget.\n"
 #: src/rcon.c:719
 msgid "Password: "
 msgstr "Adgangskode: "
+
+#: src/redial.c:116
+#, c-format
+msgid ""
+"Waiting for free slots on\n"
+"%s"
+msgstr "Venter på frie plads på\n%s"
+
+#: src/redial.c:118
+#, c-format
+msgid ""
+"Refreshing\n"
+"%s"
+msgstr "Opdaterer\n%s"
+
+#: src/redial.c:166 src/redial.c:171
+msgid "XQF: Redialing"
+msgstr "XQF: Ringer op igen"
+
+#: src/redial.c:182
+msgid ""
+"***\n"
+"***"
+msgstr "***\n***"
+
+#: src/redial.c:202
+msgid "Launch now"
+msgstr "Kør nu"
+
+#: src/source.c:66
+msgid "Standard"
+msgstr "Standard"
+
+#: src/source.c:67
+msgid "Gamespy"
+msgstr "Gamespy"
+
+#: src/source.c:68
+msgid "http"
+msgstr "http"
+
+#: src/source.c:70
+msgid "File"
+msgstr "Fil"
+
+#: src/source.c:122
+msgid "Retry"
+msgstr "Forsøg"
+
+#: src/source.c:122
+msgid "Skip"
+msgstr "Spring over"
+
+#: src/source.c:123
+#, c-format
+msgid ""
+"Cannot write to file %s\n"
+"System Error: %s\n"
+msgstr "Kan ikke skrive til fil %s\nSystem Fejl: %s\n"
+
+#: src/source.c:862
+#, c-format
+msgid "You have to specify a port number for %s."
+msgstr "Du skal specificere et port nummer for %s."
+
+#: src/source.c:875
+#, c-format
+msgid "'gsmtype' options missing for master %s."
+msgstr "'gsmtype' indstillinger mangler for master %s."
+
+#: src/source.c:1487
+msgid "Favorites"
+msgstr "Favoritter"
 
 #: src/srv-prop.c:415
 msgid "IP Address:"
@@ -1869,6 +1243,10 @@ msgstr "RCon/Admin adgangskode"
 msgid "This server sucks"
 msgstr "Denne server stinker"
 
+#: src/srv-prop.c:759 src/xqf.c:2650 src/xqf.c:2919
+msgid "Properties"
+msgstr "Egenskaber"
+
 #: src/srv-prop.c:804
 msgid "Info"
 msgstr "Info"
@@ -1881,191 +1259,646 @@ msgstr "Adgangskoder"
 msgid "Comment"
 msgstr "Kommentar"
 
-#: src/addmaster.c:99
-msgid "You have to specify a name and an address."
-msgstr "Du skal angive et navn og en adresse."
+#: src/stat.c:612
+msgid "Allies"
+msgstr "Allierede"
 
-#: src/addmaster.c:105
+#: src/stat.c:612
+msgid "Axis"
+msgstr "Akse"
+
+#: src/stat.c:617
+msgid "Red"
+msgstr "Rød"
+
+#: src/stat.c:617
+msgid "Blue"
+msgstr "Blå"
+
+#: src/stat.c:1286
 #, c-format
-msgid "Master address \"%s\" is not valid."
-msgstr "Master adresse \"%s\" er ikke gyldig."
+msgid ""
+"UT2004 CD Key not found, cannot query master '%s'.\n"
+"Make sure the working directory is set correctly."
+msgstr "UT2004 CD Key ikke fundet, kan ikke forespørge master '%s'.\nSørg for at arbejdsmappen er sat korrekt."
 
-#: src/addmaster.c:216
-msgid "Rename Master"
-msgstr "Omdøb master"
+#: src/stat.c:1458
+#, c-format
+msgid "Failed to create a temporary file %s: %s"
+msgstr "Fejlede ved oprettelse af midlertidig fil %s: %s"
 
-#: src/addmaster.c:219
-msgid "Add Master"
+#: src/statistics.c:82 src/statistics.c:93
+msgid "Servers"
+msgstr "Servere"
+
+#: src/statistics.c:82
+msgid "Up "
+msgstr "Op "
+
+#: src/statistics.c:82
+msgid "Timeout"
+msgstr "Tidsudløb"
+
+#: src/statistics.c:82
+msgid "Down "
+msgstr "Ned "
+
+#: src/statistics.c:82
+msgid "Info n/a"
+msgstr "Info ikke tilgængelig"
+
+#: src/statistics.c:82 src/statistics.c:495 src/xqf-ui.c:88
+msgid "Players"
+msgstr "Spillere"
+
+#: src/statistics.c:86 src/statistics.c:90
+msgid "unknown"
+msgstr "ukendt"
+
+#: src/statistics.c:94
+msgid "OS/CPU"
+msgstr "OS/CPU"
+
+#: src/statistics.c:95 src/xqf-ui.c:65
+msgid "Country"
+msgstr "Land"
+
+#: src/statistics.c:441 src/statistics.c:489 src/statistics.c:494
+msgid "Total"
+msgstr "Total"
+
+#: src/statistics.c:484
+msgid "CPU  \\  OS"
+msgstr "CPU  \\  OS"
+
+#: src/statistics.c:701
+msgid "All Games"
+msgstr "Alle spil"
+
+#: src/statistics.c:781 src/statistics.c:790
+msgid "Statistics"
+msgstr "Statistikker"
+
+#: src/utils.c:917
+msgid "<error>"
+msgstr "<fejl>"
+
+#: src/utils.c:1126
+msgid "Can't open source file for reading"
+msgstr ""
+
+#: src/utils.c:1132
+msgid "Can't open destination file for writing"
+msgstr ""
+
+#: src/utils.c:1138
+msgid "write error on destination file"
+msgstr ""
+
+#: src/utils.c:1144
+msgid "read error on source file"
+msgstr ""
+
+#: src/xqf-ui.c:58
+msgid "Type"
+msgstr ""
+
+#: src/xqf-ui.c:61
+msgid "Address"
+msgstr "Adresse"
+
+#: src/xqf-ui.c:68 src/xqf-ui.c:153
+msgid "Ping"
+msgstr "Ping"
+
+#: src/xqf-ui.c:74
+msgid "TO"
+msgstr "Til"
+
+#: src/xqf-ui.c:80
+msgid "Priv"
+msgstr "Priv"
+
+#: src/xqf-ui.c:85
+msgid "PB"
+msgstr "PB"
+
+#: src/xqf-ui.c:93
+msgid "Max"
+msgstr ""
+
+#: src/xqf-ui.c:96
+msgid "Map"
+msgstr "Bane"
+
+#: src/xqf-ui.c:108
+msgid "GameType"
+msgstr "Spiltype"
+
+#: src/xqf-ui.c:135
+msgid "Frags"
+msgstr ""
+
+#: src/xqf-ui.c:147
+msgid "Skin"
+msgstr ""
+
+#: src/xqf-ui.c:159
+msgid "Time"
+msgstr "Tid"
+
+#: src/xqf-ui.c:179
+msgid "Rule"
+msgstr "Regel"
+
+#: src/xqf-ui.c:185
+msgid "Value"
+msgstr "Værdi"
+
+#: src/xqf-ui.c:552
+msgid "Source"
+msgstr "Kilde"
+
+#: src/xqf.c:367
+#, c-format
+msgid "%d server"
+msgstr "%d server"
+
+#: src/xqf.c:367
+#, c-format
+msgid "%d servers"
+msgstr "%d servere"
+
+#: src/xqf.c:613
+#, c-format
+msgid "None <--"
+msgstr "Ingen <--"
+
+#: src/xqf.c:616 src/xqf.c:3548 src/xqf.c:3595 src/xqf.c:3730
+#, c-format
+msgid "None"
+msgstr "Ingen"
+
+#: src/xqf.c:633
+#, c-format
+msgid "Filter %d <--"
+msgstr "Filter %d <--"
+
+#: src/xqf.c:636
+#, c-format
+msgid "Filter %d"
+msgstr "Filter %d"
+
+#: src/xqf.c:657
+#, c-format
+msgid "No Server Filter Active"
+msgstr "Ingen Server Filtre Aktive"
+
+#: src/xqf.c:662
+#, c-format
+msgid "Server Filter: %s"
+msgstr "Server Filter: %s"
+
+#: src/xqf.c:665
+#, c-format
+msgid "Server Filter: %d"
+msgstr "Server Filter: %d"
+
+#: src/xqf.c:825
+msgid "Updating lists..."
+msgstr "Opdaterer lister..."
+
+#: src/xqf.c:832
+#, c-format
+msgid "Resolving host names: %d/%d"
+msgstr "Finder værtsnavne: %d/%d"
+
+#: src/xqf.c:836
+#, c-format
+msgid "Refreshing: %d/%d"
+msgstr "Opdaterer: %d/%d"
+
+#: src/xqf.c:843
+#, c-format
+msgid "Resolving host addresses: %d/%d"
+msgstr "Finder værtsnavne: %d/%d"
+
+#: src/xqf.c:965
+#, c-format
+msgid ""
+"\n"
+"\n"
+"The server sucks for the following reason:\n"
+"%s"
+msgstr ""
+
+#: src/xqf.c:972
+#, c-format
+msgid ""
+"You said this servers sucks.\n"
+"Do you want to risk a game this time?%s"
+msgstr "Du sagde at denne server stinker.\nVil du risikere et spil nu?%s"
+
+#: src/xqf.c:984
+#, c-format
+msgid ""
+"This server is not compatible with the version of %s you have installed.\n"
+"Launch client anyway?"
+msgstr ""
+
+#: src/xqf.c:995
+#, c-format
+msgid ""
+"Server %s:%d is %s.\n"
+"\n"
+"Launch client anyway?"
+msgstr "Server %s:%d er %s.\n\nKør klient alligevel?"
+
+#: src/xqf.c:1007
+#, c-format
+msgid ""
+"Server %s:%d is full.\n"
+"\n"
+"Launch client anyway?"
+msgstr "Server %s:%d er fuld.\n\nKør klient alligevel?"
+
+#: src/xqf.c:1115 src/xqf.c:1136 src/xqf.c:2003
+msgid "Save Password"
+msgstr "Gem adgangskode"
+
+#: src/xqf.c:1115
+msgid "Spectator Password:"
+msgstr "Tilskuer adgangskode::"
+
+#: src/xqf.c:1136 src/xqf.c:2003
+msgid "Server Password:"
+msgstr "Server adgangskode:"
+
+#: src/xqf.c:1290
+msgid "Spectator"
+msgstr "Tilskuer"
+
+#: src/xqf.c:1290 src/xqf.c:1293
+msgid "Demo name:"
+msgstr "Demo navn:"
+
+#: src/xqf.c:1532
+#, c-format
+msgid "Host %s not found"
+msgstr "Værtsnavn %s blev ikke fundet"
+
+#: src/xqf.c:1552 src/xqf.c:4099
+#, c-format
+msgid "\"%s\" is not valid host[:port] combination."
+msgstr "\"%s\" er ikke en gyldig værtsnavn[:port] kombination."
+
+#: src/xqf.c:1652
+msgid "Remove selected servers from all lists?"
+msgstr ""
+
+#: src/xqf.c:1787
+#, c-format
+msgid ""
+"For Gslist support you must install the 'gslist' program available from\n"
+"%s\n"
+"Don't forget that you need to run 'gslist -u' before you can use it."
+msgstr ""
+
+#: src/xqf.c:1861
+msgid "You have to select the server you want to delete"
+msgstr "Du skal vælge en server du vil slette"
+
+#: src/xqf.c:1867
+#, c-format
+msgid ""
+"Master%s to delete:\n"
+"\n"
+"%s"
+msgstr "Master%s der skal slettes:\n\n%s"
+
+#: src/xqf.c:1890
+#, c-format
+msgid "Find Player: %s"
+msgstr "Find spiller: %s"
+
+#: src/xqf.c:1984
+msgid "Done."
+msgstr "Færdig."
+
+#: src/xqf.c:2496 src/xqf.c:3443
+msgid "Connect"
+msgstr "Forbind"
+
+#: src/xqf.c:2505 src/xqf.c:3452
+msgid "Observe"
+msgstr "Observer"
+
+#: src/xqf.c:2514 src/xqf.c:3460
+msgid "Record Demo"
+msgstr "Optag demo"
+
+#: src/xqf.c:2543
+msgid "Add new Server"
+msgstr "Tilføj ny server"
+
+#: src/xqf.c:2552
+msgid "Add to Favorites"
+msgstr "Tilføj til favoritter"
+
+#: src/xqf.c:2561
+msgid "Remove"
+msgstr ""
+
+#: src/xqf.c:2570 src/xqf.c:2671
+msgid "Copy"
+msgstr "Kopiér"
+
+#: src/xqf.c:2579
+msgid "Copy+"
+msgstr "Kopiér+"
+
+#: src/xqf.c:2596 src/xqf.c:3417 src/trayicon.c:423
+msgid "Refresh"
+msgstr "Genindlæs"
+
+#: src/xqf.c:2605
+msgid "Refresh Selected"
+msgstr "Opdatér valgte"
+
+#: src/xqf.c:2623
+msgid "DNS Lookup"
+msgstr "DNS opslag"
+
+#: src/xqf.c:2641
+msgid "RCon"
+msgstr "RCon"
+
+#: src/xqf.c:2690
+msgid "_Statistics"
+msgstr "_Statistikker"
+
+#: src/xqf.c:2708
+msgid "_Exit"
+msgstr "_Afslut"
+
+#: src/xqf.c:2730 src/xqf.c:2847
+msgid "Add _Master"
 msgstr "Tilføj master"
 
-#: src/addmaster.c:233
-msgid "Master Name"
-msgstr "Master navn"
+#: src/xqf.c:2739 src/xqf.c:2856
+msgid "_Rename Master"
+msgstr "Omdøb master"
 
-#: src/addmaster.c:284
-msgid "Master Address"
-msgstr "Master adresse"
+#: src/xqf.c:2748 src/xqf.c:2865
+msgid "D_elete Master"
+msgstr "Sl_et master"
 
-#: src/flt-player.c:69 src/flt-player.c:75
-msgid "string"
-msgstr "streng"
+#: src/xqf.c:2756 src/xqf.c:2874
+msgid "_Clear Servers"
+msgstr "_Ryd servere"
 
-#: src/flt-player.c:70
-msgid "substr"
-msgstr "del af streng"
+#: src/xqf.c:2775 src/xqf.c:3070
+msgid "_Add new Server"
+msgstr "_Tilføj ny server"
 
-#: src/flt-player.c:71
-msgid "regexp"
-msgstr "regulært udtryk"
+#: src/xqf.c:2784 src/xqf.c:3079
+msgid "Add to _Favorites"
+msgstr "Tilføj til _favoritter"
 
-#: src/flt-player.c:76
-msgid "substring"
-msgstr "del af streng"
+#: src/xqf.c:2793 src/xqf.c:3088
+msgid "_Remove"
+msgstr ""
 
-#: src/flt-player.c:77
-msgid "regular expression"
-msgstr "regulært udtryk"
+#: src/xqf.c:2802
+msgid "_Copy"
+msgstr "_Kopiér"
 
-#: src/flt-player.c:665 src/flt-player.c:753
-msgid "Pattern"
-msgstr "Mønster"
+#: src/xqf.c:2811
+msgid "_Copy+"
+msgstr "_Kopiér+"
 
-#: src/flt-player.c:700
-msgid "Pattern Comment"
-msgstr "Mønster Kommentar"
+#: src/xqf.c:2829
+msgid "Add Default Masters"
+msgstr "Tilføj standard masters"
 
-#: src/flt-player.c:753
-msgid "Mode"
-msgstr "Mode"
+#: src/xqf.c:2838
+msgid "Add Gslist Masters"
+msgstr "Tilføj Gslist masters"
 
-#: src/flt-player.c:759
-msgid "Player Filter"
-msgstr "Spiller Filter"
+#: src/xqf.c:2892
+msgid "_Find Player"
+msgstr "_Find spiller"
 
-#: src/flt-player.c:829
-msgid "Up"
-msgstr "Op"
+#: src/xqf.c:2901
+msgid "Find A_gain"
+msgstr "Find i_gen"
 
-#: src/flt-player.c:835
-msgid "Down"
-msgstr "Ned"
+#: src/xqf.c:2940
+msgid "_Refresh"
+msgstr "_Opdatér"
 
-#: src/filter.c:95
-msgid "Server"
-msgstr "Server"
+#: src/xqf.c:2947
+msgid "Refresh _Selected"
+msgstr "Opdater _valgte"
 
-#: src/filter.c:96
-msgid "S Filter"
-msgstr "S Filter"
+#: src/xqf.c:2955
+msgid "_Update From Master"
+msgstr "_Opdatér fra master"
 
-#: src/filter.c:97
-msgid "SF Cfg"
-msgstr "SF Cfg"
+#: src/xqf.c:2973
+msgid "Show _Host Names"
+msgstr "Vis værtsnavne"
 
-#: src/filter.c:109
-msgid "Player"
-msgstr "Spiller"
+#: src/xqf.c:2982
+msgid "Show Default _Port"
+msgstr "Vis standard _port"
 
-#: src/filter.c:110
-msgid "P Filter"
-msgstr "P Filter"
+#: src/xqf.c:3023
+msgid "_Connect"
+msgstr "_Forbind"
 
-#: src/filter.c:111
-msgid "PF Cfg"
-msgstr "PF Cfg"
+#: src/xqf.c:3032
+msgid "_Observe"
+msgstr "_Observer"
 
-#: src/filter.c:986
-msgid "Enter filter name"
-msgstr "Indtast filter navn"
+#: src/xqf.c:3041
+msgid "Record _Demo"
+msgstr "Optag _demo"
 
-#: src/filter.c:1020
-msgid "Delete server filter"
-msgstr "Slet server filter"
+#: src/xqf.c:3097
+msgid "DNS _Lookup"
+msgstr "DNS _opslag"
 
-#: src/filter.c:1023
+#: src/xqf.c:3115
+msgid "_RCon"
+msgstr "_RCon"
+
+#: src/xqf.c:3124
+msgid "_Properties"
+msgstr "_Egenskaber"
+
+#: src/xqf.c:3145
+msgid "_General"
+msgstr "_Generelt"
+
+#: src/xqf.c:3154
+msgid "_Games"
+msgstr "_Spil"
+
+#: src/xqf.c:3163
+msgid "_Appearance"
+msgstr "_Udseende"
+
+#: src/xqf.c:3172
+msgid "_QStat"
+msgstr "_QStat"
+
+#: src/xqf.c:3181
+msgid "_Sounds"
+msgstr ""
+
+#: src/xqf.c:3190
+msgid "S_cripts"
+msgstr ""
+
+#: src/xqf.c:3208
+msgid "_Server Filter"
+msgstr "_Server filter"
+
+#: src/xqf.c:3217
+msgid "Player _Filter"
+msgstr "Spiller _filter"
+
+#: src/xqf.c:3238
+msgid "_About"
+msgstr "_Om"
+
+#: src/xqf.c:3260
+msgid "_File"
+msgstr "_Fil"
+
+#: src/xqf.c:3269
+msgid "_Edit"
+msgstr "_Redigér"
+
+#: src/xqf.c:3278
+msgid "_View"
+msgstr "_Vis"
+
+#: src/xqf.c:3287
+msgid "_Server"
+msgstr "_Server"
+
+#: src/xqf.c:3296
+msgid "_Preferences"
+msgstr "_Præferencer"
+
+#: src/xqf.c:3305
+msgid "_Server Filters"
+msgstr "_Server Filtre"
+
+#: src/xqf.c:3314
+msgid "_Help"
+msgstr "_Hjælp"
+
+#: src/xqf.c:3367
+msgid "Mark as Red"
+msgstr "Markér som rød"
+
+#: src/xqf.c:3374
+msgid "Mark as Green"
+msgstr "Markér som grøn"
+
+#: src/xqf.c:3381
+msgid "Mark as Blue"
+msgstr "Markér som blå"
+
+#: src/xqf.c:3388
+msgid "Add to Player Filter"
+msgstr "Tilføj til spiller filter"
+
+#: src/xqf.c:3409 src/trayicon.c:427
+msgid "Update"
+msgstr "Opdatér"
+
+#: src/xqf.c:3409
+msgid "Update from master"
+msgstr "Opdater fra master"
+
+#: src/xqf.c:3417
+msgid "Refresh current list"
+msgstr "Opdater nuværende liste"
+
+#: src/xqf.c:3425
+msgid "Ref.Sel."
+msgstr "Opd. valg."
+
+#: src/xqf.c:3425
+msgid "Refresh selected servers"
+msgstr "Opdater valgte servere"
+
+#: src/xqf.c:3460
+msgid "Record"
+msgstr "Optag"
+
+#: src/xqf.c:3476
 #, c-format
-msgid "Really delete server filter \"%s\"?"
-msgstr "Vil du virkelig slette server filter \"%s\"?"
+msgid "%s Filter Enable / Disable"
+msgstr "%s Filter Aktiver / Deaktiver"
 
-#: src/filter.c:1211
-msgid "Server Filter"
-msgstr "Server filter"
+#: src/xqf.c:3496
+#, c-format
+msgid "%s Filter Configuration"
+msgstr "%s filter opsætning"
 
-#: src/filter.c:1232
-msgid "Rename"
-msgstr "Omdøb"
+#: src/xqf.c:3580
+msgid "Configure"
+msgstr "Konfigurér"
 
-#: src/filter.c:1246
-msgid "Server would pass filter if"
-msgstr "Server vil passere filter hvis"
+#: src/xqf.c:3710
+msgid "Filters"
+msgstr "Filtre"
 
-#: src/filter.c:1267
-msgid "ping is less than"
-msgstr "ping er mindre end"
+#: src/xqf.c:3866
+msgid "Quick Filter:"
+msgstr "Hurtigt filter:"
 
-#: src/filter.c:1287
-msgid "the game contains the string"
-msgstr "spillet indeholder strengen"
+#: src/xqf.c:4019
+msgid "no sound player configured"
+msgstr "ingen lydspiller konfigureret"
 
-#: src/filter.c:1305
-msgid "the number of retries is fewer than"
-msgstr "antallet af forsøg er mindre end"
+#: src/xqf.c:4053
+msgid ""
+"Usage:\n"
+"\txqf [OPTIONS]\n"
+"\n"
+"OPTIONS:\n"
+"\t--launch \"[SERVERTYPE] IP\"\tlaunch game on specified server\n"
+"\t--add    \"[SERVERTYPE] IP\"\tadd specified server to favorites\n"
+"\t--debug <level>\t\t\tset debug level\n"
+"\t--version\t\t\tprint version and exit\n"
+msgstr "Brug:\n\txqf [TILVALG]\n\nTILVALG:\n\t--launch \"[SERVERTYPE] IP\"\tstart spil på angivet server\n\t--add    \"[SERVERTYPE] IP\"\ttilføj angivet server til favoritter\n\t--debug <level>\t\t\tsæt fejlsøgnings niveau\n\t--version\t\t\tudskriv version og afslut\n"
 
-#: src/filter.c:1324
-msgid "the game type contains the string"
-msgstr "spil typen indeholder strengen"
+#: src/xqf.c:4269
+msgid "gdk-pixbuf is not installed. Some icons may not be displayed"
+msgstr ""
 
-#: src/filter.c:1341
-msgid "it is not full"
-msgstr "er ikke fuld"
+#: src/xqf.c:4309
+msgid "Reading server lists"
+msgstr "Læser server lister"
 
-#: src/filter.c:1348
-msgid "the version contains the string"
-msgstr "versions nummeret indeholder strengen"
+#: src/xqf.c:4324
+#, c-format
+msgid "You need at least qstat version %s for xqf to function properly"
+msgstr "Du skal have mindst qstat version %s før at xqf virker ordentligt"
 
-#: src/filter.c:1367
-msgid "it is not empty"
-msgstr "er ikke tom"
+#: src/xqf.c:4327
+msgid "Loading icons ..."
+msgstr ""
 
-#: src/filter.c:1376
-msgid "the map contains the string"
-msgstr "banen indeholder strengen"
-
-#: src/filter.c:1394
-msgid "cheats are not allowed"
-msgstr "snydekoder er ikke tilladt"
-
-#: src/filter.c:1402
-msgid "the server name contains the string"
-msgstr "server navnet indeholder strengen"
-
-#: src/filter.c:1420
-msgid "no password required"
-msgstr "ingen adgangskode krævet"
-
-#: src/filter.c:1430 src/filter.c:1884
-msgid "Country filter:"
-msgstr "Landefilter:"
-
-#: src/filter.c:1470
-msgid "select..."
-msgstr "vælg..."
-
-#: src/filter.c:1483
-msgid "clear"
-msgstr "ryd"
-
-#: src/filter.c:1539
-msgid "XQF: Filters"
-msgstr "XQF: Filtre"
-
-#: src/filter.c:1875
-msgid "Configure Country Filter"
-msgstr "Opsæt landefilter"
-
-#: src/filter.c:2016
-msgid "Show all countries"
-msgstr "Vis alle lande"
+#: src/xqf.c:4333
+msgid "Starting ..."
+msgstr "Starter ..."
 
 #: src/splash.c:59
 msgid "XQF: Loading"
@@ -2075,58 +1908,26 @@ msgstr "XQF: Indlæser"
 msgid "Loading ..."
 msgstr "Indlæser ..."
 
-#~ msgid "XQF"
-#~ msgstr "XQF"
+#: src/country-filter.c:213 src/loadpixmap.c:191 src/loadpixmap.c:207
+#: src/loadpixmap.c:227 src/loadpixmap.c:234
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Fejl ved indlæsning af pixmap fil: %s"
 
-#~ msgid "vm_cgame fix"
-#~ msgstr "vm_cgame fix"
+#: src/trayicon.c:349 src/trayicon.c:355 src/trayicon.c:363 src/trayicon.c:369
+#: src/trayicon.c:382
+#, c-format
+msgid "Error in file: %s line: %d\n"
+msgstr "Fejl i fil: %s linje %d\n"
 
-#~ msgid "Rocketarena fix"
-#~ msgstr "Rocketarena fix"
+#: src/trayicon.c:441
+msgid "Show"
+msgstr "Vis"
 
-#~ msgid "OS"
-#~ msgstr "Styresystem"
+#: src/trayicon.c:446
+msgid "Hide"
+msgstr "Skjul"
 
-#~ msgid "Remove from Favorites"
-#~ msgstr "Fjern fra favoritter"
-
-#~ msgid "_Remove from Favorites"
-#~ msgstr "_Fjern fra favoritter"
-
-#~ msgid "_QStat Options"
-#~ msgstr "_QStat indstillinger"
-
-#~ msgid "_Sound Options"
-#~ msgstr "Lyd indstillinger"
-
-#~ msgid ""
-#~ "Note: You need to create a qstat config file for this game to work.\n"
-#~ "Please see the XQF documentation for more information."
-#~ msgstr ""
-#~ "Bemærk: Du skal oprette en qstat opsætningsfil for at få dette spil \n"
-#~ "til at virke. Se XQF dokumentationen for flere oplysninger."
-
-#~ msgid "QuakeForge workaround (uses base/ instead of id1/)"
-#~ msgstr "QuakeForge \"workaround\" (bruger base/ istedet for id1/)"
-
-#~ msgid ""
-#~ "~/.q3a directory doesn't exist or doesn't contain\n"
-#~ "\"baseq3\" (\"demoq3\") subdirectory.\n"
-#~ "Please run %s client at least once before running XQF\n"
-#~ "or specify correct %s working directory."
-#~ msgstr ""
-#~ "~/.q3a mappen eksisterer ikke eller indeholder ikke\n"
-#~ "\"baseq3\" (\"demoq3\") undermappen.\n"
-#~ "Kør %s klient mindst en gang før du kører XQF\n"
-#~ "eller angiv en korrekt %s arbejdsmappe"
-
-#~ msgid ""
-#~ "\"%s\" directory doesn't exist or doesn't contain \"baseq3\" (\"demoq3\") "
-#~ "subdirectory.\n"
-#~ "Please specify correct %s working directory\n"
-#~ "or leave it empty (~/.q3a is used by default)"
-#~ msgstr ""
-#~ "\"%s\" eksisterer ikke, eller indeholder ikke \"baseq3\" (\"demoq3\") "
-#~ "undermappen.\n"
-#~ "Angiv en korrekt %s arbejdsmappe\n"
-#~ "eller lad den være tom (~/.q3a) er brugt som standard)"
+#: src/trayicon.c:450
+msgid "Exit"
+msgstr "Afslut"
