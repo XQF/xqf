@@ -34,11 +34,9 @@ AVAILABILITY / PLACES TO BE
 * Current home page: [linuxgames.com/xqf](http://www.linuxgames.com/xqf/)
 * Mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/)
 * IRC Channel: [#xqf@Freenode](irc://irc.freenode.net/xqf)
-
 * Source code repository: [github.com/XQF/xqf](https://github.com/XQF/xqf/) (up to date Git repository)
 * Online translation tool: [transifex.com/projects/p/xqf](https://www.transifex.com/projects/p/xqf/)
 * Continuous integration tool: [travis-ci.org/XQF/xqf](https://travis-ci.org/XQF/xqf)
-
 * Historical archives: [sf.net/p/xqf](https://sourceforge.net/projects/xqf/) (previously published files, old SVN repository, and old ticket list)
 
 
