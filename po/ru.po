@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-22 22:20+0300\n"
-"PO-Revision-Date: 2015-02-06 14:27+0000\n"
+"PO-Revision-Date: 2015-02-07 20:44+0000\n"
 "Last-Translator: Artem Vorotnikov <artem@vorotnikov.me>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/xqf/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -105,7 +105,7 @@ msgstr "Версия %s"
 
 #: src/dialogs.c:489
 msgid "Copyright (C) 1998-2002 Roman Pozlevich"
-msgstr "Copyright·(C)·1998-2002·Роман·Позлевич"
+msgstr "(С) Роман Позлевич, 1998-2002"
 
 #: src/dialogs.c:492
 msgid "Maintainers:"
@@ -117,7 +117,7 @@ msgstr "Помогавшие:"
 
 #: src/dialogs.c:503
 msgid "Bug reports and feature requests:"
-msgstr "Присылайте сообщения об ошибках и запросы на привнесение новых возможностей по адресам:"
+msgstr "Присылайте сообщения об ошибках и запросы на добавление новых возможностей по адресам:"
 
 #: src/dialogs.c:549
 msgid "About XQF"
@@ -549,15 +549,15 @@ msgstr "*** Не реализовано ***"
 
 #: src/pref.c:2748
 msgid "Custom Args"
-msgstr "Особые параметры"
+msgstr "Особые ключи"
 
 #: src/pref.c:2761
 msgid "Command Line"
-msgstr "Коммандная строка"
+msgstr "Командная строка"
 
 #: src/pref.c:2786 src/pref.c:2820
 msgid "Suggest"
-msgstr "Поздсказка"
+msgstr "Подсказка"
 
 #: src/pref.c:2791
 msgid "Searches the path for the game executable"
@@ -569,11 +569,11 @@ msgstr "Рабочий каталог"
 
 #: src/pref.c:2824
 msgid "Tries to guess the working directory based on the command line"
-msgstr "Подобрать рабочий каталог, основываясь на значении коммандной строки"
+msgstr "Поиск рабочего каталога на основании значения командной строки"
 
 #: src/pref.c:2841
 msgid "Custom CFG"
-msgstr "Особая конфигурация"
+msgstr "Особые настройки"
 
 #: src/pref.c:2939 src/xqf-ui.c:102
 msgid "Game"
@@ -581,11 +581,11 @@ msgstr "Игра"
 
 #: src/pref.c:2946
 msgid "Arguments"
-msgstr "Параметры"
+msgstr "Ключи"
 
 #: src/pref.c:2953
 msgid "Game and Arguments"
-msgstr "Игра и параметры"
+msgstr "Игра и ключи"
 
 #: src/pref.c:2975
 msgid "Enter the game name from the game column"
@@ -717,7 +717,7 @@ msgstr "Частота пакетов"
 
 #: src/pref.c:3657
 msgid "pushlatency"
-msgstr "Задержка движенияа"
+msgstr "Задержка движения"
 
 #: src/pref.c:3672
 msgid "Troubleshooting"
@@ -908,11 +908,11 @@ msgstr "Настройки QStat"
 
 #: src/pref.c:4230
 msgid "Number of simultaneous servers to query"
-msgstr "Количество опрашиваемых одновременно серверов"
+msgstr "Число одновременно опрашиваемых серверов"
 
 #: src/pref.c:4253
 msgid "Number of retries"
-msgstr "Количество повторных попыток"
+msgstr "Число повторных попыток"
 
 #: src/pref.c:4272
 msgid "Source IP Address"
