@@ -11,11 +11,15 @@ Significant contributors
 * Ludwig Nussel <ludwig.nussel@suse.de>
 * Jordi Mallach <jordi@debian.org>
 * Thomas Debesse <xqf@illwieckz.net>
+* Zack Middleton <zturtleman@gmail.com>
 
 Other contributors
 ------------------
 
-* Zack Middleton <zturtleman@gmail.com>
+* Artem Vorotnikov <artem@vorotnikov.me>
+* Gilles Crettenand <gilles.crettenand@liip.ch>
+* Arnaud Bonatti <arnaud.bonatti@gmail.com>
+* Spanti Nicola <rydroid_dev@yahoo.com>
 * Witold Piłat <witold.pilat@gmail.com>
 * Jochen Baier <email@jochen-baier.de>
 * Jo Shields <directhex@apebox.org>

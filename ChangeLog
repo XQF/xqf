@@ -1,3 +1,40 @@
+Jan 7, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+- fix russian translation
+
+Jan 23, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+- add gettext template
+- remove GTK+1 support
+- fix automake warnings
+- remove splash
+
+Jan 18, 2015: Thomas Debesse <xqf@illwieckz.net>
+- fix Wolf:ET and ET:Legacy empty server query
+
+Nov 25, 2014: Zack Middleton <zturtleman@gmail.com>
+- fix Q3Rally and Warsow support
+
+Nov 14, 2014: Thomas Debesse <xqf@illwieckz.net>
+- recognize some OpenArena games hosted with Q3Arena and Q3Arena games
+  hosted by OpenArena
+
+Nov 8, 2014: Thomas Debesse <xqf@illwieckz.net>
+- add some Wolf:ET and ET:Legacy mods (like TrueCombat mods)
+- filter escape codes in Call Of Duty gametypes
+
+Nov 7, 2014: Thomas Debesse <xqf@illwieckz.net>
+- synchronize translation files to source tree
+- fix some translations
+
+Nov 3, 2014: Thomas Debesse <xqf@illwieckz.net>
+- update master server list
+
+Nov 2, 2014: Thomas Debesse <xqf@illwieckz.net>
+- fix Unvanquished, Turtle Arena, Xonotic and Urban Terror LAN server browsing
+
+Nov 1, 2014: Zack Middleton <zturtleman@gmail.com>
+- fix gametype strings for a few games
+- fix ioquake3 and iostvef basegame gametype strings
+
 Oct 31, 2014: Thomas Debesse <xqf@illwieckz.net>
 - improve french translation
 

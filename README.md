@@ -28,18 +28,25 @@ BUILD / INSTALLATION / USAGE
 Please see the ``docs/xqfdocs.html`` file for more information. Warning, this page is not up to date!
 
 
-AVAILABILITY
-------------
+AVAILABILITY / PLACES TO BE
+---------------------------
 
-* https://github.com/XQF/xqf/ (up to date Git repository)
-* http://www.linuxgames.com/xqf/ (old but current home page)
-* http://sourceforge.net/projects/xqf/ (previously published files and old SVN repository)
+* Current home page: [linuxgames.com/xqf](http://www.linuxgames.com/xqf/)
+* Mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/)
+* IRC Channel: [#xqf@Freenode](irc://irc.freenode.net/xqf)
+
+* Source code repository: [github.com/XQF/xqf](https://github.com/XQF/xqf/) (up to date Git repository)
+* Online translation tool: [transifex.com/projects/p/xqf](https://www.transifex.com/projects/p/xqf/)
+* Continuous integration tool: [travis-ci.org/XQF/xqf](https://travis-ci.org/XQF/xqf)
+
+* Historical archives: [sf.net/p/xqf](https://sourceforge.net/projects/xqf/) (previously published files, old SVN repository, and old ticket list)
 
 
 HOW TO CONTRIBUTE
 -----------------
 
-The best way to contribute is to fork this project, please read the [GUIDELINES.md](GUIDELINES.md) for further information.
+The best way to contribute code is to fork this project, please read the [GUIDELINES.md](GUIDELINES.md) for further information.
+To contribute translation, the best way is to do it on Transifex.
 
 
 COPYRIGHT
@@ -55,7 +62,7 @@ See the file [COPYING](COPYING) for more details.
 HISTORY
 -------
 
-2013-2014 Thomas Debesse <xqf@illwieckz.net>  
+2013-2015 Thomas Debesse <xqf@illwieckz.net>  
 2001-2014 Jordi Mallach <jordi@debian.org>  
 2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>  
 2000-2003 Alex Burger <alex_b@users.sf.net>  

@@ -1,3 +1,16 @@
+2015-02-07  Artem Vorotnikov <artem@vorotnikov.me>
+    * ca.po: Migrated to Transifex
+	* da.po: Migrated to Transifex
+	* de.po: Migrated to Transifex
+	* es.po: Migrated to Transifex
+	* fi.po: Migrated to Transifex
+	* fr.po: Migrated to Transifex
+	* pl.po: Migrated to Transifex
+	* ru.po: Migrated to Transifex
+
+2015-01-23  Artem Vorotnikov <artem@vorotnikov.me>
+	* xqf.pot: Added gettext template
+
 2013-11-01  Thomas Debesse  <xqf@illwieckz.net>
 
 	* fr.po: Updated French translation.
