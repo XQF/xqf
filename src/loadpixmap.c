@@ -29,7 +29,7 @@
 #include <dlfcn.h>
 
 #include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdk.h>
 
 #include "loadpixmap.h"
 #include "pixmaps.h"

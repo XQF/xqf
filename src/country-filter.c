@@ -26,7 +26,7 @@
 #include "loadpixmap.h"
 #include "xpm/noflag.xpm"
 
-#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdk.h>
 #include <ctype.h>
 #include <unistd.h> // access()
 

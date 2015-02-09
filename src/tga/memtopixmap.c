@@ -21,9 +21,7 @@
 
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <gdk-pixbuf/gdk-pixbuf-loader.h>
+#include <gdk/gdk.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
