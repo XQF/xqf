@@ -3,71 +3,60 @@ Author
 
 * Roman Pozlevich <roma@botik.ru>
 
-Significant contributors
-------------------------
 
-* Bill Adams <bill@evilbill.org>
-* Alex Burger <alex_b@users.sf.net>
-* Ludwig Nussel <ludwig.nussel@suse.de>
-* Jordi Mallach <jordi@debian.org>
+Maintainers
+-----------
+
 * Thomas Debesse <xqf@illwieckz.net>
+* Jordi Mallach <jordi@debian.org>
+* Ludwig Nussel <ludwig.nussel@suse.de>
+* Alex Burger <alex_b@users.sf.net>
+* Bill Adams <mailto:bill@evilbill.org>
+
+
+Contributors
+------------
+
 * Zack Middleton <zturtleman@gmail.com>
-
-Other contributors
-------------------
-
 * Artem Vorotnikov <artem@vorotnikov.me>
-* Gilles Crettenand <gilles.crettenand@liip.ch>
 * Arnaud Bonatti <arnaud.bonatti@gmail.com>
-* Spanti Nicola <rydroid_dev@yahoo.com>
-* Witold Piłat <witold.pilat@gmail.com>
 * Jochen Baier <email@jochen-baier.de>
+* Witold Piłat <witold.pilat@gmail.com>
+* Victor BE <victorbe@users.sf.net>
 * Jo Shields <directhex@apebox.org>
 * Sven Joachim <svenjoac@gmx.de>
 * Lars Wirzenius <liw@iki.fi>
-* Victor BE <victorbe@users.sf.net>
+* Gilles Crettenand <gilles.crettenand@liip.ch>
+* Spanti Nicola <rydroid_dev@yahoo.com>
 * Luca Camillo <kamy@tutorials.it>
-* Alexander Hambalgo
-* Philipp Thomas
-* O Sezer
-* Jorge Hodge
-* Steffen Pankratz
-* Jason Santos
-* Jochen Baier
-* Matze Braun
-* Thomas Zajic
-* Andreas Schneider
-* Ben Winslow
-* Florian Riepler
-* Mike Mestnik
-* Luigi Auriemma
+* Alexander Hambalgo <balgo@users.sf.net>
+* Ozkan Sezer <sezero@users.sf.net>
+* Jorge Hodge <jhodge@users.sf.net>
+* Steffen Pankratz <krat00@users.sf.net>
+* Thomas Zajic <zlatk0@users.sf.net>
+* Jason Santos 
+* Matze Braun 
+* Philipp Thomasi 
+* Andreas Schneider 
+* Ben Winslow 
+* Florian Riepler 
+* Mike Mestnik 
+* Simon Philips 
+* Luigi Auriemma 
+
 
 Translators
 -----------
 
-* Dan Korostelev <dan@ats.energo.ru>
-* Michel Briand <michelbriand@free.fr>
-* François Perichon
-* Sami Laitinen
-* Miłosz Kosobucki
-* Morten Brix Pedersen
+  - Jordi Mallach <jordi@debian.org>
+  - Morten Brix Pedersen <morten@wtf.dk>
+  - Sami Laitinen <azmotus@gmail.com>
+  - Thomas Debesse <xqf@illwieckz.net>
+  - Michel Briand <michelbriand@free.fr>
+  - Ludwig Nussel <ludwig.nussel@suse.de>
+  - Miłosz Kosobucki <mikomek@poczta.onet.pl>
+  - Artem Vorotnikov <artem@vorotnikov.me>
+  - Dan Korostelev <dan@ats.energo.ru>
+  - François Perichon
 
-Special thanks (reports, review, ideas, help…)
-----------------------------------------------
-
-* Chris Vine <chris@cvine.freeserve.co.uk>
-* Tomasz Kalkosiński
-* Timothée Besset
-* Simon Philips
-* Wiesław Młynarski
-* Gonzalo Nemmi
-* Julien Langer
-* Ruediger Meier
-* Mike Frysinger
-* Michael Prager
-* Pierre Pronchery
-* Roerich
-* Kracho
-* Despair
-* Esa
-* cjay
+See the Wiki page for more information: https://github.com/XQF/xqf/wiki/Authors
