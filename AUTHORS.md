@@ -7,11 +7,11 @@ Author
 Maintainers
 -----------
 
-* Thomas Debesse [:email:](mailto:xqf@illwieckz.net) [:octocat:](http://github.com/illwieckz)
+* Thomas Debesse [:email:](mailto:xqf@illwieckz.net) [:octocat:](http://github.com/illwieckz) [:dizzy:](http://sf.net/u/illwieckz)
 * Jordi Mallach [:email:](mailto:jordi@debian.org) [:octocat:](http://github.com/jmallach) [:dizzy:](http://sf.net/u/jordi)
 * Ludwig Nussel [:email:](mailto:ludwig.nussel@suse.de) [:octocat:](http://github.com/lnussel) [:dizzy:](http://sf.net/u/l-n)
 * Alex Burger [:email:](mailto:alex_b@users.sf.net) [:dizzy:](http://sf.net/u/alex_b)
-* Bill Adams [:email:](mailto:bill@evilbill.org)
+* Bill Adams [:email:](mailto:bill@evilbill.org) [:dizzy:](http://sf.net/u/evilbill)
 
 
 Contributors
@@ -55,7 +55,7 @@ Translators
 * **Finish**
   - Sami Laitinen [:email:](mailto:azmotus@gmail.com)
 * **French**
-  - Thomas Debesse [:email:](mailto:xqf@illwieckz.net) [:octocat:](http://github.com/illwieckz)  [:dizzy:](http://sf.net/u/illwieckz)
+  - Thomas Debesse [:email:](mailto:xqf@illwieckz.net) [:octocat:](http://github.com/illwieckz) [:dizzy:](http://sf.net/u/illwieckz)
   - Michel Briand [:email:](mailto:michelbriand@free.fr)
   - François Perichon
 * **German**
@@ -86,7 +86,7 @@ Special thanks _(report, review, idea, help…)_
 ----------------------------------------------
 
 * Chris Vine [:email:](mailto:chris@cvine.freeserve.co.uk) _(Help on port to GIO)_
-* Timothée Besset [:email:](mailto:ttimo@ttimo.net) [:octocat:](http://github.com/TTimo) _(Help on Quake 4 support, and some Doom3 reports and suggestions)_
+* Timothée Besset [:email:](mailto:ttimo@ttimo.net) [:octocat:](http://github.com/TTimo) [:dizzy:](http://sf.net/u/ttimo) _(Help on Quake 4 support, and some Doom3 reports and suggestions)_
 * Martin Petříček [:email:](mailto:bilboq@users.sf.net) [:dizzy:](http://sf.net/u/bilboq) _(Cursor navigation issue report)_
 * Paul Klumpp [:email:](mailto:quadhaui@users.sf.net) [:dizzy:](http://sf.net/u/quadhaui) _(RCon pasword Quake 2 issue report)_
 * Will L G [:email:](mailto:diskman@users.sf.net) [:dizzy:](http://sf.net/u/diskman) _(Preferences windows issue report)_
