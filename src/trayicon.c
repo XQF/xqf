@@ -32,17 +32,16 @@
  */
 
 
-#include <gtk/gtk.h>
 #include "gnuconfig.h"
 
 #include <stdio.h>
-#include <gtk/gtkplug.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
-#include <string.h>
 #include <X11/Xatom.h>
-#include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
-#include <stdlib.h>
 
 #include "i18n.h"
 #include "pref.h"
