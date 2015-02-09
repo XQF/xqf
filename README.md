@@ -13,7 +13,7 @@ XQF is a front-end to [QStat](http://qstat.sourceforge.net/), a program by Steve
 See the file [NEWS.md](NEWS.md) and the [ChangeLog](ChangeLog) for updated information.
 
 
-BUILD / INSTALLATION / USAGE
+INSTALLATION
 ----------------------------
 
 [![Build status](https://travis-ci.org/XQF/xqf.svg?branch=master)](https://travis-ci.org/XQF/xqf)
@@ -28,12 +28,13 @@ BUILD / INSTALLATION / USAGE
 Please see the ``docs/xqfdocs.html`` file for more information. Warning, this page is not up to date!
 
 
-AVAILABILITY / PLACES TO BE
+LINKS
 ---------------------------
 
 * Current home page: [linuxgames.com/xqf](http://www.linuxgames.com/xqf/)
 * Mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/)
 * IRC Channel: [#xqf@Freenode](irc://irc.freenode.net/xqf)
+* XMPP Conference: [xqf@conference.jabber.ru](xmpp://xqf@conference.jabber.ru?join)
 * Source code repository: [github.com/XQF/xqf](https://github.com/XQF/xqf/) (up to date Git repository)
 * Online translation tool: [transifex.com/projects/p/xqf](https://www.transifex.com/projects/p/xqf/)
 * Continuous integration tool: [travis-ci.org/XQF/xqf](https://travis-ci.org/XQF/xqf)
@@ -44,7 +45,7 @@ HOW TO CONTRIBUTE
 -----------------
 
 The best way to contribute code is to fork this project, please read the [GUIDELINES.md](GUIDELINES.md) for further information.
-To contribute translation, the best way is to do it on Transifex.
+To contribute translation please visit our Transifex project.
 
 
 COPYRIGHT
@@ -59,10 +60,11 @@ See the file [COPYING](COPYING) for more details.
 
 HISTORY
 -------
+XQF was originally written by Roman Pozlevich from Pereslavl-Zalessky, Russia. Over 17 years of existence the project has had the following major developers:
 
-2013-2015 Thomas Debesse <xqf@illwieckz.net>  
-2001-2014 Jordi Mallach <jordi@debian.org>  
-2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>  
-2000-2003 Alex Burger <alex_b@users.sf.net>  
-2000-2002 Bill Adams <bill@evilbill.org>  
 1998-2000 Roman Pozlevich <roma@botik.ru>
+2000-2002 Bill Adams <bill@evilbill.org>
+2000-2003 Alex Burger <alex_b@users.sf.net>
+2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>
+2001-2014 Jordi Mallach <jordi@debian.org>
+2013-2015 Thomas Debesse <xqf@illwieckz.net>
