@@ -102,11 +102,12 @@ char* xqf_LOCALEDIR = LOCALEDIR;
 
 char* qstat_configfile = NULL;
 
-GtkWidget *main_window = NULL;
-GtkWidget *source_ctree = NULL;
-GtkCList  *server_clist = NULL;
-GtkCList  *player_clist = NULL;
-GtkCTree  *srvinf_ctree = NULL;
+GtkBuilder *builder = NULL;
+GtkWidget  *main_window = NULL;
+GtkWidget  *source_ctree = NULL;
+GtkCList   *server_clist = NULL;
+GtkCList   *player_clist = NULL;
+GtkCTree   *srvinf_ctree = NULL;
 
 GtkEditable *selection_manager = NULL;
 
@@ -3396,45 +3397,12 @@ static GtkWidget *create_player_menu (GtkAccelGroup *accel_group) {
 
 
 static void populate_main_toolbar (void) {
-	GtkWidget *pixmap;
+	GtkWidget *image;
 	char buf[128];
 	unsigned mask;
 	int i;
 
-	pixmap = gtk_pixmap_new (update_pix.pix, update_pix.mask);
-	gtk_widget_show (pixmap);
-
-	update_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Update"), _("Update from master"), NULL,
-			pixmap,
-			GTK_SIGNAL_FUNC (update_source_callback), NULL);
-
-	pixmap = gtk_pixmap_new (refresh_pix.pix, refresh_pix.mask);
-	gtk_widget_show (pixmap);
-
-	refresh_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Refresh"), _("Refresh current list"), NULL,
-			pixmap,
-			GTK_SIGNAL_FUNC (refresh_callback), NULL);
-
-	pixmap = gtk_pixmap_new (refrsel_pix.pix, refrsel_pix.mask);
-	gtk_widget_show (pixmap);
-
-	refrsel_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Ref.Sel."), _("Refresh selected servers"), NULL,
-			pixmap,
-			GTK_SIGNAL_FUNC (refresh_selected_callback), NULL);
-
-	pixmap = gtk_pixmap_new (stop_pix.pix, stop_pix.mask);
-	gtk_widget_show (pixmap);
-
-	stop_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Stop"), _("Stop"), NULL,
-			pixmap,
-			GTK_SIGNAL_FUNC (stop_callback), NULL);
-
-	gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
-
+/*	for reference, old code style:
 	pixmap = gtk_pixmap_new (connect_pix.pix, connect_pix.mask);
 	gtk_widget_show (pixmap);
 
@@ -3442,26 +3410,48 @@ static void populate_main_toolbar (void) {
 			_("Connect"), _("Connect"), NULL,
 			pixmap,
 			GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL);
+*/
+
+	update_button =  GTK_WIDGET (gtk_builder_get_object (builder, "update-button"));
+	refresh_button = GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button"));
+	refrsel_button = GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button"));
+	stop_button =    GTK_WIDGET (gtk_builder_get_object (builder, "stop-button"));
+	connect_button = GTK_WIDGET (gtk_builder_get_object (builder, "connect-button"));
+
+	g_signal_connect (G_OBJECT (update_button),  "clicked", G_CALLBACK (update_source_callback), NULL);
+	g_signal_connect (G_OBJECT (refresh_button), "clicked", G_CALLBACK (refresh_callback), NULL);
+	g_signal_connect (G_OBJECT (refrsel_button), "clicked", G_CALLBACK (refresh_selected_callback), NULL);
+	g_signal_connect (G_OBJECT (stop_button),    "clicked", G_CALLBACK (stop_callback), NULL);
+	g_signal_connect (G_OBJECT (connect_button), "clicked", G_CALLBACK (launch_callback), (gpointer) LAUNCH_NORMAL);	// TODO test... ^^'
+
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "update-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "update.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "refresh-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "refresh.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "refrsel-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "refrsel.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "stop-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "stop.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "connect-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "connect.xpm", NULL));
 
 #if 0
-	pixmap = gtk_pixmap_new (observe_pix.pix, observe_pix.mask);
-	gtk_widget_show (pixmap);
+	/* not tested at all */
+	observe_button = GTK_WIDGET (gtk_builder_get_object (builder, "observe-button"));
+	record_button =  GTK_WIDGET (gtk_builder_get_object (builder, "record-button"));
 
-	observe_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Observe"), _("Observe"), NULL,
-			pixmap,
-			GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_SPECTATE);
+	g_signal_connect (G_OBJECT (observe_button), "clicked", G_CALLBACK (launch_callback), (gpointer) LAUNCH_SPECTATE);
+	g_signal_connect (G_OBJECT (record_button),  "clicked", G_CALLBACK (launch_callback), (gpointer) LAUNCH_RECORD);
 
-	pixmap = gtk_pixmap_new (record_pix.pix, record_pix.mask);
-	gtk_widget_show (pixmap);
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "observe-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "observe.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "record-image")),
+	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "record.xpm", NULL));
 
-	record_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Record"), _("Record Demo"), NULL,
-			pixmap,
-			GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_RECORD);
+	gtk_widget_show (observe_button);
+	gtk_widget_show (record_button);
 #endif
 
-	gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
 	/*
 	 *  Filter buttons
 	 */
@@ -3471,20 +3461,32 @@ static void populate_main_toolbar (void) {
 			filter_buttons[i] = NULL;
 			continue;
 		}
-		// Translators: e.g. Server Filter
-		g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
 
-		pixmap = gtk_pixmap_new (filters[i].pix->pix, filters[i].pix->mask);
+/*		pixmap = gtk_pixmap_new (filters[i].pix->pix, filters[i].pix->mask);
 		gtk_widget_show (pixmap);
 
-		filter_buttons[i] = gtk_toolbar_append_element (
-				GTK_TOOLBAR (main_toolbar),
+		filter_buttons[i] = gtk_toolbar_append_element (GTK_TOOLBAR (main_toolbar),
 				GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL,
 				_(filters[i].short_name), buf, NULL,
 				pixmap,
 				GTK_SIGNAL_FUNC (filter_toggle_callback), GINT_TO_POINTER (mask));
+*/
+		filter_buttons[i] = GTK_WIDGET (gtk_toggle_tool_button_new ());
+		g_signal_connect (G_OBJECT (filter_buttons[i]),  "toggled", G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
+		gtk_tool_button_set_label (GTK_TOOL_BUTTON (filter_buttons[i]), _(filters[i].short_name));
 
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_buttons[i]), ((cur_filter & mask) != 0)? TRUE : FALSE);
+		// Translators: e.g. Server Filter
+		g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
+		gtk_widget_set_tooltip_text (GTK_WIDGET (filter_buttons[i]), buf);
+
+		image = gtk_image_new_from_file (g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", filters[i].icon_name, NULL));
+		gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (filter_buttons[i]), image);
+		gtk_widget_show (image);
+
+		gtk_widget_show (filter_buttons[i]);
+		gtk_toolbar_insert (GTK_TOOLBAR (main_toolbar), GTK_TOOL_ITEM (filter_buttons[i]), -1);
+
+		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (filter_buttons[i]), ((cur_filter & mask) != 0)? TRUE : FALSE);
 	}
 
 #if 0
@@ -3654,7 +3656,17 @@ void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 }
 
 static void create_main_window (void) {
-	main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	GError *error = NULL;
+
+	builder = gtk_builder_new ();
+	gtk_builder_add_from_file (builder, g_build_filename (xqf_PACKAGE_DATA_DIR, "ui", "xqf.ui", NULL), &error);
+	if (G_UNLIKELY (error != NULL)) {
+		fprintf (stderr, "Could not load UI: %s\n", error->message);
+		g_clear_error (&error);
+		return;
+	}
+
+	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "main-window"));	// gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
 			GTK_SIGNAL_FUNC (window_delete_event_callback), NULL);
 	gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
@@ -3670,17 +3682,11 @@ static void create_main_window (void) {
 
 static void populate_main_window (void) {
 	GtkWidget *main_vbox;
-	GtkWidget *vbox;
-	GtkWidget *vbox2;
 	GtkWidget *hbox;
-	GtkWidget *hpaned;
-	GtkWidget *hpaned2;
-	GtkWidget *vpaned;
 	GtkWidget *menu_bar;
-	GtkWidget *handlebox;
+//	GtkWidget *handlebox;
 	GtkWidget *scrollwin;
 	GtkWidget *entry;
-	GtkWidget *label;
 	GtkWidget *button;
 	GtkWidget *pixmap;
 	GtkAccelGroup *accel_group;
@@ -3702,7 +3708,7 @@ static void populate_main_window (void) {
 	*/
 
 #if 0
-	if ((server_filter_menu_items = g_malloc(sizeof(struct menuitem) *  (MAX_SERVER_FILTERS + 4)))) {
+	if ((server_filter_menu_items = g_malloc (sizeof (struct menuitem) * (MAX_SERVER_FILTERS + 4)))) {
 		i = 0;
 		j = 0;
 		server_filter_menu_items[i].type       = MENU_ITEM;
@@ -3737,8 +3743,8 @@ static void populate_main_window (void) {
 		j++;
 
 		for (; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++){
-			buf = g_malloc(sizeof(char) * (16));
-			sprintf(buf, "Filter %d", j);
+			buf = g_malloc (sizeof (char) * (16));
+			sprintf (buf, "Filter %d", j);
 			server_filter_menu_items[i].type       = MENU_ITEM;
 			server_filter_menu_items[i].label      = buf;
 			server_filter_menu_items[i].accel_key  = 0;
@@ -3777,8 +3783,7 @@ static void populate_main_window (void) {
 
 	player_menu = create_player_menu (accel_group);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (main_window), main_vbox);
+	main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
 
 	/*  Lazy way to get `copy to clipboard' feature working.
 	 *  Don't gtk_widget_show() selection_manager widget!
@@ -3788,52 +3793,40 @@ static void populate_main_window (void) {
 	gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (selection_manager), FALSE, FALSE, 0);
 	gtk_widget_realize (GTK_WIDGET (selection_manager));
 
-	handlebox = gtk_handle_box_new ();
+/*	handlebox = gtk_handle_box_new ();
 	gtk_box_pack_start (GTK_BOX (main_vbox), handlebox, FALSE, FALSE, 0);
-
+*/
 	menu_bar = create_menubar (menubar_menu_items, accel_group);
 
 	// add server filters to menu
-	server_filter_menu_items = g_array_new(FALSE,FALSE,sizeof(GtkWidget*));
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu());
+	server_filter_menu_items = g_array_new (FALSE, FALSE, sizeof (GtkWidget*));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu ());
 
 	gtk_signal_connect_object (GTK_OBJECT (file_quit_menu_item), "activate", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (main_window));
 
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (view_hostnames_menu_item), show_hostnames);
-
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (view_defport_menu_item), show_default_port);
 
+	gtk_box_pack_start (GTK_BOX (main_vbox), menu_bar, FALSE, FALSE, 0);
+	gtk_widget_show (menu_bar);
+/*
 	gtk_container_add (GTK_CONTAINER (handlebox), menu_bar);
 	gtk_widget_show (menu_bar);
 
 	gtk_widget_show (handlebox);
-
-	vbox = gtk_vbox_new (FALSE, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
-
-	main_toolbar = gtk_toolbar_new ();
-	gtk_toolbar_set_orientation (GTK_TOOLBAR(main_toolbar),GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR(main_toolbar),GTK_TOOLBAR_BOTH);
-	gtk_box_pack_start (GTK_BOX (main_vbox), main_toolbar, FALSE, FALSE, 0);
-
-	// FIXME GTK2
-	gtk_box_reorder_child(GTK_BOX (main_vbox), main_toolbar, 2);
+*/
+	main_toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "main-toolbar"));
 	populate_main_toolbar ();
-	gtk_widget_show (main_toolbar);
 
-	pane1_widget = hpaned = gtk_hpaned_new ();
-	gtk_box_pack_start (GTK_BOX (vbox), hpaned, TRUE, TRUE, 0);
+	pane1_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned"));
 
 	/*
 	 *  Sources CTree
 	 */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_paned_add1 (GTK_PANED (hpaned), scrollwin);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources"));
 
 	source_ctree = create_source_ctree (scrollwin);
-
 	gtk_widget_show (source_ctree);
 
 	gtk_signal_connect (GTK_OBJECT (source_ctree), "tree_select_row", GTK_SIGNAL_FUNC (source_ctree_selection_changed_callback), NULL);
@@ -3842,44 +3835,25 @@ static void populate_main_window (void) {
 
 	gtk_widget_show (scrollwin);
 
-	pane2_widget = vpaned = gtk_vpaned_new ();
-	gtk_paned_add2 (GTK_PANED (hpaned), vpaned);
+	pane2_widget = GTK_WIDGET (gtk_builder_get_object (builder, "vpaned"));
 
 	/*
 	 *  Server CList
 	 */
 
-	vbox2 = gtk_vbox_new (FALSE, 4);
-	gtk_paned_add1 (GTK_PANED (vpaned), vbox2);
+	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox"));
 
-	hbox = gtk_hbox_new (FALSE, 4);
-
-	button = gtk_button_new();
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+	button = GTK_WIDGET (gtk_builder_get_object (builder, "button"));
 	pixmap = gtk_pixmap_new (delete_pix.pix, delete_pix.mask);
-	gtk_container_add(GTK_CONTAINER(button), pixmap);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (button), pixmap);
+	gtk_widget_show_all (button);
 
-	gtk_widget_show_all(button);
-
-	label = gtk_label_new(_("Quick Filter:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	entry = gtk_entry_new();
-	gtk_signal_connect(GTK_OBJECT(entry), "changed", G_CALLBACK(quick_filter_entry_changed), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
-	gtk_widget_show (entry);
+	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
+	gtk_signal_connect (GTK_OBJECT (entry), "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
 
 	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (quickfilter_delete_button_clicked), entry);
 
-	gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 0);
-	gtk_widget_show (hbox);
-
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-
-	gtk_box_pack_start (GTK_BOX (vbox2), scrollwin, TRUE, TRUE, 0);
-	gtk_widget_show (vbox2);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server"));
 
 	server_clist = GTK_CLIST (create_cwidget (scrollwin, &server_clist_def));
 
@@ -3892,17 +3866,14 @@ static void populate_main_window (void) {
 	gtk_clist_set_compare_func (server_clist, (GtkCListCompareFunc) server_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (server_clist));
-	gtk_widget_show (scrollwin);
 
-	pane3_widget = hpaned2 = gtk_hpaned_new ();
-	gtk_paned_add2 (GTK_PANED (vpaned), hpaned2);
+	pane3_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned2"));
 
 	/*
 	 *  Player CList
 	 */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_paned_add1 (GTK_PANED (hpaned2), scrollwin);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player"));
 
 	player_clist = GTK_CLIST (create_cwidget (scrollwin, &player_clist_def));
 
@@ -3912,29 +3883,21 @@ static void populate_main_window (void) {
 	gtk_clist_set_compare_func (player_clist, (GtkCListCompareFunc) player_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (player_clist));
-	gtk_widget_show (scrollwin);
 
 	/*
 	 *  Server Info CList
 	 */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_paned_add2 (GTK_PANED (hpaned2), scrollwin);
+	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info"));
 
 	srvinf_ctree = GTK_CTREE (create_cwidget (scrollwin, &srvinf_clist_def));
 
 	gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "click_column", GTK_SIGNAL_FUNC (clist_set_sort_column), &srvinf_clist_def);
-
 	gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "event", GTK_SIGNAL_FUNC (server_info_clist_event_callback), NULL);
 
 	gtk_clist_set_compare_func (GTK_CLIST (srvinf_ctree), (GtkCListCompareFunc) srvinf_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (srvinf_ctree));
-	gtk_widget_show (scrollwin);
-
-	gtk_widget_show (hpaned2);
-	gtk_widget_show (vpaned);
-	gtk_widget_show (hpaned);
 
 	gtk_widget_ensure_style (GTK_WIDGET (server_clist));
 	i = calculate_clist_row_height (GTK_WIDGET (server_clist), games[Q1_SERVER].pix->pix);
@@ -3947,19 +3910,11 @@ static void populate_main_window (void) {
 	 *  Status Bar & Progress Bar
 	 */
 
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox-status-bar"));
+	main_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar"));
+	main_filter_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-filter-status-bar"));
 
-	main_status_bar = gtk_statusbar_new ();
-	gtk_box_pack_start (GTK_BOX (hbox), main_status_bar, TRUE, TRUE, 0);
-	gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_status_bar), FALSE);
-	gtk_widget_show (main_status_bar);
-
-	main_filter_status_bar = gtk_statusbar_new ();
-	gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(main_filter_status_bar), FALSE);
-	gtk_widget_set_usize (main_filter_status_bar, 100, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), main_filter_status_bar, TRUE, TRUE, 0);
-	gtk_widget_show (main_filter_status_bar);
+	gtk_widget_set_usize (main_filter_status_bar, 100, -1);         // ???
 
 	main_progress_bar = create_progress_bar ();
 	gtk_widget_set_usize (main_progress_bar, 200, -1);
@@ -3971,17 +3926,11 @@ static void populate_main_window (void) {
 
 	/* Refresh optionmenu on toolbar */
 
-	set_filter_option_menu_toolbar();
-
-	gtk_widget_show (hbox);
-
-	gtk_widget_show (vbox);
-
-	gtk_widget_show (main_vbox);
+	set_filter_option_menu_toolbar ();
 
 	restore_main_window_geometry ();
 
-	window_set_icon(main_window);
+	window_set_icon (main_window);
 
 	gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
 	gtk_accel_group_unref (accel_group);
@@ -3989,13 +3938,13 @@ static void populate_main_window (void) {
 	// Set tooltips - also in prefs_load
 	tooltips = gtk_tooltips_new ();
 	if (default_toolbar_tips) {
-		gtk_tooltips_enable(tooltips);
+		gtk_tooltips_enable (tooltips);
 	}
 	else {
-		gtk_tooltips_disable(tooltips);
+		gtk_tooltips_disable (tooltips);
 	}
 
-	gtk_widget_grab_focus(entry);
+	gtk_widget_grab_focus (entry);
 }
 
 void play_sound (const char *sound, gboolean override) {
@@ -4276,7 +4225,7 @@ int main (int argc, char *argv[]) {
 	add_pixmap_path_for_theme ("default");
 	add_pixmap_directory (xqf_PACKAGE_DATA_DIR);
 
-	qstat_configfile = g_strconcat (xqf_PACKAGE_DATA_DIR, "/qstat.cfg", NULL);
+	qstat_configfile = g_build_filename (xqf_PACKAGE_DATA_DIR, "qstat.cfg", NULL);
 
 	dns_gtk_init ();
 
