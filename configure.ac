@@ -219,7 +219,6 @@ AC_CONFIG_FILES([
 	pixmaps/Makefile
 	pixmaps/flags/Makefile
 	pixmaps/trayicon/Makefile
-	xqf.spec
 	po/Makefile.in
 ])
 AC_OUTPUT
