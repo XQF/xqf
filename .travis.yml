@@ -12,3 +12,6 @@ before_install:
 script:
   - ./configure --with-qstat=quakestat
   - make
+
+notifications:
+  irc: "chat.freenode.net#xqf"
