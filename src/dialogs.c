@@ -481,6 +481,8 @@ static GtkWidget* create_AboutWindow (void);
 
 void about_dialog (GtkWidget *widget, gpointer data) {
 	const gchar *authors[] = {
+		_("Author:"),
+		"   Roman Pozlevich <roma@botik.ru>",
 		_("Maintainers:"),
 		"   Thomas Debesse <xqf@illwieckz.net>",
 		"   Ludwig Nussel <ludwig.nussel@suse.de>",
