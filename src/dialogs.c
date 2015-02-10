@@ -508,8 +508,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		NULL, //GTK_WINDOW (window),
 		"program-name", _("XQF"),
 		"version", XQF_VERSION,
-		/* translators can use the copyright symbol instead of (C) */
-		"copyright", _("Copyright (C) 1998-2002 Roman Pozlevich"),
+		"copyright", _("Copyright \xc2\xa9 1998-2002 Roman Pozlevich"),
 //		"license-type", GTK_LICENSE_GPL_2_0,			// TODO
 		"comments", _("XQF Game Server Browser"),
 		"authors", authors,
