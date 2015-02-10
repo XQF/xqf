@@ -488,13 +488,10 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"   Jordi Mallach <jordi@sindominio.net>",
 		"   Bill Adams <bill@evilbill.org>",
 		_("Contributors:"),
-		"   Jochen Baier <email@jochen-baier.de>",
-		"   Luca Camillo <kamy@tutorials.it>",
+		"   http://github.com/XQF/xqf/wiki/Contributors", /* https do not create link */
 		/* FIXME hacky, limit to the "website" entry & infos in configure.in */
 		_("Bug reports and feature requests:"),
 		"   http://github.com/XQF/xqf",		/* https do not create link */
-		"   mailing list <xqf-developer@lists.sourceforge.net>",
-		"   http://sourceforge.net/projects/xqf",
 	NULL};
 
 /*	const gchar *artists[] = {
