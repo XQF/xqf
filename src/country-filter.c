@@ -20,13 +20,15 @@
 #ifdef USE_GEOIP
 
 #include "country-filter.h"
-#include "i18n.h"
 #include "debug.h"
 #include "pixmaps.h"
 #include "loadpixmap.h"
 #include "xpm/noflag.xpm"
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gdk/gdk.h>
+
 #include <ctype.h>
 #include <unistd.h> // access()
 

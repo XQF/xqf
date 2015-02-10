@@ -31,9 +31,10 @@
 #include <dirent.h>
 #include <ctype.h>
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "xqf.h"
 #include "pref.h"
 #include "launch.h"

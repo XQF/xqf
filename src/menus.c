@@ -21,10 +21,11 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "menus.h"
 
 static void create_menu_recursive (GtkWidget *menu, 

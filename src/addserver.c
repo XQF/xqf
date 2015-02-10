@@ -18,7 +18,9 @@
 
 #include "gnuconfig.h"
 
-#include "i18n.h"
+#include <glib.h>
+#include <glib/gi18n.h>
+
 #include "game.h"
 #include "xqf-ui.h"
 #include "history.h"

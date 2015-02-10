@@ -144,7 +144,6 @@ zipped.h \
 redial.h \
 q3maps.h \
 utmaps.h \
-i18n.h \
 loadpixmap.h \
 scripts.h
 

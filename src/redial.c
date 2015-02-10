@@ -21,8 +21,10 @@
 #include <sys/types.h>
 #include <string.h> /* strlen, strstr, strcpy */
 
+#include <glib.h>
+#include <glib/gi18n.h>
+
 #include "xqf-ui.h"
-#include "i18n.h"
 #include "redial.h"
 #include "debug.h"
 #include "dialogs.h"

@@ -29,9 +29,10 @@
 #include <arpa/inet.h>  /* inet_aton, inet_ntoa */
 #include <errno.h>      /* errno */
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "source.h"

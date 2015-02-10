@@ -42,11 +42,12 @@
 #  include <locale.h>
 #endif
 
-#include <gtk/gtk.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "game.h"
