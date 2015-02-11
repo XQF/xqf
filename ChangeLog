@@ -1,5 +1,15 @@
-Jan 7, 2015: Artem Vorotnikov <artem@vorotnikov.me>
-- fix russian translation
+Feb 11, 2015: IR4 <gutzu@gmx.ch>
+- fix German translation
+
+Feb 10, 2015: Jordi Mallach <jordi@sindominio.net>
+- drop i18n.h and use on GLib's gi18n.h instead
+- use unicode copyright symbol
+
+Feb 9, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+- remove individual GLib/GTK includes
+
+Feb 7, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+- fix Russian translation
 
 Jan 23, 2015: Artem Vorotnikov <artem@vorotnikov.me>
 - add gettext template
@@ -25,6 +35,10 @@ Nov 7, 2014: Thomas Debesse <xqf@illwieckz.net>
 - synchronize translation files to source tree
 - fix some translations
 
+Nov 4, 2014: Arnaud Bonatti <arnaud.bonatti@gmail.com>
+- use GtkBuilder for main window and toolbar
+- use GtkAboutDialog
+
 Nov 3, 2014: Thomas Debesse <xqf@illwieckz.net>
 - update master server list
 
@@ -36,7 +50,7 @@ Nov 1, 2014: Zack Middleton <zturtleman@gmail.com>
 - fix ioquake3 and iostvef basegame gametype strings
 
 Oct 31, 2014: Thomas Debesse <xqf@illwieckz.net>
-- improve french translation
+- improve French translation
 
 Oct 27, 2014: Thomas Debesse <xqf@illwieckz.net>
 - fix gamesxml2c compilation warnings
@@ -120,7 +134,7 @@ Nov 06, 2013: Thomas Debesse <xqf@illwieckz.net>
 - filter Unvanquished extended color codes
 
 Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
-- complete french translation (100%)
+- complete French translation (100%)
 
 Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
 - detect more ioquake3 variant as ioquake3
@@ -129,8 +143,8 @@ Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
 
 Oct 30, 2013: Thomas Debesse <xqf@illwieckz.net>
 - recognize Urban Terror in Quake3 server list even if engine is bare ioquake3
-- update and improve french translation (near 100%),
-  use french typography (thin space, apostrophe, french quote, etc.)
+- update and improve French translation (near 100%),
+  use French typography (thin space, apostrophe, French quote, etc.)
 
 Oct 27, 2013: Thomas Debesse <xqf@illwieckz.net>
 - add Alien Arena, Reaction and Q3 Rally games
@@ -354,7 +368,7 @@ Apr 15, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - add q3a Excessive Plus gametypes (patch by Jason Santos)
 
 Apr 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add finish translation by Sami Laitinen
+- add Finish translation by Sami Laitinen
 
 Mar 24, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
 - use separate server type for ut2004
@@ -683,8 +697,8 @@ Jan 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - add g_gear flags of Urban Terror 3.2
 
 Jan 15, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Update danish translation (Morten Brix Pedersen)
-- Update german translation
+- Update Danish translation (Morten Brix Pedersen)
+- Update German translation
 
 Jan 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix GTK2 application icon
@@ -787,7 +801,7 @@ Nov 16, 2003: Jordi Mallach <jordi@sindominio.net>
 - update Catalan translation
 
 Nov 16, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- update german translation
+- update German translation
 - add custom arguments for FragOps UT2 mod
 
 Nov 16, 2003: Alex <alex_b@users.sourceforge.net>
@@ -799,7 +813,7 @@ Nov 09, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - update docu
 - remove useless gamespy game listings
 - add note that the savage script has to be modified (needs translation)
-- update german translation
+- update German translation
 
 Nov 06, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - update docu
@@ -846,7 +860,7 @@ Oct 19, 2003: Jordi Mallach <jordi@sindominio.net>
 - disable the QuakeForge HexenWorld master server while it gets fixed
 
 Oct 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- update german translation
+- update German translation
 - run msgfmt -c in po/updateonepo
 
 Oct 16, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -980,7 +994,7 @@ May 20, 2003: Jordi Mallach <jordi@sindominio.net>
 May 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - option to not count bots as players based on a patch by Mike Mestnik. Works
   for Q3 and Tribes2.
-- update german translation
+- update German translation
 
 May 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
 - switch hostname resolving off by default
@@ -1098,7 +1112,7 @@ Dec 18, 2002: Alex Burger <alex_b@users.sourceforge.net>
 
 Dec 18, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - update NEWS
-- update german translation
+- update German translation
 
 Dec 18, 2002: Jordi Mallach <jordi@sindominio.net>
 - Updated Catalan and Spanish translations.
@@ -1167,7 +1181,7 @@ Nov 5, 2002: Alex Burger <alex_b@users.sourceforge.net>
 
 Nov 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - use gtk functions instead of spaces to make test button look nice
-- update german translation
+- update German translation
 
 Nov 3, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Add Test buttons to Preferences - Sound page
@@ -1196,7 +1210,7 @@ Oct 30, 2002: Alex Burger <alex_b@users.sourceforge.net>
 
 Oct 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix some memleaks
-- update german translation
+- update German translation
 
 Oct 29, 2002: Alex Burger <alex_b@users.sourceforge.net>
 - Fixup master_check_master_addr_prefix
@@ -1219,7 +1233,7 @@ Oct 28, 2002: Alex <alex_b@users.sourceforge.net>
 
 Oct 28, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - fix source menu
-- update german translation
+- update German translation
 - print number of servers when changing filters too
 
 Oct 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -1362,7 +1376,7 @@ Oct 16, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 
 Oct 15, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - switch fix conversion when adding ut2s as gps
-- update german translation
+- update German translation
 
 Oct 15, 2002: Bill Adams <nospam-200201@evilbill.org>
 - Added some support for punkbuster and setting cl_punkbuster
@@ -1412,7 +1426,7 @@ Oct 13, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - grey out delete button for masters != favorites
 - comment out unused redial code
 - rename "Delete" -> "Remove from Favorites"
-- update german translation
+- update German translation
 - remove empty lines for unconfigures games in statistics dialog
 
 Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
@@ -1572,7 +1586,7 @@ Jul 26, 2002: Jordi Mallach <jordi@sindominio.net>
 Jul 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - variable number of server filters
 - fix segfault when deleting last player filter entry
-- update german translation
+- update German translation
 - better back up your config before trying this new versoin
 
 July 7, 2002: Alex Burger <alex@users.sourceforge dot net>
@@ -1617,7 +1631,7 @@ May 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
   hand else they will get lost
 - added master server preferences tab for voyager elite force (req upcoming
   qstat)
-- updated german translation
+- updated German translation
 
 Apr 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - acconfig.h seems to be deprecated, moved it to i18n.h
@@ -1631,7 +1645,7 @@ Mar 17, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
 - added RTCW protocol 58 to preferences
 - added a server_unref so old servers no longer pile up in srvinfo.gz
 - added player statistics per OS
-- updated german translation
+- updated German translation
 
 Feb 28, 2002: Jordi Mallach <jordi@sindominio.net>
 - updated copyright notice in about dialog
@@ -1707,7 +1721,7 @@ Dec 15, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - server filters were broken, fixed
 - new Tribes2 icon
 - updated TODO
-- updated german translation
+- updated German translation
 
 Dec 15, 2001: Alex Burger <alex@users.sourceforge dot net>
 - Added Edit / Add Default Masters command.  Adds in all the default
@@ -1735,7 +1749,7 @@ Nov 22, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - the ppc problem turned out to be a bug in filter.c, special thanks to Philipp
   Thomas for finding it!
 - other changes by Philipp Thomas to get rid of some compiler warnings
-- updated german translation
+- updated German translation
 
 Nov 21, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - fixed the ppc fix (hopefully ;)
@@ -1789,7 +1803,7 @@ Oct 03, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - initial descent3 support (requires qstat 2.4e)
 - changed version to 0.9.7c (new master for descent3)
 - added quakeforge workaround
-- updated german translation
+- updated German translation
 - fixed player filter dialog bug
 
 Oct 01, 2001: Jordi Mallach <jordi@sindominio.net>
@@ -1799,7 +1813,7 @@ Oct 01, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - major redesign of settings dialog
 - individually configurable nick for q1,qw,q2,t2
 - more translatabe strings
-- updated german translation
+- updated German translation
 
 Oct 01, 2001: Jordi Mallach <jordi@sindominio.net>
 - updated Spanish translation
@@ -1809,7 +1823,7 @@ Sep 30, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - disabled write_quake_variables function for q3
 - added ability to use custom configs for q3
 - made some error popups translatable
-- updated german translation
+- updated German translation
 
 Sep 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added Rune support
@@ -1819,12 +1833,12 @@ Sep 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - added support for games using the gamespy protocol
 - added q3,ut,sof,nolf,rally masters,turok2 and shogo masters
 - made game names translatable
-- updated german translation
+- updated German translation
 - changed version to 0.9.7b
 
 Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - more translatable strings marked
-- updated german translation
+- updated German translation
 
 Sep 27, 2001: Jordi Mallach <jordi@sindominio.net>
 - Updated Spanish translation
@@ -1840,7 +1854,7 @@ Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
 - changed default q3 command: linuxquake3 -> quake3
 - made string for tooltip for server&playerfilter translatable
 - split about dialog string into smaller chunks for easier translation
-- update for german translation
+- update for German translation
 
 Sept 24,2001: Alex Burger <alex@users.sourceforge dot net>
 - Changed version to 0.9.7a

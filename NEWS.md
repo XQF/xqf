@@ -3,10 +3,10 @@ XQF 1.0.6-current
 
 Changes since 1.0.6:
 
-* Add gettext template
+* Add gettext template (online translation tool now hosted by Transifex)
 * Add some Wolfenstein: Enemy Territory and Enemy Territory: Legacy mods (like TrueCombat mods)
 * Recognize some OpenArena games hosted with Q3Arena and Q3Arena games hosted by OpenArena
-* Update French and Russian translation (online translation tool hosted by Transifex)
+* Update French and Russian translation
 * Update master server list
 * Filter escape codes in Call Of Duty gametypes
 * Fix Q3Rally and Warsow support (status2 packet)
@@ -16,6 +16,9 @@ Changes since 1.0.6:
 * Fix ioquake3 and iostvef basegame gametype strings
 * Fix gamesxml2c compilation warnings
 * Fix automake warnings
+* Port some UI part to GtkBuilder, use GtkAboutDialog
+* Remove GLib/GTK individual includes
+* Remove i18n.h and use GLib's gi18n.h instead
 * Remove splash
 * Remove GTK+1 remains
 

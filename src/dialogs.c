@@ -496,11 +496,12 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"   http://github.com/XQF/xqf",		/* https do not create link */
 	NULL};
 
-/*	const gchar *artists[] = {
-		"",
+	const gchar *artists[] = {
+		_("XQF Logo:"),
+		"   Luca Camillo <kamy@tutorials.it>",
 	NULL};
 
-	const gchar *documenters[] = {
+/*	const gchar *documenters[] = {
 		"",
 	NULL};
 */
@@ -514,7 +515,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"comments", _("XQF Game Server Browser"),
 		"authors", authors,
 //		"documenters", documenters,
-//		"artists", artists,
+		"artists", artists,
 		"translator-credits", _("translator-credits"),
 //		"logo", "splash.png",	// old splash [don't work], isn't icon better?
 		"logo-icon-name", "xqf",
