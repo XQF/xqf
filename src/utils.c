@@ -34,12 +34,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "utils.h"
 #include "debug.h"
-#include "i18n.h"
 
 static char* _find_file_in_path(const char* files, gboolean relative);
 static char* _find_file_in_path_list(char** binaries, gboolean relative);

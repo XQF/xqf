@@ -29,7 +29,9 @@
 #include <arpa/inet.h>  /* inet_ntoa */
 #include <stdlib.h>     /* atoi */
 
-#include "i18n.h"
+#include <glib.h>
+#include <glib/gi18n.h>
+
 #include "xqf-ui.h"
 #include "game.h"
 #include "pref.h"

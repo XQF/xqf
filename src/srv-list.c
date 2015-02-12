@@ -24,7 +24,6 @@
 #include <arpa/inet.h>  /* inet_ntoa */
 #include <string.h>     /* strncpy */
 
-#include "i18n.h"
 #include "xqf-ui.h"
 #include "game.h"
 #include "sort.h"

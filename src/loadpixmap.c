@@ -28,12 +28,13 @@
 
 #include <dlfcn.h>
 
-#include <gtk/gtk.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 #include "loadpixmap.h"
 #include "pixmaps.h"
-#include "i18n.h"
 #include "debug.h"
 
 /* This is an internally used function to check if a pixmap file exists. */

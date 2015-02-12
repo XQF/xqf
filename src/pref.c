@@ -28,9 +28,10 @@
 #include <sys/resource.h>   /* setrlimit */
 #include <errno.h>
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "game.h"

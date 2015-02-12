@@ -40,7 +40,9 @@
 #include <readline/history.h>
 #endif
 
-#include "i18n.h"
+#include <glib.h>
+#include <glib/gi18n.h>
+
 #include "xqf.h"
 #include "utils.h"
 #ifndef RCON_STANDALONE

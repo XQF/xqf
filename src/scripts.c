@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#include <glib.h>
+#include <glib/gi18n.h>
+
 #include "game.h"
 #include "server.h"
 #include "xqf.h"
@@ -31,7 +34,6 @@
 #include "debug.h"
 #include "scripts.h"
 #include "config.h"
-#include "i18n.h"
 #include "dialogs.h"
 
 static unsigned MAX_SCRIPT_VERSION = 1;

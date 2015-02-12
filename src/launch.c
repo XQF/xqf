@@ -27,9 +27,10 @@
 #include <signal.h>     /* kill, signal... */
 #include <stdlib.h>     /* setenv */
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "xqf.h"
 #include "game.h"
 #include "pref.h"

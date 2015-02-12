@@ -22,9 +22,10 @@
 #include <regex.h>
 #include <string.h>     /* strcmp */
 
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "i18n.h"
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "srv-list.h"
