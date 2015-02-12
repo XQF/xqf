@@ -7,12 +7,13 @@
 # Michel Briand <michelbriand@free.fr>, 2003
 # Thomas Debesse <dev@illwieckz.net>, 2014
 # Thomas DEBESSE <dev@illwieckz.net>, 2015
+# Thomas DEBESSE <dev@illwieckz.net>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-22 22:20+0300\n"
-"PO-Revision-Date: 2015-02-07 10:07+0000\n"
+"PO-Revision-Date: 2015-02-12 11:48+0000\n"
 "Last-Translator: Thomas DEBESSE <dev@illwieckz.net>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/xqf/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1110,7 +1111,7 @@ msgstr "Utilisation : %s [type de serveur] <ip> <port>\n"
 #: src/rcon.c:687
 #, c-format
 msgid "  server type is either --qws, --hws, --hls or --dm3s.\n"
-msgstr "  le type de serveur est soit --qws, soit --hws, soit --hls.\n"
+msgstr "le type de serveur est soit --qws, --hws, --hls ou --dm3s.\n"
 
 #: src/rcon.c:688
 #, c-format
@@ -1288,7 +1289,7 @@ msgstr "Clé du CD UT2004 non trouvée, ne peut interroger le serveur maître «
 #: src/stat.c:1458
 #, c-format
 msgid "Failed to create a temporary file %s: %s"
-msgstr "Échec de la création du fichier temporaire %s: %s"
+msgstr "Échec de la création du fichier temporaire %s : %s"
 
 #: src/statistics.c:82 src/statistics.c:93
 msgid "Servers"
@@ -1360,7 +1361,7 @@ msgstr "erreur d’écriture sur le fichier destination"
 
 #: src/utils.c:1144
 msgid "read error on source file"
-msgstr "erreyr de lecture sur le fichier source"
+msgstr "erreur de lecture sur le fichier source"
 
 #: src/xqf-ui.c:58
 msgid "Type"
@@ -1553,7 +1554,7 @@ msgstr "Hôte %s non trouvé"
 #: src/xqf.c:1552 src/xqf.c:4099
 #, c-format
 msgid "\"%s\" is not valid host[:port] combination."
-msgstr "\"%s\" n’est pas une combinaison hôte[:port] valide"
+msgstr "« %s » n’est pas une combinaison hôte[:port] valide"
 
 #: src/xqf.c:1652
 msgid "Remove selected servers from all lists?"
@@ -1921,7 +1922,7 @@ msgstr "Erreur au chargement du fichier pixmap : %s"
 #: src/trayicon.c:382
 #, c-format
 msgid "Error in file: %s line: %d\n"
-msgstr "Erreur dans le fichier : %s line %d\n"
+msgstr "Erreur dans le fichier : %s ligne : %d\n"
 
 #: src/trayicon.c:441
 msgid "Show"
