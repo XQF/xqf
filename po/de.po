@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# IR4 <gutzu@gmx.ch>, 2015
 # Ludwig Nussel <l-n@users.sourceforge.net>, 2003-2005
 msgid ""
 msgstr ""
 "Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-22 22:20+0300\n"
-"PO-Revision-Date: 2015-02-02 10:38+0000\n"
-"Last-Translator: Artem Vorotnikov <artem@vorotnikov.me>\n"
+"PO-Revision-Date: 2015-02-11 17:57+0000\n"
+"Last-Translator: IR4 <gutzu@gmx.ch>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xqf/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +21,11 @@ msgstr ""
 
 #: xqf.desktop.in.h:1
 msgid "Game Server Browser"
-msgstr ""
+msgstr "Spieleserver Browser"
 
 #: xqf.desktop.in.h:2
 msgid "Locate and connect to game servers"
-msgstr ""
+msgstr "Finde und verbinde mit Spiele Server"
 
 #: xqf.desktop.in.h:3 src/dialogs.c:485
 msgid "XQF Game Server Browser"
@@ -32,7 +33,7 @@ msgstr "XQF Spieleserver Browser"
 
 #: src/addmaster.c:99
 msgid "You have to specify a name and an address."
-msgstr "Sie müssen einen Namen und eine Adresse angeben."
+msgstr "Du musst einen Namen und eine Adresse angeben."
 
 #: src/addmaster.c:105
 #, c-format
@@ -185,7 +186,7 @@ msgstr "Server trifft zu wenn"
 
 #: src/filter.c:1267
 msgid "ping is less than"
-msgstr "sein Ping kleiner ist als"
+msgstr "Ping ist kleiner als"
 
 #: src/filter.c:1287
 msgid "the game contains the string"
@@ -201,7 +202,7 @@ msgstr "der Spieltyp diese Zeichenkette enthält"
 
 #: src/filter.c:1341
 msgid "it is not full"
-msgstr "er nicht voll ist"
+msgstr "er ist nicht voll"
 
 #: src/filter.c:1348
 msgid "the version contains the string"
@@ -209,7 +210,7 @@ msgstr "die Version diese Zeichenkette enthält"
 
 #: src/filter.c:1367
 msgid "it is not empty"
-msgstr "er nicht leer ist"
+msgstr "er ist nicht leer"
 
 #: src/filter.c:1376
 msgid "the map contains the string"
@@ -217,7 +218,7 @@ msgstr "das Karte diese Zeichenkette enthält"
 
 #: src/filter.c:1394
 msgid "cheats are not allowed"
-msgstr "Cheats nicht erlaubt sind"
+msgstr "Cheats sind nicht erlaubt"
 
 #: src/filter.c:1402
 msgid "the server name contains the string"
@@ -544,7 +545,7 @@ msgstr "Aufruf"
 
 #: src/pref.c:2737
 msgid "*** Not Implemented ***"
-msgstr "*** Nicht Implementiert ***"
+msgstr "*** Nicht implementiert ***"
 
 #: src/pref.c:2748
 msgid "Custom Args"
@@ -640,7 +641,7 @@ msgstr "cl_punkbuster beim Verbinden setzen"
 
 #: src/pref.c:3315
 msgid "enable console"
-msgstr ""
+msgstr "Konsole einschalten"
 
 #: src/pref.c:3369
 msgid "Pass memory settings on command line"
@@ -865,7 +866,7 @@ msgstr "Beim Spielstart..."
 
 #: src/pref.c:4130
 msgid "Terminate XQF"
-msgstr "XQF beenden"
+msgstr "XQF Beenden"
 
 #: src/pref.c:4142
 msgid "Iconify XQF window"
@@ -1000,7 +1001,7 @@ msgstr "Skripte"
 #: src/pref.c:4931
 msgid ""
 "Unable to get user name/home directory/XDG config directory/tmp directory"
-msgstr ""
+msgstr "Kein Benutzer vorhanden name/home directory/XDG config directory/tmp directory"
 
 #: src/pref.c:5230
 #, c-format
@@ -1061,11 +1062,11 @@ msgstr "Regulärer Ausdruck"
 
 #: src/psearch.c:173
 msgid "Find Player"
-msgstr "Spieler suchen"
+msgstr "Spieler finden"
 
 #: src/psearch.c:184
 msgid "Find Player:"
-msgstr "Spieler suchen:"
+msgstr "Spieler finden:"
 
 #: src/psearch.c:393
 msgid "Player not found."
@@ -1107,7 +1108,7 @@ msgstr "Verwendung: %s [Servertyp] <ip> <port>\n"
 #: src/rcon.c:687
 #, c-format
 msgid "  server type is either --qws, --hws, --hls or --dm3s.\n"
-msgstr ""
+msgstr "Server Typ ist entweder --qws, --hws, --hls or --dm3s.\n"
 
 #: src/rcon.c:688
 #, c-format
@@ -1490,7 +1491,7 @@ msgid ""
 "\n"
 "The server sucks for the following reason:\n"
 "%s"
-msgstr ""
+msgstr "\n\nDer Server ist für die Tonne. Grund:\n%s"
 
 #: src/xqf.c:972
 #, c-format
@@ -1554,7 +1555,7 @@ msgstr "\"%s\" ist keine zulässige host[:port] Kombination"
 
 #: src/xqf.c:1652
 msgid "Remove selected servers from all lists?"
-msgstr ""
+msgstr "Entferne den ausgewählten Server von allen Listen?"
 
 #: src/xqf.c:1787
 #, c-format
@@ -1607,7 +1608,7 @@ msgstr "Zu Favoriten hinzufügen"
 
 #: src/xqf.c:2561
 msgid "Remove"
-msgstr ""
+msgstr "Entferne"
 
 #: src/xqf.c:2570 src/xqf.c:2671
 msgid "Copy"
@@ -1667,7 +1668,7 @@ msgstr "Zu Favoriten hin_zufügen"
 
 #: src/xqf.c:2793 src/xqf.c:3088
 msgid "_Remove"
-msgstr ""
+msgstr "_Entferne"
 
 #: src/xqf.c:2802
 msgid "_Copy"
@@ -1881,7 +1882,7 @@ msgstr "Verwendung:\n\txqf [OPTIONEN]\n\nOPTIONEN:\n\t--launch \"[SERVERTYP] IP\
 
 #: src/xqf.c:4269
 msgid "gdk-pixbuf is not installed. Some icons may not be displayed"
-msgstr ""
+msgstr "gdk-pixbuf ist nicht installiert. Einige Icons können nicht gezeigt werden"
 
 #: src/xqf.c:4309
 msgid "Reading server lists"
