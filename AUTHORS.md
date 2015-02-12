@@ -53,10 +53,11 @@ Translators
   - Sami Laitinen <azmotus@gmail.com>
   - Thomas Debesse <xqf@illwieckz.net>
   - Michel Briand <michelbriand@free.fr>
+  - IR4 <gutzu@gmx.ch>
   - Ludwig Nussel <ludwig.nussel@suse.de>
   - Miłosz Kosobucki <mikomek@poczta.onet.pl>
   - Artem Vorotnikov <artem@vorotnikov.me>
   - Dan Korostelev <dan@ats.energo.ru>
   - François Perichon
 
-See the Wiki page for more information: https://github.com/XQF/xqf/wiki/Authors
+See the Wiki page for more information: https://github.com/XQF/xqf/wiki/Contributors
