@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Jordi Mallach <jordi@sindominio.net>, 2002-2004
+# Jordi Mallach <jordi@softcatala.org>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-22 22:20+0300\n"
-"PO-Revision-Date: 2015-02-02 10:38+0000\n"
-"Last-Translator: Artem Vorotnikov <artem@vorotnikov.me>\n"
+"PO-Revision-Date: 2015-02-16 23:04+0000\n"
+"Last-Translator: Jordi Mallach <jordi@softcatala.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/projects/p/xqf/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +21,11 @@ msgstr ""
 
 #: xqf.desktop.in.h:1
 msgid "Game Server Browser"
-msgstr ""
+msgstr "Navegador de servidors de jocs"
 
 #: xqf.desktop.in.h:2
 msgid "Locate and connect to game servers"
-msgstr ""
+msgstr "Trobeu i connecteu-vos a servidors de jocs"
 
 #: xqf.desktop.in.h:3 src/dialogs.c:485
 msgid "XQF Game Server Browser"
@@ -1000,7 +1001,7 @@ msgstr "Seqüències"
 #: src/pref.c:4931
 msgid ""
 "Unable to get user name/home directory/XDG config directory/tmp directory"
-msgstr ""
+msgstr "No s'ha pogut obtenir el nom d'usuari/directori personal/directori de configuració XDG/directori temporal"
 
 #: src/pref.c:5230
 #, c-format
@@ -1490,7 +1491,7 @@ msgid ""
 "\n"
 "The server sucks for the following reason:\n"
 "%s"
-msgstr ""
+msgstr "\n\nAquest servidor és dolent per la raó següent:\n%s"
 
 #: src/xqf.c:972
 #, c-format
@@ -1881,7 +1882,7 @@ msgstr "Forma d'ús:\n\txqf [OPCIONS]:\n\nOPCIONS:\n\t--launch «[TIPUSDESERVIDO
 
 #: src/xqf.c:4269
 msgid "gdk-pixbuf is not installed. Some icons may not be displayed"
-msgstr ""
+msgstr "gdk-pixbuf no està instal·lat. És possible que no es mostren algunes icones"
 
 #: src/xqf.c:4309
 msgid "Reading server lists"
