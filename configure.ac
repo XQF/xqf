@@ -217,7 +217,12 @@ AC_CONFIG_FILES([
 	src/tga/Makefile
 	docs/Makefile
 	pixmaps/Makefile
+	pixmaps/128x128/Makefile
+	pixmaps/22x22/Makefile
+	pixmaps/32x32/Makefile
+	pixmaps/48x48/Makefile
 	pixmaps/flags/Makefile
+	pixmaps/scalable/Makefile
 	pixmaps/trayicon/Makefile
 	po/Makefile.in
 ])
