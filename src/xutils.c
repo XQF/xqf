@@ -36,14 +36,3 @@ void iconify_window (GdkWindow *window) {
 
 	XIconifyWindow (GDK_DISPLAY (), xwindow, DefaultScreen (GDK_DISPLAY ()));
 }
-
-static const char* minimize_icon = "xqf.svg";
-
-void window_set_icon (GtkWidget *win) {
-	GdkPixbuf* pixbuf;
-	pixbuf = load_pixmap_as_pixbuf(minimize_icon);
-	if (pixbuf) {
-		gtk_window_set_icon (GTK_WINDOW (win), pixbuf);
-		g_object_unref (pixbuf);
-	}
-}
