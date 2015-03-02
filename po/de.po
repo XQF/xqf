@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-22 22:20+0300\n"
-"PO-Revision-Date: 2015-02-11 17:57+0000\n"
+"PO-Revision-Date: 2015-03-02 19:58+0000\n"
 "Last-Translator: IR4 <gutzu@gmx.ch>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xqf/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1796,7 +1796,7 @@ msgstr "_Einstellungen"
 
 #: src/xqf.c:3305
 msgid "_Server Filters"
-msgstr "Server_filter"
+msgstr "_Serverfilter"
 
 #: src/xqf.c:3314
 msgid "_Help"
