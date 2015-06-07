@@ -26,7 +26,7 @@ src/gnuconfig.h.in \
 src/xpm/Makefile.in \
 src/xpm/Makefile \
 src/*.o \
-src/test-utils \
+src/test_utils \
 src/xqf \
 pixmaps/Makefile.in \
 pixmaps/flags/Makefile.in \
