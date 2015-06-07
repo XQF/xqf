@@ -69,6 +69,7 @@ static struct history *rcon_history = NULL;
 
 static GtkWidget *rcon_combo = NULL;
 static GtkWidget *rcon_text = NULL;
+GtkTextBuffer *rcon_text_buffer;
 #endif
 
 static char* msg_terminate (char *msg, int size);
@@ -91,12 +92,10 @@ static void rcon_print (char *fmt, ...) {
 		g_vsnprintf (buf, sizeof(buf), fmt, ap);
 		va_end (ap);
 
-		gtk_text_freeze (GTK_TEXT (rcon_text));
-		gtk_text_insert (GTK_TEXT (rcon_text), NULL, NULL, NULL, buf, -1);
-		gtk_text_thaw (GTK_TEXT (rcon_text));
-		gtk_adjustment_set_value (GTK_TEXT (rcon_text)->vadj,
-				GTK_TEXT (rcon_text)->vadj->upper - 
-				GTK_TEXT (rcon_text)->vadj->page_size);
+		gtk_text_buffer_set_text(rcon_text_buffer, buf, strlen(buf));
+		gtk_adjustment_set_value (GTK_TEXT_VIEW (rcon_text)->vadjustment,
+				GTK_TEXT_VIEW (rcon_text)->vadjustment->upper -
+				GTK_TEXT_VIEW (rcon_text)->vadjustment->page_size);
 	}
 #endif
 }
@@ -376,12 +375,10 @@ static void rcon_input_callback (gpointer data, int fd,
 		GdkInputCondition condition) {
 	char* msg = rcon_receive();
 
-	gtk_text_freeze (GTK_TEXT (rcon_text));
-	gtk_text_insert (GTK_TEXT (rcon_text), NULL, NULL, NULL, msg, -1);
-	gtk_text_thaw (GTK_TEXT (rcon_text));
-	gtk_adjustment_set_value (GTK_TEXT (rcon_text)->vadj,
-			GTK_TEXT (rcon_text)->vadj->upper - 
-			GTK_TEXT (rcon_text)->vadj->page_size);
+	gtk_text_buffer_set_text (rcon_text_buffer, msg, strlen(msg));
+	gtk_adjustment_set_value (GTK_TEXT_VIEW (rcon_text)->vadjustment,
+			GTK_TEXT_VIEW (rcon_text)->vadjustment->upper -
+			GTK_TEXT_VIEW (rcon_text)->vadjustment->page_size);
 	g_free(msg);
 }
 #endif
@@ -397,11 +394,7 @@ static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
 
 #ifndef RCON_STANDALONE
 static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
-	gtk_text_freeze (GTK_TEXT (rcon_text));
-	gtk_text_set_point (GTK_TEXT (rcon_text), 0);
-	gtk_text_forward_delete (GTK_TEXT (rcon_text), 
-			gtk_text_get_length (GTK_TEXT (rcon_text)));
-	gtk_text_thaw (GTK_TEXT (rcon_text));
+	gtk_text_buffer_set_text (rcon_text_buffer, "", 0);
 }
 #endif
 
@@ -507,13 +500,15 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-	rcon_text = gtk_text_new (NULL, NULL);
-	gtk_text_set_editable (GTK_TEXT (rcon_text), FALSE);
+	rcon_text_buffer = gtk_text_buffer_new (NULL);
+	rcon_text = gtk_text_view_new_with_buffer (rcon_text_buffer);
+
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (rcon_text), FALSE);
 	GTK_WIDGET_UNSET_FLAGS (rcon_text, GTK_CAN_FOCUS);
 	gtk_box_pack_start (GTK_BOX (hbox), rcon_text, TRUE, TRUE, 0);
 	gtk_widget_show (rcon_text);
 
-	vscrollbar = gtk_vscrollbar_new (GTK_TEXT (rcon_text)->vadj);
+	vscrollbar = gtk_vscrollbar_new (GTK_TEXT_VIEW (rcon_text)->vadjustment);
 	GTK_WIDGET_UNSET_FLAGS (vscrollbar, GTK_CAN_FOCUS);
 	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
 	gtk_widget_show (vscrollbar);

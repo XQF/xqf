@@ -53,6 +53,8 @@ static GtkWidget *delete_button;
 static GtkWidget *up_button;
 static GtkWidget *down_button;
 
+GtkTextBuffer *comment_text_buffer;
+
 static int current_row = -1;
 
 static void player_filter_save_patterns (void);
@@ -227,23 +229,21 @@ static void pattern_clist_sync_selection (void) {
 		list = g_slist_nth (curplrs, current_row);
 		pp = (struct player_pattern *) list->data;
 
-		if (!GTK_WIDGET_REALIZED (comment_text))
+		if (gtk_widget_get_realized(comment_text)==FALSE) {
 			gtk_widget_realize (comment_text);
-
-		gtk_text_freeze (GTK_TEXT (comment_text));
-		gtk_text_set_point (GTK_TEXT (comment_text), 0);
-		gtk_text_forward_delete (GTK_TEXT (comment_text),
-				gtk_text_get_length (GTK_TEXT (comment_text)));
-		gtk_text_set_point (GTK_TEXT (comment_text), 0);
-		if (pp->comment) {
-			gtk_text_insert (GTK_TEXT (comment_text), NULL, NULL, NULL,
-					pp->comment, strlen (pp->comment));
-			gtk_text_set_point (GTK_TEXT (comment_text), 0);
 		}
-		gtk_text_set_editable (GTK_TEXT (comment_text), TRUE);
-		gtk_text_thaw (GTK_TEXT (comment_text));
+	}
 
-		gtk_entry_set_text (GTK_ENTRY (pattern_entry), 
+	gtk_text_buffer_set_text(comment_text_buffer, "", 0);
+
+	if (current_row >= 0) {
+		if (pp->comment) {
+			gtk_text_buffer_set_text(comment_text_buffer, pp->comment,
+				strlen (pp->comment));
+		}
+		gtk_text_view_set_editable (GTK_TEXT_VIEW (comment_text), TRUE);
+
+		gtk_entry_set_text (GTK_ENTRY (pattern_entry),
 				(pp->pattern)? pp->pattern : "");
 		gtk_entry_set_editable (GTK_ENTRY (pattern_entry), TRUE);
 
@@ -259,13 +259,6 @@ static void pattern_clist_sync_selection (void) {
 		gtk_widget_set_sensitive (down_button, TRUE);
 	}
 	else {
-		gtk_text_freeze (GTK_TEXT (comment_text));
-		gtk_text_set_point (GTK_TEXT (comment_text), 0);
-		gtk_text_forward_delete (GTK_TEXT (comment_text),
-				gtk_text_get_length (GTK_TEXT (comment_text)));
-		gtk_text_set_editable (GTK_TEXT (comment_text), FALSE);
-		gtk_text_thaw (GTK_TEXT (comment_text));
-
 		gtk_entry_set_text (GTK_ENTRY (pattern_entry), "");
 		gtk_entry_set_editable (GTK_ENTRY (pattern_entry), FALSE);
 
@@ -340,7 +333,7 @@ static void sync_pattern_data (void) {
 		mode = PATTERN_MODE_REGEXP;
 
 	pattern = strdup_strip (gtk_entry_get_text (GTK_ENTRY (pattern_entry)));
-	comment = gtk_editable_get_chars (GTK_EDITABLE (comment_text), 0, -1);
+	comment = gtk_editable_get_chars (GTK_EDITABLE (comment_text_buffer), 0, -1);
 
 	update_pattern = (pp->pattern && pp->pattern[0])? 
 		!pattern || !pattern[0] || strcmp (pp->pattern, pattern) :
@@ -705,12 +698,14 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_container_add (GTK_CONTAINER (frame), hbox);
 
-	comment_text = gtk_text_new (NULL, NULL);
+	comment_text_buffer = gtk_text_buffer_new (NULL);
+	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
+
 	gtk_widget_set_usize (comment_text, -1, 80);
 	gtk_box_pack_start (GTK_BOX (hbox), comment_text, TRUE, TRUE, 0);
 	gtk_widget_show (comment_text);
 
-	vscrollbar = gtk_vscrollbar_new (GTK_TEXT (comment_text)->vadj);
+	vscrollbar = gtk_vscrollbar_new (GTK_TEXT_VIEW (comment_text)->vadjustment);
 	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
 	gtk_widget_show (vscrollbar);
 

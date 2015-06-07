@@ -52,6 +52,9 @@ static  GtkWidget *customcfg_combo;
 static  GtkWidget *sucks_check_button;
 static  GtkWidget *comment_text;
 
+GtkTextBuffer *comment_text_buffer;
+GtkTextIter start, end;
+
 /*pulp*/
 static  GtkWidget *spinner;
 static  GtkAdjustment *adj;
@@ -334,7 +337,10 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
 	rconpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (rcon_entry)));
 	reserved = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
 	sucks = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (sucks_check_button));
-	comment = gtk_editable_get_chars (GTK_EDITABLE (comment_text), 0, -1);
+
+	gtk_text_buffer_get_iter_at_offset (comment_text_buffer, &start, 0);
+	gtk_text_buffer_get_iter_at_offset (comment_text_buffer, &end, 12);
+	comment = gtk_text_buffer_get_text (comment_text_buffer, &start, &end, FALSE);
 
 	props = properties (s);
 
@@ -725,19 +731,15 @@ static GtkWidget *server_comment_page (struct server *s) {
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
 
-	comment_text = gtk_text_new (NULL, NULL);
+
+	comment_text_buffer = gtk_text_buffer_new (NULL);
+	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
+	if (comment) {
+		gtk_text_buffer_set_text (comment_text_buffer, comment, strlen (comment));
+	}
 	//  gtk_widget_set_usize (comment_text, -1, 80);
 	gtk_container_add (GTK_CONTAINER (scrollwin), comment_text);
 	gtk_widget_show (comment_text);
-
-	gtk_text_freeze (GTK_TEXT (comment_text));
-	if (comment) {
-		gtk_text_insert (GTK_TEXT (comment_text), NULL, NULL, NULL,
-				comment, strlen (comment));
-		gtk_text_set_point (GTK_TEXT (comment_text), 0);
-	}
-	gtk_text_set_editable (GTK_TEXT (comment_text), TRUE);
-	gtk_text_thaw (GTK_TEXT (comment_text));
 
 	gtk_widget_show (scrollwin);
 
