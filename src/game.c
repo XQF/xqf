@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -227,7 +227,7 @@ void init_games() {
 	game_set_attribute(SFS_SERVER,"game_notes",strdup(_
 				("Note: Soldier of Fortune will not connect to a server correctly\n"\
 				 "without creating a startup script for the game.  Please see the\n"\
-				 "XQF documentation for more information."))); 
+				 "XQF documentation for more information.")));
 	game_set_attribute(UN_SERVER,"game_notes",strdup(_
 				("Note: Unreal Tournament will not launch correctly without\n"\
 				 "modifications to the game's startup script.  Please see the\n"\
@@ -300,7 +300,7 @@ enum server_type id2type (const char *id) {
 
 /*
  *  This function should be used only for configuration saving to make
- *  possible qstat2.2<->qstat2.3 migration w/o loss of some game-specific 
+ *  possible qstat2.2<->qstat2.3 migration w/o loss of some game-specific
  *  preferences.
  */
 
@@ -620,7 +620,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 			player->model = (char*)clan;
 		}
 		else {
-			player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1; 
+			player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1;
 			q3_unescape(player->model, clan);
 		}
 	}
@@ -664,12 +664,12 @@ static struct player *un_parse_player (char *token[], int n, struct server *s) {
 	skin_strlen = strlen (token[4]) + 1;
 	mesh_strlen = strlen (token[5]) + 1;
 
-	player = g_malloc0 (sizeof (struct player) + name_strlen + 
+	player = g_malloc0 (sizeof (struct player) + name_strlen +
 			skin_strlen + mesh_strlen);
 
 	ptr = (char *) player + sizeof (struct player);
 	player->name = strcpy (ptr, token[0]);
-	ptr += name_strlen; 
+	ptr += name_strlen;
 
 	player->frags = strtosh (token[1]);
 	player->ping = strtosh (token[2]);
@@ -813,7 +813,7 @@ static void un_analyze_serverinfo (struct server *s) {
 
 		// password required?
 		// If not password=False or password=0, set SERVER_PASSWORD
-		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0) && 
+		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0) &&
 				(g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0"))) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
@@ -1136,8 +1136,8 @@ static char *q3a_threewave_gametypes[MAX_Q3A_THREEWAVE_TYPES] = {
 	"Obelisk",          // 6  - Obelisk       (invalid, don't use this)
 	"Harvester",        // 7  - Harvester     (invalid, don't use this)
 	"Portal",           // 8  - Portal        (invalid, don't use this)
-	"CaptureStrike",    // 9  - CaptureStrike 
-	"Classic CTF",      // 10 - Classic CTF   
+	"CaptureStrike",    // 9  - CaptureStrike
+	"Classic CTF",      // 10 - Classic CTF
 	NULL                // 11+ ???
 };
 
@@ -2115,7 +2115,7 @@ static int quake_config_is_valid (struct server *s) {
 		if (stat (g->real_dir, &stat_buf) != 0 || !S_ISDIR (stat_buf.st_mode)) {
 			// directory name, game name
 			dialog_ok (NULL, _("\"%s\" is not a directory\n"
-						"Please specify correct %s working directory."), 
+						"Please specify correct %s working directory."),
 					g->real_dir, g->name);
 			return FALSE;
 		}
@@ -2126,14 +2126,14 @@ static int quake_config_is_valid (struct server *s) {
 	if (stat (path, &stat_buf) || !S_ISDIR (stat_buf.st_mode)) {
 		if (!g->real_dir || g->real_dir[0] == '\0') {
 			// game name
-			dialog_ok (NULL, _("Please specify correct %s working directory."), 
+			dialog_ok (NULL, _("Please specify correct %s working directory."),
 					g->name);
 		}
 		else {
-			dialog_ok (NULL,  
+			dialog_ok (NULL,
 					// directory, subdirectory, game name
 					_("Directory \"%s\" doesn\'t contain \"%s\" subdirectory.\n"
-						"Please specify correct %s working directory."), 
+						"Please specify correct %s working directory."),
 					g->real_dir, cfgdir, g->name);
 		}
 		g_free (path);
@@ -2157,7 +2157,7 @@ static int config_is_valid_generic (struct server *s) {
 		if (stat (g->real_dir, &stat_buf) != 0 || !S_ISDIR (stat_buf.st_mode)) {
 			// %s directory, game name
 			dialog_ok (NULL, _("\"%s\" is not a directory\n"
-						"Please specify correct %s working directory."), 
+						"Please specify correct %s working directory."),
 					g->real_dir, g->name);
 			return FALSE;
 		}
@@ -2167,7 +2167,7 @@ static int config_is_valid_generic (struct server *s) {
 }
 
 static int complain_launch_cant_write_file(const char* file) {
-	return dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
+	return dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
 			//%s frontend.cfg
 			_("Cannot write to file \"%s\".\n\nLaunch client anyway?"), file);
 }
@@ -2199,7 +2199,7 @@ static int write_passwords (const char *filename, const struct condef *con) {
 	FILE *f;
 
 	f = open_cfg (filename, TRUE);
-	if (!f) 
+	if (!f)
 		return FALSE;
 
 	if (con->password)
@@ -3204,7 +3204,7 @@ static int t2_exec (const struct condef *con, int forkit) {
 
 	if (con->server) {
 
-		if (default_t2_name && *default_t2_name) {   
+		if (default_t2_name && *default_t2_name) {
 			argv[argi++] = "-login";
 			argv[argi++] = default_t2_name;
 		}
@@ -3375,7 +3375,7 @@ static char *dir_custom_cfg_filter (const char *dir, const char *str) {
 	len = strlen (str);
 
 	for (ext = cfgext; *ext; ext++) {
-		if (len > strlen (*ext) && 
+		if (len > strlen (*ext) &&
 				strcasecmp (str + len - strlen (*ext), *ext) == 0) {
 			return g_strdup (str);
 		}
@@ -3392,8 +3392,8 @@ static GList *custom_cfg_filter (GList *list) {
 
 	for (tmp = list; tmp; tmp = tmp->next) {
 		str = (char *) tmp->data;
-		if (strcmp (str, EXEC_CFG) && strcmp (str, PASSWORD_CFG) && 
-				strcmp (str, "__qf__.cfg") && strcasecmp (str, "config.cfg") && 
+		if (strcmp (str, EXEC_CFG) && strcmp (str, PASSWORD_CFG) &&
+				strcmp (str, "__qf__.cfg") && strcasecmp (str, "config.cfg") &&
 				strcasecmp (str, "server.cfg") && strcasecmp (str, "autoexec.cfg") &&
 				strcasecmp (str, "quake.rc") && strcasecmp (str, "q3config.cfg")) {
 			res = g_list_prepend (res, str);
@@ -3482,8 +3482,8 @@ static void quake_save_info (FILE *f, struct server *s) {
 		/* POQS */
 
 		case Q1_SERVER:
-		case H2_SERVER: 
-			fprintf (f, 
+		case H2_SERVER:
+			fprintf (f,
 					"%s" QSTAT_DELIM_STR
 					"%s:%d" QSTAT_DELIM_STR
 					"%s" QSTAT_DELIM_STR
@@ -3493,7 +3493,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 					"%d" QSTAT_DELIM_STR
 					"%d" QSTAT_DELIM_STR
 					"%d" QSTAT_DELIM_STR
-					"%d\n", 
+					"%d\n",
 					games[s->type].id,
 					inet_ntoa (s->host->ip), s->port,
 					(s->name)? s->name : "",
@@ -3508,7 +3508,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 			/* QW, Q2 */
 
 		default:
-			fprintf (f, 
+			fprintf (f,
 					"%s" QSTAT_DELIM_STR
 					"%s:%d" QSTAT_DELIM_STR
 					"%s" QSTAT_DELIM_STR
@@ -3516,12 +3516,12 @@ static void quake_save_info (FILE *f, struct server *s) {
 					"%d" QSTAT_DELIM_STR
 					"%d" QSTAT_DELIM_STR
 					"%d" QSTAT_DELIM_STR
-					"%d\n", 
+					"%d\n",
 					games[s->type].id,
 					inet_ntoa (s->host->ip), s->port,
 					(s->name)? s->name : "",
 					(s->map)? s->map : "",
-					s->maxplayers, 
+					s->maxplayers,
 					s->curplayers,
 					s->ping,
 					s->retries);
@@ -3541,8 +3541,8 @@ static void quake_save_info (FILE *f, struct server *s) {
 				/* POQS */
 
 				case Q1_SERVER:
-				case H2_SERVER: 
-					fprintf (f, 
+				case H2_SERVER:
+					fprintf (f,
 							"0"  QSTAT_DELIM_STR
 							"%s" QSTAT_DELIM_STR
 							QSTAT_DELIM_STR
@@ -3561,7 +3561,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 
 				case QW_SERVER:
 				case HW_SERVER:
-					fprintf (f, 
+					fprintf (f,
 							"0"  QSTAT_DELIM_STR
 							"%s" QSTAT_DELIM_STR
 							"%d" QSTAT_DELIM_STR
@@ -3585,18 +3585,18 @@ static void quake_save_info (FILE *f, struct server *s) {
 				case RUNE_SERVER:
 				case POSTAL2_SERVER:
 				case AAO_SERVER:
-					fprintf (f, 
-							"%s" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%s" QSTAT_DELIM_STR 
+					fprintf (f,
+							"%s" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%s" QSTAT_DELIM_STR
 							"%s" QSTAT_DELIM_STR
 							"\n",
 							(p->name)? p->name : "",
 							p->frags,
-							p->ping, 
-							p->pants, 
+							p->ping,
+							p->pants,
 							(p->skin)? p->skin : "",
 							(p->model)? p->model : "");
 					break;
@@ -3604,12 +3604,12 @@ static void quake_save_info (FILE *f, struct server *s) {
 					/* Q2, etc... */
 
 				case T2_SERVER:
-					fprintf (f, 
-							"%s" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%s" QSTAT_DELIM_STR 
-							"%s" QSTAT_DELIM_STR 
+					fprintf (f,
+							"%s" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%s" QSTAT_DELIM_STR
+							"%s" QSTAT_DELIM_STR
 							"\n", //tribe tag not supported yet
 							(p->name)? p->name : "",
 							p->frags,
@@ -3619,10 +3619,10 @@ static void quake_save_info (FILE *f, struct server *s) {
 					break;
 
 				case DESCENT3_SERVER:
-					fprintf (f, 
-							"%s" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
+					fprintf (f,
+							"%s" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
 							"%d" QSTAT_DELIM_STR
 							"\n",
 							p->name?p->name:"",
@@ -3632,10 +3632,10 @@ static void quake_save_info (FILE *f, struct server *s) {
 					break;
 
 				case Q4_SERVER:
-					fprintf (f, 
-							"%s" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
+					fprintf (f,
+							"%s" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
 							"%s\n",
 							(p->name)? p->name : "",
 							p->frags,
@@ -3646,9 +3646,9 @@ static void quake_save_info (FILE *f, struct server *s) {
 				case HL_SERVER:
 				case HL_SERVER_OLD:
 				case HL2_SERVER:
-					fprintf (f, 
-							"%s" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
+					fprintf (f,
+							"%s" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
 							"%d\n",
 							(p->name)? p->name : "",
 							p->frags,
@@ -3656,9 +3656,9 @@ static void quake_save_info (FILE *f, struct server *s) {
 					break;
 
 				default:
-					fprintf (f, 
-							"%s" QSTAT_DELIM_STR 
-							"%d" QSTAT_DELIM_STR 
+					fprintf (f,
+							"%s" QSTAT_DELIM_STR
+							"%d" QSTAT_DELIM_STR
 							"%d\n",
 							(p->name)? p->name : "",
 							p->frags,
@@ -3676,7 +3676,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 
 // fetch additional arguments when launching server of type 'type' and it's
 // game matches 'gamestring'
-// returns a newly-allocated array of strings. Use g_strfreev() to free it. 
+// returns a newly-allocated array of strings. Use g_strfreev() to free it.
 // TODO use struct server instead of char* to be able to match any variable
 
 char **get_custom_arguments(enum server_type type, const char *gamestring) {

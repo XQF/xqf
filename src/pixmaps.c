@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -451,13 +451,13 @@ GdkPixmap *two_colors_pixmap (GdkWindow *window, int width, int height,
 	gdk_draw_rectangle (pixmap, pixmaps_gc, TRUE, 0, 0, width, height/2);
 
 	gdk_gc_set_foreground (pixmaps_gc, bottom);
-	gdk_draw_rectangle (pixmap, pixmaps_gc, TRUE, 0, height/2, width, 
+	gdk_draw_rectangle (pixmap, pixmaps_gc, TRUE, 0, height/2, width,
 			height - height/2);
 	return pixmap;
 }
 
 
-void create_server_pixmap (GtkWidget *window, struct pixmap *stype, 
+void create_server_pixmap (GtkWidget *window, struct pixmap *stype,
 		int n, GdkPixmap **pix, GdkBitmap **mask) {
 	GdkGC *white_gc;
 	int hb, wb, hs, ws;
@@ -506,7 +506,7 @@ void create_server_pixmap (GtkWidget *window, struct pixmap *stype,
 }
 
 
-void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask, 
+void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask,
 		unsigned key) {
 	struct cached_pixmap *cp;
 	GdkPixmap *res_pix = NULL;
@@ -527,7 +527,7 @@ void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask,
 	}
 
 	*pix = res_pix;
-	if (res_pix) 
+	if (res_pix)
 		gdk_pixmap_ref (res_pix);
 
 	if (mask) {
@@ -538,7 +538,7 @@ void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask,
 }
 
 
-void pixmap_cache_add (GSList **cache, GdkPixmap *pix, GdkBitmap *mask, 
+void pixmap_cache_add (GSList **cache, GdkPixmap *pix, GdkBitmap *mask,
 		unsigned key) {
 	struct cached_pixmap *cp;
 
@@ -561,7 +561,7 @@ void pixmap_cache_add (GSList **cache, GdkPixmap *pix, GdkBitmap *mask,
 }
 
 
-static int cached_pixmap_cmp (const struct cached_pixmap *a, 
+static int cached_pixmap_cmp (const struct cached_pixmap *a,
 		const struct cached_pixmap *b) {
 	return b->weight - a->weight;   /* descending order */
 }
@@ -571,7 +571,7 @@ static void free_cached_pixmap (struct cached_pixmap *cp) {
 
 	gdk_pixmap_unref (cp->pix);
 
-	if (cp->mask) 
+	if (cp->mask)
 		gdk_bitmap_unref (cp->mask);
 
 	g_free (cp);

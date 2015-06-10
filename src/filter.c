@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -106,7 +106,7 @@ struct filter filters[FILTERS_TOTAL] = {
 		&sfilter_cfg_pix,
 		"sfilter.xpm",
 	},
-	{ 
+	{
 		N_("Player"),
 		N_("P Filter"),
 		N_("PF Cfg"),
@@ -121,7 +121,7 @@ struct filter filters[FILTERS_TOTAL] = {
 		&pfilter_cfg_pix,
 		"pfilter.xpm",
 	},
-	{ 
+	{
 		"not visible",
 		"not visible",
 		"not visible",
@@ -242,7 +242,7 @@ static struct server_filter_vars* server_filter_vars_copy(struct server_filter_v
 }
 
 void server_filter_print(struct server_filter_vars* f) {
-#ifdef USE_GEOIP 
+#ifdef USE_GEOIP
 	unsigned i;
 #endif
 
@@ -281,14 +281,14 @@ void apply_filters (unsigned mask, struct server *s) {
 
 			/* baa --
 			   The 'vars' (second param to the func) only matters
-			   with the server filter call.  It gets passed to the 
-			   player filter call but not used. 
+			   with the server filter call.  It gets passed to the
+			   player filter call but not used.
 			   */
 			/* if ((*filters[n].func)(s, vars)) */
 			//if ((*filters[n].func)(s, &server_filters[current_server_filter]))
 			if ((*filters[n].func)(s))
 				s->filters |= i;
-			else 
+			else
 				s->filters &= ~i;
 
 			if (flt_time < filters[n].last_changed)
@@ -304,7 +304,7 @@ void apply_filters (unsigned mask, struct server *s) {
 
 /*
    build_filtered_list -- Return a list of servers that pass the filter
-   requirements. Called from server_clist_setlist() and 
+   requirements. Called from server_clist_setlist() and
    server_clist_build_filtered().
    */
 
@@ -329,7 +329,7 @@ GSList *build_filtered_list (unsigned mask, GSList *server_list) {
 	return list;
 }
 
-/* 
+/*
    This applies a filter's attributes to a server entry and returns true if it
    passes the filter or false if not.
    */
@@ -415,18 +415,18 @@ static int server_pass_filter (struct server *s){
 		if (!s->country_id) {
 			return FALSE;
 		}
-		else {  
+		else {
 			for (i = 0; i < filter->countries->len; ++i) {
 				if (g_array_index(filter->countries,int,i) == s->country_id) {
 					have_country=TRUE;
 				}
 			}
 
-			if (!have_country) { 
+			if (!have_country) {
 				return FALSE;
 			}
 		}
-	} 
+	}
 
 #endif
 
@@ -464,7 +464,7 @@ static void server_filter_init (void) {
 	server_filters = g_array_new(FALSE,FALSE, sizeof(struct server_filter_vars*));
 	if (!server_filters) return;
 
-	i = 1;  
+	i = 1;
 	snprintf(config_section, 64, "/" CONFIG_FILE "/Server Filter/%d", i);
 	config_push_prefix(config_section);
 
@@ -701,7 +701,7 @@ static void server_filter_save_settings (int number,
 	if (newfilter->game_contains && strlen(newfilter->game_contains)){
 		/*
 		   First case, the user entered something.  See if the value
-		   is different 
+		   is different
 		*/
 		if (oldfilter->game_contains){
 			if (strcmp(newfilter->game_contains, oldfilter->game_contains)) text_changed = 1;
@@ -722,7 +722,7 @@ static void server_filter_save_settings (int number,
 			filters[FILTER_SERVER].changed = FILTER_CHANGED;
 		}
 		oldfilter->game_contains = NULL;
-	} 
+	}
 
 
 	/* Version string values -- baa */
@@ -730,7 +730,7 @@ static void server_filter_save_settings (int number,
 	if (newfilter->version_contains && strlen(newfilter->version_contains)){
 		/*
 		   First case, the user entered something.  See if the value
-		   is different 
+		   is different
 		*/
 		if (oldfilter->version_contains){
 			if (strcmp(newfilter->version_contains, oldfilter->version_contains)) text_changed = 1;
@@ -751,7 +751,7 @@ static void server_filter_save_settings (int number,
 			filters[FILTER_SERVER].changed = FILTER_CHANGED;
 		}
 		oldfilter->version_contains = NULL;
-	} 
+	}
 
 
 	/* GAMETYPE string values -- baa */
@@ -782,8 +782,8 @@ static void server_filter_save_settings (int number,
 		oldfilter->game_type = NULL;
 	}
 	/* end game_type filter */
-  
-  
+
+
 	/* map string values */
 	text_changed = 0;
 	if (newfilter->map_contains && strlen(newfilter->map_contains)){
@@ -905,7 +905,7 @@ static void server_filter_save_settings (int number,
 		}
 	}
 #endif
-  
+
 	config_pop_prefix ();
 
 	if (filters[FILTER_SERVER].changed == FILTER_CHANGED)
@@ -1136,7 +1136,7 @@ static void server_filter_fill_widgets(guint num) {
 				last_row_country_list++;
 				++rw;
 			}
-		} 
+		}
 	}
 
 #endif
@@ -1275,7 +1275,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	adj = gtk_adjustment_new(MAX_PING, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
 
 	filter_ping_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0, 0);
-	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(filter_ping_spinner), 
+	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(filter_ping_spinner),
 			GTK_UPDATE_ALWAYS);
 	gtk_widget_set_usize(filter_ping_spinner, 64, -1);
 	gtk_signal_connect_object(GTK_OBJECT(filter_ping_spinner), "changed",
@@ -1307,7 +1307,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	/* max timeouts */
 	label = gtk_label_new(_("the number of retries is fewer than"));
 	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL, 
+	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL,
 			0, 0);
 	gtk_widget_show(label);
 
@@ -1317,7 +1317,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_widget_set_usize(filter_retries_spinner, 64, -1);
 	gtk_signal_connect_object(GTK_OBJECT(filter_retries_spinner), "changed",
 			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_retries_spinner, 
+	gtk_table_attach_defaults(GTK_TABLE(table), filter_retries_spinner,
 			1, 2, row, row+1);
 	gtk_widget_show(filter_retries_spinner);
 
@@ -1366,11 +1366,11 @@ static void server_filter_page (GtkWidget *notebook) {
 	/*row=3..4*/
 
 	/* not empty */
-	filter_not_empty_check_button = 
+	filter_not_empty_check_button =
 		gtk_check_button_new_with_label(_("it is not empty"));
 	gtk_signal_connect_object(GTK_OBJECT(filter_not_empty_check_button), "toggled",
 			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_not_empty_check_button, 
+	gtk_table_attach_defaults(GTK_TABLE(table), filter_not_empty_check_button,
 			0, 2, row, row+1);
 	gtk_widget_show(filter_not_empty_check_button);
 
@@ -1393,7 +1393,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	/*row=4..5*/
 
 	/* no cheats */
-	filter_no_cheats_check_button = 
+	filter_no_cheats_check_button =
 		gtk_check_button_new_with_label(_("cheats are not allowed"));
 	gtk_signal_connect_object(GTK_OBJECT(filter_no_cheats_check_button), "toggled",
 		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
@@ -1419,7 +1419,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	/*row=5..6*/
 
 	/* no password */
-	filter_no_password_check_button = 
+	filter_no_password_check_button =
 		gtk_check_button_new_with_label(_("no password required"));
 	gtk_signal_connect_object(GTK_OBJECT(filter_no_password_check_button), "toggled",
 		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
@@ -1429,7 +1429,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	row++;
 
 	/*country list */
-#ifdef USE_GEOIP 
+#ifdef USE_GEOIP
 	label = gtk_label_new(_("Country filter:"));
 	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 6, 7);
 	gtk_misc_set_padding(GTK_MISC(label), 0, 15);
@@ -1517,7 +1517,7 @@ static void filters_on_ok (void) {
 static void filters_on_cancel (void) {
 	int i;
 
-	// ok was pressed 
+	// ok was pressed
 	if (cleaned_up) return;
 
 	for (i = 0; i < FILTERS_TOTAL; i++) {
@@ -1539,7 +1539,7 @@ int filters_cfg_dialog (int page_num) {
 	const char *flt_status[3] = { "not changed", "changed", "data changed" };
 #endif
 
-	window = dialog_create_modal_transient_window(_("XQF: Filters"), 
+	window = dialog_create_modal_transient_window(_("XQF: Filters"),
 			TRUE, TRUE, filters_on_cancel);
 	vbox = gtk_vbox_new(FALSE, 8);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 8);
@@ -1560,7 +1560,7 @@ int filters_cfg_dialog (int page_num) {
 
 	gtk_widget_show(notebook);
 
-	/* 
+	/*
 	 *  Buttons at the bottom
 	 */
 

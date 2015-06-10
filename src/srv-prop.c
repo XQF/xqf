@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -85,7 +85,7 @@ void props_free_all (void) {
 }
 
 
-static struct server_props *__properties (const struct host *h, 
+static struct server_props *__properties (const struct host *h,
 		const unsigned short p) {
 	struct server_props *res;
 	GSList *tmp;
@@ -607,16 +607,16 @@ static GtkWidget *server_info_page (struct server *s) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
 	customcfg_combo = gtk_combo_new ();
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry), 
+	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry),
 			256);
 	gtk_widget_set_usize (GTK_COMBO (customcfg_combo)->entry, 112, -1);
 
-	if ((games[s->type].flags & GAME_CONNECT) != 0 && 
+	if ((games[s->type].flags & GAME_CONNECT) != 0 &&
 			games[s->type].custom_cfgs) {
 
 		cfgs = (*games[s->type].custom_cfgs) (&games[s->type], NULL, s->game);
 
-		combo_set_vals (customcfg_combo, cfgs, 
+		combo_set_vals (customcfg_combo, cfgs,
 				(props && props->custom_cfg)? props->custom_cfg : NULL);
 		if (cfgs) {
 			g_list_foreach (cfgs, (GFunc) g_free, NULL);
@@ -760,14 +760,14 @@ void properties_dialog (struct server *s) {
 	GtkWidget *label;
 	char buf[256];
 
-	window = dialog_create_modal_transient_window (_("Properties"), 
+	window = dialog_create_modal_transient_window (_("Properties"),
 			TRUE, FALSE, NULL);
 	main_vbox = gtk_vbox_new (FALSE, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
 	/*
-	 *  Server Name 
+	 *  Server Name
 	 */
 
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -777,7 +777,7 @@ void properties_dialog (struct server *s) {
 	gtk_box_pack_start (GTK_BOX (hbox), hbox2, TRUE, FALSE, 0);
 
 	if (games[s->type].pix) {
-		pixmap = gtk_pixmap_new (games[s->type].pix->pix, 
+		pixmap = gtk_pixmap_new (games[s->type].pix->pix,
 				games[s->type].pix->mask);
 		gtk_box_pack_start (GTK_BOX (hbox2), pixmap, FALSE, FALSE, 0);
 		gtk_widget_show (pixmap);
@@ -797,7 +797,7 @@ void properties_dialog (struct server *s) {
 	gtk_widget_show (hbox);
 
 	/*
-	 *  Notebook 
+	 *  Notebook
 	 */
 
 	notebook = gtk_notebook_new ();
@@ -823,7 +823,7 @@ void properties_dialog (struct server *s) {
 
 	gtk_widget_show (notebook);
 
-	/* 
+	/*
 	 *  Buttons at the bottom
 	 */
 
@@ -869,9 +869,9 @@ void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
 		gtk_list_clear_items (GTK_LIST (GTK_COMBO (combo)->list), 0, -1);
 	} else {
 		/*
-		 *  gtk_combo_set_popdown_strings (actually gtk_list_insert_items) 
-		 *  automatically selects the first one and puts it into entry.  
-		 *  That should not happen.  Drop selection mode for a moment 
+		 *  gtk_combo_set_popdown_strings (actually gtk_list_insert_items)
+		 *  automatically selects the first one and puts it into entry.
+		 *  That should not happen.  Drop selection mode for a moment
 		 *  to prevent that.
 		 */
 

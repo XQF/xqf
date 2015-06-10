@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -177,7 +177,7 @@ enum CPU identify_cpu (struct server *s, const char *versionstr) {
 	else if (strstr (str, "ppc"))
 		cpu = CPU_PPC;
 	else {
-		debug (3, "identify_cpu() -- [%s %s:%d] Unknown CPU: %s\n", type2id(s->type), 
+		debug (3, "identify_cpu() -- [%s %s:%d] Unknown CPU: %s\n", type2id(s->type),
 				inet_ntoa (s->host->ip), s->port, versionstr);
 	}
 	g_free(str);
@@ -294,12 +294,12 @@ static void collect_statistics (void) {
 							break;
 
 						if (games[s->type].identify_cpu)
-							cpu = games[s->type].identify_cpu(s, info[1]); 
+							cpu = games[s->type].identify_cpu(s, info[1]);
 						else
 							cpu = CPU_UNKNOWN;
 
 						if (games[s->type].identify_os)
-							os = games[s->type].identify_os(s, info[1]); 
+							os = games[s->type].identify_os(s, info[1]);
 						else
 							os = OS_UNKNOWN;
 
@@ -331,14 +331,14 @@ static void collect_statistics (void) {
 }
 
 
-static void put_label_to_table (GtkWidget *table, const char *str, 
+static void put_label_to_table (GtkWidget *table, const char *str,
 		float justify, int col, int row) {
 	GtkWidget *label;
 
 	if (str) {
 		label = gtk_label_new (str);
 		gtk_misc_set_alignment (GTK_MISC (label), justify, 0.5);
-		gtk_table_attach_defaults (GTK_TABLE (table), label, 
+		gtk_table_attach_defaults (GTK_TABLE (table), label,
 				col, col + 1, row, row + 1);
 		gtk_widget_show (label);
 	}
@@ -357,7 +357,7 @@ static void put_server_stats (GtkWidget *table, int num, int row) {
 	strings[4] = buf5;
 	strings[5] = buf6;
 
-	g_snprintf (buf1, 16, "%d (%.2f%%)", srv_stats[num].servers, 
+	g_snprintf (buf1, 16, "%d (%.2f%%)", srv_stats[num].servers,
 			PERCENTS (srv_stats[num].servers, servers_count));
 
 	g_snprintf (buf2, 16, "%d (%.2f%%)", srv_stats[num].ok,
@@ -421,8 +421,8 @@ static GtkWidget *server_stats_page (void) {
 			continue;
 
 		game_label = game_pixmap_with_label (i);
-		gtk_table_attach_defaults (GTK_TABLE (table), 
-				game_label, 
+		gtk_table_attach_defaults (GTK_TABLE (table),
+				game_label,
 				0, 1, row, row+1);
 
 		put_server_stats (table, i, row);
@@ -453,7 +453,7 @@ static GtkWidget *server_stats_page (void) {
 }
 
 
-static void put_arch_stats (GtkWidget *table, int val, int total, 
+static void put_arch_stats (GtkWidget *table, int val, int total,
 		int row, int col) {
 	char buf[16];
 
@@ -462,7 +462,7 @@ static void put_arch_stats (GtkWidget *table, int val, int total,
 }
 
 
-static void arch_notebook_page (GtkWidget *notebook, 
+static void arch_notebook_page (GtkWidget *notebook,
 		enum server_type type, struct arch_stats *arch) {
 	GtkWidget *table;
 	int i, j;
@@ -593,7 +593,7 @@ static gboolean create_server_type_menu_filter_hascountries(enum server_type typ
 	return (srv_countries[type].nonzero != 0);
 }
 
-static void country_notebook_page (GtkWidget *notebook, 
+static void country_notebook_page (GtkWidget *notebook,
 		enum server_type type, struct country_stats *stats) {
 	GtkWidget *table;
 	GtkWidget *scrollwin;
@@ -718,7 +718,7 @@ static GtkWidget *country_stats_page (void) {
 		gtk_widget_show (label);
 
 		if (to_activate == GAMES_TOTAL) {
-			gtk_menu_item_activate (GTK_MENU_ITEM (menu_item)); 
+			gtk_menu_item_activate (GTK_MENU_ITEM (menu_item));
 			gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
 		}
 	}
@@ -741,7 +741,7 @@ static void grab_defaults (GtkWidget *w, gpointer data) {
 	config_set_int ("/" CONFIG_FILE "/Statistics/country", selected_country);
 	config_set_int ("/" CONFIG_FILE "/Statistics/game", selected_type);
 
-	config_set_int ("/" CONFIG_FILE "/Statistics/page", 
+	config_set_int ("/" CONFIG_FILE "/Statistics/page",
 			gtk_notebook_get_current_page (GTK_NOTEBOOK (stat_notebook)));
 }
 
@@ -779,7 +779,7 @@ void statistics_dialog (void) {
 	server_stats_create ();
 	collect_statistics ();
 
-	window = dialog_create_modal_transient_window (_("Statistics"), 
+	window = dialog_create_modal_transient_window (_("Statistics"),
 			TRUE, TRUE, GTK_SIGNAL_FUNC(statistics_save_geometry));
 
 	statistics_restore_geometry(window);

@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -177,7 +177,7 @@ static void find_key (const char *filename,
  * lookup keyname in section, if not found create a new config_key.
  * returns pointer to found or created key
  */
-static struct config_key *key_in_section (struct config_section *section, 
+static struct config_key *key_in_section (struct config_section *section,
 		char *keyname) {
 	struct config_key *key;
 	GList *list;
@@ -744,7 +744,7 @@ static void drop_file (struct config_file *file) {
 }
 
 
-static void drop_section (struct config_file *file, 
+static void drop_section (struct config_file *file,
 		struct config_section *section) {
 	GList *kptr;
 	struct config_key *key;
@@ -765,7 +765,7 @@ static void drop_section (struct config_file *file,
 }
 
 
-static void drop_key (struct config_file *file, 
+static void drop_key (struct config_file *file,
 		struct config_section *section,
 		struct config_key *key) {
 	g_free (key->name);
@@ -807,7 +807,7 @@ void config_clean_key (const char *path) {
 }
 
 
-void config_clean_section (const char *path) { 
+void config_clean_section (const char *path) {
 	struct config_file *file;
 	struct config_section *section = NULL;
 

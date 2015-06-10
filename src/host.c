@@ -237,7 +237,7 @@ static GSList *host_cache_read_list (FILE *f) {
 }
 
 
-static int host_cache_sorting_helper (const struct host *h1, 
+static int host_cache_sorting_helper (const struct host *h1,
 		const struct host *h2) {
 	return (h1->refreshed > h2->refreshed)? -1 : 1;
 }
@@ -254,7 +254,7 @@ static GSList *hosts_to_cache (void) {
 
 	for (tmp = allhosts; tmp; tmp = tmp->next) {
 		h = (struct host *) tmp->data;
-		if (h->name && h->refreshed && 
+		if (h->name && h->refreshed &&
 				h->refreshed < curtime + HOST_CACHE_MAX_AGE*2) {
 			hosts = g_slist_prepend (hosts, h);
 			host_ref (h);

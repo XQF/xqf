@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -60,7 +60,7 @@ static void master_check_master_addr_prefix(void) {
 
 	master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO(master_addr_combo)->entry));
 
-	// Replace up to :// with master type selected from radio buttons  
+	// Replace up to :// with master type selected from radio buttons
 	if (g_ascii_strncasecmp(master_addr, master_prefixes[current_master_query_type],
 				strlen(master_prefixes[current_master_query_type]))) {
 		pos = lowcasestrstr(master_addr,"://");
@@ -234,7 +234,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	label = gtk_label_new (_("Master Name"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
 			GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 
@@ -285,7 +285,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	label = gtk_label_new (_("Master Address"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 			GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 

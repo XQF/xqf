@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -59,7 +59,7 @@ enum server_flags {
 	SERVER_INCOMPATIBLE =   0x100
 };
 
-enum launch_mode { 
+enum launch_mode {
 	LAUNCH_NORMAL,
 	LAUNCH_SPECTATE,
 	LAUNCH_RECORD
@@ -67,7 +67,7 @@ enum launch_mode {
 
 
 // note: there is a limit of 256 servers, see get_server_pixmap in srv-list.c
-enum server_type { 
+enum server_type {
 	Q1_SERVER = 0,
 	QW_SERVER,
 	Q2_SERVER,
@@ -129,7 +129,7 @@ enum server_type {
 
 #define  GAMES_TOTAL UNKNOWN_SERVER
 
-enum master_state { 
+enum master_state {
 	SOURCE_NA = 0,
 	SOURCE_UP,
 	SOURCE_DOWN,
@@ -137,7 +137,7 @@ enum master_state {
 	SOURCE_ERROR
 };
 
-enum master_query_type { 
+enum master_query_type {
 	MASTER_NATIVE=0,
 	MASTER_GAMESPY,
 	MASTER_HTTP,

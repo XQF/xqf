@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -128,7 +128,7 @@ static void stat_master_update_done(
 
 /**
   parse qstat output line str, in ip:port format. return true if
-  successful, FALSE if server is down or timed out 
+  successful, FALSE if server is down or timed out
 
   str will be modified!!
 */
@@ -164,7 +164,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 		strcpy(token[0]+off+1,token[1]);
 
 		n=1;
-	} 
+	}
 
 	// output from broadcast, last line contains
 	// <servertype> <bcastaddr> <number>
@@ -232,7 +232,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 				// doesn't make any sense, doesn't it? -- ln
 #if 0
-				if (conn->master && conn->master->type != UNKNOWN_SERVER && 
+				if (conn->master && conn->master->type != UNKNOWN_SERVER &&
 						s->type != conn->master->type) {
 					s->type = conn->master->type;
 					server_free_info (s);
@@ -455,12 +455,12 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 		}
 
 		if (games[server->type].parse_server) {
-			/* 
+			/*
 			   We have a function to parse the server information,
 			   so first we free all of the data elements of this
 			   structure but not the structure its self.  This
 			   is because the *_analyse functions should assign values
-			   to each of the elemets.  
+			   to each of the elemets.
 			*/
 			server_free_info (server);
 
@@ -468,7 +468,7 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 			server->ping = MAX_PING;    /* TIMEOUT */
 
 			/* Actually parse the info with the given function.  The mapping
-			   and functions are in game.c  
+			   and functions are in game.c
 			*/
 			(*games[server->type].parse_server) (token, n, server);
 
@@ -780,7 +780,7 @@ static GSList* stat_buffer_to_strings(gchar buffer[], gsize bufsize) {
 	return strings;
 }
 
-/* 
+/*
    stat_servers_input_callback -- as data is returned from the qstat
    process, this gets called.  Sometimes there are multiple lines
    so the results have to be looped over.
@@ -887,7 +887,7 @@ static struct stat_conn *new_file_conn (struct stat_job *job, const char* file, 
 	conn->bufsize = BUFFER_MINSIZE;
 	conn->tmpfile = NULL;
 	conn->pid = 0;
-	conn->fd = fd; 
+	conn->fd = fd;
 	conn->chan = g_io_channel_unix_new (conn->fd);
 
 	/* FIXME: workaround to read the channel as binary (and exclude non ascii character elsewhere)
@@ -927,9 +927,9 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFun
 	struct stat_conn *conn;
 	pid_t pid;
 	int pipefds[2];
-	const char error_msg[] = QSTAT_DELIM_STR 
-		QSTAT_DELIM_STR 
-		"ERROR" QSTAT_DELIM_STR 
+	const char error_msg[] = QSTAT_DELIM_STR
+		QSTAT_DELIM_STR
+		"ERROR" QSTAT_DELIM_STR
 		"command not found\n";
 
 	debug (3, "start_qstat() -- Job %lx  Setting up/forking pipes to qstat", job);
@@ -1387,7 +1387,7 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	}
 
 	/*
-	   The g_slist_reverse does not allocate any new 
+	   The g_slist_reverse does not allocate any new
 	   lists or memory.  However, it means that job->servers
 	   will point to a different member.
 	*/
@@ -1503,7 +1503,7 @@ static void stat_master_update_done (struct stat_conn *conn,
 
 	m->state = state;
 
-	debug (1, "stat_master_update_done(%s) -- status %d\n", 
+	debug (1, "stat_master_update_done(%s) -- status %d\n",
 			(conn)? conn->master->name : "(null)", state);
 
 	if (state == SOURCE_UP && conn) {
@@ -1571,7 +1571,7 @@ static void stat_update_masters (struct stat_job *job) {
 	GSList *tmp;
 	int freecons;
 
-	freecons = maxsimultaneous - job->masters_to_resolve - 
+	freecons = maxsimultaneous - job->masters_to_resolve -
 		g_slist_length (job->cons);
 
 	debug (3, "stat_update_masters(%p) -- freecons: %d", job,freecons);
@@ -1587,7 +1587,7 @@ static void stat_update_masters (struct stat_job *job) {
 				/*
 				 *  QStat binds himself to fixed port (26500) to access Q2 masters.
 				 *  It's impossible to run several QStat programs concurently for
-				 *  Q2 masters. 
+				 *  Q2 masters.
 				 */
 
 				if (job->q2_masters > 0) {
@@ -1694,7 +1694,7 @@ static void stat_name_resolved_callback (char *id, struct host *h, enum dns_stat
 					server_free_info (us->s);
 				}
 
-				/* 
+				/*
 				   o When the job is freed, the list will
 				   be freed as well. This will take care of
 				   the reference counting.
@@ -1935,7 +1935,7 @@ void stat_start (struct stat_job *job) {
 	debug_increase_indent();
 	debug (3, "Job %p", job);
 	if (job->delayed.refresh_handler) {
-		job->delayed.timeout_id = gtk_timeout_add (1000, 
+		job->delayed.timeout_id = gtk_timeout_add (1000,
 				job->delayed.refresh_handler, job);
 	}
 
@@ -1950,7 +1950,7 @@ void stat_stop (struct stat_job *job) {
 }
 
 
-struct stat_job *stat_job_create (GSList *masters, GSList *names, 
+struct stat_job *stat_job_create (GSList *masters, GSList *names,
 		GSList *servers, GSList *hosts) {
 	struct stat_job *job;
 

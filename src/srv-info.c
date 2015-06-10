@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -535,11 +535,11 @@ void srvinf_ctree_set_server (struct server *s) {
 				if (info[0] && !strcmp (info[0], "teamplay")) {
 					if (s->game && (!g_ascii_strcasecmp (s->game, "ctf") ||
 								!g_ascii_strcasecmp (s->game, "starwars"))) {
-						show_extended_flags (info[1], qw_teamplay_ctf, QW_TEAMPLAY_CTF, 
+						show_extended_flags (info[1], qw_teamplay_ctf, QW_TEAMPLAY_CTF,
 								FALSE, node);
 					}
 					else if (s->game && !g_ascii_strcasecmp (s->game, "fortress")) {
-						show_extended_flags (info[1], qw_teamplay_fortress, QW_TEAMPLAY_TF, 
+						show_extended_flags (info[1], qw_teamplay_fortress, QW_TEAMPLAY_TF,
 								FALSE, node);
 					}
 				}
@@ -548,15 +548,15 @@ void srvinf_ctree_set_server (struct server *s) {
 			case Q2_SERVER:
 				if (info[0] && !strcmp (info[0], "dmflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "gxmod", 5)) {
-						show_extended_flags (info[1], q2_gxmod_dmflags, Q2_GXMOD_DMFLAGS, 
+						show_extended_flags (info[1], q2_gxmod_dmflags, Q2_GXMOD_DMFLAGS,
 								FALSE, node);
 					}
 					else if (s->game && !g_ascii_strncasecmp (s->game, "xatrix", 6)) {
-						show_extended_flags (info[1], q2_xatrix_dmflags, Q2_XATRIX_DMFLAGS, 
+						show_extended_flags (info[1], q2_xatrix_dmflags, Q2_XATRIX_DMFLAGS,
 								FALSE, node);
 					}
 					else if (s->game && !g_ascii_strncasecmp (s->game, "rogue", 5)) {
-						show_extended_flags (info[1], q2_rogue_dmflags, Q2_ROGUE_DMFLAGS, 
+						show_extended_flags (info[1], q2_rogue_dmflags, Q2_ROGUE_DMFLAGS,
 								FALSE, node);
 					}
 					else {
@@ -565,13 +565,13 @@ void srvinf_ctree_set_server (struct server *s) {
 				}
 				else if (info[0] && !strcmp (info[0], "ctfflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "lmctf", 5)) {
-						show_extended_flags (info[1], q2_lmctf_ctfflags, Q2_LMCTF_CTFFLAGS, 
+						show_extended_flags (info[1], q2_lmctf_ctfflags, Q2_LMCTF_CTFFLAGS,
 								FALSE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "runes")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "lmctf", 5)) {
-						show_extended_flags (info[1], q2_lmctf_runes, Q2_LMCTF_RUNES, 
+						show_extended_flags (info[1], q2_lmctf_runes, Q2_LMCTF_RUNES,
 								TRUE, node);
 					}
 				}
@@ -582,21 +582,21 @@ void srvinf_ctree_set_server (struct server *s) {
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "weapflags")) {
-					if (s->game && (!g_ascii_strncasecmp (s->game, "gxmod", 5) || 
+					if (s->game && (!g_ascii_strncasecmp (s->game, "gxmod", 5) ||
 								!g_ascii_strcasecmp (s->game, "gx"))) {
-						show_extended_flags (info[1], q2_gxmod_weapflags, 
+						show_extended_flags (info[1], q2_gxmod_weapflags,
 								Q2_GXMOD_WEAPFLAGS, TRUE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "powerupflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "gxmod", 5)) {
-						show_extended_flags (info[1], q2_gxmod_powerupflags, 
+						show_extended_flags (info[1], q2_gxmod_powerupflags,
 								Q2_GXMOD_POWERUPFLAGS, TRUE, node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "wfflags")) {
 					if (s->game && !g_ascii_strcasecmp (s->game, "wf")) {
-						show_extended_flags (info[1], q2_wf_wfflags, Q2_WF_WFFLAGS, 
+						show_extended_flags (info[1], q2_wf_wfflags, Q2_WF_WFFLAGS,
 								FALSE, node);
 					}
 				}

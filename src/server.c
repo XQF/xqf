@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -53,7 +53,7 @@ static int server_hash_func (const struct host *h, unsigned short port) {
 		return 0;
 
 	ptr = (unsigned char *) &h->ip.s_addr;
-	return (ptr[0] + (ptr[1] << 2) + (ptr[2] << 4) + (ptr[3] << 6) + port) % 
+	return (ptr[0] + (ptr[1] << 2) + (ptr[2] << 4) + (ptr[3] << 6) + port) %
 		servers.num;
 }
 
@@ -72,11 +72,11 @@ static int userver_hash_func (const char *hostname, unsigned short port) {
 
 /*
    server_new -- Create (malloc) a new server structure with
-   all of the values set at zero except the reference count which 
+   all of the values set at zero except the reference count which
    should be at one.
 */
 
-static struct server *server_new (struct host *h, unsigned short port, 
+static struct server *server_new (struct host *h, unsigned short port,
 		enum server_type type) {
 	struct server *server;
 
@@ -104,7 +104,7 @@ static struct server *server_new (struct host *h, unsigned short port,
 }
 
 
-static struct userver *userver_new (const char *hostname, unsigned short port, 
+static struct userver *userver_new (const char *hostname, unsigned short port,
 		enum server_type type) {
 	struct userver *userver;
 
@@ -126,7 +126,7 @@ static struct userver *userver_new (const char *hostname, unsigned short port,
    server_add -- See if a host/port is in our list.  If it is not
    then add one.  If it is then we increase the reference count.
 */
-struct server *server_add (struct host *h, unsigned short port, 
+struct server *server_add (struct host *h, unsigned short port,
 		enum server_type type) {
 	struct server *server;
 	GSList *ptr;
@@ -245,7 +245,7 @@ struct server* server_unref (struct server *server) {
 
 	server->ref_count--;
 
-	debug (7, "server_unref() -- Server %lx ref now at %d", 
+	debug (7, "server_unref() -- Server %lx ref now at %d",
 			server, server->ref_count);
 
 	if (server->ref_count <= 0) {
@@ -254,7 +254,7 @@ struct server* server_unref (struct server *server) {
 		/*
 		   Oops, it seems that we were freeing the server info before
 		   freeing the host info.  Bad. To free the host info w/o a memory
-		   leak we need to do that before freeing the server info. --baa 
+		   leak we need to do that before freeing the server info. --baa
 		*/
 		host_unref (server->host);
 		server_free_info (server);
@@ -273,7 +273,7 @@ void userver_unref (struct userver *s) {
 
 	s->ref_count--;
 
-	debug (6, "userver_unref() -- UServer %lx ref now at %d", 
+	debug (6, "userver_unref() -- UServer %lx ref now at %d",
 			s, s->ref_count);
 
 	if (s->ref_count <= 0) {
@@ -392,7 +392,7 @@ int uservers_total (void) {
 
 
 /*
-   all_servers -- Get a list of all servers.  This is called from 
+   all_servers -- Get a list of all servers.  This is called from
    two functions source.c:free_masters and statistics.c:collect_statistics
    both of which call server_free_list afterwards.
 */
@@ -505,7 +505,7 @@ void uservers_to_servers (GSList **uservers, GSList **servers) {
 
 /*
    server_lists_intersect() -- Find servers that are
-   in two lists (by reference).  The first arg gets a list 
+   in two lists (by reference).  The first arg gets a list
    of servers not in both lists.  The second list gets servers
    removed that are in both lists.
 */
@@ -539,7 +539,7 @@ void server_list_fprintf (FILE *f, GSList *servers) {
 
 	for (i = 0; servers; i++) {
 		s = (struct server *) servers->data;
-		fprintf (f, "%d> [%s:%d](%d) %s \"%s\"\n", i, inet_ntoa (s->host->ip), 
+		fprintf (f, "%d> [%s:%d](%d) %s \"%s\"\n", i, inet_ntoa (s->host->ip),
 				s->port, s->ref_count, games[s->type].id, s->name);
 		servers = servers->next;
 	}
@@ -552,11 +552,11 @@ void userver_list_fprintf (FILE *f, GSList *uservers) {
 
 	for (i = 0; uservers; i++) {
 		us = (struct userver *) uservers->data;
-		fprintf (f, "%d> [%s:%d](%d) %s\n", i, us->hostname, us->port, 
+		fprintf (f, "%d> [%s:%d](%d) %s\n", i, us->hostname, us->port,
 				us->ref_count, games[us->type].id);
 		if (us->s) {
-			fprintf (f, "  --> [%s:%d](%d) %s \"%s\"\n", 
-					inet_ntoa (us->s->host->ip), us->s->port, 
+			fprintf (f, "  --> [%s:%d](%d) %s \"%s\"\n",
+					inet_ntoa (us->s->host->ip), us->s->port,
 					us->s->ref_count, games[us->type].id, us->s->name);
 		}
 

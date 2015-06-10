@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -195,7 +195,7 @@ char *expand_tilde (const char *path) {
  */
 
 
-GList *dir_to_list (const char *dirname, 
+GList *dir_to_list (const char *dirname,
 		char * (*filter) (const char *, const char *)) {
 	DIR *directory;
 	struct dirent *dirent_ptr;
@@ -310,7 +310,7 @@ GList* createGListfromchar(char* strings[]) {
 
 
 /*
- * Signals 
+ * Signals
  */
 
 
@@ -319,7 +319,7 @@ void on_sig (int signum, void (*func) (int signum)) {
 
 	action.sa_handler = func;
 	sigemptyset (&action.sa_mask);
-	action.sa_flags = (signum == SIGCHLD)? 
+	action.sa_flags = (signum == SIGCHLD)?
 		SA_RESTART | SA_NOCLDSTOP : SA_RESTART;
 	sigaction (signum, &action, NULL);
 }
@@ -767,7 +767,7 @@ GSList* slist_sort_remove_dups(GSList* list, GCompareFunc compare_func, void (*u
  *     store as directory
  *   - If there is no /'s in the pointed to file, use the original path instead and
  *     strip filename and store as directory
- * 
+ *
  * - If path is not a symlink:
  *   - strip filename and store as directory
  *
@@ -828,7 +828,7 @@ char* resolve_path(const char* path) {
 	if (S_ISLNK(statbuf.st_mode) == 1) {
 		// Grab directory from sym link of cmd_entry
 
-		debug(3, "path is a sym link");    
+		debug(3, "path is a sym link");
 
 		length = readlink (path, buf, sizeof(buf) - 1);
 
@@ -892,7 +892,7 @@ char* resolve_path(const char* path) {
 				debug(3, "found directory %s in $PATH, ignoring", tmp);
 			}
 		}
-	}  
+	}
 
 	g_free(tmp);
 
@@ -1067,7 +1067,7 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
 	conn.linefunc = linefunc;
 	conn.data = data;
 
-	conn.tag = gdk_input_add (conn.fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
+	conn.tag = gdk_input_add (conn.fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
 			(GdkInputFunction) external_program_input_callback, &conn);
 
 	gtk_main();
@@ -1088,7 +1088,7 @@ int _run_program_sync(const char* argv[], void(*child_callback)(void*), gpointer
 		 }
 		execvp(argv[0],(void*)argv);
 		_exit(EXIT_FAILURE);
-	}     
+	}
 	else if (pid > 0) {
 		waitpid(pid,&status,0);
 

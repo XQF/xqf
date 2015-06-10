@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -31,7 +31,7 @@ struct pcx_header {
 	unsigned char bitsperpixel;
 	unsigned char nplanes;
 	unsigned bytesperline;
-	unsigned width; 
+	unsigned width;
 	unsigned height;
 };
 
@@ -55,12 +55,12 @@ static int check_pcx_header (FILE *f, struct pcx_header *h, int quake2) {
 	h->width        = (raw[9] << 8) + raw[8] - ((raw[5] << 8) + raw[4]) + 1;
 	h->height       = (raw[11] << 8) + raw[10] - ((raw[7] << 8) + raw[6]) + 1;
 
-	if (h->manufacturer != 10 || h->encoding != 1 || h->bitsperpixel != 8 || 
+	if (h->manufacturer != 10 || h->encoding != 1 || h->bitsperpixel != 8 ||
 			h->nplanes != 1) {
 #ifdef DEBUG
 		fprintf (stderr, "Invalid PCX header: manufacturer %d(10), "
 				"encoding %d(1), bitsperpixel %d(8), nplanes %d(1)\n",
-				h->manufacturer, h->encoding, 
+				h->manufacturer, h->encoding,
 				h->bitsperpixel, h->nplanes);
 #endif
 		return 0;
@@ -69,17 +69,17 @@ static int check_pcx_header (FILE *f, struct pcx_header *h, int quake2) {
 	if (quake2) {
 		if (h->width != 32 || h->width != 32) {
 #ifdef DEBUG
-			fprintf (stderr, "Wrong Quake2 skin size: [%d,%d]\n", 
+			fprintf (stderr, "Wrong Quake2 skin size: [%d,%d]\n",
 					h->width, h->height);
 #endif
 			return 0;
 		}
 	}
 	else {
-		if (h->width > 320 || h->width < 296 || 
+		if (h->width > 320 || h->width < 296 ||
 				h->height > 200 || h->height < 194) {
 #ifdef DEBUG
-			fprintf (stderr, "Wrong QuakeWorld skin size: [%d,%d]\n", 
+			fprintf (stderr, "Wrong QuakeWorld skin size: [%d,%d]\n",
 					h->width, h->height);
 #endif
 			return 0;
@@ -130,7 +130,7 @@ char *read_skin_pcx (char *filename, int quake2) {
 	if ((f = fopen (filename, "r")) == NULL)
 		return NULL;
 
-	if (!check_pcx_header (f, &h, quake2) || 
+	if (!check_pcx_header (f, &h, quake2) ||
 			(buf = malloc ((quake2)? 32*32 : 320*200)) == NULL) {
 		fclose (f);
 		return NULL;

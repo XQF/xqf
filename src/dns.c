@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -390,7 +390,7 @@ static void worker_resolve (char *str) {
 
 	alarm (0);
 
-	print_resolved (str, inet_ntoa (ip), 
+	print_resolved (str, inet_ntoa (ip),
 			(h)? h->h_name : DNS_MSG_PREFIX DNS_MSG_NOTFOUND);
 }
 
@@ -467,7 +467,7 @@ static int dns_dispatch_to_worker (char *str) {
 	if (dns_workers_num < DNS_MAX_CHILDREN) {
 		for (i = 0; i < DNS_MAX_CHILDREN; i++) {
 			if (dns_workers[i].pid < 0) {
-				debug (7, "DNS Master> \"%s\" is dispatched to worker %d", 
+				debug (7, "DNS Master> \"%s\" is dispatched to worker %d",
 						str, i);
 				fork_worker (i, str);
 				return TRUE;
@@ -538,7 +538,7 @@ static void master_parse_callback (char *str, void *data) {
 
 
 static void master_close_callback (int error, void *data) {
-	debug (3, "DNS Master> pipe closed, errors: %s", 
+	debug (3, "DNS Master> pipe closed, errors: %s",
 			(error)? "yes" : "no");
 	dns_master_reset ();
 	_exit (0);
@@ -616,7 +616,7 @@ static void dns_input_callback (struct dns_stream *stream, int fd,
 
 	if (first_used > 0) {
 		if (first_used != stream->pos) {
-			g_memmove (stream->buf, stream->buf + first_used, 
+			g_memmove (stream->buf, stream->buf + first_used,
 					stream->pos - first_used);
 		}
 		stream->pos -= first_used;
@@ -637,7 +637,7 @@ static void dns_master_mainloop (void) {
 			dns_move_queue ();
 		}
 
-		debug (7, "DNS Master> %d workers, queue is %s", 
+		debug (7, "DNS Master> %d workers, queue is %s",
 				dns_workers_num,
 				(q_head)? "not empty" : "empty");
 
@@ -660,9 +660,9 @@ static void dns_master_mainloop (void) {
 		}
 
 		for (i = 0; i < DNS_MAX_CHILDREN; i++) {
-			if (dns_workers[i].pid > 0 && 
+			if (dns_workers[i].pid > 0 &&
 					FD_ISSET (dns_workers[i].input->fd, &readfds)) {
-				dns_input_callback (dns_workers[i].input, 
+				dns_input_callback (dns_workers[i].input,
 						dns_workers[i].input->fd, GDK_INPUT_READ);
 			}
 		}
@@ -744,8 +744,8 @@ int dns_spawn_helper (void) {
 
 void dns_gtk_init (void) {
 	if (dns_helper.input && dns_helper.input->fd > 0) {
-		dns_helper.tag = gdk_input_add (dns_helper.input->fd, 
-				GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
+		dns_helper.tag = gdk_input_add (dns_helper.input->fd,
+				GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
 				(GdkInputFunction) dns_input_callback,
 				dns_helper.input);
 	}

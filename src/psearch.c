@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -48,7 +48,7 @@ static GtkWidget *mode_buttons[3];
 
 static int psearch_new_pattern;
 
-static const char *mode_names[3] = { 
+static const char *mode_names[3] = {
 	N_("Exact Match"),
 	N_("Substring"),
 	N_("Regular Expression")
@@ -57,9 +57,9 @@ static const char *mode_names[3] = {
 
 static int psearch_test_player (struct player *p) {
 	return
-		((psearch.mode == PSEARCH_MODE_STRING && 
+		((psearch.mode == PSEARCH_MODE_STRING &&
 		  g_ascii_strcasecmp (p->name, psearch.data) == 0) ||
-		 (psearch.mode == PSEARCH_MODE_SUBSTR && 
+		 (psearch.mode == PSEARCH_MODE_SUBSTR &&
 		  lowcasestrstr (p->name, psearch.data)) ||
 		 (psearch.mode == PSEARCH_MODE_REGEXP &&
 		  regexec ((regex_t *) psearch.data, p->name, 0, NULL, 0) == 0));
@@ -114,7 +114,7 @@ static int psearch_compile_pattern (void) {
 					error = get_regerror (res, (regex_t *) psearch.data);
 					psearch_free_pattern ();
 
-					dialog_ok (_("XQF: Error"), 
+					dialog_ok (_("XQF: Error"),
 							_("Regular Expression Error!\n\n%s\n\n%s."),
 							psearch.pattern, error);
 					g_free (error);
@@ -137,7 +137,7 @@ static int psearch_compile_pattern (void) {
 }
 
 
-static void psearch_combo_activate_callback (GtkWidget *widget, 
+static void psearch_combo_activate_callback (GtkWidget *widget,
 		gpointer data) {
 	psearch_free_pattern ();
 
@@ -193,16 +193,16 @@ int find_player_dialog (void) {
 	gtk_widget_set_usize (GTK_COMBO (psearch_combo)->entry, 160, -1);
 	gtk_combo_disable_activate (GTK_COMBO (psearch_combo));
 	if (psearch_history->items) {
-		gtk_combo_set_popdown_strings (GTK_COMBO (psearch_combo), 
+		gtk_combo_set_popdown_strings (GTK_COMBO (psearch_combo),
 				psearch_history->items);
-		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 
+		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry),
 				(char *) psearch_history->items->data);
-		gtk_entry_select_region (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 0, 
+		gtk_entry_select_region (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 0,
 				strlen ((char *) psearch_history->items->data));
 	}
-	gtk_signal_connect (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry), 
+	gtk_signal_connect (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry),
 			"activate", GTK_SIGNAL_FUNC (psearch_combo_activate_callback), NULL);
-	gtk_signal_connect_object (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry), 
+	gtk_signal_connect_object (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry),
 			"activate", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), psearch_combo, TRUE, TRUE, 0);
 	gtk_widget_grab_focus (GTK_COMBO (psearch_combo)->entry);

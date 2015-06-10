@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -57,7 +57,7 @@ static inline int compare_server_ping(const struct server* s1, const struct serv
 	if (s1->ping >= 0) {
 		if (s2->ping >= 0) {
 			res = s1->ping - s2->ping;
-			if (!res) 
+			if (!res)
 				res = s1->retries - s2->retries;
 		}
 		else {
@@ -179,7 +179,7 @@ int compare_servers (const struct server *s1, const struct server *s2,
 			if (s1->retries >= 0) {
 				if (s2->retries >= 0) {
 					res = s1->retries - s2->retries;
-					if (!res) 
+					if (!res)
 						res = s1->ping - s2->ping;
 				}
 				else {

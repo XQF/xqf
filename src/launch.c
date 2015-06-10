@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -67,7 +67,7 @@ static GSList *clients = NULL;
 
 
 static void dialog_failed (char *func, char *arg) {
-	dialog_ok (_("XQF: ERROR!"), _("ERROR!\n\n%s(%s) failed: %s"), 
+	dialog_ok (_("XQF: ERROR!"), _("ERROR!\n\n%s(%s) failed: %s"),
 			func, (arg)? arg : "", g_strerror (errno));
 }
 
@@ -138,7 +138,7 @@ static void client_sigchild_handler (int signum) {
 			cl = (struct running_client *) list->data;
 			if (cl->pid == pid) {
 
-				/*  Mark it as dead and get out.  All the resource freeing 
+				/*  Mark it as dead and get out.  All the resource freeing
 				 *  should be done outside signal handler.
 				 */
 
@@ -191,9 +191,9 @@ static void client_input_callback (struct running_client *cl, int fd, GdkInputCo
 		close (cl->fd);
 		cl->fd = -1;
 
-		if (!strncmp (cl->buffer, 
+		if (!strncmp (cl->buffer,
 					CLIENT_ERROR_MSG_HEAD, strlen (CLIENT_ERROR_MSG_HEAD))) {
-			dialog_ok (_("XQF: ERROR!"), _("ERROR!\n\n%s"), 
+			dialog_ok (_("XQF: ERROR!"), _("ERROR!\n\n%s"),
 					cl->buffer + strlen (CLIENT_ERROR_MSG_HEAD));
 
 			pid = cl->pid;                  /* save PID value */
@@ -215,7 +215,7 @@ static void client_attach (pid_t pid, int fd, struct server *s) {
 	cl->pid = pid;
 
 	cl->fd = fd;
-	cl->tag = gdk_input_add (cl->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION, 
+	cl->tag = gdk_input_add (cl->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
 			(GdkInputFunction) client_input_callback, cl);
 	cl->server = s;
 	server_ref (s);
@@ -274,7 +274,7 @@ int client_launch_exec (int forkit, char *dir, char* argv[], struct server *s) {
 
 			if (dir && dir[0] != '\0') {
 				if (chdir (dir) != 0) {
-					g_snprintf (msg, CLIENT_ERROR_BUFFER, "%schdir failed: %s", 
+					g_snprintf (msg, CLIENT_ERROR_BUFFER, "%schdir failed: %s",
 							CLIENT_ERROR_MSG_HEAD, g_strerror (errno));
 					goto error_out;
 				}
@@ -285,7 +285,7 @@ int client_launch_exec (int forkit, char *dir, char* argv[], struct server *s) {
 
 			execvp (argv[0], argv);
 
-			g_snprintf (msg, CLIENT_ERROR_BUFFER, "%sexec(%s) failed: %s", 
+			g_snprintf (msg, CLIENT_ERROR_BUFFER, "%sexec(%s) failed: %s",
 					CLIENT_ERROR_MSG_HEAD, argv[0], g_strerror (errno));
 
 			error_out:
@@ -336,7 +336,7 @@ static int already_running (enum server_type type) {
 
 	s = (struct server *) ((struct running_client *) clients->data) -> server;
 
-	res = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"), 
+	res = dialog_yesno (NULL, 1, _("Launch"), _("Cancel"),
 			_("There is %s client running.\n\nLaunch %s client?"),
 			(another)? games[type].name : games[s->type].name,
 			(another)? "another" : games[type].name);
@@ -392,7 +392,7 @@ void condef_free (struct condef *con) {
 	if (con->gamedir)
 		g_free (con->gamedir);
 
-	if (con->password) 
+	if (con->password)
 		g_free (con->password);
 
 	if (con->spectator_password)

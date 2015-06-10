@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -28,8 +28,8 @@
 
 #include "menus.h"
 
-static void create_menu_recursive (GtkWidget *menu, 
-		const struct menuitem *items, 
+static void create_menu_recursive (GtkWidget *menu,
+		const struct menuitem *items,
 		GtkAccelGroup *accel_group) {
 	GtkWidget *menu_item;
 	GtkWidget *label;
@@ -41,8 +41,8 @@ static void create_menu_recursive (GtkWidget *menu,
 
 		switch (items->type) {
 
-#if 0 
-			/* This does not work, I need to figure out how to       
+#if 0
+			/* This does not work, I need to figure out how to
 			   add some sort of indicator as to the active filter */
 			case MENU_RADIO_ITEM:
 				if (button == NULL){
@@ -55,7 +55,7 @@ static void create_menu_recursive (GtkWidget *menu,
 
 				if (GTK_IS_MENU_BAR (menu))
 					gtk_menu_bar_append (GTK_MENU_BAR (menu), button);
-				else 
+				else
 					gtk_menu_append (GTK_MENU (menu), button);
 
 				gtk_widget_show (button);
@@ -120,7 +120,7 @@ static void create_menu_recursive (GtkWidget *menu,
 
 				if (GTK_IS_MENU_BAR (menu))
 					gtk_menu_bar_append (GTK_MENU_BAR (menu), menu_item);
-				else 
+				else
 					gtk_menu_append (GTK_MENU (menu), menu_item);
 				gtk_widget_show (menu_item);
 
@@ -151,7 +151,7 @@ static void create_menu_recursive (GtkWidget *menu,
 }
 
 
-GtkWidget *create_menu (const struct menuitem *items, 
+GtkWidget *create_menu (const struct menuitem *items,
 		GtkAccelGroup *accel_group) {
 	GtkWidget *menu;
 
@@ -163,7 +163,7 @@ GtkWidget *create_menu (const struct menuitem *items,
 }
 
 
-GtkWidget *create_menubar (const struct menuitem *items, 
+GtkWidget *create_menubar (const struct menuitem *items,
 		GtkAccelGroup *accel_group) {
 	GtkWidget *menubar;
 	menubar = gtk_menu_bar_new ();

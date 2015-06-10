@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -120,8 +120,8 @@ void save_favorites (void) {
 		f = fopen (realname, "w");
 
 		if (!f) {
-			if (dialog_yesno (NULL, 0, _("Retry"), _("Skip"), 
-						_("Cannot write to file %s\nSystem Error: %s\n"), 
+			if (dialog_yesno (NULL, 0, _("Retry"), _("Skip"),
+						_("Cannot write to file %s\nSystem Error: %s\n"),
 						realname, g_strerror (errno))) {
 				continue;
 			}
@@ -206,9 +206,9 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
 
 	for (list = all_masters; list; list = list->next) {
 		m = (struct master *) list->data;
-		if (m->port && m->port == port) 
+		if (m->port && m->port == port)
 		{
-			if (m->hostname) 
+			if (m->hostname)
 			{
 				if (!g_ascii_strcasecmp (m->hostname, addr)) {
 					if ((!str || // pre 0.9.4e list file
@@ -217,7 +217,7 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
 						break;
 				}
 			}
-			else 
+			else
 			{
 				if (m->host && inet_aton (addr, &ip) && ip.s_addr == m->host->ip.s_addr) {
 					if ((!str || // pre 0.9.4e list file
@@ -236,7 +236,7 @@ static struct master *find_master_server (char *addr, unsigned short port, char 
 
 /*
  *  This is internal function to make compare_urls() function work.
- *  Don't use it for any other purposes.  
+ *  Don't use it for any other purposes.
  *
  *  Unification is
  *    1) lower case protocol and hostname
@@ -405,7 +405,7 @@ static struct master *read_list_parse_master (char *str, char *url) {
 	return m;
 }
 
-static gint server_sorting_helper (const struct server *s1, 
+static gint server_sorting_helper (const struct server *s1,
 		const struct server *s2) {
 	if (s1 == s2)
 		return 0;
@@ -429,7 +429,7 @@ static void master_add_server (struct master *m, char *str, enum server_type typ
 			host_ref (h);
 			if ((s = server_add (h, port, type)) != NULL) {
 				m->servers = server_list_prepend_ndp (m->servers, s);
-				/* Since the server_add increments the ref count, and 
+				/* Since the server_add increments the ref count, and
 				   server_list_prepend_ndp ups the ref_count, we should
 				   unref it once because we are only keeping it in
 				   one list after this function.
@@ -633,7 +633,7 @@ static void compat_convert_favorites (void) {
 }
 
 
-static struct master *create_master (char *name, enum server_type type, 
+static struct master *create_master (char *name, enum server_type type,
 		int group) {
 	struct master *m;
 
@@ -1573,14 +1573,14 @@ static inline GSList *master_list_add_sigle (GSList *list, struct master *m) {
 }
 
 
-static void master_list_add (GSList **masters, GSList **servers, 
+static void master_list_add (GSList **masters, GSList **servers,
 		GSList **uservers, struct master *m) {
 	GSList *tmp;
 
 	debug (6, "master_list_add() -- master '%s'", m->name);
 	if (m->isgroup || m == favorites) {
 		if (servers) {
-			*servers = server_list_append_list (*servers, favorites->servers, 
+			*servers = server_list_append_list (*servers, favorites->servers,
 					m->type);
 		}
 		if (uservers) {
@@ -1592,7 +1592,7 @@ static void master_list_add (GSList **masters, GSList **servers,
 	if (masters) {
 		if (m->isgroup) {
 			for (tmp = m->masters; tmp; tmp = tmp->next)
-				*masters =  master_list_add_sigle (*masters, 
+				*masters =  master_list_add_sigle (*masters,
 						(struct master *) tmp->data);
 		}
 		else {
@@ -1603,7 +1603,7 @@ static void master_list_add (GSList **masters, GSList **servers,
 }
 
 
-void collate_server_lists (GSList *masters, GSList **servers, 
+void collate_server_lists (GSList *masters, GSList **servers,
 		GSList **uservers) {
 	struct master *m;
 	GSList *tmp;
@@ -1611,18 +1611,18 @@ void collate_server_lists (GSList *masters, GSList **servers,
 	for (tmp = masters; tmp; tmp = tmp->next) {
 		m = (struct master *) tmp->data;
 		if (servers) {
-			*servers = server_list_append_list (*servers, m->servers, 
+			*servers = server_list_append_list (*servers, m->servers,
 					UNKNOWN_SERVER);
 		}
 		if (uservers) {
-			*uservers = userver_list_append_list (*uservers, m->uservers, 
+			*uservers = userver_list_append_list (*uservers, m->uservers,
 					UNKNOWN_SERVER);
 		}
 	}
 }
 
 
-void master_selection_to_lists (GSList *list, GSList **masters, 
+void master_selection_to_lists (GSList *list, GSList **masters,
 		GSList **servers, GSList **uservers) {
 	struct master *m;
 	GSList *tmp;
@@ -1646,7 +1646,7 @@ int source_has_masters_to_update (GSList *source) {
 				return TRUE;
 		}
 		else {
-			if (m != favorites) 
+			if (m != favorites)
 				return TRUE;
 		}
 	}

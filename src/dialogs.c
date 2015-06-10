@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -50,8 +50,8 @@ static int unregister_window_callback (GtkWidget *widget, GdkEventKey *event) {
 }
 
 GtkWidget *dialog_create_modal_transient_window (const char *title,
-		int close_on_esc, 
-		int allow_resize, 
+		int close_on_esc,
+		int allow_resize,
 		GtkSignalFunc on_destroy) {
 	GtkWidget *window;
 	GtkWidget *parent;
@@ -83,7 +83,7 @@ GtkWidget *dialog_create_modal_transient_window (const char *title,
 			GDK_DECOR_BORDER | GDK_DECOR_TITLE);
 
 	gdk_window_set_functions (window->window, (allow_resize)?
-			GDK_FUNC_MOVE | GDK_FUNC_CLOSE | GDK_FUNC_RESIZE : 
+			GDK_FUNC_MOVE | GDK_FUNC_CLOSE | GDK_FUNC_RESIZE :
 			GDK_FUNC_MOVE | GDK_FUNC_CLOSE);
 
 	gtk_window_set_modal (GTK_WINDOW (window), TRUE);
@@ -171,7 +171,7 @@ static void redial_button_clicked_callback (GtkWidget *widget, int *data) {
 }
 
 
-int dialog_yesno (const char *title, int defbutton, char *yes, char *no, 
+int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 		char *fmt, ...) {
 	GtkWidget *window;
 	GtkWidget *main_vbox;
@@ -436,7 +436,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 			gtk_widget_set_sensitive (enter_string_opt_button, FALSE);
 		}
 
-		gtk_box_pack_start (GTK_BOX (hbox), enter_string_opt_button, 
+		gtk_box_pack_start (GTK_BOX (hbox), enter_string_opt_button,
 				FALSE, FALSE, 8);
 		gtk_widget_show (enter_string_opt_button);
 
@@ -466,7 +466,7 @@ char *enter_string_dialog (int visible, char *fmt, ...) {
 }
 
 
-char *enter_string_with_option_dialog (int visible, char *optstr, int *optval, 
+char *enter_string_with_option_dialog (int visible, char *optstr, int *optval,
 		char *fmt, ...) {
 	char *res;
 	va_list ap;

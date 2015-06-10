@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -69,7 +69,7 @@ static void get_server_pixmap (GtkWidget *window, struct server *s,
 			return;
 	}
 
-	create_server_pixmap (window, games[s->type].pix, 
+	create_server_pixmap (window, games[s->type].pix,
 			s->flags & PLAYER_GROUP_MASK, pix, mask);
 	if (cache)
 		pixmap_cache_add (cache, *pix, *mask, key);
@@ -101,12 +101,12 @@ static struct pixmap* get_server_pixmap2(struct server* s) {
 
 void assemble_server_address (char *buf, int size, const struct server *s) {
 	if (show_default_port || games[s->type].default_port != s->port) {
-		g_snprintf (buf, size, "%s:%d", (show_hostnames && s->host->name)? 
-				s->host->name : inet_ntoa (s->host->ip), 
+		g_snprintf (buf, size, "%s:%d", (show_hostnames && s->host->name)?
+				s->host->name : inet_ntoa (s->host->ip),
 				s->port);
 	}
 	else {
-		strncpy (buf, (show_hostnames && s->host->name)? 
+		strncpy (buf, (show_hostnames && s->host->name)?
 				s->host->name : inet_ntoa (s->host->ip), size);
 	}
 }
@@ -188,7 +188,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 	text[6] = (s->map) ?  s->map : NULL;
 	text[7] = (s->game)? s->game : NULL;
-	text[8] = (s->gametype) ? s->gametype : NULL; 
+	text[8] = (s->gametype) ? s->gametype : NULL;
 
 	if (row < 0) {
 		row = gtk_clist_append (server_clist, text);
@@ -249,15 +249,15 @@ static int server_clist_refresh_row (struct server *s, int row) {
 			gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask);
 	}
 
-	get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap, 
+	get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap,
 			&server_pixmask);
-	gtk_clist_set_pixtext (server_clist, row, 0, 
+	gtk_clist_set_pixtext (server_clist, row, 0,
 			(s->name)? s->name : "", 2, server_pixmap, server_pixmask);
 
 #ifdef USE_GEOIP
 	countrypix = get_pixmap_for_country_with_fallback(s->country_id);
 	if (countrypix)
-		gtk_clist_set_pixtext (server_clist, row, 1, 
+		gtk_clist_set_pixtext (server_clist, row, 1,
 				text[1], 2, countrypix->pix, countrypix->mask);
 #endif
 
@@ -282,7 +282,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 }
 
 
-static int player_clist_refresh_row (struct server *s, struct player *p, 
+static int player_clist_refresh_row (struct server *s, struct player *p,
 		int row) {
 	GdkPixmap *qw_colors_pixmap = NULL;
 	char *text[6];
@@ -332,26 +332,26 @@ static int player_clist_refresh_row (struct server *s, struct player *p,
 	}
 
 	if ((games[s->type].flags & GAME_QUAKE1_PLAYER_COLORS) != 0) {
-		qw_colors_pixmap = qw_colors_pixmap_create (main_window, 
+		qw_colors_pixmap = qw_colors_pixmap_create (main_window,
 				p->shirt, p->pants, &qw_colors_pixmap_cache);
 
 		g_snprintf (buf2, 32, "%d:%d", p->shirt, p->pants);
-		gtk_clist_set_pixtext (player_clist, row, 2, buf2, 2, 
+		gtk_clist_set_pixtext (player_clist, row, 2, buf2, 2,
 				qw_colors_pixmap, NULL);
 		gdk_pixmap_unref (qw_colors_pixmap);
 	}
 
 	if ((p->flags & PLAYER_GROUP_MASK) == 0) {
 		gtk_clist_set_text (player_clist, row, 0, (p->name)? p->name : "");
-		gtk_clist_set_shift (player_clist, row, 0, 0, 
+		gtk_clist_set_shift (player_clist, row, 0, 0,
 				pixmap_width (buddy_pix[1].pix) + 2);
 	}
 	else {
 		ensure_buddy_pix (main_window, p->flags & PLAYER_GROUP_MASK);
 		gtk_clist_set_shift (player_clist, row, 0, 0, 0);
-		gtk_clist_set_pixtext (player_clist, row, 0, 
+		gtk_clist_set_pixtext (player_clist, row, 0,
 				(p->name)? p->name : "", 2,
-				buddy_pix[p->flags & PLAYER_GROUP_MASK].pix, 
+				buddy_pix[p->flags & PLAYER_GROUP_MASK].pix,
 				buddy_pix[p->flags & PLAYER_GROUP_MASK].mask);
 	}
 
@@ -466,7 +466,7 @@ int server_clist_refresh_server (struct server *s) {
 		if ((s->filters & cur_filter) == cur_filter) {
 			debug (6, "server_clist_refresh_server() -- Server %lx needs to be added.");
 			row = server_clist_refresh_row (s, -1);
-			gtk_clist_set_row_data_full (server_clist, row, s, 
+			gtk_clist_set_row_data_full (server_clist, row, s,
 					(GtkDestroyNotify) server_unref);
 			server_ref (s);
 			return TRUE;
@@ -520,7 +520,7 @@ GSList *server_clist_get_n_servers (int amount) {
 }
 
 /*
-   server_clist_all_servers -- Return all servers that are in the server 
+   server_clist_all_servers -- Return all servers that are in the server
    clist widget. It returns a new list.  Note that the prepend function
    adds one to the reference count.
 */
@@ -569,7 +569,7 @@ void server_clist_selection_visible (void) {
 
 	if (rows->next) /* if (g_list_length (rows) > 1) */
 		gtk_clist_moveto (server_clist, min, 0, 0.2, 0.0);
-	else 
+	else
 		gtk_clist_moveto (server_clist, min, 0, 0.5, 0.0);
 }
 
@@ -633,12 +633,12 @@ void server_clist_set_list (GSList *servers) {
 		for (list = filtered; list; list = list->next) {
 			server = (struct server *) list->data;
 			row = server_clist_refresh_row (server, -1);
-			gtk_clist_set_row_data_full (server_clist, row, server, 
+			gtk_clist_set_row_data_full (server_clist, row, server,
 					(GtkDestroyNotify) server_unref);
 			/*
 			   Because the a destroy event on the server_clist will
 			   call server_unref, we want to add a reference to
-			   count to the server. Note if we comment out both 
+			   count to the server. Note if we comment out both
 			   the ref line and the list_free line we have a net sum
 			   of zero.  But just for clarity...
 			*/
@@ -695,8 +695,8 @@ void server_clist_build_filtered (GSList *server_list, int update) {
 			if (row >= 0) {
 				debug (3, "server_clist_build_filtered() -- Delete server %lx, call gtk_clist_remove()", server);
 
-				/* 
-Note: Each server clist item gets a server_unref call on 
+				/*
+Note: Each server clist item gets a server_unref call on
 a GtkDestroyNotify event.
 */
 				gtk_clist_remove (server_clist, row);
@@ -715,12 +715,12 @@ a GtkDestroyNotify event.
 		}
 	}
 
-	/* 
+	/*
 	   Now we want to add all of the servers that we
 	   got from the build_fiter_list function. Note that
 	   the said function adds one to the reference count
 	   for us and since we free that list after we put
-	   the data in the clist, we do NOT need to 
+	   the data in the clist, we do NOT need to
 	   do a reference count in this fuction. --baa
 	*/
 	if (add) {
@@ -728,7 +728,7 @@ a GtkDestroyNotify event.
 			server = (struct server *) tmp->data;
 			row = server_clist_refresh_row (server, -1);
 			debug (7, "server_clist_build_filtered() -- add server %lx to row %d", server, row);
-			gtk_clist_set_row_data_full (server_clist, row, server, 
+			gtk_clist_set_row_data_full (server_clist, row, server,
 					(GtkDestroyNotify) server_unref);
 
 			server_ref (server); /* See nots above about GtkDestroyNotify */

@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -371,7 +371,7 @@ static char* rcon_receive() {
 
 
 #ifndef RCON_STANDALONE
-static void rcon_input_callback (gpointer data, int fd, 
+static void rcon_input_callback (gpointer data, int fd,
 		GdkInputCondition condition) {
 	char* msg = rcon_receive();
 
@@ -461,7 +461,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	assemble_server_address (srv, 256, s);
 	g_snprintf (buf, 256, "Remote Console [%s]", srv);
 
-	window = dialog_create_modal_transient_window (buf, TRUE, TRUE, 
+	window = dialog_create_modal_transient_window (buf, TRUE, TRUE,
 			GTK_SIGNAL_FUNC(rcon_save_geometry));
 	gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
 	rcon_restore_geometry (window);
@@ -482,7 +482,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
 
 	if (games[s->type].pix) {
-		pixmap = gtk_pixmap_new (games[s->type].pix->pix, 
+		pixmap = gtk_pixmap_new (games[s->type].pix->pix,
 				games[s->type].pix->mask);
 		gtk_box_pack_start (GTK_BOX (hbox2), pixmap, FALSE, FALSE, 0);
 		gtk_widget_show (pixmap);
@@ -601,7 +601,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_widget_show (main_vbox);
 	gtk_widget_show (window);
 
-	rcon_tag = gdk_input_add (rcon_fd, GDK_INPUT_READ, 
+	rcon_tag = gdk_input_add (rcon_fd, GDK_INPUT_READ,
 			(GdkInputFunction) rcon_input_callback, NULL);
 
 	gtk_main ();

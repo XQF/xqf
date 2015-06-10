@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -74,8 +74,8 @@ static char *mode_symbols[3] = {
 	N_("regexp")
 };
 
-static const char *mode_names[3] = { 
-	N_("string"), 
+static const char *mode_names[3] = {
+	N_("string"),
 	N_("substring"),
 	N_("regular expression")
 };
@@ -110,9 +110,9 @@ int player_filter (struct server *s) {
 			p = (struct player *) plist->data;
 
 			if (pp->data && !pp->error) {
-				if ((pp->mode == PATTERN_MODE_STRING && 
+				if ((pp->mode == PATTERN_MODE_STRING &&
 						g_ascii_strcasecmp (p->name, pp->data) == 0) ||
-						(pp->mode == PATTERN_MODE_SUBSTR && 
+						(pp->mode == PATTERN_MODE_SUBSTR &&
 						 lowcasestrstr (p->name, pp->data)) ||
 						(pp->mode == PATTERN_MODE_REGEXP &&
 						 regexec ((regex_t *) pp->data, p->name, 0, NULL, 0) == 0)) {
@@ -273,7 +273,7 @@ static void pattern_clist_sync_selection (void) {
 }
 
 
-static void pattern_clist_update_groups (int row, unsigned newstate, 
+static void pattern_clist_update_groups (int row, unsigned newstate,
 		unsigned oldstate) {
 	int i;
 	unsigned mask;
@@ -281,7 +281,7 @@ static void pattern_clist_update_groups (int row, unsigned newstate,
 	for (i = 0, mask = 1; i < 3; i++, mask <<= 1) {
 		if ((newstate & mask) != 0) {
 			if ((oldstate & mask) == 0) {
-				gtk_clist_set_pixmap (GTK_CLIST (pattern_clist), row, i, 
+				gtk_clist_set_pixmap (GTK_CLIST (pattern_clist), row, i,
 						group_pix[i].pix, group_pix[i].mask);
 			}
 		}
@@ -298,11 +298,11 @@ static void pattern_clist_update_row (struct player_pattern *pp, int row) {
 	pattern_clist_update_groups (row, pp->groups, ~pp->groups); /* update all */
 
 	if (pp->error) {
-		gtk_clist_set_pixtext (GTK_CLIST (pattern_clist), row, 3, 
+		gtk_clist_set_pixtext (GTK_CLIST (pattern_clist), row, 3,
 				mode_symbols[pp->mode], 2, error_pix.pix, error_pix.mask);
 	}
 	else {
-		gtk_clist_set_text (GTK_CLIST (pattern_clist), row, 3, 
+		gtk_clist_set_text (GTK_CLIST (pattern_clist), row, 3,
 				mode_symbols[pp->mode]);
 	}
 
@@ -316,7 +316,7 @@ static void sync_pattern_data (void) {
 	char *comment;
 	enum pattern_mode mode;
 	int update_pattern = FALSE;
-	int update_comment = FALSE; 
+	int update_comment = FALSE;
 	GSList *list;
 
 	if (current_row < 0)
@@ -335,15 +335,15 @@ static void sync_pattern_data (void) {
 	pattern = strdup_strip (gtk_entry_get_text (GTK_ENTRY (pattern_entry)));
 	comment = gtk_editable_get_chars (GTK_EDITABLE (comment_text_buffer), 0, -1);
 
-	update_pattern = (pp->pattern && pp->pattern[0])? 
+	update_pattern = (pp->pattern && pp->pattern[0])?
 		!pattern || !pattern[0] || strcmp (pp->pattern, pattern) :
 		pattern && pattern[0];
 
-	update_comment = (pp->comment && pp->comment[0])? 
+	update_comment = (pp->comment && pp->comment[0])?
 		!comment || !comment[0] || strcmp (pp->comment, comment) :
 		comment && comment[0];
 
-	/* 
+	/*
 	 *  Test everything but groups.
 	 *  They are synchronized by pattern_set_groups()
 	 */
@@ -438,7 +438,7 @@ static void show_pattern_error (int row) {
 	pp = (struct player_pattern *) list->data;
 
 	if (pp->error) {
-		dialog_ok (_("XQF: Error"), _("Regular Expression Error!\n\n%s\n\n%s."), 
+		dialog_ok (_("XQF: Error"), _("Regular Expression Error!\n\n%s\n\n%s."),
 				pp->pattern, pp->error);
 	}
 }
@@ -454,7 +454,7 @@ static int pattern_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 				event->type == GDK_3BUTTON_PRESS) &&
 			bevent->window == GTK_CLIST (pattern_clist)->clist_window) {
 
-		if (gtk_clist_get_selection_info (GTK_CLIST (pattern_clist), 
+		if (gtk_clist_get_selection_info (GTK_CLIST (pattern_clist),
 					bevent->x, bevent->y, &row, &column)) {
 			if (event->type == GDK_BUTTON_PRESS) {
 
@@ -465,7 +465,7 @@ static int pattern_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 						case 1:
 						case 2:
 							sync_pattern_data ();
-							add = (bevent->button == 3) || 
+							add = (bevent->button == 3) ||
 								(bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) != 0;
 							pattern_set_groups (row, column, add);
 							return TRUE;
@@ -494,7 +494,7 @@ static int pattern_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 }
 
 
-static void pattern_clist_select_row_callback (GtkWidget *widget, 
+static void pattern_clist_select_row_callback (GtkWidget *widget,
 		int row, int column, GdkEventButton *event) {
 	sync_pattern_data ();
 
@@ -565,7 +565,7 @@ static void pattern_clist_adjust_visibility (int row, int direction) {
 
 	vis = gtk_clist_row_is_visible (GTK_CLIST (pattern_clist), row);
 	if (vis != GTK_VISIBILITY_FULL) {
-		gtk_clist_moveto (GTK_CLIST (pattern_clist), row, 0, 
+		gtk_clist_moveto (GTK_CLIST (pattern_clist), row, 0,
 				(direction == 0)? 0.5 : ((direction > 0)? 1.0 : 0.0), 0.0);
 	}
 }
@@ -597,7 +597,7 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
 }
 
 
-static void pattern_clist_row_move_callback (GtkWidget *widget, 
+static void pattern_clist_row_move_callback (GtkWidget *widget,
 		int source, int dest, gpointer data) {
 	GtkCList *clist = GTK_CLIST (widget);
 	GSList *link;
@@ -605,7 +605,7 @@ static void pattern_clist_row_move_callback (GtkWidget *widget,
 
 	debug(5,"pattern_clist_row_move_callback(widget=%d,source=%d,dest=%d)",widget,source,dest);
 
-	if (source < 0 || dest < 0 || source == dest || 
+	if (source < 0 || dest < 0 || source == dest ||
 			source > clist->rows || dest > clist->rows) {
 		return;
 	}
@@ -762,7 +762,7 @@ void player_filter_page (GtkWidget *notebook) {
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_box_pack_start (GTK_BOX (page_hbox), scrollwin, FALSE, FALSE, 0);
 
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), 
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	pattern_clist = gtk_clist_new_with_titles (5, titles);
@@ -780,7 +780,7 @@ void player_filter_page (GtkWidget *notebook) {
 
 	for (i = 0; i < 3; i++) {
 		pixmap = aligned_pixmap (group_pix[i].pix, group_pix[i].mask);
-		gtk_clist_set_column_width (GTK_CLIST (pattern_clist), i, 
+		gtk_clist_set_column_width (GTK_CLIST (pattern_clist), i,
 				pixmap_width (group_pix[i].pix));
 		gtk_clist_set_column_widget (GTK_CLIST (pattern_clist), i, pixmap);
 		gtk_widget_show (pixmap);
@@ -790,7 +790,7 @@ void player_filter_page (GtkWidget *notebook) {
 
 	gtk_clist_set_column_width (GTK_CLIST (pattern_clist), 3, 45);
 
-	gtk_container_add (GTK_CONTAINER (scrollwin), pattern_clist); 
+	gtk_container_add (GTK_CONTAINER (scrollwin), pattern_clist);
 	gtk_clist_column_titles_passive (GTK_CLIST (pattern_clist));
 
 	gtk_widget_show (pattern_clist);
@@ -857,11 +857,11 @@ static int strings_are_same (const char *s1, const char *s2) {
 
 
 /*
- *  'FILTER_DATA_CHANGED' situations that are not catched by 
+ *  'FILTER_DATA_CHANGED' situations that are not catched by
  *   player_pattern_lists_compare():
  *
  *     - string/substring mode: case change in pattern
- *     - regexp mode: errorneous pattern is modified but 
+ *     - regexp mode: errorneous pattern is modified but
  *          the error is not corrected
  */
 
@@ -878,7 +878,7 @@ static int player_pattern_lists_compare (GSList *list1, GSList *list2) {
 		pp2 = (struct player_pattern *) list2->data;
 
 		if (pp1->mode == pp2->mode && pp1->groups == pp2->groups &&
-				strings_are_same (pp1->pattern, pp2->pattern)) { 
+				strings_are_same (pp1->pattern, pp2->pattern)) {
 			if (!strings_are_same (pp1->comment, pp2->comment))
 				changed = FILTER_DATA_CHANGED;
 			list2 = list2->next;
@@ -890,7 +890,7 @@ static int player_pattern_lists_compare (GSList *list1, GSList *list2) {
 				pp2 = (struct player_pattern *) tmp->data;
 
 				if (pp1->mode == pp2->mode && pp1->groups == pp2->groups &&
-						strings_are_same (pp1->pattern, pp2->pattern)) { 
+						strings_are_same (pp1->pattern, pp2->pattern)) {
 					break;
 				}
 			}
@@ -912,7 +912,7 @@ void player_filter_new_defaults (void) {
 
 	sync_pattern_data ();
 
-	filters[FILTER_PLAYER].changed = 
+	filters[FILTER_PLAYER].changed =
 		player_pattern_lists_compare (players, curplrs);
 
 	for (list = curplrs; list; list = list->next) {
@@ -1186,7 +1186,7 @@ static void player_filter_load_patterns (void) {
 	scanner = g_scanner_new (&patterns_scanner_config);
 
 	for (i = TOKEN_STRING; i <= TOKEN_REGEXP; i++) {
-		g_scanner_add_symbol (scanner, mode_symbols[i - TOKEN_STRING], 
+		g_scanner_add_symbol (scanner, mode_symbols[i - TOKEN_STRING],
 				GINT_TO_POINTER(i));
 	}
 

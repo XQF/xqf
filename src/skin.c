@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -168,7 +168,7 @@ void draw_qw_skin (GtkWidget *preview, guchar *data, int top, int bottom) {
 
 		if (fixed_top_color != 1) {
 			for (i = 0; i<16; i++)
-				colormap[16*1 + i] = fixed_top_color*16 + 
+				colormap[16*1 + i] = fixed_top_color*16 +
 					((fixed_top_color <= 7)? i : 15 - i);
 		}
 
@@ -341,7 +341,7 @@ void allocate_quake_player_colors (GdkWindow *window) {
 			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]);
 			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]);
 			if (!gdk_color_alloc (colormap, &pcolors[i])) {
-				g_warning ("unable to allocate color: ( %d %d %d )", 
+				g_warning ("unable to allocate color: ( %d %d %d )",
 						pcolors[i].red, pcolors[i].green, pcolors[i].blue);
 			}
 		}
@@ -397,7 +397,7 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
 }
 
 
-GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, 
+GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top,
 		unsigned char bottom, GSList **cache) {
 	GdkPixmap *pixmap;
 	unsigned key;
@@ -417,7 +417,7 @@ GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top,
 	h = player_clist->row_height - 2;
 	w = h * 3 / 2;
 
-	pixmap = two_colors_pixmap (window->window, w, h, &pcolors[top], 
+	pixmap = two_colors_pixmap (window->window, w, h, &pcolors[top],
 			&pcolors[bottom]);
 	if (cache)
 		pixmap_cache_add (cache, pixmap, NULL, key);

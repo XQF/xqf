@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
@@ -43,12 +43,12 @@ static void server_combo_activate_callback (GtkWidget *widget, gpointer data) {
 				GTK_ENTRY (GTK_COMBO (server_combo)->entry)));
 	history_add (server_history, enter_server_result);
 
-	config_set_string ("/" CONFIG_FILE "/Add Server/game", 
+	config_set_string ("/" CONFIG_FILE "/Add Server/game",
 			type2id (*server_type));
 }
 
 
-static void select_server_type_callback (GtkWidget *widget, 
+static void select_server_type_callback (GtkWidget *widget,
 		enum server_type type) {
 	*server_type = type;
 }
