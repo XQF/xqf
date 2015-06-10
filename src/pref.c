@@ -5051,7 +5051,7 @@ void q3_prefs_load(struct game* g) {
 
 	if ( type == Q3_SERVER ) {
 		game_set_attribute(type,"pass_memory_options",config_get_string("pass_memory_options=false"));
-		game_set_attribute(type,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
+		game_set_attribute(type,"com_hunkmegs",config_get_string("com_hunkmegs=56"));
 		game_set_attribute(type,"com_zonemegs",config_get_string("com_zonemegs=16"));
 		game_set_attribute(type,"com_soundmegs",config_get_string("com_soundmegs=8"));
 		game_set_attribute(type,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
