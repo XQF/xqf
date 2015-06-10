@@ -533,8 +533,8 @@ static struct q3_common_prefs_s unvanquished_prefs = {
 
 static const char* openarena_masterprotocols[] = {
 	"auto",
-	"71 - v0.8.8"
-		"70 - v0.8.0",
+	"71 - v0.8.8",
+	"70 - v0.8.0",
 	NULL
 };
 
