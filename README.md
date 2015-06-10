@@ -6,7 +6,7 @@ XQF
 DESCRIPTION
 -----------
 
-XQF is a server browser and launcher for games using id Tech engines, Unreal engines and derivatives. XQF is a front-end to QStat and uses the GTK+ 2 toolkit. See the Wiki for more information: https://github.com/XQF/xqf/wiki
+XQF is a server browser and launcher for games using id Tech engines, Unreal engines and derivatives. XQF is a front-end to QStat and uses the GTK+ 2 toolkit. See the [Wiki](https://github.com/XQF/xqf/wiki) for more information.
 
 To learn more about what's new in XQF, please read the file [NEWS.md](NEWS.md) and the [ChangeLog](ChangeLog).
 
@@ -14,7 +14,7 @@ To learn more about what's new in XQF, please read the file [NEWS.md](NEWS.md) a
 DOWNLOADS
 ---------
 
-See the Wiki page: https://github.com/XQF/xqf/wiki/Downloads
+See the Wiki page: [wiki/Downloads](https://github.com/XQF/xqf/wiki/Downloads).
 
 
 INSTALLATION
@@ -34,7 +34,7 @@ xqf
 
 On Debian or Ubuntu, use ``./configure --with-qstat=quakestat --prefix=/usr``.
 
-See the Wiki page for more information: https://github.com/XQF/xqf/wiki/How-to-build
+See the Wiki page for more information: [wiki/How-to-build](https://github.com/XQF/xqf/wiki/How-to-build).
 
 
 LINKS
@@ -55,14 +55,14 @@ LINKS
 HOW TO CONTRIBUTE
 -----------------
 
-The best way to contribute code is to fork this project, to contribute translation please visit our Transifex project. See the Wiki page for more information: https://github.com/XQF/xqf/wiki/How-to-contribute
+The best way to contribute code is to fork this project, to contribute translation please visit our Transifex project. See the Wiki page for more information: [wiki/How-to-contribute](https://github.com/XQF/xqf/wiki/How-to-contribute).
 
 
 COPYRIGHT
 ---------
 
 XQF is Copyright © 1998-2000 Roman Pozlevich.  
-See the wiki page for contributors: https://github.com/XQF/xqf/wiki/Contributors
+See the wiki page for contributors: [wiki/Contributors](https://github.com/XQF/xqf/wiki/Contributors).
 
 Copying is allowed under the terms of the GNU General Public License.  
 See the file [COPYING](COPYING) for more details.
