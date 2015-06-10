@@ -3930,7 +3930,7 @@ static void populate_main_window (void) {
 
 	restore_main_window_geometry ();
 
-	window_set_icon (main_window);
+	gtk_window_set_default_icon_name ("xqf");
 
 	gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
 	gtk_accel_group_unref (accel_group);
