@@ -802,25 +802,6 @@ static void load_game_defaults (enum server_type type) {
 	config_pop_prefix();
 }
 
-// verify Quake3 settings, return false if something's not ok
-int verify_q3_settings (void) {
-	int com_hunkmegs        = 0;
-	int com_zonemegs        = 0;
-	int com_soundmegs       = 0;
-	// int cg_precachedmodels  = 0;
-
-	com_hunkmegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
-	com_soundmegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
-	com_zonemegs = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
-	// cg_precachedmodels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
-
-	if (com_soundmegs + com_zonemegs >= com_hunkmegs) {
-		dialog_ok (NULL, _("com_soundmegs and com_zonemegs must be lower than com_hunkmegs"));
-		return FALSE;
-	}
-	return TRUE;
-}
-
 void q1_update_prefs (struct game* g) {
 	char* str;
 
@@ -1462,10 +1443,6 @@ static int check_qstat_source_port() {
 // call various verification fuctions, store settings and destroy preferences
 // window if everything's fine
 static void ok_callback (GtkWidget *widget, GtkWidget* window) {
-	if (!verify_q3_settings()) {
-		return;
-	}
-
 	if (!check_qstat_source_port()) {
 		return;
 	}
