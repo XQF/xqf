@@ -1038,25 +1038,27 @@ void q3_update_prefs (struct game* g) {
 
 	q3_update_prefs_common(g);
 
-	i = GTK_TOGGLE_BUTTON (pass_memory_options_button)->active;
-	config_set_bool ("pass_memory_options", i);
-	game_set_attribute(type,"pass_memory_options",g_strdup(bool2str(i)));
+	if ( type == Q3_SERVER ) {
+		i = GTK_TOGGLE_BUTTON (pass_memory_options_button)->active;
+		config_set_bool ("pass_memory_options", i);
+		game_set_attribute(type,"pass_memory_options",g_strdup(bool2str(i)));
 
-	i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
-	config_set_int ("com_hunkmegs", i);
-	game_set_attribute(type,"com_hunkmegs",g_strdup_printf("%d",i));
+		i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_hunkmegs_spinner));
+		config_set_int ("com_hunkmegs", i);
+		game_set_attribute(type,"com_hunkmegs",g_strdup_printf("%d",i));
 
-	i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
-	config_set_int ("com_soundmegs", i);
-	game_set_attribute(type,"com_soundmegs",g_strdup_printf("%d",i));
+		i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_soundmegs_spinner));
+		config_set_int ("com_soundmegs", i);
+		game_set_attribute(type,"com_soundmegs",g_strdup_printf("%d",i));
 
-	i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
-	config_set_int ("com_zonemegs", i);
-	game_set_attribute(type,"com_zonemegs",g_strdup_printf("%d",i));
+		i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
+		config_set_int ("com_zonemegs", i);
+		game_set_attribute(type,"com_zonemegs",g_strdup_printf("%d",i));
 
-	i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
-	config_set_int ("cg_precachedmodels", i);
-	game_set_attribute(type,"cg_precachedmodels",g_strdup_printf("%d",i));
+		i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
+		config_set_int ("cg_precachedmodels", i);
+		game_set_attribute(type,"cg_precachedmodels",g_strdup_printf("%d",i));
+	}
 }
 
 static void doom3_detect_version(struct game* g) {
@@ -5047,11 +5049,13 @@ void q3_prefs_load(struct game* g) {
 
 	q3_prefs_load_common(g);
 
-	game_set_attribute(type,"pass_memory_options",config_get_string("pass_memory_options=false"));
-	game_set_attribute(type,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
-	game_set_attribute(type,"com_zonemegs",config_get_string("com_zonemegs=16"));
-	game_set_attribute(type,"com_soundmegs",config_get_string("com_soundmegs=8"));
-	game_set_attribute(type,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
+	if ( type == Q3_SERVER ) {
+		game_set_attribute(type,"pass_memory_options",config_get_string("pass_memory_options=false"));
+		game_set_attribute(type,"com_hunkmegs",config_get_string("com_hunkmegs=54"));
+		game_set_attribute(type,"com_zonemegs",config_get_string("com_zonemegs=16"));
+		game_set_attribute(type,"com_soundmegs",config_get_string("com_soundmegs=8"));
+		game_set_attribute(type,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
+	}
 }
 
 void tribes2_prefs_load(struct game* g) {
