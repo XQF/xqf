@@ -1,7 +1,7 @@
 XQF
 ===
 
-![XQF logo](pixmaps/xqf.png)
+![XQF logo](pixmaps/128x128/xqf.png)
 
 DESCRIPTION
 -----------
