@@ -3789,7 +3789,7 @@ static void populate_main_window (void) {
 	 *  Don't gtk_widget_show() selection_manager widget!
 	 */
 
-	selection_manager = GTK_EDITABLE (gtk_text_new (NULL, NULL));
+	selection_manager = GTK_EDITABLE (gtk_entry_new());
 	gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (selection_manager), FALSE, FALSE, 0);
 	gtk_widget_realize (GTK_WIDGET (selection_manager));
 

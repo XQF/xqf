@@ -41,6 +41,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gdk/gdk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <X11/Xatom.h>

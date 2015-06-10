@@ -25,14 +25,15 @@ src/gnuconfig.h \
 src/gnuconfig.h.in \
 src/xpm/Makefile.in \
 src/xpm/Makefile \
+src/*.o \
+src/test_utils \
+src/xqf \
 pixmaps/Makefile.in \
 pixmaps/flags/Makefile.in \
 po/Makefile.in \
-po/Makefile.in.in \
 po/POTFILES \
 po/*.gmo \
-INSTALL \
-COPYING
+INSTALL
 
 # gettextize
 rm -rf \
