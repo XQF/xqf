@@ -3413,7 +3413,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	hbox = gtk_hbox_new (FALSE, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
-	adj = gtk_adjustment_new (com_soundmegs, 16, 1024, 4, 8, 0);
+	adj = gtk_adjustment_new (com_soundmegs, 8, 1024, 4, 8, 0);
 	com_soundmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_soundmegs_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_usize (com_soundmegs_spinner, 64, -1);
