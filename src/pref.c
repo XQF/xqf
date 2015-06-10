@@ -5098,7 +5098,7 @@ int prefs_load (void) {
 		else {
 			char* endptr = NULL;
 			long int size = strtol(coresize,&endptr,10);
-			if (endptr==coresize || size < 0) break;
+			if (endptr == coresize || size < 0) break;
 			rlim.rlim_cur = size;
 		}
 

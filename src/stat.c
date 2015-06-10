@@ -1234,7 +1234,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 		argv[argi++] = buf1;
 		g_snprintf (buf1, 64, "%d", maxretries + 2);
 
-		if (m->master_type==MASTER_LAN) {
+		if (m->master_type == MASTER_LAN) {
 			debug (3, "stat_update_master_qstat() -- MASTER_LAN");
 			arg_type = g_strdup_printf("%s,outfile", games[m->type].qstat_option);
 		}
@@ -1334,7 +1334,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 		argv[argi++] = arg_type;
 
 		argv[argi++] = buf3;
-		g_snprintf (buf3, 64, "%s%s:%d,-", m->master_type==MASTER_LAN?"+":"" ,inet_ntoa (m->host->ip), m->port);
+		g_snprintf (buf3, 64, "%s%s:%d,-", m->master_type == MASTER_LAN?"+":"" ,inet_ntoa (m->host->ip), m->port);
 
 		argv[argi] = NULL;
 

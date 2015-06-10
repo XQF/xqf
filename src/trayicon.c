@@ -230,7 +230,7 @@ void tray_icon_set_tooltip(gchar * tip) {
 static gint animation_callback(gpointer _ani) {
 	animation *ani= _ani;
 
-	if (ani->frame_counter==0 && ani->time_counter==0) {
+	if (ani->frame_counter == 0 && ani->time_counter == 0) {
 		ani->current_frame=g_array_index (ani->array, frame, ani->frame_counter);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(tray_icon->image), ani->current_frame.pix);
 	}
@@ -366,7 +366,7 @@ static animation *tray_icon_load_animation (gchar *name, gboolean loop) {
 					}
 
 					tmp_frame.delay= strtol(delay_string, NULL, 10);
-					if (tmp_frame.delay== 0) {
+					if (tmp_frame.delay == 0) {
 						xqf_warning (_("Error in file: %s line: %d\n"), ani_file, line_number);
 						break;
 					}

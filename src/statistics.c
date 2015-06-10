@@ -694,7 +694,7 @@ static GtkWidget *country_stats_page (void) {
 	hbox = gtk_hbox_new(FALSE,0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
 
-	option_menu = create_server_type_menu (to_activate==GAMES_TOTAL?-1:to_activate,
+	option_menu = create_server_type_menu (to_activate == GAMES_TOTAL?-1:to_activate,
 			create_server_type_menu_filter_hascountries,
 			GTK_SIGNAL_FUNC(select_country_server_type_callback));
 	{

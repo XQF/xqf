@@ -73,7 +73,7 @@ static void master_check_master_addr_prefix(void) {
 		}
 
 		// Add lan://255.255.255.255 if user picks LAN and has not already entered an address
-		if (current_master_query_type==MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr))) {
+		if (current_master_query_type == MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr))) {
 			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type], "255.255.255.255");
 			gtk_entry_set_text(
 					GTK_ENTRY(GTK_COMBO(master_addr_combo)->entry), txt);
@@ -127,7 +127,7 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 	if (!games[type].default_master_port) {
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
-		if (current_master_query_type==MASTER_NATIVE) {
+		if (current_master_query_type == MASTER_NATIVE) {
 			gtk_toggle_button_set_active
 				(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 		}
@@ -149,7 +149,7 @@ static void master_type_radio_callback (GtkWidget *widget, enum master_query_typ
 
 		master_name = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (master_name_combo)->entry));
 
-		if (current_master_query_type==MASTER_LAN
+		if (current_master_query_type == MASTER_LAN
 				&& (!master_name || !strlen(master_name))) {
 			gtk_entry_set_text(
 					GTK_ENTRY(GTK_COMBO(master_name_combo)->entry), _("LAN"));
@@ -328,7 +328,7 @@ struct master *add_master_dialog (struct master *m) {
 	for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++) {
 		master_query_type_radios[i] =
 			gtk_radio_button_new_with_label_from_widget(
-					i==MASTER_NATIVE?NULL:GTK_RADIO_BUTTON(master_query_type_radios[MASTER_NATIVE]),
+					i == MASTER_NATIVE?NULL:GTK_RADIO_BUTTON(master_query_type_radios[MASTER_NATIVE]),
 					_(master_designation[i]));
 		if (master_to_edit) {
 			gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);

@@ -54,7 +54,7 @@ static int host_hash_func (const struct in_addr *ip) {
 }
 
 static gint host_sorting_helper (const struct host *h1, const struct host *h2) {
-	if (h1==h2) {
+	if (h1 == h2) {
 		return 0;
 	}
 	if (h1<h2) {

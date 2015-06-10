@@ -121,12 +121,12 @@ int geoip_id_by_code(const char *country) {
 	if (!gi) return -1; {
 	}
 
-	if (strcmp(country,"00")==0) {
+	if (strcmp(country,"00") == 0) {
 		return LAN_GeoIPid;
 	}
 
 	for (i=1;i<MaxCountries;++i) {
-		if (strcmp(country,xqf_geoip_country_name[i])==0) {
+		if (strcmp(country,xqf_geoip_country_name[i]) == 0) {
 			return i;
 		}
 	}

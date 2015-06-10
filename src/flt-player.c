@@ -229,7 +229,7 @@ static void pattern_clist_sync_selection (void) {
 		list = g_slist_nth (curplrs, current_row);
 		pp = (struct player_pattern *) list->data;
 
-		if (gtk_widget_get_realized(comment_text)==FALSE) {
+		if (gtk_widget_get_realized(comment_text) == FALSE) {
 			gtk_widget_realize (comment_text);
 		}
 	}

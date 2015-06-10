@@ -407,7 +407,7 @@ static struct master *read_list_parse_master (char *str, char *url) {
 
 static gint server_sorting_helper (const struct server *s1, 
 		const struct server *s2) {
-	if (s1==s2)
+	if (s1 == s2)
 		return 0;
 	else if (s1<s2)
 		return -1;

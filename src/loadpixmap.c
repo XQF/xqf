@@ -121,7 +121,7 @@ static char* find_pixmap_file(const char* filename) {
 		return NULL;
 
 	// load absolute paths directly
-	if (filename[0]=='/')
+	if (filename[0] == '/')
 		found_filename = check_file_exists(NULL, filename);
 	else
 		found_filename = find_pixmap_directory(filename);

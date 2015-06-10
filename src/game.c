@@ -2698,7 +2698,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 		// Check to see if we can find that generated filename
 		// absolute path?
-		if (tmp_cmd[0]=='/') {
+		if (tmp_cmd[0] == '/') {
 			if (!access(tmp_cmd,X_OK)) {
 				cmd = protocmdtofree = strdup(tmp_cmd);
 				debug(1,"absolute path %s",cmd);

@@ -104,7 +104,7 @@ static void findmaps_pak(const char* packfile, GHashTable* maphash) {
 
 	// printf ("packfile %s (%i files)\n", packfile, numpackfiles);
 
-	if (lseek (fd, header.dirofs, SEEK_SET)==-1) {
+	if (lseek (fd, header.dirofs, SEEK_SET) == -1) {
 		perror(packfile);
 		return;
 	}
@@ -556,7 +556,7 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 		}
 
 		ret = unzCloseCurrentFile(zf);
-		if (ret==UNZ_CRCERROR) {
+		if (ret == UNZ_CRCERROR) {
 			g_warning("CRC Error: %s inside zip archive %s\n",filename,zipfile);
 			error = 1;
 			break;
