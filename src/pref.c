@@ -303,7 +303,6 @@ static GtkWidget *pass_memory_options_button;
 static GtkWidget *com_hunkmegs_spinner;
 static GtkWidget *com_soundmegs_spinner;
 static GtkWidget *com_zonemegs_spinner;
-static GtkWidget *cg_precachedmodels_spinner;
 
 
 // change config_get_string below too!
@@ -1035,10 +1034,6 @@ void q3_update_prefs (struct game* g) {
 		i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(com_zonemegs_spinner));
 		config_set_int ("com_zonemegs", i);
 		game_set_attribute(type,"com_zonemegs",g_strdup_printf("%d",i));
-
-		i = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(cg_precachedmodels_spinner));
-		config_set_int ("cg_precachedmodels", i);
-		game_set_attribute(type,"cg_precachedmodels",g_strdup_printf("%d",i));
 	}
 }
 
@@ -3299,25 +3294,21 @@ static void q3_set_memory_callback (GtkWidget *widget, int what) {
 	int com_hunkmegs        = 56;
 	int com_zonemegs        = 16;
 	int com_soundmegs       = 8;
-	int cg_precachedmodels  = 3;
 
 	if (what == 1) {
 		com_hunkmegs        = 72;
 		com_zonemegs        = 24;
 		com_soundmegs       = 16;
-		cg_precachedmodels  = 6;
 	}
 	else if (what == 2) {
 		com_hunkmegs        = 96;
 		com_zonemegs        = 24;
 		com_soundmegs       = 16;
-		cg_precachedmodels  = 15;
 	}
 
 	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(com_hunkmegs_spinner)), com_hunkmegs);
 	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(com_zonemegs_spinner)), com_zonemegs);
 	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(com_soundmegs_spinner)), com_soundmegs);
-	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(cg_precachedmodels_spinner)), cg_precachedmodels);
 }
 
 static GtkWidget *q3_mem_options_page (void) {
@@ -3333,7 +3324,6 @@ static GtkWidget *q3_mem_options_page (void) {
 	int com_hunkmegs        = atoi(game_get_attribute(Q3_SERVER,"com_hunkmegs"));
 	int com_zonemegs        = atoi(game_get_attribute(Q3_SERVER,"com_zonemegs"));
 	int com_soundmegs       = atoi(game_get_attribute(Q3_SERVER,"com_soundmegs"));
-	int cg_precachedmodels  = atoi(game_get_attribute(Q3_SERVER,"cg_precachedmodels"));
 
 	page_vbox = gtk_vbox_new (FALSE, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -3404,29 +3394,6 @@ static GtkWidget *q3_mem_options_page (void) {
 	gtk_widget_show (label);
 
 	label = gtk_label_new (_("com_soundmegs"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	gtk_widget_show (hbox);
-
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
-
-	// value, lower, upper, step_increment, page_increment, page_size
-	adj = gtk_adjustment_new (cg_precachedmodels, 2, 32, 1, 4, 0);
-	cg_precachedmodels_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
-	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (cg_precachedmodels_spinner), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (cg_precachedmodels_spinner, 64, -1);
-
-	gtk_box_pack_start (GTK_BOX (hbox), cg_precachedmodels_spinner, FALSE, FALSE, 0);
-	gtk_widget_show (cg_precachedmodels_spinner);
-
-	// Mega Byte
-	label = gtk_label_new (_("MB"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	label = gtk_label_new (_("cg_precachedmodels"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
@@ -5031,7 +4998,6 @@ void q3_prefs_load(struct game* g) {
 		game_set_attribute(type,"com_hunkmegs",config_get_string("com_hunkmegs=56"));
 		game_set_attribute(type,"com_zonemegs",config_get_string("com_zonemegs=16"));
 		game_set_attribute(type,"com_soundmegs",config_get_string("com_soundmegs=8"));
-		game_set_attribute(type,"cg_precachedmodels",config_get_string("cg_precachedmodels=3"));
 	}
 }
 
