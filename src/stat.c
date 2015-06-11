@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>  /* kill */
 #include <stdio.h>      /* FILE, fopen, fclose, fprintf, ... */
 #include <string.h>     /* strchr, strcmp, strlen, strcpy, memchr, strtok */
@@ -302,7 +300,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 		}
 
 		strncpy(conn->buf + (conn->bufsize - res), buf, res);
-		
+
 		if (status == G_IO_STATUS_EOF) {
 			debug(3, "stat_master_input_callback -- eof");
 			debug(6, "conn->buf: [%d]", buf);
@@ -813,7 +811,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 			debug(3, "stat_servers_input_callback -- eof");
 			debug(6, "conn->buf: [%d]", buf);
 			debug(3, "Conn %ld  Sub Process Done with server list %lx", conn, conn->job->servers);
-			
+
 			strings = stat_buffer_to_strings(conn->buf, conn->bufsize);
 			current = strings;
 
@@ -832,7 +830,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 				current = current->next;
 			}
 			g_slist_free(strings);
-			
+
 			stat_servers_update_done (conn);
 			stat_next (job);
 			g_free(buf);
@@ -1065,7 +1063,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 		if (m->type == SAS_SERVER) {
 			argv[argi++] = "sh";
 			argv[argi++] = QSTAT_SAVAGE_SCRIPT;
-			argv[argi++] = m->url;	
+			argv[argi++] = m->url;
 		}
 		else if (m->master_type == MASTER_GSLIST) {
 			int ret = 0;
@@ -2024,4 +2022,3 @@ void stat_job_free (struct stat_job *job) {
 
 	g_free (job);
 }
-

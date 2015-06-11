@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <gtk/gtk.h>
 
 #include "utils.h"
@@ -605,4 +603,3 @@ void pixmap_cache_clear (GSList **cache, int maxitems) {
 		g_slist_free (tmp);
 	}
 }
-

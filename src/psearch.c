@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>
 #include <regex.h>
 #include <string.h>     /* strcmp */
@@ -403,4 +401,3 @@ void find_player (int find_next) {
 			reset_main_status_bar();
 	}
 }
-

@@ -19,8 +19,6 @@
 
 // modified version of what glade generates
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

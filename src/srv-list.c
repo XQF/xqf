@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>
 #include <sys/socket.h> /* inet_ntoa */
 #include <netinet/in.h> /* inet_ntoa */

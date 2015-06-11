@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -134,7 +132,7 @@ static enum script_option_type scriptoption_get_type(const char* str) {
 	if (!strcmp(str, "list")) {
 		return SCRIPT_OPTION_TYPE_LIST;
 	}
-	
+
 	return SCRIPT_OPTION_TYPE_INVALID;
 }
 
