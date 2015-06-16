@@ -1218,15 +1218,15 @@ static char *q3a_wq3_gametypes[MAX_Q3A_WQ3_TYPES] = {
 
 #define MAX_Q3A_WOP_TYPES 9
 static char *q3a_wop_gametypes[MAX_Q3A_WOP_TYPES] = {
+	"Free for All",          // FFA
 	NULL,
 	NULL,
-	NULL,
-	"Spray your Color FFA (SyC)",       // 3
-	"LastPadStanding (LPS)",            // 4
-	NULL,
-	NULL,
-	"Spray your Color Teamgame (SyC)",  // 7
-	"BigBalloon (BB)"                   // 8
+	"Spray Your Color",      // SYC
+	"Last Pad Standing",     // LPS
+	"Free For All Team",     // TFFA
+	"Capture The Lolly",     // CTL
+	"Spray Your Color Team", // TSYC
+	"Big Balloon"            // BB
 };
 
 #define MAX_Q3A_EXCESSIVEPLUS_TYPES 10
@@ -1249,7 +1249,7 @@ static char *q3a_excessiveplus_gametypes[MAX_Q3A_EXCESSIVEPLUS_TYPES] = {
 #define MAX_SMOKINGUNS_TYPES MAX_Q3A_WQ3_TYPES
 #define smokinguns_gametypes q3a_wq3_gametypes
 
-#define MAX_WORLDOFPADMAN_TYPES MAX_Q3A_WQ3_TYPES
+#define MAX_WORLDOFPADMAN_TYPES MAX_Q3A_WOP_TYPES
 #define worldofpadman_gametypes q3a_wop_gametypes
 
 #define MAX_WOLF_TYPES 9
