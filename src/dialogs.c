@@ -482,7 +482,7 @@ static GtkWidget* create_AboutWindow (void);
 
 void about_dialog (GtkWidget *widget, gpointer data) {
 	const gchar *authors[] = {
-		_("Author:"),
+		_("Creator:"),
 		"   Roman Pozlevich <roma@botik.ru>",
 		_("Maintainers:"),
 		"   Thomas Debesse <xqf@illwieckz.net>",
@@ -510,16 +510,15 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		NULL, //GTK_WINDOW (window),
 		"program-name", _("XQF"),
 		"version", XQF_VERSION,
-		"copyright", _("Copyright \xc2\xa9 1998-2002 Roman Pozlevich"),
+		"copyright", _("Copyright \xc2\xa9 1998-2015 XQF Team"),
 //		"license-type", GTK_LICENSE_GPL_2_0,			// TODO
-		"comments", _("XQF Game Server Browser"),
+		"comments", _("Game Server Browser"),
 		"authors", authors,
 //		"documenters", documenters,
 		"artists", artists,
 		"translator-credits", _("translator-credits"),
-//		"logo", "splash.png",	// old splash [don't work], isn't icon better?
 		"logo-icon-name", "xqf",
-		"website", "http://www.linuxgames.com/xqf",
+		"website", "https://xqf.github.io",
 	NULL);
 }
 
