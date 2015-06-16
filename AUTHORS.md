@@ -11,7 +11,7 @@ Maintainers
 * Jordi Mallach <jordi@debian.org>
 * Ludwig Nussel <ludwig.nussel@suse.de>
 * Alex Burger <alex_b@users.sf.net>
-* Bill Adams <mailto:bill@evilbill.org>
+* Bill Adams <bill@evilbill.org>
 
 
 Contributors
@@ -37,30 +37,39 @@ Contributors
 * Niklas Paulsson <niklas@student.adb.gu.se>
 * Daniel O'Connor <doconnor@gsoft.com.au>
 * Pete Toscano <pete@bubba.psi.com>
-* Jason Santos 
-* Matze Braun 
-* Philipp Thomasi 
-* Andreas Schneider 
-* Ben Winslow 
-* Florian Riepler 
-* Mike Mestnik 
-* Simon Philips 
-* Luigi Auriemma 
+* Philipp Thomasi
+* Jason Santos
+* Matze Braun
+* Andreas Schneider
+* Ben Winslow
+* Florian Riepler
+* Mike Mestnik
+* Simon Philips
+* Luigi Auriemma
 
 
 Translators
 -----------
 
-  - Jordi Mallach <jordi@debian.org>
-  - Morten Brix Pedersen <morten@wtf.dk>
-  - Sami Laitinen <azmotus@gmail.com>
-  - Thomas Debesse <xqf@illwieckz.net>
-  - Michel Briand <michelbriand@free.fr>
-  - IR4 <gutzu@gmx.ch>
-  - Ludwig Nussel <ludwig.nussel@suse.de>
-  - Miłosz Kosobucki <mikomek@poczta.onet.pl>
-  - Artem Vorotnikov <artem@vorotnikov.me>
-  - Dan Korostelev <dan@ats.energo.ru>
-  - François Perichon
+* Jordi Mallach <jordi@debian.org>
+* Morten Brix Pedersen <morten@wtf.dk>
+* Sami Laitinen <azmotus@gmail.com>
+* Thomas Debesse <xqf@illwieckz.net>
+* Michel Briand <michelbriand@free.fr>
+* IR4 <gutzu@gmx.ch>
+* Ludwig Nussel <ludwig.nussel@suse.de>
+* Miłosz Kosobucki <mikomek@poczta.onet.pl>
+* Artem Vorotnikov <artem@vorotnikov.me>
+* Dan Korostelev <dan@ats.energo.ru>
+* François Perichon
+
+
+Packagers
+---------
+
+* Slash Bunny <demodevil@gmail.com>
+* Jordi Mallach <jordi@debian.org>
+* Ludwig Nussel <ludwig.nussel@suse.de>
+
 
 See the Wiki page for more information: https://github.com/XQF/xqf/wiki/Contributors
