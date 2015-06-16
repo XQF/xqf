@@ -1,5 +1,5 @@
-Author
-------
+Creator
+-------
 
 * Roman Pozlevich <roma@botik.ru>
 
@@ -34,6 +34,9 @@ Contributors
 * Jorge Hodge <jhodge@users.sf.net>
 * Steffen Pankratz <krat00@users.sf.net>
 * Thomas Zajic <zlatk0@users.sf.net>
+* Niklas Paulsson <niklas@student.adb.gu.se>
+* Daniel O'Connor <doconnor@gsoft.com.au>
+* Pete Toscano <pete@bubba.psi.com>
 * Jason Santos 
 * Matze Braun 
 * Philipp Thomasi 
