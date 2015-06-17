@@ -553,12 +553,6 @@ msgstr ""
 msgid "scan now"
 msgstr ""
 
-msgid "Minimize to system tray"
-msgstr ""
-
-msgid "Enable xqf tray icon. You need to restart xqf for this to take effect."
-msgstr ""
-
 msgid "On Exit"
 msgstr ""
 
@@ -575,9 +569,6 @@ msgid "When launching a game..."
 msgstr ""
 
 msgid "Terminate XQF"
-msgstr ""
-
-msgid "Iconify XQF window"
 msgstr ""
 
 msgid "Create LaunchInfo.txt"
@@ -922,25 +913,6 @@ msgstr ""
 msgid "Statistics"
 msgstr ""
 
-#, c-format
-msgid "Error in file: %s line: %d\n"
-msgstr ""
-
-msgid "Refresh"
-msgstr ""
-
-msgid "Update"
-msgstr ""
-
-msgid "Show"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "Exit"
-msgstr ""
-
 msgid "<error>"
 msgstr ""
 
@@ -1138,7 +1110,13 @@ msgstr ""
 msgid "You need at least qstat version %s for xqf to function properly"
 msgstr ""
 
+msgid "Update"
+msgstr ""
+
 msgid "Update from master"
+msgstr ""
+
+msgid "Refresh"
 msgstr ""
 
 msgid "Refresh current list"

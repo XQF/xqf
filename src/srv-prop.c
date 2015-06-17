@@ -40,7 +40,6 @@
 #include "server.h"
 #include "pixmaps.h"
 #include "utils.h"
-#include "xutils.h"
 #include "dialogs.h"
 #include "srv-prop.h"
 #include "country-filter.h"
@@ -890,4 +889,3 @@ void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
 		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), "");
 	}
 }
-

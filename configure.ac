@@ -223,7 +223,6 @@ AC_CONFIG_FILES([
 	pixmaps/48x48/Makefile
 	pixmaps/flags/Makefile
 	pixmaps/scalable/Makefile
-	pixmaps/trayicon/Makefile
 	po/Makefile.in
 ])
 AC_OUTPUT

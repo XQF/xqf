@@ -30,7 +30,6 @@
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "utils.h"
-#include "xutils.h"
 #include "dialogs.h"
 #include "loadpixmap.h"
 
