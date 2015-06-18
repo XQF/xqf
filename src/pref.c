@@ -41,7 +41,6 @@
 #include "utils.h"
 #include "srv-prop.h"
 #include "pixmaps.h"
-#include "xutils.h"
 #include "config.h"
 #include "rc.h"
 #include "debug.h"
@@ -93,7 +92,6 @@ int show_default_port;
 int serverlist_countbots;
 
 int default_terminate;
-int default_iconify;
 int default_launchinfo;
 int default_stopxmms;
 int default_prelaunchexec;
@@ -103,7 +101,6 @@ int default_save_plrinfo;
 int default_auto_favorites;
 int default_auto_maps;
 int skip_startup_mapscan;
-int default_show_tray_icon;
 int default_toolbar_style;
 int default_toolbar_tips;
 int default_refresh_sorts;
@@ -170,7 +167,6 @@ static GtkWidget *qw_top_color_button;
 static GtkWidget *qw_bottom_color_button;
 
 static GtkWidget *terminate_check_button;
-static GtkWidget *iconify_check_button;
 static GtkWidget *launchinfo_check_button;
 static GtkWidget *stopxmms_check_button;
 static GtkWidget *prelaunchexec_check_button;
@@ -179,9 +175,6 @@ static GtkWidget *save_srvinfo_check_button;
 static GtkWidget *save_plrinfo_check_button;
 static GtkWidget *auto_favorites_check_button;
 static GtkWidget *auto_maps_check_button;
-
-/*Tray Icon*/
-static GtkWidget *tray_icon_check_button;
 
 static GtkWidget *show_hostnames_check_button;
 static GtkWidget *show_defport_check_button;
@@ -1235,11 +1228,6 @@ static void get_new_defaults (void) {
 		config_set_bool ("terminate", default_terminate = i);
 	}
 
-	i = GTK_TOGGLE_BUTTON (iconify_check_button)->active;
-	if (i != default_iconify) {
-		config_set_bool ("iconify", default_iconify = i);
-	}
-
 	i = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
 	if (i != default_launchinfo) {
 		config_set_bool ("launchinfo", default_launchinfo = i);
@@ -1278,12 +1266,6 @@ static void get_new_defaults (void) {
 	i = GTK_TOGGLE_BUTTON (auto_maps_check_button)->active;
 	if (i != default_auto_maps) {
 		config_set_bool ("search maps", default_auto_maps = i);
-	}
-
-	/*Tray icon*/
-	i = GTK_TOGGLE_BUTTON (tray_icon_check_button)->active;
-	if (i != default_show_tray_icon) {
-		config_set_bool ("showtray", default_show_tray_icon = i);
 	}
 
 	config_pop_prefix();
@@ -3674,7 +3656,6 @@ static void terminate_toggled_callback (GtkWidget *widget, gpointer data) {
 	int val;
 
 	val = GTK_TOGGLE_BUTTON (terminate_check_button)->active;
-	gtk_widget_set_sensitive (iconify_check_button, TRUE - val);
 }
 
 static void launchinfo_toggled_callback (GtkWidget *widget, gpointer data) {
@@ -3970,24 +3951,6 @@ static GtkWidget *general_options_page (void) {
 
 	gtk_widget_show (hbox);
 
-	/*Tray icon*/
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
-
-	tray_icon_check_button = gtk_check_button_new_with_label (_("Minimize to system tray"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tray_icon_check_button), default_show_tray_icon);
-
-	gtk_tooltips_set_tip (tooltips, tray_icon_check_button, _("Enable xqf tray icon. You need to restart xqf for this to take effect."), NULL);
-
-	gtk_box_pack_start (GTK_BOX (hbox), tray_icon_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (tray_icon_check_button);
-	gtk_widget_show (hbox);
-
-	gtk_widget_show (vbox);
-
-	gtk_widget_show (frame);
-
 	/* On Exit */
 
 	frame = gtk_frame_new (_("On Exit"));
@@ -4066,19 +4029,6 @@ static GtkWidget *general_options_page (void) {
 	gtk_widget_show (terminate_check_button);
 
 	gtk_widget_show (hbox);
-
-	/* Iconify */
-
-	iconify_check_button = gtk_check_button_new_with_label (_("Iconify XQF window"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (iconify_check_button), default_iconify);
-
-	if (default_terminate) {
-		gtk_widget_set_sensitive (iconify_check_button, FALSE);
-	}
-
-	gtk_widget_show (iconify_check_button);
-
-	gtk_table_attach_defaults(GTK_TABLE(table),iconify_check_button, 1, 2, 0, 1);
 
 	/* Launchinfo */
 
@@ -5090,7 +5040,6 @@ int prefs_load (void) {
 	config_push_prefix ("/" CONFIG_FILE "/General");
 
 	default_terminate =         config_get_bool("terminate=false");
-	default_iconify =           config_get_bool("iconify=false");
 	default_launchinfo =        config_get_bool("launchinfo=true");
 	default_stopxmms =          config_get_bool("stopxmms=false");
 	default_prelaunchexec =     config_get_bool("prelaunchexec=false");
@@ -5099,7 +5048,6 @@ int prefs_load (void) {
 	default_save_plrinfo =      config_get_bool("save players=false");
 	default_auto_favorites =    config_get_bool("refresh favorites=false");
 	default_auto_maps =         config_get_bool("search maps=false");
-	default_show_tray_icon =    config_get_bool("showtray=false");
 
 	config_pop_prefix();
 

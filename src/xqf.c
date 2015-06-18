@@ -62,7 +62,6 @@
 #include "server.h"
 #include "launch.h"
 #include "host.h"
-#include "xutils.h"
 #include "srv-list.h"
 #include "srv-info.h"
 #include "srv-prop.h"
@@ -79,7 +78,6 @@
 #include "debug.h"
 #include "redial.h"
 #include "loadpixmap.h"
-#include "trayicon.h"
 #include "scripts.h"
 #include "tga/memtopixmap.h"
 
@@ -823,9 +821,6 @@ static void stat_lists_state_handler (struct stat_job *job, enum stat_state stat
 
 		case STAT_UPDATE_SOURCE:
 			progress_bar_str = _("Updating lists...");
-			if (default_show_tray_icon) {
-				tray_icon_start_animation ();
-			}
 			break;
 
 		case STAT_RESOLVE_NAMES:
@@ -834,9 +829,6 @@ static void stat_lists_state_handler (struct stat_job *job, enum stat_state stat
 
 		case STAT_REFRESH_SERVERS:
 			progress_bar_str = _("Refreshing: %d/%d");
-			if (default_show_tray_icon) {
-				tray_icon_start_animation ();
-			}
 			break;
 
 		case STAT_RESOLVE_HOSTS:
@@ -871,7 +863,6 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
 	}
 	*/
 
-	tray_icon_stop_animation ();
 	reset_main_status_bar ();
 
 	progress_bar_reset (main_progress_bar);
@@ -1216,10 +1207,6 @@ static void launch_close_handler_part2 (struct condef *con) {
 			xqf_error ("PreLaunch failed");
 			_exit (EXIT_FAILURE);
 		}
-	}
-
-	if (main_window && default_iconify && !default_terminate) {
-		iconify_window (main_window->window);
 	}
 
 	if (main_window && default_terminate) {
@@ -4281,12 +4268,7 @@ int main (int argc, char *argv[]) {
 
 	populate_main_window ();
 
-	if (default_show_tray_icon) {
-		tray_init (main_window);
-	}
-	else {
-		gtk_widget_show (main_window);
-	}
+	gtk_widget_show (main_window);
 
 	source_ctree_select_source (favorites);
 	filter_menu_activate_current ();
@@ -4299,16 +4281,10 @@ int main (int argc, char *argv[]) {
 
 	debug (1, "startup time %ds", time (NULL) - xqf_start_time);
 
-	// tray_icon_set_tooltip (_("nothing yet..."));
-
 	gtk_main ();
 
 	play_sound (sound_xqf_quit, 0);
 	script_action_quit ();
-
-	if (default_show_tray_icon) {
-		tray_done ();
-	}
 
 	unregister_window (main_window);
 	main_window = NULL;

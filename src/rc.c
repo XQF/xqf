@@ -75,7 +75,6 @@ static struct keyword  keywords[] = {
 	{ "nopasswd",		KEYWORD_BOOL,	"/" CONFIG_FILE "/Server Filter/no password" },
 
 	{ "terminate",		KEYWORD_BOOL,	"/" CONFIG_FILE "/General/terminate" },
-	{ "iconify",		KEYWORD_BOOL,	"/" CONFIG_FILE "/General/iconify" },
 	{ "savelists",		KEYWORD_BOOL,	"/" CONFIG_FILE "/General/save lists" },
 	{ "saveservers",	KEYWORD_BOOL,	"/" CONFIG_FILE "/General/save srvinfo" },
 	{ "saveplayers",	KEYWORD_BOOL,	"/" CONFIG_FILE "/General/save players" },

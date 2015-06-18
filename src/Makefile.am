@@ -92,11 +92,9 @@ srv-list.c \
 srv-prop.c \
 stat.c \
 statistics.c \
-trayicon.c \
 utils.c \
 xqf.c \
 xqf-ui.c \
-xutils.c \
 zipped.c \
 redial.c \
 q3maps.c \
@@ -134,11 +132,9 @@ srv-list.h \
 srv-prop.h \
 stat.h \
 statistics.h \
-trayicon.h \
 utils.h \
 xqf-ui.h \
 xqf.h \
-xutils.h \
 zipped.h \
 redial.h \
 q3maps.h \
