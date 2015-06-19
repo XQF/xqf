@@ -1022,49 +1022,6 @@ static gboolean check_launch (struct condef* con) {
 	return FALSE;
 }
 
-// stop XMMS if running
-static void stopxmms () {
-	char* xmmssocket = NULL;
-	pid_t pid;
-
-	if (!default_stopxmms) {
-		return;
-	}
-
-	xmmssocket = g_strdup_printf ("/tmp/xmms_%s.0", g_get_user_name ());
-
-	if (access (xmmssocket, R_OK)) {
-		debug (3, "xmms not running");
-		g_free (xmmssocket);
-		return;
-	}
-
-	pid = fork ();
-	if (pid == 0) {
-		char *argv[3];
-		argv[0] = "xmms";
-		argv[1] = "-s";
-		argv[2] = NULL;
-		execvp (argv[0], argv);
-		_exit (EXIT_FAILURE);
-	}
-	else if (pid > 0) {
-		int status;
-		waitpid (pid,&status,0);
-
-		if (WIFEXITED (status)) {
-			debug (3, "xmms exited normally");
-		}
-		else {
-			debug (3, "xmms exited with status %d", WEXITSTATUS (status));
-		}
-		if (WIFSIGNALED (status)) {
-			debug (3, "xmms was killed by signal %d", WTERMSIG (status));
-		}
-	}
-
-	g_free (xmmssocket);
-}
 
 static void launch_close_handler_part2 (struct condef *con) {
 	struct server_props *props;
@@ -1077,8 +1034,6 @@ static void launch_close_handler_part2 (struct condef *con) {
 	char *temp_game;
 
 	struct server *s;
-
-	stopxmms ();
 
 	if (redialserver == 1) // was called from a redial
 		play_sound (sound_redial_success, 0);
