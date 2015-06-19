@@ -3943,6 +3943,59 @@ static GtkWidget *general_options_page (void) {
 
 	gtk_widget_show (hbox);
 
+	/* When launching a Game */
+
+	frame = gtk_frame_new (_("When launching a game..."));
+	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+
+	vbox = gtk_vbox_new (FALSE, 2);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+	gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+	/* Terminate */
+
+	hbox = gtk_hbox_new (FALSE, 4);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	terminate_check_button = gtk_check_button_new_with_label (_("Terminate XQF"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (terminate_check_button), default_terminate);
+	gtk_signal_connect (GTK_OBJECT (terminate_check_button), "toggled", GTK_SIGNAL_FUNC (terminate_toggled_callback), NULL);
+	gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
+	gtk_widget_show (terminate_check_button);
+
+	gtk_widget_show (hbox);
+
+	/* Launchinfo */
+
+	hbox = gtk_hbox_new (FALSE, 4);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	launchinfo_check_button = gtk_check_button_new_with_label (_("Create LaunchInfo.txt"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
+	gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled", GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
+	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
+	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
+	gtk_widget_show (launchinfo_check_button);
+
+	gtk_widget_show (hbox);
+
+	/* Prelaunchinfo */
+
+	hbox = gtk_hbox_new (FALSE, 4);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	prelaunchexec_check_button = gtk_check_button_new_with_label (_("Execute prelaunch"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
+	gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled", GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
+	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
+	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"), NULL);
+	gtk_widget_show (prelaunchexec_check_button);
+
+	gtk_widget_show (hbox);
+
+	gtk_widget_show (vbox);
+	gtk_widget_show (frame);
+
 	/* On Exit */
 
 	frame = gtk_frame_new (_("On Exit"));
@@ -3991,59 +4044,6 @@ static GtkWidget *general_options_page (void) {
 	}
 
 	gtk_widget_show (save_plrinfo_check_button);
-
-	gtk_widget_show (hbox);
-
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
-
-	/* When launching a Game */
-
-	frame = gtk_frame_new (_("When launching a game..."));
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-
-	vbox = gtk_vbox_new (FALSE, 2);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
-
-	/* Terminate */
-
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
-	terminate_check_button = gtk_check_button_new_with_label (_("Terminate XQF"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (terminate_check_button), default_terminate);
-	gtk_signal_connect (GTK_OBJECT (terminate_check_button), "toggled", GTK_SIGNAL_FUNC (terminate_toggled_callback), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (terminate_check_button);
-
-	gtk_widget_show (hbox);
-
-	/* Launchinfo */
-
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
-	launchinfo_check_button = gtk_check_button_new_with_label (_("Create LaunchInfo.txt"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
-	gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled", GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
-	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
-	gtk_widget_show (launchinfo_check_button);
-
-	gtk_widget_show (hbox);
-
-	/* Prelaunchinfo */
-
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
-	prelaunchexec_check_button = gtk_check_button_new_with_label (_("Execute prelaunch"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
-	gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled", GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
-	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"), NULL);
-	gtk_widget_show (prelaunchexec_check_button);
 
 	gtk_widget_show (hbox);
 
