@@ -1,10 +1,10 @@
 [Desktop Entry]
-_Name=XQF Game Server Browser
-_GenericName=Game Server Browser
-_Comment=Locate and connect to game servers
+Name=XQF Game Server Browser
+GenericName=Game Server Browser
+Comment=Locate and connect to game servers
 Exec=xqf
 Icon=xqf
 StartupNotify=true
 Terminal=false
 Type=Application
-Categories=GTK;Game;ActionGame;X-SuSE-Core-Game;
+Categories=GTK;Game;ActionGame;

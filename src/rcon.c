@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>  /* socket, send, bind, connect */
 #include <stdio.h>      /* fprintf */
 #include <stdarg.h>     /* va_start, va_end */
@@ -32,9 +30,7 @@
 #include <sys/time.h>   // select
 
 #ifdef RCON_STANDALONE
-#  ifdef ENABLE_NLS
-#  include <locale.h>
-#  endif
+#include <locale.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -356,7 +352,7 @@ static char* rcon_receive() {
 
 				/* Q2, Q3 */
 
-			default:	
+			default:
 				// "\377\377\377\377print\n"
 				msg = packet + 4 + 6;
 				size = size - 4 - 6;
@@ -652,11 +648,9 @@ int main(int argc, char* argv[]) {
 	char* buf = NULL;
 	int res;
 
-#ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
-#endif
 
 	rcon_servertype = Q3_SERVER;
 

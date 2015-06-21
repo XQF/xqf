@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>  /* getpwnam, readdir, dirent */
 #include <stdio.h>      /* FILE, putc */
 #include <string.h>     /* strlen, strncpy, strcmp, strspn, strcspn, strchr */

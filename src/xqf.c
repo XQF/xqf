@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>     /* atoi */
@@ -37,10 +35,7 @@
 #include <signal.h>     /* kill... */
 #include <sys/wait.h>
 
-
-#ifdef ENABLE_NLS
-#  include <locale.h>
-#endif
+#include <locale.h>
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -4124,12 +4119,10 @@ int main (int argc, char *argv[]) {
 		xqf_LOCALEDIR = var;
 	}
 
-#ifdef ENABLE_NLS
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, xqf_LOCALEDIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
-#endif
 
 	set_debug_level (DEFAULT_DEBUG_LEVEL);
 	debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);

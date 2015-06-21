@@ -19,8 +19,6 @@
 #ifndef __XQF_H__
 #define __XQF_H__
 
-#include "gnuconfig.h"      /* GNU autoconf */
-
 #include <sys/types.h>
 #include <netinet/in.h>     /* struct in_addr */
 #include <arpa/inet.h>      /* struct in_addr */

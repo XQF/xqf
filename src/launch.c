@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>  /* chmod, waitpid, kill */
 #include <string.h>     /* memchr, strlen */
 #include <unistd.h>     /* execvp, fork, _exit, chdir, read, close, write, fcntl, sleep */
@@ -409,4 +407,3 @@ void condef_free (struct condef *con) {
 
 	g_free (con);
 }
-

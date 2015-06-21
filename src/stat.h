@@ -28,9 +28,12 @@
 
 
 #ifndef HTTP_HELPER
-# define HTTP_HELPER        "wget -t 1 -T 20 -q -e robots=off --user-agent=XQF/" VERSION " -O -"
+# define HTTP_HELPER        "wget -t 1 -T 20 -q -e robots=off --user-agent=XQF/" XQF_VERSION " -O -"
 #endif
 
+#ifndef QSTAT_SAVAGE_SCRIPT
+#define QSTAT_SAVAGE_SCRIPT "qstat_savage.sh"
+#endif
 
 #define QSTAT_DELIM         '\t'
 #define QSTAT_DELIM_STR     "\t"
@@ -137,4 +140,3 @@ extern void stat_job_free (struct stat_job *job);
 
 
 #endif /* __QSTAT_H__ */
-

@@ -33,20 +33,15 @@ struct compr {
 };
 
 
-#ifdef COMPRESSOR_BZIP2
-# define COMPRESSOR_DEFAULT 1
+#ifdef USE_GZIP
+#  define COMPRESSOR_DEFAULT 1 /* gzip */
 #else
-# ifdef COMPRESSOR_GZIP
-#  define COMPRESSOR_DEFAULT 2
-# else
-#  define COMPRESSOR_DEFAULT 0  /* None */
-# endif
+#  define COMPRESSOR_DEFAULT 0 /* none */
 #endif
 
 
 static struct compr compressor[] = {
 	{ "",      NULL,        NULL          },
-	{ ".bz2",  "bzip2 -1",  "bzip2 -d -c" },
 	{ ".gz",   "gzip -1",   "gzip -d -c"  },
 	{ NULL,    NULL,        NULL          }
 };
@@ -141,4 +136,3 @@ void zstream_unlink (const char *name) {
 		g_free (fn);
 	}
 }
-

@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>
 #include <stdio.h>      /* FILE, fprintf, fopen, fclose */
 #include <string.h>     /* strlen, strcpy, strcmp, strtok */
@@ -185,7 +183,7 @@ static struct quake_private zeq2lite_private;
 static struct quake_private turtlearena_private;
 static struct quake_private alienarena_private;
 
-#include "games.c"
+#include GAMES_INCLUDE
 
 struct gsname2type_s
 {

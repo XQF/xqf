@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include "gnuconfig.h"
-
 #include <sys/types.h>      /* FD_SETSIZE */
 #include <stdio.h>          /* fprintf */
 #include <stdlib.h>         /* strtol */
