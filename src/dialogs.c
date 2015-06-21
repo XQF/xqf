@@ -463,8 +463,7 @@ char *enter_string_dialog (int visible, char *fmt, ...) {
 }
 
 
-char *enter_string_with_option_dialog (int visible, char *optstr, int *optval,
-		char *fmt, ...) {
+char *enter_string_with_option_dialog (int visible, char *optstr, int *optval, char *fmt, ...) {
 	char *res;
 	va_list ap;
 
@@ -483,9 +482,10 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"   Roman Pozlevich <roma@botik.ru>",
 		_("Maintainers:"),
 		"   Thomas Debesse <xqf@illwieckz.net>",
+		"   Jordi Mallach <jordi@sindominio.net>",
+		"   Artem Vorotnikov <artem@vorotnikov.me>",
 		"   Ludwig Nussel <ludwig.nussel@suse.de>",
 		"   Alex Burger <alex_b@users.sourceforge.net>",
-		"   Jordi Mallach <jordi@sindominio.net>",
 		"   Bill Adams <bill@evilbill.org>",
 		_("Contributors:"),
 		"   http://github.com/XQF/xqf/wiki/Contributors", /* https do not create link */
