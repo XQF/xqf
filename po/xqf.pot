@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XQF xqf-1.0.6.2\n"
 "Report-Msgid-Bugs-To: https://github.com/xqf/xqf/issues\n"
-"POT-Creation-Date: 2015-06-16 16:57+0300\n"
+"POT-Creation-Date: 2015-06-21 23:11+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,42 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Update"
+msgstr ""
+
+msgid "Update from master"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Refresh current list"
+msgstr ""
+
+msgid "Ref.Sel."
+msgstr ""
+
+msgid "Refresh selected servers"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Connect"
+msgstr ""
+
+msgid "Observe"
+msgstr ""
+
+msgid "Record"
+msgstr ""
+
+msgid "Record Demo"
+msgstr ""
+
+msgid "Quick Filter:"
+msgstr ""
 
 msgid "You have to specify a name and an address."
 msgstr ""
@@ -67,7 +103,7 @@ msgstr ""
 msgid "Redial"
 msgstr ""
 
-msgid "Author:"
+msgid "Creator:"
 msgstr ""
 
 msgid "Maintainers:"
@@ -85,13 +121,31 @@ msgstr ""
 msgid "XQF"
 msgstr ""
 
-msgid "Copyright © 1998-2002 Roman Pozlevich"
+msgid "Copyright © 1998-2015 XQF Team"
 msgstr ""
 
-msgid "XQF Game Server Browser"
+msgid "Game Server Browser"
 msgstr ""
 
 msgid "translator-credits"
+msgstr ""
+
+msgid "Server"
+msgstr ""
+
+msgid "S Filter"
+msgstr ""
+
+msgid "SF Cfg"
+msgstr ""
+
+msgid "Player"
+msgstr ""
+
+msgid "P Filter"
+msgstr ""
+
+msgid "PF Cfg"
 msgstr ""
 
 msgid "Enter filter name"
@@ -168,6 +222,21 @@ msgid "Configure Country Filter"
 msgstr ""
 
 msgid "Show all countries"
+msgstr ""
+
+msgid "string"
+msgstr ""
+
+msgid "substr"
+msgstr ""
+
+msgid "regexp"
+msgstr ""
+
+msgid "substring"
+msgstr ""
+
+msgid "regular expression"
 msgstr ""
 
 msgid "XQF: Error"
@@ -312,6 +381,33 @@ msgstr ""
 msgid "Model/Skin"
 msgstr ""
 
+msgid "--- Anything ---"
+msgstr ""
+
+msgid "Axe"
+msgstr ""
+
+msgid "Shotgun"
+msgstr ""
+
+msgid "Super Shotgun"
+msgstr ""
+
+msgid "Nailgun"
+msgstr ""
+
+msgid "Super Nailgun"
+msgstr ""
+
+msgid "Grenade Launcher"
+msgstr ""
+
+msgid "Rocket Launcher"
+msgstr ""
+
+msgid "ThunderBolt"
+msgstr ""
+
 msgid "Use skins"
 msgstr ""
 
@@ -410,6 +506,15 @@ msgstr ""
 msgid "Disable Sound"
 msgstr ""
 
+msgid "Do not set (use game default)"
+msgstr ""
+
+msgid "Automatically calculate from server ping time"
+msgstr ""
+
+msgid "Fixed value"
+msgstr ""
+
 msgid "Masterserver Protocol Version"
 msgstr ""
 
@@ -491,6 +596,15 @@ msgstr ""
 msgid "Player Profile"
 msgstr ""
 
+msgid "Icons"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Both"
+msgstr ""
+
 msgid "Server List"
 msgstr ""
 
@@ -553,18 +667,6 @@ msgstr ""
 msgid "scan now"
 msgstr ""
 
-msgid "On Exit"
-msgstr ""
-
-msgid "Save server lists"
-msgstr ""
-
-msgid "Save server information"
-msgstr ""
-
-msgid "Save player information"
-msgstr ""
-
 msgid "When launching a game..."
 msgstr ""
 
@@ -586,12 +688,16 @@ msgid ""
 "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
 msgstr ""
 
-msgid "Stop current song in XMMS"
+msgid "On Exit"
 msgstr ""
 
-msgid ""
-"Stopping XMMS will release /dev/dsp. Activate this option if you use XMMS "
-"and have a cheap soundcard that allows only one application to open /dev/dsp."
+msgid "Save server lists"
+msgstr ""
+
+msgid "Save server information"
+msgstr ""
+
+msgid "Save player information"
 msgstr ""
 
 msgid "QStat Options"
@@ -634,9 +740,6 @@ msgid "Update Done"
 msgstr ""
 
 msgid "Refresh Done"
-msgstr ""
-
-msgid "Stop"
 msgstr ""
 
 msgid "Server Connect"
@@ -702,6 +805,15 @@ msgid "Server Connect Sound Selection"
 msgstr ""
 
 msgid "Redial Success Sound Selection"
+msgstr ""
+
+msgid "Exact Match"
+msgstr ""
+
+msgid "Substring"
+msgstr ""
+
+msgid "Regular Expression"
 msgstr ""
 
 msgid "Find Player"
@@ -817,6 +929,18 @@ msgstr ""
 msgid "Select Script"
 msgstr ""
 
+msgid "Standard"
+msgstr ""
+
+msgid "Gamespy"
+msgstr ""
+
+msgid "http"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
 msgid "Retry"
 msgstr ""
 
@@ -835,6 +959,9 @@ msgstr ""
 
 #, c-format
 msgid "'gsmtype' options missing for master %s."
+msgstr ""
+
+msgid "Favorites"
 msgstr ""
 
 msgid "IP Address:"
@@ -888,6 +1015,18 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+msgid "Allies"
+msgstr ""
+
+msgid "Axis"
+msgstr ""
+
+msgid "Red"
+msgstr ""
+
+msgid "Blue"
+msgstr ""
+
 #, c-format
 msgid ""
 "UT2004 CD Key not found, cannot query master '%s'.\n"
@@ -898,13 +1037,37 @@ msgstr ""
 msgid "Failed to create a temporary file %s: %s"
 msgstr ""
 
+msgid "Servers"
+msgstr ""
+
+msgid "Up "
+msgstr ""
+
+msgid "Timeout"
+msgstr ""
+
+msgid "Down "
+msgstr ""
+
+msgid "Info n/a"
+msgstr ""
+
+msgid "Players"
+msgstr ""
+
+msgid "unknown"
+msgstr ""
+
+msgid "OS/CPU"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
 msgid "Total"
 msgstr ""
 
 msgid "CPU  \\  OS"
-msgstr ""
-
-msgid "Players"
 msgstr ""
 
 msgid "All Games"
@@ -1063,6 +1226,153 @@ msgstr ""
 msgid "Done."
 msgstr ""
 
+msgid "Add new Server"
+msgstr ""
+
+msgid "Add to Favorites"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy+"
+msgstr ""
+
+msgid "Refresh Selected"
+msgstr ""
+
+msgid "DNS Lookup"
+msgstr ""
+
+msgid "RCon"
+msgstr ""
+
+msgid "_Statistics"
+msgstr ""
+
+msgid "_Exit"
+msgstr ""
+
+msgid "Add _Master"
+msgstr ""
+
+msgid "_Rename Master"
+msgstr ""
+
+msgid "D_elete Master"
+msgstr ""
+
+msgid "_Clear Servers"
+msgstr ""
+
+msgid "_Add new Server"
+msgstr ""
+
+msgid "Add to _Favorites"
+msgstr ""
+
+msgid "_Remove"
+msgstr ""
+
+msgid "_Copy"
+msgstr ""
+
+msgid "_Copy+"
+msgstr ""
+
+msgid "Add Default Masters"
+msgstr ""
+
+msgid "Add Gslist Masters"
+msgstr ""
+
+msgid "_Find Player"
+msgstr ""
+
+msgid "Find A_gain"
+msgstr ""
+
+msgid "_Refresh"
+msgstr ""
+
+msgid "Refresh _Selected"
+msgstr ""
+
+msgid "_Update From Master"
+msgstr ""
+
+msgid "Show _Host Names"
+msgstr ""
+
+msgid "Show Default _Port"
+msgstr ""
+
+msgid "_Connect"
+msgstr ""
+
+msgid "_Observe"
+msgstr ""
+
+msgid "Record _Demo"
+msgstr ""
+
+msgid "DNS _Lookup"
+msgstr ""
+
+msgid "_RCon"
+msgstr ""
+
+msgid "_Properties"
+msgstr ""
+
+msgid "_General"
+msgstr ""
+
+msgid "_Games"
+msgstr ""
+
+msgid "_Appearance"
+msgstr ""
+
+msgid "_QStat"
+msgstr ""
+
+msgid "_Sounds"
+msgstr ""
+
+msgid "S_cripts"
+msgstr ""
+
+msgid "_Server Filter"
+msgstr ""
+
+msgid "Player _Filter"
+msgstr ""
+
+msgid "_About"
+msgstr ""
+
+msgid "_File"
+msgstr ""
+
+msgid "_Edit"
+msgstr ""
+
+msgid "_View"
+msgstr ""
+
+msgid "_Server"
+msgstr ""
+
+msgid "_Preferences"
+msgstr ""
+
+msgid "_Server Filters"
+msgstr ""
+
+msgid "_Help"
+msgstr ""
+
 msgid "Mark as Red"
 msgstr ""
 
@@ -1110,43 +1420,55 @@ msgstr ""
 msgid "You need at least qstat version %s for xqf to function properly"
 msgstr ""
 
-msgid "Update"
+msgid "© XQF Team 1998-2015"
 msgstr ""
 
-msgid "Update from master"
+msgid "Address"
 msgstr ""
 
-msgid "Refresh"
+msgid "Ping"
 msgstr ""
 
-msgid "Refresh current list"
+msgid "TO"
 msgstr ""
 
-msgid "Ref.Sel."
+msgid "Priv"
 msgstr ""
 
-msgid "Refresh selected servers"
+msgid "Map"
 msgstr ""
 
-msgid "Connect"
+msgid "GameType"
 msgstr ""
 
-msgid "Observe"
+msgid "Frags"
 msgstr ""
 
-msgid "Record"
+msgid "Skin"
 msgstr ""
 
-msgid "Record Demo"
+msgid "Time"
 msgstr ""
 
-msgid "Quick Filter:"
+msgid "Rule"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "PB"
+msgstr ""
+
+msgid "Max"
 msgstr ""
 
 msgid "Source"
 msgstr ""
 
-msgid "Game Server Browser"
+msgid "XQF Game Server Browser"
 msgstr ""
 
 msgid "Locate and connect to game servers"
