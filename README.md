@@ -25,14 +25,14 @@ INSTALLATION
 ```sh
 git clone https://github.com/XQF/xqf.git
 cd xqf
-./autogen.sh
-./configure
+mkdir build
+cd build
+cmake ..
 make
 make install
-xqf
 ```
 
-On Debian or Ubuntu, use ``./configure --with-qstat=quakestat --prefix=/usr``.
+On Debian or Ubuntu, use ``cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_INSTALL_PREFIX=/usr ..``.
 
 See the Wiki page for more information: [wiki/How-to-build](https://github.com/XQF/xqf/wiki/How-to-build).
 
