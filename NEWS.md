@@ -5,22 +5,37 @@ Changes since 1.0.6:
 
 * Add gettext template (online translation tool now hosted by Transifex)
 * Add some Wolfenstein: Enemy Territory and Enemy Territory: Legacy mods (like TrueCombat mods)
+* Add PO template generation script
 * Recognize some OpenArena games hosted with Q3Arena and Q3Arena games hosted by OpenArena
-* Update French and Russian translation
+* Update Catalan, French, German and Russian translation
 * Update master server list
+* Install icons in the correct hicolor per-size paths
+* Generate games.c from games.xml at build time
+* Move game launch option to appear before exit option
 * Filter escape codes in Call Of Duty gametypes
 * Fix Q3Rally and Warsow support (status2 packet)
 * Fix Wolfenstein: Enemy Territory and Enemy Territory: Legacy empty server query
 * Fix Unvanquished, Turtle Arena, Xonotic and Urban Terror LAN server browsing
 * Fix gametype strings for a few games
 * Fix ioquake3 and iostvef basegame gametype strings
+* Fix Quake 3 memory settings
+* Fix OpenArena protocol list
+* Fix World of Padman gametype names
 * Fix gamesxml2c compilation warnings
 * Fix automake warnings
 * Port some UI part to GtkBuilder, use GtkAboutDialog
+* Port build system from autotools to cmake
+* Allow out-of-tree compilation
+* Clean up massively the source tree
 * Remove GLib/GTK individual includes
 * Remove i18n.h and use GLib's gi18n.h instead
-* Remove splash
 * Remove GTK+1 remains
+* Remove broken GTK+ classes
+* Remove XMMS support
+* Remove splash screen
+* Remove trayicon
+* Remove bzip2 support
+* Use external minizip library
 
 XQF 1.0.6 -- October 26, 2014
 -----------------------------
@@ -115,7 +130,7 @@ Changes since 1.0:
 * Additional Descent3 server listing
 * UT2004 Master support
 * xqf-rcon uses $XQF_RCON_PASSWORD for the rcon password if set
-* Requries qstat 2.7
+* Requires qstat 2.7
 
 XQF 1.0 -- August 15, 2004
 --------------------------

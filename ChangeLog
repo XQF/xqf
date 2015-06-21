@@ -1,2137 +1,2665 @@
+Jun 21, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+
+ * switch build system from autotools to cmake
+ * allow out-of-tree compilation
+ * generate games.c from games.xml at build time
+ * add libxml2 as build dependency (needed by games.c generation)
+ * add gettext as build dependency
+ * add minizip as dependency
+ * remove bzip2 support
+ * add GTK+3 build switch (allow to work on GTK+3 support, not yet usable)
+ * add deprecated disabling switch (allow to track down them)
+ * clean the repository from mistakenly tracked files
+
+Jun 20, 2015: Thomas Debesse <xqf@illwieckz.net>
+
+ * move game launch option to appear before exit option
+
+Jun 19, 2015: Thomas Debesse <xqf@illwieckz.net>
+
+ * remove xmms support
+
+Jun 17, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+
+ * remove trayicon
+
+Jun 16, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+
+ * add PO template generation script
+ * update PO template
+
+Jun 16, 2015: Zack Middleton <zturtleman@gmail.com>
+
+ * fix World of Padman gametype names
+
+Jun 10, 2015: Zack Middleton <zturtleman@gmail.com>
+
+ * fix OpenArena protocol list
+ * fix Quake3 memory settings
+
+Jun 7, 2015: Artem Vorotnikov <artem@vorotnikov.me>
+
+ * port text widgets from GTK+1
+ * remove broken GTK+2 classes
+
+Feb 16, 2015: Jordi Mallach <jordi@sindominio.net>
+
+ * install icons in the correct hicolor per-size paths.
+
 Feb 11, 2015: IR4 <gutzu@gmx.ch>
-- fix German translation
+
+ * fix German translation
 
 Feb 10, 2015: Jordi Mallach <jordi@sindominio.net>
-- drop i18n.h and use on GLib's gi18n.h instead
-- use unicode copyright symbol
+
+ * remove i18n.h and use on GLib's gi18n.h instead
+ * use unicode copyright symbol
 
 Feb 9, 2015: Artem Vorotnikov <artem@vorotnikov.me>
-- remove individual GLib/GTK includes
+
+ * remove individual GLib/GTK includes
 
 Feb 7, 2015: Artem Vorotnikov <artem@vorotnikov.me>
-- fix Russian translation
+
+ * migrate translations to Transifex
+ * fix Russian translation
 
 Jan 23, 2015: Artem Vorotnikov <artem@vorotnikov.me>
-- add gettext template
-- remove GTK+1 support
-- fix automake warnings
-- remove splash
+
+ * add gettext template
+ * remove GTK+1 support
+ * fix automake warnings
+ * remove splash
 
 Jan 18, 2015: Thomas Debesse <xqf@illwieckz.net>
-- fix Wolf:ET and ET:Legacy empty server query
+
+ * fix Wolf:ET and ET:Legacy empty server query
 
 Nov 25, 2014: Zack Middleton <zturtleman@gmail.com>
-- fix Q3Rally and Warsow support
+
+ * fix Q3Rally and Warsow support
 
 Nov 14, 2014: Thomas Debesse <xqf@illwieckz.net>
-- recognize some OpenArena games hosted with Q3Arena and Q3Arena games
-  hosted by OpenArena
+
+ * recognize some OpenArena games hosted with Q3Arena and Q3Arena games
+   hosted by OpenArena
 
 Nov 8, 2014: Thomas Debesse <xqf@illwieckz.net>
-- add some Wolf:ET and ET:Legacy mods (like TrueCombat mods)
-- filter escape codes in Call Of Duty gametypes
+
+ * add some Wolf:ET and ET:Legacy mods (like TrueCombat mods)
+ * filter escape codes in Call Of Duty gametypes
 
 Nov 7, 2014: Thomas Debesse <xqf@illwieckz.net>
-- synchronize translation files to source tree
-- fix some translations
+
+ * synchronize translation files to source tree
+ * fix some translations
 
 Nov 4, 2014: Arnaud Bonatti <arnaud.bonatti@gmail.com>
-- use GtkBuilder for main window and toolbar
-- use GtkAboutDialog
+
+ * use GtkBuilder for main window and toolbar
+ * use GtkAboutDialog
 
 Nov 3, 2014: Thomas Debesse <xqf@illwieckz.net>
-- update master server list
+
+ * update master server list
 
 Nov 2, 2014: Thomas Debesse <xqf@illwieckz.net>
-- fix Unvanquished, Turtle Arena, Xonotic and Urban Terror LAN server browsing
+
+ * fix Unvanquished, Turtle Arena, Xonotic and Urban Terror LAN server browsing
 
 Nov 1, 2014: Zack Middleton <zturtleman@gmail.com>
-- fix gametype strings for a few games
-- fix ioquake3 and iostvef basegame gametype strings
+
+ * fix gametype strings for a few games
+ * fix ioquake3 and iostvef basegame gametype strings
 
 Oct 31, 2014: Thomas Debesse <xqf@illwieckz.net>
-- improve French translation
+
+ * improve French translation
 
 Oct 27, 2014: Thomas Debesse <xqf@illwieckz.net>
-- fix gamesxml2c compilation warnings
+
+ * fix gamesxml2c compilation warnings
 
 Oct 26, 2014: Jordi Mallach <jordi@sindominio.net>
-- fix a build issue related to the Savage hack
+
+ * fix a build issue related to the Savage hack
 
 Oct 26, 2014: Thomas Debesse <xqf@illwieckz.net>
-- use a new Savage hack to query Savage master server
-- filter Savage color codes
+
+ * use a new Savage hack to query Savage master server
+ * filter Savage color codes
 
 Oct 25, 2014: Zack Middleton <zturtleman@gmail.com>
-- fix some errors with Turtle Arena, a mismatch of server_type enum and games
-  array, plus missing qstat config
+
+ * fix some errors with Turtle Arena, a mismatch of server_type enum and games
+   array, plus missing qstat config
 
 Oct 24, 2014: Zack Middleton <zturtleman@gmail.com>
-- fix debug build compiling using clang
-- fix gamesxml2c compilation
+
+ * fix debug build compiling using clang
+ * fix gamesxml2c compilation
 
 Oct 24, 2014: Thomas Debesse <xqf@illwieckz.net>
-- fix another overflow in q3_unescape when the string ends with an escape code
-- filter more color codes from Wolfenstein: Enemy Territory
+
+ * fix another overflow in q3_unescape when the string ends with an escape code
+ * filter more color codes from Wolfenstein: Enemy Territory
 
 Oct 23, 2014: Witold Piłat <witold.pilat@gmail.com>
-- fix Jedi Outcast support
+
+ * fix Jedi Outcast support
 
 Oct 23, 2014: Thomas Debesse <xqf@illwieckz.net>
-- fix an overflow in q3_unescape (14+ years old bug)
+
+ * fix an overflow in q3_unescape (14+ years old bug)
 
 Oct 22, 2014: Thomas Debesse <xqf@illwieckz.net>
-- workaround non ASCII characters in servers strings
-- rewrite stat_master_input_callback and stat_servers_input_callback
+
+ * workaround non ASCII characters in servers strings
+ * rewrite stat_master_input_callback and stat_servers_input_callback
 
 Oct 16, 2014: Thomas Debesse <xqf@illwieckz.net>
-- use Gstatus to check GIOChannel reads
+
+ * use Gstatus to check GIOChannel reads
 
 Oct 15, 2014: Thomas Debesse <xqf@illwieckz.net>
-- reuse mod and gametype descriptions for similar games
-- rewrite deprecated gdk_pixbuf_*ref calls
+
+ * reuse mod and gametype descriptions for similar games
+ * rewrite deprecated gdk_pixbuf_*ref calls
 
 Oct 14, 2014: Thomas Debesse <xqf@illwieckz.net>
-- add the Turtle Arena game (thanks to Zack Middleton help)
-- rewrite deprecated g_str* calls, and g_basename calls
+
+ * add the Turtle Arena game (thanks to Zack Middleton help)
+ * rewrite deprecated g_str* calls, and g_basename calls
 
 Oct 13, 2014: Thomas Debesse <xqf@illwieckz.net>
-- fix a 14+ years old bug, a comma was missing in a string table of some
-  Quake 2 game properties
+
+ * fix Quake 2 game properties
 
 Oct 11, 2014: Thomas Debesse <xqf@ilwieckz.net>
-- port obsolete fd handling code to GIOChannel (many thanks to Chris Vine for
-  his precious and generous help)
-- fix the "source id not found" bug due to "g_source_remove" duplication
+
+ * port obsolete fd handling code to GIOChannel (many thanks to Chris Vine for
+   his precious and generous help)
+ * fix the "source id not found" bug due to "g_source_remove" duplication
 
 Oct 10, 2014: Thomas Debesse <xqf@illwieckz.net>
-- add ZEQ2 Lite game
+
+ * add ZEQ2 Lite game
 
 Oct 02, 2014: Thomas Debesse <xqf@illwieckz.net>
-- add Jedi Outcast (JK2) game (VictorBE patch)
+
+ * add Jedi Outcast (JK2) game (VictorBE patch)
 
 Oct 01, 2014: Thomas Debesse <xqf@illwieckz.net>
-- fix Unvanquished status packet
-- detect some Wolf:ET server with unusual version name
+
+ * fix Unvanquished status packet
+ * detect some Wolf:ET server with unusual version name
 
 Sep 30, 2014: Thomas Debesse <xqf@illwieckz.net>
-- add Enemy Territory:Legacy game
+
+ * add Enemy Territory:Legacy game
 
 Sep 28, 2014: Thomas Debesse <xqf@illwieckz.net>
-- distinguish Tremulous, Tremulous GPP and TremFusion
-- some cleaning (id tech 3 derivatives are not described as tremulous anymore)
-- rename tremulous server qstat variable to 'gamename'+'s' like others
-- master server for Urban Terror updated
+
+ * distinguish Tremulous, Tremulous GPP and TremFusion
+ * some cleaning (id tech 3 derivatives are not described as tremulous anymore)
+ * rename tremulous server qstat variable to 'gamename'+'s' like others
+ * master server for Urban Terror updated
 
 Nov 11, 2013: Thomas Debesse <xqf@illwieckz.net>
-- follow XDG Base Directory Specification for user configuration directory
-  and migrate old directory to the new one
+
+ * follow XDG Base Directory Specification for user configuration directory
+   and migrate old directory to the new one
 
 Nov 10, 2013: Thomas Debesse <xqf@illwieckz.net>
-- add World of Padman game
+
+ * add World of Padman game
 
 Nov 06, 2013: Thomas Debesse <xqf@illwieckz.net>
-- filter Unvanquished extended color codes
+
+ * filter Unvanquished extended color codes
 
 Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
-- complete French translation (100%)
+
+ * complete French translation (100%)
 
 Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
-- detect more ioquake3 variant as ioquake3
-- launch some Quake3 derivatives as ioquake3 mod if standalone isn't installed
-- add another master for Xonotic (dpmaster.tchr.no)
+
+ * detect more ioquake3 variant as ioquake3
+ * launch some Quake3 derivatives as ioquake3 mod if standalone isn't installed
+ * add another master for Xonotic (dpmaster.tchr.no)
 
 Oct 30, 2013: Thomas Debesse <xqf@illwieckz.net>
-- recognize Urban Terror in Quake3 server list even if engine is bare ioquake3
-- update and improve French translation (near 100%),
-  use French typography (thin space, apostrophe, French quote, etc.)
+
+ * recognize Urban Terror in Quake3 server list even if engine is bare ioquake3
+ * update and improve French translation (near 100%),
+   use French typography (thin space, apostrophe, French quote, etc.)
 
 Oct 27, 2013: Thomas Debesse <xqf@illwieckz.net>
-- add Alien Arena, Reaction and Q3 Rally games
-- add LAN broadcast for Nexuiz, Xonotic, Warsow, Tremulous, Unvanquished,
-  OpenArena, Q3 Rally, Urban Terror, Reaction, Smokin' Guns and Alien Arena
-- update Warsow protocol version and improve Warsow icon
-- detect ioquake3 server as Quake3 server
+
+ * add Alien Arena, Reaction and Q3 Rally games
+ * add LAN broadcast for Nexuiz, Xonotic, Warsow, Tremulous, Unvanquished,
+   OpenArena, Q3 Rally, Urban Terror, Reaction, Smokin' Guns and Alien Arena
+ * update Warsow protocol version and improve Warsow icon
+ * detect ioquake3 server as Quake3 server
 
 Oct 26, 2013: Thomas Debesse <xqf@illwieckz.net>
-- add Unvanquished, Xonotic and Smokin' Guns games
+
+ * add Unvanquished, Xonotic and Smokin' Guns games
 
 Oct 25, 2013: Thomas Debesse <xqf@illwieckz.net>
-- fix "dlsym" compilation problem
-- fix spelling (Debian patch, Jordi Mallach)
-- fix intltool compilation problem (Debian patch, Jordi Mallach)
-- fix redline check (Debian patch, Sven Joachim)
-- fix autotools (Debian patch, Jordi Mallach)
-- drop gtk 1.2 support (Debian patch, Jordi Mallach)
-- fix X11 build dependency (Debian patch, Jordi Mallach)
-- fix desktop file (Debian patch, Jordi Mallach)
-- fix steam applaunch (Debian patch, Jo Shields)
-- fix Voyager Elite Force xpm path file (Debian patch, Jordi Mallach)
-- fix missing pixmap file opening (Debian patch, Lars Wirzenius)
+
+ * fix "dlsym" compilation problem
+ * fix spelling (Debian patch, Jordi Mallach)
+ * fix intltool compilation problem (Debian patch, Jordi Mallach)
+ * fix redline check (Debian patch, Sven Joachim)
+ * fix autotools (Debian patch, Jordi Mallach)
+ * disable GTK+ 1.2 support (Debian patch, Jordi Mallach)
+ * fix X11 build dependency (Debian patch, Jordi Mallach)
+ * fix desktop file (Debian patch, Jordi Mallach)
+ * fix steam applaunch (Debian patch, Jo Shields)
+ * fix Voyager Elite Force xpm path file (Debian patch, Jordi Mallach)
+ * fix missing pixmap file opening (Debian patch, Lars Wirzenius)
 
 Dec 21, 2010: Ludwig Nussel <l-n@users.sourceforge.net>
-- add hack for systems without gtk1
+
+ * add hack for systems without gtk1
 
 Apr 25, 2009: Ludwig Nussel <l-n@users.sourceforge.net>
-- increase buffer size for qstat version check
+
+ * increase buffer size for qstat version check
 
 Jan 11, 2009: Ludwig Nussel <l-n@users.sourceforge.net>
-- launch q3ut4 as Quake3 mod if ioUrbanTerror isn't configured
+
+ * launch q3ut4 as Quake3 mod if ioUrbanTerror isn't configured
 
 Nov 23, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
-- add ioUrbanTerror as separate game
-  (#2330187, patch by Alexander Hambalgo)
+
+ * add ioUrbanTerror as separate game
+   (#2330187, patch by Alexander Hambalgo)
 
 Sep 13, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
-- add OpenArena as separate game
+
+ * add OpenArena as separate game
 
 Jan 13, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
-- add master for OpenArena (#1869975)
-- add support for OpenTTD (#1254682)
+
+ * add master for OpenArena (#1869975)
+ * add support for OpenTTD (#1254682)
 
 Jan 11, 2008: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix busy loop when client exits
+
+ * fix busy loop when client exits
 
 Nov 04, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- close fds before launching games
+
+ * close fds before launching games
 
 Nov 03, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- offer more q4 and etqw versions in preferences dialog
+
+ * offer more q4 and etqw versions in preferences dialog
 
 Oct 25, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- print only one single warning if gdk-pixbuf isn't installed
-- add hexenworld master server support (Patch by O. Sezer)
-- add support for ETQW
+
+ * print only one single warning if gdk-pixbuf isn't installed
+ * add hexenworld master server support (Patch by O. Sezer)
+ * add support for ETQW
 
 May 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- display user specified comment about why a server sucks when
-  trying to connect
+
+ * display user specified comment about why a server sucks when
+   trying to connect
 
 Apr 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- add q3ut4 game types (#1693170)
+
+ * add q3ut4 game types (#1693170)
 
 Jan 09, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- use g_object_unref instead of gtk_object_unref for GTK2 (#1629598)
+
+ * use g_object_unref instead of gtk_object_unref for GTK2 (#1629598)
 
 Jan 06, 2007: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove check for baseq3 directory (#1629221)
-- fix reference counting of a GtkPixbuf when showing a map preview
-  (#1629309)
-- add Urban Terror master server (#1629226)
+
+ * remove check for baseq3 directory (#1629221)
+ * fix reference counting of a GtkPixbuf when showing a map preview
+   (#1629309)
+ * add Urban Terror master server (#1629226)
 
 Nov 04, 2006: Ludwig Nussel <l-n@users.sourceforge.net>
-- release 1.0.5
+
+ * bump version to 1.0.5
 
 Oct 28, 2006: Jordi Mallach <jordi@sindominio.net>
-- fix Polish and reenable
+
+ * fix Polish and reenable
 
 Oct 28, 2006: <l-n@users.sourceforge.net>
-- update qstat.cfg from qstat
-- disable Polish translation, file is broken
-- add Warsow master protocol version 8
-- update documentation
+
+ * update qstat.cfg from qstat
+ * disable Polish translation, file is broken
+ * add Warsow master protocol version 8
+ * update documentation
 
 Oct 26, 2006: Jordi Mallach <jordi@sindominio.net>
-- add Polish translation by Miłosz Kosobucki
-- update Catalan translation
-- tweaks to desktop file
+
+ * add Polish translation by Miłosz Kosobucki
+ * update Catalan translation
+ * tweak to desktop file
 
 Jun 18, 2006: <l-n@users.sourceforge.net>
-- split Half-Life support into old and new version
-- fix saving of Half-Life player information
-- allow to also delete servers that are not in the Favorites list
-- display Warsow team colors (suggested by Tomasz Kalkosiński)
-- fix compilation of stand alone rcon tool (patch by O. Sezer)
-- filter QuakeWorld namefun characters in rcon (patch by Jorge Hodge)
+
+ * split Half-Life support into old and new version
+ * fix saving of Half-Life player information
+ * allow to also delete servers that are not in the Favorites list
+ * display Warsow team colors (suggested by Tomasz Kalkosiński)
+ * fix compilation of stand alone rcon tool (patch by O. Sezer)
+ * filter QuakeWorld namefun characters in rcon (patch by Jorge Hodge)
 
 Apr 08, 2006: <l-n@users.sourceforge.net>
-- Tremulous support
-- don't pass -steam option to hl2
-- strip newline when reading the doom3 version file
+
+ * add Tremulous support
+ * do not pass -steam option to hl2
+ * strip newline when reading the doom3 version file
 
 Jan 05, 2006: <l-n@users.sourceforge.net>
-- fix cursor navigation in server list (thanks Simon Philips)
+
+ * fix cursor navigation in server list (thanks Simon Philips)
 
 Jan 04, 2006: <l-n@users.sourceforge.net>
-- add -Wl,--export-dynamic to LDFLAGS as xqf relies on it
+
+ * add -Wl,--export-dynamic to LDFLAGS as xqf relies on it
 
 Jan 03, 2006: <l-n@users.sourceforge.net>
-- add TC:E game types (patch by Steffen Pankratz)
-- remove AMS from qstat.cfg, it's native now
+
+ * add TC:E game types (patch by Steffen Pankratz)
+ * remove AMS from qstat.cfg, it's native now
 
 Dec 28, 2005: <l-n@users.sourceforge.net>
-- add CoD protocol 6
+
+ * add CoD protocol 6
 
 Dec 25, 2005: <l-n@users.sourceforge.net>
-- allow to copy server info values
+
+ * allow to copy server info values
 
 Dec 13, 2005: <l-n@users.sourceforge.net>
-- add new armyops master server
+
+ * add new armyops master server
 
 Nov 19, 2005: <l-n@users.sourceforge.net>
-- fix SOF2 query (thanks to Wiesław Młynarski for reporting)
+
+ * fix SOF2 query (thanks to Wiesław Młynarski for reporting)
 
 Nov 12, 2005: <l-n@users.sourceforge.net>
-- clean up code duplication in pref.c
-- add support for warsow level shots
+
+ * clean up code duplication in pref.c
+ * add support for warsow level shots
 
 Nov 01, 2005: <l-n@users.sourceforge.net>
-- add gslist Q4 master
-- initial Warsow support, partially broken
+
+ * add gslist Q4 master
+ * add initial Warsow support, partially broken
 
 Oct 27, 2005: <l-n@users.sourceforge.net>
-- unescape Q4 clan tags (thanks Gonzalo Nemmi for reporting)
+
+ * unescape Q4 clan tags (thanks Gonzalo Nemmi for reporting)
 
 Oct 26, 2005: <l-n@users.sourceforge.net>
-- make "Show only configured games" button reappear
-- require qstat 2.10
+
+ * make "Show only configured games" button reappear
+ * require qstat 2.10
 
 Oct 23, 2005: <l-n@users.sourceforge.net>
-- fix Q4 rcon
-- change Q4 main mod to q4base
-- set rcon password correctly when launching Q4
-- version 1.0.4.1
+
+ * fix Q4 rcon
+ * change Q4 main mod to q4base
+ * set rcon password correctly when launching Q4
+ * bump version to 1.0.4.1
 
 Oct 20, 2005: <l-n@users.sourceforge.net>
-- release 1.0.4
+
+ * bump version to 1.0.4
 
 Oct 18, 2005: <l-n@users.sourceforge.net>
-- use Q4 clan name if it exists
+
+ * use Q4 clan name if it exists
 
 Oct 17, 2005: <l-n@users.sourceforge.net>
-- add x86_64 to statistics page
-- fix Q4 master server protocol prefs
+
+ * add x86_64 to statistics page
+ * fix Q4 master server protocol prefs
 
 Oct 09, 2005: <l-n@users.sourceforge.net>
-- update NEWS
-- show anti-cheat icon for Doom3 and Quake4 (thanks Timothee Besset for
-  reporting)
-- try to support Quake4 map previews
+
+ * update NEWS
+ * show anti-cheat icon for Doom3 and Quake4 (thanks Timothee Besset for
+   reporting)
+ * try to support Quake4 map previews
 
 Oct 07, 2005: <l-n@users.sourceforge.net>
-- initial Quake4 support (thanks to Timothee Besset for providing
-  the necessary info)
+
+ * add initial Quake 4 support (thanks to Timothee Besset for providing
+   the necessary info)
 
 Sep 20, 2005: Jordi Mallach <jordi@sindominio.net>
-- update Catalan transaltion
+
+ * update Catalan transaltion
 
 Sep 13, 2005: <l-n@users.sourceforge.net>
-- get rid of libtool
-- set version to 1.0.3.1
-- another attempt to finally fix gensyms.pl
+
+ * remove libtool
+ * set version to 1.0.3.1
+ * fix gensyms.pl, another attempt to finally fix gensyms.pl
 
 Sep 12, 2005: <l-n@users.sourceforge.net>
-- fix integer overflow in TGA loader
+
+ * fix integer overflow in TGA loader
 
 Sep 09, 2005: <l-n@users.sourceforge.net>
-- fix some typos in German translation
+
+ * fix some typos in German translation
 
 Sep 07, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- docu update and master server cleanup by Steffen Pankratz
+
+ * update documentation and cleanup master server list by Steffen Pankratz
 
 Aug 23, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix redial dialog not honoring private clients (reported by Julien
-  Langer)
+
+ * fix redial dialog not honoring private clients (reported by Julien
+   Langer)
 
 Aug 20, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix gamespy and descent exec functions (reported by Steffen
-  Pankratz)
+
+ * fix gamespy and descent exec functions (reported by Steffen
+   Pankratz)
 
 Aug 14, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix saving of server filters (reported by Steffen Pankratz)
+
+ * fix saving of server filters (reported by Steffen Pankratz)
 
 Aug 07, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add script install button
-- add multiple sort modes per column (#1253101)
-- fix compiler warnings
-- add delete button for quickfilter
-- update German translation
+
+ * add script install button
+ * add multiple sort modes per column (#1253101)
+ * fix compiler warnings
+ * add delete button for quickfilter
+ * update German translation
 
 Aug 01, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add demo script
+
+ * add demo script
 
 Jul 03, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add support for plugin scripts
+
+ * add support for plugin scripts
 
 Jun 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- move generic code for running a program into util.c
-- Nexuiz support
-- check for q3 based gametypes before parsing the server info
+
+ * move generic code for running a program into util.c
+ * add Nexuiz support
+ * check for q3 based gametypes before parsing the server info
 
 Jun 01, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add doom3 protocol 1.40 to menu (Steffen Pankratz)
+
+ * add doom3 protocol 1.40 to menu (Steffen Pankratz)
 
 Apr 29, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- honor setting to ignore bots when copying server info to clipboard
+
+ * honor setting to ignore bots when copying server info to clipboard
 
 Apr 15, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add q3a Excessive Plus gametypes (patch by Jason Santos)
+
+ * add q3a Excessive Plus gametypes (patch by Jason Santos)
 
 Apr 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add Finish translation by Sami Laitinen
+
+ * add Finish translation by Sami Laitinen
 
 Mar 24, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- use separate server type for ut2004
-- add epic's second ut2004 master
+
+ * use separate server type for ut2004
+ * add epic's second ut2004 master
 
 Mar 22, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- change default ET protocol to 84, fix qstat.cfg
+
+ * change default ET protocol to 84, fix qstat.cfg
 
 Mar 06, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- update NEWS file for 1.0.3
+
+ * update NEWS file for 1.0.3
 
 Feb 22, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix ut2k4 and doom3 master query not working after starting xqf
+
+ * fix ut2k4 and doom3 master query not working after starting xqf
 
 Feb 20, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix logic for applying colors
+
+ * fix logic for applying colors
 
 Feb 19, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- use GTK2 colors and Raleigh theme by default in GTK1 version
-- update German translation
-- reorder some structs to reduce size
+
+ * use GTK2 colors and Raleigh theme by default in GTK1 version
+ * update German translation
+ * reorder some structs to reduce size
 
 Feb 18, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix use of wrong server type when adding servers (#1143801, thanks roerich
-  and kracho for helping to debug this)
+
+ * fix use of wrong server type when adding servers (#1143801, thanks roerich
+   and kracho for helping to debug this)
 
 Feb 05, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- make all icons themeable
-- make yellow man actually yellow instead of green
+
+ * make all icons themeable
+ * make yellow man actually yellow instead of green
 
 Feb 04, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- add --nomapscan option
-- add ET Gslist master
-- mark q3 servers with protocol different from master as incompatible
+
+ * add --nomapscan option
+ * add ET Gslist master
+ * mark q3 servers with protocol different from master as incompatible
 
 Feb 03, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- update Danish translation (Morten Brix Pedersen)
+
+ * update Danish translation (Morten Brix Pedersen)
 
 Jan 30, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove quakeforge specials
-- remove no longer needed ssam notes
-- fix saving of quake2 passwords (#1112381)
+
+ * remove quakeforge specials
+ * remove no longer needed ssam notes
+ * fix saving of quake2 passwords (#1112381)
 
 Jan 25, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- Halflife2 support (untested)
+
+ * add Half Life2 support (untested)
 
 Jan 21, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- highly experimental: optionally use DT_AUXILIARY stub libraries to not depend
-  on libGeoIP and libgdk_pixbuf at runtime
+
+ * add highly experimental: optionally use DT_AUXILIARY stub libraries to
+   not depend on libGeoIP and libgdk_pixbuf at runtime
 
 Jan 12, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- split get_new_defaults into game specific functions
-- fix doom3 protocol detection (#1092165)
+
+ * split get_new_defaults into game specific functions
+ * fix doom3 protocol detection (#1092165)
 
 Jan 11, 2005: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix crashes due to wrong return type of callbacks (#1098910, patch by Jochen
-  Baier)
-- fix q1/qw/q2 skin list update
+
+ * fix crashes due to wrong return type of callbacks (#1098910, patch by Jochen
+   Baier)
+ * fix q1/qw/q2 skin list update
 
 Dec 23, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- don't try to scan home directories for maps if the directory
-  doesn't exist (reported by Steffen Pankratz)
+
+ * do not try to scan home directories for maps if the directory
+   doesn't exist (reported by Steffen Pankratz)
 
 Dec 22, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- prepare for 1.0.2
-- set TF_U2_NAMES qstat flag for armyops
-- require qstat 2.7
+
+ * prepare for 1.0.2
+ * set TF_U2_NAMES qstat flag for armyops
+ * require qstat 2.7
 
 Dec 19, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- manpage corrections
-- add Netpanzer master
+
+ * fix manpage
+ * add Netpanzer master
 
 Nov 26, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add gslist master for UT, remove Epic one
-- updates for 1.0.1
+
+ * add gslist master for UT, remove Epic one
+ * bump version to 1.0.1
 
 Nov 22, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- update German translation because of typo
-- set window type of splash screen in gtk2 version
+
+ * update German translation because of typo
+ * set window type of splash screen in gtk2 version
 
 Nov 22, 2004: Jordi Mallach <jordi@sindominio.net>
-- fix typo: Soure -> Source
-- Update Catalan and Spanish translations
+
+ * fix typo: Soure -> Source
+ * update Catalan and Spanish translations
 
 Nov 21, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix compatability issues with gcc 2.95
-- remove unneeded tray icon animation frames
+
+ * fix compatability issues with gcc 2.95
+ * remove unneeded tray icon animation frames
 
 Nov 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Use non-blocking socket for rcon
-- Add small timeout to catch replies with multiple packets in xqf-rcon
-- Make xqf-recon optionally read the rcon passwort from the environment
-  variable XQF_RCON_PASSWORD
-- Honor osmask of Doom3 servers and check for Linux support
-  (suggested by TTimo)
-- update German translation
+
+ * use non-blocking socket for rcon
+ * add small timeout to catch replies with multiple packets in xqf-rcon
+ * make xqf-recon optionally read the rcon passwort from the environment
+   variable XQF_RCON_PASSWORD
+ * honor osmask of Doom3 servers and check for Linux support
+   (suggested by TTimo)
+ * update German translation
 
 Nov 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- update German translation
-- add wolfmp as main mod of rtcw (reported by Ruediger Meier)
+
+ * update German translation
+ * add wolfmp as main mod of rtcw (reported by Ruediger Meier)
 
 Nov 11, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add options for qstat source ip and port range (feature #1034631)
+
+ * add options for qstat source ip and port range (feature #1034631)
 
 Nov 06, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- open splash screen with progress bar when clicking the "scan now" button
+
+ * add progress bar to splash screen when clicking the "scan now" button
 
 Nov 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add country statistics
-- use an empty flag for countries without flag for proper alignment
-- add "clear servers" menu item for master servers
-- delete HL WON servers as they are switched off
+
+ * add country statistics
+ * use an empty flag for countries without flag for proper alignment
+ * add "clear servers" menu item for master servers
+ * delete HL WON servers as they are switched off
 
 Oct 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- UT2004 master server support, needs qstat from CVS
+
+ * add UT2004 master server support, needs qstat from CVS
 
 Oct 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add descent3 server listing from d3.descent.cx. Thanks Esa for providing a
-  format suitable for XQF!
+
+ * add descent3 server listing from d3.descent.cx. Thanks Esa for providing a
+   format suitable for XQF!
 
 Oct 10, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Show UT200[34] mutators as tree like dmflags
-- Add gslist master for RTCW
+
+ * show UT200[34] mutators as tree like dmflags
+ * add gslist master for RTCW
 
 Oct 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Descent3: use Gamespy protocol instead of PXO protocol, remove no longer
-  working masters, use custom launch function (uses --directip), fix saving of
-  player info
+
+ * fix descent3: use Gamespy protocol instead of PXO protocol, remove no longer
+   working masters, use custom launch function (uses --directip), fix saving of
+   player info
 
 Oct 04, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix segfault at doom3 version detection (reported by Steffen Pankratz)
+
+ * fix segfault at doom3 version detection (reported by Steffen Pankratz)
 
 Oct 02, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- automatically detect the doom3 network protocol version
-- add support for Netpanzer (> 0.1.6). Thanks Matze Braun for the patch.
+
+ * add automatically detection for doom3 network protocol version
+ * add support for Netpanzer (> 0.1.6). Thanks Matze Braun for the patch.
 
 Sep 26, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add support for gslist. Thanks to Luigi Auriemma for making this
-  possible!
-- drop broken master servers, add some new ones for quake2
-- update German translation
-- version 1.0.0.2
+
+ * add support for gslist. Thanks to Luigi Auriemma for making this
+   possible!
+ * remove broken master servers, add some new ones for quake2
+ * update German translation
+ * bump version to 1.0.0.2
 
 Sep 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix UT99 master server listing
-- Allow to completely overwrite the qstat master argument via config file
+
+ * fix UT99 master server listing
+ * allow to completely overwrite the qstat master argument via config file
 
 Aug 22, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Set default master protocol version for COD to 5
+
+ * set default master protocol version for COD to 5
 
 Aug 18, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Apply brightness correction to mapshots
+
+ * apply brightness correction to mapshots
 
 Aug 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix usage of AC_ARG_ENABLE (#1010440). Thanks Mike Frysinger for reporting.
+
+ * fix usage of AC_ARG_ENABLE (#1010440). Thanks Mike Frysinger for reporting.
 
 Aug 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix quickfilter not working when pressing backspace or delete in the empty
-  textentry (thanks Ruediger Meier for spotting this one).
-- add new tray icons from Jochen Baier
-- set version to 1.0.0.1
+
+ * fix quickfilter not working when pressing backspace or delete in the empty
+   textentry (thanks Ruediger Meier for spotting this one).
+ * add new tray icons from Jochen Baier
+ * bump version to 1.0.0.1
 
 Aug 15, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix compile with gcc 2.95 (patch by Thomas Zajic)
-- Fix --add when one server without type is specified whose port matches
-  exactly one game.
+
+ * fix compile with gcc 2.95 (patch by Thomas Zajic)
+ * fix --add when one server without type is specified whose port matches
+   exactly one game.
 
 Aug 15, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- released 1.0
+
+ * bump version to 1.0
 
 Aug 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Use TGA loader from quake2 if gdk-pixbuf fails to load a mapshot. Useful for
-  at least Q3, RTCW, ET and Doom3 mapshots.
-- require qstat version 2.6
+
+ * use TGA loader from quake2 if gdk-pixbuf fails to load a mapshot. Useful for
+   at least Q3, RTCW, ET and Doom3 mapshots.
+ * require qstat version 2.6
 
 Aug 13, 2004: Jordi Mallach <jordi@sindominio.net>
-- update Catalan and Spanish translations
-- fix Makevar so intltool works ok
-- remove updateonepo, use intltool-update instead.
+
+ * update Catalan and Spanish translations
+ * fix Makevar so intltool works ok
+ * remove updateonepo, use intltool-update instead.
 
 Aug 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Doom 3 rcon support
+
+ * add Doom 3 rcon support
 
 Aug 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- properly detect installed Doom 3 maps. No preview though since gdk-pixbuf
-  doesn't support the TGA format used by id :-(
+
+ * fix properly detection for installed Doom 3 maps. No preview though since
+   gdk-pixbuf doesn't support the TGA format used by id :-(
 
 Aug 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove some obsolete stuff from docu, update list of supported games
+
+ * remove some obsolete stuff from documentation, update list of supported games
 
 Aug 07, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- initial Doom 3 support
+
+ * add initial Doom 3 support
 
 Aug 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- support multiple words in quick filter (AND)
-- update German translation
+
+ * add support multiple words in quick filter (AND)
+ * update German translation
 
 Jul 24, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- new feature: quick filter
+
+ * new feature: quick filter
 
 Jul 18, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- do not set fs_game if mod is a 'main mod'
+
+ * do not set fs_game if mod is a 'main mod'
 
 Jul 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix NULL pointer dereference when sorting rule/value columns with subtress
-  (#990692)
+
+ * fix NULL pointer dereference when sorting rule/value columns with subtress
+   (#990692)
 
 Jul 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- update German translation
+
+ * update German translation
 
 Jul 12, 2004: Jordi Mallach <jordi@sindominio.net>
-- update Catalan translation.
+
+ * update Catalan translation.
 
 Jul 04, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- rename xml tags suggest_commands -> command, main_mods -> main_mod
-- make command a NULL terminated string list
-- clean up some file dialog handling
-- fix sound test button not playing sound before pressing ok
+
+ * rename xml tags suggest_commands -> command, main_mods -> main_mod
+ * make command a NULL terminated string list
+ * clean up some file dialog handling
+ * fix sound test button not playing sound before pressing ok
 
 Jun 28, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- make Copy and Copy+ menu items also copy to CLIPBOARD instead of only PRIMARY
-  to allow paste via Ctrl-v
+
+ * make Copy and Copy+ menu items also copy to CLIPBOARD instead of only PRIMARY
+   to allow paste via Ctrl-v
 
 Jun 19, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- use separate types for ET and RTCW so update from master doesn't throw away
-  all servers. Today's qstat cvs version required.
-- add gametypes for World of Padman Q3A mod
-- add support for Jedi Academy (wine game, patch by Steffen Pankratz)
-- add an animated tray icon for the GTK2 version (patch by Jochen Baier)
+
+ * use separate types for ET and RTCW so update from master doesn't throw away
+   all servers. Today's qstat cvs version required.
+ * add gametypes for World of Padman Q3A mod
+ * add support for Jedi Academy (wine game, patch by Steffen Pankratz)
+ * add an animated tray icon for the GTK2 version (patch by Jochen Baier)
 
 Jun 06, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- update Danish translation (Morten Brix Pedersen)
+
+ * update Danish translation (Morten Brix Pedersen)
 
 Jun 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add support for Americas Army 2.1. Still no master, old version no longer
-  supported, requires recent qstat from cvs (gs2 protocol)
+
+ * add support for Americas Army 2.1. Still no master, old version no longer
+   supported, requires recent qstat from cvs (gs2 protocol)
 
 May 29, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add AlienSwarm custom arguments for UT2004, also specify separate log file
-  for each mod (patch by Andreas Schneider)
+
+ * add AlienSwarm custom arguments for UT2004, also specify separate log file
+   for each mod (patch by Andreas Schneider)
 
 May 24, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add Troopers custom arguments for UT2004 (patch by Andreas Schneider)
+
+ * add Troopers custom arguments for UT2004 (patch by Andreas Schneider)
 
 May 23, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- enable custom args for all games
-- add RedOrchestra custom arguments for UT2004
+
+ * enable custom args for all games
+ * add RedOrchestra custom arguments for UT2004
 
 May 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- replace no longer working Tribes2 master server addresses with
-  current ones (#954570)
+
+ * replace no longer working Tribes2 master server addresses with
+   current ones (#954570)
 
 May 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- create LaunchInfo.txt by default
-- when suggesting a command, don't add full path (since it will be found in
-  $PATH anyway)
-- clean up resolve_path. Let it do path and tilde expansion and don't suggest
-  directories in $PATH.
-- fix some minor memory leaks
-- export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
-  XQF_SERVER_GAME when launching a game (suggested by Ruediger Meier)
-- don't inherit some tags from base game, e.g. suggested commands
-- use steam1.steampowered.com and steam2.steampowered.com as steam master
+
+ * create LaunchInfo.txt by default
+ * fix executable path: when suggesting a command, don't add full path (since
+   it will be found in $PATH anyway)
+ * clean up resolve_path. Let it do path and tilde expansion and don't suggest
+   directories in $PATH.
+ * fix some minor memory leaks
+ * export the variables XQF_SERVER_NAME, XQF_SERVER_MAP, XQF_SERVER_HOSTNAME and
+   XQF_SERVER_GAME when launching a game (suggested by Ruediger Meier)
+ * do not inherit some tags from base game, e.g. suggested commands
+ * use steam1.steampowered.com and steam2.steampowered.com as steam master
 
 May 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- support for Half-Life steam master. Nasty hack, hopefully doesn't break other stuff.
-- set anti-cheat flag for VAC (secure != 0)
-- increase version to 0.9.14.1
-- redial also when only private slots are free and no password is set
-  (suggested by John Stotler)
-- default_home and main_mods (e.g. baseq3) tags in games.xml
-- support custom config in all Q3A based games (suggested by Ruediger Meier)
-- fix fs_game for RTCW, offer it for ET (reported by Ruediger Meier)
+
+ * add support for Half-Life steam master. Nasty hack, hopefully doesn't break 
+   other stuff.
+ * set anti-cheat flag for VAC (secure != 0)
+ * increase version to 0.9.14.1
+ * redial also when only private slots are free and no password is set
+   (suggested by John Stotler)
+ * add default_home and main_mods (e.g. baseq3) tags in games.xml
+ * add support for custom config in all Q3A based games (suggested by Ruediger
+   Meier)
+ * fix fs_game for RTCW, offer it for ET (reported by Ruediger Meier)
 
 Mar 30, 2004: Jordi Mallach <jordi@sindominio.net>
-- add Russian translation by Dan Korostelev <dan@ats.energo.ru>.
+
+ * add Russian translation by Dan Korostelev <dan@ats.energo.ru>.
 
 Mar 22, 2004: Jordi Mallach <jordi@sindominio.net>
-- fix clean rule in toplevel Makefile.am.
+
+ * fix clean rule in toplevel Makefile.am.
 
 Mar 21, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- released 0.9.14
+
+ * bump version to 0.9.14
 
 Mar 20, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- load GeoIP.dat from location specified in environment variable xqf_GEOIPDAT
+
+ * load GeoIP.dat from location specified in environment variable xqf_GEOIPDAT
 
 Mar 16, 2004: Jordi Mallach <jordi@sindominio.net>
-- update Catalan and Spanish translations.
+
+ * update Catalan and Spanish translations.
 
 Mar 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- redesign about dialog to include logo
-- unify summary in .desktop and .spec file
-- change version to 0.9.13.2
+
+ * redesign about dialog to include logo
+ * unify summary in .desktop and .spec file
+ * bump version to 0.9.13.2
 
 Feb 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add LAN master for ut2004
-- detect whether a server is ut2003 or ut2004
-- update ut2004 icon
+
+ * add LAN master for ut2004
+ * detect whether a server is ut2003 or ut2004
+ * update ut2004 icon
 
 Feb 16, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- don't unset game if it's baseq3 to be able to filter for it
+
+ * do not unset game if it's baseq3 to be able to filter for it
 
 Feb 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- also check GamePassword rule which is used by UT2004
-- add multiplay.co.uk server listing
+
+ * also check GamePassword rule which is used by UT2004
+ * add multiplay.co.uk server listing
 
 Feb 13, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- move suggest_commands into xml file
-- add support for UT2004. Someone please tell me a master server for it!
+
+ * move suggest_commands into xml file
+ * add support for UT2004. Someone please tell me a master server for it!
 
 Feb 09, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- introduce GAME_ADMIN which allows to enter an rcon password without actually
-  supporting rcon
-- fix launching savage with password, support rcon password. Thanks Andreas
-  Schneider for reporting.
+
+ * introduce GAME_ADMIN which allows to enter an rcon password without actually
+   supporting rcon
+ * fix launching savage with password, support rcon password. Thanks Andreas
+   Schneider for reporting.
 
 Feb 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- allow tga as q3 mapshot
+
+ * allow tga as q3 mapshot
 
 Feb 02, 2004: Jordi Mallach <jordi@sindominio.net>
-- switch to intltoolize
-- add desktop file for GNOME and KDE
-- update Catalan translation
+
+ * switch to intltoolize
+ * add desktop file for GNOME and KDE
+ * update Catalan translation
 
 Jan 17, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add g_gear flags of Urban Terror 3.2
+
+ * add g_gear flags of Urban Terror 3.2
 
 Jan 15, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- Update Danish translation (Morten Brix Pedersen)
-- Update German translation
+
+ * update Danish translation (Morten Brix Pedersen)
+ * update German translation
 
 Jan 14, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix GTK2 application icon
+
+ * fix GTK2 application icon
 
 Jan 12, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add support for BF1942 (wine game). Uses EYE protocol, no official master,
-  LAN browsing doesn't work.
-- load game icons by name via dlsym to reduce number of c&p operations when
-  adding new games
-- renamed "pix" tag in xml to "icon"
-- use config_is_valid_generic for ET
+
+ * add support for BF1942 (wine game). Uses EYE protocol, no official master,
+   LAN browsing doesn't work.
+ * load game icons by name via dlsym to reduce number of c&p operations when
+   adding new games
+ * rename "pix" tag in xml to "icon"
+ * use config_is_valid_generic for ET
 
 Jan 08, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- move struct games into games.c which is now generated from games.xml by
-  gamesxml2c
-- don't pass tribes2 name if empty
-- add --dontlaunch parameter for internal use
-- add exec function to hexenworld (anyone ever played that game??)
-- make sof2 master protcol configurable
-- support password on savage servers. Thanks Andreas Schneider for reporting.
+
+ * move struct games into games.c which is now generated from games.xml by
+   gamesxml2c
+ * do not pass tribes2 name if empty
+ * add --dontlaunch parameter for internal use
+ * add exec function to hexenworld (anyone ever played that game??)
+ * make sof2 master protcol configurable
+ * support password on savage servers. Thanks Andreas Schneider for reporting.
 
 Jan 07, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- check props pointer before dereferencing it ...
+
+ * check props pointer before dereferencing it…
 
 Jan 05, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- added comment and "this server sucks" properties for servers
+
+ * add comment and "this server sucks" properties for servers
 
 Jan 02, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- add lan masters per default
-- fix lan browsing for Americas Army
+
+ * add lan masters per default
+ * fix lan browsing for Americas Army
 
 Jan 01, 2004: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove multiplay.co.uk AA master
-- fix some function prototypes
-- --add command line option to just add a server to favorites without launching
-  a game
+
+ * remove multiplay.co.uk AA master
+ * fix some function prototypes
+ * add --add command line option to just add a server to favorites without
+   launching a game
 
 Dec 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- added support for postal2, no master.
+
+ * add support for postal2, no master.
 
 Dec 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix LAN browsing. Only worked by luck.
+
+ * fix LAN browsing. Only worked by luck.
 
 Dec 15, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix crash caused by wrong reference counting of uservers
-- use mkstemp instead of pid based temporary file to avoid symlink attacks
+
+ * fix crash caused by wrong reference counting of uservers
+ * use mkstemp instead of pid based temporary file to avoid symlink attacks
 
 Dec 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- --launch now guesses the type from the port if only one argument is given. If
-  not enough information is given (no type, no port) it will prompt the user to
-  choose the type. This way, it should be possible to use --launch now e.g.
-  from within IRC clients where you don't know the type before.
-- add second argument to add_server_dialog() to preset the address
-- make combo_set_vals() work with empty str argument
+
+ * fix --launch to now guesses the type from the port if only one argument
+   is given. If not enough information is given (no type, no port) it will
+   prompt the user to choose the type. This way, it should be possible to
+   use --launch now e.g. from within IRC clients where you don't know the
+   type before.
+ * add second argument to add_server_dialog() to preset the address
+ * make combo_set_vals() work with empty str argument
 
 Dec 02, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- convert server names from iso-8859-1 to UTF-8 if needed
+
+ * convert server names from iso-8859-1 to UTF-8 if needed
 
 Nov 30, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- new function create_server_type_menu creates a GtkOptionMenu with all games
-- modify statistics dialog to make it smaller, scollbars
-- remember size of statistics window
-- disable resize grip of status bars in gtk2
+
+ * new function create_server_type_menu creates a GtkOptionMenu with all games
+ * modify statistics dialog to make it smaller, scollbars
+ * remember size of statistics window
+ * disable resize grip of status bars in gtk2
 
 Nov 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- move help menu item to the left
-- pack games list in preferences into a scrolled window
+
+ * move help menu item to the left
+ * pack games list in preferences into a scrolled window
 
 Nov 28, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- split up load_pixmap in load_pixmap, load_pixmap_as_pixmap and
-  load_pixmap_as_pixbuf
-- set minimize icon as suggested by Jordi (someone know how to make this
-  work properly with windowmaker?)
-- work around gcc complaining about %c in strftime
+
+ * split up load_pixmap in load_pixmap, load_pixmap_as_pixmap and
+   load_pixmap_as_pixbuf
+ * set minimize icon as suggested by Jordi (someone know how to make this
+   work properly with windowmaker?)
+ * work around gcc complaining about %c in strftime
 
 Nov 27, 2003: Alex <alex_b@users.sourceforge.net>
-- Changed version to 0.9.13.1
+
+ * bump version to 0.9.13.1
 
 Nov 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- released 0.9.13
+
+ * bump version to 0.9.13
 
 Nov 24, 2003: Jordi Mallach <jordi@sindominio.net>
-- update Spanish translation
+
+ * update Spanish translation
 
 Nov 23, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove the static option again, would link everything static *sigh*
-- update docu, use mozilla function for table of contents
+
+ * remove the static option again, would link everything static *sigh*
+ * update documentation, use mozilla function for table of contents
 
 Nov 22, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- link GeoIP statically when using ./configure --enable-geoip=static
-- fix wrong function argument in rcon.c
+
+ * link GeoIP statically when using ./configure --enable-geoip=static
+ * fix wrong function argument in rcon.c
 
 Nov 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- allow data and localedir to be overridden via environment variables
+
+ * allow data and localedir to be overridden via environment variables
 
 Nov 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- add Call of Duty master from Activision
+
+ * add Call of Duty master from Activision
 
 Nov 16, 2003: Jordi Mallach <jordi@sindominio.net>
-- update Catalan translation
+
+ * update Catalan translation
 
 Nov 16, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- update German translation
-- add custom arguments for FragOps UT2 mod
+
+ * update German translation
+ * add custom arguments for FragOps UT2 mod
 
 Nov 16, 2003: Alex <alex_b@users.sourceforge.net>
-- Added Luca Camillo <kamy at tutorials.it> to the help about screen
-  for submitted logos
+
+ * add Luca Camillo <kamy at tutorials.it> to the help about screen
+   for submitted logos
 
 Nov 09, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- add support for Call of Duty (wine, no official master)
-- update docu
-- remove useless gamespy game listings
-- add note that the savage script has to be modified (needs translation)
-- update German translation
+
+ * add support for Call of Duty (wine, no official master)
+ * update documentation
+ * remove useless gamespy game listings
+ * add note that the savage script has to be modified (needs translation)
+ * update German translation
 
 Nov 06, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- update docu
+
+ * update documentation
 
 Nov 01, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- add custom arguments for Death Ball UT2003 mod
-- use case insensitive compare for password in ut&co
+
+ * add custom arguments for Death Ball UT2003 mod
+ * use case insensitive compare for password in ut&co
 
 Oct 30, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- move definition of PACKAGE_DATA_DIR to Makefile.am as recommended in autoconf
-  docu
+
+ * move definition of PACKAGE_DATA_DIR to Makefile.am as recommended in
+   autoconf documentation
 
 Oct 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- additional gametypes for RTCW and ET mods. Thanks Ben Winslow for
-  the patch
+
+ * add additional gametypes for RTCW and ET mods. Thanks Ben Winslow for
+   the patch
 
 Oct 28, 2003: Jordi Mallach <jordi@sindominio.net>
-- move list of supported languages to po/LINGUAS.
+
+ * move list of supported languages to po/LINGUAS.
 
 Oct 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- added kde flag icons
-- new splash screen and desktop icons from Luca Camillo <kamy at tutorials.it>
-- new directory layout
+
+ * add kde flag icons
+ * new splash screen and desktop icons from Luca Camillo <kamy at tutorials.it>
+
+ * new directory layout
 
 Oct 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove gettext stuff from repository. Instead autogen.sh will run
-  gettextize to create the necessary files
-- fix alpha threshold when rendering flag icons
-- add GTK2 patch from Jochen Baier
+
+ * remove gettext stuff from repository. Instead autogen.sh will run
+   gettextize to create the necessary files
+ * fix alpha threshold when rendering flag icons
+ * add GTK2 patch from Jochen Baier
 
 Oct 23, 2003: Alex <alex_b@users.sourceforge.net>
-- Replaced French translation with new fr.po from
-  Michel Briand <michelbriand@free.fr>
+
+ * replace French translation with new fr.po from
+   Michel Briand <michelbriand@free.fr>
+
 
 Oct 22, 2003: Alex <alex_b@users.sourceforge.net>
-- Updated Danish translation with diff file from
-  Morten Brix Pedersen (again)
+
+ * update Danish translation with diff file from
+   Morten Brix Pedersen (again)
 
 Oct 19, 2003: Alex <alex_b@users.sourceforge.net>
-- Updated Danish translation with diff file from
-  Morten Brix Pedersen
+
+ * update Danish translation with diff file from
+   Morten Brix Pedersen
 
 Oct 19, 2003: Jordi Mallach <jordi@sindominio.net>
-- disable the QuakeForge HexenWorld master server while it gets fixed
+
+ * disable the QuakeForge HexenWorld master server while it gets fixed
 
 Oct 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- update German translation
-- run msgfmt -c in po/updateonepo
+
+ * update German translation
+ * run msgfmt -c in po/updateonepo
 
 Oct 16, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- display players on savage servers
+
+ * display players on savage servers
 
 Oct 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- added some server listings from multiplay.co.uk, especially MOHAA. Thanks
-  Steve Hartland of multiplay.co.uk for making this possible!
-- wget uses XQF/version as user-agent now
-- for savage support, you need Steve Hartland's qstat from
-  ftp://ftp.multiplay.co.uk/pub/apps/qstat/. Please note that the 'savage'
-  script of the savage demo is broken, you need to put "$@" after savage.bin in
-  line five if you want to join any game.
-- show g_gametypestring for Medal of Honor
-- increase version number to make new masters show up
+
+ * add some server listings from multiplay.co.uk, especially MOHAA. Thanks
+   Steve Hartland of multiplay.co.uk for making this possible!
+ * fix wget call to use XQF/version as user-agent now
+ * notify for savage support, you need Steve Hartland's qstat from
+   ftp://ftp.multiplay.co.uk/pub/apps/qstat/. Please note that the 'savage'
+   script of the savage demo is broken, you need to put "$@" after savage.bin
+   in line five if you want to join any game.
+ * show g_gametypestring for Medal of Honor
+ * increase version number to make new masters show up
 
 Oct 13, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- savage support, finally
+
+ * add savage support, finally
 
 Oct 11, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- rework qstat version parser to be able to deal with any amount of data
+
+ * rework qstat version parser to be able to deal with any amount of data
 
 Oct 08, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- stub functions for savage
+
+ * add stub functions for savage
 
 Oct 06, 2003: Jordi Mallach <jordi@sindominio.net>
-- remove non-ASCII character from source, which broke gettext 0.12.
-- update QuakeForge's HexenWorld port.
-- update Catalan translation.
+
+ * remove non-ASCII character from source, which broke gettext 0.12.
+ * update QuakeForge's HexenWorld port.
+ * update Catalan translation.
 
 Oct 05, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- add twilight to q1 and qw command suggestion
-- add checkbox to be able to also filter countries without icon
+
+ * add twilight to q1 and qw command suggestion
+ * add checkbox to be able to also filter countries without icon
 
 Sep 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- load flag icons from /usr/(local/)share/flags/default
-- scripts docs/copykdeflags and docs/convertmaxmindflags for copying kde or
-  maxmind flags for use with xqf
+
+ * load flag icons from /usr/(local/)share/flags/default
+ * add scripts docs/copykdeflags and docs/convertmaxmindflags for copying kde
+   or maxmind flags for use with xqf
 
 Sep 12, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- add ET protocol 83 for version 2.56
+
+ * add ET protocol 83 for version 2.56
 
 Aug 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix medal of honor to not check for q3a files (#795017)
+
+ * fix medal of honor to not check for q3a files (#795017)
 
 Aug 21, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- replace strings by ints in country filter (Jochen Baier)
-- add support for Medal of Honor
+
+ * replace strings by ints in country filter (Jochen Baier)
+ * add support for Medal of Honor
 
 Aug 17, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- patch from Jochen Baier
-  * icon for LAN servers
-  * new GeoIP server filter GUI
+
+ * merge patch from Jochen Baier:
+    - icon for LAN servers
+    - new GeoIP server filter GUI
 
 Aug 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- detect cheating-death on halflife-servers
-- set variable XQF_SERVER_ANTICHEAT before launching a game when the server
-  requires some anti-cheat software
-- split up stat_next() function to make it more readable
+
+ * detect cheating-death on halflife-servers
+ * set variable XQF_SERVER_ANTICHEAT before launching a game when the server
+   requires some anti-cheat software
+ * split up stat_next() function to make it more readable
 
 Aug 10, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- use getopt for command line parameters
-- add --launch parameter, syntax subject to modification
-- add gametypes and voteflags for Urban Terror 3
+
+ * use getopt for command line parameters
+ * add --launch parameter, syntax subject to modification
+ * add gametypes and voteflags for Urban Terror 3
 
 Aug 03, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix default ping value when reading server filters
+
+ * Fix default ping value when reading server filters
 
 Jul 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Support for America's Army. Thanks Florian Riepler for the patch.
+
+ * add support for America's Army. Thanks Florian Riepler for the patch.
 
 Jul 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Fix default ET protocol, now 82. Thanks cjay for not reporting ;-)
+
+ * fix default ET protocol, now 82. Thanks cjay for not reporting ;-)
 
 Jun 30, 2003: Alex <alex_b@users.sourceforge.net>
-- Replaced fr.po with updated version from Francois Perichon
+
+ * replace fr.po with updated version from Francois Perichon
 
 Jun 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix variable declaration to work with older gcc
+
+ * fix variable declaration to work with older gcc
 
 Jun 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Option to stop current song in XMMS when launching a game
-- Option to resolve hostnames on update. This way it is possible to display
-  hostnames even if they are not automatically resolved. Show hostnames is now
-  default on, resolve hostnames off.
-- Merge GeoIP branch
-- Ability to directly join ut2k3 servers as spectator, even with password
-- Server side filtering for Half-Life will be used if you have a server filter
-  enabled when clicking update. Currently filtering for game, map, not full and
-  not empty will be requested from the server.
+
+ * add option to stop current song in XMMS when launching a game
+ * add option to resolve hostnames on update. This way it is possible to
+   display hostnames even if they are not automatically resolved. Show
+   hostnames is now default on, resolve hostnames off.
+ * merge GeoIP branch
+ * add ability to directly join ut2k3 servers as spectator, even with password
+ * add server side filtering for Half-Life to be used if you have a
+   server filter enabled when clicking update. Currently filtering for game,
+   map, not full and not empty will be requested from the server.
 
 Jun 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Display team of player for Q3 mods that provide the necessary information
-  (currently osp, truecombat)
+
+ * display team of player for Q3 mods that provide the necessary information
+   (currently osp, truecombat)
 
 Jun 14, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- add gametypes for Truecombat 1.0
-- compare private_clients case insensitive in q3
+
+ * add gametypes for Truecombat 1.0
+ * compare private_clients case insensitive in q3
 
 Jun 11, 2003: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.12.1
+
+ * bump version to 0.9.12.1
 
 Jun 10, 2003: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.12
 
-June 09, 2003: Alex Burger <alex_b@users.sourceforge.net>
-- Updated French translation
+ * bump version to 0.9.12
+
+Jun 09, 2003: Alex Burger <alex_b@users.sourceforge.net>
+
+ * update French translation
 
 Jun 05, 2003: Jordi Mallach <jordi@sindominio.net>
-- add QuakeForge's HexenWorld master
+
+ * add QuakeForge's HexenWorld master
 
 May 31, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- added ET voteflags
-- fix PreLaunch, pass qstat type and address as parameter
-- don't overwrite server type with master server type on update
-- update docu
-- added docs/PreLaunch.example
-- fix vc to not add a new ChangeLog header if the last entry has the
-  same header as the new one would get
+
+ * add ET voteflags
+ * fix PreLaunch, pass qstat type and address as parameter
+ * do not overwrite server type with master server type on update
+ * update documentation
+ * add docs/PreLaunch.example
+ * fix vc to not add a new ChangeLog header if the last entry has the
+   same header as the new one would get
 
 May 29, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- added master protocol version for full version of Enemy Territory
-- add qstat.cfg as EXTRA_DIST in Makefile.am
+
+ * add master protocol version for full version of Enemy Territory
+ * add qstat.cfg as EXTRA_DIST in Makefile.am
 
 May 20, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- install a qstat.cfg to $datadir/xqf to make ssam work out of the box
+
+ * install a qstat.cfg to $datadir/xqf to make ssam work out of the box
 
 May 20, 2003: Jordi Mallach <jordi@sindominio.net>
-- update Catalan and Spanish translations
+
+ * update Catalan and Spanish translations
 
 May 19, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- option to not count bots as players based on a patch by Mike Mestnik. Works
-  for Q3 and Tribes2.
-- update German translation
+
+ * add option to not count bots as players based on a patch by Mike Mestnik.
+   Works for Q3 and Tribes2.
+ * update German translation
 
 May 18, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- switch hostname resolving off by default
-- do not update single rows if more than 100 servers are to be updated.
-  elimitates too large delay with hl master
+
+ * switch hostname resolving off by default
+ * do not update single rows if more than 100 servers are to be updated.
+   elimitates too large delay with hl master
 
 May 17, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- abort configure if gdk-pixbuf is not installed
-- adapt spec file
+
+ * abort configure if gdk-pixbuf is not installed
+ * update spec file
 
 May 07, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Pass RCON password on command line when launching Half-Life. Thanks Andreas
-  Schneider for reporting.
+
+ * add RCON password on command line when launching Half-Life. Thanks Andreas
+   Schneider for reporting.
 
 May 02, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- update German translation
-- remove custom args for Rocket Arena as 1.6 does not need them anymore
-- display number of private clients in player column (initial idea from Michael
-  Prager) 
-- coresize option in config file because I always remember that I wanted to
-  change the ulimit when xqf had already crashed ;-)
+
+ * update German translation
+ * remove custom args for Rocket Arena as 1.6 does not need them anymore
+ * display number of private clients in player column (initial idea from
+   Michael Prager) 
+ * add coresize option in config file because I always remember that I wanted
+   to change the ulimit when xqf had already crashed ;-)
 
 Apr 29, 2003: Jordi Mallach <jordi@sindominio.net>
-- update Catalan and Spanish translations
+
+ * update Catalan and Spanish translations
 
 Apr 27, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix keyboard focus in server list
-- don't allow double click on map column if game supports map preview,
-  otherwise mouse would be grabbed and not available in other windows
+
+ * fix keyboard focus in server list
+ * fix grabbed mouse: don't allow double click on map column if game
+   supports map preview, otherwise mouse would be grabbed and not
+   available in othewindows
 
 Apr 26, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Display team of player for wolf and et
+
+ * display team of player for wolf and et
 
 Apr 25, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- Icon for Enemy Territory
-- Config option for Master server
+
+ * add icon for Enemy Territory
+ * add config option for Master server
 
 Apr 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- cleanups, fixed some warnings, changed debug macros
-- initial Enemy Territory Support (Testversion)
-- increased version number
+
+ * clean up, fix some warnings, change debug macros
+ * add initial Enemy Territory Support (Testversion)
+ * bump version number
 
 Apr 22, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- don't display warnings about NULL if scanning for maps is disabled. Thanks
-  Jochen Baier for reporting.
+
+ * fix warnings, don't display warnings about NULL if scanning for maps is
+   disabled. Thanks Jochen Baier for reporting.
 
 Mar 24, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- popup window with levelshot when clicking on map column, currently supports
-  jpg shots inside pk3 files for q3 and wolf.
+
+ * popup window with levelshot when clicking on map column, currently supports
+   jpg shots inside pk3 files for q3 and wolf.
 
 Mar 15, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- added Serious Sam: The Second Encounter
+
+ * add Serious Sam: The Second Encounter
 
 Mar 10, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- store all map names lowercase, otherwise many maps are reported as
-  not installed
-- #define ZEXPORT if not already defined to fix compilation problems. Thanks
-  Pierre Pronchery
-- set private clients from reserve_slots variable for hl
+
+ * store all map names lowercase, otherwise many maps are reported as
+   not installed
+ * fix #define ZEXPORT if not already defined to fix compilation problems.
+   Thanks Pierre Pronchery
+ * set private clients from reserve_slots variable for hl
 
 Mar 07, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- game types for westernq3
+
+ * add game types for westernq3
 
 Feb 19, 2003: Jordi Mallach <jordi@sindominio.net>
-- update Catalan translation
+
+ * update Catalan translation
 
 Feb 09, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- adapt configure.in to install French translation
+
+ * updatet configure.in to install French translation
 
 Feb 08, 2003: Alex Burger <alex_b@users.sourceforge.net>
-- Added French translation
+
+ * add French translation
 
 Feb 04, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- move server filter submenu to top level
-- remove rarely used buttons from toolbar
+
+ * move server filter submenu to top level
+ * remove rarely used buttons from toolbar
 
 Feb 03, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- merge patch from Jochen Baier to allow filtering for map and server name
-- update German translation
+
+ * merge patch from Jochen Baier to allow filtering for map and server name
+ * update German translation
 
 Feb 01, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix high cpu load when dialogs are shown during launch phase. It's
-  obviously no good idea to enter the gtk event loop from inside a
-  gdk input callback.
+
+ * fix high cpu load when dialogs are shown during launch phase. It's
+   obviously no good idea to enter the gtk event loop from inside a
+   gdk input callback.
 
 Jan 20, 2003: Ludwig Nussel <l-n@users.sourceforge.net>
-- image loading through gdk-pixbuf (png, jpeg etc.)
-- splash screen, logo in $datadir/xqf/pixmaps/xqflogo.png
+
+ * add image loading through gdk-pixbuf (png, jpeg etc.)
+ * add splash screen, logo in $datadir/xqf/pixmaps/xqflogo.png
 
 Jan 03, 2002: Jordi Mallach <jordi@sindominio.net>
-- New Danish translation, from Morten Brix Pedersen.
+
+ * add new Danish translation, from Morten Brix Pedersen.
 
 Dec 25, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- added button to scan for maps without restarting xqf
-- fixed some minor memleaks
-- map scan function for q1, qw, q2 and hl
+
+ * add button to scan for maps without restarting xqf
+ * fix some minor memleaks
+ * add map scan function for q1, qw, q2 and hl
 
 Dec 19, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.11.1
+
+ * bump version to 0.9.11.1
 
 Dec 19, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version back to to 0.9.11 for release with fixes below
+
+ * bump version back to to 0.9.11 for release with fixes below
 
 Dec 19, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- properly quoted macros for zlib checks
-- changed configure argument because help text said --enable-externalrcon while
-  it actually was --enable-readline.
-- disabled external rcon by default
+
+ * use properly quoted macros for zlib checks
+ * change configure argument because help text said --enable-externalrcon
+   while it actually was --enable-readline.
+ * disable external rcon by default
 
 Dec 18, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.11.1
+
+ * bump version to 0.9.11.1
 
 Dec 18, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.11
+
+ * bump version to 0.9.11
 
 Dec 18, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- update NEWS
-- update German translation
+
+ * update NEWS
+ * update German translation
 
 Dec 18, 2002: Jordi Mallach <jordi@sindominio.net>
-- Updated Catalan and Spanish translations.
+
+ * update Catalan and Spanish translations.
 
 Dec 08, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- update configure.in and autogen.sh to match newer automake/autoconf
+
+ * update configure.in and autogen.sh to match newer automake/autoconf
 
 Dec 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- Scan for installed q3, wolfenstein, ut, ut2 and rune maps. Mark not installed
-  ones in serverlist
+
+ * scan for installed q3, wolfenstein, ut, ut2 and rune maps. Mark not installed
+   ones in serverlist
 
 Dec 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- Added support for Serious Sam, appropriate qstat config with "SMS" game type
-  required
+
+ * add support for Serious Sam, appropriate qstat config with "SMS" game type
+   required
 
 Dec 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- display RTCW voteflags like dmflags
+
+ * display RTCW voteflags like dmflags
 
 Nov 28, 2002: Jordi Mallach <jordi@sindominio.net>
-- Updated Catalan and Spanish translations.
+
+ * update Catalan and Spanish translations.
 
 Nov 22, 2002: Jordi Mallach <jordi@sindominio.net>
-- port Ludwig's setlocale fix to rcon.c.
+
+ * port Ludwig's setlocale fix to rcon.c.
 
 Nov 21, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- store when a server was last up, display this date in red if it's more than
-  three days older than the last refresh. Necessary change to ~/.qf/srvinfo.gz
-  is backward and forward compatible.
-- util function timet2string, it has yet to be verified this one works on
-  none-linux system too.
-- use setlocale(LC_ALL, "");
-- fix __FUNCTION__ warnings
+
+ * store when a server was last up, display this date in red if it's more than
+   three days older than the last refresh. Necessary change to ~/.qf/srvinfo.gz
+   is backward and forward compatible.
+ * util function timet2string, it has yet to be verified this one works on
+   none-linux system too.
+ * use setlocale(LC_ALL, "");
+ * fix __FUNCTION__ warnings
 
 Nov 20, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix wrong pointer passed to userver_ref
+
+ * fix wrong pointer passed to userver_ref
 
 Nov 17, 2002: Jordi Mallach <jordi@sindominio.net>
-- Initialize i18n for xqf-rcon.
+
+ * initialize i18n for xqf-rcon.
 
 Nov 16, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.10.1
+
+ * bump version to 0.9.10.1
 
 Nov 16, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Changed version to 0.9.10
+
+ * bump version to 0.9.10
 
 Nov 09, 2002: Jordi Mallach <jordi@sindominio.net>
-- Fix typos in Catalan translation.
+
+ * fix typos in Catalan translation.
 
 Nov 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- make cl_punkbuster method usable for any game, make it configurable for wolf
-- use protocol 60 by default for RTCW
+
+ * make cl_punkbuster method usable for any game, make it configurable for wolf
+ * use protocol 60 by default for RTCW
 
 Nov 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- added protocol 60 for RTCW 1.4 to preferences
-- added -lncurses to readline check
+
+ * add protocol 60 for RTCW 1.4 to preferences
+ * add -lncurses to readline check
 
 Nov 05, 2002: Jordi Mallach <jordi@sindominio.net>
-- Update QW master list, remove non-working and add QuakeForge's.
+
+ * update QW master list, remove non-working and add QuakeForge's.
 
 Nov 05, 2002: Jordi Mallach <jordi@sindominio.net>
-- Updated Catalan and Spanish translations.
+
+ * update Catalan and Spanish translations.
 
 Nov 5, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Add parameter to play_sound to force playing even if sound is disabled.
-  Used by Test buttons to Preferences - Sound page
+
+ * add parameter to play_sound to force playing even if sound is disabled.
+   Used by Test buttons to Preferences - Sound page
 
 Nov 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- use gtk functions instead of spaces to make test button look nice
-- update German translation
+
+ * use gtk functions instead of spaces to make test button look nice
+ * update German translation
 
 Nov 3, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Add Test buttons to Preferences - Sound page
+
+ * add Test buttons to Preferences - Sound page
 
 Nov 02, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix saving of player info for rune, ut2 and tribes2
-- do not display a single slash when model and skin are empty
+
+ * fix saving of player info for rune, ut2 and tribes2
+ * fix to not display a single slash when model and skin are empty
 
 Nov 2, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Add gametype decode for instaunlagged, instagibplus, beryllium, excessive,
-  q3f, q3f2
+
+ * add gametype decode for instaunlagged, instagibplus, beryllium, excessive,
+   q3f, q3f2
 
 Nov 1, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Add gametype decode for arena and cpma
-- Fix for find_file_in_path to not append / if directory is blank.  Caused
-  more and more beginning /'s in game command line each time you pressed 
-  enter in the field.
+
+ * add gametype decode for arena and cpma
+ * fix for find_file_in_path to not append / if directory is blank. Caused
+   more and more beginning /'s in game command line each time you pressed 
+   enter in the field.
 
 Oct 31, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove workaround for unreal to use gps for lan broadcasting, this is no
-  longer necessary with qstat 2.5c
+
+ * remove workaround for unreal to use gps for lan broadcasting, this is no
+   longer necessary with qstat 2.5c
 
 Oct 30, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Modify game command entry field to expand command line into full path if
-  command is in the path.  Also executes guess_dir
+
+ * modify game command entry field to expand command line into full path if
+   command is in the path. Also executes guess_dir
 
 Oct 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix some memleaks
-- update German translation
+
+ * fix some memleaks
+ * update German translation
 
 Oct 29, 2002: Alex Burger <alex_b@users.sourceforge.net>
-- Fixup master_check_master_addr_prefix
-- Create resolve_path function for use with guess_dir, user_fix_defaults etc
+
+ * fix master_check_master_addr_prefix
+ * add resolve_path function for use with guess_dir, user_fix_defaults etc
 
 Oct 29, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- add some missing gettext calls
-- fix function casting to int*
-- use only first argument of command line for directory guessing
+
+ * add some missing gettext calls
+ * fix function casting to int*
+ * use only first argument of command line for directory guessing
 
 Oct 28, 2002: Alex <alex_b@users.sourceforge.net>
-- Add guess_dir functionality to Suggest button and user_fix_defaults
-- Change find_file_in_path to return entire filename including path
-- Add (...) button to game directory
-- Add Guess button to game directory - follows symlinks
-- Changed UT2003 default port to 7777
-- Changed UT2003 back to -ut2s as the next version of qstat (soon!)
-  will support another UT2 query method that works off of gameport+1
-  which is the same as the in-game browser in UT2003
+
+ * add guess_dir functionality to Suggest button and user_fix_defaults
+ * change find_file_in_path to return entire filename including path
+ * add (…) button to game directory
+ * add Guess button to game directory - follows symlinks
+ * change UT2003 default port to 7777
+ * change UT2003 back to -ut2s as the next version of qstat (soon!)
+   will support another UT2 query method that works off of gameport+1
+   which is the same as the in-game browser in UT2003
 
 Oct 28, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix source menu
-- update German translation
-- print number of servers when changing filters too
+
+ * fix source menu
+ * update German translation
+ * print number of servers when changing filters too
 
 Oct 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- speed improvements for host and server lists
-- fix plural form in reset_main_status_bar
+
+ * improve speed for host and server lists
+ * fix plural form in reset_main_status_bar
 
 Oct 27, 2002: Alex <alex_b@users.sourceforge.net>
-- Bug fix - was able to enter same custom argument twice if case of game
-  was different
-- Changed UT2003 default port to 7787
-- Changed UT2003 back to -gps for qstat, now uses query port from master
-  server for server list, pulls hostport from server info when connecting
-- Number of servers in status bar now updated when enabling / disabling a
-  filter and when finished searching for a player
-- Created function reset_main_status_bar
+
+ * fix bug - was able to enter same custom argument twice if case of game
+   was different
+ * change UT2003 default port to 7787
+ * change UT2003 back to -gps for qstat, now uses query port from master
+   server for server list, pulls hostport from server info when connecting
+ * update statusbar : number of servers in status bar now updated when
+   enabling / disabling a filter and when finished searching for a player
+ * add function reset_main_status_bar
 
 Oct 26, 2002: Alex <alex_b@users.sourceforge.net>
-- Set focus to Game Contains when adding new server filter
-- Set focus to Game when adding new custom arg
-- Added file dialog box (... button) to sound config page
+
+ * set focus to Game Contains when adding new server filter
+ * set focus to Game when adding new custom arg
+ * add file dialog box (… button) to sound config page
 
 Oct 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- cleanup q3_exec:
-  - protocol dependant launching no longer requires full path, will search $PATH
-  - do not check for valid mod dir for games other than q3a
-  - do not check for punkbuster for games other than q3a
-  - pass all options as separate arguments
-- fix xqf killing itself when exec failed
+
+ * clean up q3_exec:
+    - protocol dependant launching no longer requires full path,
+      will search $PATH
+    - do not check for valid mod dir for games other than q3a
+    - do not check for punkbuster for games other than q3a
+    - pass all options as separate arguments
+ * fix xqf killing itself when exec failed
 
 Oct 25, 2002: Alex <alex_b@users.sourceforge.net>
-- Segfault fix - q3_exec - launch game even if it doesn't respond to refresh
-- Tooltip updates
+
+ * fix segfault - q3_exec - launch game even if it doesn't respond to refresh
+ * update Tooltip
 
 Oct 24, 2002: Alex <alex_b@users.sourceforge.net>
-- Make tooltips global so it can be used anywhere.  Have new tooltips use
-  toolbar tooltip enable / disable option
 
-Oct 24, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Use game_set_attribute / game_get_attribute for game Notes
-- Added notes for SFS, UT2003 and HL
-- Add note to Unreal Tournament config page to see documentation
-  for modifications to UT script.
-- Make UT logo round, remove 2 from UT2 logo
-- Improve custom args editor
+ * make tooltips global so it can be used anywhere. Have new tooltips use
+   toolbar tooltip enable / disable option
+
+Oct 24, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * use game_set_attribute / game_get_attribute for game Notes
+ * add notes for SFS, UT2003 and HL
+ * add note to Unreal Tournament config page to see documentation
+   for modifications to UT script.
+ * make UT logo round, remove 2 from UT2 logo
+ * improve custom args editor
 
 Oct 24, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- code cleanup
-- do not append first argument directly to ip in ut to be consistent with q3
+
+ * clean up code
+ * fix first argument: do not append first argument directly to ip in
+   ut to be consistent with q3
 
 Oct 23, 2002: Jordi Mallach <jordi@sindominio.net>
-- Update Catalan and Spanish translations.
 
-Oct 23, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Add spacing around button
-- Added file dialog box (... button) to game config page
-- Removed rafix option from q3_exec
-- Modified vmfix option in q3_exec to make custom args preferred over
-  vmfix args
-- Added button to add default custom args to editor page
-- Add default custom args for UT StrikeForce & TacticalOps
-- Add default custom args for Q3A Rocket Arena
+ * update Catalan and Spanish translations.
+
+Oct 23, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add spacing around button
+ * add file dialog box (… button) to game config page
+ * remove rafix option from q3_exec
+ * modify vmfix option in q3_exec to make custom args preferred over
+   vmfix args
+ * add button to add default custom args to editor page
+ * add default custom args for UT StrikeForce & TacticalOps
+ * add default custom args for Q3A Rocket Arena
 
 Oct 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- remove old tribes2 master, add three new
-- increase version to 0.9.9.3
 
-Oct 22, 2002: Alex Burger <alex@users.sourceforge dot net>
-- user_fix_defaults is now called if the version changes at all
-- add_custom_args_defaults created, user_fix_defaults calls it to 
-  add some default args for games
-- add default custom args for StrikeForce & TacticalOps
+ * remove old tribes2 master, add three new
+ * bump version to 0.9.9.3
+
+Oct 22, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * user_fix_defaults is now called if the version changes at all
+ * add_custom_args_defaults created, user_fix_defaults calls it to 
+   add some default args for games
+ * add default custom args for StrikeForce & TacticalOps
 
 Oct 22, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- use optimal width for arguments editor
 
-Oct 21, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added tooltips to custom args editor
-- Update docs
-- Add Replace button to custom args editor
-- Cleaned up new arguments editor
+ * use optimal width for arguments editor
 
-Oct 21, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added new arguments editor - new tab for Q3, UT, UT2003
+Oct 21, 2002: Alex Burger <alex@users.sourceforge.net>
 
-Oct 20, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Fixed width of redial button
-- Added support for ~ in file master filename
-- Fix edit menu sensitivity problem for add / remove fav
+ * add tooltips to custom args editor
+ * update docs
+ * add Replace button to custom args editor
+ * clean up new arguments editor
 
-Oct 19, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Updated documentation
-- Added server properties password page support to Unreal, UT2003
-  and Rune
-- Updated ca.po, de.po, es.po for 'Add new Server' and removal of
-  ...'s.  Had to remove duplicate 'Properties' because of this.
-  Note:  Translation still needs to be done for 'Add new Server' as 
-  the translated version is still just 'Add'
-- Add 'Add to Fav' to Edit menu, add 'Add new server' to Server menu
-- Change menu items to not end in ...
-- Make menus look similar (Add new Server instead of Add) etc.
-- Only Q3A uses find_game_dir now
+Oct 21, 2002: Alex Burger <alex@users.sourceforge.net>
 
-Oct 18, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Changed default port for UT2003 to 7777
-- Continuing on with the October 11th addition of get_custom_arguments:
-  -arguments now stored in a GSList
-  -custom_arg_num no longer needed in config file
-  -added to game structure and all games
-  -added basic ability to add arguments to Games Invoking pref page
-  -only visible for Quake3, Unreal Tournament and UT2003
-  -added support to q3_exec (ut_exec already done)
-- Flipped locked_punkbuster icon
-- Increased default width of Priv column
-- Applied Ludwig's patch which reduces code needed to speed up the
-  startup of XQF
-- Added check to user_fix_defaults so that if 1 or more games are
-  found it defaults to 'show only configured games'
+ * add new arguments editor - new tab for Q3, UT, UT2003
+
+Oct 20, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * fix width of redial button
+ * add support for ~ in file master filename
+ * fix edit menu sensitivity problem for add / remove fav
+
+Oct 19, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * update documentation
+ * add server properties password page support to Unreal, UT2003
+   and Rune
+ * update ca.po, de.po, es.po for 'Add new Server' and removal of …'s.
+   Had to remove duplicate 'Properties' because of this.
+   Note: Translation still needs to be done for 'Add new Server' as 
+   the translated version is still just 'Add'
+ * add 'Add to Fav' to Edit menu, add 'Add new server' to Server menu
+ * change menu items to not end in…
+ * make menus look similar (Add new Server instead of Add) etc.
+ * notify only Q3A uses find_game_dir now
+
+Oct 18, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * change default port for UT2003 to 7777
+ * update get_custom_arguments,
+   Continuing on with the October 11th addition of get_custom_arguments:
+    - arguments now stored in a GSList
+    - custom_arg_num no longer needed in config file
+    - added to game structure and all games
+    - added basic ability to add arguments to Games Invoking pref page
+    - only visible for Quake3, Unreal Tournament and UT2003
+    - added support to q3_exec (ut_exec already done)
+ * flip locked_punkbuster icon
+ * increase default width of Priv column
+ * merge Ludwig's patch which reduces code needed to speed up the
+   startup of XQF
+ * add check to user_fix_defaults so that if 1 or more games are
+   found it defaults to 'show only configured games'
 
 Oct 18, 2002: Jordi Mallach <jordi@sindominio.net>
-- Update Catalan and Spanish translations.
 
-Oct 17, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Changed default for 'show_only_configured_games' to false
+ * update Catalan and Spanish translations.
+
+Oct 17, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * change default for 'show_only_configured_games' to false
 
 Oct 17, 2002: Bill Adams <nospam-200201@evilbill.org>
-- Clear s->flags when analyzing server info.
+
+ * iclear s->flags when analyzing server info.
 
 Oct 17, 2002: Bill Adams <nospam-200201@evilbill.org>
-- Fixed init_masters to not have a memory leak.
 
-Oct 16, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Created server_list_prepend_ndp which does not check for duplicates.
-  Modified master_add_server to use server_list_prepend_ndp.  Modified
-  init_master to do a duplicate check after loading all the masters.
-  Greatly reduces startup time with large lists of serves.  Does NOT
-  affect updating of masters once inside XQF.
+ * fix init_masters to not have a memory leak.
+
+Oct 16, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add server_list_prepend_ndp which does not check for duplicates.
+   Modified master_add_server to use server_list_prepend_ndp. Modified
+   init_master to do a duplicate check after loading all the masters.
+   Greatly reduces startup time with large lists of serves. Does NOT
+   affect updating of masters once inside XQF.
 
 Oct 16, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- show punkbuster warning only once
+
+ * fix punkbuster warning: show punkbuster warning only once
 
 Oct 15, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- switch fix conversion when adding ut2s as gps
-- update German translation
+
+ * switch fix conversion when adding ut2s as gps
+ * update German translation
 
 Oct 15, 2002: Bill Adams <nospam-200201@evilbill.org>
-- Added some support for punkbuster and setting cl_punkbuster
-  on the command line. It is an option in the q3a game config.
-- Fixed the autogen.sh to better work with autoconf 2.5 in the case
-  that both 2.5 and an earlier version are installed.
-- Added --with-rpm-release to configure, properly sets the release
-  when generating the xqf.spec file.
 
-Oct 15, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Few minor changes to make it compile on gcc <3
-- Properly fixed create_server_type_menu and create_master_type_menu
-  bugs
+ * add some support for punkbuster and setting cl_punkbuster
+   on the command line. It is an option in the q3a game config.
+ * fix the autogen.sh to better work with autoconf 2.5 in the case
+   that both 2.5 and an earlier version are installed.
+ * add --with-rpm-release to configure, properly sets the release
+   when generating the xqf.spec file.
 
-Oct 14, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Fixed create_server_type_menu bug
-- Added punkbuster (and locked_punkbuster) XPMs
-- Modified create_server_type_menu to show all server types until bug
-  can be figured out
-- Updated help about and AUTHORS page with contributors
-- Updated reserved slots support to use integers (Jochen Baier)
-- Added reserved slots support for redial from Jochen Baier
-  (email@jochen-baier.de).  Server properties page allows setting 
-  for reserved admin slots for the server.
-  
-Oct 13, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Updated q3_exec to search ~/.q3a and then real game dir for
-  mods.  Tested with osp (~/.q3a/Osp)
-- Created q2_exec function to be used by Quake2 to search ~/.quake2
-  folder and then real game dir for mods.  Tested find_game_dir with
-  Quake2-r0.14.1.  Connects and then restarts using lowercase name. 
-  May work with other versions of Quake2.  Leaving in.
-- g_free in find_game_dir and exec functions
-- find_game_dir fixes:  Allow symlinks, use const
-- Minor fix to ut_exec if there are no custom arguments
+Oct 15, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * fix gcc compilation
+   Few minor changes to make it compile on gcc <3
+ * fix create_server_type_menu and create_master_type_menu bugs
+
+Oct 14, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * fix create_server_type_menu bug
+ * add punkbuster (and locked_punkbuster) XPMs
+ * modify create_server_type_menu to show all server types until bug
+   can be figured out
+ * update help about and AUTHORS page with contributors
+ * update reserved slots support to use integers (Jochen Baier)
+ * add reserved slots support for redial from Jochen Baier
+   (email@jochen-baier.de). Server properties page allows setting 
+   for reserved admin slots for the server.
+   
+Oct 13, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * update q3_exec to search ~/.q3a and then real game dir for
+   mods. Tested with osp (~/.q3a/Osp)
+ * add q2_exec function to be used by Quake2 to search ~/.quake2
+   folder and then real game dir for mods. Tested find_game_dir with
+   Quake2-r0.14.1. Connects and then restarts using lowercase name. 
+   May work with other versions of Quake2. Leaving in.
+ * add g_free in find_game_dir and exec functions
+ * fix find_game_dir: Allow symlinks, use const
+ * fix ut_exec if there are no custom arguments (minor fix)
 
 Oct 13, 2002: Jordi Mallach <jordi@sindominio.net>
-- add redial.c to POTFILES.
-- updated Catalan and Spanish translations.
+
+ * add redial.c to POTFILES.
+ * update Catalan and Spanish translations.
 
 Oct 13, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- use server_clist_set_list in server_clist_build_filtered. It's actually
-  faster to rebuild the displayed server list from scratch than to determine
-  which servers have to be deleted or added.
-- when deleting last server from favorites, do not display it any longer
-- replace unsigned char type by enum server_type type
-- grey out delete button for masters != favorites
-- comment out unused redial code
-- rename "Delete" -> "Remove from Favorites"
-- update German translation
-- remove empty lines for unconfigures games in statistics dialog
+
+ * use server_clist_set_list in server_clist_build_filtered. It's actually
+   faster to rebuild the displayed server list from scratch than to determine
+   which servers have to be deleted or added.
+ * when deleting last server from favorites, do not display it any longer
+ * replace unsigned char type by enum server_type type
+ * grey out delete button for masters != favorites
+ * comment out unused redial code
+ * rename "Delete" -> "Remove from Favorites"
+ * update German translation
+ * remove empty lines for unconfigures games in statistics dialog
 
 Oct 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- cleaned up get_custom_arguments
-- custom_arg_count no longer neccessary
-- suggest function for game commands
-- show only configured games by default
 
-Oct 11, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Modified q3_exec to call find_game_dir using quake3_data_dir
-- Added NULL checks to find_game_dir
+ * cleaned up get_custom_arguments
+ * custom_arg_count no longer neccessary
+ * suggest function for game commands
+ * show only configured games by default
 
-Oct 11, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added function get_custom_arguments.  Used by ut_exec to pass user
-  defined command line arguments to UT when launching.  Currently does 
-  not have a GUI front end. To use, add something like the following
-  to the [Game: UN] section in ~/.qf/config:
+Oct 11, 2002: Alex Burger <alex@users.sourceforge.net>
 
-  custom_arg0=TacticalOps, -ini=TacticalOps.ini
-  custom_arg1=SFTeamDM, -ini=StrikeForce.ini -userini=SFUser.ini
-  custom_arg_count=2
+ * modify q3_exec to call find_game_dir using quake3_data_dir
+ * add NULL checks to find_game_dir
 
-  For UT, the 'gametype' server variable is compared with the entries
-  in the config file above.  If there is a match, the arguments are 
-  appended.
+Oct 11, 2002: Alex Burger <alex@users.sourceforge.net>
 
-  For UT, the argument is appended to the IP address so you could 
-  specify additional options such as ?Name=Alex etc.  If you want to
-  pass - options, make sure you put a space after the comma like above.  
+ * add function get_custom_arguments. Used by ut_exec to pass user
+   defined command line arguments to UT when launching. Currently does 
+   not have a GUI front end. To use, add something like the following
+   to the [Game: UN] section in ~/.qf/config:
 
-- Added function find_game_dir which searches for the game dir regardless
-  of case.  Called by qw_exec, q2_exec_generic, q3_exec and hl_exec to set
-  the game, or fs_game argument.  For example, if server has a game of 
-  'OSP', and client has dir of 'osp', Q3 will now be properly be launched
-  with +fs_game osp instead of OSP.
+   custom_arg0=TacticalOps, -ini=TacticalOps.ini
+   custom_arg1=SFTeamDM, -ini=StrikeForce.ini -userini=SFUser.ini
+   custom_arg_count=2
 
-Oct 10, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added support of 'Show only configured games' to Add Master window
-  Add Server window and Statistics page
-- Cleaned up 'When launching a game' placement in Preferences / General
+   For UT, the 'gametype' server variable is compared with the entries
+   in the config file above. If there is a match, the arguments are 
+   appended.
+
+   For UT, the argument is appended to the IP address so you could 
+   specify additional options such as ?Name=Alex etc. If you want to
+   pass - options, make sure you put a space after the comma like above. 
+
+ * add function find_game_dir which searches for the game dir regardless
+   of case. Called by qw_exec, q2_exec_generic, q3_exec and hl_exec to set
+   the game, or fs_game argument. For example, if server has a game of 
+   'OSP', and client has dir of 'osp', Q3 will now be properly be launched
+   with +fs_game osp instead of OSP.
+
+Oct 10, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add support of 'Show only configured games' to Add Master window
+   Add Server window and Statistics page
+ * clean up 'When launching a game' placement in Preferences / General
 
 Oct 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- update NEWS and TODO
-- added script 'vc' to automate editing this file
-- remove instructions for Half-Life hack from docu
-- access functions for game specific attributes
 
-Oct 09, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added password support to Unreal based games (games that use
-  un_exec - Unreal, UT 2003, Rune)
-- Changed UT 2003 icon to have a #2 at the bottom right hand corner.
-  I used KEdit which seams to have changed the format of the file, but it
-  still looks fine in XQF.
-- Changed Unreal / UT icon to UT 2003 icon (without a number)
-- Changed Unreal name to 'Unreal / UT'
+ * update NEWS and TODO
+ * add script 'vc' to automate editing this file
+ * remove instructions for Half-Life hack from docu
+ * add access functions for game specific attributes
+
+Oct 09, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add password support to Unreal based games (games that use
+   un_exec - Unreal, UT 2003, Rune)
+ * change UT 2003 icon to have a #2 at the bottom right hand corner.
+   I used KEdit which seams to have changed the format of the file, but it
+   still looks fine in XQF.
+ * change Unreal / UT icon to UT 2003 icon (without a number)
+ * change Unreal name to 'Unreal / UT'
 
 Oct 08, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- Q3 protocol 68
+
+ * add Q3 protocol 68
 
 Oct 06, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- clean up sound code
-- increased version to 0.9.9.2 to make UT2003 server lists visible.
-  Note for those using the CVS Version: You need a qstat that supports 'ut2s'
-  as gametype. You can generate a suitable config file at
-  http://qstat.uglypunk.com/. Keep in mind that you may have to remove the file
-  when a new qstat version is released!
 
-Oct 05, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added Preferences Appearance option of 'Show only configured games'.
-  Masters added will still be stored, but only displayed on the screen
-  if the command line for the game is configured.  Defaults to false.
-  I was tired of scrolling past games I don't have.
-- Changed source_ctree_remove_master_group() to not be static.
+ * clean up sound code
+ * bump version to 0.9.9.2 to make UT2003 server lists visible.
+   Note for those using the CVS Version: You need a qstat that supports
+   'ut2s' as gametype. You can generate a suitable config file at
+   http://qstat.uglypunk.com/. Keep in mind that you may have to remove 
+   the file when a new qstat version is released!
+
+Oct 05, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add Preferences Appearance option of 'Show only configured games'.
+   Masters added will still be stored, but only displayed on the screen
+   if the command line for the game is configured. Defaults to false.
+   I was tired of scrolling past games I don't have.
+ * change source_ctree_remove_master_group() to not be static.
 
 Oct 04, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- modified that ugly ut2 master hack a little
 
-Oct 04, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added support for UT 2003 http masters (not the same as the other
-  http formats) and added full and demo Epic masters
-- Fixed UT 2003 password column (servers use password=0/1 instead of
-  password=False/True)
-- Added sound enable/disable button
+ * modify that ugly ut2 master hack a little
 
-Oct 03, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added sound support actions for: xqf start, xqf quit, update, refresh,
-  stop, server connect, redial success.  Added Preferences / Sound Options.
-  If file does not start with a / (except for Player), prepends user's
-  config folder (~/.qf/)
+Oct 04, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add support for UT 2003 http masters (not the same as the other
+   http formats) and added full and demo Epic masters
+ * fix UT 2003 password column (servers use password=0/1 instead of
+   password=False/True)
+ * add sound enable/disable button
+
+Oct 03, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add sound support actions for: xqf start, xqf quit, update, refresh,
+   stop, server connect, redial success. Added Preferences / Sound Options.
+   If file does not start with a / (except for Player), prepends user's
+   config folder (~/.qf/)
 
 Oct 03, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- add popup while redialing
+
+ * add popup while redialing
 
 Oct 03, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- rename Unreal 2003 Demo -> UT 2003
 
-Oct 01, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Update status bar for redial
+ * rename Unreal 2003 Demo -> UT 2003
+
+Oct 01, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * update status bar for redial
 
 Oct 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix segfault because of format error and some cast warnings
-- use q3 parse and launch functions for SOF2
-- reinsert signal handlers for changing debug level
-- set sensitivity of cancel redial button
 
-Sep 30, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added busy server redial.  Server - Cancel Redial to stop
+ * fix segfault because of format error and some cast warnings
+ * use q3 parse and launch functions for SOF2
+ * reinsert signal handlers for changing debug level
+ * set sensitivity of cancel redial button
 
-Sep 29, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Added Soldier of Fortune 2 support and master
+Sep 30, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add busy server redial. Server - Cancel Redial to stop
+
+Sep 29, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * add Soldier of Fortune 2 support and master
 
 Sep 27, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- q3a gametypes for afterwards. that stuff should really be stored in a runtime
-  parsed, external file
+
+ * add q3a gametypes for afterwards. that stuff should really be stored in a
+   runtime parsed, external file
 
 Sep 26, 2002: Jordi Mallach <jordi@sindominio.net>
-- updated Catalan & Spanish translations
+
+ * update Catalan & Spanish translations
 
 Sep 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- improved debug functions, debug level can be in- and decreased with SIGUSR1
-  and SIGUSR2
-- proper launch function for Half-Life
+
+ * improve debug functions, debug level can be in- and decreased with SIGUSR1
+   and SIGUSR2
+ * fix proper launch function for Half-Life
 
 Sep 16, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- changed some macros to make cvs work with older autoconf/automake
+
+ * change some macros to make cvs work with older autoconf/automake
 
 Sep 15, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- new master type "file", reads ip addresses from a file
+
+ * add new master type "file", reads ip addresses from a file
 
 Sep 14, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- support for Unreal Tournament 2003 Demo. No master yet. If you know one, tell
-  me
+
+ * add support for Unreal Tournament 2003 Demo. No master yet. If you know
+   one, tell me
 
 Sep 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix Half-Life rcon
-- primitive external rcon program that is not linked against X (xqf-rcon)
+
+ * fix Half-Life rcon
+ * primitive external rcon program that is not linked against X (xqf-rcon)
 
 Aug 15, 2002: Jordi Mallach <jordi@sindominio.net>
-- fixed a typo in the filter dialog
-- updated Catalan & Spanish translations
+
+ * fix a typo in the filter dialog
+ * update Catalan & Spanish translations
 
 Aug 10, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fixed some strings that where marked for translation but the gettext call was
-  missing
+
+ * fix some strings that where marked for translation but the gettext call was
+   missing
 
 Aug 09, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fixed player search to move the visible area to the server on which a player
-  was found
-- changed some player search dialog a bit
-- fixed default tribes2 master port, it's possible to actually add tribes2
-  masters now
-- made quake_parse_server less picky about number of columns in qstat output
+
+ * fix player search to move the visible area to the server on which a player
+   was found
+ * change some player search dialog a bit
+ * fix default tribes2 master port, it's possible to actually add tribes2
+   masters now
+ * fix quake_parse_server, less picky about number of columns in qstat output
 
 Jul 26, 2002: Jordi Mallach <jordi@sindominio.net>
-- updated Catalan and Spanish translations
+
+ * update Catalan and Spanish translations
 
 Jul 26, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- variable number of server filters
-- fix segfault when deleting last player filter entry
-- update German translation
-- better back up your config before trying this new versoin
 
-July 7, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Changed version to 0.9.9.1
+ * add variable number of server filters
+ * fix segfault when deleting last player filter entry
+ * update German translation
+ * notify better back up your config before trying this new version
+
+Jul 7, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * bump version to 0.9.9.1
 
 Jul 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fixed segfault when adding servers with no name to favorites
-- added RTCW protocol 59
 
-July 4, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Changed version to 0.9.9c
+ * fix segfault when adding servers with no name to favorites
+ * add RTCW protocol 59
 
-July 3, 2002: Alex Burger <alex@users.sourceforge dot net>
-- Changed version to 0.9.9
+Jul 4, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * bump version to 0.9.9c
+
+Jul 3, 2002: Alex Burger <alex@users.sourceforge.net>
+
+ * bump version to 0.9.9
 
 Jun 30, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- added a short explanation about LAN queries to docu
-- added gametypes and dmflags for q3 freezetag
+
+ * add a short explanation about LAN queries to docu
+ * add gametypes and dmflags for q3 freezetag
 
 Jun 28, 2002: Jordi Mallach <jordi@sindominio.net>
-- new Catalan translation
-- added a mnemonic to a menu item
+
+ * add new Catalan translation
+ * add a mnemonic to a menu item
 
 Jun 20, 2002: Jordi Mallach <jordi@sindominio.net>
-- updated Spanish translation
+
+ * update Spanish translation
 
 May 20, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- increased servers hash
-- added some debug output for hash utilization
-- use macro QSTAT_EXEC for determining the qstat version as qstat is called
-  quakestat on debian (reported by Despair)
-- added Ravensoft Elite Force master
+
+ * increase servers hash
+ * add some debug output for hash utilization
+ * use macro QSTAT_EXEC for determining the qstat version as qstat is called
+   quakestat on debian (reported by Despair)
+ * add Ravensoft Elite Force master
 
 May 07, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- Added punkbuster label for rtcw. Yes it's ugly but ...
+
+ * add punkbuster label for rtcw. Yes it's ugly but…
 
 May 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix LAN Browsing for games that need a port change (Rune)
-- replaced static struct for q3 options with a more flexible g_datalist
-- added preferences tab for q3 memory settings
-- renamed STVEFS to EFS to match qstat beta, old servers need to be renamed by
-  hand else they will get lost
-- added master server preferences tab for voyager elite force (req upcoming
-  qstat)
-- updated German translation
+
+ * fix LAN Browsing for games that need a port change (Rune)
+ * replace static struct for q3 options with a more flexible g_datalist
+ * add preferences tab for q3 memory settings
+ * rename STVEFS to EFS to match qstat beta, old servers need to be renamed by
+   hand else they will get lost
+ * add master server preferences tab for voyager elite force (req upcoming
+   qstat)
+ * update German translation
 
 Apr 23, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- acconfig.h seems to be deprecated, moved it to i18n.h
-- removed explicit -I/usr/include as gcc3 doesn't like that
+
+ * fix acconfig.h, seems to be deprecated, moved it to i18n.h
+ * remove explicit -I/usr/include as gcc3 doesn't like that
 
 Apr 20, 2002: Jordi Mallach <jordi@sindominio.net>
-- updated Spanish translation
+
+ * update Spanish translation
 
 Mar 17, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- added navy seals gametype
-- added RTCW protocol 58 to preferences
-- added a server_unref so old servers no longer pile up in srvinfo.gz
-- added player statistics per OS
-- updated German translation
+
+ * add navy seals gametype
+ * add RTCW protocol 58 to preferences
+ * add a server_unref so old servers no longer pile up in srvinfo.gz
+ * add player statistics per OS
+ * update German translation
 
 Feb 28, 2002: Jordi Mallach <jordi@sindominio.net>
-- updated copyright notice in about dialog
-- updated Spanish translation.
+
+ * update copyright notice in about dialog
+ * update Spanish translation.
 
 Feb 17, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- support for LAN broadcast queries
+
+ * add support for LAN broadcast queries
 
 Feb 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- check for correct version of qstat on startup
+
+ * check for correct version of qstat on startup
 
 Feb 12, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- reworked dialog for adding master
-- added popup menu for master server tree
-- added function for renaming master servers
+
+ * redesign dialog for adding master
+ * add popup menu for master server tree
+ * add function for renaming master servers
 
 Feb 01, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- fix display of gametypes > MAX_Q3A_TYPES
+
+ * fix display of gametypes > MAX_Q3A_TYPES
 
 Jan 17, 2002: Jordi Mallach <jordi@sindominio.net>
-- updated NEWS for 0.9.9.
+
+ * update NEWS for 0.9.9.
 
 Jan 05, 2002: Ludwig Nussel <l-n@users.sourceforge.net>
-- removed not working Tribes2 masterservers and added a new one
-- wrote new function for parsing Tribes2 player info
-- changed version to 0.9.9b
 
-Jan  2, 2002: Jordi Mallach <jordi@sindominio.net>
-- Spanish update
+ * removed not working Tribes2 masterservers and added a new one
+ * wrote new function for parsing Tribes2 player info
+ * bump version to 0.9.9b
+
+Jan 2, 2002: Jordi Mallach <jordi@sindominio.net>
+
+ * update Spanish
 
 Dec 30, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- changed textentries to comboboxes for q3/wolf protocol selection
+
+ * change textentries to comboboxes for q3/wolf protocol selection
 
 Dec 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added gametypes for truecombat
-- wrote function for determining the gametype to get rid of all
-  those ugly else if's
+
+ * add gametypes for truecombat
+ * add function for determining the gametype to get rid of all
+   those ugly else if's
 
 Dec 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added 20sec timeout for wget
-- support for Voyager Elite Force
-- changed some internals for statistics
-- removed 2 not working q3 masters
-- added gameaholic lists for voyager and q3a
-- renamed T/O -> Timeout
-- added tribes2 statistics, only 25% servers are running linux :-(
+
+ * add 20sec timeout for wget
+ * add support for Voyager Elite Force
+ * change some internals for statistics
+ * remove 2 not working q3 masters
+ * add gameaholic lists for voyager and q3a
+ * rename T/O -> Timeout
+ * add tribes2 statistics, only 25% servers are running linux :-(
 
 Dec 23, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- default masterprotocol for q3 is now 67 (pr 1.31)
+
+ * add default masterprotocol for q3 is now 67 (pr 1.31)
 
 Dec 23, 2001: Jordi Mallach <jordi@sindominio.net>
-- Spanish translation fixes
 
-Dec 22,2001: Alex Burger <alex@users.sourceforge dot net>
-- Changed version to 0.9.9a
+ * fix spanish translation
+
+Dec 22,2001: Alex Burger <alex@users.sourceforge.net>
+
+ * bump version to 0.9.9a
 
 Dec 21, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added gametypes and dmflags for q3a mod generations
+
+ * add gametypes and dmflags for q3a mod generations
 
 Dec 17, 2001: Jordi Mallach <jordi@sindominio.net>
-- configure.in: remove debian/Makefile creation, too.
-- Attempt to fix Gamespy pixmap.
-- Updated NEWS for 0.9.8.
+
+ * update configure.in: remove debian/Makefile creation, too.
+ * fix Gamespy pixmap (attempt).
+ * update NEWS for 0.9.8.
 
 Dec 16, 2001: Jordi Mallach <jordi@sindominio.net>
-- Makefile.am: remove debian from SUBDIRS. What a pain in the ass!
-  The whole directory should be removed, but this is the bare minimum.
+
+ * update Makefile.am: remove debian from SUBDIRS. What a pain in the ass!
+   The whole directory should be removed, but this is the bare minimum.
 
 Dec 16, 2001: Jordi Mallach <jordi@sindominio.net>
-- Updated Spanish translation.
+
+ * update Spanish translation.
 
 Dec 15, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- server filters were broken, fixed
-- new Tribes2 icon
-- updated TODO
-- updated German translation
 
-Dec 15, 2001: Alex Burger <alex@users.sourceforge dot net>
-- Added Edit / Add Default Masters command.  Adds in all the default
-  master servers in case you accidentally deleted one (or all)
+ * fix server filters were broken
+ * add new Tribes2 icon
+ * update TODO
+ * update German translation
+
+Dec 15, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * add Edit / Add Default Masters command. Adds in all the default
+   master servers in case you accidentally deleted one (or all)
 
 Dec 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- qstat no longer required at build time
+
+ * qstat no longer required at build time
 
 Dec 09, 2001: Jordi Mallach <jordi@sindominio.net>
-- Added past release dates to NEWS.
+
+ * add past release dates to NEWS.
 
 Dec 09, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- Updated NEWS and BUGS
+
+ * update NEWS and BUGS
 
 Dec 07, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- Patch by Ben Winslow to create OS/CPU statistics for RTCW, Kingpin and
-  Half-Life
+
+ * merge patch by Ben Winslow to create OS/CPU statistics for RTCW,
+   Kingpin and Half-Life
 
 Dec 06, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added rtcw gametypes
-- changed master protocol for rtcw to 57
-- added a missing gettext call
+
+ * add rtcw gametypes
+ * change master protocol for rtcw to 57
+ * add a missing gettext call
 
 Nov 22, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- the ppc problem turned out to be a bug in filter.c, special thanks to Philipp
-  Thomas for finding it!
-- other changes by Philipp Thomas to get rid of some compiler warnings
-- updated German translation
+
+ * fix the ppc problem, it turned out to be a bug in filter.c, special
+   thanks to Philipp Thomas for finding it!
+ * merge other changes by Philipp Thomas to get rid of some compiler warnings
+ * update German translation
 
 Nov 21, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- fixed the ppc fix (hopefully ;)
+
+ * fix the ppc fix (hopefully ;)
 
 Nov 21, 2001: Jordi Mallach <jordi@sindominio.net>
-- NEWS updates for 0.9.7
+
+ * update NEWS for 0.9.7
 
 Nov 21, 2001: Jordi Mallach <jordi@sindominio.net>
-- es.po updates
+
+ * es.po updates
 
 Nov 21, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- updated TODO
+
+ * update TODO
 
 Nov 19, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- workaround for ppc compiler bug
+
+ * add a workaround for ppc compiler bug
 
 Oct 23, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- changed wording and my email in about dialog
-- removed gnuconfig.h.in from cvs
+
+ * change wording and my email in about dialog
+ * remov gnuconfig.h.in from cvs
 
 Oct 18, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- fixed compiler warnings
-- replaced some strange sprintf's with g_strdup
-- made server_pass_filter return FALSE if ping==-1
-- fixed #define's for gametypes
-- set s->game to either fs_game, game or gamename rule in that order (game will
-  be supported by next qstat)
+
+ * fix compiler warnings
+ * replace some strange sprintf's with g_strdup
+ * fix server_pass_filter to return FALSE if ping==-1
+ * fix #define's for gametypes
+ * set s->game to either fs_game, game or gamename rule in that order
+   (game will be supported by next qstat)
 
 Oct 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added gametype strings for TribalCTF and Threewave.
-  Unfortunately TribalCTF servers modify their gamename variable,
-  so this is not really useful yet.
+
+ * add gametype strings for TribalCTF and Threewave.
+   Unfortunately TribalCTF servers modify their gamename variable,
+   so this is not really useful yet.
 
 Oct 13, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added gameaholic.com rune server list
-- game and gametype are now displayed in LaunchInfo.txt
+
+ * add gameaholic.com rune server list
+ * game and gametype are now displayed in LaunchInfo.txt
 
 Oct 07, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- changed default commandline for qs & qws for quakeforge
-- added default commandlines for rune,tribes2,wolf and ut
+
+ * change default commandline for qs & qws for quakeforge
+ * add default commandlines for rune,tribes2,wolf and ut
 
 Oct 05, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- removed quakeforge workaround
-- added -Wall to CFLAGS
+
+ * remove quakeforge workaround
+ * add -Wall to CFLAGS
 
 Oct 05, 2001: Jordi Mallach <jordi@sindominio.net>
-- fixed a variable type in es.po which was making it segfault directly.
-  Thanks, Ludwig.
+
+ * fix a variable type in es.po which was making it segfault directly.
+   Thanks, Ludwig.
 
 Oct 03, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- initial descent3 support (requires qstat 2.4e)
-- changed version to 0.9.7c (new master for descent3)
-- added quakeforge workaround
-- updated German translation
-- fixed player filter dialog bug
+
+ * add initial descent3 support (requires qstat 2.4e)
+ * bump version to 0.9.7c (new master for descent3)
+ * add quakeforge workaround
+ * update German translation
+ * fix player filter dialog bug
 
 Oct 01, 2001: Jordi Mallach <jordi@sindominio.net>
-- updated Spanish translation, again :)
+
+ * update Spanish translation, again :)
 
 Oct 01, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- major redesign of settings dialog
-- individually configurable nick for q1,qw,q2,t2
-- more translatabe strings
-- updated German translation
+
+ * redesign settings dialog
+ * add individually configurable nick for q1,qw,q2,t2
+ * add more translatabe strings
+ * update German translation
 
 Oct 01, 2001: Jordi Mallach <jordi@sindominio.net>
-- updated Spanish translation
-- added some notes in BUGS
+
+ * update Spanish translation
+ * add some notes in BUGS
 
 Sep 30, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- disabled write_quake_variables function for q3
-- added ability to use custom configs for q3
-- made some error popups translatable
-- updated German translation
+
+ * disable write_quake_variables function for q3
+ * add ability to use custom configs for q3
+ * made some error popups translatable
+ * update German translation
 
 Sep 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added Rune support
-- changed layout of game configuration screen
+
+ * add Rune support
+ * change layout of game configuration screen
 
 Sep 28, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- added support for games using the gamespy protocol
-- added q3,ut,sof,nolf,rally masters,turok2 and shogo masters
-- made game names translatable
-- updated German translation
-- changed version to 0.9.7b
+
+ * add support for games using the gamespy protocol
+ * add q3,ut,sof,nolf,rally masters,turok2 and shogo masters
+ * add ability to translate game names
+ * update German translation
+ * bump version to 0.9.7b
 
 Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- more translatable strings marked
-- updated German translation
+
+ * more translatable strings marked
+ * update German translation
 
 Sep 27, 2001: Jordi Mallach <jordi@sindominio.net>
-- Updated Spanish translation
-- added gettext cruft to po/.cvsignore
+
+ * update Spanish translation
+ * add gettext cruft to po/.cvsignore
 
 Sep 27, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
-- made q3_exec usable for Wofenstein, removed wo_exec
-- identify q3/rtcw servers by their version string
-- use common option struct for all games with q3 engine
-- add configuration options for Wolfenstein to q3 tab
-- pass server and rconpasswords on the command line
-- fix q3 rcon_password -> rconpassword
-- changed default q3 command: linuxquake3 -> quake3
-- made string for tooltip for server&playerfilter translatable
-- split about dialog string into smaller chunks for easier translation
-- update for German translation
 
-Sept 24,2001: Alex Burger <alex@users.sourceforge dot net>
-- Changed version to 0.9.7a
+ * fix q3_exec to be usable for Wofenstein, removed wo_exec
+ * identify q3/rtcw servers by their version string
+ * use common option struct for all games with q3 engine
+ * add configuration options for Wolfenstein to q3 tab
+ * add server and rconpasswords command line options
+ * fix q3 rcon_password -> rconpassword
+ * change default q3 command: linuxquake3 -> quake3
+ * add string for tooltip for server&playerfilter translatable
+ * split about dialog string into smaller chunks for easier translation
+ * update for German translation
 
-Sept 24,2001: Alex Burger <alex@users.sourceforge dot net>
-- Added wo_exec function to properly launch Wolf.  Tested with
-  Wolfmptest 0.7.16-1
+Sep 24,2001: Alex Burger <alex@users.sourceforge.net>
 
-Sept 19, 2001: Alex Burger <alex@users.sourceforge dot net>
-- Added Wolfenstein support.  Currently uses q3_exec to launch
-  the game, but will change when Wolf client for Linux is released.
-  Uses qstat as if it is a Quake3 server
+ * bump version to 0.9.7a
 
-Sept 14, 2001: Alex Burger <alex@users.sourceforge dot net>
-- Added docs/xqfdocs.html
-- Added new NEWS file from Jordi 
+Sep 24,2001: Alex Burger <alex@users.sourceforge.net>
 
-Sept 10, 2001: Alex Burger <alex@users.sourceforge dot net>
-- Added Jordi Mallach's man page - xqf.6 and modified Makefile.am
-- Added 'General' Preferences page and moved most of 'Appearance'
-  to 'General' page.
+ * add wo_exec function to properly launch Wolf. Tested with
+   Wolfmptest 0.7.16-1
 
-Sept 5, 2001: Alex Burger <alex@users.sourceforge dot net>
-- Patch by  Ludwig Nussel ludwig.nussel@gmx.de to add German
-  translation and some code fixes.
+Sep 19, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * add Wolfenstein support. Currently uses q3_exec to launch
+   the game, but will change when Wolf client for Linux is released.
+   Uses qstat as if it is a Quake3 server
+
+Sep 14, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * add docs/xqfdocs.html
+ * add new NEWS file from Jordi 
+
+Sep 10, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * add Jordi Mallach's man page - xqf.6 and modified Makefile.am
+ * add 'General' Preferences page and moved most of 'Appearance'
+   to 'General' page.
+
+Sep 5, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * merge patch by Ludwig Nussel ludwig.nussel@gmx.de to add German
+   translation and some code fixes.
 
 Aug 19, 2001: Bill Adams <bill@evilbill.org>
-- Removed BUILD_INCLUDED_LIBINTL from intl/Makefile.pm and replaced it with
-  USE_INCLUDED_LIBINTL as that is the only variable defined in gettext.m4 for
-  gettext 0.10.35.
-- Patch by  Ludwig Nussel ludwig.nussel@gmx.de to fix some of the
-  q3a game types, options for setting fs_game on the command line and
-  r3a hack for the vm_* settings.
-  
-Aug 9, 2001: Alex Burger <alex@users.sourceforge dot net>
--Changed Quake3 protocol version to 66 to support
- latest Quake3 patch.  Change located in game.c
 
-July 07, 2001, Bill Adams <bill@evilbill.org>
-- Added "Game Type" filter.  Now you can filter on 
-  CTF, TDM, etc. and the mod.
-- Merged Jordi's changes (see below).
-  
-June 8, 2001, Jordi Mallach <jordi@sindominio.net>
-- Big internationalization patch for XQF.
-  Adds intl/ and po/ subdirs, and adds the gettext marks
-  to every .c that needs it. Modified configure.in and 
-  the Makefile.am's to support gettext. From now on,
-  every string in the code should be wrapped inside
-  gettext() calls, and .c's should add a <libintl.h>
-  if they don't have it already.
-  Some issues with the current code remain (untranslatable
-  strings), thats a work in progress.
-- Initial, incomplete Spanish translation (po/es.po).
-- changed configure.in so it barfs about qstat << 2.4c.
+ * remove BUILD_INCLUDED_LIBINTL from intl/Makefile.pm and replaced it with
+   USE_INCLUDED_LIBINTL as that is the only variable defined in gettext.m4
+   for gettext 0.10.35.
+ * merge by Ludwig Nussel ludwig.nussel@gmx.de to fix some of the
+   q3a game types, options for setting fs_game on the command line and
+   r3a hack for the vm_* settings.
+   
+Aug 9, 2001: Alex Burger <alex@users.sourceforge.net>
 
-June 5, 2001: Alex Burger <alex@users.sourceforge dot net>
--Tribes 2 games can now be launched.  Created a t2_exec
- function. If a name is specified in Player Profile, it 
- is used on the command line to log in.  This would only
- work if you have saved your password in the game.
- Otherwise it launches and prompts for login.
+ * change Quake3 protocol version to 66 to support
+   latest Quake3 patch. Change located in game.c
 
-April 20, 2001: Alex Burger <alex@users.sourceforge dot net>
--Now requires qstat2.4c.  Removed fixes to Tribes 2 code
- for qstat2.4b as qstat2.4c fixes the problems
--Added t2_analyze_serverinfo function to decode Game and
- GameType columns for Tribes 2.
+Jul 07, 2001, Bill Adams <bill@evilbill.org>
 
-April 19, 2001: Alex Burger <alex@users.sourceforge dot net>
--Changed version to 0.9.6g
--Added Tribes 2 support.  Tribes 2 support requires at
- least QSTAT 2.4b.  As I do not even have Tribes 2 I
- can not test launching the game but it if it launches
- the same as Quake2, then it should work.  More work
- will be done to ensure the player and server info is
- being decoded correctly etc.
+ * add "Game Type" filter. Now you can filter on 
+   CTF, TDM, etc. and the mod.
+ * merge Jordi's changes (see below).
+   
+Jun 8, 2001, Jordi Mallach <jordi@sindominio.net>
+
+ * improve internationalization
+   Big internationalization patch for XQF.
+   Adds intl/ and po/ subdirs, and adds the gettext marks
+   to every .c that needs it. Modified configure.in and 
+   the Makefile.am's to support gettext. From now on,
+   every string in the code should be wrapped inside
+   gettext() calls, and .c's should add a <libintl.h>
+
+   if they don't have it already.
+   Some issues with the current code remain (untranslatable
+   strings), thats a work in progress.
+ * add initial, incomplete Spanish translation (po/es.po).
+ * change configure.in so it barfs about qstat << 2.4c.
+
+Jun 5, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * add support for Tribes 2 launch
+   Tribes 2 games can now be launched. Created a t2_exec
+   function. If a name is specified in Player Profile, it 
+   is used on the command line to log in. This would only
+   work if you have saved your password in the game.
+   Otherwise it launches and prompts for login.
+
+Apr 20, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * require qstat2.4c. Removed fixes to Tribes 2 code
+   for qstat2.4b as qstat2.4c fixes the problems
+ * add t2_analyze_serverinfo function to decode Game and
+   GameType columns for Tribes 2.
+
+Apr 19, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * bump version to 0.9.6g
+ * add Tribes 2 support. Tribes 2 support requires at
+   least QSTAT 2.4b. As I do not even have Tribes 2 I
+   can not test launching the game but it if it launches
+   the same as Quake2, then it should work. More work
+   will be done to ensure the player and server info is
+   being decoded correctly etc.
 
 Feb 14, 2001: Bill Adams <bill@evil.inetarena.com>
--Oh dear god, I think I fixed the core dumps related
- to the reference counting on the server structures.
- At least to the best of my ability, I cannot make
- the server references increase or decrease
- over time: i.e. the program always exits with
- a reference count of one on all server structures.
- I could not figure out why it was 1 and not zero
- but I will deal with that later.
+
+ * fix core dumps
+   Oh dear god, I think I fixed the core dumps related
+   to the reference counting on the server structures.
+   At least to the best of my ability, I cannot make
+   the server references increase or decrease
+   over time: i.e. the program always exits with
+   a reference count of one on all server structures.
+   I could not figure out why it was 1 and not zero
+   but I will deal with that later.
 
 Feb 13, 2001: Bill Adams <bill@evil.inetarena.com>
--Changed version to 0.9.6f, added announcement dir
- and announcement.
+
+ * bump version to 0.9.6f, added announcement dir
+   and announcement.
 
 Feb 07, 2001: Bill Adams <bill@evil.inetarena.com>
--Fixed the core dumps (for the most part) for real.
- The only time I have seen a core dump at this point
- is when updating a master list where there are not
- any servers already in the list.  However, once
- you have a list of servers, you should be able to
- update/refresh at will without any problems.
--Lots of debugging code with the debug(...) call. If
- you want lots of output, use -d 3, to see the servers
- it is parsing use -d 4. For an insane amount of output
- use -d 7.  Debug levels greater than three will
- will have so much output that it will most likely 
- slow down the program.
--Added a fair number of comments to the code.
+
+ * fix the core dumps (for the most part) for real.
+   The only time I have seen a core dump at this point
+   is when updating a master list where there are not
+   any servers already in the list. However, once
+   you have a list of servers, you should be able to
+   update/refresh at will without any problems.
+ * notify lots of debugging code with the debug(…) call.
+   If you want lots of output, use -d 3, to see the servers
+   it is parsing use -d 4. For an insane amount of output
+   use -d 7. Debug levels greater than three will
+   will have so much output that it will most likely 
+   slow down the program.
+ * add a fair number of comments to the code.
 
 Jan 31, 2001: Bill Adams <bill@evil.inetarena.com>
--Made it so OSP game types show up correctly.
+
+ * fix OSP game types to show up correctly.
 
 Jan 24, 2001: Bill Adams <bill@evil.inetarena.com>
--Fixed the game.c hack.  Bad bug.
+
+ * fix the game.c hack. Bad bug.
 	
 Jan 23, 2001: Bill Adams <bill@evil.inetarena.com>
--Did BAD hack to game.c::q3_exec( ) so that when
- connecting to an arena (rocket arena 3) server,
- it will "+set sv_pure 0 +set vm_* 0" on the command
- line so arena will load properly.  As a side note,
- one should use vm_* all at zero unless you have a 
- really good reason to do otherwise.
+
+ * add BAD hack to game.c::q3_exec( ) so that when
+   connecting to an arena (rocket arena 3) server,
+   it will "+set sv_pure 0 +set vm_* 0" on the command
+   line so arena will load properly. As a side note,
+   one should use vm_* all at zero unless you have a 
+   really good reason to do otherwise.
 	
 Jan 21, 2001: Bill Adams <bill@evil.inetarena.com>
--Changed "Insert" behavior.  Now Insert brings up the add
- server dialog while SHIFT+Insert adds a server from the 
- server list to your favorites.  I am not sure about 
- this because one can also use CTRL+N to add another 
- server via a dialog. But I am told the Insert == Dialog
- is how GameSpy works so there it is.
--q3_exec now adds +set fs_game SSSS for either the
- fs_game or gamename.  This should improve connecting
- as it will load the mod when Q3A starts.
--Added a function in util.c to get the value for
- any server variable that shows up in the server info
- pane.  This is a setup for arbitrary server filters
- and for...
--q3_exec will now check for <quake3exec>protoNN before
- it just runs <quake3exec>.  To use this feature you
- have to configure xqf to point to the FULL path to
- your q3 exec script.  Then you can put scripts that
- are named with the "protoNN" on the end to have xqf
- automatically connect to the right server.  See
- the instructions in the README.  This allows you (if
- you have LOTS of disk space) to be able to connect to
- multiple point-releases.
--added -d N command line option to get more debugging
- output.  Added debug.c and debug.h to facilitate this
- new feature.  Only a few code segments use the new
- debug() function.
--added self to AUTHORS.
--Version now 0.9.6e-beta.
--Fixed config.in to have the correct version.
+
+ * change "Insert" behavior. Now Insert brings up the add
+   server dialog while SHIFT+Insert adds a server from the 
+   server list to your favorites. I am not sure about 
+   this because one can also use CTRL+N to add another 
+   server via a dialog. But I am told the Insert == Dialog
+   is how GameSpy works so there it is.
+ * fix q3_exec to adds +set fs_game SSSS for either the
+   fs_game or gamename. This should improve connecting
+   as it will load the mod when Q3A starts.
+ * add a function in util.c to get the value for
+   any server variable that shows up in the server info
+   pane. This is a setup for arbitrary server filters
+   and for…
+ * fix q3_exec to check for <quake3exec>protoNN before
+   it just runs <quake3exec>. To use this feature you
+   have to configure xqf to point to the FULL path to
+   your q3 exec script. Then you can put scripts that
+   are named with the "protoNN" on the end to have xqf
+   automatically connect to the right server. See
+   the instructions in the README. This allows you (if
+   you have LOTS of disk space) to be able to connect to
+   multiple point-releases.
+ * add -d N command line option to get more debugging
+   output. Added debug.c and debug.h to facilitate this
+   new feature. Only a few code segments use the new
+   debug() function.
+ * add self to AUTHORS.
+ * bump version to 0.9.6e-beta.
+ * fix config.in to have the correct version.
 	
-	
-Jan 7, 2001: Alex Burger <alex@users.sourceforge dot net>
--Renamed MOD column to GameType
--Swapped Quake3 'Game' and 'Mod/GameType' columns
--Swapped UT 'Game' and 'Mod/GameType' columns
--Renamed all occurences of ->mod in source to ->gametype
--Changed filter from 'the mod contains' to 'the game contains'
--Changed all occurences of mod_contains to gametype_contains
--Version changed to 0.9.6d-beta
+Jan 7, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * rename MOD column to GameType
+ * swap Quake3 'Game' and 'Mod/GameType' columns
+ * swap UT 'Game' and 'Mod/GameType' columns
+ * rename all occurences of ->mod in source to ->gametype
+ * change filter from 'the mod contains' to 'the game contains'
+ * change all occurences of mod_contains to gametype_contains
+ * bump version to 0.9.6d-beta
 
 Jan 7, 2001: Ludwig Nussel <l-n@users.sourceforge.net>
--Added hl_analyze_serverinfo function to display gamedir and
- gamename in columns for Half-Life servers.  For example:
- cstrike and Counter Strike
--Added un_analyze_serverinfo function to display gametype and
- gamestyle in columns for Unreal Tournament servers.  For example:
- game_unrealfortress and hardcore
--Modified q2_analyze_serverinfo function to display gamename
- in columns for Quake2 servers.  For example: Lithium II V1.23
 
-Jan 2, 2001: Alex Burger <alex@users.sourceforge dot net>
--Change g_gametype of 8 to ' mod ' instead of TeamTournament which 
- TeamArena uses in the in-game browser.
+ * add hl_analyze_serverinfo function to display gamedir and
+   gamename in columns for Half-Life servers. For example:
+   cstrike and Counter Strike
+ * add un_analyze_serverinfo function to display gametype and
+   gamestyle in columns for Unreal Tournament servers. For example:
+   game_unrealfortress and hardcore
+ * fix q2_analyze_serverinfo function to display gamename
+   in columns for Quake2 servers. For example: Lithium II V1.23
 
-Jan 1, 2001: Alex Burger <alex@users.sourceforge dot net>
--Now executes the file PreLaunch from the ~/.qf directory when launching a 
- game for use with ICQ scripts etc.  Toggle on / off using Preferences / 
- Appearance 
+Jan 2, 2001: Alex Burger <alex@users.sourceforge.net>
 
-Dec 28, 2000: Alex Burger <alex@users.sourceforge dot net>
--Modified game.c to query for protocol 48 Quake3 servers instead of the
- qstat default by using "-q3m,48"
+ * change g_gametype of 8 to ' mod ' instead of TeamTournament which 
+   TeamArena uses in the in-game browser.
+
+Jan 1, 2001: Alex Burger <alex@users.sourceforge.net>
+
+ * add PreLaunch file execution from the ~/.qf directory when launching a 
+   game for use with ICQ scripts etc. Toggle on / off using Preferences / 
+   Appearance 
+
+Dec 28, 2000: Alex Burger <alex@users.sourceforge.net>
+
+ * fix game.c to query for protocol 48 Quake3 servers instead of the
+   qstat default by using "-q3m,48"
 
 Dec 27, 2000: Bill Adams <bill@evil.inetarena.com>
--Adding a server with the Insert key now gives feedback on the status bar.
--Fixed the core dump.  Perhaps?  So I hope. (added server_ref to 
- server.c::server_add( )). This will require verification on the reference
- count but it seemed to fix it for me.
 
-Dec 23, 2000: Alex Burger <alex@users.sourceforge dot net>
--Added new Quake3 game types to support Team Arena.  Note: g_gametype values
- of 5 to 8 are now defined by id for Team Arena.  Mod authors usually use 5.
- XQF will only show the new values if the game version is 1.27 until we find
- out what the mod authors are doing.
--Changed game types to not use < > around the type in the Game column
+ * add a server with the Insert key now gives feedback on the status bar.
+ * fix the core dump. Perhaps?  So I hope. (added server_ref to 
+   server.c::server_add( )). This will require verification on the reference
+   count but it seemed to fix it for me.
+
+Dec 23, 2000: Alex Burger <alex@users.sourceforge.net>
+
+ * add new Quake3 game types to support Team Arena. Note: g_gametype values
+   of 5 to 8 are now defined by id for Team Arena. Mod authors usually use 5.
+   XQF will only show the new values if the game version is 1.27 until we find
+   out what the mod authors are doing.
+ * change game types to not use < > around the type in the Game column
 
 Dec 22, 2000: Bill Adams <bill@evil.inetarena.com>
--New column in the server list to show if you need a password or not. If
- you do a lock icon appears.
--If a Q3A server has all non private-client slots filled, a yellow man
- appears next to the map.  The icon is slightly different for color blind
- people so don't tell me about it unless you are color blind and need the
- difference greater.
--You can press "Insert" to add a server to the Favorites list while in
- anything but the Favorites list.  Pressing "Delete" while in the Favorites
- list will remove it from Favorites.  "Enter" or "Return" in any list will
- will connect you to the server.
--Moved the filter selection to the "Server" menu pulldown.
--It still dumps core. :(. There seems to be a reference counting bug
- with the server lists.  If you want to watch it happen, set up a
- "mod contains wfa" filter, update the Q3A ID list, apply the filter, and
- press refresh repeatedly.
+
+ * add a new column in the server list to show if you need a password or not.
+   If you do a lock icon appears.
+ * add a yellow man appearing next to the map if a Q3A server has all non
+   private-client slots filled. the icon is slightly different for color
+   blind people so don't tell me about it unless you are color blind and
+   need the difference greater.
+ * add mechanism to insert server to the favorite list from elsewhere.
+   You can press "Insert" to add a server to the Favorites list while in
+   anything but the Favorites list. Pressing "Delete" while in the Favorites
+   list will remove it from Favorites. "Enter" or "Return" in any list will
+   will connect you to the server.
+ * move the filter selection to the "Server" menu pulldown.
+ * notify it still dumps core. :(. There seems to be a reference counting bug
+   with the server lists. If you want to watch it happen, set up a
+   "mod contains wfa" filter, update the Q3A ID list, apply the filter, and
+   press refresh repeatedly.
 
 Dec 20th 2000: Bill Adams <bill@evil.inetarena.com>
---The filter name now appears in the status bar.
---Version changed to 0.9.6b-beta
---There are still core dumps :(.
+
+ * add filter name in the status bar.
+ * bump version changed to 0.9.6b-beta
+ * notify there are still core dumps :(.
 
 Dec 04th 2000: Bill Adams <bill@evil.inetarena.com>
--Added the ability to have multiple filters.  Right now the
- number is set at compile time to 10 (see xqf.h:MAX_SERVER_FILTERS
- if you want to change it).  You can name the filters to 
- whatever you want.  The first filter "None" cannot be changed.
- It is there for a reason (future feature). The last filter selected
- is remembered each time you exit (if you use the menu File->exit).
--Version changed to 0.9.6a-beta
+
+ * add the ability to have multiple filters. Right now the
+   number is set at compile time to 10 (see xqf.h:MAX_SERVER_FILTERS
+   if you want to change it). You can name the filters to 
+   whatever you want. The first filter "None" cannot be changed.
+   It is there for a reason (future feature). The last filter selected
+   is remembered each time you exit (if you use the menu File->exit).
+ * bump version to 0.9.6a-beta
 
 Nov 26th 2000: Bill Adams <bill@evil.inetarena.com>
--Changed a few filter related files to make it easier to
- put in multiple server filters.
 
-Nov 24th 2000: Alex Burger <alex@users.sourceforge dot net>
--Version changed to XQF 0.9.5a-beta
--Fixed UT launching.  Now passes proper parameters to UT
+ * change a few filter related files to make it easier to
+   put in multiple server filters.
 
-Nov 18th 2000: Alex Burger <alex@users.sourceforge dot net>
--Version changed to XQF 0.9.5
+Nov 24th 2000: Alex Burger <alex@users.sourceforge.net>
 
-Nov 13th 2000: Alex Burger <alex@users.sourceforge dot net>
--Bug fix to prevent filter buttons from not staying 'pressed' after doing a
- refresh.  Thanks to slashdev for the fix.
--Now requires QStat 2.4a
+ * bump version to XQF 0.9.5a-beta
+ * fix UT launching. Now passes proper parameters to UT
 
-Nov 12th 2000: Alex Burger <alex@users.sourceforge dot net>
--Changed Copy+ menu to use double spaces instead of commas to separate
- fields.  Added 'of' for current players / max players. Eg: 5 of 10
+Nov 18th 2000: Alex Burger <alex@users.sourceforge.net>
 
-Nov 5th 2000: Alex Burger <alex@users.sourceforge dot net>
--Add call to clear list to end of function server_clist_build_filtered
- to prevent segfault on some computers due to server list that is emptied
- after a player filter is applied
+ * bump version to XQF 0.9.5
 
-Oct 27th 2000: xqf-0.9.4f2 - Alex Burger <alex@users.sourceforge dot net>
--Added Copy+ menu option - copies the following server info to the clipboard:
- ping  ip:port  name  map  curplayers  maxplayers
--Now creates a LaunchInfo.txt in ~/.qf when launching a game for use with IRC 
- scripts etc.  Toggle on / off using Preferences / Appearance 
+Nov 13th 2000: Alex Burger <alex@users.sourceforge.net>
 
-Oct 8th 2000: xqf-0.9.4f - Alex Burger <alex@users.sourceforge dot net>
--UnrealTournament master support using Gamespy style master via QStat 2.4a
--Add Epic UT Master server to default master list
--Remove Gamespy master server entry from default master list
--Fixed master list bug
+ * fix bug preventing filter buttons from not staying 'pressed' after doing a
+   refresh. Thanks to slashdev for the fix.
+ * require QStat 2.4a
 
-Oct 4th 2000: xqf-0.9.4e - Alex Burger <alex@users.sourceforge dot net>
--Soldier of Fortune support
--Gamespy style master server support when used with QStat 2.4a
--Format of 'lists' file changed to record game type in master entry
--Ability to add the same master to multiple games such as Gamespy's master
+Nov 12th 2000: Alex Burger <alex@users.sourceforge.net>
+
+ * change Copy+ menu to use double spaces instead of commas to separate
+   fields. Added 'of' for current players / max players. Eg: 5 of 10
+
+Nov 5th 2000: Alex Burger <alex@users.sourceforge.net>
+
+ * add call to clear list to end of function server_clist_build_filtered
+   to prevent segfault on some computers due to server list that is emptied
+   after a player filter is applied
+
+Oct 27th 2000: xqf-0.9.4f2 - Alex Burger <alex@users.sourceforge.net>
+
+ * add Copy+ menu option - copies the following server info to the clipboard:
+   ping ip:port  name  map  curplayers  maxplayers
+ * add LaunchInfo.txt creation in ~/.qf when launching a game for use with IRC 
+   scripts etc. Toggle on / off using Preferences / Appearance 
+
+Oct 8th 2000: xqf-0.9.4f - Alex Burger <alex@users.sourceforge.net>
+
+ * add UnrealTournament master support using Gamespy style master
+   via QStat 2.4a
+ * add Epic UT Master server to default master list
+ * remove Gamespy master server entry from default master list
+ * fix master list bug
+
+Oct 4th 2000: xqf-0.9.4e - Alex Burger <alex@users.sourceforge.net>
+
+ * add Soldier of Fortune support
+ * add Gamespy style master server support when used with QStat 2.4a
+ * change format of 'lists' file to record game type in master entry
+ * add ability to add the same master to multiple games such as
+   Gamespy's master
 
 xqf-0.9.4d - Bill Adams <webmaster@evil.inetarena.com>
--When browsing Q3A games the mods (e.g. arena, osp, beryllium, etc.) show
- up in the "Game" column along with the game type (FFA, etc.). 
--The mod appears in its own column for Q3A games
--You can filter by mod
--You can filter by the version string
 
+ * show up games the mods (e.g. arena, osp, beryllium, etc.)
+   in the "Game" column along with the game type (FFA, etc.)
+   when browsing Q3A
+ * add mod column for Q3A games
+ * add filter by mod
+ * add filter by the version string
 

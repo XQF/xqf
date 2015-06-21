@@ -6,7 +6,7 @@ XQF
 DESCRIPTION
 -----------
 
-XQF is a server browser and launcher for games using id Tech engines, Unreal engines and derivatives. XQF is a front-end to QStat and uses the GTK+ 2 toolkit. See the [Wiki](https://github.com/XQF/xqf/wiki) for more information.
+XQF is a server browser and launcher for games using id Tech engines, Unreal engines and many others (see the [wiki/Supported-games](https://github.com/XQF/xqf/wiki/Supported-games) page for details). XQF is a front-end to QStat and uses the GTK+ 2 toolkit.
 
 To learn more about what's new in XQF, please read the file [NEWS.md](NEWS.md) and the [ChangeLog](ChangeLog).
 
@@ -34,13 +34,13 @@ make install
 
 On Debian or Ubuntu, use ``cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_INSTALL_PREFIX=/usr ..``.
 
-See the Wiki page for more information: [wiki/How-to-build](https://github.com/XQF/xqf/wiki/How-to-build).
+For extended information, read this Wiki page: [wiki/How-to-build](https://github.com/XQF/xqf/wiki/How-to-build).
 
 
 LINKS
 -----
 
-* Current home page: [linuxgames.com/xqf](http://www.linuxgames.com/xqf/)
+* Current home page: [xqf.github.io](http://xqf.github.io)
 * XQF Wiki: [github.com/XQF/xqf/wiki](https://github.com/XQF/xqf/wiki)
 * Mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/)
 * IRC Channel: [#xqf@Freenode](irc://chat.freenode.net/xqf)
@@ -55,13 +55,13 @@ LINKS
 HOW TO CONTRIBUTE
 -----------------
 
-The best way to contribute code is to fork this project, to contribute translation please visit our Transifex project. See the Wiki page for more information: [wiki/How-to-contribute](https://github.com/XQF/xqf/wiki/How-to-contribute).
+The best way to contribute code is to fork this project. To contribute translation please visit our Transifex project. You will find more details on the wiki: [wiki/How-to-contribute](https://github.com/XQF/xqf/wiki/How-to-contribute).
 
 
 COPYRIGHT
 ---------
 
-XQF is Copyright © 1998-2000 Roman Pozlevich.  
+XQF is Copyright © 1998-2000 Roman Pozlevich.
 See the wiki page for contributors: [wiki/Contributors](https://github.com/XQF/xqf/wiki/Contributors).
 
 Copying is allowed under the terms of the GNU General Public License.  
@@ -79,3 +79,4 @@ XQF was originally written by Roman Pozlevich in 1998. It has been maintained an
 2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>  
 2001-2014 Jordi Mallach <jordi@debian.org>  
 2013-2015 Thomas Debesse <xqf@illwieckz.net>  
+2015-2015 Artem Vorotnikov <artem@vorotnikov.me>

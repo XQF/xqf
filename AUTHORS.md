@@ -8,6 +8,7 @@ Maintainers
 -----------
 
 * Thomas Debesse <xqf@illwieckz.net>
+* Artem Vorotnikov <artem@vorotnikov.me>
 * Jordi Mallach <jordi@debian.org>
 * Ludwig Nussel <ludwig.nussel@suse.de>
 * Alex Burger <alex_b@users.sf.net>
@@ -18,7 +19,6 @@ Contributors
 ------------
 
 * Zack Middleton <zturtleman@gmail.com>
-* Artem Vorotnikov <artem@vorotnikov.me>
 * Arnaud Bonatti <arnaud.bonatti@gmail.com>
 * Jochen Baier <email@jochen-baier.de>
 * Witold Piłat <witold.pilat@gmail.com>
