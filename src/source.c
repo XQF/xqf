@@ -1053,6 +1053,7 @@ static char *builtin_masters_update_info[] = {
 	"DELETE A2S,-stma2s master://steam1.steampowered.com:27011 Steam 1",            // doesn't work (03.11.2014)
 	"DELETE A2S,-stma2s master://steam2.steampowered.com:27011 Steam 2",            // doesn't work (03.11.2014)
 	"DELETE A2S,-stma2s master://69.28.151.178:27011 Valve 1",                      // doesn't work (03.11.2014)
+	"ADD A2S,-stma2s master://hl2master.steampowered.com:27011 hl2master.steampowered.com",
 
 	"ADD Q2S:KP http://www.gameaholic.com/servers/qspy-kingpin gameaholic.com",
 	"DELETE Q2S:KP http://www.ogn.org:6666 OGN",                                    // doesn't work (03.11.2014)
@@ -1114,6 +1115,7 @@ static char *builtin_masters_update_info[] = {
 	"DELETE UT2S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K3&hostport=1 multiplay.co.uk - UT2003",            // does no longer work
 	"DELETE UT2004S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K4&hostport=1 multiplay.co.uk - UT2004",         // does no longer work
 	"DELETE UT2004S http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=UT2K4D&hostport=1 multiplay.co.uk - UT2004 Demo",   // does no longer work
+	"ADD HLS master://master3.won2.steamlessproject.nl:27010 WON2 Masterserver #3",
 	"DELETE HLS http://tourneys.multiplay.co.uk/public/servers.pl?opt=ListGamespy&event=Online&type=HLS&hostport=1 multiplay.co.uk - Half-Life",            // does no longer work
 
 	"ADD CODS master://cod01.activision.com Activision",
@@ -1233,26 +1235,26 @@ static char *builtin_masters_update_info[] = {
 };
 
 static char *builtin_gslist_masters_update_info[] = {
-	"ADD QS gslist://master.gamespy.com;gsmtype=quake1 Gslist",
-	"ADD QWS gslist://master.gamespy.com;gsmtype=quakeworld Gslist",
-	"ADD Q2S gslist://master.gamespy.com;gsmtype=quake2 Gslist",
-	"ADD Q3S gslist://master.gamespy.com;gsmtype=quake3 Gslist",
-	"ADD Q4S gslist://master.gamespy.com;gsmtype=quake4 Gslist",
-	"ADD WOS gslist://master.gamespy.com;gsmtype=rtcw Gslist",
-	"ADD WOETS gslist://master.gamespy.com;gsmtype=rtcwet Gslist",
-	"ADD DM3S gslist://master.gamespy.com;gsmtype=doom3 Gslist",
-	"ADD RUNESRV gslist://master.gamespy.com;portadjust=-1;gsmtype=rune Gslist",
-	"ADD UNS gslist://master.gamespy.com;portadjust=-1;gsmtype=ut Gslist",
-	"ADD UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004 Gslist",
-	"ADD UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004d Gslist (Demo)",
-	"ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2 Gslist",
-	"ADD POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2d Gslist (Demo)",
-	"ADD AMS gslist://master.gamespy.com;portadjust=-1;gsmtype=armygame Gslist",
-	"ADD D3G gslist://master.gamespy.com;gsmtype=descent3 Gslist",
-	"ADD SOF2S gslist://master.gamespy.com;gsmtype=sof2 Gslist",
-	// "ADD GPS gslist://master.gamespy.com;gsmtype=mohaa Gslist",                          // no fixed port offset
-	// "ADD SMS gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussam Gslist",       // not compatible with linux version
-	// "ADD SMSSE gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussamse Gslist",   // not compatible with linux version
+	"DELETE QS gslist://master.gamespy.com;gsmtype=quake1 Gslist",                                      // GameSpy was shutdown
+	"DELETE QWS gslist://master.gamespy.com;gsmtype=quakeworld Gslist",                                 // GameSpy was shutdown
+	"DELETE Q2S gslist://master.gamespy.com;gsmtype=quake2 Gslist",                                     // GameSpy was shutdown
+	"DELETE Q3S gslist://master.gamespy.com;gsmtype=quake3 Gslist",                                     // GameSpy was shutdown
+	"DELETE Q4S gslist://master.gamespy.com;gsmtype=quake4 Gslist",                                     // GameSpy was shutdown
+	"DELETE WOS gslist://master.gamespy.com;gsmtype=rtcw Gslist",                                       // GameSpy was shutdown
+	"DELETE WOETS gslist://master.gamespy.com;gsmtype=rtcwet Gslist",                                   // GameSpy was shutdown
+	"DELETE DM3S gslist://master.gamespy.com;gsmtype=doom3 Gslist",                                     // GameSpy was shutdown
+	"DELETE RUNESRV gslist://master.gamespy.com;portadjust=-1;gsmtype=rune Gslist",                     // GameSpy was shutdown
+	"DELETE UNS gslist://master.gamespy.com;portadjust=-1;gsmtype=ut Gslist",                           // GameSpy was shutdown
+	"DELETE UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004 Gslist",                  // GameSpy was shutdown
+	"DELETE UT2004S gslist://master.gamespy.com;portadjust=-10;gsmtype=ut2004d Gslist (Demo)",          // GameSpy was shutdown
+	"DELETE POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2 Gslist",                  // GameSpy was shutdown
+	"DELETE POSTAL2 gslist://master.gamespy.com;portadjust=-1;gsmtype=postal2d Gslist (Demo)",          // GameSpy was shutdown
+	"DELETE AMS gslist://master.gamespy.com;portadjust=-1;gsmtype=armygame Gslist",                     // GameSpy was shutdown
+	"DELETE D3G gslist://master.gamespy.com;gsmtype=descent3 Gslist",                                   // GameSpy was shutdown
+	"DELETE SOF2S gslist://master.gamespy.com;gsmtype=sof2 Gslist",                                     // GameSpy was shutdown
+	// "ADD GPS gslist://master.gamespy.com;gsmtype=mohaa Gslist",                                      // no fixed port offset
+	// "ADD SMS gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussam Gslist",                   // not compatible with linux version
+	// "ADD SMSSE gslist://master.gamespy.com;portadjust=-1;gsmtype=serioussamse Gslist",               // not compatible with linux version
 	NULL
 };
 
