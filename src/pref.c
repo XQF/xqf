@@ -3644,21 +3644,15 @@ void add_t2_options_to_notebook(GtkWidget *notebook, enum server_type type) {
 }
 
 static void terminate_toggled_callback (GtkWidget *widget, gpointer data) {
-	int val;
-
-	val = GTK_TOGGLE_BUTTON (terminate_check_button)->active;
+	GTK_TOGGLE_BUTTON (terminate_check_button)->active;
 }
 
 static void launchinfo_toggled_callback (GtkWidget *widget, gpointer data) {
-	int val;
-
-	val = GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
+	GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
 }
 
 static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
-	int val;
-
-	val = GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
+	GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
 }
 
 /** make entries editable if yes == TRUE */
@@ -5080,7 +5074,6 @@ int prefs_load (void) {
 static void scan_maps_for(enum server_type type) {
 	// translator: %s = game name, e.g. Quake 3 Arena
 	char* msg = g_strdup_printf(_("Searching for %s maps"),games[type].name);
-	guint per = 100/GAMES_TOTAL;
 
 	if (games[type].init_maps) {
 		games[type].init_maps(games[type].type);

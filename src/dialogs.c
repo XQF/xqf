@@ -41,11 +41,6 @@ static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
 	return FALSE;
 }
 
-static int unregister_window_callback (GtkWidget *widget, GdkEventKey *event) {
-	unregister_window(widget);
-	return FALSE;
-}
-
 GtkWidget *dialog_create_modal_transient_window (const char *title,
 		int close_on_esc,
 		int allow_resize,
@@ -473,8 +468,6 @@ char *enter_string_with_option_dialog (int visible, char *optstr, int *optval, c
 
 	return res;
 }
-
-static GtkWidget* create_AboutWindow (void);
 
 void about_dialog (GtkWidget *widget, gpointer data) {
 	const gchar *authors[] = {
