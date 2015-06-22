@@ -362,6 +362,9 @@ add_custom_command (TARGET translation
 # Executable
 install (TARGETS xqf DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
+# Query script
+install (PROGRAMS ${CMAKE_SOURCE_DIR}/src/script/qstat_savage.sh DESTINATION "${PACKAGE_DATA_DIR}/script")
+
 # UI
 install (FILES ${CMAKE_SOURCE_DIR}/src/xqf.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
 
@@ -380,7 +383,7 @@ endforeach (SIZE ${icon_SIZE})
 install (FILES ${CMAKE_SOURCE_DIR}/pixmaps/scalable/xqf.svg DESTINATION ${PIXMAPS_ENTRY_PATH}/scalable/apps)
 
 # Config
-install (FILES ${CMAKE_SOURCE_DIR}/src/qstat.cfg ${CMAKE_SOURCE_DIR}/src/qstat_savage.sh DESTINATION ${PACKAGE_DATA_DIR})
+install (FILES ${CMAKE_SOURCE_DIR}/src/qstat.cfg DESTINATION ${PACKAGE_DATA_DIR})
 
 # Man pages
 install (FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man6)
