@@ -31,10 +31,6 @@
 # define HTTP_HELPER        "wget -t 1 -T 20 -q -e robots=off --user-agent=XQF/" XQF_VERSION " -O -"
 #endif
 
-#ifndef QSTAT_SAVAGE_SCRIPT
-#define QSTAT_SAVAGE_SCRIPT "qstat_savage.sh"
-#endif
-
 #define QSTAT_DELIM         '\t'
 #define QSTAT_DELIM_STR     "\t"
 #define QSTAT_MASTER_DELIM  ' '

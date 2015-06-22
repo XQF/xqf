@@ -1,12 +1,24 @@
 #! /bin/sh
 
-#url="http://masterserver.savage.s2games.com/gamelist_full.dat"
-url="$1"
-
-if [ "x${url}" = 'x' ]
+if [ "x${1}" = 'x' -o "x${1}" = 'x--help' ]
 then
+	printf 'Usage: %s -sam http://masterserver.savage.s2games.com/gamelist_full.dat\n' "${0}"
 	exit
 fi
+
+if [ "x${2}" = 'x' ]
+then
+	printf 'missing argument for "%s"\n' "${1}"
+	exit
+fi
+
+if [ "x${1}" != 'x-sam' ]
+then
+	printf 'unknown option "%s"\n' "${1}"
+	exit
+fi
+
+url="${2}"
 
 http_helper="wget -t 1 -T 20 -q -e robots=off --user-agent=XQF -O -"
 server_type="SAS"
