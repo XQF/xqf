@@ -73,7 +73,7 @@
 #include "redial.h"
 #include "loadpixmap.h"
 #include "scripts.h"
-#include "tga/memtopixmap.h"
+#include "memtopixmap.h"
 
 #ifdef USE_GEOIP
 #include "country-filter.h"

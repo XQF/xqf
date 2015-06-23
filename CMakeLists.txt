@@ -114,8 +114,7 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/utmaps.c
      ${CMAKE_SOURCE_DIR}/src/loadpixmap.c
      ${CMAKE_SOURCE_DIR}/src/scripts.c
-     ${CMAKE_SOURCE_DIR}/src/tga/memtopixmap.c
-     ${CMAKE_SOURCE_DIR}/src/tga/tga.c
+     ${CMAKE_SOURCE_DIR}/src/memtopixmap.c
 
      ${CMAKE_SOURCE_DIR}/src/addmaster.h
      ${CMAKE_SOURCE_DIR}/src/addserver.h
@@ -156,8 +155,7 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/utmaps.h
      ${CMAKE_SOURCE_DIR}/src/loadpixmap.h
      ${CMAKE_SOURCE_DIR}/src/scripts.h
-     ${CMAKE_SOURCE_DIR}/src/tga/memtopixmap.h
-     ${CMAKE_SOURCE_DIR}/src/tga/tga.h
+     ${CMAKE_SOURCE_DIR}/src/memtopixmap.h
      )
 
 set (flag_DATA
