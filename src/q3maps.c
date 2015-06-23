@@ -297,8 +297,12 @@ static void findq3maps_zip(const char* zipfile, GHashTable* maphash,
 		gboolean (*is_mapshot_func)(const char* name)) {
 	unzFile f;
 	int ret;
-	enum { bufsize = 256 };
-	char buf[bufsize] = {0};
+
+	// some minizip releases do not allow NULL pointers for some unzGetCurrentFileInfo parameters
+	// so we need to use real pointers even if we never read them:
+	unz_file_info pfile_info = { 0 };
+	void *extraField = { 0 };
+	char buf[256] = "";
 
 	if (!zipfile || !maphash || !is_map_func || !is_mapshot_func)
 		return;
@@ -310,7 +314,7 @@ static void findq3maps_zip(const char* zipfile, GHashTable* maphash,
 	}
 
 	for (ret = unzGoToFirstFile(f); ret == UNZ_OK; ret = unzGoToNextFile(f)) {
-		if (unzGetCurrentFileInfo(f,NULL,buf,bufsize,NULL,0,NULL,0) == UNZ_OK) {
+		if (unzGetCurrentFileInfo(f, &pfile_info, buf, sizeof(buf), extraField, 0, NULL, 0) == UNZ_OK) {
 			if (if_map_insert(buf, maphash, is_map_func)) {
 			}
 			if (if_shot_insert(buf, is_mapshot_func, zipfile)) {
@@ -507,7 +511,12 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 	int ret;
 	int error = 0;
 	size_t buflen = 0;
-	unz_file_info info;
+	unz_file_info info = { 0 };
+
+	// some minizip releases do not allow NULL pointers for some unzGetCurrentFileInfo parameters
+	// so we need to use real pointers even if we never read them:
+	void *extraField = { 0 };
+	char szFileName[256] = "";
 
 	g_return_val_if_fail(zipfile!=NULL,0);
 	g_return_val_if_fail(filename!=NULL,0);
@@ -531,7 +540,7 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 			break;
 		}
 
-		ret = unzGetCurrentFileInfo(zf,&info,NULL,0,NULL,0,NULL,0);
+		ret = unzGetCurrentFileInfo(zf, &info, szFileName, sizeof(szFileName), extraField, 0, NULL, 0);
 		if (ret!=UNZ_OK || info.uncompressed_size <= 0) {
 			g_warning("unable to retrieve info on %s inside zip archive %s\n",filename,zipfile);
 			error = 1;
