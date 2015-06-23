@@ -3935,6 +3935,9 @@ static GtkWidget *general_options_page (void) {
 
 	gtk_widget_show (hbox);
 
+	gtk_widget_show (vbox);
+	gtk_widget_show (frame);
+
 	/* When launching a Game */
 
 	frame = gtk_frame_new (_("When launching a game..."));
