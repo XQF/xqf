@@ -628,7 +628,7 @@ GtkWidget *create_progress_bar (void) {
 	info = g_malloc0 (sizeof (struct pbarinfo));
 
 	gtk_object_set_user_data (GTK_OBJECT (pbar), info);
-	gtk_signal_connect (GTK_OBJECT (pbar), "destroy",
+	g_signal_connect (GTK_OBJECT (pbar), "destroy",
 			(GtkSignalFunc) progress_bar_destroy_event, NULL);
 
 	gtk_progress_set_format_string (GTK_PROGRESS (pbar), "%1p%%");
@@ -835,7 +835,7 @@ GtkWidget *create_server_type_menu (int active_type,
 		gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
 
 		if (callback)
-			gtk_signal_connect (GTK_OBJECT (menu_item), "activate", GTK_SIGNAL_FUNC (callback), GINT_TO_POINTER (i));
+			g_signal_connect (GTK_OBJECT (menu_item), "activate", G_CALLBACK (callback), GINT_TO_POINTER (i));
 
 		gtk_widget_show (menu_item);
 

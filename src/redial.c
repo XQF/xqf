@@ -213,8 +213,8 @@ static GtkWidget* create_redialwindow (void) {
 	gtk_container_add (GTK_CONTAINER (hbuttonbox1), cancelbutton);
 	GTK_WIDGET_SET_FLAGS (cancelbutton, GTK_CAN_DEFAULT);
 
-	gtk_signal_connect (GTK_OBJECT (launchbutton), "clicked", GTK_SIGNAL_FUNC (on_launchbutton_clicked), NULL);
-	gtk_signal_connect (GTK_OBJECT (cancelbutton), "clicked", GTK_SIGNAL_FUNC (on_cancelbutton_clicked), NULL);
+	g_signal_connect (GTK_OBJECT (launchbutton), "clicked", G_CALLBACK (on_launchbutton_clicked), NULL);
+	g_signal_connect (GTK_OBJECT (cancelbutton), "clicked", G_CALLBACK (on_cancelbutton_clicked), NULL);
 
 	gtk_widget_grab_focus (cancelbutton);
 	gtk_widget_grab_default (cancelbutton);

@@ -1188,14 +1188,11 @@ static void launch_server_handler (struct stat_job *job, struct server *s) {
 	}
 }
 
+// Restructure: Front callback calls callback core with specified action, action sits in another function
 
+void launch_core1_callback () {
 
-static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
-	int spectate = FALSE;
-	char *demo = NULL;
-	struct condef *con = NULL;
-
-	debug (6, "launc_callback() --");
+	debug (6, "launch_callback() --");
 	if (stat_process || !cur_server || (games[cur_server->type].flags & GAME_CONNECT) == 0) {
 		return;
 	}
@@ -1205,38 +1202,9 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
 		return;
 	}
 
-	switch (mode) {
+}
 
-		case LAUNCH_NORMAL:
-			break;
-
-		case LAUNCH_SPECTATE:
-			if ((cur_server->flags & SERVER_SPECTATE) == 0) {
-				return;
-			}
-
-			spectate = TRUE;
-			break;
-
-		case LAUNCH_RECORD:
-			if ((games[cur_server->type].flags & GAME_RECORD) == 0) {
-				return;
-			}
-
-			if ((games[cur_server->type].flags & GAME_SPECTATE) != 0) {
-				demo = enter_string_with_option_dialog (TRUE, _("Spectator"), &spectate, _("Demo name:"));
-			}
-			else {
-				demo = enter_string_dialog (TRUE, _("Demo name:"));
-			}
-
-			if (!demo) {
-				return;
-			}
-
-			break;
-
-	}
+void launch_core2_callback (int spectate, char *demo, struct condef *con) {
 
 	con = condef_new (cur_server);
 	con->demo = demo;
@@ -1259,6 +1227,71 @@ static void launch_callback (GtkWidget *widget, enum launch_mode mode) {
 
 	stat_start (stat_process);
 	set_widgets_sensitivity ();
+
+	return;
+
+}
+
+static void launch_normal_callback (GtkWidget *widget) {
+
+	int spectate = FALSE;
+	char *demo = NULL;
+	struct condef *con = NULL;
+
+	launch_core1_callback ();
+	launch_core2_callback (spectate, demo, con);
+
+	return;
+}
+
+static void launch_spectate_callback (GtkWidget *widget) {
+
+	int spectate = FALSE;
+	char *demo = NULL;
+	struct condef *con = NULL;
+
+	launch_core1_callback ();
+
+	if ((cur_server->flags & SERVER_SPECTATE) == 0) {
+		return;
+	}
+
+	spectate = TRUE;
+
+	launch_core2_callback (spectate, demo, con);
+
+	return;
+
+}
+
+static void launch_record_callback (GtkWidget *widget) {
+
+	int spectate = FALSE;
+	char *demo = NULL;
+	struct condef *con = NULL;
+
+	launch_core1_callback ();
+
+	if ((games[cur_server->type].flags & GAME_RECORD) == 0) {
+		return;
+	}
+
+	if ((games[cur_server->type].flags & GAME_SPECTATE) != 0) {
+		demo = enter_string_with_option_dialog (TRUE, _("Spectator"), &spectate, _("Demo name:"));
+	}
+
+	else {
+		demo = enter_string_dialog (TRUE, _("Demo name:"));
+	}
+
+	if (!demo) {
+		return;
+	}
+
+	launch_core2_callback (spectate, demo, con);
+	
+	return;
+
 }
 
 static int server_clist_sort_mode = SORT_SERVER_PING;
@@ -1969,7 +2002,7 @@ static void server_clist_select_callback (GtkWidget *widget, int row,
 	if (bevent && bevent->type == GDK_2BUTTON_PRESS && bevent->button == 1 &&
 			!((column == 6) && cur_server && (games[cur_server->type].get_mapshot))) // not for map preview
 	{
-		launch_callback (NULL, LAUNCH_NORMAL);
+		launch_normal_callback (NULL);
 	}
 }
 
@@ -1996,7 +2029,7 @@ static gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *
 		}
 		return TRUE;
 	} else if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter) {
-		launch_callback (widget, LAUNCH_NORMAL);
+		launch_normal_callback (widget);
 		return TRUE;
 	}
 	return FALSE;
@@ -2414,7 +2447,7 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-
+#ifdef GUI_GTK2
 struct __menuitem {
 	char *label;
 	char accel_key;
@@ -2433,7 +2466,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Connect"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (launch_callback),
+		G_CALLBACK (launch_normal_callback),
 		(gpointer) LAUNCH_NORMAL,
 		&connect_menu_item
 	},
@@ -2442,8 +2475,8 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Observe"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (launch_callback),
-		(gpointer) LAUNCH_SPECTATE,
+		G_CALLBACK (launch_spectate_callback),
+		NULL,
 		&observe_menu_item
 	},
 	{
@@ -2451,8 +2484,8 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Record Demo"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (launch_callback),
-		(gpointer) LAUNCH_RECORD,
+		G_CALLBACK (launch_record_callback),
+		NULL,
 		&record_menu_item
 	},
 	/*
@@ -2461,7 +2494,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Cancel Redial"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (cancelredial_callback),
+		G_CALLBACK (cancelredial_callback),
 		NULL,
 		&cancel_redial_menu_item
 	},
@@ -2480,7 +2513,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Add new Server"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (add_server_callback),
+		G_CALLBACK (add_server_callback),
 		NULL,
 		&add_menu_item
 	},
@@ -2489,7 +2522,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Add to Favorites"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (add_to_favorites_callback),
+		G_CALLBACK (add_to_favorites_callback),
 		NULL,
 		&favadd_menu_item
 	},
@@ -2498,7 +2531,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Remove"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (del_server_callback),
+		G_CALLBACK (del_server_callback),
 		NULL,
 		&delete_menu_item
 	},
@@ -2507,7 +2540,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Copy"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (copy_server_callback),
+		G_CALLBACK (copy_server_callback),
 		NULL,
 		NULL
 	},
@@ -2516,7 +2549,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Copy+"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (copy_server_callback_plus),
+		G_CALLBACK (copy_server_callback_plus),
 		NULL,
 		NULL
 	},
@@ -2533,7 +2566,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Refresh"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (refresh_callback),
+		G_CALLBACK (refresh_callback),
 		NULL,
 		&refresh_menu_item
 	},
@@ -2542,7 +2575,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Refresh Selected"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (refresh_selected_callback),
+		G_CALLBACK (refresh_selected_callback),
 		NULL,
 		&refrsel_menu_item
 	},
@@ -2560,7 +2593,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("DNS Lookup"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (resolve_callback),
+		G_CALLBACK (resolve_callback),
 		NULL,
 		&resolve_menu_item
 	},
@@ -2578,7 +2611,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("RCon"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (rcon_callback),
+		G_CALLBACK (rcon_callback),
 		NULL,
 		&rcon_menu_item
 	},
@@ -2587,7 +2620,7 @@ static const struct menuitem srvopt_menu_items[] = {
 		N_("Properties"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (properties_callback),
+		G_CALLBACK (properties_callback),
 		NULL,
 		&properties_menu_item
 	},
@@ -2608,7 +2641,7 @@ static const struct menuitem srvinfo_menu_items[] = {
 		N_("Copy"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (copy_server_info_callback), NULL,
+		G_CALLBACK (copy_server_info_callback), NULL,
 		NULL
 	},
 	{
@@ -2627,7 +2660,7 @@ static const struct menuitem file_menu_items[] = {
 		N_("_Statistics"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (statistics_callback),
+		G_CALLBACK (statistics_callback),
 		NULL,
 		&file_statistics_menu_item
 	},
@@ -2667,7 +2700,7 @@ static const struct menuitem source_ctree_popup_menu[] = {
 		N_("Add _Master"),
 		'M',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (add_master_callback),
+		G_CALLBACK (add_master_callback),
 		NULL,
 		&source_add_master_menu_item
 	},
@@ -2676,7 +2709,7 @@ static const struct menuitem source_ctree_popup_menu[] = {
 		N_("_Rename Master"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (edit_master_callback),
+		G_CALLBACK (edit_master_callback),
 		NULL,
 		&source_edit_master_menu_item
 	},
@@ -2684,7 +2717,7 @@ static const struct menuitem source_ctree_popup_menu[] = {
 		MENU_ITEM,
 		N_("D_elete Master"),
 		0,	0,
-		GTK_SIGNAL_FUNC (del_master_callback),
+		G_CALLBACK (del_master_callback),
 		NULL,
 		&source_delete_master_menu_item
 	},
@@ -2692,7 +2725,7 @@ static const struct menuitem source_ctree_popup_menu[] = {
 		MENU_ITEM,
 		N_("_Clear Servers"),
 		0,	0,
-		GTK_SIGNAL_FUNC (clear_master_servers_callback),
+		G_CALLBACK (clear_master_servers_callback),
 		NULL,
 		&source_clear_master_servers_menu_item
 	},
@@ -2712,7 +2745,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Add new Server"),
 		'N',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (add_server_callback),
+		G_CALLBACK (add_server_callback),
 		NULL,
 		&edit_add_menu_item
 	},
@@ -2721,7 +2754,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("Add to _Favorites"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (add_to_favorites_callback),
+		G_CALLBACK (add_to_favorites_callback),
 		NULL,
 		&edit_favadd_menu_item
 	},
@@ -2730,7 +2763,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Remove"),
 		'D',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (del_server_callback),
+		G_CALLBACK (del_server_callback),
 		NULL,
 		&edit_delete_menu_item
 	},
@@ -2739,7 +2772,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Copy"),
 		'C',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (copy_server_callback),
+		G_CALLBACK (copy_server_callback),
 		NULL,
 		NULL
 	},
@@ -2748,7 +2781,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Copy+"),
 		'O',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (copy_server_callback_plus),
+		G_CALLBACK (copy_server_callback_plus),
 		NULL,
 		NULL
 	},
@@ -2766,7 +2799,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("Add Default Masters"),
 		0,
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (update_master_builtin_callback),
+		G_CALLBACK (update_master_builtin_callback),
 		NULL,
 		&edit_update_master_builtin_menu_item
 	},
@@ -2775,7 +2808,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("Add Gslist Masters"),
 		0,
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (update_master_gslist_callback),
+		G_CALLBACK (update_master_gslist_callback),
 		NULL,
 		&edit_update_master_gslist_menu_item
 	},
@@ -2784,7 +2817,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("Add _Master"),
 		'M',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (add_master_callback),
+		G_CALLBACK (add_master_callback),
 		NULL,
 		&edit_add_master_menu_item
 	},
@@ -2793,7 +2826,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Rename Master"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (edit_master_callback),
+		G_CALLBACK (edit_master_callback),
 		NULL,
 		&edit_edit_master_menu_item
 	},
@@ -2802,7 +2835,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("D_elete Master"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (del_master_callback),
+		G_CALLBACK (del_master_callback),
 		NULL,
 		&edit_delete_master_menu_item
 	},
@@ -2811,7 +2844,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Clear Servers"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (clear_master_servers_callback),
+		G_CALLBACK (clear_master_servers_callback),
 		NULL,
 		&edit_clear_master_servers_menu_item
 	},
@@ -2829,7 +2862,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("_Find Player"),
 		'F',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (find_player_callback),
+		G_CALLBACK (find_player_callback),
 		(gpointer) FALSE,
 		&edit_find_player_menu_item
 	},
@@ -2838,7 +2871,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("Find A_gain"),
 		'G',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (find_player_callback),
+		G_CALLBACK (find_player_callback),
 		(gpointer) TRUE,
 		&edit_find_again_menu_item
 	},
@@ -2856,7 +2889,7 @@ static const struct menuitem edit_menu_items[] = {
 		N_("Properties"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (properties_callback),
+		G_CALLBACK (properties_callback),
 		NULL,
 		&properties_menu_item
 	},
@@ -2876,14 +2909,14 @@ static const struct menuitem view_menu_items[] = {
 		MENU_ITEM,
 		N_("_Refresh"),
 		'R', GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (refresh_callback), NULL,
+		G_CALLBACK (refresh_callback), NULL,
 		&view_refresh_menu_item
 	},
 	{
 		MENU_ITEM,
 		N_("Refresh _Selected"),
 		'S', GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (refresh_selected_callback),
+		G_CALLBACK (refresh_selected_callback),
 		NULL,
 		&view_refrsel_menu_item
 	},
@@ -2892,7 +2925,7 @@ static const struct menuitem view_menu_items[] = {
 		N_("_Update From Master"),
 		'U',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (update_source_callback),
+		G_CALLBACK (update_source_callback),
 		NULL,
 		&view_update_menu_item
 	},
@@ -2910,7 +2943,7 @@ static const struct menuitem view_menu_items[] = {
 		N_("Show _Host Names"),
 		'H',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (show_hostnames_callback),
+		G_CALLBACK (show_hostnames_callback),
 		NULL,
 		&view_hostnames_menu_item
 	},
@@ -2919,7 +2952,7 @@ static const struct menuitem view_menu_items[] = {
 		N_("Show Default _Port"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (show_default_port_callback),
+		G_CALLBACK (show_default_port_callback),
 		NULL,
 		&view_defport_menu_item
 	},
@@ -2960,8 +2993,8 @@ static const struct menuitem server_menu_items[] = {
 		N_("_Connect"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (launch_callback),
-		(gpointer) LAUNCH_NORMAL,
+		G_CALLBACK (launch_normal_callback),
+		NULL,
 		&server_connect_menu_item
 	},
 	{
@@ -2969,8 +3002,8 @@ static const struct menuitem server_menu_items[] = {
 		N_("_Observe"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (launch_callback),
-		(gpointer) LAUNCH_SPECTATE,
+		G_CALLBACK (launch_spectate_callback),
+		NULL,
 		&server_observe_menu_item
 	},
 	{
@@ -2978,8 +3011,8 @@ static const struct menuitem server_menu_items[] = {
 		N_("Record _Demo"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (launch_callback),
-		(gpointer) LAUNCH_RECORD,
+		G_CALLBACK (launch_record_callback),
+		NULL,
 		&server_record_menu_item
 	},
 	/*
@@ -2988,7 +3021,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("Cancel Redial"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (cancelredial_callback),
+		G_CALLBACK (cancelredial_callback),
 		NULL,
 		&server_cancel_redial_menu_item
 	},
@@ -3007,7 +3040,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("_Add new Server"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (add_server_callback),
+		G_CALLBACK (add_server_callback),
 		NULL,
 		&edit_add_menu_item
 	},
@@ -3016,7 +3049,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("Add to _Favorites"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (add_to_favorites_callback),
+		G_CALLBACK (add_to_favorites_callback),
 		NULL,
 		&server_favadd_menu_item
 	},
@@ -3025,7 +3058,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("_Remove"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (del_server_callback),
+		G_CALLBACK (del_server_callback),
 		NULL,
 		&server_delete_menu_item
 	},
@@ -3034,7 +3067,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("DNS _Lookup"),
 		'L',
 		GDK_CONTROL_MASK,
-		GTK_SIGNAL_FUNC (resolve_callback),
+		G_CALLBACK (resolve_callback),
 		NULL,
 		&server_resolve_menu_item
 	},
@@ -3052,7 +3085,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("_RCon"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (rcon_callback),
+		G_CALLBACK (rcon_callback),
 		NULL,
 		&server_rcon_menu_item
 	},
@@ -3061,7 +3094,7 @@ static const struct menuitem server_menu_items[] = {
 		N_("_Properties"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (properties_callback),
+		G_CALLBACK (properties_callback),
 		NULL,
 		&server_properties_menu_item
 	},
@@ -3082,7 +3115,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("_General"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_preferences_dialog),
+		G_CALLBACK (start_preferences_dialog),
 		(gpointer) (PREF_PAGE_GENERAL + UNKNOWN_SERVER * 256),
 		NULL
 	},
@@ -3091,7 +3124,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("_Games"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_preferences_dialog),
+		G_CALLBACK (start_preferences_dialog),
 		(gpointer) (PREF_PAGE_GAMES + UNKNOWN_SERVER * 256),
 		NULL
 	},
@@ -3100,7 +3133,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("_Appearance"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_preferences_dialog),
+		G_CALLBACK (start_preferences_dialog),
 		(gpointer) (PREF_PAGE_APPEARANCE + UNKNOWN_SERVER * 256),
 		NULL
 	},
@@ -3109,7 +3142,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("_QStat"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_preferences_dialog),
+		G_CALLBACK (start_preferences_dialog),
 		(gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
 		NULL
 	},
@@ -3118,7 +3151,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("_Sounds"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_preferences_dialog),
+		G_CALLBACK (start_preferences_dialog),
 		(gpointer) (PREF_PAGE_SOUNDS + UNKNOWN_SERVER * 256),
 		NULL
 	},
@@ -3127,7 +3160,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("S_cripts"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_preferences_dialog),
+		G_CALLBACK (start_preferences_dialog),
 		(gpointer) (PREF_PAGE_SCRIPTS + UNKNOWN_SERVER * 256),
 		NULL
 	},
@@ -3145,7 +3178,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("_Server Filter"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_filters_cfg_dialog),
+		G_CALLBACK (start_filters_cfg_dialog),
 		(gpointer) FILTER_SERVER,
 		NULL
 	},
@@ -3154,7 +3187,7 @@ static const struct menuitem preferences_menu_items[] = {
 		N_("Player _Filter"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (start_filters_cfg_dialog),
+		G_CALLBACK (start_filters_cfg_dialog),
 		(gpointer) FILTER_PLAYER,
 		NULL
 	},
@@ -3175,7 +3208,7 @@ static const struct menuitem help_menu_items[] = {
 		N_("_About"),
 		0,
 		0,
-		GTK_SIGNAL_FUNC (about_dialog),
+		G_CALLBACK (about_dialog),
 		NULL,
 		NULL
 	},
@@ -3266,7 +3299,6 @@ static const struct menuitem menubar_menu_items[] = {
 	}
 };
 
-
 static GtkWidget *create_player_menu_item (char *str, int i) {
 	GtkWidget *menu_item;
 	GtkWidget *hbox;
@@ -3303,22 +3335,22 @@ static GtkWidget *create_player_menu (GtkAccelGroup *accel_group) {
 
 	menu_item = create_player_menu_item (_("Mark as Red"), 0);
 	gtk_menu_append (GTK_MENU (marker_menu), menu_item);
-	gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-			GTK_SIGNAL_FUNC (add_to_player_filter_callback),
+	g_signal_connect (GTK_OBJECT (menu_item), "activate",
+			G_CALLBACK (add_to_player_filter_callback),
 			(gpointer) PLAYER_GROUP_RED);
 	gtk_widget_show (menu_item);
 
 	menu_item = create_player_menu_item (_("Mark as Green"), 1);
 	gtk_menu_append (GTK_MENU (marker_menu), menu_item);
-	gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-			GTK_SIGNAL_FUNC (add_to_player_filter_callback),
+	g_signal_connect (GTK_OBJECT (menu_item), "activate",
+			G_CALLBACK (add_to_player_filter_callback),
 			(gpointer) PLAYER_GROUP_GREEN);
 	gtk_widget_show (menu_item);
 
 	menu_item = create_player_menu_item (_("Mark as Blue"), 2);
 	gtk_menu_append (GTK_MENU (marker_menu), menu_item);
-	gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-			GTK_SIGNAL_FUNC (add_to_player_filter_callback),
+	g_signal_connect (GTK_OBJECT (menu_item), "activate",
+			G_CALLBACK (add_to_player_filter_callback),
 			(gpointer) PLAYER_GROUP_BLUE);
 	gtk_widget_show (menu_item);
 
@@ -3346,7 +3378,7 @@ static void populate_main_toolbar (void) {
 	connect_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
 			_("Connect"), _("Connect"), NULL,
 			pixmap,
-			GTK_SIGNAL_FUNC (launch_callback), (gpointer) LAUNCH_NORMAL);
+			G_CALLBACK (launch_normal_callback), NULL);
 */
 
 	update_button =  GTK_WIDGET (gtk_builder_get_object (builder, "update-button"));
@@ -3359,7 +3391,7 @@ static void populate_main_toolbar (void) {
 	g_signal_connect (G_OBJECT (refresh_button), "clicked", G_CALLBACK (refresh_callback), NULL);
 	g_signal_connect (G_OBJECT (refrsel_button), "clicked", G_CALLBACK (refresh_selected_callback), NULL);
 	g_signal_connect (G_OBJECT (stop_button),    "clicked", G_CALLBACK (stop_callback), NULL);
-	g_signal_connect (G_OBJECT (connect_button), "clicked", G_CALLBACK (launch_callback), (gpointer) LAUNCH_NORMAL);	// TODO test... ^^'
+	g_signal_connect (G_OBJECT (connect_button), "clicked", G_CALLBACK (launch_normal_callback), NULL);	// TODO test... ^^'
 
 	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "update-image")),
 	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "update.xpm", NULL));
@@ -3377,8 +3409,8 @@ static void populate_main_toolbar (void) {
 	observe_button = GTK_WIDGET (gtk_builder_get_object (builder, "observe-button"));
 	record_button =  GTK_WIDGET (gtk_builder_get_object (builder, "record-button"));
 
-	g_signal_connect (G_OBJECT (observe_button), "clicked", G_CALLBACK (launch_callback), (gpointer) LAUNCH_SPECTATE);
-	g_signal_connect (G_OBJECT (record_button),  "clicked", G_CALLBACK (launch_callback), (gpointer) LAUNCH_RECORD);
+	g_signal_connect (G_OBJECT (observe_button), "clicked", G_CALLBACK (launch_spectate_callback), NULL);
+	g_signal_connect (G_OBJECT (record_button),  "clicked", G_CALLBACK (launch_record_callback), NULL);
 
 	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "observe-image")),
 	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "observe.xpm", NULL));
@@ -3406,7 +3438,7 @@ static void populate_main_toolbar (void) {
 				GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL,
 				_(filters[i].short_name), buf, NULL,
 				pixmap,
-				GTK_SIGNAL_FUNC (filter_toggle_callback), GINT_TO_POINTER (mask));
+				G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
 */
 		filter_buttons[i] = GTK_WIDGET (gtk_toggle_tool_button_new ());
 		g_signal_connect (G_OBJECT (filter_buttons[i]),  "toggled", G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
@@ -3439,7 +3471,7 @@ static void populate_main_toolbar (void) {
 		gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
 				_(filters[i].short_cfg_name), buf, NULL,
 				pixmap,
-				GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) i);
+				G_CALLBACK (start_filters_cfg_dialog), (gpointer) i);
 	}
 
 	gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
@@ -3494,13 +3526,15 @@ static GtkWidget* create_filter_menu_toolbar () {
 		gtk_menu_append (GTK_MENU (menu), menu_item);
 		gtk_widget_show (menu_item);
 
-		gtk_signal_connect (GTK_OBJECT (menu_item), "activate", GTK_SIGNAL_FUNC (server_filter_select_callback_toolbar), (gpointer)i); // array starts from zero but filters from 1
+		g_signal_connect (GTK_OBJECT (menu_item), "activate", G_CALLBACK (server_filter_select_callback_toolbar), (gpointer)i); // array starts from zero but filters from 1
 
 	}
 
 	gtk_widget_show (menu);
 	return menu;
 }
+#endif
+
 #endif
 
 /** build server filter menu for toolbar */
@@ -3519,7 +3553,7 @@ static GtkWidget* create_filter_menu () {
 	gtk_menu_append (GTK_MENU (menu), menu_item);
 	gtk_widget_show (menu_item);
 
-	gtk_signal_connect (GTK_OBJECT (menu_item), "activate", GTK_SIGNAL_FUNC (start_filters_cfg_dialog), (gpointer) FILTER_SERVER);
+	g_signal_connect (GTK_OBJECT (menu_item), "activate", G_CALLBACK (start_filters_cfg_dialog), (gpointer) FILTER_SERVER);
 
 	menu_item = gtk_menu_item_new ();
 	gtk_widget_set_sensitive (menu_item, FALSE);
@@ -3546,7 +3580,7 @@ static GtkWidget* create_filter_menu () {
 		gtk_widget_show (menu_item);
 
 		// array starts from zero but filters from 1
-		gtk_signal_connect (GTK_OBJECT (menu_item), "activate",	GTK_SIGNAL_FUNC (server_filter_select_callback), GINT_TO_POINTER(i));
+		g_signal_connect (GTK_OBJECT (menu_item), "activate",	G_CALLBACK (server_filter_select_callback), GINT_TO_POINTER(i));
 
 		/*
 		// add separator
@@ -3595,21 +3629,26 @@ void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 static void create_main_window (void) {
 	GError *error = NULL;
 
+#if defined GUI_GTK3
+	builder = gtk_builder_new_from_file (g_build_filename (xqf_PACKAGE_DATA_DIR, "ui", "xqf-gtk3.ui", NULL));
+#elif defined GUI_GTK2
 	builder = gtk_builder_new ();
-	gtk_builder_add_from_file (builder, g_build_filename (xqf_PACKAGE_DATA_DIR, "ui", "xqf.ui", NULL), &error);
+	gtk_builder_add_from_file (builder, g_build_filename (xqf_PACKAGE_DATA_DIR, "ui", "xqf-gtk2.ui", NULL), &error);
+#else
+	fprintf (stderr, "No UI has been compiled!\n");
+
+	return;
+#endif
 	if (G_UNLIKELY (error != NULL)) {
 		fprintf (stderr, "Could not load UI: %s\n", error->message);
 		g_clear_error (&error);
 		return;
 	}
 
-	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "main-window"));	// gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_signal_connect (GTK_OBJECT (main_window), "delete_event",
-			GTK_SIGNAL_FUNC (window_delete_event_callback), NULL);
-	gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-			GTK_SIGNAL_FUNC (ui_done), NULL);
-	gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-			GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "main-window"));
+	g_signal_connect (main_window, "delete_event", G_CALLBACK (window_delete_event_callback), NULL);
+	g_signal_connect (main_window, "destroy", G_CALLBACK (ui_done), NULL);
+	g_signal_connect (main_window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 	gtk_window_set_title (GTK_WINDOW (main_window), "XQF");
 
 	register_window (main_window);
@@ -3672,7 +3711,7 @@ static void populate_main_window (void) {
 		server_filter_menu_items[i].label      = _("None");
 		server_filter_menu_items[i].accel_key  = 0;
 		server_filter_menu_items[i].accel_mods = 0;
-		server_filter_menu_items[i].callback   = GTK_SIGNAL_FUNC (server_filter_select_callback);
+		server_filter_menu_items[i].callback   = G_CALLBACK (server_filter_select_callback);
 		server_filter_menu_items[i].user_data  = (gpointer) j;
 		server_filter_menu_items[i].widget     = &server_filter_widget[i];
 
@@ -3686,7 +3725,7 @@ static void populate_main_window (void) {
 			server_filter_menu_items[i].label      = buf;
 			server_filter_menu_items[i].accel_key  = 0;
 			server_filter_menu_items[i].accel_mods = 0;
-			server_filter_menu_items[i].callback   = GTK_SIGNAL_FUNC (server_filter_select_callback);
+			server_filter_menu_items[i].callback   = G_CALLBACK (server_filter_select_callback);
 			server_filter_menu_items[i].user_data  = (gpointer) j;
 			server_filter_menu_items[i].widget     = &server_filter_widget[i];
 		}
@@ -3739,7 +3778,7 @@ static void populate_main_window (void) {
 	server_filter_menu_items = g_array_new (FALSE, FALSE, sizeof (GtkWidget*));
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu ());
 
-	gtk_signal_connect_object (GTK_OBJECT (file_quit_menu_item), "activate", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (main_window));
+	g_signal_connect_swapped (GTK_OBJECT (file_quit_menu_item), "activate", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (main_window));
 
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (view_hostnames_menu_item), show_hostnames);
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (view_defport_menu_item), show_default_port);
@@ -3766,9 +3805,9 @@ static void populate_main_window (void) {
 	source_ctree = create_source_ctree (scrollwin);
 	gtk_widget_show (source_ctree);
 
-	gtk_signal_connect (GTK_OBJECT (source_ctree), "tree_select_row", GTK_SIGNAL_FUNC (source_ctree_selection_changed_callback), NULL);
-	gtk_signal_connect (GTK_OBJECT (source_ctree), "tree_unselect_row", GTK_SIGNAL_FUNC (source_ctree_selection_changed_callback), NULL);
-	gtk_signal_connect (GTK_OBJECT (source_ctree), "event", GTK_SIGNAL_FUNC (source_ctree_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (source_ctree), "tree_select_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
+	g_signal_connect (GTK_OBJECT (source_ctree), "tree_unselect_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
+	g_signal_connect (GTK_OBJECT (source_ctree), "event", G_CALLBACK (source_ctree_event_callback), NULL);
 
 	gtk_widget_show (scrollwin);
 
@@ -3786,19 +3825,19 @@ static void populate_main_window (void) {
 	gtk_widget_show_all (button);
 
 	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
-	gtk_signal_connect (GTK_OBJECT (entry), "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
+	g_signal_connect (GTK_OBJECT (entry), "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
 
-	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (quickfilter_delete_button_clicked), entry);
+	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (quickfilter_delete_button_clicked), entry);
 
 	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server"));
 
 	server_clist = GTK_CLIST (create_cwidget (scrollwin, &server_clist_def));
 
-	gtk_signal_connect (GTK_OBJECT (server_clist), "click_column", GTK_SIGNAL_FUNC (clist_set_sort_column), &server_clist_def);
-	gtk_signal_connect (GTK_OBJECT (server_clist), "event", GTK_SIGNAL_FUNC (server_clist_event_callback), NULL);
-	gtk_signal_connect (GTK_OBJECT (server_clist), "select_row", GTK_SIGNAL_FUNC (server_clist_select_callback), NULL);
-	gtk_signal_connect (GTK_OBJECT (server_clist), "unselect_row", GTK_SIGNAL_FUNC (server_clist_unselect_callback), NULL);
-	gtk_signal_connect (GTK_OBJECT (server_clist), "key_press_event", GTK_SIGNAL_FUNC (server_clist_keypress_callback), NULL);
+	g_signal_connect (GTK_OBJECT (server_clist), "click_column", G_CALLBACK (clist_set_sort_column), &server_clist_def);
+	g_signal_connect (GTK_OBJECT (server_clist), "event", G_CALLBACK (server_clist_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (server_clist), "select_row", G_CALLBACK (server_clist_select_callback), NULL);
+	g_signal_connect (GTK_OBJECT (server_clist), "unselect_row", G_CALLBACK (server_clist_unselect_callback), NULL);
+	g_signal_connect (GTK_OBJECT (server_clist), "key_press_event", G_CALLBACK (server_clist_keypress_callback), NULL);
 
 	gtk_clist_set_compare_func (server_clist, (GtkCListCompareFunc) server_clist_compare_func);
 
@@ -3814,8 +3853,8 @@ static void populate_main_window (void) {
 
 	player_clist = GTK_CLIST (create_cwidget (scrollwin, &player_clist_def));
 
-	gtk_signal_connect (GTK_OBJECT (player_clist), "click_column", GTK_SIGNAL_FUNC (clist_set_sort_column), &player_clist_def);
-	gtk_signal_connect (GTK_OBJECT (player_clist), "event", GTK_SIGNAL_FUNC (player_clist_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (player_clist), "click_column", G_CALLBACK (clist_set_sort_column), &player_clist_def);
+	g_signal_connect (GTK_OBJECT (player_clist), "event", G_CALLBACK (player_clist_event_callback), NULL);
 
 	gtk_clist_set_compare_func (player_clist, (GtkCListCompareFunc) player_clist_compare_func);
 
@@ -3829,8 +3868,8 @@ static void populate_main_window (void) {
 
 	srvinf_ctree = GTK_CTREE (create_cwidget (scrollwin, &srvinf_clist_def));
 
-	gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "click_column", GTK_SIGNAL_FUNC (clist_set_sort_column), &srvinf_clist_def);
-	gtk_signal_connect (GTK_OBJECT (srvinf_ctree), "event", GTK_SIGNAL_FUNC (server_info_clist_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (srvinf_ctree), "click_column", G_CALLBACK (clist_set_sort_column), &srvinf_clist_def);
+	g_signal_connect (GTK_OBJECT (srvinf_ctree), "event", G_CALLBACK (server_info_clist_event_callback), NULL);
 
 	gtk_clist_set_compare_func (GTK_CLIST (srvinf_ctree), (GtkCListCompareFunc) srvinf_clist_compare_func);
 

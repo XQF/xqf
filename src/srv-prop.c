@@ -830,18 +830,18 @@ void properties_dialog (struct server *s) {
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_widget_set_usize (button, 80, -1);
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_usize (button, 80, -1);
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (set_new_properties), (gpointer) s);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (set_new_properties), (gpointer) s);
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);

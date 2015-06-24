@@ -606,7 +606,7 @@ GtkWidget *scripts_config_page () {
 	button = gtk_button_new_with_label(_("Install..."));
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
-	gtk_signal_connect (GTK_OBJECT (button),
+	g_signal_connect (GTK_OBJECT (button),
 			"clicked", G_CALLBACK(install_button_callback), NULL);
 
 #if have_time_to_implement_that
@@ -637,8 +637,8 @@ GtkWidget *scripts_config_page () {
 
 		gtk_container_add (GTK_CONTAINER (item), gtk_label_new(filename));
 
-		gtk_signal_connect (GTK_OBJECT (item), "select",
-				GTK_SIGNAL_FUNC(scripts_page_select_callback), GINT_TO_POINTER(i));
+		g_signal_connect (GTK_OBJECT (item), "select",
+				G_CALLBACK(scripts_page_select_callback), GINT_TO_POINTER(i));
 
 		gtk_widget_show_all(item);
 		gtk_container_add (GTK_CONTAINER (gtklist), item);

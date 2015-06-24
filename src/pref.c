@@ -1730,8 +1730,8 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (q1_top_color_button, 40, -1);
-	gtk_signal_connect (GTK_OBJECT (q1_top_color_button), "event",
-			GTK_SIGNAL_FUNC (color_button_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (q1_top_color_button), "event",
+			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), q1_top_color_button,
 			1, 2, 0, 1);
 	set_bg_color (q1_top_color_button, fix_qw_player_color (pref_q1_top_color));
@@ -1746,8 +1746,8 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (q1_bottom_color_button, 40, -1);
-	gtk_signal_connect (GTK_OBJECT (q1_bottom_color_button), "event",
-			GTK_SIGNAL_FUNC (color_button_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (q1_bottom_color_button), "event",
+			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), q1_bottom_color_button,
 			1, 2, 1, 2);
 	set_bg_color (q1_bottom_color_button,
@@ -1806,8 +1806,8 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_widget_set_usize(GTK_COMBO(qw_skin_combo)->entry, 112, -1);
 	gtk_combo_set_use_arrows_always(GTK_COMBO(qw_skin_combo), TRUE);
 	gtk_combo_set_case_sensitive(GTK_COMBO(qw_skin_combo), TRUE);
-	gtk_signal_connect (GTK_OBJECT(GTK_COMBO(qw_skin_combo)->entry),
-			"changed", GTK_SIGNAL_FUNC(qw_skin_combo_changed_callback), NULL);
+	g_signal_connect (GTK_OBJECT(GTK_COMBO(qw_skin_combo)->entry),
+			"changed", G_CALLBACK(qw_skin_combo_changed_callback), NULL);
 	gtk_container_add(GTK_CONTAINER(alignment), qw_skin_combo);
 	gtk_widget_show(qw_skin_combo);
 
@@ -1829,8 +1829,8 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (qw_top_color_button, 40, -1);
-	gtk_signal_connect (GTK_OBJECT (qw_top_color_button), "event",
-			GTK_SIGNAL_FUNC (color_button_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (qw_top_color_button), "event",
+			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), qw_top_color_button,
 			1, 2, 0, 1);
 	set_bg_color (qw_top_color_button, fix_qw_player_color (pref_qw_top_color));
@@ -1845,7 +1845,7 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (qw_bottom_color_button, 40, -1);
-	gtk_signal_connect (GTK_OBJECT (qw_bottom_color_button), "event", GTK_SIGNAL_FUNC (color_button_event_callback), NULL);
+	g_signal_connect (GTK_OBJECT (qw_bottom_color_button), "event", G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), qw_bottom_color_button, 1, 2, 1, 2);
 	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
 	gtk_widget_show (qw_bottom_color_button);
@@ -1946,7 +1946,7 @@ static GtkWidget *q2_skin_box_create (void) {
 	gtk_widget_set_usize(GTK_COMBO(q2_skin_combo)->entry, 144, -1);
 	gtk_combo_set_use_arrows_always(GTK_COMBO(q2_skin_combo), TRUE);
 	gtk_combo_set_case_sensitive(GTK_COMBO(q2_skin_combo), TRUE);
-	gtk_signal_connect(GTK_OBJECT(GTK_COMBO(q2_skin_combo)->entry), "changed", GTK_SIGNAL_FUNC(q2_skin_combo_changed_callback), NULL);
+	g_signal_connect(GTK_OBJECT(GTK_COMBO(q2_skin_combo)->entry), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
 	gtk_container_add(GTK_CONTAINER(alignment), q2_skin_combo);
 	gtk_widget_show(q2_skin_combo);
 
@@ -2288,7 +2288,7 @@ static GtkWidget *create_wb_switch_menu(void(*callback)(GtkWidget *, int)) {
 
 	for (i = 0; i < 9; i++) {
 		menu_item = gtk_menu_item_new_with_label(_(wb_switch_labels[i]));
-		gtk_signal_connect(GTK_OBJECT(menu_item), "activate", GTK_SIGNAL_FUNC(callback), GINT_TO_POINTER(i));
+		g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), GINT_TO_POINTER(i));
 		gtk_menu_append(GTK_MENU(menu), menu_item);
 		gtk_widget_show(menu_item);
 	}
@@ -2313,17 +2313,17 @@ static GtkWidget *create_noskins_menu (int qworq2) {
 	menu = gtk_menu_new();
 
 	menu_item = gtk_menu_item_new_with_label(_("Use skins"));
-	gtk_signal_connect(GTK_OBJECT(menu_item), "activate", GTK_SIGNAL_FUNC(callback), (gpointer) 0);
+	g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 0);
 	gtk_menu_append(GTK_MENU(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	menu_item = gtk_menu_item_new_with_label(_("Don\'t use skins"));
-	gtk_signal_connect(GTK_OBJECT(menu_item), "activate", GTK_SIGNAL_FUNC(callback), (gpointer) 1);
+	g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 1);
 	gtk_menu_append(GTK_MENU(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	menu_item = gtk_menu_item_new_with_label(_("Don\'t download new skins"));
-	gtk_signal_connect(GTK_OBJECT(menu_item), "activate", GTK_SIGNAL_FUNC(callback), (gpointer) 2);
+	g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 2);
 	gtk_menu_append(GTK_MENU(menu), menu_item);
 	gtk_widget_show(menu_item);
 
@@ -2713,18 +2713,18 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 		gtk_entry_set_text(GTK_ENTRY(genprefs[type].cmd_entry), games[type].cmd);
 		gtk_entry_set_position(GTK_ENTRY(genprefs[type].cmd_entry), 0);
 	}
-	gtk_signal_connect_object(GTK_OBJECT(genprefs[type].cmd_entry), "activate", GTK_SIGNAL_FUNC(game_file_activate_callback), GINT_TO_POINTER(type));
+	g_signal_connect_swapped(GTK_OBJECT(genprefs[type].cmd_entry), "activate", G_CALLBACK(game_file_activate_callback), GINT_TO_POINTER(type));
 	gtk_box_pack_start(GTK_BOX(hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
 	gtk_widget_show(genprefs[type].cmd_entry);
 
 	button = gtk_button_new_with_label("...");
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(game_file_dialog), GINT_TO_POINTER(type));
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(game_file_dialog), GINT_TO_POINTER(type));
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 3);
 	gtk_widget_show(button);
 
 	// translator: button for command suggestion
 	button = gtk_button_new_with_label(_("Suggest"));
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(pref_suggest_command), GINT_TO_POINTER(type));
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(pref_suggest_command), GINT_TO_POINTER(type));
 	gtk_widget_set_sensitive(button, pref_can_suggest(type));
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
@@ -2752,13 +2752,13 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	gtk_box_pack_start(GTK_BOX(hbox),genprefs[type].dir_entry , TRUE, TRUE, 0);
 
 	button = gtk_button_new_with_label("...");
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(game_dir_dialog), (gpointer)type);
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(game_dir_dialog), (gpointer)type);
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 3);
 	gtk_widget_show(button);
 
 	// translator: button for directory guess
 	button = gtk_button_new_with_label(_("Suggest"));
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(game_file_activate_callback), (gpointer)type);
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(game_file_activate_callback), (gpointer)type);
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
 	gtk_tooltips_set_tip(tooltips, button, _("Tries to guess the working directory based on the command line"), NULL);
@@ -2766,13 +2766,13 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	if (games[type].custom_cfgs) {
 		gtk_object_set_user_data(GTK_OBJECT(genprefs[type].dir_entry), (gpointer) type);
-		gtk_signal_connect(GTK_OBJECT(genprefs[type].dir_entry),
+		g_signal_connect(GTK_OBJECT(genprefs[type].dir_entry),
 				"activate",
-				GTK_SIGNAL_FUNC(dir_entry_activate_callback),
+				G_CALLBACK(dir_entry_activate_callback),
 				NULL);
-		gtk_signal_connect(GTK_OBJECT(genprefs[type].dir_entry),
+		g_signal_connect(GTK_OBJECT(genprefs[type].dir_entry),
 				"focus_out_event",
-				GTK_SIGNAL_FUNC(dir_entry_activate_callback),
+				G_CALLBACK(dir_entry_activate_callback),
 				NULL);
 	}
 	gtk_widget_show(genprefs[type].dir_entry);
@@ -2873,7 +2873,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_widget_show(arguments_clist);
 	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_clist);
 	gtk_clist_column_titles_show(GTK_CLIST(arguments_clist));
-	gtk_signal_connect(GTK_OBJECT(arguments_clist), "select_row", GTK_SIGNAL_FUNC(custom_args_clist_select_row_callback), arguments_clist);
+	g_signal_connect(GTK_OBJECT(arguments_clist), "select_row", G_CALLBACK(custom_args_clist_select_row_callback), arguments_clist);
 	gtk_object_set_user_data(GTK_OBJECT(arguments_clist), (gpointer) type);
 
 	game_label = gtk_label_new(_("Game"));
@@ -2961,23 +2961,23 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	GTK_WIDGET_SET_FLAGS(custom_args_add_button[type], GTK_CAN_DEFAULT);
 
 	gtk_object_set_user_data(GTK_OBJECT(new_button), (gpointer) type);
-	gtk_signal_connect(GTK_OBJECT(new_button), "clicked",
-		GTK_SIGNAL_FUNC(new_custom_args_callback),
+	g_signal_connect(GTK_OBJECT(new_button), "clicked",
+		G_CALLBACK(new_custom_args_callback),
 		(gpointer) arguments_clist);
 
 	gtk_object_set_user_data(GTK_OBJECT(delete_button), (gpointer) type);
-	gtk_signal_connect(GTK_OBJECT(delete_button), "clicked",
-		GTK_SIGNAL_FUNC(delete_custom_args_callback),
+	g_signal_connect(GTK_OBJECT(delete_button), "clicked",
+		G_CALLBACK(delete_custom_args_callback),
 		(gpointer) arguments_clist);
 
 	gtk_object_set_user_data(GTK_OBJECT(defaults_button), (gpointer) type);
-	gtk_signal_connect(GTK_OBJECT(defaults_button), "clicked",
-		GTK_SIGNAL_FUNC(add_custom_args_defaults),
+	g_signal_connect(GTK_OBJECT(defaults_button), "clicked",
+		G_CALLBACK(add_custom_args_defaults),
 		(gpointer) arguments_clist);
 
 	gtk_object_set_user_data(GTK_OBJECT(custom_args_add_button[type]), (gpointer) type);
-	gtk_signal_connect(GTK_OBJECT(custom_args_add_button[type]), "clicked",
-		GTK_SIGNAL_FUNC(add_custom_args_callback),
+	g_signal_connect(GTK_OBJECT(custom_args_add_button[type]), "clicked",
+		G_CALLBACK(add_custom_args_callback),
 		(gpointer) arguments_clist);
 
 	// Populate clist with custom_args from g_slist
@@ -3054,8 +3054,8 @@ static GtkWidget *games_config_page (int defgame) {
 
 		gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
 
-		gtk_signal_connect (GTK_OBJECT (genprefs[i].game_button), "select",
-			GTK_SIGNAL_FUNC (game_listitem_selected_callback), GINT_TO_POINTER(i));
+		g_signal_connect (GTK_OBJECT (genprefs[i].game_button), "select",
+			G_CALLBACK (game_listitem_selected_callback), GINT_TO_POINTER(i));
 
 		gtk_widget_show(genprefs[i].game_button);
 		gtk_container_add (GTK_CONTAINER (gtklist), genprefs[i].game_button);
@@ -3384,17 +3384,17 @@ static GtkWidget *q3_mem_options_page (void) {
 
 	button = gtk_button_new_with_label(_("Default"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (q3_set_memory_callback), (gpointer) 0);
+	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 0);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label(_("128MB"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (q3_set_memory_callback), (gpointer) 1);
+	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 1);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label(_(">256MB"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (q3_set_memory_callback), (gpointer) 2);
+	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 2);
 	gtk_widget_show (button);
 
 	gtk_widget_show (hbox2);
@@ -3929,7 +3929,7 @@ static GtkWidget *general_options_page (void) {
 		GtkWidget* button = gtk_button_new_with_label(_("scan now"));
 		gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 		gtk_misc_set_padding(GTK_MISC(GTK_BIN(button)->child),4,0);
-		gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (scan_maps_callback), NULL);
+		g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (scan_maps_callback), NULL);
 		gtk_widget_show (button);
 	}
 
@@ -3954,7 +3954,7 @@ static GtkWidget *general_options_page (void) {
 
 	terminate_check_button = gtk_check_button_new_with_label (_("Terminate XQF"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (terminate_check_button), default_terminate);
-	gtk_signal_connect (GTK_OBJECT (terminate_check_button), "toggled", GTK_SIGNAL_FUNC (terminate_toggled_callback), NULL);
+	g_signal_connect (GTK_OBJECT (terminate_check_button), "toggled", G_CALLBACK (terminate_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (terminate_check_button);
 
@@ -3967,7 +3967,7 @@ static GtkWidget *general_options_page (void) {
 
 	launchinfo_check_button = gtk_check_button_new_with_label (_("Create LaunchInfo.txt"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
-	gtk_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled", GTK_SIGNAL_FUNC (launchinfo_toggled_callback), NULL);
+	g_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled", G_CALLBACK (launchinfo_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
 	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
 	gtk_widget_show (launchinfo_check_button);
@@ -3981,7 +3981,7 @@ static GtkWidget *general_options_page (void) {
 
 	prelaunchexec_check_button = gtk_check_button_new_with_label (_("Execute prelaunch"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
-	gtk_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled", GTK_SIGNAL_FUNC (prelaunchexec_toggled_callback), NULL);
+	g_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled", G_CALLBACK (prelaunchexec_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
 	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"), NULL);
 	gtk_widget_show (prelaunchexec_check_button);
@@ -4020,7 +4020,7 @@ static GtkWidget *general_options_page (void) {
 	save_srvinfo_check_button = gtk_check_button_new_with_label (_("Save server information"));
 	gtk_box_pack_start (GTK_BOX (hbox), save_srvinfo_check_button, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (save_srvinfo_check_button), default_save_srvinfo);
-	gtk_signal_connect (GTK_OBJECT (save_srvinfo_check_button), "toggled", GTK_SIGNAL_FUNC (save_srvinfo_toggled_callback), NULL);
+	g_signal_connect (GTK_OBJECT (save_srvinfo_check_button), "toggled", G_CALLBACK (save_srvinfo_toggled_callback), NULL);
 	gtk_widget_show (save_srvinfo_check_button);
 
 	gtk_widget_show (hbox);
@@ -4241,7 +4241,7 @@ static GtkWidget *sound_options_page (void) {
 
 	sound_enable_check_button = gtk_check_button_new_with_label (_("Enable Sound"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_enable_check_button), sound_enable);
-	gtk_signal_connect (GTK_OBJECT (sound_enable_check_button), "toggled", GTK_SIGNAL_FUNC (sound_enable_toggled_callback), NULL);
+	g_signal_connect (GTK_OBJECT (sound_enable_check_button), "toggled", G_CALLBACK (sound_enable_toggled_callback), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_enable_check_button, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (sound_enable_check_button);
 
@@ -4263,7 +4263,7 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_player_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_player_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_player_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_player_file_dialog_button), "clicked", G_CALLBACK (sound_player_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_player_file_dialog_button, 2, 3, 1, 2, 0, 0, 0, 0);
 	gtk_widget_show (sound_player_file_dialog_button);
 
@@ -4300,13 +4300,13 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_xqf_start_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_xqf_start_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_xqf_start_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_start_file_dialog_button), "clicked", G_CALLBACK (sound_xqf_start_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_xqf_start_file_dialog_button, 2, 3, 0, 1, 0, 0, 0, 0);
 	gtk_widget_show (sound_xqf_start_file_dialog_button);
 
 	// Test button
 	sound_xqf_start_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_xqf_start_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_xqf_start_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_start_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_xqf_start_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_xqf_start_file_test_button, 3, 4, 0, 1, 0, 0, 0, 0);
 	gtk_widget_show (sound_xqf_start_file_test_button);
 
@@ -4328,13 +4328,13 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_xqf_quit_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_xqf_quit_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_xqf_quit_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_quit_file_dialog_button), "clicked", G_CALLBACK (sound_xqf_quit_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_xqf_quit_file_dialog_button, 2, 3, 1, 2, 0, 0, 0, 0);
 	gtk_widget_show (sound_xqf_quit_file_dialog_button);
 
 	// Test button
 	sound_xqf_quit_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_xqf_quit_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_xqf_quit_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_quit_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_xqf_quit_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_xqf_quit_file_test_button, 3, 4, 1, 2, 0, 0, 0, 0);
 	gtk_widget_show (sound_xqf_quit_file_test_button);
 
@@ -4356,14 +4356,14 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_update_done_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_update_done_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_update_done_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_update_done_file_dialog_button), "clicked", G_CALLBACK (sound_update_done_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_update_done_file_dialog_button, 2, 3, 2, 3, 0, 0, 0, 0);
 	gtk_widget_show (sound_update_done_file_dialog_button);
 
 
 	// Test button
 	sound_update_done_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_update_done_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_update_done_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_update_done_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_update_done_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_update_done_file_test_button, 3, 4, 2, 3, 0, 0, 0, 0);
 	gtk_widget_show (sound_update_done_file_test_button);
 
@@ -4385,14 +4385,14 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_refresh_done_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_refresh_done_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_refresh_done_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_refresh_done_file_dialog_button), "clicked", G_CALLBACK (sound_refresh_done_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_refresh_done_file_dialog_button, 2, 3, 3, 4, 0, 0, 0, 0);
 	gtk_widget_show (sound_refresh_done_file_dialog_button);
 
 
 	// Test button
 	sound_refresh_done_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_refresh_done_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_refresh_done_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_refresh_done_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_refresh_done_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_refresh_done_file_test_button, 3, 4, 3, 4, 0, 0, 0, 0);
 	gtk_widget_show (sound_refresh_done_file_test_button);
 
@@ -4414,14 +4414,14 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_stop_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_stop_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_stop_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_stop_file_dialog_button), "clicked", G_CALLBACK (sound_stop_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_stop_file_dialog_button, 2, 3, 4, 5, 0, 0, 0, 0);
 	gtk_widget_show (sound_stop_file_dialog_button);
 
 
 	// Test button
 	sound_stop_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_stop_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_stop_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_stop_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_stop_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_stop_file_test_button, 3, 4, 4, 5, 0, 0, 0, 0);
 	gtk_widget_show (sound_stop_file_test_button);
 
@@ -4443,14 +4443,14 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_server_connect_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_server_connect_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_server_connect_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_server_connect_file_dialog_button), "clicked", G_CALLBACK (sound_server_connect_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_server_connect_file_dialog_button, 2, 3, 5, 6, 0, 0, 0, 0);
 	gtk_widget_show (sound_server_connect_file_dialog_button);
 
 
 	// Test button
 	sound_server_connect_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_server_connect_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_server_connect_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_server_connect_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_server_connect_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_server_connect_file_test_button, 3, 4, 5, 6, 0, 0, 0, 0);
 	gtk_widget_show (sound_server_connect_file_test_button);
 
@@ -4472,14 +4472,14 @@ static GtkWidget *sound_options_page (void) {
 
 	// File selection dialog
 	sound_redial_success_file_dialog_button = gtk_button_new_with_label ("...");
-	gtk_signal_connect_object (GTK_OBJECT (sound_redial_success_file_dialog_button), "clicked", GTK_SIGNAL_FUNC (sound_redial_success_file_dialog), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (sound_redial_success_file_dialog_button), "clicked", G_CALLBACK (sound_redial_success_file_dialog), NULL);
 	gtk_table_attach (GTK_TABLE (table), sound_redial_success_file_dialog_button, 2, 3, 6, 7, 0, 0, 0, 0);
 	gtk_widget_show (sound_redial_success_file_dialog_button);
 
 
 	// Test button
 	sound_redial_success_file_test_button = sound_test_button_new();
-	gtk_signal_connect_object (GTK_OBJECT (sound_redial_success_file_test_button), "clicked", GTK_SIGNAL_FUNC (play_sound_pref), (gpointer)sound_redial_success_entry);
+	g_signal_connect_swapped (GTK_OBJECT (sound_redial_success_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_redial_success_entry);
 	gtk_table_attach (GTK_TABLE (table), sound_redial_success_file_test_button, 3, 4, 6, 7, 0, 0, 0, 0);
 	gtk_widget_show (sound_redial_success_file_test_button);
 
@@ -4678,14 +4678,14 @@ void preferences_dialog (int page_num) {
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (ok_callback), GTK_OBJECT(window));
+	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (ok_callback), GTK_OBJECT(window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
@@ -5125,7 +5125,7 @@ void game_file_activate_callback (enum server_type type) {
 }
 
 void game_file_dialog(enum server_type type) {
-	file_dialog(_("Game Command Selection"), GTK_SIGNAL_FUNC(game_file_dialog_ok_callback), GINT_TO_POINTER(type));
+	file_dialog(_("Game Command Selection"), G_CALLBACK(game_file_dialog_ok_callback), GINT_TO_POINTER(type));
 }
 
 void game_dir_dialog(enum server_type type) {
