@@ -108,12 +108,12 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_combo_set_case_sensitive (GTK_COMBO (server_combo), TRUE);
 	gtk_combo_set_use_arrows_always (GTK_COMBO (server_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (server_combo));
-	gtk_signal_connect (
+	g_signal_connect (
 			GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
-			GTK_SIGNAL_FUNC (server_combo_activate_callback), NULL);
-	gtk_signal_connect_object (
+			G_CALLBACK (server_combo_activate_callback), NULL);
+	g_signal_connect_swapped (
 			GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 
 	GTK_WIDGET_SET_FLAGS (GTK_COMBO (server_combo)->entry, GTK_CAN_FOCUS);
 	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (server_combo)->button, GTK_CAN_FOCUS);
@@ -126,7 +126,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 
 	option_menu = create_server_type_menu (*type,
 			create_server_type_menu_filter_configured,
-			GTK_SIGNAL_FUNC(select_server_type_callback));
+			G_CALLBACK(select_server_type_callback));
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 	gtk_widget_show (option_menu);
@@ -150,8 +150,8 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
@@ -160,11 +160,11 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	button = gtk_button_new_with_label ("OK");
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (server_combo_activate_callback),
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (server_combo_activate_callback),
 			GTK_OBJECT (GTK_COMBO (server_combo)->entry));
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);

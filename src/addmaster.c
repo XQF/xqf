@@ -246,9 +246,9 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_combo_set_case_sensitive (GTK_COMBO (master_name_combo), TRUE);
 	gtk_combo_set_use_arrows_always (GTK_COMBO (master_name_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (master_name_combo));
-	gtk_signal_connect(
+	g_signal_connect(
 			GTK_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
-			GTK_SIGNAL_FUNC (master_okbutton_callback), GTK_OBJECT (window));
+			G_CALLBACK (master_okbutton_callback), GTK_OBJECT (window));
 
 	GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_name_combo)->entry, GTK_CAN_FOCUS);
 	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (master_name_combo)->button, GTK_CAN_FOCUS);
@@ -266,7 +266,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	/* Master Type Option Menu */
 
-	option_menu = create_server_type_menu (master_type, create_server_type_menu_filter_configured, GTK_SIGNAL_FUNC(select_master_type_callback));
+	option_menu = create_server_type_menu (master_type, create_server_type_menu_filter_configured, G_CALLBACK(select_master_type_callback));
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 
@@ -293,13 +293,13 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_combo_set_case_sensitive (GTK_COMBO (master_addr_combo), TRUE);
 	gtk_combo_set_use_arrows_always (GTK_COMBO (master_addr_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (master_addr_combo));
-	gtk_signal_connect (
+	g_signal_connect (
 			GTK_OBJECT (GTK_COMBO (master_addr_combo)->entry), "activate",
-			GTK_SIGNAL_FUNC (master_okbutton_callback), GTK_OBJECT (window));
-	gtk_signal_connect (
+			G_CALLBACK (master_okbutton_callback), GTK_OBJECT (window));
+	g_signal_connect (
 			GTK_OBJECT (GTK_COMBO (master_addr_combo)->list),
 			"selection-changed",
-			GTK_SIGNAL_FUNC
+			G_CALLBACK
 			(master_address_from_history_selected_callback),NULL);
 
 	GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_addr_combo)->entry, GTK_CAN_FOCUS);
@@ -331,8 +331,8 @@ struct master *add_master_dialog (struct master *m) {
 		if (master_to_edit) {
 			gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);
 		}
-		gtk_signal_connect(GTK_OBJECT (master_query_type_radios[i]), "toggled",
-				GTK_SIGNAL_FUNC (master_type_radio_callback), (gpointer)i);
+		g_signal_connect(GTK_OBJECT (master_query_type_radios[i]), "toggled",
+				G_CALLBACK (master_type_radio_callback), (gpointer)i);
 
 		gtk_widget_show (master_query_type_radios[i]);
 		gtk_box_pack_start (GTK_BOX (hbox),master_query_type_radios[i], FALSE, FALSE, 0);
@@ -369,7 +369,7 @@ struct master *add_master_dialog (struct master *m) {
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
@@ -378,7 +378,7 @@ struct master *add_master_dialog (struct master *m) {
 	button = gtk_button_new_with_label ("OK");
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC(master_okbutton_callback), window);
+	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);

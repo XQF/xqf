@@ -4,14 +4,22 @@ cmake_minimum_required(VERSION 2.8.7)
 project(xqf)
 
 set (VERSION "1.0.6.2")
-set (DOMAIN ${PROJECT_NAME})
+set (DOMAIN "${PROJECT_NAME}")
 
 set (LINGUAS ca da de es fi fr pl ru)
+set (DEFAULT_GUI GTK2)
 
 # Paths
 set (PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/xqf")
 set (LOCALEDIR "${CMAKE_INSTALL_PREFIX}/share/locale")
-set (PIXMAPS_ENTRY_PATH ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor)
+
+if (NOT MAN_ENTRY_PATH)
+	set (MAN_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
+endif (NOT MAN_ENTRY_PATH)
+
+if (NOT PIXMAPS_ENTRY_PATH)
+	set (PIXMAPS_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor")
+endif (NOT PIXMAPS_ENTRY_PATH)
 
 if (NOT CMAKE_INSTALL_PREFIX)
 	set (CMAKE_INSTALL_PREFIX "/usr")
@@ -21,7 +29,6 @@ endif (NOT CMAKE_INSTALL_PREFIX)
 add_definitions (-DPACKAGE="${PROJECT_NAME}" -DPACKAGE_VERSION="${VERSION}" -DXQF_VERSION="${VERSION}" -DDOMAIN="${DOMAIN}" -DLOCALEDIR="${LOCALEDIR}" -DPACKAGE_DATA_DIR="${PACKAGE_DATA_DIR}")
 
 # Options
-option(USE_GTK3 "Use GTK+ toolkit version 3" OFF)
 option(DEPRECATED_DISABLE "Disable deprecated parts of GLib, GObject, GDK and GTK+" OFF)
 
 option(USE_GEOIP "Depend on GeoIP library for geolocation" ON)
@@ -34,10 +41,25 @@ endif (NOT WITH_QSTAT)
 
 add_definitions (-DQSTAT_EXEC="${WITH_QSTAT}")
 
-if (CMAKE_BUILD_TYPE EQUAL DEBUG)
+if (CMAKE_BUILD_TYPE MATCHES DEBUG)
 	add_definitions (-DDEBUG)
-endif (CMAKE_BUILD_TYPE EQUAL DEBUG)
+endif (CMAKE_BUILD_TYPE MATCHES DEBUG)
 
+# Default GUI setting
+if (NOT (GUI MATCHES GTK2 OR GUI MATCHES GTK3))
+	set (GUI ${DEFAULT_GUI})
+endif (NOT (GUI MATCHES GTK2 OR GUI MATCHES GTK3))
+
+# GUI definitions
+if (GUI MATCHES GTK2)
+	add_definitions (-DGUI_GTK2)
+endif (GUI MATCHES GTK2)
+
+if (GUI MATCHES GTK3)
+	add_definitions (-DGUI_GTK3)
+endif (GUI MATCHES GTK3)
+
+# Other definitions
 if (RCON_STANDALONE)
 	add_definitions (-DRCON_STANDALONE)
 endif (RCON_STANDALONE)
@@ -54,8 +76,6 @@ endif (USE_GZIP)
 set (xqf_HEADERS_DIR ${CMAKE_SOURCE_DIR}/src)
 
 set (xqf_SOURCES
-
-     ${CMAKE_SOURCE_DIR}/src/xqf.ui
 
      ${CMAKE_SOURCE_DIR}/src/addmaster.c
      ${CMAKE_SOURCE_DIR}/src/addserver.c
@@ -281,17 +301,24 @@ find_package (Gettext REQUIRED)
 pkg_check_modules (UNZIP REQUIRED minizip)
 pkg_check_modules (XML REQUIRED libxml-2.0)
 
-if (USE_GTK3)
-	pkg_check_modules (GTK3 REQUIRED gtk+-3.0)
-	include_directories (${GTK3_INCLUDE_DIRS})
-	link_directories (${GTK3_LIBRARY_DIRS})
-	add_definitions (${GTK3_CFLAGS_OTHER})
-else (USE_GTK3)
+
+
+if (GUI MATCHES GTK2)
 	pkg_check_modules (GTK2 REQUIRED gtk+-2.0)
 	include_directories (${GTK2_INCLUDE_DIRS})
 	link_directories (${GTK2_LIBRARY_DIRS})
 	add_definitions (${GTK2_CFLAGS_OTHER})
-endif (USE_GTK3)
+	set (GUI_SET ON)
+endif (GUI MATCHES GTK2)
+
+if (GUI MATCHES GTK3)
+	pkg_check_modules (GTK3 REQUIRED gtk+-3.0)
+	include_directories (${GTK3_INCLUDE_DIRS})
+	link_directories (${GTK3_LIBRARY_DIRS})
+	add_definitions (${GTK3_CFLAGS_OTHER})
+	set (GUI_SET ON)
+endif (GUI MATCHES GTK3)
+
 
 if (USE_GEOIP)
 	pkg_check_modules (GEOIP REQUIRED geoip)
@@ -318,11 +345,13 @@ add_definitions (-DGAMES_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
 add_executable (xqf ${xqf_SOURCES})
 target_link_libraries (xqf ${UNZIP_LIBRARIES} dl)
 
-if (USE_GTK3)
-	target_link_libraries (xqf ${GTK3_LIBRARIES})
-else (USE_GTK3)
+if (GUI MATCHES GTK2)
 	target_link_libraries (xqf ${GTK2_LIBRARIES})
-endif (USE_GTK3)
+endif (GUI MATCHES GTK2)
+
+if (GUI MATCHES GTK3)
+	target_link_libraries (xqf ${GTK3_LIBRARIES})
+endif (GUI MATCHES GTK3)
 
 if (USE_GEOIP)
 	target_link_libraries (xqf GeoIP)
@@ -366,7 +395,13 @@ install (TARGETS xqf DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 install (PROGRAMS ${CMAKE_SOURCE_DIR}/src/script/qstat_savage.sh DESTINATION "${PACKAGE_DATA_DIR}/script")
 
 # UI
-install (FILES ${CMAKE_SOURCE_DIR}/src/xqf.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
+if (GUI MATCHES GTK2)
+	install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk2.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
+endif (GUI MATCHES GTK2)
+
+if (GUI MATCHES GTK3)
+	install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk3.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
+endif (GUI MATCHES GTK3)
 
 # Icons
 install (FILES ${xpm_DATA} DESTINATION ${PACKAGE_DATA_DIR}/xpm)
@@ -386,7 +421,7 @@ install (FILES ${CMAKE_SOURCE_DIR}/pixmaps/scalable/xqf.svg DESTINATION ${PIXMAP
 install (FILES ${CMAKE_SOURCE_DIR}/src/qstat.cfg DESTINATION ${PACKAGE_DATA_DIR})
 
 # Man pages
-install (FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man6)
+install (FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6 DESTINATION ${MAN_ENTRY_PATH}/man6)
 
 # i18n
 foreach (LANG ${LINGUAS})

@@ -569,7 +569,7 @@ static GtkWidget *archs_stats_page (void) {
 
 	option_menu = create_server_type_menu (to_activate,
 			create_server_type_menu_filter_hasharch,
-			GTK_SIGNAL_FUNC(select_server_type_callback));
+			G_CALLBACK(select_server_type_callback));
 
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
@@ -694,7 +694,7 @@ static GtkWidget *country_stats_page (void) {
 
 	option_menu = create_server_type_menu (to_activate == GAMES_TOTAL?-1:to_activate,
 			create_server_type_menu_filter_hascountries,
-			GTK_SIGNAL_FUNC(select_country_server_type_callback));
+			G_CALLBACK(select_country_server_type_callback));
 	{
 		GtkWidget* menu_item = gtk_menu_item_new ();
 		GtkWidget* label = gtk_label_new(_("All Games"));
@@ -709,8 +709,8 @@ static GtkWidget *country_stats_page (void) {
 		gtk_menu_prepend (GTK_MENU (menu), menu_item);
 		gtk_container_add (GTK_CONTAINER (menu_item), label);
 
-		gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-				GTK_SIGNAL_FUNC (select_country_server_type_callback), (gpointer)GAMES_TOTAL);
+		g_signal_connect (GTK_OBJECT (menu_item), "activate",
+				G_CALLBACK (select_country_server_type_callback), (gpointer)GAMES_TOTAL);
 
 		gtk_widget_show (menu_item);
 		gtk_widget_show (label);
@@ -778,7 +778,7 @@ void statistics_dialog (void) {
 	collect_statistics ();
 
 	window = dialog_create_modal_transient_window (_("Statistics"),
-			TRUE, TRUE, GTK_SIGNAL_FUNC(statistics_save_geometry));
+			TRUE, TRUE, G_CALLBACK(statistics_save_geometry));
 
 	statistics_restore_geometry(window);
 
@@ -826,10 +826,10 @@ void statistics_dialog (void) {
 	button = gtk_button_new_with_label (_("Close"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	gtk_signal_connect (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (grab_defaults), NULL);
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (grab_defaults), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);

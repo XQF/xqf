@@ -948,8 +948,8 @@ static GtkWidget *create_filter_menu() {
 
 	menu = gtk_menu_new();
 
-	//  gtk_signal_connect(GTK_OBJECT(menu_item), "activate",
-	//                 GTK_SIGNAL_FUNC(callback), (gpointer) 0);
+	//  g_signal_connect(GTK_OBJECT(menu_item), "activate",
+	//                 G_CALLBACK(callback), (gpointer) 0);
 
 	for (i = 0;i<server_filters->len;i++) {
 		filter = g_array_index(server_filters, struct server_filter_vars*, i);
@@ -961,8 +961,8 @@ static GtkWidget *create_filter_menu() {
 		gtk_menu_append(GTK_MENU(menu), menu_item);
 		gtk_widget_show(menu_item);
 
-		gtk_signal_connect(GTK_OBJECT(menu_item), "activate",
-				GTK_SIGNAL_FUNC(filter_select_callback), GINT_TO_POINTER(i+1)); // array starts from zero but filters from 1
+		g_signal_connect(GTK_OBJECT(menu_item), "activate",
+				G_CALLBACK(filter_select_callback), GINT_TO_POINTER(i+1)); // array starts from zero but filters from 1
 	}
 
 	gtk_widget_show (menu);
@@ -1227,22 +1227,22 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	button = gtk_button_new_with_label(_("New"));
 	gtk_widget_set_usize(button, 80, -1);
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked",
-			GTK_SIGNAL_FUNC(filter_new_rename_callback), (gpointer)0);
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked",
+			G_CALLBACK(filter_new_rename_callback), (gpointer)0);
 	gtk_box_pack_start(GTK_BOX(hbox), button, FALSE, FALSE, 0);
 	gtk_widget_show(button);
 
 	button = gtk_button_new_with_label(_("Rename"));
 	gtk_widget_set_usize(button, 80, -1);
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked",
-			GTK_SIGNAL_FUNC(filter_new_rename_callback), (gpointer)1);
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked",
+			G_CALLBACK(filter_new_rename_callback), (gpointer)1);
 	gtk_box_pack_start(GTK_BOX(hbox), button, FALSE, FALSE, 0);
 	gtk_widget_show(button);
 
 	button = gtk_button_new_with_label(_("Delete"));
 	gtk_widget_set_usize(button, 80, -1);
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked",
-			GTK_SIGNAL_FUNC(filter_delete_callback), NULL);
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked",
+			G_CALLBACK(filter_delete_callback), NULL);
 	gtk_box_pack_start(GTK_BOX(hbox), button, FALSE, FALSE, 0);
 	gtk_widget_show(button);
 
@@ -1278,8 +1278,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON(filter_ping_spinner),
 			GTK_UPDATE_ALWAYS);
 	gtk_widget_set_usize(filter_ping_spinner, 64, -1);
-	gtk_signal_connect_object(GTK_OBJECT(filter_ping_spinner), "changed",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback),(gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_ping_spinner), "changed",
+			G_CALLBACK(server_filter_set_changed_callback),(gpointer) TRUE);
 	gtk_table_attach_defaults(GTK_TABLE(table), filter_ping_spinner, 1, 2, row, row+1);
 	gtk_widget_show(filter_ping_spinner);
 
@@ -1294,8 +1294,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	game_contains_entry = gtk_entry_new_with_max_length(32);
 	gtk_widget_set_usize(game_contains_entry, 64, -1);
 	gtk_entry_set_editable(GTK_ENTRY(game_contains_entry), TRUE);
-	gtk_signal_connect_object(GTK_OBJECT(game_contains_entry), "changed",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(game_contains_entry), "changed",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), game_contains_entry, 4, 5, row, row+1);
 	gtk_widget_show(game_contains_entry);
@@ -1315,8 +1315,8 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	filter_retries_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0, 0);
 	gtk_widget_set_usize(filter_retries_spinner, 64, -1);
-	gtk_signal_connect_object(GTK_OBJECT(filter_retries_spinner), "changed",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_retries_spinner), "changed",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 	gtk_table_attach_defaults(GTK_TABLE(table), filter_retries_spinner,
 			1, 2, row, row+1);
 	gtk_widget_show(filter_retries_spinner);
@@ -1331,8 +1331,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_game_type_entry = gtk_entry_new_with_max_length(32);
 	gtk_widget_set_usize(filter_game_type_entry, 64, -1);
 	gtk_entry_set_editable(GTK_ENTRY(filter_game_type_entry), TRUE);
-	gtk_signal_connect_object(GTK_OBJECT(filter_game_type_entry), "changed",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_game_type_entry), "changed",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), filter_game_type_entry, 4, 5, row, row+1);
 	gtk_widget_show(filter_game_type_entry);
@@ -1342,8 +1342,8 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	/*not full */
 	filter_not_full_check_button =gtk_check_button_new_with_label(_("it is not full"));
-	gtk_signal_connect_object(GTK_OBJECT(filter_not_full_check_button),"toggled",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_not_full_check_button),"toggled",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 	gtk_table_attach_defaults(GTK_TABLE(table),filter_not_full_check_button, 0, 2, row, row+1);
 	gtk_widget_show(filter_not_full_check_button);
 
@@ -1356,8 +1356,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	version_contains_entry = gtk_entry_new_with_max_length(32);
 	gtk_widget_set_usize(version_contains_entry, 64, -1);
 	gtk_entry_set_editable(GTK_ENTRY(version_contains_entry), TRUE);
-	gtk_signal_connect_object(GTK_OBJECT(version_contains_entry), "changed",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(version_contains_entry), "changed",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), version_contains_entry, 4, 5, row, row+1);
 	gtk_widget_show(version_contains_entry);
@@ -1368,8 +1368,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	/* not empty */
 	filter_not_empty_check_button =
 		gtk_check_button_new_with_label(_("it is not empty"));
-	gtk_signal_connect_object(GTK_OBJECT(filter_not_empty_check_button), "toggled",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_not_empty_check_button), "toggled",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 	gtk_table_attach_defaults(GTK_TABLE(table), filter_not_empty_check_button,
 			0, 2, row, row+1);
 	gtk_widget_show(filter_not_empty_check_button);
@@ -1383,8 +1383,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	map_contains_entry = gtk_entry_new_with_max_length(32);
 	gtk_widget_set_usize(map_contains_entry, 64, -1);
 	gtk_entry_set_editable(GTK_ENTRY(map_contains_entry), TRUE);
-	gtk_signal_connect_object(GTK_OBJECT(map_contains_entry), "changed",
-			GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(map_contains_entry), "changed",
+			G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), map_contains_entry, 4, 5, row, row+1);
 	gtk_widget_show(map_contains_entry);
@@ -1395,8 +1395,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	/* no cheats */
 	filter_no_cheats_check_button =
 		gtk_check_button_new_with_label(_("cheats are not allowed"));
-	gtk_signal_connect_object(GTK_OBJECT(filter_no_cheats_check_button), "toggled",
-		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_no_cheats_check_button), "toggled",
+		G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 	gtk_table_attach_defaults(GTK_TABLE(table), filter_no_cheats_check_button, 0, 2, row, row+1);
 	gtk_widget_show(filter_no_cheats_check_button);
 
@@ -1409,8 +1409,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	server_name_contains_entry = gtk_entry_new_with_max_length(32);
 	gtk_widget_set_usize(server_name_contains_entry, 64, -1);
 	gtk_entry_set_editable(GTK_ENTRY(server_name_contains_entry), TRUE);
-	gtk_signal_connect_object(GTK_OBJECT(server_name_contains_entry), "changed",
-		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(server_name_contains_entry), "changed",
+		G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table),server_name_contains_entry , 4, 5, row, row+1);
 	gtk_widget_show(server_name_contains_entry);
@@ -1421,8 +1421,8 @@ static void server_filter_page (GtkWidget *notebook) {
 	/* no password */
 	filter_no_password_check_button =
 		gtk_check_button_new_with_label(_("no password required"));
-	gtk_signal_connect_object(GTK_OBJECT(filter_no_password_check_button), "toggled",
-		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(filter_no_password_check_button), "toggled",
+		G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 	gtk_table_attach_defaults(GTK_TABLE(table), filter_no_password_check_button, 0, 2, row, row+1);
 	gtk_widget_show(filter_no_password_check_button);
 
@@ -1476,19 +1476,19 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_container_add(GTK_CONTAINER(vbuttonbox1),
 		country_selection_button);
 	gtk_widget_set_usize(country_selection_button, 80, -1);
-	gtk_signal_connect(GTK_OBJECT(country_selection_button), "clicked",
-		GTK_SIGNAL_FUNC(country_select_button_pressed), NULL);
+	g_signal_connect(GTK_OBJECT(country_selection_button), "clicked",
+		G_CALLBACK(country_select_button_pressed), NULL);
 
-	gtk_signal_connect_object(GTK_OBJECT(country_selection_button), "clicked",
-		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect_swapped(GTK_OBJECT(country_selection_button), "clicked",
+		G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 
 	country_clear_button = gtk_button_new_with_label(_("clear"));
 	gtk_widget_set_sensitive(country_clear_button,FALSE);
-	gtk_signal_connect(GTK_OBJECT(country_clear_button), "clicked",
-		GTK_SIGNAL_FUNC(country_clear_list), NULL);
-	gtk_signal_connect_object(GTK_OBJECT(country_clear_button), "clicked",
-		GTK_SIGNAL_FUNC(server_filter_set_changed_callback), (gpointer) TRUE);
+	g_signal_connect(GTK_OBJECT(country_clear_button), "clicked",
+		G_CALLBACK(country_clear_list), NULL);
+	g_signal_connect_swapped(GTK_OBJECT(country_clear_button), "clicked",
+		G_CALLBACK(server_filter_set_changed_callback), (gpointer) TRUE);
 
 
 	gtk_widget_show(country_clear_button);
@@ -1569,21 +1569,21 @@ int filters_cfg_dialog (int page_num) {
 
 	button = gtk_button_new_with_label(_("Cancel"));
 	gtk_widget_set_usize(button, 80, -1);
-	/*  gtk_signal_connect_object(GTK_OBJECT(button), "clicked",
-	    GTK_SIGNAL_FUNC(filters_on_cancel), NULL);
+	/*  g_signal_connect_swapped(GTK_OBJECT(button), "clicked",
+	    G_CALLBACK(filters_on_cancel), NULL);
 	*/
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked",
-			GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(window));
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked",
+			G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(window));
 	gtk_box_pack_end(GTK_BOX(hbox), button, FALSE, FALSE, 0);
 	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
 	gtk_widget_show(button);
 
 	button = gtk_button_new_with_label(_("OK"));
 	gtk_widget_set_usize(button, 80, -1);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked",
-			GTK_SIGNAL_FUNC(filters_on_ok), NULL);
-	gtk_signal_connect_object(GTK_OBJECT(button), "clicked",
-			GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(window));
+	g_signal_connect(GTK_OBJECT(button), "clicked",
+			G_CALLBACK(filters_on_ok), NULL);
+	g_signal_connect_swapped(GTK_OBJECT(button), "clicked",
+			G_CALLBACK(gtk_widget_destroy), GTK_OBJECT(window));
 	gtk_box_pack_end(GTK_BOX(hbox), button, FALSE, FALSE, 0);
 	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default(button);
@@ -1912,13 +1912,13 @@ static void country_create_popup_window(void) {
 	gtk_clist_set_column_width(GTK_CLIST(country_left_list), 0, 100);
 
 
-	gtk_signal_connect(GTK_OBJECT(country_left_list), "select_row",
-			GTK_SIGNAL_FUNC(country_selection_left_list),
+	g_signal_connect(GTK_OBJECT(country_left_list), "select_row",
+			G_CALLBACK(country_selection_left_list),
 			NULL);
 
 
-	gtk_signal_connect(GTK_OBJECT(country_left_list), "button_press_event",
-			GTK_SIGNAL_FUNC(country_mouse_click_left_list),
+	g_signal_connect(GTK_OBJECT(country_left_list), "button_press_event",
+			G_CALLBACK(country_mouse_click_left_list),
 			NULL);
 
 	/* fill the list with all countries if the flag is available*/
@@ -1943,8 +1943,8 @@ static void country_create_popup_window(void) {
 	// gtk_button_box_set_child_size(GTK_BUTTON_BOX(vbuttonbox1), 63, -1);
 
 	button3 = gtk_button_new_with_label(">>");
-	gtk_signal_connect(GTK_OBJECT(button3), "clicked",
-			GTK_SIGNAL_FUNC(country_add_button), NULL);
+	g_signal_connect(GTK_OBJECT(button3), "clicked",
+			G_CALLBACK(country_add_button), NULL);
 	gtk_widget_show(button3);
 	gtk_container_add(GTK_CONTAINER(vbuttonbox1), button3);
 	GTK_WIDGET_SET_FLAGS(button3, GTK_CAN_DEFAULT);
@@ -1952,8 +1952,8 @@ static void country_create_popup_window(void) {
 
 	/* << */
 	button4 = gtk_button_new_with_label("<<");
-	gtk_signal_connect(GTK_OBJECT(button4), "clicked",
-			GTK_SIGNAL_FUNC(country_delete_button), NULL);
+	g_signal_connect(GTK_OBJECT(button4), "clicked",
+			G_CALLBACK(country_delete_button), NULL);
 	gtk_widget_show(button4);
 	gtk_container_add(GTK_CONTAINER(vbuttonbox1), button4);
 	GTK_WIDGET_SET_FLAGS(button4, GTK_CAN_DEFAULT);
@@ -1973,16 +1973,16 @@ static void country_create_popup_window(void) {
 	gtk_clist_set_column_width(GTK_CLIST(country_right_list), 0, 100);
 
 
-	gtk_signal_connect(GTK_OBJECT(country_right_list), "select_row",
-			GTK_SIGNAL_FUNC(country_selection_right_list),
+	g_signal_connect(GTK_OBJECT(country_right_list), "select_row",
+			G_CALLBACK(country_selection_right_list),
 			NULL);
 
-	gtk_signal_connect(GTK_OBJECT(country_right_list), "unselect_row",
-			GTK_SIGNAL_FUNC(country_unselection_right_list),
+	g_signal_connect(GTK_OBJECT(country_right_list), "unselect_row",
+			G_CALLBACK(country_unselection_right_list),
 			NULL);
 
-	gtk_signal_connect(GTK_OBJECT(country_right_list), "button_press_event",
-			GTK_SIGNAL_FUNC(country_mouse_click_right_list),
+	g_signal_connect(GTK_OBJECT(country_right_list), "button_press_event",
+			G_CALLBACK(country_mouse_click_right_list),
 			NULL);
 
 
@@ -2017,8 +2017,8 @@ static void country_create_popup_window(void) {
 	gtk_widget_show(country_right_list);
 
 	country_show_all_check_button = gtk_check_button_new_with_label(_("Show all countries"));
-	gtk_signal_connect(GTK_OBJECT(country_show_all_check_button),"toggled",
-			GTK_SIGNAL_FUNC(country_show_all_changed_callback), (gpointer) country_left_list);
+	g_signal_connect(GTK_OBJECT(country_show_all_check_button),"toggled",
+			G_CALLBACK(country_show_all_changed_callback), (gpointer) country_left_list);
 	gtk_widget_show(country_show_all_check_button);
 	gtk_box_pack_start(GTK_BOX(vbox2), country_show_all_check_button, FALSE, FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(country_show_all_check_button), 4);
@@ -2037,10 +2037,10 @@ static void country_create_popup_window(void) {
 
 	button1 = gtk_button_new_with_label(_("OK"));
 	// gtk_widget_set_usize(button1, 80, -1);
-	gtk_signal_connect(GTK_OBJECT(button1), "clicked",
-			GTK_SIGNAL_FUNC(country_selection_on_ok), NULL);
-	gtk_signal_connect_object(GTK_OBJECT(button1), "clicked",
-			GTK_SIGNAL_FUNC(gtk_widget_destroy),
+	g_signal_connect(GTK_OBJECT(button1), "clicked",
+			G_CALLBACK(country_selection_on_ok), NULL);
+	g_signal_connect_swapped(GTK_OBJECT(button1), "clicked",
+			G_CALLBACK(gtk_widget_destroy),
 			GTK_OBJECT(country_popup_window));
 
 	gtk_widget_show(button1);
@@ -2049,8 +2049,8 @@ static void country_create_popup_window(void) {
 
 	button2 = gtk_button_new_with_label(_("Cancel"));
 	// gtk_widget_set_usize(button2, 80, -1);
-	gtk_signal_connect_object(GTK_OBJECT(button2), "clicked",
-			GTK_SIGNAL_FUNC(gtk_widget_destroy),
+	g_signal_connect_swapped(GTK_OBJECT(button2), "clicked",
+			G_CALLBACK(gtk_widget_destroy),
 			GTK_OBJECT(country_popup_window));
 
 	gtk_widget_show(button2);

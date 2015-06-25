@@ -198,10 +198,10 @@ int find_player_dialog (void) {
 		gtk_entry_select_region (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 0,
 				strlen ((char *) psearch_history->items->data));
 	}
-	gtk_signal_connect (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry),
-			"activate", GTK_SIGNAL_FUNC (psearch_combo_activate_callback), NULL);
-	gtk_signal_connect_object (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry),
-			"activate", GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry),
+			"activate", G_CALLBACK (psearch_combo_activate_callback), NULL);
+	g_signal_connect_swapped (GTK_OBJECT (GTK_COMBO (psearch_combo)->entry),
+			"activate", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), psearch_combo, TRUE, TRUE, 0);
 	gtk_widget_grab_focus (GTK_COMBO (psearch_combo)->entry);
 	gtk_widget_show (psearch_combo);
@@ -209,19 +209,19 @@ int find_player_dialog (void) {
 	/* OK Button */
 
 	button = gtk_button_new_with_label (_("OK"));
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (psearch_combo_activate_callback),
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (psearch_combo_activate_callback),
 			GTK_OBJECT (psearch_combo));
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_show (button);
 
 	/* Cancel Button */
 
 	button = gtk_button_new_with_label (_("Cancel"));
-	gtk_signal_connect_object (GTK_OBJECT (button), "clicked",
-			GTK_SIGNAL_FUNC (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_show (button);
 

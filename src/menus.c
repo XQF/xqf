@@ -99,8 +99,8 @@ static void create_menu_recursive (GtkWidget *menu,
 
 				if (items->type != MENU_BRANCH && items->type != MENU_LAST_BRANCH) {
 					if (items->callback) {
-						gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-								GTK_SIGNAL_FUNC (items->callback), items->user_data);
+						g_signal_connect (GTK_OBJECT (menu_item), "activate",
+								G_CALLBACK (items->callback), items->user_data);
 					}
 
 					if (accel_group && items->accel_key) {
