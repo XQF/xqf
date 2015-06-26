@@ -1910,14 +1910,14 @@ int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 GtkWidget *server_mapshot_popup = NULL;
 GtkWidget *server_mapshot_popup_pixmap = NULL;
 
-void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y) {
+void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y, gushort overBrightBits) {
 	GtkWidget *frame;
 	int win_x, win_y, scr_w, scr_h;
 	guint w = 0, h = 0;
 	GdkPixmap *pix = NULL;
 	GdkBitmap *mask = NULL;
 
-	renderMemToGtkPixmap (imagedata, len, &pix, &mask, &w, &h, 0);
+	renderMemToGtkPixmap (imagedata, len, &pix, &mask, &w, &h, overBrightBits);
 
 	if (!pix || !w || !h) {
 		if (pix) gdk_pixmap_unref (pix);
@@ -1984,7 +1984,24 @@ int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 								GDK_BUTTON_RELEASE_MASK,
 								NULL, NULL, bevent->time);
 
-						server_mapshot_preview_popup_show (buf, buflen, bevent->x, bevent->y);
+						// Quake 3-like gamma ramp for some games
+						switch (cur_server->type) {
+							case DOOM3_SERVER:
+							case EF_SERVER:
+							case Q3RALLY_SERVER:
+							case Q3_SERVER:
+							case Q4_SERVER:
+							case REACTION_SERVER:
+							case SMOKINGUNS_SERVER:
+							case TREMFUSION_SERVER:
+							case TREMULOUSGPP_SERVER:
+							case TREMULOUS_SERVER:
+							case WO_SERVER:
+								server_mapshot_preview_popup_show (buf, buflen, bevent->x, bevent->y, 1);
+								break;
+							default:
+								server_mapshot_preview_popup_show (buf, buflen, bevent->x, bevent->y, 0);
+						}
 
 						g_free (buf);
 						return TRUE;
