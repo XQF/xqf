@@ -122,7 +122,6 @@ static int server_clist_refresh_row (struct server *s, int row) {
 	char *retries;
 	struct pixmap *retries_pix = NULL;
 	int col;
-	//  char* private_col_text = "";
 	int slots_buffer;
 	unsigned short players = 0;
 
@@ -148,15 +147,15 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 	if (s->retries >= 0) {
 		if (s->ping == MAX_PING + 1) {
-			retries = "D";  /* DOWN */
+			retries = "D";  // DOWN
 			retries_pix = &server_status[2];
 		}
 		else if (s->ping == MAX_PING) {
-			retries = "T";  /* TIMEOUT */
+			retries = "T";  // TIMEOUT
 			retries_pix = &server_status[3];
 		}
 		else {
-			g_snprintf (buf3, 32, "%d", s->retries);    /* UP */
+			g_snprintf (buf3, 32, "%d", s->retries);    // UP
 			retries = buf3;
 			retries_pix = &server_status[1];
 		}
@@ -180,8 +179,8 @@ static int server_clist_refresh_row (struct server *s, int row) {
 	else
 		g_snprintf (buf4, 32, "%d/%d", players, s->maxplayers);
 
-	// set text only if no players are on the server. Otherwise an icon is added
-	// later together with this text
+	// set text only if no players are on the server. Otherwise an icon is added later together with this text
+
 	text[5] = (!players)? buf4 : NULL;
 
 	text[6] = (s->map) ?  s->map : NULL;
@@ -199,15 +198,8 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 	gtk_clist_set_pixtext (server_clist, row, 3, retries, 2,
 			retries_pix->pix, retries_pix->mask);
-#if 0
-	if (s->curplayers) {
-		gtk_clist_set_pixtext (server_clist, row, 4, buf4, 2,
-				(s->curplayers >= s->maxplayers)? man_red_pix.pix : man_black_pix.pix,
-				(s->curplayers >= s->maxplayers)? man_red_pix.mask : man_black_pix.mask);
-	}
-#endif
 
-	/*pulp*/
+	// pulp
 
 	p = properties (s);
 
@@ -517,11 +509,8 @@ GSList *server_clist_get_n_servers (int amount) {
 	return g_slist_reverse (list);
 }
 
-/*
-   server_clist_all_servers -- Return all servers that are in the server
-   clist widget. It returns a new list.  Note that the prepend function
-   adds one to the reference count.
-*/
+// Return all servers that are in the server clist widget. It returns a new list. Note that the prepend function adds one to the reference count.
+
 GSList *server_clist_all_servers (void) {
 	GSList *list = NULL;
 	struct server *server;
@@ -657,91 +646,13 @@ void server_clist_set_list (GSList *servers) {
 }
 
 
-/**
- * filter server_list through server filter and display result in clist
- */
-void server_clist_build_filtered (GSList *server_list, int update) {
-	/* This gets called whenever a user clicks the filter button */
+// Filter server_list through server filter and display result in clist
 
-	//  GSList *delete;
-	//  GSList *add;
-	//  GSList *tmp;
-	//  struct server *server;
+void server_clist_build_filtered (GSList *server_list, int update) {
+
 	int row;
 
 	debug(3, "update: %d", update);
-
-#if 0
-
-	delete = server_clist_all_servers ();
-	add = build_filtered_list (cur_filter, server_list); /* in filter.c */
-
-	server_lists_intersect (&delete, &add);
-
-	gtk_clist_freeze (server_clist);
-
-	/*
-	   If there are entries in the server clist, we want to first remove
-	   them.  Be sure to decrement the reference count as we will
-	   be adding them back in later.
-	*/
-	if (delete) {
-		debug (7, "server_clist_build_filtered() -- Got Delete %lx", delete);
-		for (tmp = delete; tmp; tmp = tmp->next) {
-			server = (struct server *) tmp->data;
-			row = gtk_clist_find_row_from_data (server_clist, server);
-			if (row >= 0) {
-				debug (3, "server_clist_build_filtered() -- Delete server %lx, call gtk_clist_remove()", server);
-
-				/*
-Note: Each server clist item gets a server_unref call on
-a GtkDestroyNotify event.
-*/
-				gtk_clist_remove (server_clist, row);
-			}
-		}
-		/* Free the list of severs in this loop. */
-		debug (7, "server_clist_build_filtered() -- Call server_list_free on [delete] list %lx", delete);
-		server_list_free (delete);
-	}
-
-
-	if (update) {
-		for (row = 0; row < server_clist->rows; row++) {
-			server = (struct server *) gtk_clist_get_row_data (server_clist, row);
-			server_clist_refresh_row (server, row);
-		}
-	}
-
-	/*
-	   Now we want to add all of the servers that we
-	   got from the build_fiter_list function. Note that
-	   the said function adds one to the reference count
-	   for us and since we free that list after we put
-	   the data in the clist, we do NOT need to
-	   do a reference count in this fuction. --baa
-	*/
-	if (add) {
-		for (tmp = add; tmp; tmp = tmp->next) {
-			server = (struct server *) tmp->data;
-			row = server_clist_refresh_row (server, -1);
-			debug (7, "server_clist_build_filtered() -- add server %lx to row %d", server, row);
-			gtk_clist_set_row_data_full (server_clist, row, server,
-					(GtkDestroyNotify) server_unref);
-
-			server_ref (server); /* See nots above about GtkDestroyNotify */
-		}
-		server_list_free (add);
-	}
-
-	// prevent segfault on some systems if server list is empty due to a player
-	// filter that finds no servers that match by clearing the list if rows is 0.
-	// Fix by 'slashdev'
-	if (server_clist->rows == 0)
-		gtk_clist_clear(server_clist);
-
-	gtk_clist_sort (server_clist);
-#else
 
 	{
 
@@ -758,8 +669,6 @@ a GtkDestroyNotify event.
 			server_clist_select_one (row);
 
 	}
-
-#endif
 
 
 	server_clist_selection_visible ();

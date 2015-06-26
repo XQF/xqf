@@ -385,8 +385,7 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
 		menu_item = gtk_menu_item_new ();
 		gtk_container_add (GTK_CONTAINER (menu_item), button);
 		gtk_menu_append (GTK_MENU (menu), menu_item);
-		g_signal_connect (GTK_OBJECT (menu_item), "activate",
-				G_CALLBACK (callback), GINT_TO_POINTER(i));
+		g_signal_connect (menu_item, "activate", G_CALLBACK (callback), GINT_TO_POINTER(i));
 		gtk_widget_show (menu_item);
 
 		set_bg_color (menu_item, i);
@@ -397,8 +396,7 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
 }
 
 
-GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top,
-		unsigned char bottom, GSList **cache) {
+GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache) {
 	GdkPixmap *pixmap;
 	unsigned key;
 	int w, h;

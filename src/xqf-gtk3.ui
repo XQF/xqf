@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.18.3 
+
+XQF - Game Server Browser
+Copyright (C) © XQF Team 1998-2015
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+-->
 <interface>
   <requires lib="gtk+" version="3.12"/>
+  <!-- interface-license-type gplv2 -->
+  <!-- interface-name XQF -->
+  <!-- interface-description Game Server Browser -->
+  <!-- interface-copyright \302\251 XQF Team 1998-2015 -->
   <object class="GtkAboutDialog" id="about-dialog">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
@@ -52,6 +75,46 @@ Artem Vorotnikov</property>
     </child>
   </object>
   <object class="GtkListStore" id="player_list_store"/>
+  <object class="GtkMenu" id="player_menu">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="player_filter_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child type="submenu">
+          <object class="GtkMenu" id="player_filter_menu">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkMenuItem" id="player_filter_red_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Mark as Red</property>
+                <signal name="activate" handler="add_to_player_filter_red_callback" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="player_filter_green_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Mark as Green</property>
+                <signal name="activate" handler="add_to_player_filter_green_callback" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="player_filter_blue_menu_item">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Mark as Blue</property>
+                <signal name="activate" handler="add_to_player_filter_blue_callback" swapped="no"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkDialog" id="pref-window">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
@@ -118,9 +181,8 @@ Artem Vorotnikov</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="hexpand">True</property>
-                    <property name="border_width">0</property>
                     <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkGrid" id="grid3">
                         <property name="visible">True</property>
@@ -209,8 +271,9 @@ Artem Vorotnikov</property>
                   <object class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
                     <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkGrid" id="grid5">
                         <property name="visible">True</property>
@@ -289,8 +352,9 @@ Artem Vorotnikov</property>
                   <object class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
                     <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkGrid" id="grid6">
                         <property name="visible">True</property>
@@ -377,6 +441,10 @@ Artem Vorotnikov</property>
               <object class="GtkGrid" id="games_config_page">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <child>
                   <object class="GtkFrame" id="frame4">
                     <property name="visible">True</property>
@@ -491,116 +559,138 @@ Artem Vorotnikov</property>
               <object class="GtkGrid" id="appearance_options_page">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <child>
-                  <object class="GtkGrid" id="grid2">
+                  <object class="GtkFrame" id="frame8">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">25</property>
-                    <property name="margin_right">25</property>
-                    <property name="margin_top">15</property>
-                    <property name="margin_bottom">15</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <property name="row_spacing">5</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
                     <child>
-                      <object class="GtkCheckButton" id="show_hostnames_check_button">
-                        <property name="label" translatable="yes">Show host names</property>
+                      <object class="GtkGrid" id="grid2">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Show hostnames instead of IP addresses if possible</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">15</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="row_spacing">5</property>
+                        <child>
+                          <object class="GtkCheckButton" id="show_hostnames_check_button">
+                            <property name="label" translatable="yes">Show host names</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">Show hostnames instead of IP addresses if possible</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="show_defport_check_button">
+                            <property name="label" translatable="yes">Show default port</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="countbots_check_button">
+                            <property name="label" translatable="yes">Do not count bots as players</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="refresh_sorts_check_button">
+                            <property name="label" translatable="yes">Sort servers real-time during refresh</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="refresh_on_update_check_button">
+                            <property name="label" translatable="yes">Refresh on update</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="resolve_on_update_check_button">
+                            <property name="label" translatable="yes">Resolve hostnames on update</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">Enable or disable DNS resolution of IP addresses</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="show_only_configured_games_check_button">
+                            <property name="label" translatable="yes">Show only configured games</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">6</property>
+                          </packing>
+                        </child>
                       </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
                     </child>
-                    <child>
-                      <object class="GtkCheckButton" id="show_defport_check_button">
-                        <property name="label" translatable="yes">Show default port</property>
+                    <child type="label">
+                      <object class="GtkLabel" id="label14">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Appearance options</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="countbots_check_button">
-                        <property name="label" translatable="yes">Do not count bots as players</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="refresh_sorts_check_button">
-                        <property name="label" translatable="yes">Sort servers real-time during refresh</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="refresh_on_update_check_button">
-                        <property name="label" translatable="yes">Refresh on update</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">4</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="resolve_on_update_check_button">
-                        <property name="label" translatable="yes">Resolve hostnames on update</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Enable or disable DNS resolution of IP addresses</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">5</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="show_only_configured_games_check_button">
-                        <property name="label" translatable="yes">Show only configured games</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">6</property>
-                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -628,8 +718,183 @@ Artem Vorotnikov</property>
               <object class="GtkGrid" id="qstat_options_page">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <child>
-                  <placeholder/>
+                  <object class="GtkFrame" id="frame5">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkGrid" id="grid7">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">15</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="hexpand">True</property>
+                        <property name="row_spacing">5</property>
+                        <property name="column_spacing">5</property>
+                        <property name="row_homogeneous">True</property>
+                        <property name="column_homogeneous">True</property>
+                        <child>
+                          <object class="GtkLabel" id="label2">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Number of simultaneous servers to query</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label3">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Number of retries</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label8">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Source IP Address</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label9">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Source Port Range</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="maxsimultaneous_spinner">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">end</property>
+                            <property name="numeric">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="maxretries_spinner">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">end</property>
+                            <property name="numeric">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="qstat_srcip_entry">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">end</property>
+                            <property name="max_length">15</property>
+                            <property name="width_chars">15</property>
+                            <property name="max_width_chars">15</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkGrid" id="grid8">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <child>
+                              <object class="GtkEntry" id="qstat_srcport_entry_low">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="max_length">5</property>
+                                <property name="width_chars">5</property>
+                                <property name="max_width_chars">5</property>
+                                <property name="input_purpose">number</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label10">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes"> - </property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="qstat_srcport_high">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="max_length">5</property>
+                                <property name="width_chars">5</property>
+                                <property name="max_width_chars">5</property>
+                                <property name="input_purpose">number</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">QStat options</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -651,8 +916,502 @@ Artem Vorotnikov</property>
               <object class="GtkGrid" id="sound_options_page">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
+                <property name="row_spacing">15</property>
                 <child>
-                  <placeholder/>
+                  <object class="GtkFrame" id="sound_general_frame">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkGrid" id="sound_general_grid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">15</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="hexpand">True</property>
+                        <property name="row_spacing">5</property>
+                        <child>
+                          <object class="GtkGrid" id="sound_player_grid">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="row_spacing">5</property>
+                            <property name="column_spacing">5</property>
+                            <child>
+                              <object class="GtkLabel" id="sound_player_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Player program</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkFileChooserButton" id="sound_player_file_dialog_button">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="sound_player_clear_button">
+                                <property name="label" translatable="yes">Clear</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="sound_enable_check_button">
+                            <property name="label" translatable="yes">Enable Sound</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="sound_general_frame_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Sound Enable / Disable</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="sound_file_frame">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkGrid" id="sound_file_grid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">15</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="hexpand">True</property>
+                        <property name="row_spacing">5</property>
+                        <property name="column_spacing">10</property>
+                        <child>
+                          <object class="GtkLabel" id="sound_xqf_start_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">XQF Start</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="sound_xqf_quit_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">XQF Quit</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="sound_update_done_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Update Done</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="sound_refresh_done_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Refresh Done</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="sound_stop_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Stop</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="sound_server_connect_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Server Connect</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="sound_redial_success_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Redial Success</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_xqf_start_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_xqf_start_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">right</property>
+                            <property name="always_show_image">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_xqf_start_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_xqf_start_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_xqf_start_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_xqf_quit_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_update_done_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_refresh_done_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_stop_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_server_connect_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFileChooserButton" id="sound_redial_success_file_chooser_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="title" translatable="yes">Select a File</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_xqf_quit_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_xqf_quit_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_update_done_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_update_done_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_refresh_done_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_refresh_done_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_stop_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_stop_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_server_connect_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_server_connect_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_redial_success_test_button">
+                            <property name="label" translatable="yes">♪</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pref_sound_play" object="sound_redial_success_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_xqf_quit_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_xqf_quit_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_update_done_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_update_done_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_refresh_done_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_refresh_done_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_stop_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_stop_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_server_connect_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_server_connect_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="sound_redial_success_clear_button">
+                            <property name="label" translatable="yes">⌫</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="image_position">top</property>
+                            <signal name="clicked" handler="pref_sound_conf_clear" object="sound_redial_success_file_chooser_button" swapped="yes"/>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">6</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="sound_file_frame_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Sound Files</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -667,29 +1426,6 @@ Artem Vorotnikov</property>
               </object>
               <packing>
                 <property name="position">4</property>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkGrid" id="scripts_config_page">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel" id="scripts_config_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Scripts</property>
-              </object>
-              <packing>
-                <property name="position">5</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -724,6 +1460,47 @@ Artem Vorotnikov</property>
       <!-- column-name SERVER_GAMETYPE -->
       <column type="gchararray"/>
     </columns>
+  </object>
+  <object class="GtkMenu" id="source_tree_popup_menu">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="source_add_master_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Add _Master</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="add_master_callback" swapped="no"/>
+        <accelerator key="m" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="source_edit_master_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">_Rename Master</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="edit_master_callback" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="source_delete_master_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">D_elete Master</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="del_master_callback" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="source_clear_master_servers_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">_Clear Servers</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="clear_master_servers_callback" swapped="no"/>
+      </object>
+    </child>
   </object>
   <object class="GtkTreeStore" id="source_tree_store">
     <columns>
@@ -783,6 +1560,7 @@ Artem Vorotnikov</property>
                         <property name="label" translatable="yes">_Exit</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="gtk_main_quit" swapped="no"/>
+                        <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                   </object>
@@ -805,7 +1583,8 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Add new Server</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_server_callback" object="server_tree_selection" swapped="no"/>
+                        <signal name="activate" handler="add_server_callback" swapped="no"/>
+                        <accelerator key="n" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -814,7 +1593,7 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Add to _Favorites</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_to_favorites_callback" object="server_tree_selection" swapped="no"/>
+                        <signal name="activate" handler="add_to_favorites_callback" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -823,7 +1602,8 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Remove</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="del_server_callback" object="server_tree_selection" swapped="no"/>
+                        <signal name="activate" handler="del_server_callback" swapped="no"/>
+                        <accelerator key="d" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -833,6 +1613,7 @@ Artem Vorotnikov</property>
                         <property name="label" translatable="yes">_Copy</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="copy_server_callback" swapped="no"/>
+                        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -842,6 +1623,7 @@ Artem Vorotnikov</property>
                         <property name="label" translatable="yes">_Copy+</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="copy_server_callback_plus" swapped="no"/>
+                        <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -873,6 +1655,7 @@ Artem Vorotnikov</property>
                         <property name="label" translatable="yes">Add _Master</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="add_master_callback" swapped="no"/>
+                        <accelerator key="m" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -915,6 +1698,7 @@ Artem Vorotnikov</property>
                         <property name="label" translatable="yes">_Find Player</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="find_player_callback" swapped="no"/>
+                        <accelerator key="f" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -924,6 +1708,7 @@ Artem Vorotnikov</property>
                         <property name="label" translatable="yes">Find A_gain</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="find_player_callback" swapped="no"/>
+                        <accelerator key="g" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -953,7 +1738,7 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Preferences</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="open-window" swapped="no"/>
+                        <signal name="activate" handler="start_preferences_dialog" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -976,6 +1761,8 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Refresh</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="refresh_callback" swapped="no"/>
+                        <accelerator key="r" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -984,6 +1771,8 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Refresh _Selected</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="refresh_selected_callback" swapped="no"/>
+                        <accelerator key="s" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -992,6 +1781,8 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Update From Master</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="update_source_callback" swapped="no"/>
+                        <accelerator key="u" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -1001,19 +1792,22 @@ Artem Vorotnikov</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="view_hostnames_menu_item">
+                      <object class="GtkCheckMenuItem" id="view_hostnames_menu_item">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show _Host Names</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="show_hostnames_callback" swapped="no"/>
+                        <accelerator key="h" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="view_defport_menu_item">
+                      <object class="GtkCheckMenuItem" id="view_defport_menu_item">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show Default _Port</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="show_default_port_callback" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -1036,6 +1830,92 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Connect</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="launch_normal_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_observe_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Observe</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="launch_spectate_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_record_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Record _Demo</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="launch_record_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="server_separator1_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_add_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Add new Server</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="add_server_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_favadd_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Add to _Favorites</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="add_to_favorites_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_delete_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Remove</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="del_server_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_resolve_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">DNS _Lookup</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="resolve_callback" swapped="no"/>
+                        <accelerator key="l" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="server_separator2_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_rcon_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_RCon</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="rcon_callback" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="server_properties_menu_item">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">_Properties</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="properties_callback" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -1072,7 +1952,7 @@ Artem Vorotnikov</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_About</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="open_window" object="about-dialog" swapped="no"/>
+                        <signal name="activate" handler="about_dialog" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -1543,6 +2423,19 @@ Artem Vorotnikov</property>
       </object>
     </child>
   </object>
+  <object class="GtkMenu" id="svinfo_menu">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="svinfo_copy_menu_item">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">_Copy</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="copy_server_info_callback" swapped="no"/>
+      </object>
+    </child>
+  </object>
   <object class="GtkMenu" id="svopt_menu">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -1552,6 +2445,7 @@ Artem Vorotnikov</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">_Connect</property>
         <property name="use_underline">True</property>
+        <signal name="activate" handler="launch_normal_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1560,6 +2454,7 @@ Artem Vorotnikov</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">_Observe</property>
         <property name="use_underline">True</property>
+        <signal name="activate" handler="launch_spectate_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1568,6 +2463,7 @@ Artem Vorotnikov</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">_Record</property>
         <property name="use_underline">True</property>
+        <signal name="activate" handler="launch_record_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1581,6 +2477,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Add new Server</property>
+        <signal name="activate" handler="add_server_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1588,6 +2485,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Add to Favorites</property>
+        <signal name="activate" handler="add_to_favorites_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1595,6 +2493,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Remove</property>
+        <signal name="activate" handler="del_server_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1602,6 +2501,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Copy</property>
+        <signal name="activate" handler="copy_server_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1622,6 +2522,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Refresh</property>
+        <signal name="activate" handler="refresh_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1629,6 +2530,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Refresh Selected</property>
+        <signal name="activate" handler="refresh_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1642,6 +2544,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">DNS Lookup</property>
+        <signal name="activate" handler="resolve_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1655,6 +2558,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">RCon</property>
+        <signal name="activate" handler="rcon_callback" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1662,6 +2566,7 @@ Artem Vorotnikov</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Properties</property>
+        <signal name="activate" handler="properties_callback" swapped="no"/>
       </object>
     </child>
   </object>

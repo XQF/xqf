@@ -224,7 +224,7 @@ int main (int argc, char* argv[]) {
 	close(fd);
 
 	main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	g_signal_connect (GTK_OBJECT (main_window), "destroy", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (main_window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
 
 	if (0) {
@@ -247,7 +247,7 @@ int main (int argc, char* argv[]) {
 		//gtk_widget_set_size_request (darea, IMAGE_WIDTH, IMAGE_HEIGHT);
 		gtk_widget_set_usize (darea, gdk_pixbuf_get_width (pixbuf), gdk_pixbuf_get_height(pixbuf));
 		gtk_container_add (GTK_CONTAINER (main_window), darea);
-		g_signal_connect (GTK_OBJECT (darea), "expose-event", G_CALLBACK (on_darea_expose), pixbuf);
+		g_signal_connect (darea, "expose-event", G_CALLBACK (on_darea_expose), pixbuf);
 		gtk_widget_show_all (main_window);
 
 		pixbuf2rgbbuf(pixbuf);

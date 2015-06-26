@@ -291,5 +291,6 @@ extern void refresh_source_list (void);
 extern void update_source_callback (GtkWidget *widget, gpointer data);
 extern void refresh_n_server(GtkWidget * button, gpointer *data);
 extern void stop_callback (GtkWidget *widget, gpointer data);
+void add_to_player_filter (unsigned mask);
 
 #endif /* __XQF_H__ */

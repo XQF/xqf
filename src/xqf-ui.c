@@ -852,3 +852,4 @@ GtkWidget *create_server_type_menu (int active_type,
 
 	return option_menu;
 }
+
