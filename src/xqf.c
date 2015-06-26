@@ -1917,7 +1917,7 @@ void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, in
 	GdkPixmap *pix = NULL;
 	GdkBitmap *mask = NULL;
 
-	renderMemToGtkPixmap (imagedata, len, &pix, &mask, &w, &h, 64);
+	renderMemToGtkPixmap (imagedata, len, &pix, &mask, &w, &h, 0);
 
 	if (!pix || !w || !h) {
 		if (pix) gdk_pixmap_unref (pix);

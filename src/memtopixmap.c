@@ -66,8 +66,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len) {
 	return pixbuf;
 }
 
-void renderMemToGtkPixmap(const guchar* mem, size_t len,
-		GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, unsigned char brightness) {
+void renderMemToGtkPixmap(const guchar* mem, size_t len, GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, gushort overBrightBits) {
 	GdkPixbuf* pixbuf = renderMemToPixbuf(mem, len);
 
 	if (pixbuf) {
@@ -77,7 +76,7 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 		*height = gdk_pixbuf_get_height(pixbuf);
 		*width = gdk_pixbuf_get_width(pixbuf);
 
-		if (brightness && gdk_pixbuf_get_n_channels (pixbuf) >= 3) // brightness correction
+		if (overBrightBits > 0 && gdk_pixbuf_get_n_channels (pixbuf) >= 3) // gamma correction
 		{
 			unsigned x, y;
 			unsigned w = gdk_pixbuf_get_width (pixbuf);
@@ -88,11 +87,11 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len,
 			register unsigned tmp;
 			for (y=0; y < h; ++y) {
 				for (x=0; x < w; ++x, p+=c) {
-					tmp = p[0] + brightness;
+					tmp = ((int)p[0]) << overBrightBits;
 					p[0] = (tmp>0xFF)?0xFF:tmp;
-					tmp = p[1] + brightness;
+					tmp = ((int)p[1]) << overBrightBits;
 					p[1] = (tmp>0xFF)?0xFF:tmp;
-					tmp = p[2] + brightness;
+					tmp = ((int)p[2]) << overBrightBits;
 					p[2] = (tmp>0xFF)?0xFF:tmp;
 				}
 				if (x*c<rs) {
