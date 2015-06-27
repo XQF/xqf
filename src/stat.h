@@ -21,7 +21,7 @@
 
 #include <unistd.h>     /* pid_t */
 
-#include <gtk/gtk.h>
+#include <glib.h>
 
 #include "xqf.h"
 #include "dns.h"

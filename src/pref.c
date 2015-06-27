@@ -139,6 +139,8 @@ static int pref_q2_noskins;
 static char *pref_qw_skin;
 static char *pref_q2_skin;
 
+GtkBuilder *builder;
+
 static GtkWidget *games_notebook;
 static GtkWidget *pref_notebook;
 
@@ -1337,11 +1339,11 @@ static void get_new_defaults (void) {
 	/* These are set from chained calls to "activate" callbacks */
 
 	gtk_check_menu_item_set_active (
-			GTK_CHECK_MENU_ITEM (view_hostnames_menu_item),
+			GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item")),
 			GTK_TOGGLE_BUTTON (show_hostnames_check_button)->active);
 
 	gtk_check_menu_item_set_active (
-			GTK_CHECK_MENU_ITEM (view_defport_menu_item),
+			GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item")),
 			GTK_TOGGLE_BUTTON (show_defport_check_button)->active);
 
 	//  i = gtk_notebook_get_current_page (GTK_NOTEBOOK (profile_notebook));
@@ -3701,6 +3703,16 @@ static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
 	gtk_widget_set_sensitive (save_plrinfo_check_button, val);
 }
 
+static void scan_maps_callback (GtkWidget *widget, gpointer data) {
+	int i;
+
+	for (i = 0; i < GAMES_TOTAL; i++) {
+		scan_maps_for(i);
+	}
+
+	server_clist_set_list (cur_server_list);
+}
+
 
 static GtkWidget *appearance_options_page (void) {
 	GtkWidget *page_vbox;
@@ -3867,16 +3879,7 @@ static GtkWidget *appearance_options_page (void) {
 	return page_vbox;
 }
 
-static void scan_maps_callback (GtkWidget *widget, gpointer data) {
-	int i;
-
-	for (i = 0; i < GAMES_TOTAL; i++) {
-		scan_maps_for(i);
-	}
-
-	server_clist_set_list (cur_server_list);
-}
-
+#ifdef GUI_GTK2
 static GtkWidget *general_options_page (void) {
 	GtkWidget *page_vbox;
 	GtkWidget *frame;
@@ -4053,7 +4056,7 @@ static GtkWidget *general_options_page (void) {
 
 	return page_vbox;
 }
-
+#endif
 
 static GtkWidget *qstat_options_page (void) {
 	GtkWidget *page_vbox;

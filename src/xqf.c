@@ -68,7 +68,6 @@
 #include "addserver.h"
 #include "addmaster.h"
 #include "sort.h"
-#include "menus.h"
 #include "config.h"
 #include "debug.h"
 #include "redial.h"
@@ -80,9 +79,9 @@
 #include "country-filter.h"
 #endif
 
-static const char gslisthome[] = "http://aluigi.altervista.org/papers.htm#gslist";
+const char gslisthome[] = "http://aluigi.altervista.org/papers.htm#gslist";
 
-static const char required_qstat_version[] = "2.10";
+const char required_qstat_version[] = "2.10";
 
 time_t xqf_start_time;
 
@@ -112,115 +111,32 @@ struct server *cur_server = NULL;
 
 struct stat_job *stat_process = NULL;
 
-static GtkWidget *main_toolbar = NULL;
-static GtkWidget *main_status_bar = NULL;
-static GtkWidget *main_filter_status_bar = NULL;
-static GtkWidget *main_progress_bar = NULL;
+GtkWidget *main_status_bar = NULL;
+GtkWidget *main_filter_status_bar = NULL;
+GtkWidget *main_progress_bar = NULL;
 
-static char *progress_bar_str = NULL;
+char *progress_bar_str = NULL;
 
-// static GtkWidget *server_filter_menu = NULL; /* baa */
+GArray *server_filter_menu_items;
 
-static GtkWidget *server_menu = NULL;
-static GtkWidget *source_menu = NULL;
-static GtkWidget *player_menu = NULL;
-static GtkWidget *server_info_menu = NULL;
+GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
 
-static GtkWidget *connect_menu_item = NULL;
-static GtkWidget *observe_menu_item = NULL;
-static GtkWidget *record_menu_item = NULL;
-static GtkWidget *favadd_menu_item = NULL;
-static GtkWidget *add_menu_item = NULL;
-static GtkWidget *delete_menu_item = NULL;
-static GtkWidget *refresh_menu_item = NULL;
-static GtkWidget *refrsel_menu_item = NULL;
-static GtkWidget *resolve_menu_item = NULL;
-static GtkWidget *properties_menu_item = NULL;
-static GtkWidget *rcon_menu_item = NULL;
-// static GtkWidget *cancel_redial_menu_item = NULL;
+GtkWidget *player_skin_popup = NULL;
+GtkWidget *player_skin_popup_preview = NULL;
 
-static GtkWidget *file_quit_menu_item = NULL;
-static GtkWidget *file_statistics_menu_item = NULL;
+gboolean check_launch (struct condef* con);
+void refresh_selected_callback (GtkWidget *widget, gpointer data);
+void launch_close_handler_part2 (struct condef *con);
 
-static GtkWidget *edit_add_menu_item = NULL;
-static GtkWidget *edit_favadd_menu_item = NULL;
-static GtkWidget *edit_delete_menu_item = NULL;
-static GtkWidget *edit_update_master_builtin_menu_item = NULL;
-static GtkWidget *edit_update_master_gslist_menu_item = NULL;
-static GtkWidget *edit_add_master_menu_item = NULL;
-static GtkWidget *edit_edit_master_menu_item = NULL;
-static GtkWidget *edit_delete_master_menu_item = NULL;
-static GtkWidget *edit_clear_master_servers_menu_item = NULL;
-static GtkWidget *edit_find_player_menu_item = NULL;
-static GtkWidget *edit_find_again_menu_item = NULL;
+void copy_text_to_clipboard (const char* text);
 
-// rmb popup
-static GtkWidget *source_add_master_menu_item = NULL;
-static GtkWidget *source_edit_master_menu_item = NULL;
-static GtkWidget *source_delete_master_menu_item = NULL;
-static GtkWidget *source_clear_master_servers_menu_item = NULL;
+// build server filter menu for menubar
+GtkWidget* create_filter_menu ();
+GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
 
-static GtkWidget *view_refresh_menu_item = NULL;
-static GtkWidget *view_refrsel_menu_item = NULL;
-static GtkWidget *view_update_menu_item = NULL;
+int redialserver = 0;
 
-GtkWidget *view_hostnames_menu_item = NULL;
-GtkWidget *view_defport_menu_item = NULL;
-
-static GtkWidget *server_connect_menu_item = NULL;
-static GtkWidget *server_observe_menu_item = NULL;
-static GtkWidget *server_record_menu_item = NULL;
-static GtkWidget *server_favadd_menu_item = NULL;
-static GtkWidget *server_delete_menu_item = NULL;
-static GtkWidget *server_resolve_menu_item = NULL;
-static GtkWidget *server_properties_menu_item = NULL;
-static GtkWidget *server_rcon_menu_item = NULL;
-// static GtkWidget *server_cancel_redial_menu_item = NULL;
-
-static GtkWidget *server_serverfilter_menu_item = NULL;
-static GArray* server_filter_menu_items;
-
-static GtkWidget *player_filter_menu_item = NULL;
-
-static GtkWidget *update_button = NULL;
-static GtkWidget *refresh_button = NULL;
-static GtkWidget *refrsel_button = NULL;
-static GtkWidget *stop_button = NULL;
-
-static GtkWidget *connect_button = NULL;
-// static GtkWidget *observe_button = NULL;
-// static GtkWidget *record_button = NULL;
-
-static GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
-
-/* filter widgtet for toolbar */
-// static  GtkWidget *filter_option_menu_toolbar;
-
-static GtkWidget *player_skin_popup = NULL;
-static GtkWidget *player_skin_popup_preview = NULL;
-/*
-   static GtkWidget *server_filter_1_widget = NULL;
-   static GtkWidget *server_filter_2_widget = NULL;
-   static GtkWidget *server_filter_3_widget = NULL;
-*/
-
-// XXX: GtkWidget *server_filter_widget[MAX_SERVER_FILTERS + 3];
-
-static gboolean check_launch (struct condef* con);
-static void refresh_selected_callback (GtkWidget *widget, gpointer data);
-static void launch_close_handler_part2 (struct condef *con);
-
-static void copy_text_to_clipboard (const char* text);
-
-/** build server filter menu for menubar */
-static GtkWidget* create_filter_menu ();
-// static GtkWidget* create_filter_menu_toolbar ();
-// static GtkWidget* filter_menu = NULL; // need to store that for toggling the checkboxes
-static GSList* filter_menu_radio_buttons = NULL; // for finding the widgets to activate
-
-static int redialserver = 0;
-
-static void sighandler_debug (int signum) {
+void sighandler_debug (int signum) {
 	if (signum == SIGUSR1) {
 		set_debug_level (get_debug_level () + 1);
 	}
@@ -308,7 +224,7 @@ int compare_qstat_version (const char* have, const char* expected) {
 }
 
 void qstat_version_string (struct external_program_connection* conn) {
-	static const char search_for[] = "qstat version";
+	const char search_for[] = "qstat version";
 	const char *ptr, *version_end;
 	char* found_version = NULL;
 
@@ -389,118 +305,108 @@ void set_widgets_sensitivity (void) {
 
 	sens = (!stat_process && cur_server);
 
-	gtk_widget_set_sensitive (properties_menu_item, sens);
-	gtk_widget_set_sensitive (server_properties_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_properties_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_properties_menu_item")), sens);
 
 	sens = (!stat_process && cur_server &&
 			(games[cur_server->type].flags & GAME_CONNECT) != 0);
 
-	gtk_widget_set_sensitive (connect_menu_item, sens);
-	gtk_widget_set_sensitive (server_connect_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "connect_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_connect_menu_item")), sens);
 
-	gtk_widget_set_state (connect_button, GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (connect_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), sens);
 
 	sens = (!stat_process && cur_server &&
 			(games[cur_server->type].flags & GAME_SPECTATE) != 0 &&
 			(cur_server->flags & SERVER_SPECTATE) != 0);
 
-	gtk_widget_set_sensitive (observe_menu_item, sens);
-	gtk_widget_set_sensitive (server_observe_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "observe_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_observe_menu_item")), sens);
 
-	// gtk_widget_set_state (observe_button, GTK_STATE_NORMAL);
-	// gtk_widget_set_sensitive (observe_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), sens);
 
-	sens = (!stat_process && cur_server &&
-			(games[cur_server->type].flags & GAME_RECORD) != 0);
+	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_RECORD) != 0);
 
-	gtk_widget_set_sensitive (record_menu_item, sens);
-	gtk_widget_set_sensitive (server_record_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "record_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_record_menu_item")), sens);
 
-	// gtk_widget_set_state (record_button, GTK_STATE_NORMAL);
-	// gtk_widget_set_sensitive (record_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")), sens);
 
-	sens = (!stat_process && cur_server &&
-			(games[cur_server->type].flags & GAME_RCON) != 0);
+	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_RCON) != 0);
 
-	gtk_widget_set_sensitive (rcon_menu_item, sens);
-	gtk_widget_set_sensitive (server_rcon_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "rcon_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_rcon_menu_item")), sens);
 
 	sens = (!stat_process && selected);
 
-	gtk_widget_set_sensitive (refrsel_menu_item, sens);
-	gtk_widget_set_sensitive (view_refrsel_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refrsel_menu_item")), sens);
 
-	gtk_widget_set_state (refrsel_button, GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (refrsel_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), sens);
 
-	gtk_widget_set_sensitive (resolve_menu_item, sens);
-	gtk_widget_set_sensitive (server_resolve_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "resolve_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_resolve_menu_item")), sens);
 
 	sens = (!stat_process);
 
-	gtk_widget_set_sensitive (file_statistics_menu_item, sens);
-	gtk_widget_set_sensitive (add_menu_item, sens);
-	gtk_widget_set_sensitive (edit_add_menu_item, sens);
-	gtk_widget_set_sensitive (edit_update_master_builtin_menu_item, sens);
-	gtk_widget_set_sensitive (edit_update_master_gslist_menu_item, sens);
-	gtk_widget_set_sensitive (edit_add_master_menu_item, sens);
-	gtk_widget_set_sensitive (edit_find_player_menu_item, sens);
-	gtk_widget_set_sensitive (edit_find_again_menu_item, sens);
-	gtk_widget_set_sensitive (player_filter_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "file_statistics_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "add_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_add_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_update_master_builtin_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_update_master_gslist_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_add_master_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_player_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_again_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "player_filter_menu_item")), sens);
 	gtk_widget_set_sensitive (source_ctree, sens);
 
 	sens = (!stat_process && selected && !source_is_favorites);
 
-	gtk_widget_set_sensitive (favadd_menu_item, sens);
-	gtk_widget_set_sensitive (edit_favadd_menu_item, sens);
-	gtk_widget_set_sensitive (server_favadd_menu_item, sens);
-
-#if 0
-	sens = (!stat_process && selected && source_is_favorites);
-
-	gtk_widget_set_sensitive (delete_menu_item, sens);
-	gtk_widget_set_sensitive (edit_delete_menu_item, sens);
-	gtk_widget_set_sensitive (server_delete_menu_item, sens);
-#endif
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "favadd_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_favadd_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_favadd_menu_item")), sens);
 
 	sens = (!stat_process && masters_to_delete);
 
-	gtk_widget_set_sensitive (edit_delete_master_menu_item, sens);
-	gtk_widget_set_sensitive (edit_clear_master_servers_menu_item, sens);
-	gtk_widget_set_sensitive (source_delete_master_menu_item, sens);
-	gtk_widget_set_sensitive (source_clear_master_servers_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_delete_master_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_clear_master_servers_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_delete_master_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_clear_master_servers_menu_item")), sens);
 
 	// you can only edit one server a time, no groups and no favorites
 	sens = (cur_source && cur_source->next == NULL
 			&& ! ((struct master *) cur_source->data)->isgroup
 			&& ! source_is_favorites);
 
-	gtk_widget_set_sensitive (source_edit_master_menu_item, sens);
-	gtk_widget_set_sensitive (edit_edit_master_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_edit_master_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_edit_master_menu_item")), sens);
 
 	sens = (!stat_process && (server_clist->rows > 0));
 
-	gtk_widget_set_sensitive (refresh_menu_item, sens);
-	gtk_widget_set_sensitive (view_refresh_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refresh_menu_item")), sens);
 
-	gtk_widget_set_state (refresh_button, GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (refresh_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), sens);
 
-	gtk_widget_set_sensitive (view_hostnames_menu_item, sens);
-	gtk_widget_set_sensitive (view_defport_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_hostnames_menu_item")), sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_defport_menu_item")), sens);
 
 	sens = (!stat_process && masters_to_update);
 
-	gtk_widget_set_sensitive (view_update_menu_item, sens);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_update_menu_item")), sens);
 
-	gtk_widget_set_state (update_button, GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (update_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")), sens);
 
 	sens = (stat_process != NULL);
 
-	gtk_widget_set_state (stop_button, GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (stop_button, sens);
+	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")), GTK_STATE_NORMAL);
+	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")), sens);
 
 	sens = (stat_process == NULL);
 
@@ -514,19 +420,13 @@ void set_widgets_sensitivity (void) {
 			gtk_widget_set_state (filter_buttons[i], GTK_STATE_ACTIVE);
 		}
 	}
-#if 0
-	// grey out button if not redialing
-	sens = (redialserver == 1);
-	gtk_widget_set_sensitive (cancel_redial_menu_item, sens);
-	gtk_widget_set_sensitive (server_cancel_redial_menu_item, sens);
-#endif
 }
 
 
-static int forced_filters_flag = FALSE;
+int forced_filters_flag = FALSE;
 
 
-static void set_filters (unsigned char mask) {
+void set_filters (unsigned char mask) {
 	unsigned n;
 	int i;
 
@@ -543,7 +443,7 @@ static void set_filters (unsigned char mask) {
 }
 
 
-static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
+void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
 
 
 	if (!forced_filters_flag) {
@@ -553,9 +453,8 @@ static void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
 	}
 }
 
-// iterate through radio buttons and activate the one for the current server
-// filter
-static void filter_menu_activate_current () {
+// iterate through radio buttons and activate the one for the current server filter
+void filter_menu_activate_current () {
 	unsigned int count = 0;
 	GSList* rbgroup = filter_menu_radio_buttons;
 	GtkWidget* widget = NULL;
@@ -577,71 +476,10 @@ static void filter_menu_activate_current () {
 }
 
 
-/*refresh filtermenu on toolbar*/
-
-void set_filter_option_menu_toolbar (void) {
-
-	/*
-	   gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu_toolbar), create_filter_menu_toolbar ());
-	   gtk_option_menu_set_history (GTK_OPTION_MENU (filter_option_menu_toolbar), current_server_filter);
-	*/
-}
-
-
 void set_server_filter_menu_list_text (void){
-
-	/* baa -- Set the names of the filters if they have been set in
-	   the config file. The server_filters is defined in filter.h
-	*/
 
 	char status_buf[64];
 	char* name;
-
-#if 0
-	for (i = 0; i < MAX_SERVER_FILTERS; i++) {
-
-		if (i == 0){
-			if (current_server_filter == i) {
-				//server filter
-				snprintf (buf, 64, _("None <--"));
-			}
-			else {
-				snprintf (buf, 64, _("None"));
-			}
-		}
-		else {
-			if (server_filters[i].filter_name && strlen (server_filters[i].filter_name)){
-
-				if (current_server_filter == i) {
-					snprintf (buf, 64, "%s <--", server_filters[i].filter_name);
-				}
-				else {
-					snprintf (buf, 64, "%s", server_filters[i].filter_name);
-				}
-
-			}
-			else {
-
-				if (current_server_filter == i) {
-					snprintf (buf, 64, _("Filter %d <--"), i);
-				}
-				else {
-					snprintf (buf, 64, _("Filter %d"), i);
-				}
-
-			}
-		}
-
-		if (server_filter_widget[i + filter_start_index ] && GTK_BIN (server_filter_widget[i + filter_start_index])->child) {
-			GtkWidget *child = GTK_BIN (server_filter_widget[i + filter_start_index ])->child;
-			if (GTK_IS_LABEL (child)) {
-				gtk_label_set (GTK_LABEL (child), buf);
-			}
-		}
-	}
-
-#endif
-
 
 	/* Show the active filter on the status bar
 	   -- Add code to indicate if the filter button is checked.
@@ -666,7 +504,7 @@ void set_server_filter_menu_list_text (void){
 }
 
 
-static void server_filter_select_callback (GtkWidget *widget, int number) {
+void server_filter_select_callback (GtkWidget *widget, int number) {
 
 	if (!GTK_IS_CHECK_MENU_ITEM (widget)) {
 		g_warning ("no check menu item");
@@ -683,12 +521,8 @@ static void server_filter_select_callback (GtkWidget *widget, int number) {
 	filters[FILTER_SERVER].changed = FILTER_CHANGED;
 	filters[FILTER_SERVER].last_changed = filter_time_inc ();
 
-	server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
+	server_clist_build_filtered (cur_server_list, FALSE); // in srv-list.c
 	set_server_filter_menu_list_text ();
-
-	/* refresh optionmenu on toolbar*/
-
-	set_filter_option_menu_toolbar ();
 
 	config_push_prefix ("/" CONFIG_FILE "/Server Filter");
 	config_set_int ("current_server_filter", current_server_filter);
@@ -697,36 +531,18 @@ static void server_filter_select_callback (GtkWidget *widget, int number) {
 	return;
 }
 
-/* need new one to refresh filter radio buttons in menu */
-#if 0
-static void server_filter_select_callback_toolbar (GtkWidget *widget, int number) {
-
-	current_server_filter = number;
-
-	/*apply changes to radio buttons in menu*/
-
-	filter_menu_activate_current ();
-
-	return;
-}
-#endif
-
-
-static void start_preferences_dialog (GtkWidget *widget, int page_num) {
+void start_preferences_dialog (GtkWidget *widget, int page_num) {
 	preferences_dialog (page_num);
-	set_toolbar_appearance (GTK_TOOLBAR (main_toolbar), default_toolbar_style, default_toolbar_tips);
+	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")), default_toolbar_style, default_toolbar_tips);
 }
 
 
-static void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
+void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
 	if (filters_cfg_dialog (page_num)) {
 		config_sync ();
 		rc_save ();
-		gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu ());
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (gtk_builder_get_object (builder, "svfilter_menu_item")), create_filter_menu ());
 		filter_menu_activate_current ();
-
-		/* refresh optionmenu on toolbar*/
-		set_filter_option_menu_toolbar ();
 
 		/* refresh filter status*/
 		set_server_filter_menu_list_text ();
@@ -737,7 +553,7 @@ static void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
 }
 
 
-static void update_server_lists_from_selected_source (void) {
+void update_server_lists_from_selected_source (void) {
 	GSList *cur_masters = NULL;
 
 	debug (6, "update_server_lists_from_selected_source() --");
@@ -759,7 +575,7 @@ static void update_server_lists_from_selected_source (void) {
 /**
   update ui with aquired data during refresh and when refresh is done
 */
-static int stat_lists_refresh (struct stat_job *job) {
+int stat_lists_refresh (struct stat_job *job) {
 	int items;
 	int freeze;
 
@@ -807,7 +623,7 @@ static int stat_lists_refresh (struct stat_job *job) {
 }
 
 
-static void stat_lists_state_handler (struct stat_job *job, enum stat_state state) {
+void stat_lists_state_handler (struct stat_job *job, enum stat_state state) {
 	if (!main_window) {
 		return;
 	}
@@ -841,7 +657,7 @@ static void stat_lists_state_handler (struct stat_job *job, enum stat_state stat
 }
 
 
-static void stat_lists_close_handler (struct stat_job *job, int killed) {
+void stat_lists_close_handler (struct stat_job *job, int killed) {
 
 	if (!main_window) {
 		return;
@@ -867,7 +683,7 @@ static void stat_lists_close_handler (struct stat_job *job, int killed) {
 }
 
 
-static void stat_lists_server_handler (struct stat_job *job, struct server *s) {
+void stat_lists_server_handler (struct stat_job *job, struct server *s) {
 	if (s == cur_server) {
 		if (job->delayed.refresh_handler) {
 			(*job->delayed.refresh_handler) (job);
@@ -878,12 +694,12 @@ static void stat_lists_server_handler (struct stat_job *job, struct server *s) {
 }
 
 
-static void stat_lists_master_handler (struct stat_job *job, struct master *m) {
+void stat_lists_master_handler (struct stat_job *job, struct master *m) {
 	source_ctree_show_node_status (source_ctree, m);
 }
 
 
-static void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList *hosts) {
+void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList *hosts) {
 
 	if (stat_process || (!masters && !names && !servers && !hosts)) {
 		return;
@@ -907,7 +723,7 @@ static void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList 
 }
 
 
-static void stat_one_server (struct server *server) {
+void stat_one_server (struct server *server) {
 	GSList *list;
 
 	debug (6, "Server %lx", server);
@@ -917,7 +733,7 @@ static void stat_one_server (struct server *server) {
 	}
 }
 
-static void launch_close_handler (struct stat_job *job, int killed) {
+void launch_close_handler (struct stat_job *job, int killed) {
 	struct condef* con;
 
 	con = (struct condef *) job->data;
@@ -932,7 +748,7 @@ static void launch_close_handler (struct stat_job *job, int killed) {
 }
 
 /** called from inside timer, always return FALSE to stop it */
-static gboolean check_launch (struct condef* con) {
+gboolean check_launch (struct condef* con) {
 	struct server_props *props;
 	gboolean launch = FALSE;
 
@@ -1018,7 +834,7 @@ static gboolean check_launch (struct condef* con) {
 }
 
 
-static void launch_close_handler_part2 (struct condef *con) {
+void launch_close_handler_part2 (struct condef *con) {
 	struct server_props *props;
 	int launch = FALSE;
 	int save = 0;
@@ -1165,7 +981,7 @@ static void launch_close_handler_part2 (struct condef *con) {
 }
 
 
-static void launch_server_handler (struct stat_job *job, struct server *s) {
+void launch_server_handler (struct stat_job *job, struct server *s) {
 
 	server_clist_refresh_server (s);
 
@@ -1232,7 +1048,7 @@ void launch_core2_callback (int spectate, char *demo, struct condef *con) {
 
 }
 
-static void launch_normal_callback (GtkWidget *widget) {
+void launch_normal_callback (GtkWidget *widget) {
 
 	int spectate = FALSE;
 	char *demo = NULL;
@@ -1244,7 +1060,7 @@ static void launch_normal_callback (GtkWidget *widget) {
 	return;
 }
 
-static void launch_spectate_callback (GtkWidget *widget) {
+void launch_spectate_callback (GtkWidget *widget) {
 
 	int spectate = FALSE;
 	char *demo = NULL;
@@ -1264,7 +1080,7 @@ static void launch_spectate_callback (GtkWidget *widget) {
 
 }
 
-static void launch_record_callback (GtkWidget *widget) {
+void launch_record_callback (GtkWidget *widget) {
 
 	int spectate = FALSE;
 	char *demo = NULL;
@@ -1294,13 +1110,13 @@ static void launch_record_callback (GtkWidget *widget) {
 
 }
 
-static int server_clist_sort_mode = SORT_SERVER_PING;
+int server_clist_sort_mode = SORT_SERVER_PING;
 
 void server_clist_set_sort_mode (enum ssort_mode mode) {
 	server_clist_sort_mode = mode;
 }
 
-static int server_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
+int server_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
 	int res, mode;
 	GtkCListRow *row1 = (GtkCListRow *) ptr1;
 	GtkCListRow *row2 = (GtkCListRow *) ptr2;
@@ -1320,7 +1136,7 @@ static int server_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gcons
 }
 
 
-static int player_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
+int player_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
 	GtkCListRow *row1 = (GtkCListRow *) ptr1;
 	GtkCListRow *row2 = (GtkCListRow *) ptr2;
 	struct player *p1 = (struct player *) row1->data;
@@ -1330,7 +1146,7 @@ static int player_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gcons
 }
 
 
-static int srvinf_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
+int srvinf_clist_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
 	GtkCListRow *row1 = (GtkCListRow *) ptr1;
 	GtkCListRow *row2 = (GtkCListRow *) ptr2;
 	const char **i1 = (const char **) row1->data;
@@ -1361,7 +1177,7 @@ void update_source_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
+void refresh_selected_callback (GtkWidget *widget, gpointer data) {
 	GSList *list;
 
 	if (stat_process) {
@@ -1379,7 +1195,7 @@ static void refresh_selected_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void refresh_callback (GtkWidget *widget, gpointer data) {
+void refresh_callback (GtkWidget *widget, gpointer data) {
 	GSList *servers;
 	GSList *uservers;
 
@@ -1432,7 +1248,7 @@ void stop_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
+void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 	GList *selected = server_clist->selection;
 	GSList *list;
 	GSList *tmp;
@@ -1468,7 +1284,7 @@ static void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 }
 
 // add a server to favorites
-static void new_server_to_favorites (struct stat_job *job, struct server *s) {
+void new_server_to_favorites (struct stat_job *job, struct server *s) {
 	int row;
 
 	debug (6, "Server %lx, job %p", s, job);
@@ -1492,7 +1308,7 @@ static void new_server_to_favorites (struct stat_job *job, struct server *s) {
 }
 
 
-static void add_server_name_handler (struct stat_job *job, struct userver *us,
+void add_server_name_handler (struct stat_job *job, struct userver *us,
 		enum dns_status status) {
 	if (us->s) {
 		new_server_to_favorites (job, us->s);
@@ -1507,7 +1323,7 @@ static void add_server_name_handler (struct stat_job *job, struct userver *us,
  * finally call new_server_to_favorites
  * calls free (str)!!!
  */
-static void prepare_new_server_to_favorites (enum server_type type, char* str, gboolean dolaunch) {
+void prepare_new_server_to_favorites (enum server_type type, char* str, gboolean dolaunch) {
 	char *addr;
 	unsigned short port;
 	struct host *h;
@@ -1574,7 +1390,7 @@ static void prepare_new_server_to_favorites (enum server_type type, char* str, g
 	}
 }
 
-static void add_server_callback (GtkWidget *widget, gpointer data) {
+void add_server_callback (GtkWidget *widget, gpointer data) {
 	char *str = NULL;
 	enum server_type type = UNKNOWN_SERVER;
 
@@ -1593,7 +1409,7 @@ static void add_server_callback (GtkWidget *widget, gpointer data) {
 	return;
 }
 
-static void del_server_callback (GtkWidget *widget, gpointer data) {
+void del_server_callback (GtkWidget *widget, gpointer data) {
 	GSList *selected;
 	GSList *l, *c;
 	int is_favorites = 0;
@@ -1650,7 +1466,7 @@ static void del_server_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void copy_server_callback (GtkWidget *widget, gpointer data) {
+void copy_server_callback (GtkWidget *widget, gpointer data) {
 	GList *selection = server_clist->selection;
 	struct server *s;
 	char buf[256];
@@ -1678,7 +1494,7 @@ static void copy_server_callback (GtkWidget *widget, gpointer data) {
 	gtk_editable_copy_clipboard (selection_manager);
 }
 
-static void copy_server_info_callback (GtkWidget *widget, gpointer data) {
+void copy_server_info_callback (GtkWidget *widget, gpointer data) {
 	GList *selection = GTK_CLIST (srvinf_ctree)->selection;
 	int pos = 0;
 
@@ -1700,7 +1516,7 @@ static void copy_server_info_callback (GtkWidget *widget, gpointer data) {
 	gtk_editable_copy_clipboard (selection_manager);
 }
 
-static void copy_text_to_clipboard (const char* text) {
+void copy_text_to_clipboard (const char* text) {
 	int pos = 0;
 	gtk_editable_delete_text (selection_manager, 0, -1);
 	if (text && *text) {
@@ -1710,7 +1526,7 @@ static void copy_text_to_clipboard (const char* text) {
 	gtk_editable_copy_clipboard (selection_manager);
 }
 
-static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
+void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
 	GList *selection = server_clist->selection;
 	struct server *s;
 	char buf[256];
@@ -1746,12 +1562,12 @@ static void copy_server_callback_plus (GtkWidget *widget, gpointer data) {
 	gtk_editable_copy_clipboard (selection_manager);
 }
 
-static void update_master_builtin_callback (GtkWidget *widget, gpointer data) {
+void update_master_builtin_callback (GtkWidget *widget, gpointer data) {
 
 	update_master_list_builtin ();
 }
 
-static void update_master_gslist_callback (GtkWidget *widget, gpointer data) {
+void update_master_gslist_callback (GtkWidget *widget, gpointer data) {
 	if (!have_gslist_installed ()) {
 		// translator: %s == url
 		dialog_ok (NULL, _("For Gslist support you must install the 'gslist' program available from\n%s\n"
@@ -1762,7 +1578,7 @@ static void update_master_gslist_callback (GtkWidget *widget, gpointer data) {
 	update_master_gslist_builtin ();
 }
 
-static void add_master_callback (GtkWidget *widget, gpointer data) {
+void add_master_callback (GtkWidget *widget, gpointer data) {
 	struct master *m;
 
 	if (stat_process) {
@@ -1778,7 +1594,7 @@ static void add_master_callback (GtkWidget *widget, gpointer data) {
 }
 
 // does only work with one master selected
-static void edit_master_callback (GtkWidget *widget, gpointer data) {
+void edit_master_callback (GtkWidget *widget, gpointer data) {
 	struct master *master_to_edit, *master_to_add;
 
 	if (!cur_source) {
@@ -1794,7 +1610,7 @@ static void edit_master_callback (GtkWidget *widget, gpointer data) {
 	}
 }
 
-static void del_master_callback (GtkWidget *widget, gpointer data) {
+void del_master_callback (GtkWidget *widget, gpointer data) {
 	struct master *m;
 	GSList *masters = NULL;
 	char *master_names = NULL;
@@ -1851,7 +1667,7 @@ static void del_master_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void find_player_callback (GtkWidget *widget, int find_next) {
+void find_player_callback (GtkWidget *widget, int find_next) {
 	char *pattern;
 
 	if (find_next || find_player_dialog ()) {
@@ -1866,35 +1682,35 @@ static void find_player_callback (GtkWidget *widget, int find_next) {
 }
 
 
-static void show_hostnames_callback (GtkWidget *widget, gpointer data) {
+void show_hostnames_callback (GtkWidget *widget, gpointer data) {
 
 	if (stat_process || !server_clist || server_clist->rows == 0) {
 		return;
 	}
 
-	if (GTK_CHECK_MENU_ITEM (view_hostnames_menu_item)->active != show_hostnames) {
-		show_hostnames = GTK_CHECK_MENU_ITEM (view_hostnames_menu_item)->active;
+	if (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item"))->active != show_hostnames) {
+		show_hostnames = GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item"))->active;
 		server_clist_redraw ();
 		config_set_bool ("/" CONFIG_FILE "/Appearance/show hostnames", show_hostnames);
 	}
 }
 
 
-static void show_default_port_callback (GtkWidget *widget, gpointer data) {
+void show_default_port_callback (GtkWidget *widget, gpointer data) {
 
 	if (stat_process || !server_clist || server_clist->rows == 0) {
 		return;
 	}
 
-	if (GTK_CHECK_MENU_ITEM (view_defport_menu_item)->active != show_default_port) {
-		show_default_port = GTK_CHECK_MENU_ITEM (view_defport_menu_item)->active;
+	if (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item"))->active != show_default_port) {
+		show_default_port = GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item"))->active;
 		server_clist_redraw ();
 		config_set_bool ("/" CONFIG_FILE "/Appearance/show default port", show_default_port);
 	}
 }
 
 
-static void resolve_callback (GtkWidget *widget, gpointer data) {
+void resolve_callback (GtkWidget *widget, gpointer data) {
 	GSList *selected;
 	GSList *hosts;
 	struct server *s;
@@ -1906,7 +1722,7 @@ static void resolve_callback (GtkWidget *widget, gpointer data) {
 
 	if (!show_hostnames) {
 		gtk_check_menu_item_set_active (
-				GTK_CHECK_MENU_ITEM (view_hostnames_menu_item), TRUE);
+				GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item")), TRUE);
 	}
 
 	selected = server_clist_selected_servers ();
@@ -1931,7 +1747,7 @@ static void resolve_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void properties_callback (GtkWidget *widget, gpointer data) {
+void properties_callback (GtkWidget *widget, gpointer data) {
 
 	if (stat_process) {
 		return;
@@ -1944,7 +1760,7 @@ static void properties_callback (GtkWidget *widget, gpointer data) {
 }
 
 #if 0
-static void cancelredial_callback (GtkWidget *widget, gpointer data) {
+void cancelredial_callback (GtkWidget *widget, gpointer data) {
 
 	if (stat_process) {
 		return;
@@ -1957,7 +1773,7 @@ static void cancelredial_callback (GtkWidget *widget, gpointer data) {
 }
 #endif
 
-static void rcon_callback (GtkWidget *widget, gpointer data) {
+void rcon_callback (GtkWidget *widget, gpointer data) {
 	struct server_props *sp;
 	char *passwd = NULL;
 	int save = 0;
@@ -1993,7 +1809,7 @@ static void rcon_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-static void server_clist_select_callback (GtkWidget *widget, int row,
+void server_clist_select_callback (GtkWidget *widget, int row,
 		int column, GdkEvent *event, GtkWidget *button) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	debug (7, "server_clist_select_callback() -- Row %d", row);
@@ -2007,7 +1823,7 @@ static void server_clist_select_callback (GtkWidget *widget, int row,
 }
 
 
-static void server_clist_unselect_callback (GtkWidget *widget, int row,
+void server_clist_unselect_callback (GtkWidget *widget, int row,
 		int column, GdkEvent *event, GtkWidget *button) {
 	debug (7, "server_clist_uselect_callback() -- Row %d", row);
 	server_clist_sync_selection ();
@@ -2015,7 +1831,7 @@ static void server_clist_unselect_callback (GtkWidget *widget, int row,
 
 
 /* Deal with key-presses in the server pane */
-static gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event) {
+gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event) {
 
 	debug (7, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval);
 	if (event->keyval == GDK_Delete) {
@@ -2035,7 +1851,7 @@ static gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *
 	return FALSE;
 }
 
-static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
+int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	GList *selection;
 	int row;
@@ -2079,7 +1895,7 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 
 				}
 
-				gtk_menu_popup (GTK_MENU (source_menu), NULL, NULL, NULL, NULL,
+				gtk_menu_popup (GTK_MENU (gtk_builder_get_object (builder, "source_tree_popup_menu")), NULL, NULL, NULL, NULL,
 						bevent->button, bevent->time);
 				return TRUE;
 
@@ -2091,10 +1907,10 @@ static int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 	return FALSE;
 }
 
-static GtkWidget *server_mapshot_popup = NULL;
-static GtkWidget *server_mapshot_popup_pixmap = NULL;
+GtkWidget *server_mapshot_popup = NULL;
+GtkWidget *server_mapshot_popup_pixmap = NULL;
 
-static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y) {
+void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y) {
 	GtkWidget *frame;
 	int win_x, win_y, scr_w, scr_h;
 	guint w = 0, h = 0;
@@ -2143,7 +1959,7 @@ static void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, in
 	gtk_widget_show (server_mapshot_popup);
 }
 
-static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
+int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	GList *selection;
 	int row, column;
@@ -2190,7 +2006,7 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 						server_clist_select_one (row);
 					}
 				}
-				gtk_menu_popup (GTK_MENU (server_menu), NULL, NULL, NULL, NULL,
+				gtk_menu_popup (GTK_MENU (gtk_builder_get_object (builder, "server_menu")), NULL, NULL, NULL, NULL,
 						bevent->button, bevent->time);
 				return TRUE;
 
@@ -2211,7 +2027,7 @@ static int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 	return FALSE;
 }
 
-static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
+int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	GList *selection;
 	GtkCTreeNode *node, *node_under_mouse;
@@ -2247,7 +2063,7 @@ static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 				}
 			}
 		}
-		gtk_menu_popup (GTK_MENU (server_info_menu), NULL, NULL, NULL, NULL,
+		gtk_menu_popup (GTK_MENU (gtk_builder_get_object(builder, "svinfo_menu")), NULL, NULL, NULL, NULL,
 				bevent->button, bevent->time);
 
 		return TRUE;
@@ -2257,7 +2073,7 @@ static int server_info_clist_event_callback (GtkWidget *widget, GdkEvent *event)
 }
 
 
-static void source_selection_changed (void) {
+void source_selection_changed (void) {
 	GList *selection = GTK_CLIST (source_ctree)->selection;
 	GtkCTreeNode *node;
 	struct master *m;
@@ -2283,13 +2099,13 @@ static void source_selection_changed (void) {
 }
 
 
-static void source_ctree_selection_changed_callback (GtkWidget *widget,
+void source_ctree_selection_changed_callback (GtkWidget *widget,
 		int row, int column, GdkEvent *event, GtkWidget *button) {
 	debug (6, "source_ctree_selection_changed_callback(%p,%d,%d,%p,%p)", widget, row, column, event, button);
 	source_selection_changed ();
 }
 
-static void source_selection_clear_master_servers (void) {
+void source_selection_clear_master_servers (void) {
 	struct master *m;
 	GSList* source = NULL;
 
@@ -2310,12 +2126,24 @@ static void source_selection_clear_master_servers (void) {
 	reset_main_status_bar ();
 }
 
-static void clear_master_servers_callback (GtkWidget *widget,
-		int row, int column, GdkEvent *event, GtkWidget *button) {
+void clear_master_servers_callback (GtkWidget *widget,
+	int row, int column, GdkEvent *event, GtkWidget *button) {
 	source_selection_clear_master_servers ();
 }
 
-static void add_to_player_filter_callback (GtkWidget *widget, unsigned mask) {
+void add_to_player_filter_red_callback (GtkWidget *widget) {
+	add_to_player_filter (PLAYER_GROUP_RED);
+}
+
+void add_to_player_filter_green_callback (GtkWidget *widget) {
+	add_to_player_filter (PLAYER_GROUP_GREEN);
+}
+
+void add_to_player_filter_blue_callback (GtkWidget *widget) {
+	add_to_player_filter (PLAYER_GROUP_BLUE);
+}
+
+void add_to_player_filter (unsigned mask) {
 	GList *selection = player_clist->selection;
 	struct player *p;
 	int row;
@@ -2334,7 +2162,7 @@ static void add_to_player_filter_callback (GtkWidget *widget, unsigned mask) {
 }
 
 
-static void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, int y) {
+void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, int y) {
 	GtkWidget *frame;
 	int win_x, win_y, scr_w, scr_h;
 
@@ -2371,7 +2199,7 @@ static void player_skin_preview_popup_show (guchar *skin, int top, int bottom, i
 }
 
 
-static int player_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
+int player_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 	GdkEventButton *bevent = (GdkEventButton *) event;
 	guchar *skindata;
 	int row, column;
@@ -2408,7 +2236,7 @@ static int player_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 						else {
 							if (bevent->button == 3) {
 								gtk_clist_select_row (player_clist, row, column);
-								gtk_menu_popup (GTK_MENU (player_menu), NULL, NULL, NULL, NULL, bevent->button, bevent->time);
+								gtk_menu_popup (GTK_MENU (gtk_builder_get_object (builder, "player_menu")), NULL, NULL, NULL, NULL, bevent->button, bevent->time);
 								return TRUE;
 							}
 						}
@@ -2437,7 +2265,7 @@ static int player_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 }
 
 
-static void statistics_callback (GtkWidget *widget, gpointer data) {
+void statistics_callback (GtkWidget *widget) {
 
 	if (stat_process) {
 		return;
@@ -2446,984 +2274,19 @@ static void statistics_callback (GtkWidget *widget, gpointer data) {
 	statistics_dialog ();
 }
 
-
-#ifdef GUI_GTK2
-struct __menuitem {
-	char *label;
-	char accel_key;
-	int accel_mods;
-	GtkWidget **widget;
-	GtkSignalFunc	callback;
-	gpointer user_data;
-};
-
-
-
-
-static const struct menuitem srvopt_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("Connect"),
-		0,
-		0,
-		G_CALLBACK (launch_normal_callback),
-		(gpointer) LAUNCH_NORMAL,
-		&connect_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Observe"),
-		0,
-		0,
-		G_CALLBACK (launch_spectate_callback),
-		NULL,
-		&observe_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Record Demo"),
-		0,
-		0,
-		G_CALLBACK (launch_record_callback),
-		NULL,
-		&record_menu_item
-	},
-	/*
-	{
-		MENU_ITEM,
-		N_("Cancel Redial"),
-		0,
-		0,
-		G_CALLBACK (cancelredial_callback),
-		NULL,
-		&cancel_redial_menu_item
-	},
-	*/
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("Add new Server"),
-		0,
-		0,
-		G_CALLBACK (add_server_callback),
-		NULL,
-		&add_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Add to Favorites"),
-		0,
-		0,
-		G_CALLBACK (add_to_favorites_callback),
-		NULL,
-		&favadd_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Remove"),
-		0,
-		0,
-		G_CALLBACK (del_server_callback),
-		NULL,
-		&delete_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Copy"),
-		0,
-		0,
-		G_CALLBACK (copy_server_callback),
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("Copy+"),
-		0,
-		0,
-		G_CALLBACK (copy_server_callback_plus),
-		NULL,
-		NULL
-	},
-	{	MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("Refresh"),
-		0,
-		0,
-		G_CALLBACK (refresh_callback),
-		NULL,
-		&refresh_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Refresh Selected"),
-		0,
-		0,
-		G_CALLBACK (refresh_selected_callback),
-		NULL,
-		&refrsel_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("DNS Lookup"),
-		0,
-		0,
-		G_CALLBACK (resolve_callback),
-		NULL,
-		&resolve_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("RCon"),
-		0,
-		0,
-		G_CALLBACK (rcon_callback),
-		NULL,
-		&rcon_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Properties"),
-		0,
-		0,
-		G_CALLBACK (properties_callback),
-		NULL,
-		&properties_menu_item
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-static const struct menuitem srvinfo_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("Copy"),
-		0,
-		0,
-		G_CALLBACK (copy_server_info_callback), NULL,
-		NULL
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-static const struct menuitem file_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("_Statistics"),
-		0,
-		0,
-		G_CALLBACK (statistics_callback),
-		NULL,
-		&file_statistics_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Exit"),
-		'Q',
-		GDK_CONTROL_MASK,
-		NULL,
-		NULL,
-		&file_quit_menu_item
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-// appears on right click on a master server
-static const struct menuitem source_ctree_popup_menu[] = {
-	{
-		MENU_ITEM,
-		N_("Add _Master"),
-		'M',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (add_master_callback),
-		NULL,
-		&source_add_master_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Rename Master"),
-		0,
-		0,
-		G_CALLBACK (edit_master_callback),
-		NULL,
-		&source_edit_master_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("D_elete Master"),
-		0,	0,
-		G_CALLBACK (del_master_callback),
-		NULL,
-		&source_delete_master_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Clear Servers"),
-		0,	0,
-		G_CALLBACK (clear_master_servers_callback),
-		NULL,
-		&source_clear_master_servers_menu_item
-	},
-	{MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-static const struct menuitem edit_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("_Add new Server"),
-		'N',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (add_server_callback),
-		NULL,
-		&edit_add_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Add to _Favorites"),
-		0,
-		0,
-		G_CALLBACK (add_to_favorites_callback),
-		NULL,
-		&edit_favadd_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Remove"),
-		'D',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (del_server_callback),
-		NULL,
-		&edit_delete_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Copy"),
-		'C',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (copy_server_callback),
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Copy+"),
-		'O',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (copy_server_callback_plus),
-		NULL,
-		NULL
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("Add Default Masters"),
-		0,
-		GDK_CONTROL_MASK,
-		G_CALLBACK (update_master_builtin_callback),
-		NULL,
-		&edit_update_master_builtin_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Add Gslist Masters"),
-		0,
-		GDK_CONTROL_MASK,
-		G_CALLBACK (update_master_gslist_callback),
-		NULL,
-		&edit_update_master_gslist_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Add _Master"),
-		'M',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (add_master_callback),
-		NULL,
-		&edit_add_master_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Rename Master"),
-		0,
-		0,
-		G_CALLBACK (edit_master_callback),
-		NULL,
-		&edit_edit_master_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("D_elete Master"),
-		0,
-		0,
-		G_CALLBACK (del_master_callback),
-		NULL,
-		&edit_delete_master_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Clear Servers"),
-		0,
-		0,
-		G_CALLBACK (clear_master_servers_callback),
-		NULL,
-		&edit_clear_master_servers_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Find Player"),
-		'F',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (find_player_callback),
-		(gpointer) FALSE,
-		&edit_find_player_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Find A_gain"),
-		'G',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (find_player_callback),
-		(gpointer) TRUE,
-		&edit_find_again_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("Properties"),
-		0,
-		0,
-		G_CALLBACK (properties_callback),
-		NULL,
-		&properties_menu_item
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-static const struct menuitem view_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("_Refresh"),
-		'R', GDK_CONTROL_MASK,
-		G_CALLBACK (refresh_callback), NULL,
-		&view_refresh_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Refresh _Selected"),
-		'S', GDK_CONTROL_MASK,
-		G_CALLBACK (refresh_selected_callback),
-		NULL,
-		&view_refrsel_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Update From Master"),
-		'U',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (update_source_callback),
-		NULL,
-		&view_update_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_CHECK_ITEM,
-		N_("Show _Host Names"),
-		'H',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (show_hostnames_callback),
-		NULL,
-		&view_hostnames_menu_item
-	},
-	{
-		MENU_CHECK_ITEM,
-		N_("Show Default _Port"),
-		0,
-		0,
-		G_CALLBACK (show_default_port_callback),
-		NULL,
-		&view_defport_menu_item
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-
-/*
-   baa -- Oh, this is kind of bad.  In order to allow
-   the number of menus to be changed at compile (and in
-   the future, run) time, I have to allocate and set
-   up each of the filter menu items.  But that makes
-   it no longer a const.
-*/
-
-static const struct menuitem server_menu_items[] = {
-	/*
-	{
-		MENU_ITEM,
-		N_("_Server Filters"),
-		0,
-		0,
-		NULL,
-		0,
-		&server_serverfilter_menu_item
-	},
-	*/
-	{
-		MENU_ITEM,
-		N_("_Connect"),
-		0,
-		0,
-		G_CALLBACK (launch_normal_callback),
-		NULL,
-		&server_connect_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Observe"),
-		0,
-		0,
-		G_CALLBACK (launch_spectate_callback),
-		NULL,
-		&server_observe_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Record _Demo"),
-		0,
-		0,
-		G_CALLBACK (launch_record_callback),
-		NULL,
-		&server_record_menu_item
-	},
-	/*
-	{
-		MENU_ITEM,
-		N_("Cancel Redial"),
-		0,
-		0,
-		G_CALLBACK (cancelredial_callback),
-		NULL,
-		&server_cancel_redial_menu_item
-	},
-	*/
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Add new Server"),
-		0,
-		0,
-		G_CALLBACK (add_server_callback),
-		NULL,
-		&edit_add_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("Add to _Favorites"),
-		0,
-		0,
-		G_CALLBACK (add_to_favorites_callback),
-		NULL,
-		&server_favadd_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Remove"),
-		0,
-		0,
-		G_CALLBACK (del_server_callback),
-		NULL,
-		&server_delete_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("DNS _Lookup"),
-		'L',
-		GDK_CONTROL_MASK,
-		G_CALLBACK (resolve_callback),
-		NULL,
-		&server_resolve_menu_item
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_RCon"),
-		0,
-		0,
-		G_CALLBACK (rcon_callback),
-		NULL,
-		&server_rcon_menu_item
-	},
-	{
-		MENU_ITEM,
-		N_("_Properties"),
-		0,
-		0,
-		G_CALLBACK (properties_callback),
-		NULL,
-		&server_properties_menu_item
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-static const struct menuitem preferences_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("_General"),
-		0,
-		0,
-		G_CALLBACK (start_preferences_dialog),
-		(gpointer) (PREF_PAGE_GENERAL + UNKNOWN_SERVER * 256),
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Games"),
-		0,
-		0,
-		G_CALLBACK (start_preferences_dialog),
-		(gpointer) (PREF_PAGE_GAMES + UNKNOWN_SERVER * 256),
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Appearance"),
-		0,
-		0,
-		G_CALLBACK (start_preferences_dialog),
-		(gpointer) (PREF_PAGE_APPEARANCE + UNKNOWN_SERVER * 256),
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_QStat"),
-		0,
-		0,
-		G_CALLBACK (start_preferences_dialog),
-		(gpointer) (PREF_PAGE_QSTAT + UNKNOWN_SERVER * 256),
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Sounds"),
-		0,
-		0,
-		G_CALLBACK (start_preferences_dialog),
-		(gpointer) (PREF_PAGE_SOUNDS + UNKNOWN_SERVER * 256),
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("S_cripts"),
-		0,
-		0,
-		G_CALLBACK (start_preferences_dialog),
-		(gpointer) (PREF_PAGE_SCRIPTS + UNKNOWN_SERVER * 256),
-		NULL
-	},
-	{
-		MENU_SEPARATOR,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Server Filter"),
-		0,
-		0,
-		G_CALLBACK (start_filters_cfg_dialog),
-		(gpointer) FILTER_SERVER,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("Player _Filter"),
-		0,
-		0,
-		G_CALLBACK (start_filters_cfg_dialog),
-		(gpointer) FILTER_PLAYER,
-		NULL
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-static const struct menuitem help_menu_items[] = {
-	{
-		MENU_ITEM,
-		N_("_About"),
-		0,
-		0,
-		G_CALLBACK (about_dialog),
-		NULL,
-		NULL
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-
-static const struct menuitem menubar_menu_items[] = {
-	{
-		MENU_BRANCH,
-		N_("_File"),
-		0,
-		0,
-		NULL,
-		&file_menu_items,
-		NULL
-	},
-	{
-		MENU_BRANCH,
-		N_("_Edit"),
-		0,
-		0,
-		NULL,
-		&edit_menu_items,
-		NULL
-	},
-	{
-		MENU_BRANCH,
-		N_("_View"),
-		0,
-		0,
-		NULL,
-		&view_menu_items,
-		NULL
-	},
-	{
-		MENU_BRANCH,
-		N_("_Server"),
-		0,
-		0,
-		NULL,
-		&server_menu_items,
-		NULL
-	},
-	{
-		MENU_BRANCH,
-		N_("_Preferences"),
-		0,
-		0,
-		NULL,
-		&preferences_menu_items,
-		NULL
-	},
-	{
-		MENU_ITEM,
-		N_("_Server Filters"),
-		0,
-		0,
-		NULL,
-		0,
-		&server_serverfilter_menu_item
-	},
-	{
-		MENU_BRANCH,
-		N_("_Help"),
-		0,
-		0,
-		NULL,
-		&help_menu_items,
-		NULL
-	},
-	{
-		MENU_END,
-		NULL,
-		0,
-		0,
-		NULL,
-		NULL,
-		NULL
-	}
-};
-
-static GtkWidget *create_player_menu_item (char *str, int i) {
-	GtkWidget *menu_item;
-	GtkWidget *hbox;
-	GtkWidget *label;
-	GtkWidget *pixmap;
-
-	menu_item = gtk_menu_item_new ();
-
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_container_add (GTK_CONTAINER (menu_item), hbox);
-
-	label = gtk_label_new (str);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	pixmap = gtk_pixmap_new (group_pix[i].pix, group_pix[i].mask);
-	gtk_box_pack_end (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
-	gtk_widget_show (pixmap);
-
-	gtk_widget_show (hbox);
-
-	return menu_item;
-}
-
-
-static GtkWidget *create_player_menu (GtkAccelGroup *accel_group) {
-	GtkWidget *menu;
-	GtkWidget *marker_menu;
-	GtkWidget *menu_item;
-
-	menu = gtk_menu_new ();
-
-	marker_menu = gtk_menu_new ();
-
-	menu_item = create_player_menu_item (_("Mark as Red"), 0);
-	gtk_menu_append (GTK_MENU (marker_menu), menu_item);
-	g_signal_connect (GTK_OBJECT (menu_item), "activate",
-			G_CALLBACK (add_to_player_filter_callback),
-			(gpointer) PLAYER_GROUP_RED);
-	gtk_widget_show (menu_item);
-
-	menu_item = create_player_menu_item (_("Mark as Green"), 1);
-	gtk_menu_append (GTK_MENU (marker_menu), menu_item);
-	g_signal_connect (GTK_OBJECT (menu_item), "activate",
-			G_CALLBACK (add_to_player_filter_callback),
-			(gpointer) PLAYER_GROUP_GREEN);
-	gtk_widget_show (menu_item);
-
-	menu_item = create_player_menu_item (_("Mark as Blue"), 2);
-	gtk_menu_append (GTK_MENU (marker_menu), menu_item);
-	g_signal_connect (GTK_OBJECT (menu_item), "activate",
-			G_CALLBACK (add_to_player_filter_callback),
-			(gpointer) PLAYER_GROUP_BLUE);
-	gtk_widget_show (menu_item);
-
-	menu_item = gtk_menu_item_new_with_label (_("Add to Player Filter"));
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), marker_menu);
-	gtk_menu_append (GTK_MENU (menu), menu_item);
-	gtk_widget_show (menu_item);
-
-	player_filter_menu_item = menu_item;
-
-	return menu;
-}
-
-
-static void populate_main_toolbar (void) {
+void populate_main_toolbar (void) {
 	GtkWidget *image;
 	char buf[128];
 	unsigned mask;
 	int i;
 
-/*	for reference, old code style:
-	pixmap = gtk_pixmap_new (connect_pix.pix, connect_pix.mask);
-	gtk_widget_show (pixmap);
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "update-image")), g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "update.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "refresh-image")), g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "refresh.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "refrsel-image")), g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "refrsel.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "stop-image")), g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "stop.xpm", NULL));
+	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "connect-image")), g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "connect.xpm", NULL));
 
-	connect_button = gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-			_("Connect"), _("Connect"), NULL,
-			pixmap,
-			G_CALLBACK (launch_normal_callback), NULL);
-*/
-
-	update_button =  GTK_WIDGET (gtk_builder_get_object (builder, "update-button"));
-	refresh_button = GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button"));
-	refrsel_button = GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button"));
-	stop_button =    GTK_WIDGET (gtk_builder_get_object (builder, "stop-button"));
-	connect_button = GTK_WIDGET (gtk_builder_get_object (builder, "connect-button"));
-
-	g_signal_connect (G_OBJECT (update_button),  "clicked", G_CALLBACK (update_source_callback), NULL);
-	g_signal_connect (G_OBJECT (refresh_button), "clicked", G_CALLBACK (refresh_callback), NULL);
-	g_signal_connect (G_OBJECT (refrsel_button), "clicked", G_CALLBACK (refresh_selected_callback), NULL);
-	g_signal_connect (G_OBJECT (stop_button),    "clicked", G_CALLBACK (stop_callback), NULL);
-	g_signal_connect (G_OBJECT (connect_button), "clicked", G_CALLBACK (launch_normal_callback), NULL);	// TODO test... ^^'
-
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "update-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "update.xpm", NULL));
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "refresh-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "refresh.xpm", NULL));
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "refrsel-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "refrsel.xpm", NULL));
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "stop-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "stop.xpm", NULL));
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "connect-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "connect.xpm", NULL));
-
-#if 0
-	/* not tested at all */
-	observe_button = GTK_WIDGET (gtk_builder_get_object (builder, "observe-button"));
-	record_button =  GTK_WIDGET (gtk_builder_get_object (builder, "record-button"));
-
-	g_signal_connect (G_OBJECT (observe_button), "clicked", G_CALLBACK (launch_spectate_callback), NULL);
-	g_signal_connect (G_OBJECT (record_button),  "clicked", G_CALLBACK (launch_record_callback), NULL);
-
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "observe-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "observe.xpm", NULL));
-	gtk_image_set_from_file (GTK_IMAGE (gtk_builder_get_object (builder, "record-image")),
-	                         g_build_filename (xqf_PACKAGE_DATA_DIR, "xpm", "record.xpm", NULL));
-
-	gtk_widget_show (observe_button);
-	gtk_widget_show (record_button);
-#endif
-
-	/*
-	 *  Filter buttons
-	 */
+	// Filter buttons
 
 	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
 		if (!filters[i].pix) {
@@ -3431,15 +2294,6 @@ static void populate_main_toolbar (void) {
 			continue;
 		}
 
-/*		pixmap = gtk_pixmap_new (filters[i].pix->pix, filters[i].pix->mask);
-		gtk_widget_show (pixmap);
-
-		filter_buttons[i] = gtk_toolbar_append_element (GTK_TOOLBAR (main_toolbar),
-				GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL,
-				_(filters[i].short_name), buf, NULL,
-				pixmap,
-				G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
-*/
 		filter_buttons[i] = GTK_WIDGET (gtk_toggle_tool_button_new ());
 		g_signal_connect (G_OBJECT (filter_buttons[i]),  "toggled", G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
 		gtk_tool_button_set_label (GTK_TOOL_BUTTON (filter_buttons[i]), _(filters[i].short_name));
@@ -3453,92 +2307,17 @@ static void populate_main_toolbar (void) {
 		gtk_widget_show (image);
 
 		gtk_widget_show (filter_buttons[i]);
-		gtk_toolbar_insert (GTK_TOOLBAR (main_toolbar), GTK_TOOL_ITEM (filter_buttons[i]), -1);
+		gtk_toolbar_insert (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")), GTK_TOOL_ITEM (filter_buttons[i]), -1);
 
 		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (filter_buttons[i]), ((cur_filter & mask) != 0)? TRUE : FALSE);
 	}
 
-#if 0
-	gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
-
-	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
-		// Translators: e.g. Server Filter Configuration
-		g_snprintf (buf, 128, _("%s Filter Configuration"), _(filters[i].name));
-
-		pixmap = gtk_pixmap_new (filter_cfg_pix[i].pix, filter_cfg_pix[i].mask);
-		gtk_widget_show (pixmap);
-
-		gtk_toolbar_append_item (GTK_TOOLBAR (main_toolbar),
-				_(filters[i].short_cfg_name), buf, NULL,
-				pixmap,
-				G_CALLBACK (start_filters_cfg_dialog), (gpointer) i);
-	}
-
-	gtk_toolbar_append_space (GTK_TOOLBAR (main_toolbar));
-
-	/* filter option menu for toolbar */
-
-	filter_toolbar_label = gtk_label_new ("Filter: ");
-	gtk_toolbar_append_widget (GTK_TOOLBAR (main_toolbar),
-			filter_toolbar_label,
-			"Select a server filter",
-			"Private");
-	gtk_widget_show (filter_toolbar_label);
-
-	filter_option_menu_toolbar = gtk_option_menu_new ();
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu_toolbar), create_filter_menu_toolbar ());
-
-	gtk_toolbar_append_widget (GTK_TOOLBAR (main_toolbar),
-			filter_option_menu_toolbar,
-			"Select a server filter",
-			"Private");
-
-	gtk_widget_show (filter_option_menu_toolbar);
-#endif
-
-	set_toolbar_appearance (GTK_TOOLBAR (main_toolbar), default_toolbar_style, default_toolbar_tips);
+	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")), default_toolbar_style, default_toolbar_tips);
 }
 
-/** build server filter menu for menubar */
-#if 0
-static GtkWidget* create_filter_menu_toolbar () {
-	unsigned int i;
-	GtkWidget *menu;
-	GtkWidget *menu_item;
+	// build server filter menu for toolbar
 
-	struct server_filter_vars* filter = NULL;
-
-	menu = gtk_menu_new ();
-
-
-	for (i = 0; i <= server_filters->len; i++) {
-		char* name = NULL;
-		if (i == 0) {
-			filter = NULL;
-			name = _("None");
-		}
-		else {
-			filter = g_array_index (server_filters, struct server_filter_vars*, i-1);
-			name = filter->filter_name;
-		}
-
-		menu_item = gtk_menu_item_new_with_label (name);
-		gtk_menu_append (GTK_MENU (menu), menu_item);
-		gtk_widget_show (menu_item);
-
-		g_signal_connect (GTK_OBJECT (menu_item), "activate", G_CALLBACK (server_filter_select_callback_toolbar), (gpointer)i); // array starts from zero but filters from 1
-
-	}
-
-	gtk_widget_show (menu);
-	return menu;
-}
-#endif
-
-#endif
-
-/** build server filter menu for toolbar */
-static GtkWidget* create_filter_menu () {
+GtkWidget* create_filter_menu () {
 	unsigned int i;
 	GtkWidget *menu;
 	GtkWidget *menu_item;
@@ -3553,7 +2332,7 @@ static GtkWidget* create_filter_menu () {
 	gtk_menu_append (GTK_MENU (menu), menu_item);
 	gtk_widget_show (menu_item);
 
-	g_signal_connect (GTK_OBJECT (menu_item), "activate", G_CALLBACK (start_filters_cfg_dialog), (gpointer) FILTER_SERVER);
+	g_signal_connect (menu_item, "activate", G_CALLBACK (start_filters_cfg_dialog), (gpointer) FILTER_SERVER);
 
 	menu_item = gtk_menu_item_new ();
 	gtk_widget_set_sensitive (menu_item, FALSE);
@@ -3580,24 +2359,12 @@ static GtkWidget* create_filter_menu () {
 		gtk_widget_show (menu_item);
 
 		// array starts from zero but filters from 1
-		g_signal_connect (GTK_OBJECT (menu_item), "activate",	G_CALLBACK (server_filter_select_callback), GINT_TO_POINTER(i));
-
-		/*
-		// add separator
-		if (i == 0) {
-			menu_item = gtk_menu_item_new ();
-			gtk_widget_set_sensitive (menu_item, FALSE);
-			gtk_menu_append (GTK_MENU (menu), menu_item);
-			gtk_widget_show (menu_item);
-		}
-		*/
+		g_signal_connect (menu_item, "activate", G_CALLBACK (server_filter_select_callback), GINT_TO_POINTER(i));
 	}
-
-	// filter_menu = menu;
 	return menu;
 }
 
-static void quick_filter_entry_changed (GtkWidget* entry, gpointer data) {
+void quick_filter_entry_changed (GtkWidget* entry, gpointer data) {
 	const char* text = gtk_entry_get_text (GTK_ENTRY (entry));
 	int mask = 0;
 
@@ -3626,7 +2393,7 @@ void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 	gtk_widget_grab_focus (entry);
 }
 
-static void create_main_window (void) {
+void create_main_window (void) {
 	GError *error = NULL;
 
 #if defined GUI_GTK3
@@ -3646,6 +2413,7 @@ static void create_main_window (void) {
 	}
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "main-window"));
+	gtk_builder_connect_signals (builder, NULL);
 	g_signal_connect (main_window, "delete_event", G_CALLBACK (window_delete_event_callback), NULL);
 	g_signal_connect (main_window, "destroy", G_CALLBACK (ui_done), NULL);
 	g_signal_connect (main_window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
@@ -3656,18 +2424,14 @@ static void create_main_window (void) {
 	gtk_widget_realize (main_window);
 }
 
-static void populate_main_window (void) {
+void populate_main_window (void) {
 	GtkWidget *main_vbox;
 	GtkWidget *hbox;
-	GtkWidget *menu_bar;
-//	GtkWidget *handlebox;
-	GtkWidget *scrollwin;
 	GtkWidget *entry;
 	GtkWidget *button;
 	GtkWidget *pixmap;
 	GtkAccelGroup *accel_group;
 	int i;
-	//  char *buf;
 
 	accel_group = gtk_accel_group_new ();
 
@@ -3683,139 +2447,42 @@ static void populate_main_window (void) {
 	   you need to change the server_filter_widget line in xqf.h.
 	*/
 
-#if 0
-	if ((server_filter_menu_items = g_malloc (sizeof (struct menuitem) * (MAX_SERVER_FILTERS + 4)))) {
-		i = 0;
-		j = 0;
-		server_filter_menu_items[i].type       = MENU_ITEM;
-		server_filter_menu_items[i].label      = _("Filters");
-		server_filter_menu_items[i].accel_key  = 0;
-		server_filter_menu_items[i].accel_mods = 0;
-		server_filter_menu_items[i].callback   = NULL;
-		server_filter_menu_items[i].user_data  = NULL;
-		server_filter_menu_items[i].widget     = &server_filter_widget[i];
-		i++;
-
-		server_filter_menu_items[i].type       = MENU_SEPARATOR;
-		server_filter_menu_items[i].label      = NULL;
-		server_filter_menu_items[i].accel_key  = 0;
-		server_filter_menu_items[i].accel_mods = 0;
-		server_filter_menu_items[i].callback   = NULL;
-		server_filter_menu_items[i].user_data  = NULL;
-		server_filter_menu_items[i].widget     = &server_filter_widget[i];
-		i++;
-
-		/* Start of the filters */
-		filter_start_index = i;
-		server_filter_menu_items[i].type       = MENU_ITEM;
-		server_filter_menu_items[i].label      = _("None");
-		server_filter_menu_items[i].accel_key  = 0;
-		server_filter_menu_items[i].accel_mods = 0;
-		server_filter_menu_items[i].callback   = G_CALLBACK (server_filter_select_callback);
-		server_filter_menu_items[i].user_data  = (gpointer) j;
-		server_filter_menu_items[i].widget     = &server_filter_widget[i];
-
-		i++;
-		j++;
-
-		for (; i < (MAX_SERVER_FILTERS + filter_start_index); i++, j++){
-			buf = g_malloc (sizeof (char) * (16));
-			sprintf (buf, "Filter %d", j);
-			server_filter_menu_items[i].type       = MENU_ITEM;
-			server_filter_menu_items[i].label      = buf;
-			server_filter_menu_items[i].accel_key  = 0;
-			server_filter_menu_items[i].accel_mods = 0;
-			server_filter_menu_items[i].callback   = G_CALLBACK (server_filter_select_callback);
-			server_filter_menu_items[i].user_data  = (gpointer) j;
-			server_filter_menu_items[i].widget     = &server_filter_widget[i];
-		}
-
-		server_filter_menu_items[i].type       = MENU_END;
-		server_filter_menu_items[i].label      = NULL;
-		server_filter_menu_items[i].accel_key  = 0;
-		server_filter_menu_items[i].accel_mods = 0;
-		server_filter_menu_items[i].callback   = NULL;
-		server_filter_menu_items[i].user_data  = NULL;
-		server_filter_menu_items[i].widget     = NULL;
-	}
-
-	/* Depeding on where you want the filters to appear... */
-#if 0
-	srvopt_menu_items[0].user_data = &server_filter_menu_items[0];
-#else
-	server_menu_items[0].user_data = &server_filter_menu_items[0];
-#endif
-#endif
-
-	server_menu = create_menu (srvopt_menu_items, accel_group);
-
-	server_info_menu = create_menu (srvinfo_menu_items, accel_group);
-
-	source_menu = create_menu (source_ctree_popup_menu, accel_group);
-
-	/* We will call set_server_filter_menu_list_text (); below after we
-	   have the filter status bar. It used to be here -baa
-	*/
-
-	player_menu = create_player_menu (accel_group);
-
 	main_vbox = GTK_WIDGET (gtk_builder_get_object (builder, "main-vbox"));
 
-	/*  Lazy way to get `copy to clipboard' feature working.
-	 *  Don't gtk_widget_show() selection_manager widget!
-	 */
+	// Lazy way to get `copy to clipboard' feature working.
+	// Don't gtk_widget_show() selection_manager widget!
 
 	selection_manager = GTK_EDITABLE (gtk_entry_new());
 	gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (selection_manager), FALSE, FALSE, 0);
 	gtk_widget_realize (GTK_WIDGET (selection_manager));
 
-/*	handlebox = gtk_handle_box_new ();
-	gtk_box_pack_start (GTK_BOX (main_vbox), handlebox, FALSE, FALSE, 0);
-*/
-	menu_bar = create_menubar (menubar_menu_items, accel_group);
-
 	// add server filters to menu
 	server_filter_menu_items = g_array_new (FALSE, FALSE, sizeof (GtkWidget*));
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (server_serverfilter_menu_item), create_filter_menu ());
 
-	g_signal_connect_swapped (GTK_OBJECT (file_quit_menu_item), "activate", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (main_window));
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (gtk_builder_get_object (builder, "svfilter_menu_item")), create_filter_menu ());
 
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (view_hostnames_menu_item), show_hostnames);
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (view_defport_menu_item), show_default_port);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item")), show_hostnames);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item")), show_default_port);
 
-	gtk_box_pack_start (GTK_BOX (main_vbox), menu_bar, FALSE, FALSE, 0);
-	gtk_widget_show (menu_bar);
-/*
-	gtk_container_add (GTK_CONTAINER (handlebox), menu_bar);
-	gtk_widget_show (menu_bar);
-
-	gtk_widget_show (handlebox);
-*/
-	main_toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "main-toolbar"));
 	populate_main_toolbar ();
 
 	pane1_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned"));
 
-	/*
-	 *  Sources CTree
-	 */
+	// Sources CTree
 
-	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources"));
+	source_ctree = create_source_ctree (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
 
-	source_ctree = create_source_ctree (scrollwin);
 	gtk_widget_show (source_ctree);
 
-	g_signal_connect (GTK_OBJECT (source_ctree), "tree_select_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
-	g_signal_connect (GTK_OBJECT (source_ctree), "tree_unselect_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
-	g_signal_connect (GTK_OBJECT (source_ctree), "event", G_CALLBACK (source_ctree_event_callback), NULL);
+	g_signal_connect (source_ctree, "tree_select_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
+	g_signal_connect (source_ctree, "tree_unselect_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
+	g_signal_connect (source_ctree, "event", G_CALLBACK (source_ctree_event_callback), NULL);
 
-	gtk_widget_show (scrollwin);
+	gtk_widget_show (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
 
 	pane2_widget = GTK_WIDGET (gtk_builder_get_object (builder, "vpaned"));
 
-	/*
-	 *  Server CList
-	 */
+	// Server CList
 
 	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox"));
 
@@ -3825,51 +2492,41 @@ static void populate_main_window (void) {
 	gtk_widget_show_all (button);
 
 	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
-	g_signal_connect (GTK_OBJECT (entry), "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
+	g_signal_connect (entry, "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
 
-	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (quickfilter_delete_button_clicked), entry);
+	g_signal_connect (button, "clicked", G_CALLBACK (quickfilter_delete_button_clicked), entry);
 
-	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server"));
+	server_clist = GTK_CLIST (create_cwidget (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server")), &server_clist_def));
 
-	server_clist = GTK_CLIST (create_cwidget (scrollwin, &server_clist_def));
-
-	g_signal_connect (GTK_OBJECT (server_clist), "click_column", G_CALLBACK (clist_set_sort_column), &server_clist_def);
-	g_signal_connect (GTK_OBJECT (server_clist), "event", G_CALLBACK (server_clist_event_callback), NULL);
-	g_signal_connect (GTK_OBJECT (server_clist), "select_row", G_CALLBACK (server_clist_select_callback), NULL);
-	g_signal_connect (GTK_OBJECT (server_clist), "unselect_row", G_CALLBACK (server_clist_unselect_callback), NULL);
-	g_signal_connect (GTK_OBJECT (server_clist), "key_press_event", G_CALLBACK (server_clist_keypress_callback), NULL);
+	g_signal_connect (server_clist, "click_column", G_CALLBACK (clist_set_sort_column), &server_clist_def);
+	g_signal_connect (server_clist, "event", G_CALLBACK (server_clist_event_callback), NULL);
+	g_signal_connect (server_clist, "select_row", G_CALLBACK (server_clist_select_callback), NULL);
+	g_signal_connect (server_clist, "unselect_row", G_CALLBACK (server_clist_unselect_callback), NULL);
+	g_signal_connect (server_clist, "key_press_event", G_CALLBACK (server_clist_keypress_callback), NULL);
 
 	gtk_clist_set_compare_func (server_clist, (GtkCListCompareFunc) server_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (server_clist));
-
+	
 	pane3_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned2"));
 
-	/*
-	 *  Player CList
-	 */
+	// Player CList
 
-	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player"));
+	player_clist = GTK_CLIST (create_cwidget (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player")), &player_clist_def));
 
-	player_clist = GTK_CLIST (create_cwidget (scrollwin, &player_clist_def));
-
-	g_signal_connect (GTK_OBJECT (player_clist), "click_column", G_CALLBACK (clist_set_sort_column), &player_clist_def);
-	g_signal_connect (GTK_OBJECT (player_clist), "event", G_CALLBACK (player_clist_event_callback), NULL);
+	g_signal_connect (player_clist, "click_column", G_CALLBACK (clist_set_sort_column), &player_clist_def);
+	g_signal_connect (player_clist, "event", G_CALLBACK (player_clist_event_callback), NULL);
 
 	gtk_clist_set_compare_func (player_clist, (GtkCListCompareFunc) player_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (player_clist));
 
-	/*
-	 *  Server Info CList
-	 */
+	// Server Info CList
 
-	scrollwin = GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info"));
+	srvinf_ctree = GTK_CTREE (create_cwidget (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")), &srvinf_clist_def));
 
-	srvinf_ctree = GTK_CTREE (create_cwidget (scrollwin, &srvinf_clist_def));
-
-	g_signal_connect (GTK_OBJECT (srvinf_ctree), "click_column", G_CALLBACK (clist_set_sort_column), &srvinf_clist_def);
-	g_signal_connect (GTK_OBJECT (srvinf_ctree), "event", G_CALLBACK (server_info_clist_event_callback), NULL);
+	g_signal_connect (srvinf_ctree, "click_column", G_CALLBACK (clist_set_sort_column), &srvinf_clist_def);
+	g_signal_connect (srvinf_ctree, "event", G_CALLBACK (server_info_clist_event_callback), NULL);
 
 	gtk_clist_set_compare_func (GTK_CLIST (srvinf_ctree), (GtkCListCompareFunc) srvinf_clist_compare_func);
 
@@ -3882,9 +2539,7 @@ static void populate_main_window (void) {
 	gtk_clist_set_row_height (GTK_CLIST (srvinf_ctree), i);
 	gtk_clist_set_row_height (GTK_CLIST (source_ctree), i);
 
-	/*
-	 *  Status Bar & Progress Bar
-	 */
+	// Status Bar & Progress Bar
 
 	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox-status-bar"));
 	main_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar"));
@@ -3897,12 +2552,8 @@ static void populate_main_window (void) {
 	gtk_box_pack_end (GTK_BOX (hbox), main_progress_bar, FALSE, FALSE, 0);
 	gtk_widget_show (main_progress_bar);
 
-	/* Make sure the current filter is dispalyed and applied if needed */
+	// Make sure the current filter is dispalyed and applied if needed
 	set_server_filter_menu_list_text ();
-
-	/* Refresh optionmenu on toolbar */
-
-	set_filter_option_menu_toolbar ();
 
 	restore_main_window_geometry ();
 
@@ -3971,7 +2622,7 @@ void play_sound_with (const char* player, const char *sound, gboolean override) 
 	}
 }
 
-static void cmdlinehelp () {
+void cmdlinehelp () {
 	puts ("XQF Version " PACKAGE_VERSION);
 	puts (_(
 				"Usage:\n"
@@ -3985,9 +2636,9 @@ static void cmdlinehelp () {
 	exit (0);
 }
 
-static char* cmdline_add_server = NULL;
-static gboolean cmdline_launch = FALSE;
-static gboolean cmdline_newversion = FALSE;
+char* cmdline_add_server = NULL;
+gboolean cmdline_launch = FALSE;
+gboolean cmdline_newversion = FALSE;
 
 // must always return FALSE to stop g_timeout
 gboolean check_cmdline_launch (gpointer nothing) {
@@ -4050,7 +2701,7 @@ gboolean check_cmdline_launch (gpointer nothing) {
 	return FALSE;
 }
 
-static struct option long_options[] =
+struct option long_options[] =
 {
 	{"launch", 1, 0, 'l'},
 	{"add", 1, 0, 'a'},
@@ -4063,7 +2714,7 @@ static struct option long_options[] =
 	{0, 0, 0, 0}
 };
 
-static void parse_commandline (int argc, char* argv[]) {
+void parse_commandline (int argc, char* argv[]) {
 	while (1) {
 		int c;
 		int option_index = 0;
@@ -4121,7 +2772,7 @@ void add_pixmap_path_for_theme (const char* theme) {
 	add_pixmap_directory (dir);
 }
 
-static void init_config_path () {
+void init_config_path () {
 	char dir[PATH_MAX];
 	config_add_dir (xqf_PACKAGE_DATA_DIR);
 	snprintf (dir, sizeof (dir), "%s/.local/share/xqf", g_get_home_dir ());
@@ -4129,7 +2780,7 @@ static void init_config_path () {
 	config_add_dir (user_rcdir);
 }
 
-static void init_scripts_path () {
+void init_scripts_path () {
 	char dir[PATH_MAX];
 	snprintf (dir, sizeof (dir), "%s/scripts", xqf_PACKAGE_DATA_DIR);
 	scripts_add_dir (dir);
@@ -4166,11 +2817,11 @@ int main (int argc, char *argv[]) {
 	set_debug_level (DEFAULT_DEBUG_LEVEL);
 	debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);
 
-	/* migrate config directory to follow XDG  Base Directory Specification
-	 * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-	 * https://developer.gnome.org/basedir-spec/
-	 * https://developer.gnome.org/glib/2.37/glib-Miscellaneous-Utility-Functions.html#g-get-user-config-dir
-	 */
+	// migrate config directory to follow XDG  Base Directory Specification
+	// http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+	// https://developer.gnome.org/basedir-spec/
+	// https://developer.gnome.org/glib/2.37/glib-Miscellaneous-Utility-Functions.html#g-get-user-config-dir
+
 	if (!rc_migrate_dir ()) {
 		return 1;
 	}
@@ -4283,36 +2934,23 @@ int main (int argc, char *argv[]) {
 	debug (1, "total servers: %d", servers_total ());
 	debug (1, "total uservers: %d", uservers_total ());
 	debug (1, "total hosts: %d", hosts_total ());
-#if 0
-	if (servers_total () > 0) {
-		GSList *list = all_servers (); /* Debug code, free done in two lines */
 
-		server_list_fprintf (stderr, list);
-		server_list_free (list);
-	}
-#endif
-
-
-	if (server_menu) {
+	if (GTK_WIDGET (gtk_builder_get_object(builder, "server_menu"))) {
 		debug (6, "EXIT: destroy server_menu");
-		gtk_widget_destroy (server_menu);
-		server_menu = NULL;
+		gtk_widget_destroy (GTK_WIDGET (gtk_builder_get_object(builder, "server_menu")));
 	}
 
-	if (player_menu) {
+	if (gtk_builder_get_object(builder, "player_menu")) {
 		debug (6, "EXIT: destroy player_menu");
-		gtk_widget_destroy (player_menu);
-		player_menu = NULL;
+		gtk_widget_destroy (GTK_WIDGET (gtk_builder_get_object(builder, "player_menu")));
 	}
 
 	if (player_skin_popup) {
 		gtk_widget_destroy (player_skin_popup);
-		player_skin_popup = NULL;
 	}
 
 	if (server_mapshot_popup) {
 		gtk_widget_destroy (server_mapshot_popup);
-		server_mapshot_popup = NULL;
 	}
 
 	pixmap_cache_clear (&qw_colors_pixmap_cache, 0);

@@ -662,7 +662,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
 	pattern_entry = gtk_entry_new_with_max_length (256);
 	gtk_table_attach_defaults (GTK_TABLE (table), pattern_entry, 1, 2, 0, 1);
-	g_signal_connect (GTK_OBJECT (pattern_entry), "activate",
+	g_signal_connect (pattern_entry, "activate",
 			G_CALLBACK (sync_pattern_data), NULL);
 	gtk_widget_show (pattern_entry);
 
@@ -677,8 +677,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 		mode_buttons[i] = gtk_radio_button_new_with_label (group, _(mode_names[i]));
 		group = gtk_radio_button_group (GTK_RADIO_BUTTON (mode_buttons[i]));
 
-		g_signal_connect (GTK_OBJECT (mode_buttons[i]), "clicked",
-				G_CALLBACK (sync_pattern_data), NULL);
+		g_signal_connect (mode_buttons[i], "clicked", G_CALLBACK (sync_pattern_data), NULL);
 
 		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
 		gtk_widget_show (mode_buttons[i]);
@@ -771,12 +770,9 @@ void player_filter_page (GtkWidget *notebook) {
 			GTK_SELECTION_BROWSE);
 	gtk_clist_set_reorderable (GTK_CLIST (pattern_clist), TRUE);
 
-	g_signal_connect (GTK_OBJECT (pattern_clist), "event",
-			G_CALLBACK (pattern_clist_event_callback), NULL);
-	g_signal_connect (GTK_OBJECT (pattern_clist), "select_row",
-			G_CALLBACK (pattern_clist_select_row_callback), NULL);
-	g_signal_connect (GTK_OBJECT (pattern_clist), "row_move",
-			G_CALLBACK (pattern_clist_row_move_callback), NULL);
+	g_signal_connect (pattern_clist, "event", G_CALLBACK (pattern_clist_event_callback), NULL);
+	g_signal_connect (pattern_clist, "select_row", G_CALLBACK (pattern_clist_select_row_callback), NULL);
+	g_signal_connect (pattern_clist, "row_move", G_CALLBACK (pattern_clist_row_move_callback), NULL);
 
 	for (i = 0; i < 3; i++) {
 		pixmap = aligned_pixmap (group_pix[i].pix, group_pix[i].mask);
@@ -806,14 +802,12 @@ void player_filter_page (GtkWidget *notebook) {
 
 	button = gtk_button_new_with_label (_("New"));
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (new_pattern_callback), NULL);
+	g_signal_connect (button, "clicked", G_CALLBACK (new_pattern_callback), NULL);
 	gtk_widget_show (button);
 
 	delete_button = gtk_button_new_with_label (_("Delete"));
 	gtk_box_pack_start (GTK_BOX (vbox), delete_button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (delete_button), "clicked",
-			G_CALLBACK (delete_pattern_callback), NULL);
+	g_signal_connect (delete_button, "clicked", G_CALLBACK (delete_pattern_callback), NULL);
 	gtk_widget_show (delete_button);
 
 	alignment = gtk_alignment_new (0, 0.5, 1, 0);
@@ -824,14 +818,12 @@ void player_filter_page (GtkWidget *notebook) {
 
 	up_button = gtk_button_new_with_label (_("Up"));
 	gtk_box_pack_start (GTK_BOX (vbox2), up_button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (up_button), "clicked",
-			G_CALLBACK (move_up_down_pattern_callback), (void *) -1);
+	g_signal_connect (up_button, "clicked", G_CALLBACK (move_up_down_pattern_callback), (void *) -1);
 	gtk_widget_show (up_button);
 
 	down_button = gtk_button_new_with_label (_("Down"));
 	gtk_box_pack_start (GTK_BOX (vbox2), down_button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (down_button), "clicked",
-			G_CALLBACK (move_up_down_pattern_callback), (void *) 1);
+	g_signal_connect (down_button, "clicked", G_CALLBACK (move_up_down_pattern_callback), (void *) 1);
 	gtk_widget_show (down_button);
 
 	gtk_widget_show (vbox2);

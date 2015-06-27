@@ -90,7 +90,6 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/history.c
      ${CMAKE_SOURCE_DIR}/src/host.c
      ${CMAKE_SOURCE_DIR}/src/launch.c
-     ${CMAKE_SOURCE_DIR}/src/menus.c
      ${CMAKE_SOURCE_DIR}/src/pixmaps.c
      ${CMAKE_SOURCE_DIR}/src/pref.c
      ${CMAKE_SOURCE_DIR}/src/psearch.c
@@ -131,7 +130,6 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/history.h
      ${CMAKE_SOURCE_DIR}/src/host.h
      ${CMAKE_SOURCE_DIR}/src/launch.h
-     ${CMAKE_SOURCE_DIR}/src/menus.h
      ${CMAKE_SOURCE_DIR}/src/pixmaps.h
      ${CMAKE_SOURCE_DIR}/src/pref.h
      ${CMAKE_SOURCE_DIR}/src/psearch.h
