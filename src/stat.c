@@ -31,7 +31,6 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
 
 #include "xqf.h"
 #include "game.h"
@@ -1011,7 +1010,7 @@ static void stat_close (struct stat_job *job, int killed) {
 	}
 
 	if (job->delayed.refresh_handler) {
-		gtk_timeout_remove (job->delayed.timeout_id);
+		g_source_remove (job->delayed.timeout_id);
 	}
 
 	for (tmp = job->close_handlers; tmp; tmp = tmp->next) {
@@ -1934,8 +1933,7 @@ void stat_start (struct stat_job *job) {
 	debug_increase_indent();
 	debug (3, "Job %p", job);
 	if (job->delayed.refresh_handler) {
-		job->delayed.timeout_id = gtk_timeout_add (1000,
-				job->delayed.refresh_handler, job);
+		job->delayed.timeout_id = g_timeout_add (1000, job->delayed.refresh_handler, job);
 	}
 
 	stat_next (job);
