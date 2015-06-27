@@ -388,7 +388,7 @@ add_custom_command (TARGET translation
 install (TARGETS xqf DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
 # Query script
-install (PROGRAMS ${CMAKE_SOURCE_DIR}/src/script/qstat_savage.sh DESTINATION "${PACKAGE_DATA_DIR}/script")
+install (PROGRAMS ${CMAKE_SOURCE_DIR}/tools/qstat_savage.sh DESTINATION "${PACKAGE_DATA_DIR}/tools")
 
 # UI
 if (GUI MATCHES GTK2)
