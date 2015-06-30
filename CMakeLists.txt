@@ -43,6 +43,7 @@ add_definitions (-DQSTAT_EXEC="${WITH_QSTAT}")
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
 	add_definitions (-DDEBUG)
+	set (CMAKE_C_FLAGS "-g -ggdb -O0")
 endif (CMAKE_BUILD_TYPE MATCHES DEBUG)
 
 # Default GUI setting
@@ -79,6 +80,7 @@ set (xqf_SOURCES
 
      ${CMAKE_SOURCE_DIR}/src/addmaster.c
      ${CMAKE_SOURCE_DIR}/src/addserver.c
+     ${CMAKE_SOURCE_DIR}/src/callbacks.c
      ${CMAKE_SOURCE_DIR}/src/config.c
      ${CMAKE_SOURCE_DIR}/src/country-filter.c
      ${CMAKE_SOURCE_DIR}/src/debug.c
@@ -118,9 +120,11 @@ set (xqf_SOURCES
 
      ${CMAKE_SOURCE_DIR}/src/addmaster.h
      ${CMAKE_SOURCE_DIR}/src/addserver.h
+     ${CMAKE_SOURCE_DIR}/src/callbacks.h
      ${CMAKE_SOURCE_DIR}/src/config.h
      ${CMAKE_SOURCE_DIR}/src/country-filter.h
      ${CMAKE_SOURCE_DIR}/src/debug.h
+     ${CMAKE_SOURCE_DIR}/src/defs.h
      ${CMAKE_SOURCE_DIR}/src/dialogs.h
      ${CMAKE_SOURCE_DIR}/src/dns.h
      ${CMAKE_SOURCE_DIR}/src/filter.h

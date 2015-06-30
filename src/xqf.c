@@ -1,5 +1,5 @@
 /* XQF - Quake server browser and launcher
- * Copyright (C) 1998-2000 Roman Pozlevich <roma@botik.ru>
+ * Copyright (C) 1998-2015 XQF Team - https://xqf.github.io
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@
 
 #include "xqf.h"
 #include "xqf-ui.h"
+#include "callbacks.h"
 #include "game.h"
 #include "stat.h"
 #include "source.h"
@@ -111,15 +112,12 @@ struct server *cur_server = NULL;
 
 struct stat_job *stat_process = NULL;
 
-GtkWidget *main_status_bar = NULL;
 GtkWidget *main_filter_status_bar = NULL;
 GtkWidget *main_progress_bar = NULL;
 
 char *progress_bar_str = NULL;
 
 GArray *server_filter_menu_items;
-
-GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
 
 GtkWidget *player_skin_popup = NULL;
 GtkWidget *player_skin_popup_preview = NULL;
@@ -270,158 +268,6 @@ int check_qstat_version () {
 	return external_program_foreach_line (cmd, qstat_version_string, NULL);
 }
 
-void reset_main_status_bar () {
-	// Reset bottom left status bar to show number of servers
-	print_status (main_status_bar,
-			ngettext (_("%d server"), _("%d servers"), server_clist->rows),
-			server_clist->rows);
-}
-
-void set_widgets_sensitivity (void) {
-	GList *selected = server_clist->selection;
-	int sens;
-	int i;
-	int source_is_favorites;
-	int masters_to_update;
-	int masters_to_delete;
-
-	/*
-	 * Every button with callback that can modify its sensitivity
-	 * should be explicitly put to GTK_STATE_NORMAL state before
-	 * changing its insensitivity
-	 */
-
-	source_is_favorites = (cur_source != NULL &&
-			cur_source->next == NULL &&
-			(struct master *) cur_source->data == favorites);
-
-	if (source_is_favorites) {
-		masters_to_update = masters_to_delete = FALSE;
-	}
-	else {
-		masters_to_update = source_has_masters_to_update (cur_source);
-		masters_to_delete = source_has_masters_to_delete (cur_source);
-	}
-
-	sens = (!stat_process && cur_server);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_properties_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_properties_menu_item")), sens);
-
-	sens = (!stat_process && cur_server &&
-			(games[cur_server->type].flags & GAME_CONNECT) != 0);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "connect_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_connect_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), sens);
-
-	sens = (!stat_process && cur_server &&
-			(games[cur_server->type].flags & GAME_SPECTATE) != 0 &&
-			(cur_server->flags & SERVER_SPECTATE) != 0);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "observe_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_observe_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), sens);
-
-	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_RECORD) != 0);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "record_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_record_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")), sens);
-
-	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_RCON) != 0);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "rcon_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_rcon_menu_item")), sens);
-
-	sens = (!stat_process && selected);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refrsel_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), sens);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "resolve_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_resolve_menu_item")), sens);
-
-	sens = (!stat_process);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "file_statistics_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "add_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_add_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_update_master_builtin_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_update_master_gslist_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_add_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_player_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_again_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "player_filter_menu_item")), sens);
-	gtk_widget_set_sensitive (source_ctree, sens);
-
-	sens = (!stat_process && selected && !source_is_favorites);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "favadd_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_favadd_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_favadd_menu_item")), sens);
-
-	sens = (!stat_process && masters_to_delete);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_delete_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_clear_master_servers_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_delete_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_clear_master_servers_menu_item")), sens);
-
-	// you can only edit one server a time, no groups and no favorites
-	sens = (cur_source && cur_source->next == NULL
-			&& ! ((struct master *) cur_source->data)->isgroup
-			&& ! source_is_favorites);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_edit_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_edit_master_menu_item")), sens);
-
-	sens = (!stat_process && (server_clist->rows > 0));
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refresh_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), sens);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_hostnames_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_defport_menu_item")), sens);
-
-	sens = (!stat_process && masters_to_update);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_update_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")), sens);
-
-	sens = (stat_process != NULL);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")), GTK_STATE_NORMAL);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")), sens);
-
-	sens = (stat_process == NULL);
-
-	for (i = 0; i < FILTERS_TOTAL; i++) {
-		if (!filter_buttons[i]) {
-			continue;
-		}
-		gtk_widget_set_state (filter_buttons[i], GTK_STATE_NORMAL);
-		gtk_widget_set_sensitive (filter_buttons[i], sens);
-		if (GTK_IS_TOGGLE_BUTTON (filter_buttons[i]) && GTK_TOGGLE_BUTTON (filter_buttons[i])->active) {
-			gtk_widget_set_state (filter_buttons[i], GTK_STATE_ACTIVE);
-		}
-	}
-}
-
 
 int forced_filters_flag = FALSE;
 
@@ -449,7 +295,7 @@ void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
 	if (!forced_filters_flag) {
 		cur_filter ^= mask;
 		server_clist_build_filtered (cur_server_list, FALSE); /* in srv-list.c */
-		reset_main_status_bar ();
+		reset_main_status_bar(builder);
 	}
 }
 
@@ -500,7 +346,7 @@ void set_server_filter_menu_list_text (void){
 
 	print_status (main_filter_status_bar, status_buf);
 
-	reset_main_status_bar ();
+	reset_main_status_bar(builder);
 }
 
 
@@ -572,9 +418,9 @@ void update_server_lists_from_selected_source (void) {
 	collate_server_lists (cur_masters, &cur_server_list, &cur_userver_list);
 }
 
-/**
-  update ui with aquired data during refresh and when refresh is done
-*/
+
+// Update ui with acquired data during refresh and when refresh is done
+
 int stat_lists_refresh (struct stat_job *job) {
 	int items;
 	int freeze;
@@ -614,9 +460,8 @@ int stat_lists_refresh (struct stat_job *job) {
 		}
 	}
 
-	// print_status (main_status_bar, (progress_bar_str)? progress_bar_str : "", job->progress.done, job->progress.tasks);
 	if (job->progress.tasks > 0) {
-		progress_bar_set_percentage (main_progress_bar, ((float)job->progress.done) / job->progress.tasks);
+		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(main_progress_bar), ((float)job->progress.done) / job->progress.tasks);
 	}
 
 	return TRUE;
@@ -667,19 +512,13 @@ void stat_lists_close_handler (struct stat_job *job, int killed) {
 		update_server_lists_from_selected_source ();
 		server_clist_build_filtered (cur_server_list, TRUE);
 	}
-	/*
-	if (redialserver == 1) {
-		print_status (main_status_bar, _("Waiting to redial server(s)..."));
-	else {
-	}
-	*/
 
-	reset_main_status_bar ();
+	reset_main_status_bar(builder);
 
 	progress_bar_reset (main_progress_bar);
 
 	stat_process = NULL;
-	set_widgets_sensitivity ();
+	set_widgets_sensitivity (builder);
 }
 
 
@@ -718,7 +557,7 @@ void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList *hosts)
 	stat_process->master_handlers = g_slist_append (stat_process->master_handlers, stat_lists_master_handler);
 
 	stat_start (stat_process);
-	set_widgets_sensitivity ();
+	set_widgets_sensitivity (builder);
 	debug_decrease_indent ();
 }
 
@@ -1042,7 +881,7 @@ void launch_core2_callback (int spectate, char *demo, struct condef *con) {
 			stat_process->close_handlers, launch_close_handler);
 
 	stat_start (stat_process);
-	set_widgets_sensitivity ();
+	set_widgets_sensitivity (builder);
 
 	return;
 
@@ -1105,7 +944,7 @@ void launch_record_callback (GtkWidget *widget) {
 	}
 
 	launch_core2_callback (spectate, demo, con);
-	
+
 	return;
 
 }
@@ -1274,7 +1113,7 @@ void add_to_favorites_callback (GtkWidget *widget, gpointer data) {
 				snprintf (buf, buflen, "Server '%s' Already In Favorites",
 						  ((struct server *)tmp->data)->name);
 			}
-			print_status (main_status_bar, buf);
+			print_status (GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar")), buf);
 
 		}
 		debug (7, "add_to_favorites_callback() -- Saving To Favorites");
@@ -1386,7 +1225,7 @@ void prepare_new_server_to_favorites (enum server_type type, char* str, gboolean
 		}
 
 		stat_start (stat_process);
-		set_widgets_sensitivity ();
+		set_widgets_sensitivity (builder);
 	}
 }
 
@@ -1673,7 +1512,7 @@ void find_player_callback (GtkWidget *widget, int find_next) {
 	if (find_next || find_player_dialog ()) {
 		if (!psearch_data_is_empty ()) {
 			pattern = psearch_lookup_pattern ();
-			print_status (main_status_bar, _("Find Player: %s"), pattern);
+			print_status (GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar")), _("Find Player: %s"), pattern);
 			g_free (pattern);
 
 			find_player (find_next);
@@ -1755,23 +1594,9 @@ void properties_callback (GtkWidget *widget, gpointer data) {
 
 	if (cur_server) {
 		properties_dialog (cur_server);
-		set_widgets_sensitivity ();
+		set_widgets_sensitivity (builder);
 	}
 }
-
-#if 0
-void cancelredial_callback (GtkWidget *widget, gpointer data) {
-
-	if (stat_process) {
-		return;
-	}
-
-	redialserver = 0;
-	print_status (main_status_bar, _("Done."));
-	progress_bar_reset (main_progress_bar);
-
-}
-#endif
 
 void rcon_callback (GtkWidget *widget, gpointer data) {
 	struct server_props *sp;
@@ -2112,7 +1937,7 @@ void source_selection_changed (void) {
 	update_server_lists_from_selected_source ();
 	server_clist_set_list (cur_server_list);
 
-	reset_main_status_bar ();
+	reset_main_status_bar(builder);
 }
 
 
@@ -2140,7 +1965,7 @@ void source_selection_clear_master_servers (void) {
 	update_server_lists_from_selected_source ();
 	server_clist_set_list (cur_server_list);
 
-	reset_main_status_bar ();
+	reset_main_status_bar(builder);
 }
 
 void clear_master_servers_callback (GtkWidget *widget,
@@ -2524,7 +2349,7 @@ void populate_main_window (void) {
 	gtk_clist_set_compare_func (server_clist, (GtkCListCompareFunc) server_clist_compare_func);
 
 	gtk_widget_show (GTK_WIDGET (server_clist));
-	
+
 	pane3_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned2"));
 
 	// Player CList
@@ -2559,7 +2384,6 @@ void populate_main_window (void) {
 	// Status Bar & Progress Bar
 
 	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox-status-bar"));
-	main_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar"));
 	main_filter_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-filter-status-bar"));
 
 	gtk_widget_set_usize (main_filter_status_bar, 100, -1);         // ???
@@ -2808,7 +2632,6 @@ void init_scripts_path () {
 }
 
 int main (int argc, char *argv[]) {
-	char *gtk_config;
 	char* var = NULL;
 	int newversion = FALSE;
 
@@ -2847,17 +2670,9 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
-	gtk_config = file_in_dir (user_rcdir, "gtkrc");
-	gtk_rc_add_default_file (gtk_config);
-	g_free (gtk_config);
-
 	gtk_init (&argc, &argv);
 
 	parse_commandline (argc, argv);
-
-	if (!GDK_PIXBUF_INSTALLED) {
-		xqf_warning (_("gdk-pixbuf is not installed. Some icons may not be displayed"));
-	}
 
 	if (dns_spawn_helper () < 0) {
 		xqf_error ("Unable to start DNS helper");
@@ -2928,9 +2743,11 @@ int main (int argc, char *argv[]) {
 	source_ctree_select_source (favorites);
 	filter_menu_activate_current ();
 
-	print_status (main_status_bar, NULL);
+	print_status (GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar")), NULL);
 
-	if (default_auto_favorites && !cmdline_add_server) refresh_callback (NULL, NULL);
+	if (default_auto_favorites && !cmdline_add_server) {
+		refresh_callback (NULL, NULL);
+	}
 
 	g_timeout_add (0, check_cmdline_launch, NULL);
 
