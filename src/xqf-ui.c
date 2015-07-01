@@ -42,6 +42,8 @@ GtkWidget *pane1_widget;
 GtkWidget *pane2_widget;
 GtkWidget *pane3_widget;
 
+GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
+
 /* If you add a column here to appear in the server
    list, you need to also add an entry in sort.h and sort.c
 */
@@ -261,7 +263,7 @@ GtkWidget *top_window (void) {
 		return NULL;
 }
 
-
+#ifdef GUI_GTK2
 static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef, int set_mark) {
 	char buf[256];
 
@@ -584,7 +586,7 @@ int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
 
 	return height;
 }
-
+#endif
 
 void set_toolbar_appearance (GtkToolbar *toolbar, int style, int tips) {
 	switch (style) {
@@ -597,107 +599,53 @@ void set_toolbar_appearance (GtkToolbar *toolbar, int style, int tips) {
 	gtk_toolbar_set_tooltips (toolbar, tips);
 }
 
-
 /*******************************  Progress Bar  *****************************/
 
+int pbar_pulse_mode;
+int pbar_timeout_id;
 
-struct pbarinfo {
-	int activity_mode;
-	int timeout_id;
-};
-
-
-static void progress_bar_destroy_event (GtkWidget* widget) {
-	struct pbarinfo *info;
-
-	info = gtk_object_get_user_data (GTK_OBJECT (widget));
-
-	if (info->activity_mode)
-		gtk_timeout_remove (info->timeout_id);
-
-	g_free (info);
+void progress_bar_destroy_event (GtkWidget* widget) {
+	progress_bar_reset(widget);
 }
-
 
 GtkWidget *create_progress_bar (void) {
 	GtkWidget *pbar;
-	struct pbarinfo *info;
 
 	pbar = gtk_progress_bar_new ();
 
-	info = g_malloc0 (sizeof (struct pbarinfo));
-
-	gtk_object_set_user_data (GTK_OBJECT (pbar), info);
-	g_signal_connect (GTK_OBJECT (pbar), "destroy",
-			(GtkSignalFunc) progress_bar_destroy_event, NULL);
-
-	gtk_progress_set_format_string (GTK_PROGRESS (pbar), "%1p%%");
-	/* gtk_progress_configure (GTK_PROGRESS (pbar), 0.0, 0.0, 100.0); */
-	gtk_progress_bar_set_activity_step (GTK_PROGRESS_BAR (pbar), 5);
+	g_signal_connect (pbar, "destroy", G_CALLBACK (progress_bar_destroy_event), NULL);
 
 	return pbar;
 }
 
-
 void progress_bar_reset (GtkWidget *pbar) {
-	struct pbarinfo *info;
-
-	info = gtk_object_get_user_data (GTK_OBJECT (pbar));
-
-	if (info->activity_mode) {
-		gtk_timeout_remove (info->timeout_id);
-		info->activity_mode = FALSE;
+	if (pbar_pulse_mode == TRUE) {
+		g_source_remove (pbar_timeout_id);
+		pbar_pulse_mode = FALSE;
 	}
-
-	gtk_progress_set_activity_mode (GTK_PROGRESS (pbar), FALSE);
-	gtk_progress_set_show_text (GTK_PROGRESS (pbar), FALSE);
-	gtk_progress_set_percentage (GTK_PROGRESS (pbar), 0.0);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (pbar), 0.0);
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (pbar), NULL);
 }
 
+gboolean progress_bar_pulse (gpointer user_data) {
+	gtk_progress_bar_pulse (GTK_PROGRESS_BAR(user_data));
 
-static int progress_bar_timeout_callback (GtkWidget *pbar) {
-	gfloat new_val;
-	GtkAdjustment *adj;
-
-	adj = GTK_PROGRESS (pbar)->adjustment;
-
-	new_val = adj->value + 1;
-	if (new_val > adj->upper)
-		new_val = adj->lower;
-
-	gtk_progress_set_value (GTK_PROGRESS (pbar), new_val);
-
-	return TRUE;
+	// Ask g_source to repeat this callback
+	return G_SOURCE_CONTINUE;
 }
 
-
-void progress_bar_start (GtkWidget *pbar, int activity_mode) {
-	struct pbarinfo *info;
+void progress_bar_start (GtkWidget *pbar, int pulse_switch) {
 
 	progress_bar_reset (pbar);
 
-	if (activity_mode) {
-		info = gtk_object_get_user_data (GTK_OBJECT (pbar));
-		info->activity_mode = TRUE;
-		info->timeout_id = gtk_timeout_add (100, (GtkFunction) progress_bar_timeout_callback, pbar);
-		gtk_progress_set_activity_mode (GTK_PROGRESS (pbar), TRUE);
-	}
-	else {
-		gtk_progress_set_show_text (GTK_PROGRESS (pbar), TRUE);
+	if (pulse_switch && pbar_pulse_mode == FALSE) {
+		pbar_pulse_mode = TRUE;
+		gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (pbar), 0.03);
+		pbar_timeout_id = g_timeout_add (50, (GSourceFunc) progress_bar_pulse, (gpointer) pbar);
 	}
 }
 
-
-void progress_bar_set_percentage (GtkWidget *pbar, float percentage) {
-	struct pbarinfo *info;
-
-	info = gtk_object_get_user_data (GTK_OBJECT (pbar));
-	if (!info->activity_mode)
-		gtk_progress_set_percentage (GTK_PROGRESS (pbar), percentage);
-}
-
-
-static void save_cwidget_geometry (GtkWidget *clist, struct clist_def *cldef) {
+void save_cwidget_geometry (GtkWidget *clist, struct clist_def *cldef) {
 	char buf[256];
 	int i;
 
@@ -802,9 +750,7 @@ gboolean create_server_type_menu_filter_configured (enum server_type type) {
 		return TRUE;
 }
 
-GtkWidget *create_server_type_menu (int active_type,
-		gboolean (*filterfunc)(enum server_type),
-		GtkSignalFunc callback) {
+GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GtkSignalFunc callback) {
 	GtkWidget *option_menu = NULL;
 	GtkWidget *menu = NULL;
 	GtkWidget *menu_item = NULL;
@@ -852,4 +798,3 @@ GtkWidget *create_server_type_menu (int active_type,
 
 	return option_menu;
 }
-

@@ -22,7 +22,8 @@
 #include <gtk/gtk.h>
 
 #include "xqf.h"
-
+#include "callbacks.h"
+#include "filter.h"
 
 struct clist_column {
 	const char *name;
@@ -80,8 +81,6 @@ extern void register_window (GtkWidget *window);
 extern void unregister_window (GtkWidget *window);
 extern GtkWidget *top_window (void);
 
-extern void set_widgets_sensitivity (void);
-
 extern GtkWidget *server_filter_widget[];
 
 extern void print_status (GtkWidget *sbar, char *fmt, ...);
@@ -107,7 +106,8 @@ extern void set_toolbar_appearance (GtkToolbar *toolbar, int style, int tips);
 extern GtkWidget *create_progress_bar (void);
 extern void progress_bar_reset (GtkWidget *pbar);
 extern void progress_bar_start (GtkWidget *pbar, int activity_mode);
-extern void progress_bar_set_percentage (GtkWidget *pbar, float percentage);
+
+extern GtkWidget *filter_buttons[FILTERS_TOTAL];
 
 extern void ui_done (void);
 extern void restore_main_window_geometry (void);

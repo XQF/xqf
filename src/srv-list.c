@@ -425,7 +425,7 @@ void server_clist_sync_selection (void) {
 		player_clist_set_server (cur_server);
 		srvinf_ctree_set_server (cur_server);
 
-		set_widgets_sensitivity ();
+		set_widgets_sensitivity (builder);
 	}
 }
 

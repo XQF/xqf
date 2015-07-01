@@ -390,7 +390,7 @@ void find_player (int find_next) {
 
 	if (!find_next || server_clist->selection == NULL) {
 		dialog_ok (NULL, _("Player not found."));
-		reset_main_status_bar();
+		reset_main_status_bar(builder);
 	}
 	else {
 		if (dialog_yesno (_("XQF: End of server list reached"), 0, _("Yes"), _("No"),
@@ -398,6 +398,6 @@ void find_player (int find_next) {
 			find_player (FALSE);
 		}
 		else
-			reset_main_status_bar();
+			reset_main_status_bar(builder);
 	}
 }
