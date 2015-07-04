@@ -36,19 +36,28 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len) {
 
 	GError *err=NULL;
 
-	if (!mem) return NULL;
-	if (!len) return NULL;
+	debug(4, "loading gdk_pixbuf from memory");
+
+	if (!mem) {
+		debug(4, "memory is empty");
+		return NULL;
+	}
+
+	if (!len) {
+		debug(4, "length is null");
+		return NULL;
+	}
 
 	loader = gdk_pixbuf_loader_new();
 	g_return_val_if_fail(loader!=NULL, NULL);
 
-	ok = gdk_pixbuf_loader_write(loader, mem, len,&err);
+	ok = gdk_pixbuf_loader_write(loader, mem, len, &err);
 	if (err != NULL) {
 		xqf_warning("%s", err->message);
 		g_error_free(err);
 	}
 	err = NULL;
-	gdk_pixbuf_loader_close(loader,&err);
+	gdk_pixbuf_loader_close(loader, &err);
 	if (err != NULL) {
 		xqf_warning("%s", err->message);
 		g_error_free(err);
@@ -72,7 +81,7 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len, GdkPixmap **pix, GdkBit
 	if (pixbuf) {
 		GdkPixbuf* pixbuf_tmp = NULL;
 		pixbuf_tmp = pixbuf;
-		pixbuf = gdk_pixbuf_scale_simple(pixbuf,320,240,GDK_INTERP_TILES);
+		pixbuf = gdk_pixbuf_scale_simple(pixbuf, 320, 240, GDK_INTERP_TILES);
 		*height = gdk_pixbuf_get_height(pixbuf);
 		*width = gdk_pixbuf_get_width(pixbuf);
 
@@ -100,7 +109,7 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len, GdkPixmap **pix, GdkBit
 			}
 		}
 
-		gdk_pixbuf_render_pixmap_and_mask(pixbuf,pix,mask,0);
+		gdk_pixbuf_render_pixmap_and_mask(pixbuf, pix, mask, 0);
 
 		g_object_unref(pixbuf);
 		g_object_unref(pixbuf_tmp);

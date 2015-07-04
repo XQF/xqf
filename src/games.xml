@@ -722,14 +722,13 @@
 		<qstat_master_option>-nexuizm</qstat_master_option>
 		<icon>nexuiz.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
-		<init_maps>NULL</init_maps>
-		<has_map>NULL</has_map>
-		<get_mapshot>NULL</get_mapshot>
+		<init_maps>xonotic_init_maps</init_maps>
 		<command>nexuiz</command>
 		<default_home>~/.nexuiz</default_home>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>data</main_mod>
+		<pd>nexuiz_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -742,14 +741,13 @@
 		<qstat_master_option>-xonoticm</qstat_master_option>
 		<icon>xonotic.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
-		<init_maps>NULL</init_maps>
-		<has_map>NULL</has_map>
-		<get_mapshot>NULL</get_mapshot>
+		<init_maps>xonotic_init_maps</init_maps>
 		<command>xonotic</command>
 		<default_home>~/.xonotic</default_home>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>data</main_mod>
+		<pd>xonotic_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -842,11 +840,12 @@
 		<qstat_master_option>-unvanquishedm</qstat_master_option>
 		<icon>unvanquished.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<init_maps>unvanquished_init_maps</init_maps>
 		<command>unvanquished</command>
-		<default_home>~/.Unvanquished</default_home>
+		<default_home>~/.unvanquished</default_home>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
-		<main_mod>main</main_mod>
+		<main_mod>pkg</main_mod>
 		<pd>unvanquished_private</pd>
 	</game>
 	<game>

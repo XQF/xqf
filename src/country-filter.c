@@ -205,7 +205,7 @@ struct pixmap* get_pixmap_for_country(int id) {
 		return NULL;
 	}
 
-	debug(4,"loading %s",filename);
+	debug(4, "loading gdk_pixbuf from file: %s", filename);
 
 	pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
