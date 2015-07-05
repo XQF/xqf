@@ -125,6 +125,10 @@ static gboolean quake_has_map(struct server* s);
 static void q3_init_maps(enum server_type);
 static size_t q3_get_mapshot(struct server* s, guchar** buf);
 
+static void unvanquished_init_maps(enum server_type);
+
+static void xonotic_init_maps(enum server_type);
+
 static void doom3_init_maps(enum server_type);
 static size_t doom3_get_mapshot(struct server* s, guchar** buf);
 static gboolean doom3_has_map(struct server* s);
@@ -149,39 +153,45 @@ struct unreal_private
 	const char* suffix;
 };
 
-static struct unreal_private ut_private = { NULL, ".unr" };
-static struct unreal_private ut2_private = { NULL, ".ut2" };
-static struct unreal_private ut2004_private = { NULL, ".ut2" };
-static struct unreal_private rune_private = { NULL, ".run" };
-static struct unreal_private postal2_private = { NULL, ".fuk" };
-static struct unreal_private aao_private = { NULL, ".aao" };
 
-static struct quake_private q1_private, qw_private, q2_private, hl_private;
-static struct quake_private q3_private;
-static struct quake_private wolf_private;
-static struct quake_private wolfet_private;
-static struct quake_private etl_private;
-static struct quake_private mohaa_private;
+static struct quake_private alienarena_private;
 static struct quake_private cod_private;
+static struct quake_private doom3_private;
+static struct quake_private etl_private;
+static struct quake_private etqw_private;
+static struct quake_private hl_private;
+static struct quake_private iourt_private;
 static struct quake_private jk2_private;
 static struct quake_private jk3_private;
-static struct quake_private doom3_private;
-static struct quake_private quake4_private;
-static struct quake_private etqw_private;
-static struct quake_private warsow_private;
-static struct quake_private tremulous_private;
-static struct quake_private tremulousgpp_private;
-static struct quake_private tremfusion_private;
-static struct quake_private unvanquished_private;
+static struct quake_private mohaa_private;
+static struct quake_private nexuiz_private;
 static struct quake_private openarena_private;
+static struct quake_private q1_private;
+static struct quake_private q2_private;
+static struct quake_private q3_private;
 static struct quake_private q3rally_private;
-static struct quake_private wop_private;
-static struct quake_private iourt_private;
+static struct quake_private quake4_private;
+static struct quake_private qw_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
-static struct quake_private zeq2lite_private;
+static struct quake_private tremfusion_private;
+static struct quake_private tremulousgpp_private;
+static struct quake_private tremulous_private;
 static struct quake_private turtlearena_private;
-static struct quake_private alienarena_private;
+static struct quake_private unvanquished_private;
+static struct quake_private warsow_private;
+static struct quake_private wolfet_private;
+static struct quake_private wolf_private;
+static struct quake_private wop_private;
+static struct quake_private xonotic_private;
+static struct quake_private zeq2lite_private;
+
+static struct unreal_private aao_private = { NULL, ".aao" };
+static struct unreal_private postal2_private = { NULL, ".fuk" };
+static struct unreal_private rune_private = { NULL, ".run" };
+static struct unreal_private ut2004_private = { NULL, ".ut2" };
+static struct unreal_private ut2_private = { NULL, ".ut2" };
+static struct unreal_private ut_private = { NULL, ".unr" };
 
 #include GAMES_INCLUDE
 
@@ -210,7 +220,7 @@ static struct gsname2type_s gsname2type[] =
 void init_games() {
 	unsigned i, j;
 
-	debug(3,"initializing games");
+	debug(3, "initializing games");
 
 	for (i = 0; i < GAMES_TOTAL; i++) {
 		g_datalist_init(&games[i].games_data);
@@ -218,22 +228,22 @@ void init_games() {
 
 	for (i = 0; i < GAMES_TOTAL; i++) {
 		for (j = 0; games[i].attributes && games[i].attributes[j]; j += 2) {
-			game_set_attribute_const(i,games[i].attributes[j], games[i].attributes[j+1]);
+			game_set_attribute_const(i, games[i].attributes[j], games[i].attributes[j+1]);
 		}
 	}
 
-	game_set_attribute(SFS_SERVER,"game_notes",strdup(_
+	game_set_attribute(SFS_SERVER, "game_notes", strdup(_
 				("Note: Soldier of Fortune will not connect to a server correctly\n"\
 				 "without creating a startup script for the game.  Please see the\n"\
 				 "XQF documentation for more information.")));
-	game_set_attribute(UN_SERVER,"game_notes",strdup(_
+	game_set_attribute(UN_SERVER, "game_notes", strdup(_
 				("Note: Unreal Tournament will not launch correctly without\n"\
 				 "modifications to the game's startup script.  Please see the\n"\
 				 "XQF documentation for more information.")));
-	game_set_attribute(HL_SERVER_OLD,"game_notes",strdup(_
+	game_set_attribute(HL_SERVER_OLD, "game_notes", strdup(_
 				("Sample Command Line:  wine hl.exe -- hl.exe -console")));
 
-	game_set_attribute(SAS_SERVER,"game_notes",strdup(_
+	game_set_attribute(SAS_SERVER, "game_notes", strdup(_
 				("Note: Savage will not launch correctly without\n"\
 				 "modifications to the game's startup script. Please see the\n"\
 				 "XQF documentation for more information.")));
@@ -249,20 +259,20 @@ void games_done() {
 
 // retreive game specific value that belongs to key, do not free return value!
 const char* game_get_attribute(enum server_type type, const char* attr) {
-	return g_datalist_get_data(&games[type].games_data,attr);
+	return g_datalist_get_data(&games[type].games_data, attr);
 }
 
 // set game specific key/value pair, value is _not_ copied and must not be
 // freed manually
 const char* game_set_attribute(enum server_type type, const char* attr, char* value) {
-	g_datalist_set_data_full(&games[type].games_data,attr,value,g_free);
+	g_datalist_set_data_full(&games[type].games_data, attr, value, g_free);
 	return value;
 }
 
 // set game specific key/value pair, value is _not_ copied and must not be
 // freed manually
 const char* game_set_attribute_const(enum server_type type, const char* attr, const char* value) {
-	g_datalist_set_data_full(&games[type].games_data,attr,(void*)value,NULL);
+	g_datalist_set_data_full(&games[type].games_data, attr, (void*)value, NULL);
 	return value;
 }
 
@@ -526,7 +536,7 @@ static struct player *t2_parse_player (char *token[], int n, struct server *s) {
 		return NULL;
 
 	// show TEAM in model column
-	if (!strcmp(team_name,"TEAM"))
+	if (!strcmp(team_name, "TEAM"))
 		player_type=team_name;
 
 	player = g_malloc0 (sizeof (struct player) + strlen(name)+1 + strlen(player_type)+1);
@@ -802,7 +812,7 @@ static void un_analyze_serverinfo (struct server *s) {
 		else if (strcmp (*info_ptr, "gamename") == 0) {
 			unsigned i;
 			for (i = 0 ; gsname2type[i].name ; ++i) {
-				if (!strcmp(info_ptr[1],gsname2type[i].name)) {
+				if (!strcmp(info_ptr[1], gsname2type[i].name)) {
 					s->type = gsname2type[i].type;
 					break;
 				}
@@ -812,7 +822,7 @@ static void un_analyze_serverinfo (struct server *s) {
 		// password required?
 		// If not password=False or password=0, set SERVER_PASSWORD
 		else if ((g_ascii_strcasecmp (*info_ptr, "password") == 0 || g_ascii_strcasecmp (*info_ptr, "gamepassword") == 0) &&
-				(g_ascii_strcasecmp(info_ptr[1],"false") && strcmp(info_ptr[1],"0"))) {
+				(g_ascii_strcasecmp(info_ptr[1], "false") && strcmp(info_ptr[1], "0"))) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -827,7 +837,7 @@ static void un_analyze_serverinfo (struct server *s) {
 			case RUNE_SERVER:
 			case POSTAL2_SERVER:
 				// case AAO_SERVER: // doesn't work on lan
-				server_change_port(s,hostport);
+				server_change_port(s, hostport);
 				break;
 			default:
 				break;
@@ -885,7 +895,7 @@ static void descent3_analyze_serverinfo (struct server *s) {
 		}
 		/*
 		//password required?
-		else if (strcmp (*info_ptr, "password") == 0 && strcmp(info_ptr[1],"False")) {
+		else if (strcmp (*info_ptr, "password") == 0 && strcmp(info_ptr[1], "False")) {
 			s->flags |= SERVER_PASSWORD;
 		}
 		*/
@@ -911,7 +921,7 @@ static void q2_analyze_serverinfo (struct server *s) {
 			switch (s->type) {
 				case Q2_SERVER:
 					/* We only set the mod if name is not baseq2 */
-					if (strcmp(info_ptr[1],"baseq2"))
+					if (strcmp(info_ptr[1], "baseq2"))
 						s->gametype = info_ptr[1];
 					break;
 				default:
@@ -960,7 +970,7 @@ static void t2_analyze_serverinfo (struct server *s) {
 
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 		if (strcmp (*info_ptr, "game") == 0) {
-			if (strcmp(info_ptr[1],"base")) // If it's not 'base'
+			if (strcmp(info_ptr[1], "base")) // If it's not 'base'
 				s->game = info_ptr[1];
 		}
 
@@ -986,9 +996,9 @@ static void t2_analyze_serverinfo (struct server *s) {
 
 	}
 	// unset game if game is base
-	//  if (!strcmp(s->game,"base"))
+	//  if (!strcmp(s->game, "base"))
 	//  {
-	//  strcpy(s->gametype,"Alex");
+	//  strcpy(s->gametype, "Alex");
 	//  }
 }
 
@@ -1037,7 +1047,7 @@ static void hl_analyze_serverinfo (struct server *s) {
 	}
 
 	// unset Mod if gamedir is valve
-	if (s->game && !strcmp(s->game,"valve")) {
+	if (s->game && !strcmp(s->game, "valve")) {
 		s->gametype=NULL;
 	}
 }
@@ -1736,39 +1746,39 @@ static void q3_analyze_serverinfo (struct server *s) {
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 		if (strcmp (*info_ptr, "version") == 0) {
 			// Quake 3 Arena
-			if (!strncmp(info_ptr[1],"Q3",2) || !strncmp(info_ptr[1],"ioq3 ",5) || !strncmp(info_ptr[1],"ioQ3 ",5)) {
+			if (!strncmp(info_ptr[1], "Q3", 2) || !strncmp(info_ptr[1], "ioq3 ", 5) || !strncmp(info_ptr[1], "ioQ3 ", 5)) {
 				s->type=Q3_SERVER;
 			}
 			// Open Arena
-			if (!strncmp(info_ptr[1],"ioq3+oa",7)) {
+			if (!strncmp(info_ptr[1], "ioq3+oa", 7)) {
 				s->type=OPENARENA_SERVER;
 			}
 			// Return to Castle Wolfenstein
-			else if (!strncmp(info_ptr[1],"Wolf",4)) {
+			else if (!strncmp(info_ptr[1], "Wolf", 4)) {
 				s->type=WO_SERVER;
 			}
 			// Wolfenstein: Enemy Territory or Enemy Territory: Legacy, recognize as Wolf:ET, discriminate later
-			else if (!strncmp(info_ptr[1],"ET",2)) {
+			else if (!strncmp(info_ptr[1], "ET", 2)) {
 				s->type=WOET_SERVER;
 			}
 			// Voyager: Elite Force
-			else if (!strncmp(info_ptr[1],"ST:V HM",7)) {
+			else if (!strncmp(info_ptr[1], "ST:V HM", 7)) {
 				s->type=EF_SERVER;
 			}
 			// Medal of Honor: Allied Assault
-			else if (!strncmp(info_ptr[1],"Medal",5)) {
+			else if (!strncmp(info_ptr[1], "Medal", 5)) {
 				s->type=MOHAA_SERVER;
 			}
 			// Soldier Of Fortune 2
-			else if (!strncmp(info_ptr[1],"SOF2MP",6)) {
+			else if (!strncmp(info_ptr[1], "SOF2MP", 6)) {
 				s->type=SOF2S_SERVER;
 			}
 			// Tremulous 1.1, Tremulous GPP
-			else if (!strncmp(info_ptr[1],"tremulous",9)) {
-				if (!strncmp(info_ptr[1],"tremulous 1.1.0",15)) {
+			else if (!strncmp(info_ptr[1], "tremulous", 9)) {
+				if (!strncmp(info_ptr[1], "tremulous 1.1.0", 15)) {
 					s->type=TREMULOUS_SERVER;
 				}
-				else if (!strncmp(info_ptr[1],"tremulous gpp1",14)) {
+				else if (!strncmp(info_ptr[1], "tremulous gpp1", 14)) {
 					s->type=TREMULOUSGPP_SERVER;
 				}
 				else {
@@ -1776,43 +1786,43 @@ static void q3_analyze_serverinfo (struct server *s) {
 				}
 			}
 			// Tremulous 1.1 mod KoRx
-			else if (!strncmp(info_ptr[1],"KoRx",4)) {
+			else if (!strncmp(info_ptr[1], "KoRx", 4)) {
 				s->type=TREMULOUS_SERVER;
 			}
 			// Tremfusion
-			else if (!strncmp(info_ptr[1],"tremfusion",10)) {
+			else if (!strncmp(info_ptr[1], "tremfusion", 10)) {
 				s->type=TREMFUSION_SERVER;
 			}
 			// Unvanquished
-			else if (!strncmp(info_ptr[1],"Unvanquished",12)) {
+			else if (!strncmp(info_ptr[1], "Unvanquished", 12)) {
 				s->type=UNVANQUISHED_SERVER;
 			}
 			// World of Padman
-			else if (!strncmp(info_ptr[1],"wop",3)) {
+			else if (!strncmp(info_ptr[1], "wop", 3)) {
 				s->type=WOP_SERVER;
 			}
 			// Urban Terror
-			else if (games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1],"ioq3 1.35urt",12) || !strncmp(info_ptr[1],"ioq3-urt",8))) {
+			else if (games[IOURT_SERVER].cmd && (!strncmp(info_ptr[1], "ioq3 1.35urt", 12) || !strncmp(info_ptr[1], "ioq3-urt", 8))) {
 				s->type=IOURT_SERVER;
 			}
 			// Reaction
-			else if (!strncmp(info_ptr[1],"Reaction",8)) {
+			else if (!strncmp(info_ptr[1], "Reaction", 8)) {
 				s->type=REACTION_SERVER;
 			}
 			// Q3 Rally
-			else if (!strncmp(info_ptr[1],"Q3Rally",7)) {
+			else if (!strncmp(info_ptr[1], "Q3Rally", 7)) {
 				s->type=Q3RALLY_SERVER;
 			}
 			// Smokin' Guns
-			else if (!strncmp(info_ptr[1],"Smokin' Guns",12)) {
+			else if (!strncmp(info_ptr[1], "Smokin' Guns", 12)) {
 				s->type=SMOKINGUNS_SERVER;
 			}
 			// ZEQ2 Lite
-			else if (!strncmp(info_ptr[1],"zeq2lite",8)) {
+			else if (!strncmp(info_ptr[1], "zeq2lite", 8)) {
 				s->type=ZEQ2LITE_SERVER;
 			}
 			// Turtle Arena
-			else if (!strncmp(info_ptr[1],"Turtle Arena",12)) {
+			else if (!strncmp(info_ptr[1], "Turtle Arena", 12)) {
 				s->type=TURTLEARENA_SERVER;
 			}
 			break;
@@ -1890,7 +1900,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 			s->flags |= SERVER_PUNKBUSTER;
 		}
 		else if (!strcmp(*info_ptr, "protocol")) {
-			const char* masterprotocol = game_get_attribute(s->type,"masterprotocol");
+			const char* masterprotocol = game_get_attribute(s->type, "masterprotocol");
 
 			if (masterprotocol && !strcmp(masterprotocol, "auto"))
 				masterprotocol = game_get_attribute(s->type, "_masterprotocol");
@@ -1909,10 +1919,10 @@ static void q3_analyze_serverinfo (struct server *s) {
 		// since ioq3, many mods have same declaration (ioq3), we can discriminate with game or gamename
 		// also, some mods are played as mod or as standalone, prefer standalone to mods when standalone available
 		// but recognize standalone only if standalone is configured
-		if (games[REACTION_SERVER].cmd && !strncmp(game,"rq3",3)) {
+		if (games[REACTION_SERVER].cmd && !strncmp(game, "rq3", 3)) {
 			s->type=REACTION_SERVER;
 		}
-		else if (games[IOURT_SERVER].cmd && !strncmp(game,"q3ut4",5)) {
+		else if (games[IOURT_SERVER].cmd && !strncmp(game, "q3ut4", 5)) {
 			s->type=IOURT_SERVER;
 		}
 	}
@@ -2084,7 +2094,7 @@ static void ottd_analyze_serverinfo (struct server *s) {
 		s->flags |= SERVER_SPECTATE;
 
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-		if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1],"0")) {
+		if (!strcmp(*info_ptr, "password") && strcmp(info_ptr[1], "0")) {
 			s->flags |= SERVER_PASSWORD;
 			if (games[s->type].flags & GAME_SPECTATE)
 				s->flags |= SERVER_SP_PASSWORD;
@@ -2666,12 +2676,12 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	// pd = (struct quake_private*)games[con->s->type].pd;
 
-	setfs_game          = str2bool(game_get_attribute(g->type,"setfs_game"));
-	set_punkbuster      = str2bool(game_get_attribute(g->type,"set_punkbuster"));
-	enable_console      = str2bool(game_get_attribute(g->type,"enable_console"));
-	pass_memory_options = str2bool(game_get_attribute(g->type,"pass_memory_options"));
+	setfs_game          = str2bool(game_get_attribute(g->type, "setfs_game"));
+	set_punkbuster      = str2bool(game_get_attribute(g->type, "set_punkbuster"));
+	enable_console      = str2bool(game_get_attribute(g->type, "enable_console"));
+	pass_memory_options = str2bool(game_get_attribute(g->type, "pass_memory_options"));
 
-	cmdtokens = g_strsplit(g->cmd," ",0);
+	cmdtokens = g_strsplit(g->cmd, " ", 0);
 
 	if (cmdtokens && *cmdtokens[cmdi])
 		cmd=cmdtokens[cmdi++];
@@ -2684,7 +2694,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	protocol = strdup_strip(find_server_setting_for_key ("protocol", con->s->info));
 	if (cmd && protocol) {
-		char* tmp = g_strdup_printf("%sproto%s",cmd,protocol);
+		char* tmp = g_strdup_printf("%sproto%s", cmd, protocol);
 		char* tmp_cmd = expand_tilde(tmp);
 		g_free(tmp);
 		tmp = NULL;
@@ -2697,9 +2707,9 @@ static int q3_exec (const struct condef *con, int forkit) {
 		// Check to see if we can find that generated filename
 		// absolute path?
 		if (tmp_cmd[0] == '/') {
-			if (!access(tmp_cmd,X_OK)) {
+			if (!access(tmp_cmd, X_OK)) {
 				cmd = protocmdtofree = strdup(tmp_cmd);
-				debug(1,"absolute path %s",cmd);
+				debug(1, "absolute path %s", cmd);
 			}
 		}
 		// no, check $PATH
@@ -2707,7 +2717,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 			char* file = find_file_in_path(tmp_cmd);
 			if (file) {
 				cmd = protocmdtofree = file;
-				debug(1,"use file %s in path",cmd);
+				debug(1, "use file %s in path", cmd);
 			}
 		}
 		g_free(tmp_cmd);
@@ -2770,11 +2780,11 @@ static int q3_exec (const struct condef *con, int forkit) {
 			argv[argi++] = "1";
 		}
 		else {
-			char* option = g_strdup_printf("/" CONFIG_FILE "/Game: %s/punkbuster dialog shown",type2id(g->type));
+			char* option = g_strdup_printf("/" CONFIG_FILE "/Game: %s/punkbuster dialog shown", type2id(g->type));
 			debug(1, "Got %s for punkbuster\n", punkbuster);
 			if (!config_get_bool (option)) {
 				dialog_ok (NULL, _("The server has Punkbuster enabled but it is not going\nto be set on the command line.\nYou may have problems connecting.\nYou can fix this in the game preferences."));
-				config_set_bool (option,TRUE);
+				config_set_bool (option, TRUE);
 			}
 			g_free(option);
 		}
@@ -2817,19 +2827,19 @@ static int q3_exec (const struct condef *con, int forkit) {
 	}
 
 	if (pass_memory_options == TRUE) {
-		memoryoptions = g_new0(char*,5); // must be null terminated => max four entries
+		memoryoptions = g_new0(char*, 5); // must be null terminated => max four entries
 		argv[argi++] = "+set";
 		argv[argi++] = "com_hunkmegs";
-		argv[argi++] = memoryoptions[0] = strdup(game_get_attribute(g->type,"com_hunkmegs"));
+		argv[argi++] = memoryoptions[0] = strdup(game_get_attribute(g->type, "com_hunkmegs"));
 		argv[argi++] = "+set";
 		argv[argi++] = "com_zonemegs";
-		argv[argi++] = memoryoptions[1] = strdup(game_get_attribute(g->type,"com_zonemegs"));
+		argv[argi++] = memoryoptions[1] = strdup(game_get_attribute(g->type, "com_zonemegs"));
 		argv[argi++] = "+set";
 		argv[argi++] = "com_soundmegs";
-		argv[argi++] = memoryoptions[2] = strdup(game_get_attribute(g->type,"com_soundmegs"));
+		argv[argi++] = memoryoptions[2] = strdup(game_get_attribute(g->type, "com_soundmegs"));
 		argv[argi++] = "+set";
 		argv[argi++] = "cg_precachedmodels";
-		argv[argi++] = memoryoptions[3] = strdup(game_get_attribute(g->type,"cg_precachedmodels"));
+		argv[argi++] = memoryoptions[3] = strdup(game_get_attribute(g->type, "cg_precachedmodels"));
 	}
 
 	// Append additional args if needed
@@ -2844,7 +2854,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 
 	argv[argi] = NULL;
 
-	debug(1,"argument count %d", argi);
+	debug(1, "argument count %d", argi);
 
 	retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
 
@@ -2943,16 +2953,16 @@ static int ut_exec (const struct condef *con, int forkit) {
 		if (con->spectate) {
 			char* tmp = NULL;
 			if (real_password(con->spectator_password))
-				tmp = g_strdup_printf("%s?spectatoronly=true?password=%s",real_server,con->spectator_password);
+				tmp = g_strdup_printf("%s?spectatoronly=true?password=%s", real_server, con->spectator_password);
 			else
-				tmp = g_strdup_printf("%s?spectatoronly=true",real_server);
+				tmp = g_strdup_printf("%s?spectatoronly=true", real_server);
 			g_free(real_server);
 			real_server=tmp;
 		}
 
 		// Add password if exists
 		if (con->password) {
-			char* tmp = g_strdup_printf("%s?password=%s",real_server,con->password);
+			char* tmp = g_strdup_printf("%s?password=%s", real_server, con->password);
 			g_free(real_server);
 			real_server=tmp;
 		}
@@ -2972,7 +2982,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 			/*
 			// append first argument to server address
 			if (i == 0) {
-				tmp = g_strconcat(real_server,additional_args[i],NULL);
+				tmp = g_strconcat(real_server, additional_args[i], NULL);
 				g_free(real_server);
 				real_server=tmp;
 				argv[argi++] = real_server;
@@ -3017,7 +3027,7 @@ static int savage_exec(const struct condef *con, int forkit) {
 		argv[argi++] = "set";
 		argv[argi++] = "autoexec";
 
-		connect_arg = g_strdup_printf("connect %s",con->server);
+		connect_arg = g_strdup_printf("connect %s", con->server);
 
 		if (con->password) {
 			char* tmp = connect_arg;
@@ -3699,15 +3709,15 @@ char **get_custom_arguments(enum server_type type, const char *gamestring) {
 		// n = tokenize (arg, token, 2, ",");
 		tokenize (arg, token, 2, ",");
 
-		if (!(strcasecmp(token[0],gamestring))) {
-			ret = g_strsplit(token[1]," ",0);
-			debug(1, "found entry for:%s.  Returning argument:%s\n",gamestring,token[1]);
+		if (!(strcasecmp(token[0], gamestring))) {
+			ret = g_strsplit(token[1], " ", 0);
+			debug(1, "found entry for:%s.  Returning argument:%s\n", gamestring, token[1]);
 			g_free(arg);
 			return ret;
 		}
 		temp = g_slist_next(temp);
 	}
-	debug(1, "get_custom_arguments: Didn't find an entry for %s",gamestring);
+	debug(1, "get_custom_arguments: Didn't find an entry for %s", gamestring);
 	g_free(arg);
 	return NULL;
 }
@@ -3724,10 +3734,10 @@ static void quake_init_maps(enum server_type type) {
 	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
 	pd->maphash = q3_init_maphash();
 
-	findquakemaps(pd->maphash,games[type].real_dir);
+	find_quake_maps(pd->maphash, games[type].real_dir);
 
 	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
-		findquakemaps(pd->maphash,games[type].real_home);
+		find_quake_maps(pd->maphash, games[type].real_home);
 	}
 }
 
@@ -3739,10 +3749,40 @@ static void q3_init_maps(enum server_type type) {
 
 	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
 	pd->maphash = q3_init_maphash();
-	findq3maps(pd->maphash,games[type].real_dir);
+	find_q3_maps(pd->maphash, games[type].real_dir);
 
 	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
-		findq3maps(pd->maphash,games[type].real_home);
+		find_q3_maps(pd->maphash, games[type].real_home);
+	}
+}
+
+static void unvanquished_init_maps(enum server_type type) {
+	struct quake_private* pd = NULL;
+
+	pd = (struct quake_private*)games[type].pd;
+	g_return_if_fail(pd!=NULL);
+
+	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+	pd->maphash = q3_init_maphash();
+	find_unvanquished_maps(pd->maphash, games[type].real_dir);
+
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
+		find_unvanquished_maps(pd->maphash, games[type].real_home);
+	}
+}
+
+static void xonotic_init_maps(enum server_type type) {
+	struct quake_private* pd = NULL;
+
+	pd = (struct quake_private*)games[type].pd;
+	g_return_if_fail(pd!=NULL);
+
+	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
+	pd->maphash = q3_init_maphash();
+	find_xonotic_maps(pd->maphash, games[type].real_dir);
+
+	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
+		find_xonotic_maps(pd->maphash, games[type].real_home);
 	}
 }
 
@@ -3754,10 +3794,10 @@ static void doom3_init_maps(enum server_type type) {
 
 	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
 	pd->maphash = q3_init_maphash();
-	finddoom3maps(pd->maphash,games[type].real_dir);
+	find_doom3_maps(pd->maphash, games[type].real_dir);
 
 	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
-		finddoom3maps(pd->maphash, games[type].real_home);
+		find_doom3_maps(pd->maphash, games[type].real_home);
 	}
 }
 
@@ -3769,10 +3809,10 @@ static void quake4_init_maps(enum server_type type) {
 
 	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
 	pd->maphash = q3_init_maphash();
-	findquake4maps(pd->maphash,games[type].real_dir);
+	find_quake4_maps(pd->maphash, games[type].real_dir);
 
 	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
-		findquake4maps(pd->maphash, games[type].real_home);
+		find_quake4_maps(pd->maphash, games[type].real_home);
 	}
 }
 
@@ -3784,10 +3824,10 @@ static void etqw_init_maps(enum server_type type) {
 
 	q3_clear_maps(pd->maphash); // important to avoid memleak when called second time
 	pd->maphash = q3_init_maphash();
-	findetqwmaps(pd->maphash,games[type].real_dir);
+	find_etqw_maps(pd->maphash, games[type].real_dir);
 
 	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
-		findetqwmaps(pd->maphash, games[type].real_home);
+		find_etqw_maps(pd->maphash, games[type].real_home);
 	}
 }
 
@@ -3799,10 +3839,10 @@ static void unreal_init_maps(enum server_type type) {
 
 	ut_clear_maps(pd->maphash);
 	pd->maphash = ut_init_maphash();
-	findutmaps_dir(pd->maphash,games[type].real_dir,pd->suffix);
+	find_ut_maps_dir(pd->maphash, games[type].real_dir, pd->suffix);
 
 	if (games[type].real_home && access(games[type].real_home, R_OK) == 0) {
-		findutmaps_dir(pd->maphash,games[type].real_home,pd->suffix);
+		find_ut_maps_dir(pd->maphash, games[type].real_home, pd->suffix);
 	}
 }
 
@@ -3810,10 +3850,10 @@ static gboolean quake_has_map(struct server* s) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
-	g_return_val_if_fail(s!=NULL,TRUE);
+	g_return_val_if_fail(s!=NULL, TRUE);
 
 	pd = (struct quake_private*)games[s->type].pd;
-	g_return_val_if_fail(pd!=NULL,TRUE);
+	g_return_val_if_fail(pd!=NULL, TRUE);
 
 	hash = (GHashTable*)pd->maphash;
 	if (!hash) return TRUE;
@@ -3821,17 +3861,17 @@ static gboolean quake_has_map(struct server* s) {
 	if (!s->map)
 		return FALSE;
 
-	return q3_lookup_map(hash,s->map);
+	return q3_lookup_map(hash, s->map);
 }
 
 static gboolean doom3_has_map(struct server* s) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
-	g_return_val_if_fail(s!=NULL,TRUE);
+	g_return_val_if_fail(s!=NULL, TRUE);
 
 	pd = (struct quake_private*)games[s->type].pd;
-	g_return_val_if_fail(pd!=NULL,TRUE);
+	g_return_val_if_fail(pd!=NULL, TRUE);
 
 	hash = (GHashTable*)pd->maphash;
 	if (!hash) return TRUE;
@@ -3839,7 +3879,7 @@ static gboolean doom3_has_map(struct server* s) {
 	if (!s->map)
 		return FALSE;
 
-	return doom3_lookup_map(hash,s->map);
+	return doom3_lookup_map(hash, s->map);
 }
 
 static gboolean quake4_has_map(struct server* s) {
@@ -3850,10 +3890,10 @@ static size_t q3_get_mapshot(struct server* s, guchar** buf) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
-	g_return_val_if_fail(s!=NULL,TRUE);
+	g_return_val_if_fail(s!=NULL, TRUE);
 
 	pd = (struct quake_private*)games[s->type].pd;
-	g_return_val_if_fail(pd!=NULL,TRUE);
+	g_return_val_if_fail(pd!=NULL, TRUE);
 
 	hash = (GHashTable*)pd->maphash;
 	if (!hash) return TRUE;
@@ -3861,17 +3901,17 @@ static size_t q3_get_mapshot(struct server* s, guchar** buf) {
 	if (!s->map)
 		return FALSE;
 
-	return q3_lookup_mapshot(hash,s->map, buf);
+	return q3_lookup_mapshot(hash, s->map, buf);
 }
 
 static size_t doom3_get_mapshot(struct server* s, guchar** buf) {
 	struct quake_private* pd = NULL;
 	GHashTable* hash = NULL;
 
-	g_return_val_if_fail(s!=NULL,TRUE);
+	g_return_val_if_fail(s!=NULL, TRUE);
 
 	pd = (struct quake_private*)games[s->type].pd;
-	g_return_val_if_fail(pd!=NULL,TRUE);
+	g_return_val_if_fail(pd!=NULL, TRUE);
 
 	hash = (GHashTable*)pd->maphash;
 	if (!hash) return TRUE;
@@ -3879,7 +3919,7 @@ static size_t doom3_get_mapshot(struct server* s, guchar** buf) {
 	if (!s->map)
 		return FALSE;
 
-	return doom3_lookup_mapshot(hash,s->map, buf);
+	return doom3_lookup_mapshot(hash, s->map, buf);
 }
 
 static size_t quake4_get_mapshot(struct server* s, guchar** buf) {
@@ -3890,10 +3930,10 @@ static gboolean unreal_has_map(struct server* s) {
 	struct unreal_private* pd = NULL;
 	GHashTable* hash = NULL;
 
-	g_return_val_if_fail(s!=NULL,TRUE);
+	g_return_val_if_fail(s!=NULL, TRUE);
 
 	pd = (struct unreal_private*)games[s->type].pd;
-	g_return_val_if_fail(pd!=NULL,TRUE);
+	g_return_val_if_fail(pd!=NULL, TRUE);
 
 	hash = (GHashTable*)pd->maphash;
 	if (!hash) return TRUE;
@@ -3901,5 +3941,5 @@ static gboolean unreal_has_map(struct server* s) {
 	if (!s->map)
 		return FALSE;
 
-	return ut_lookup_map(hash,s->map);
+	return ut_lookup_map(hash, s->map);
 }

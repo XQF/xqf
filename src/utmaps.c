@@ -33,7 +33,7 @@
  * find all files with specified suffix up to two levels under startdir, insert
  * maps into maphash
  */
-void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffix) {
+void find_ut_maps_dir(GHashTable* maphash, const char* startdir, const char* suffix) {
 	DIR* dir = NULL;
 	struct dirent* dire = NULL;
 	char* curdir = NULL;
@@ -51,14 +51,14 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 	if (!startdir || !maphash || !suffix)
 		return;
 
-	dse = g_new0(DirStackEntry,1);
+	dse = g_new0(DirStackEntry, 1);
 	dse->name=g_strdup(startdir);
 
-	dirstack = g_slist_prepend(dirstack,dse);
+	dirstack = g_slist_prepend(dirstack, dse);
 
 	while (dirstack) {
 		GSList* current = dirstack;
-		dirstack = g_slist_remove_link(dirstack,dirstack);
+		dirstack = g_slist_remove_link(dirstack, dirstack);
 
 		dse = current->data;
 		curdir = dse->name;
@@ -79,21 +79,21 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 			char* name = dire->d_name;
 			struct stat statbuf;
 
-			if (!strcmp(name,".") || !strcmp(name,".."))
+			if (!strcmp(name, ".") || !strcmp(name, ".."))
 				continue;
 
-			name = g_strconcat(curdir,"/",name,NULL);
-			if (stat(name,&statbuf)) {
+			name = g_strconcat(curdir, "/", name, NULL);
+			if (stat(name, &statbuf)) {
 				perror(name);
 				g_free(name);
 				continue;
 			}
 			if (S_ISDIR(statbuf.st_mode)) {
 				if (maxlevel>=0 && dse->level<maxlevel) {
-					DirStackEntry* tmpdse = g_new0(DirStackEntry,1);
+					DirStackEntry* tmpdse = g_new0(DirStackEntry, 1);
 					tmpdse->name=name;
 					tmpdse->level=dse->level+1;
-					dirstack = g_slist_prepend(dirstack,tmpdse);
+					dirstack = g_slist_prepend(dirstack, tmpdse);
 				}
 				else {
 					g_free(name);
@@ -103,7 +103,7 @@ void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffi
 				if (strlen(dire->d_name)>strlen(suffix) && !g_ascii_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix), suffix)) {
 					// s#(.*)suffix#\1#
 					gchar* mapname = g_ascii_strdown(dire->d_name, strlen(dire->d_name)-strlen(suffix)); /* g_ascii_strdown does implicit strndup */
-					if (g_hash_table_lookup(maphash,mapname)) {
+					if (g_hash_table_lookup(maphash, mapname)) {
 						g_free(mapname);
 					}
 					else {
@@ -137,12 +137,12 @@ void ut_clear_maps(GHashTable* maphash) {
 
 /** create map hash */
 GHashTable* ut_init_maphash() {
-	return g_hash_table_new(g_str_hash,g_str_equal);
+	return g_hash_table_new(g_str_hash, g_str_equal);
 }
 
 /** return true if mapname is contained in maphash, false otherwise */
 gboolean ut_lookup_map(GHashTable* maphash, const char* mapname) {
-	if (g_hash_table_lookup(maphash,mapname))
+	if (g_hash_table_lookup(maphash, mapname))
 		return TRUE;
 	return FALSE;
 }

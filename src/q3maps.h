@@ -61,15 +61,17 @@ size_t doom3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** b
 /**
  * find all maps in .pk3 files one level under startdir
  */
-void findq3maps(GHashTable* maphash, const char* startdir);
+void find_q3_maps(GHashTable* maphash, const char* startdir);
+void find_unvanquished_maps(GHashTable* maphash, const char* startdir);
+void find_xonotic_maps(GHashTable* maphash, const char* startdir);
 
 /**
  * find all maps in .pk4 files one level under startdir
  */
-void finddoom3maps(GHashTable* maphash, const char* startdir);
-void findquake4maps(GHashTable* maphash, const char* startdir);
-void findetqwmaps(GHashTable* maphash, const char* startdir);
+void find_doom3_maps(GHashTable* maphash, const char* startdir);
+void find_quake4_maps(GHashTable* maphash, const char* startdir);
+void find_etqw_maps(GHashTable* maphash, const char* startdir);
 
-void findquakemaps(GHashTable* maphash, const char* startdir);
+void find_quake_maps(GHashTable* maphash, const char* startdir);
 
 #endif
