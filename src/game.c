@@ -2827,7 +2827,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 	}
 
 	if (pass_memory_options == TRUE) {
-		memoryoptions = g_new0(char*, 5); // must be null terminated => max four entries
+		memoryoptions = g_new0(char*, 4); // must be null terminated => max three entries
 		argv[argi++] = "+set";
 		argv[argi++] = "com_hunkmegs";
 		argv[argi++] = memoryoptions[0] = strdup(game_get_attribute(g->type, "com_hunkmegs"));
@@ -2837,9 +2837,6 @@ static int q3_exec (const struct condef *con, int forkit) {
 		argv[argi++] = "+set";
 		argv[argi++] = "com_soundmegs";
 		argv[argi++] = memoryoptions[2] = strdup(game_get_attribute(g->type, "com_soundmegs"));
-		argv[argi++] = "+set";
-		argv[argi++] = "cg_precachedmodels";
-		argv[argi++] = memoryoptions[3] = strdup(game_get_attribute(g->type, "cg_precachedmodels"));
 	}
 
 	// Append additional args if needed
