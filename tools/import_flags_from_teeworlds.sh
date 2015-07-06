@@ -9,7 +9,7 @@ fi
 xqf_repo="${1}"
 teeworlds_repo="${2}"
 
-xqf_flags_path="${xqf_repo}/pixmaps/flags"
+xqf_flags_path="${xqf_repo}/pixmaps/flags/country"
 teeworlds_flags_path="${teeworlds_repo}/datasrc/countryflags"
 
 (cd "${teeworlds_flags_path}"; ls ??.png ) | while read upName
