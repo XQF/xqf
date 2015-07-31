@@ -196,16 +196,8 @@ static GtkWidget *qstat_srcport_entry_high;
 
 static GtkWidget *sound_enable_check_button;
 
-static GtkWidget *sound_player_entry;
-static GtkWidget *sound_xqf_start_entry;
-static GtkWidget *sound_xqf_quit_entry;
-static GtkWidget *sound_update_done_entry;
-static GtkWidget *sound_refresh_done_entry;
-static GtkWidget *sound_stop_entry;
-static GtkWidget *sound_server_connect_entry;
-static GtkWidget *sound_redial_success_entry;
-
 static GtkWidget *sound_player_file_dialog_button;
+
 static GtkWidget *sound_xqf_start_file_dialog_button;
 static GtkWidget *sound_xqf_quit_file_dialog_button;
 static GtkWidget *sound_update_done_file_dialog_button;
@@ -213,15 +205,6 @@ static GtkWidget *sound_refresh_done_file_dialog_button;
 static GtkWidget *sound_stop_file_dialog_button;
 static GtkWidget *sound_server_connect_file_dialog_button;
 static GtkWidget *sound_redial_success_file_dialog_button;
-
-static GtkWidget *sound_xqf_start_file_test_button;
-static GtkWidget *sound_xqf_start_file_test_button;
-static GtkWidget *sound_xqf_quit_file_test_button;
-static GtkWidget *sound_update_done_file_test_button;
-static GtkWidget *sound_refresh_done_file_test_button;
-static GtkWidget *sound_stop_file_test_button;
-static GtkWidget *sound_server_connect_file_test_button;
-static GtkWidget *sound_redial_success_file_test_button;
 
 static guchar *q1_skin_data = NULL;
 static int q1_skin_is_valid = TRUE;
@@ -629,14 +612,6 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 static void game_file_dialog(enum server_type type);
 static void game_dir_dialog(enum server_type type);
 static void game_file_activate_callback(enum server_type type);
-static void sound_player_file_dialog();
-static void sound_xqf_start_file_dialog();
-static void sound_xqf_quit_file_dialog();
-static void sound_update_done_file_dialog();
-static void sound_refresh_done_file_dialog();
-static void sound_stop_file_dialog();
-static void sound_server_connect_file_dialog();
-static void sound_redial_success_file_dialog();
 
 static inline int compare_slist_strings (gconstpointer str1, gconstpointer str2) {
 	int res;
@@ -1310,28 +1285,24 @@ static void get_new_defaults (void) {
 		config_set_bool ("sound_enable", sound_enable = i);
 	}
 
-	sound_player = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_player_entry)));
+
+	sound_player = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button));
+
+	sound_xqf_start = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_xqf_start_file_dialog_button));
+	sound_xqf_quit = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_xqf_quit_file_dialog_button));
+	sound_update_done = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_update_done_file_dialog_button));
+	sound_refresh_done = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_refresh_done_file_dialog_button));
+	sound_stop = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_stop_file_dialog_button));
+	sound_server_connect = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_server_connect_file_dialog_button));
+	sound_redial_success = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_redial_success_file_dialog_button));
+
 	config_set_string ("sound_player", (sound_player)? sound_player : "");
-
-	sound_xqf_start = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_xqf_start_entry)));
 	config_set_string ("sound_xqf_start", (sound_xqf_start)? sound_xqf_start : "");
-
-	sound_xqf_quit = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_xqf_quit_entry)));
 	config_set_string ("sound_xqf_quit", (sound_xqf_quit)? sound_xqf_quit : "");
-
-	sound_update_done = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_update_done_entry)));
 	config_set_string ("sound_update_done", (sound_update_done)? sound_update_done : "");
-
-	sound_refresh_done = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_refresh_done_entry)));
 	config_set_string ("sound_refresh_done", (sound_refresh_done)? sound_refresh_done : "");
-
-	sound_stop = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_stop_entry)));
 	config_set_string ("sound_stop", (sound_stop)? sound_stop : "");
-
-	sound_server_connect = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_server_connect_entry)));
 	config_set_string ("sound_server_connect", (sound_server_connect)? sound_server_connect : "");
-
-	sound_redial_success = strdup_strip (gtk_entry_get_text (GTK_ENTRY (sound_redial_success_entry)));
 	config_set_string ("sound_redial_success", (sound_redial_success)? sound_redial_success : "");
 
 	config_pop_prefix();
@@ -3657,45 +3628,6 @@ static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
 	GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
 }
 
-/** make entries editable if yes == TRUE */
-static void sound_set_widgets_sensitive(gboolean yes) {
-	gtk_widget_set_sensitive (sound_player_entry, yes);
-	gtk_widget_set_sensitive (sound_xqf_start_entry, yes);
-	gtk_widget_set_sensitive (sound_xqf_quit_entry, yes);
-	gtk_widget_set_sensitive (sound_update_done_entry, yes);
-	gtk_widget_set_sensitive (sound_refresh_done_entry, yes);
-	gtk_widget_set_sensitive (sound_stop_entry, yes);
-	gtk_widget_set_sensitive (sound_redial_success_entry, yes);
-	gtk_widget_set_sensitive (sound_server_connect_entry, yes);
-
-	gtk_widget_set_sensitive (sound_player_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_xqf_start_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_xqf_quit_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_update_done_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_refresh_done_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_stop_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_redial_success_file_dialog_button, yes);
-	gtk_widget_set_sensitive (sound_server_connect_file_dialog_button, yes);
-
-	gtk_widget_set_sensitive (sound_xqf_start_file_test_button, yes);
-	gtk_widget_set_sensitive (sound_xqf_quit_file_test_button, yes);
-	gtk_widget_set_sensitive (sound_update_done_file_test_button, yes);
-	gtk_widget_set_sensitive (sound_refresh_done_file_test_button, yes);
-	gtk_widget_set_sensitive (sound_stop_file_test_button, yes);
-	gtk_widget_set_sensitive (sound_redial_success_file_test_button, yes);
-	gtk_widget_set_sensitive (sound_server_connect_file_test_button, yes);
-
-}
-
-static void sound_enable_toggled_callback (GtkWidget *widget, gpointer data) {
-	gboolean val;
-
-	val = GTK_TOGGLE_BUTTON (sound_enable_check_button)->active;
-
-	sound_set_widgets_sensitive(val);
-}
-
-
 static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
 	int val;
 
@@ -4203,18 +4135,60 @@ static GtkWidget *qstat_options_page (void) {
 	return page_vbox;
 }
 
-static void play_sound_pref (GtkWidget *sound_entry) {
-	const char* file = gtk_entry_get_text (GTK_ENTRY (sound_entry));
-	const char* player = gtk_entry_get_text (GTK_ENTRY (sound_player_entry));
+void pref_sound_play (GtkWidget *dialog_button) {
+	const char *file   = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog_button));
+	const char *player = sound_player;
 	play_sound_with (player, file, 1);
 }
 
-// create a button with label "Test", set padding to make it look nice
-static inline GtkWidget* sound_test_button_new() {
-	// Translator: sound test button
-	GtkWidget* button = gtk_button_new_with_label (_("Test"));
-	gtk_misc_set_padding(GTK_MISC(GTK_BIN(button)->child),4,0);
+void pref_sound_conf_clear(GtkWidget *dialog_button) {
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog_button), NULL);
+}
+
+GtkWidget *sound_clear_button_new() {
+	GtkWidget* button = gtk_button_new_with_label("⌫");
 	return button;
+}
+
+GtkWidget *sound_test_button_new() {
+	GtkWidget* button = gtk_button_new_with_label("♪");
+	return button;
+}
+
+GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *table, int i) {
+	GtkWidget *label;
+	GtkWidget *clear_button;
+	GtkWidget *dialog_button;
+	GtkWidget *test_button;
+
+	// Label
+	label = gtk_label_new (name);
+	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_widget_show (label);
+
+	// File selection dialog
+	dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
+	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(dialog_button), file);
+	if (file == "" || file == NULL) {
+		pref_sound_conf_clear(dialog_button);
+	};
+	gtk_table_attach_defaults (GTK_TABLE (table), dialog_button, 1, 2, i, i+1);
+	gtk_widget_show (dialog_button);
+
+	// Clear button
+	clear_button = sound_clear_button_new ();
+	g_signal_connect_swapped (clear_button, "clicked", G_CALLBACK (pref_sound_conf_clear), dialog_button);
+	gtk_table_attach (GTK_TABLE (table), clear_button, 3, 4, i, i+1, 0, 0, 0, 0);
+	gtk_widget_show (clear_button);
+
+	// Test button
+	test_button = sound_test_button_new ();
+	g_signal_connect_swapped (test_button, "clicked", G_CALLBACK (pref_sound_play), dialog_button);
+	gtk_table_attach (GTK_TABLE (table), test_button, 5, 6, i, i+1, 0, 0, 0, 0);
+	gtk_widget_show (test_button);
+
+	return dialog_button;
 }
 
 static GtkWidget *sound_options_page (void) {
@@ -4222,6 +4196,8 @@ static GtkWidget *sound_options_page (void) {
 	GtkWidget *frame;
 	GtkWidget *table;
 	GtkWidget *label;
+
+	int pos = 0;
 
 	page_vbox = gtk_vbox_new (FALSE, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -4244,7 +4220,7 @@ static GtkWidget *sound_options_page (void) {
 
 	sound_enable_check_button = gtk_check_button_new_with_label (_("Enable Sound"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_enable_check_button), sound_enable);
-	g_signal_connect (GTK_OBJECT (sound_enable_check_button), "toggled", G_CALLBACK (sound_enable_toggled_callback), NULL);
+
 	gtk_table_attach (GTK_TABLE (table), sound_enable_check_button, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (sound_enable_check_button);
 
@@ -4252,22 +4228,14 @@ static GtkWidget *sound_options_page (void) {
 
 	label = gtk_label_new (_("Player program"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 0, 0, 0, 0);
 	gtk_widget_show (label);
 
-	sound_player_entry = gtk_entry_new ();
+	sound_player_file_dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
+	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(sound_player_file_dialog_button), sound_player);
 
-	if (sound_player) {
-		gtk_entry_set_text (GTK_ENTRY (sound_player_entry), sound_player);
-		gtk_entry_set_position (GTK_ENTRY (sound_player_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_player_entry, 1, 2, 1, 2);
-	gtk_widget_show (sound_player_entry);
+	gtk_table_attach_defaults (GTK_TABLE (table), sound_player_file_dialog_button, 2, 4, 1, 2);
 
-	// File selection dialog
-	sound_player_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_player_file_dialog_button), "clicked", G_CALLBACK (sound_player_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_player_file_dialog_button, 2, 3, 1, 2, 0, 0, 0, 0);
 	gtk_widget_show (sound_player_file_dialog_button);
 
 	gtk_widget_show (frame);
@@ -4284,216 +4252,18 @@ static GtkWidget *sound_options_page (void) {
 	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
 	gtk_container_add (GTK_CONTAINER (frame), table);
 
+	sound_xqf_start_file_dialog_button = pref_sound_conf_append(sound_xqf_start, _("XQF Start"), table, pos++);
+	sound_xqf_quit_file_dialog_button = pref_sound_conf_append(sound_xqf_quit, _("XQF Quit"), table, pos++);
+	sound_update_done_file_dialog_button = pref_sound_conf_append(sound_update_done, _("Update Done"), table, pos++);
+	sound_refresh_done_file_dialog_button = pref_sound_conf_append(sound_refresh_done, _("Refresh Done"), table, pos++);
+	sound_stop_file_dialog_button = pref_sound_conf_append(sound_stop, _("Stop"), table, pos++);
+	sound_server_connect_file_dialog_button = pref_sound_conf_append(sound_server_connect, _("Server Connect"), table, pos++);
+	sound_redial_success_file_dialog_button = pref_sound_conf_append(sound_redial_success, _("Redial Success"), table, pos++);
 
-	/* Sound XQF Start */
+	gtk_widget_show(table);
+	gtk_widget_show(frame);
 
-	label = gtk_label_new (_("XQF Start"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_xqf_start_entry = gtk_entry_new ();
-
-	if (sound_xqf_start) {
-		gtk_entry_set_text (GTK_ENTRY (sound_xqf_start_entry), sound_xqf_start);
-		gtk_entry_set_position (GTK_ENTRY (sound_xqf_start_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_xqf_start_entry, 1, 2, 0, 1);
-	gtk_widget_show (sound_xqf_start_entry);
-
-	// File selection dialog
-	sound_xqf_start_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_start_file_dialog_button), "clicked", G_CALLBACK (sound_xqf_start_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_xqf_start_file_dialog_button, 2, 3, 0, 1, 0, 0, 0, 0);
-	gtk_widget_show (sound_xqf_start_file_dialog_button);
-
-	// Test button
-	sound_xqf_start_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_start_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_xqf_start_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_xqf_start_file_test_button, 3, 4, 0, 1, 0, 0, 0, 0);
-	gtk_widget_show (sound_xqf_start_file_test_button);
-
-	/* Sound XQF Quit */
-
-	label = gtk_label_new (_("XQF Quit"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_xqf_quit_entry = gtk_entry_new ();
-
-	if (sound_xqf_quit) {
-		gtk_entry_set_text (GTK_ENTRY (sound_xqf_quit_entry), sound_xqf_quit);
-		gtk_entry_set_position (GTK_ENTRY (sound_xqf_quit_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_xqf_quit_entry, 1, 2, 1, 2);
-	gtk_widget_show (sound_xqf_quit_entry);
-
-	// File selection dialog
-	sound_xqf_quit_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_quit_file_dialog_button), "clicked", G_CALLBACK (sound_xqf_quit_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_xqf_quit_file_dialog_button, 2, 3, 1, 2, 0, 0, 0, 0);
-	gtk_widget_show (sound_xqf_quit_file_dialog_button);
-
-	// Test button
-	sound_xqf_quit_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_xqf_quit_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_xqf_quit_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_xqf_quit_file_test_button, 3, 4, 1, 2, 0, 0, 0, 0);
-	gtk_widget_show (sound_xqf_quit_file_test_button);
-
-	/* Sound Update Done */
-
-	label = gtk_label_new (_("Update Done"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_update_done_entry = gtk_entry_new ();
-
-	if (sound_update_done) {
-		gtk_entry_set_text (GTK_ENTRY (sound_update_done_entry), sound_update_done);
-		gtk_entry_set_position (GTK_ENTRY (sound_update_done_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_update_done_entry, 1, 2, 2, 3);
-	gtk_widget_show (sound_update_done_entry);
-
-	// File selection dialog
-	sound_update_done_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_update_done_file_dialog_button), "clicked", G_CALLBACK (sound_update_done_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_update_done_file_dialog_button, 2, 3, 2, 3, 0, 0, 0, 0);
-	gtk_widget_show (sound_update_done_file_dialog_button);
-
-
-	// Test button
-	sound_update_done_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_update_done_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_update_done_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_update_done_file_test_button, 3, 4, 2, 3, 0, 0, 0, 0);
-	gtk_widget_show (sound_update_done_file_test_button);
-
-	/* Sound Refresh Done */
-
-	label = gtk_label_new (_("Refresh Done"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_refresh_done_entry = gtk_entry_new ();
-
-	if (sound_refresh_done) {
-		gtk_entry_set_text (GTK_ENTRY (sound_refresh_done_entry), sound_refresh_done);
-		gtk_entry_set_position (GTK_ENTRY (sound_refresh_done_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_refresh_done_entry, 1, 2, 3, 4);
-	gtk_widget_show (sound_refresh_done_entry);
-
-	// File selection dialog
-	sound_refresh_done_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_refresh_done_file_dialog_button), "clicked", G_CALLBACK (sound_refresh_done_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_refresh_done_file_dialog_button, 2, 3, 3, 4, 0, 0, 0, 0);
-	gtk_widget_show (sound_refresh_done_file_dialog_button);
-
-
-	// Test button
-	sound_refresh_done_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_refresh_done_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_refresh_done_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_refresh_done_file_test_button, 3, 4, 3, 4, 0, 0, 0, 0);
-	gtk_widget_show (sound_refresh_done_file_test_button);
-
-	/* Sound Stop */
-
-	label = gtk_label_new (_("Stop"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_stop_entry = gtk_entry_new ();
-
-	if (sound_stop) {
-		gtk_entry_set_text (GTK_ENTRY (sound_stop_entry), sound_stop);
-		gtk_entry_set_position (GTK_ENTRY (sound_stop_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_stop_entry, 1, 2, 4, 5);
-	gtk_widget_show (sound_stop_entry);
-
-	// File selection dialog
-	sound_stop_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_stop_file_dialog_button), "clicked", G_CALLBACK (sound_stop_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_stop_file_dialog_button, 2, 3, 4, 5, 0, 0, 0, 0);
-	gtk_widget_show (sound_stop_file_dialog_button);
-
-
-	// Test button
-	sound_stop_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_stop_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_stop_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_stop_file_test_button, 3, 4, 4, 5, 0, 0, 0, 0);
-	gtk_widget_show (sound_stop_file_test_button);
-
-	/* Sound Server Connect */
-
-	label = gtk_label_new (_("Server Connect"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_server_connect_entry = gtk_entry_new ();
-
-	if (sound_server_connect) {
-		gtk_entry_set_text (GTK_ENTRY (sound_server_connect_entry), sound_server_connect);
-		gtk_entry_set_position (GTK_ENTRY (sound_server_connect_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_server_connect_entry, 1, 2, 5, 6);
-	gtk_widget_show (sound_server_connect_entry);
-
-	// File selection dialog
-	sound_server_connect_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_server_connect_file_dialog_button), "clicked", G_CALLBACK (sound_server_connect_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_server_connect_file_dialog_button, 2, 3, 5, 6, 0, 0, 0, 0);
-	gtk_widget_show (sound_server_connect_file_dialog_button);
-
-
-	// Test button
-	sound_server_connect_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_server_connect_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_server_connect_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_server_connect_file_test_button, 3, 4, 5, 6, 0, 0, 0, 0);
-	gtk_widget_show (sound_server_connect_file_test_button);
-
-	/* Sound Redial Success Start */
-
-	label = gtk_label_new (_("Redial Success"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
-
-	sound_redial_success_entry = gtk_entry_new ();
-
-	if (sound_redial_success) {
-		gtk_entry_set_text (GTK_ENTRY (sound_redial_success_entry), sound_redial_success);
-		gtk_entry_set_position (GTK_ENTRY (sound_redial_success_entry), 0);
-	}
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_redial_success_entry, 1, 2, 6, 7);
-	gtk_widget_show (sound_redial_success_entry);
-
-	// File selection dialog
-	sound_redial_success_file_dialog_button = gtk_button_new_with_label ("...");
-	g_signal_connect_swapped (GTK_OBJECT (sound_redial_success_file_dialog_button), "clicked", G_CALLBACK (sound_redial_success_file_dialog), NULL);
-	gtk_table_attach (GTK_TABLE (table), sound_redial_success_file_dialog_button, 2, 3, 6, 7, 0, 0, 0, 0);
-	gtk_widget_show (sound_redial_success_file_dialog_button);
-
-
-	// Test button
-	sound_redial_success_file_test_button = sound_test_button_new();
-	g_signal_connect_swapped (GTK_OBJECT (sound_redial_success_file_test_button), "clicked", G_CALLBACK (play_sound_pref), (gpointer)sound_redial_success_entry);
-	gtk_table_attach (GTK_TABLE (table), sound_redial_success_file_test_button, 3, 4, 6, 7, 0, 0, 0, 0);
-	gtk_widget_show (sound_redial_success_file_test_button);
-
-	/*  */
-
-	sound_set_widgets_sensitive(sound_enable);
-
-	gtk_widget_show (table);
-	gtk_widget_show (frame);
-
-	gtk_widget_show (page_vbox);
+	gtk_widget_show(page_vbox);
 
 	return page_vbox;
 }
@@ -5137,38 +4907,6 @@ void game_dir_dialog(enum server_type type) {
 	}
 
 	file_dialog_textentry(_("Game Directory Selection"), genprefs[type].dir_entry);
-}
-
-void sound_player_file_dialog() {
-	file_dialog_textentry(_("Sound Player Selection"), sound_player_entry);
-}
-
-void sound_xqf_start_file_dialog() {
-	file_dialog_textentry(_("XQF Start Sound Selection"), sound_xqf_start_entry);
-}
-
-void sound_xqf_quit_file_dialog() {
-	file_dialog_textentry(_("XQF Quit Sound Selection"), sound_xqf_quit_entry);
-}
-
-void sound_update_done_file_dialog() {
-	file_dialog_textentry(_("Update Done Sound Selection"), sound_update_done_entry);
-}
-
-void sound_refresh_done_file_dialog() {
-	file_dialog_textentry(_("Refresh Done Sound Selection"), sound_refresh_done_entry);
-}
-
-void sound_stop_file_dialog() {
-	file_dialog_textentry(_("Stop Sound Selection"), sound_stop_entry);
-}
-
-void sound_server_connect_file_dialog() {
-	file_dialog_textentry(_("Server Connect Sound Selection"), sound_server_connect_entry);
-}
-
-void sound_redial_success_file_dialog() {
-	file_dialog_textentry(_("Redial Success Sound Selection"), sound_redial_success_entry);
 }
 
 /*
