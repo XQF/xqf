@@ -97,6 +97,7 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/psearch.c
      ${CMAKE_SOURCE_DIR}/src/rc.c
      ${CMAKE_SOURCE_DIR}/src/rcon.c
+     ${CMAKE_SOURCE_DIR}/src/huffman.c
      ${CMAKE_SOURCE_DIR}/src/server.c
      ${CMAKE_SOURCE_DIR}/src/skin.c
      ${CMAKE_SOURCE_DIR}/src/skin_pcx.c
@@ -140,6 +141,8 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/quake_pal.h
      ${CMAKE_SOURCE_DIR}/src/rc.h
      ${CMAKE_SOURCE_DIR}/src/rcon.h
+     ${CMAKE_SOURCE_DIR}/src/huffman.h
+     ${CMAKE_SOURCE_DIR}/src/hufffreq.h
      ${CMAKE_SOURCE_DIR}/src/server.h
      ${CMAKE_SOURCE_DIR}/src/skin.h
      ${CMAKE_SOURCE_DIR}/src/skin_pcx.h
