@@ -199,7 +199,7 @@ finish:
 		free (HuffMemBase);
 }
 
-void HuffDecode (const unsigned char *in, unsigned char *out, int inlen, int *outlen, const int maxlen)
+void HuffDecode (const unsigned char *in, unsigned char *out, ssize_t inlen, ssize_t *outlen, const int maxlen)
 {
 	int	bits, tbits;
 	huffnode_t	*tmp;
@@ -242,7 +242,7 @@ void HuffDecode (const unsigned char *in, unsigned char *out, int inlen, int *ou
 	}
 }
 
-void HuffEncode (const unsigned char *in, unsigned char *out, int inlen, int *outlen)
+void HuffEncode (const unsigned char *in, unsigned char *out, ssize_t inlen, ssize_t *outlen)
 {
 	int	i, j, bitat;
 	unsigned int	t;

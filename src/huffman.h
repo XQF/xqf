@@ -24,8 +24,8 @@
 #define __H2W_HUFFMAN_H
 
 extern void HuffInit (void);
-extern void HuffEncode (const unsigned char *in, unsigned char *out, int inlen, int *outlen);
-extern void HuffDecode (const unsigned char *in, unsigned char *out, int inlen, int *outlen, const int maxlen);
+extern void HuffEncode (const unsigned char *in, unsigned char *out, ssize_t inlen, ssize_t *outlen);
+extern void HuffDecode (const unsigned char *in, unsigned char *out, ssize_t inlen, ssize_t *outlen, const int maxlen);
 
 extern int huff_failed;
 

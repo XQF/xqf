@@ -185,7 +185,7 @@ static int open_connection (struct in_addr *ip, unsigned short port) {
 static int rcon_send(const char* cmd) {
 	char* buf = NULL;
 	size_t bufsize = 0;
-	int huffsize;
+	ssize_t huffsize;
 	int ret = -1;
 
 	if (rcon_servertype == HL_SERVER && rcon_challenge == NULL) {
