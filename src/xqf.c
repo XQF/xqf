@@ -2235,7 +2235,7 @@ void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 	gtk_widget_grab_focus (entry);
 }
 
-void create_main_window (void) {
+static gboolean create_main_window (void) {
 	GError *error = NULL;
 
 #if defined GUI_GTK3
@@ -2246,12 +2246,12 @@ void create_main_window (void) {
 #else
 	fprintf (stderr, "No UI has been compiled!\n");
 
-	return;
+	return FALSE;
 #endif
 	if (G_UNLIKELY (error != NULL)) {
 		fprintf (stderr, "Could not load UI: %s\n", error->message);
 		g_clear_error (&error);
-		return;
+		return FALSE;
 	}
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (builder, "main-window"));
@@ -2264,6 +2264,7 @@ void create_main_window (void) {
 	register_window (main_window);
 
 	gtk_widget_realize (main_window);
+	return TRUE;
 }
 
 void populate_main_window (void) {
@@ -2728,7 +2729,8 @@ int main (int argc, char *argv[]) {
 		dialog_ok (NULL, _("You need at least qstat version %s for xqf to function properly"), required_qstat_version);
 	}
 
-	create_main_window ();
+	if (!create_main_window ())
+		return 1;
 
 	init_pixmaps (main_window);
 
