@@ -20,6 +20,7 @@
 #define __RCON_H__
 
 #include "xqf.h"
+#include "huffman.h"
 
 
 extern void rcon_dialog (const struct server *s, const char *passwd);

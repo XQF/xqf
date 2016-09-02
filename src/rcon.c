@@ -77,6 +77,36 @@ static int failed (char *name) {
 	return TRUE;
 }
 
+/* HexenWorld support:
+ *
+ * USE_HUFFENCODE: 0 or 1
+ * If 1, rcon messages will be sent with huffman encoding.
+ * If 0, we shall cheat and add an extra (fifth) 255 to the
+ * header in order to send without huffman encoding.
+ * In either case, we MUST decode the received message.
+ */
+#define USE_HUFFENCODE	1
+
+static unsigned char huffbuff[PACKET_MAXSIZE];	/* [65536] */
+static int huffman_inited = 0;
+
+static int huff_check (void) {
+	if (huffman_inited)
+		return 0;
+	if (huff_failed) {
+	no_huff:
+		fprintf (stderr, "HWRCON: Couldn't initialize Huffman compression!\n");
+		rcon_print ("HWRCON: Couldn't initialize Huffman compression!\n");
+		return 1;
+	}
+	if (!huffman_inited) {
+		HuffInit ();
+		if (huff_failed)
+			goto no_huff;
+		huffman_inited = 1;
+	}
+	return 0;
+}
 
 static void rcon_print (char *fmt, ...) {
 #ifndef RCON_STANDALONE
@@ -155,6 +185,7 @@ static int open_connection (struct in_addr *ip, unsigned short port) {
 static int rcon_send(const char* cmd) {
 	char* buf = NULL;
 	size_t bufsize = 0;
+	ssize_t huffsize;
 	int ret = -1;
 
 	if (rcon_servertype == HL_SERVER && rcon_challenge == NULL) {
@@ -206,6 +237,18 @@ static int rcon_send(const char* cmd) {
 		strcpy(buf+sizeof(prefix), rcon_password);
 		strcpy(buf+sizeof(prefix)+strlen(rcon_password)+1, cmd);
 	}
+	else if (rcon_servertype == HW_SERVER) {
+		if (huff_check ()) /* do this even when not sending without encoding, */
+			return -1;	/* because we must decode the response..	*/
+#if USE_HUFFENCODE
+		buf = g_strdup_printf("\377\377\377\377rcon %s %s", rcon_password, cmd);
+		bufsize = strlen(buf)+1;
+		HuffEncode ((unsigned char *)buf, huffbuff, bufsize, &huffsize);
+#else
+		buf = g_strdup_printf("\377\377\377\377\377rcon %s %s", rcon_password, cmd);
+		bufsize = strlen(buf)+1;
+#endif
+	}
 	else {
 		buf = g_strdup_printf("\377\377\377\377rcon %s %s",rcon_password, cmd);
 		bufsize = strlen(buf)+1;
@@ -213,7 +256,13 @@ static int rcon_send(const char* cmd) {
 
 	rcon_print ("RCON> %s\n", cmd);
 
+#if USE_HUFFENCODE
+	if (rcon_servertype == HW_SERVER)
+		ret = send (rcon_fd, huffbuff, huffsize, 0);
+	else
+#endif
 	ret = send (rcon_fd, buf, bufsize, 0);
+
 	g_free(buf);
 	return ret;
 }
@@ -300,15 +349,32 @@ static char* rcon_receive() {
 	if (!packet)
 		packet = g_malloc (PACKET_MAXSIZE);
 
-	size = recv (rcon_fd, packet, PACKET_MAXSIZE, 0);
+	if (rcon_servertype == HW_SERVER) {
+		if (huff_check () != 0) /* failure (unexpected...) */
+			return msg;
+		/* receive encoded message into the huffman buffer */
+		size = recv (rcon_fd, huffbuff, PACKET_MAXSIZE, 0);
+	}
+	else {
+		size = recv (rcon_fd, packet, PACKET_MAXSIZE, 0);
+	}
+
 	if (size < 0) {
 		if (errno != EWOULDBLOCK) failed("recv");
 	}
 	else {
 		switch (rcon_servertype) {
 
+			case HW_SERVER: /* decode the received message */
+				HuffDecode (huffbuff, (unsigned char *)packet, size, &size, PACKET_MAXSIZE);
+				if (size > PACKET_MAXSIZE) {
+					packet[PACKET_MAXSIZE-1] = '\0';
+					failed("HuffDecode: Oversize!");
+					break;
+				}
+			/* FALLTHROUGH */
+
 			case QW_SERVER:
-			case HW_SERVER:
 			case HL_SERVER:
 				// "\377\377\377\377<some character>"
 				msg = packet + 4 + 1;
