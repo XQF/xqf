@@ -42,12 +42,11 @@ LINKS
 
 * Current home page: [xqf.github.io](http://xqf.github.io)
 * XQF Wiki: [github.com/XQF/xqf/wiki](https://github.com/XQF/xqf/wiki)
-* Mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/)
-* IRC Channel: [#xqf@Freenode](irc://chat.freenode.net/xqf)
-* XMPP Conference: [xqf@conference.jabber.ru](xmpp://xqf@conference.jabber.ru?join)
+* IRC Channel: [#xqf@Freenode](irc://chat.freenode.net/xqf) (active)
 * Source code repository: [github.com/XQF/xqf](https://github.com/XQF/xqf/) (up to date Git repository)
 * Online translation tool: [transifex.com/projects/p/xqf](https://www.transifex.com/projects/p/xqf/)
 * Continuous integration tool: [travis-ci.org/XQF/xqf](https://travis-ci.org/XQF/xqf)
+* Historical mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/) (havn't seen mail since years)
 * Historical archives: [sf.net/p/xqf](https://sourceforge.net/projects/xqf/) (previously published files, old SVN repository, and old ticket list)
 * QStat, the tool on which XQF is based: [github.com/multiplay/qstat](https://github.com/multiplay/qstat)
 
@@ -77,6 +76,7 @@ XQF was originally written by Roman Pozlevich in 1998. It has been maintained an
 2000-2002 Bill Adams <bill@evilbill.org>  
 2000-2003 Alex Burger <alex_b@users.sf.net>  
 2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>  
-2001-2014 Jordi Mallach <jordi@debian.org>  
-2013-2015 Thomas Debesse <xqf@illwieckz.net>  
-2015-2015 Artem Vorotnikov <artem@vorotnikov.me>
+2001-2015 Jordi Mallach <jordi@debian.org>  
+2014-2015 Zack Middleton <zturtleman@gmail.com>  
+2015-2015 Artem Vorotnikov <artem@vorotnikov.me>  
+2013-2017 Thomas Debesse <xqf@illwieckz.net>  
