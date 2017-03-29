@@ -345,20 +345,20 @@ static struct q3_common_prefs_s cod_prefs = {
 };
 
 static const char* jk2_masterprotocols[] = {
-	"15 - v1.02",
 	"16 - v1.04",
-	NULL
-};
-
-static const char* jk3_masterprotocols[] = {
-	"26 - v1.01",
-	"25 - v1.0",
+	"15 - v1.02",
 	NULL
 };
 
 static struct q3_common_prefs_s jk2_prefs = {
 	.protocols = jk2_masterprotocols,
 	.defproto  = "16",
+};
+
+static const char* jk3_masterprotocols[] = {
+	"26 - v1.01",
+	"25 - v1.0",
+	NULL
 };
 
 static struct q3_common_prefs_s jk3_prefs = {
@@ -446,6 +446,7 @@ static struct q3_common_prefs_s xonotic_prefs = {
 
 static const char* warsow_masterprotocols[] = {
 	"auto",
+	"20 - v1.50",
 	"15 - v1.02",
 	"10 - v0.40",
 	"9 - v0.32",
@@ -457,7 +458,7 @@ static const char* warsow_masterprotocols[] = {
 
 static struct q3_common_prefs_s warsow_prefs = {
 	.protocols = warsow_masterprotocols,
-	.defproto  = "15",
+	.defproto  = "20",
 };
 
 static const char* tremulous_masterprotocols[] = {
