@@ -1126,9 +1126,13 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 1017-03-03
+	"ADD WOPS master://master.worldofpadman.com:27955 worldofpadman.com",
+	"ADD WOPS master://master.worldofpadman.net:27955 worldofpadman.net",
+
 	// added 2017-02-05
-	"ADD JK3S master://master.jkhub.org:29060 master.jkhub.org",
-	"ADD JK2S master://master.jkhub.org:28060 master.jkhub.org",
+	"ADD JK3S master://master.jkhub.org:29060 jkhub.org",
+	"ADD JK2S master://master.jkhub.org:28060 jkhub.org",
 
 	// added 2015-08-21
 	"ADD POSTAL2,-gsm,postal2 gmaster://master.333networks.com:28900 333networks.com",
@@ -1145,7 +1149,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD RUNESRV,-gsm,rune gmaster://gsm.qtracker.com:28900 qtracker.com",
 	"ADD SMS,-gsm,serioussam gmaster://gsm.qtracker.com:28900 qtracker.com",
 	"ADD SMSSE,-gsm,serioussamse gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD UNS,-gsm,ut gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"ADD UNS,-gsm,ut gmaster://gsm.qtracker.com:28900 qtracker.com (ut99)",
 	"ADD UNS,-gsm,unreal gmaster://gsm.qtracker.com:28900 qtracker.com (unreal)",
 	"ADD UT2004S,-gsm,ut2004 gmaster://gsm.qtracker.com:28900 qtracker.com",
 	"ADD UT2S,-gsm,ut2 gmaster://gsm.qtracker.com:28900 qtracker.com",
