@@ -1126,7 +1126,15 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
-	// added 1017-03-03
+	// added 2017-04-09
+	"ADD CODUOS http://www.qtracker.com/server_list_details.php?game=callofdutyunitedoffensive qtracker.com",
+	"ADD CODUOS master://codmaster.activision.com activision.com",
+	"ADD COD2S http://www.qtracker.com/server_list_details.php?game=callofduty2 qtracker.com",
+	"ADD COD2S master://cod2master.activision.com activision.com",
+	"ADD COD4S http://www.qtracker.com/server_list_details.php?game=callofduty4 qtracker.com",
+	"ADD COD4S master://cod4master.activision.com activision.com",
+
+	// added 2017-03-03
 	"ADD WOPS master://master.worldofpadman.com:27955 worldofpadman.com",
 	"ADD WOPS master://master.worldofpadman.net:27955 worldofpadman.net",
 
@@ -1165,9 +1173,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD ALIENARENAS http://www.qtracker.com/server_list_details.php?game=alienarena qtracker.com",
 	"ADD AWS http://www.qtracker.com/server_list_details.php?game=quakeworld qtracker.com",
 	"ADD CODS http://www.qtracker.com/server_list_details.php?game=callofduty qtracker.com",
-	"ADD CODUOS http://www.qtracker.com/server_list_details.php?game=callofdutyunitedoffensive qtracker.com",
-	"ADD COD2S http://www.qtracker.com/server_list_details.php?game=callofduty2 qtracker.com",
-	"ADD COD4S http://www.qtracker.com/server_list_details.php?game=callofduty4 qtracker.com",
 	"ADD D3G http://www.qtracker.com/server_list_details.php?game=descent3 qtracker.com",
 	"ADD DM3S http://www.qtracker.com/server_list_details.php?game=doom3 qtracker.com",
 	"ADD EFS http://www.qtracker.com/server_list_details.php?game=eliteforce qtracker.com",
@@ -1314,11 +1319,6 @@ static char *builtin_masters_update_info[] = {
 
 	// added 2003-11-18
 	"ADD CODS master://cod01.activision.com activision.com",
-
-	// added 2017-04-09
-	"ADD CODUOS master://codmaster.activision.com activision.com",
-	"ADD COD2S master://cod2master.activision.com activision.com",
-	"ADD COD4S master://cod4master.activision.com activision.com",
 
 	// added 2003-04-24
 	"ADD WOETS master://etmaster.idsoftware.com:27950 idsoftware.com",
