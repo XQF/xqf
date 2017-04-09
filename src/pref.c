@@ -346,6 +346,7 @@ static struct q3_common_prefs_s cod_prefs = {
 
 static const char* coduo_masterprotocols[] = {
 	"22 - v1.51",
+	"21 - v1.41",
 	NULL
 };
 
@@ -356,6 +357,9 @@ static struct q3_common_prefs_s coduo_prefs = {
 
 static const char* cod2_masterprotocols[] = {
 	"118 - v1.3",
+	"117 - v1.2",
+	"116 - v1.1",
+	"115 - v1.0",
 	NULL
 };
 
@@ -366,6 +370,11 @@ static struct q3_common_prefs_s cod2_prefs = {
 
 static const char* cod4_masterprotocols[] = {
 	"6 - v1.7",
+	"5 - v1.6",
+	"4 - v1.5",
+	"3 - v1.4",
+	"2 - v1.3",
+	"1 - v1.0",
 	NULL
 };
 
