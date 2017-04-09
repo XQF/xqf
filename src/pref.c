@@ -341,7 +341,37 @@ static const char* cod_masterprotocols[] = {
 
 static struct q3_common_prefs_s cod_prefs = {
 	.protocols = cod_masterprotocols,
-	.defproto  = "5",
+	.defproto  = "6",
+};
+
+static const char* coduo_masterprotocols[] = {
+	"22 - v1.51",
+	NULL
+};
+
+static struct q3_common_prefs_s coduo_prefs = {
+	.protocols = coduo_masterprotocols,
+	.defproto  = "22",
+};
+
+static const char* cod2_masterprotocols[] = {
+	"118 - v1.3",
+	NULL
+};
+
+static struct q3_common_prefs_s cod2_prefs = {
+	.protocols = cod2_masterprotocols,
+	.defproto  = "118",
+};
+
+static const char* cod4_masterprotocols[] = {
+	"6 - v1.7",
+	NULL
+};
+
+static struct q3_common_prefs_s cod4_prefs = {
+	.protocols = cod4_masterprotocols,
+	.defproto  = "6",
 };
 
 static const char* jk2_masterprotocols[] = {
@@ -3157,6 +3187,9 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case EF_SERVER: return &ef_prefs;
 		case SOF2S_SERVER: return &sof2_prefs;
 		case COD_SERVER: return &cod_prefs;
+		case CODUO_SERVER: return &coduo_prefs;
+		case COD2_SERVER: return &cod2_prefs;
+		case COD4_SERVER: return &cod4_prefs;
 		case JK2_SERVER: return &jk2_prefs;
 		case JK3_SERVER: return &jk3_prefs;
 		case NEXUIZ_SERVER: return &nexuiz_prefs;
@@ -4304,6 +4337,9 @@ static struct generic_prefs* new_generic_prefs (void) {
 	new_genprefs[Q4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[ETQW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[COD_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+	new_genprefs[CODUO_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+	new_genprefs[COD2_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+	new_genprefs[COD4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[JK2_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[JK3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_q3_options_to_notebook;

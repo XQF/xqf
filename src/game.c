@@ -1873,7 +1873,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 		}
 
 		// unescape gametype (there is escape code in CoD gametype, if other games do it too, add here)
-		if (s->type == COD_SERVER) {
+		if (s->type == COD_SERVER || s->type == CODUO_SERVER) {
 			if (s->gametype) {
 				// unescape in place, for backward compatibility
 				gchar* tmp_gametype = g_malloc0 (sizeof (gchar) * strlen (s->gametype) + 1);
