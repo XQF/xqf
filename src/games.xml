@@ -632,6 +632,63 @@
 		<pd>cod_private</pd>
 	</game>
 	<game>
+		<base>Q3_SERVER</base>
+		<type>CODUO_SERVER</type>
+		<name>Call of Duty United Offensive</name>
+		<default_port>28960</default_port>
+		<default_master_port>20610</default_master_port>
+		<id>CODUOS</id>
+		<qstat_str>CODS</qstat_str>
+		<qstat_option>-cods</qstat_option>
+		<qstat_master_option>-codm</qstat_master_option>
+		<icon>coduo.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<arch_identifier>NULL</arch_identifier>
+		<command>coduomp</command>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>uo</main_mod>
+		<pd>cod_private</pd>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
+		<type>COD2_SERVER</type>
+		<name>Call of Duty 2</name>
+		<default_port>28960</default_port>
+		<default_master_port>20710</default_master_port>
+		<id>COD2S</id>
+		<qstat_str>COD2S</qstat_str>
+		<qstat_option>-cod2s</qstat_option>
+		<qstat_master_option>-cod2m</qstat_master_option>
+		<icon>cod2.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<arch_identifier>NULL</arch_identifier>
+		<command>cod2mp</command>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>main</main_mod>
+		<pd>cod_private</pd>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
+		<type>COD4_SERVER</type>
+		<name>Call of Duty 4</name>
+		<default_port>28960</default_port>
+		<default_master_port>20810</default_master_port>
+		<id>COD4S</id>
+		<qstat_str>COD4S</qstat_str>
+		<qstat_option>-cod4s</qstat_option>
+		<qstat_master_option>-cod4m</qstat_master_option>
+		<icon>cod4.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<arch_identifier>NULL</arch_identifier>
+		<command>cod4mp</command>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>main</main_mod>
+		<pd>cod_private</pd>
+	</game>
+	<game>
 		<type>SAS_SERVER</type>
 		<name>Savage</name>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_ADMIN | GAME_Q3COLORS</flags>

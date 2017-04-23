@@ -1126,7 +1126,15 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
-	// added 1017-03-03
+	// added 2017-04-09
+	"ADD CODUOS http://www.qtracker.com/server_list_details.php?game=callofdutyunitedoffensive qtracker.com",
+	"ADD CODUOS master://codmaster.activision.com activision.com",
+	"ADD COD2S http://www.qtracker.com/server_list_details.php?game=callofduty2 qtracker.com",
+	"ADD COD2S master://cod2master.activision.com activision.com",
+	"ADD COD4S http://www.qtracker.com/server_list_details.php?game=callofduty4 qtracker.com",
+	"ADD COD4S master://cod4master.activision.com activision.com",
+
+	// added 2017-03-03
 	"ADD WOPS master://master.worldofpadman.com:27955 worldofpadman.com",
 	"ADD WOPS master://master.worldofpadman.net:27955 worldofpadman.net",
 
@@ -1345,6 +1353,9 @@ static char *builtin_masters_update_info[] = {
 	"ADD ALIENARENAS lan://255.255.255.255 LAN",
 	"ADD AMS lan://255.255.255.255 LAN",
 	"ADD CODS lan://255.255.255.255 LAN",
+	"ADD CODUOS lan://255.255.255.255 LAN",
+	"ADD COD2S lan://255.255.255.255 LAN",
+	"ADD COD4S lan://255.255.255.255 LAN",
 	"ADD DM3S lan://255.255.255.255 LAN",
 	"ADD EFS lan://255.255.255.255 LAN",
 	"ADD ETLS lan://255.255.255.255 LAN",
