@@ -30,6 +30,6 @@ GHashTable* ut_init_maphash();
 gboolean ut_lookup_map(GHashTable* maphash, const char* mapname);
 
 /** search for maps with suffix in directory and add them to maphash */
-void findutmaps_dir(GHashTable* maphash, const char* startdir, const char* suffix);
+void find_ut_maps_dir(GHashTable* maphash, const char* startdir, const char* suffix);
 
 #endif
