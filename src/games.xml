@@ -692,6 +692,9 @@
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>jamp</command>
+		<command>openjk</command>
+		<command>openjk.i386</command>
+		<command>openjk.x86_64</command>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>base</main_mod>
