@@ -672,6 +672,7 @@
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>jk2mp</command>
+		<command>jk2mvmp</command>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>base</main_mod>
