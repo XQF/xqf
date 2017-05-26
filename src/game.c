@@ -1311,6 +1311,21 @@ static char *jk2_gametypes[MAX_JK2_TYPES] = {
 	"CTY"                   // 8 - Capture the Ysalimari
 };
 
+#define MAX_JK2_SABERMOD_TYPES 11
+static char *jk2_sabermod_gametypes[MAX_JK2_SABERMOD_TYPES] = {
+	"FFA",                  // 0  - Free For All
+	"Holocron",             // 1  - Holocron
+	"Jedi Master",          // 2  - Jedi Master
+	"Duel",                 // 3  - Duel
+	"FFA",                  // 4  - Free For All
+	"TFFA",                 // 5  - Team Free For All
+	NULL,                   // 6  - Unknown
+	"CTF",                  // 7  - Capture the Flag
+	"CTY",                  // 8  - Capture the Ysalimari
+	"Red Rover",		// 9  - Red Rover
+	"Clan Arena",           // 10 - Clan Arena
+};
+
 #define MAX_JK3_TYPES 9
 static char *jk3_gametypes[MAX_JK3_TYPES] = {
 	"FFA",          // 0 - Free For All
@@ -1612,6 +1627,11 @@ struct q3a_gametype_s jk2_gametype_map[] =
 		"base",
 		jk2_gametypes,
 		MAX_JK2_TYPES
+	},
+	{
+		"SaberMod",
+		jk2_sabermod_gametypes,
+		MAX_JK2_SABERMOD_TYPES
 	}
 };
 
