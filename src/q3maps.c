@@ -225,7 +225,7 @@ static gboolean is_xonotic_mapshot(const char* name) {
 static char* is_q3_map(const char* name) {
 	if (!g_ascii_strncasecmp(name, "maps/", 5)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".bsp")) {
-		const char* basename = g_path_get_basename(name);
+		const char* basename = name + 5;
 		return g_strndup(basename, strlen(basename)-4);
 	}
 	return NULL;
