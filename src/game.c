@@ -1396,8 +1396,8 @@ static char *jk3_gametypes[MAX_JK3_TYPES] = {
 	"FFA",          // 0 - Free For All
 	NULL,           // 1 - Unknown
 	NULL,           // 2 - Unknown
-	"Duell",        // 3 - Duell
-	"PDuell",       // 4 - Power Duell
+	"Duel",         // 3 - Duel
+	"Power Duel",   // 4 - Power Duel
 	NULL,           // 5 - Unknown
 	"TFFA",         // 6 - Team Free For All
 	"Siege",        // 7 - Siege
