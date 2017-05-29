@@ -247,8 +247,9 @@ static gboolean is_doom3_mapshot(const char* name) {
 static char* is_doom3_map(const char* name) {
 	if (!g_ascii_strncasecmp(name, "maps/game/", 10)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".map")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
+		char* basename = g_path_get_basename(name);
+		basename[strlen(name)-4] = '\0';
+		return basename;
 	}
 	return NULL;
 }
@@ -269,8 +270,9 @@ static gboolean is_quake4_mapshot(const char* name) {
 static char* is_quake4_map(const char* name) {
 	if (!g_ascii_strncasecmp(name, "maps/", 5)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".map")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
+		char* basename = g_path_get_basename(name);
+		basename[strlen(name)-4] = '\0';
+		return basename;
 	}
 	return NULL;
 }
@@ -291,8 +293,9 @@ static gboolean is_etqw_mapshot(const char* name) {
 static char* is_etqw_map(const char* name) {
 	if (!g_ascii_strncasecmp(name, "maps/", 5)
 			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".stm")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
+		char* basename = g_path_get_basename(name);
+		basename[strlen(name)-4] = '\0';
+		return basename;
 	}
 	return NULL;
 }
@@ -407,7 +410,7 @@ void quake_contains_file(const char* name, int level, GHashTable* maphash) {
 		find__maps_pak(name, maphash);
 	}
 	if (strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4, ".bsp") && level == 2) {
-		const gchar* basename = g_path_get_basename(name);
+		gchar* basename=g_path_get_basename(name);
 		gchar* mapname=g_ascii_strdown(basename, strlen(basename)-4);    /* g_ascii_strdown does implicit strndup */
 		if (g_hash_table_lookup(maphash, mapname)) {
 			g_free(mapname);
@@ -415,6 +418,7 @@ void quake_contains_file(const char* name, int level, GHashTable* maphash) {
 		else {
 			g_hash_table_insert(maphash, mapname, GUINT_TO_POINTER(-1));
 		}
+		g_free(basename);
 	}
 }
 
@@ -587,7 +591,10 @@ gboolean q3_lookup_map(GHashTable* maphash, const char* mapname) {
 
 /** return true if mapname is contained in maphash, false otherwise */
 gboolean doom3_lookup_map(GHashTable* maphash, const char* mapname) {
-	if (g_hash_table_lookup(maphash, g_path_get_basename(mapname)))
+	char* basename = g_path_get_basename(mapname);
+	gpointer p = g_hash_table_lookup(maphash, basename);
+	g_free(basename);
+	if (p)
 		return TRUE;
 	return FALSE;
 }
@@ -688,7 +695,9 @@ size_t q3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf)
  * same as q3_lookup_mapshot except that the basename of the map is used
  */
 size_t doom3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf) {
-	struct q3mapinfo* mi = g_hash_table_lookup(maphash, g_path_get_basename(mapname));
+	char* basename = g_path_get_basename(mapname);
+	struct q3mapinfo* mi = g_hash_table_lookup(maphash, basename);
+	g_free(basename);
 	if (mi && mi != GINT_TO_POINTER(-1) && mi->zipfile) {
 		return readimagefromzip(buf, mi->zipfile, mi->levelshot);
 	}
@@ -702,7 +711,7 @@ static void process_levelshots(GHashTable* maphash) {
 		struct q3mapinfo* mi = ptr->data;
 		struct q3mapinfo* mih = NULL;
 		gchar* mapname = NULL;
-		const gchar* mapbase = NULL;
+		gchar* mapbase = NULL;
 		char* origkey = NULL;
 		gboolean found = FALSE;
 		if (!mi->levelshot || strlen(mi->levelshot) <= 4) { g_free(mi); continue; }
@@ -718,6 +727,7 @@ static void process_levelshots(GHashTable* maphash) {
 			// debug(0, "insert shot %s", mapname);
 			g_hash_table_insert(maphash, origkey, mi);
 		}
+		g_free(mapbase);
 		g_free(mapname);
 	}
 	g_slist_free(shotslist);
