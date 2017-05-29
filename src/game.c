@@ -2100,7 +2100,8 @@ static void q3_analyze_serverinfo (struct server *s) {
 			q3_decode_gametype_fallback(s, jk2_gametype_map);
 		}
 		else if (s->type == JK3_SERVER) {
-			q3_decode_gametype(s, jk3_gametype_map);
+			// There is a ton of mods and they all use default gametype numbers
+			q3_decode_gametype_fallback(s, jk3_gametype_map);
 		}
 		else if (s->type == IOURT_SERVER) {
 			q3_decode_gametype(s, iourt_gametype_map);
