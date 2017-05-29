@@ -710,14 +710,17 @@ static void process_levelshots(GHashTable* maphash) {
 	for (ptr=shotslist;ptr;ptr=g_slist_next(ptr)) {
 		struct q3mapinfo* mi = ptr->data;
 		struct q3mapinfo* mih = NULL;
+		gchar* levelshot = NULL;
 		gchar* mapname = NULL;
-		gchar* mapbase = NULL;
 		char* origkey = NULL;
 		gboolean found = FALSE;
 		if (!mi->levelshot || strlen(mi->levelshot) <= 4) { g_free(mi); continue; }
-		mapbase = g_path_get_basename(mi->levelshot);
-		mapname = g_ascii_strdown(mapbase, strlen(mapbase)-4);  /* g_ascii_strdown does implicit strndup */
-		found = g_hash_table_lookup_extended(maphash, mapname, (gpointer)&origkey, (gpointer)&mih);
+		levelshot = g_ascii_strdown(mi->levelshot, strlen(mi->levelshot)-4);
+		mapname = g_strrstr(levelshot, "levelshots/");
+		if (mapname) {
+		    mapname += strlen("levelshots/");
+		    found = g_hash_table_lookup_extended(maphash, mapname, (gpointer)&origkey, (gpointer)&mih);
+		}
 		if (found != TRUE || mih != GINT_TO_POINTER(-1)) // not in hash or mapinfo alread defined
 		{
 			// debug(0, "drop shot %s %p", mapname, mih);
@@ -727,8 +730,7 @@ static void process_levelshots(GHashTable* maphash) {
 			// debug(0, "insert shot %s", mapname);
 			g_hash_table_insert(maphash, origkey, mi);
 		}
-		g_free(mapbase);
-		g_free(mapname);
+		g_free(levelshot);
 	}
 	g_slist_free(shotslist);
 	shotslist=NULL;
