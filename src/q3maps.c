@@ -421,12 +421,28 @@ void q3_contains_file(const char* name, int level, GHashTable* maphash) {
 	_q3_contains_file(name, level, maphash, is_q3_map, is_q3_mapshot);
 }
 
-void unvanquished_contains_file(const char* name, int level, GHashTable* maphash) {
-	_q3_contains_file(name, level, maphash, is_q3_map, is_unvanquished_mapshot);
-}
-
 void xonotic_contains_file(const char* name, int level, GHashTable* maphash) {
 	_q3_contains_file(name, level, maphash, is_q3_map, is_xonotic_mapshot);
+}
+
+static void _daemon_contains_file(const char* name, int level, GHashTable* maphash,
+		char* (*is_map_func)(const char* name),
+		gboolean (*is_mapshot_func)(const char* name)) {
+	// printf("%s at level %d\n", name, level);
+	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".dpk") && strlen(name) > 4) {
+		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
+	}
+	else if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pk3") && strlen(name) > 4) {
+		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
+	}
+	else if (level == 2 && if_map_insert(name, maphash, is_map_func)) {
+	}
+	else if (level == 2 && if_shot_insert(name, is_mapshot_func, NULL)) {
+	}
+}
+
+void unvanquished_contains_file(const char* name, int level, GHashTable* maphash) {
+	_daemon_contains_file(name, level, maphash, is_q3_map, is_unvanquished_mapshot);
 }
 
 static void _doom3_contains_file(const char* name, int level, GHashTable* maphash,
