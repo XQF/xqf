@@ -627,13 +627,13 @@ static struct q3_common_prefs_s zeq2lite_prefs = {
 
 static const char* turtlearena_masterprotocols[] = {
 	"auto",
-	"9",
+	"11 - v0.7",
 	NULL
 };
 
 static struct q3_common_prefs_s turtlearena_prefs = {
 	.protocols = turtlearena_masterprotocols,
-	.defproto  = "9",
+	.defproto  = "11",
 };
 
 static const char* alienarena_masterprotocols[] = {

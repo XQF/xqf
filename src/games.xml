@@ -1059,10 +1059,10 @@
 		<icon>turtlearena.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>turtlearena</command>
-		<default_home>~/.turtlearena</default_home>
+		<default_home>~/.local/share/turtle-arena</default_home>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
-		<main_mod>base</main_mod>
+		<main_mod>baseturtle</main_mod>
 		<pd>turtlearena_private</pd>
 	</game>
 	<game>
