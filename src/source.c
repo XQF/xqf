@@ -1000,6 +1000,10 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// does no longer work, removed 2018-01-07
+	"DELETE WARSOWS master://eu.master.warsow.net:27950 warsow.net",
+	"DELETE WARSOWS master://eu.master.warsow.gg:27950 warsow.gg",
+
 	// does no longer work, removed 2015-06-27
 	"DELETE NEXUIZS master://ghdigital.com ghdigital.com",
 	"DELETE QWS master://192.246.40.37:27000 id Limbo",
@@ -1216,7 +1220,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD T2S http://master.tribesnext.com/list tribesnext.com",
 	"ADD UNS http://www.gameaholic.com/servers/qspy-unreal gameaholic.com",
 	"ADD UNS gmaster://unreal.epicgames.com:28900 epicgames.com",
-	"ADD WARSOWS master://eu.master.warsow.net:27950 warsow.net",
 	"ADD WARSOWS master://excalibur.nvg.ntnu.no:27950 nvg.ntnu.no",
 	"ADD WOS master://dpmaster.deathmask.net:27950 deathmask.net",
 	"ADD WOS master://wolfmaster.s4ndmod.com:27950 s4ndmod.com",
