@@ -1231,7 +1231,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD HLS master://master3.won2.steamlessproject.nl:27010 steamlessproject.nl",
 
 	// added 2014-11-14
-	"ADD IOURTS master://master2.urbanterror.info:27900 urbanterror.info (master 2)",
+	"ADD IOURTS master://master2.urbanterror.info:27900 urbanterror.info #2",
 	"ADD Q3S master://master3.idsoftware.com:27950 idsoftware.com", // same as monster.idsoftware.com
 	"ADD Q3S master://master.quake3arena.com:27950 quake3arena.com",
 
@@ -1264,7 +1264,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD XONOTICS master://dpmaster.tchr.no tchr.no",
 
 	// added 2013-10-27
-	"ADD ALIENARENAS master://master2.corservers.com:27900 corservers.com (master 2)",
+	"ADD ALIENARENAS master://master2.corservers.com:27900 corservers.com #2",
 	"ADD ALIENARENAS master://master.corservers.com:27900 corservers.com",
 	"ADD OPENARENAS master://master.ioquake3.org:27950 ioquake3.org",
 	"ADD Q3S master://master.ioquake3.org:27950 ioquake3.org",
@@ -1303,7 +1303,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD NEXUIZS master://dpmaster.deathmask.net:27950 deathmask.net",
 
 	// added 2005-03-24
-	"ADD UT2004S master://ut2004master2.epicgames.com:28902 epicgames.com (master 2)",
+	"ADD UT2004S master://ut2004master2.epicgames.com:28902 epicgames.com #2",
 
 	// added 2004-10-17
 	"ADD UT2004S master://ut2004master1.epicgames.com:28902 epicgames.com",
