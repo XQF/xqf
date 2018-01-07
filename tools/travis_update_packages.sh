@@ -6,32 +6,40 @@
 echo 'Updating package list'
 apt-get update -qq
 
-echo 'Intalling qstat, intltool, cmake dependencies'
-apt-get install -q -y qstat intltool cmake
+# ubuntu trusty dependencies
+echo 'Installing qstat, intltool, cmake, libgtk2.0-dev, libgeoip-dev dependencies'
+apt-get install -q -y qstat intltool cmake libgtk2.0-dev libgeoip-dev
 
-# if release is older than vivid (15.04)
-if [ "$(lsb_release -sr | cut -c1-2)" -lt '15' ]
+# libminizip-dev is not in trusty
+# building xqf requires gettext 0.19 or later for 'msgfmt --desktop'
+
+# if release is older than xenial (16.04)
+if [ "$(lsb_release -sr | cut -c1-2)" -lt '16' ]
 then
-	echo 'Adding vivid respository'
-	<<-EOF cat >> '/etc/apt/sources.list.d/ubuntu-vivid-main.list'
-	deb http://archive.ubuntu.com/ubuntu vivid main universe
+	echo 'Adding xenial respository'
+	<<-EOF cat >> '/etc/apt/sources.list.d/ubuntu-xenial-main.list'
+	deb http://archive.ubuntu.com/ubuntu xenial main universe
 	EOF
 
-	echo 'Pin vivid repository to disable package installation from this repository by default'
-	<<-EOF cat > '/etc/apt/preferences.d/vivid-pinning'
+	echo 'Pin xenial repository to disable package installation from this repository by default'
+	<<-EOF cat > '/etc/apt/preferences.d/xenial-pinning'
 	Package: *
-	Pin: release n=vivid
+	Pin: release n=xenial
 	Pin-Priority: -100
 	EOF
 
-	echo 'Adding the vivid repository key'
+	echo 'Adding the xenial repository key'
 	apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3B4FE6ACC0B21F32
 
 	echo 'Updating package list'
 	apt-get update -qq
 
-	echo 'Installing libgeoip-dev libminizip-dev gettext dependencies from vivid repository'
-	apt-get install -y -q -t vivid libgeoip-dev libminizip-dev gettext
+	echo 'Installing libminizip-dev gettext dependencies from xenial repository'
+	# updated gettext requires libgomp1 gcc-5-base
+	apt-get install -y -q -t xenial libminizip-dev gettext libgomp1 gcc-5-base
+else
+	echo 'Installing libminizip-dev dependency'
+	apt-get install -q -y libminizip-dev
 fi
 
 #EOF
