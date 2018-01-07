@@ -485,6 +485,8 @@ static struct q3_common_prefs_s xonotic_prefs = {
 
 static const char* warsow_masterprotocols[] = {
 	"auto",
+	"22 - v2.1.0",
+	"21 - v2.0",
 	"20 - v1.50",
 	"15 - v1.02",
 	"10 - v0.40",
@@ -497,7 +499,7 @@ static const char* warsow_masterprotocols[] = {
 
 static struct q3_common_prefs_s warsow_prefs = {
 	.protocols = warsow_masterprotocols,
-	.defproto  = "20",
+	.defproto  = "22",
 };
 
 static const char* tremulous_masterprotocols[] = {
