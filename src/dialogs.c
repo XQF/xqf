@@ -501,7 +501,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		NULL, //GTK_WINDOW (window),
 		"program-name", _("XQF"),
 		"version", XQF_VERSION,
-		"copyright", _("Copyright \xc2\xa9 1998-2017 XQF Team"),
+		"copyright", _("Copyright \xc2\xa9 1998-2018 XQF Team"),
 //		"license-type", GTK_LICENSE_GPL_2_0,			// TODO
 		"comments", _("Game Server Browser"),
 		"authors", authors,
