@@ -693,7 +693,7 @@ static GtkWidget *server_passwords_page (struct server *s) {
 			(props)? props->rcon_password : NULL,
 			table, 2);
 
-	if (!games[s->type].flags & GAME_RCON && !games[s->type].flags & GAME_ADMIN)
+	if ((games[s->type].flags & GAME_RCON) == 0 && (games[s->type].flags & GAME_ADMIN) == 0)
 		gtk_widget_set_sensitive (rcon_entry, FALSE);
 
 	gtk_widget_show (table);
