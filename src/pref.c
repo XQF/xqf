@@ -4187,7 +4187,7 @@ void pref_sound_play (GtkWidget *dialog_button) {
 }
 
 void pref_sound_conf_clear(GtkWidget *dialog_button) {
-	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog_button), NULL);
+	gtk_file_chooser_unselect_all (GTK_FILE_CHOOSER (dialog_button));
 }
 
 GtkWidget *sound_clear_button_new() {
