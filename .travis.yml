@@ -8,7 +8,7 @@ before_install:
   - sudo -s tools/travis_update_packages.sh
 
 script:
-  - cmake -DWITH_QSTAT=/usr/bin/quakestat .
+  - cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
   - make
 
 notifications:
