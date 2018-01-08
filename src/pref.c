@@ -4181,8 +4181,8 @@ static GtkWidget *qstat_options_page (void) {
 }
 
 void pref_sound_play (GtkWidget *dialog_button) {
-	const char *file   = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog_button));
-	const char *player = sound_player;
+	const char *file   = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog_button));
+	const char *player = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button));
 	play_sound_with (player, file, 1);
 }
 
