@@ -4214,10 +4214,9 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *table, int
 
 	// File selection dialog
 	dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
-	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(dialog_button), file);
-	if (file == "" || file == NULL) {
-		pref_sound_conf_clear(dialog_button);
-	};
+	if (file != NULL && *file != '\0') {
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog_button), file);
+	}
 	gtk_table_attach_defaults (GTK_TABLE (table), dialog_button, 1, 2, i, i+1);
 	gtk_widget_show (dialog_button);
 
@@ -4277,7 +4276,9 @@ static GtkWidget *sound_options_page (void) {
 	gtk_widget_show (label);
 
 	sound_player_file_dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
-	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(sound_player_file_dialog_button), sound_player);
+	if (sound_player != NULL && *sound_player != '\0') {
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button), sound_player);
+	}
 
 	gtk_table_attach_defaults (GTK_TABLE (table), sound_player_file_dialog_button, 2, 4, 1, 2);
 
