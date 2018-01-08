@@ -3662,15 +3662,15 @@ void add_t2_options_to_notebook(GtkWidget *notebook, enum server_type type) {
 }
 
 static void terminate_toggled_callback (GtkWidget *widget, gpointer data) {
-	GTK_TOGGLE_BUTTON (terminate_check_button)->active;
+	//GTK_TOGGLE_BUTTON (terminate_check_button)->active;
 }
 
 static void launchinfo_toggled_callback (GtkWidget *widget, gpointer data) {
-	GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
+	//GTK_TOGGLE_BUTTON (launchinfo_check_button)->active;
 }
 
 static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
-	GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
+	//GTK_TOGGLE_BUTTON (prelaunchexec_check_button)->active;
 }
 
 static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {

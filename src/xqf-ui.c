@@ -348,7 +348,7 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 void clist_set_sort_column (GtkCList *clist, int column, struct clist_def *cldef) {
 	if (column == clist->sort_column) {
 		if (clist->sort_type == GTK_SORT_DESCENDING) {
-			cldef->cols[column].current_sort_mode = ++cldef->cols[column].current_sort_mode%DIMOF(cldef->cols[column].sort_mode);
+			cldef->cols[column].current_sort_mode = (cldef->cols[column].current_sort_mode+1)%DIMOF(cldef->cols[column].sort_mode);
 			if (cldef->cols[column].sort_mode[cldef->cols[column].current_sort_mode] == -1)
 				cldef->cols[column].current_sort_mode = 0;
 		}

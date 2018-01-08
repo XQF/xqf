@@ -20,7 +20,7 @@
 #define __SKIN_PCX_H__
 
 
-extern char *read_skin_pcx (char *, int quake2);
+extern unsigned char *read_skin_pcx (char *filename, int quake2);
 
 
 #endif /* __SKIN_PCX_H__ */

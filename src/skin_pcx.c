@@ -90,8 +90,8 @@ static int check_pcx_header (FILE *f, struct pcx_header *h, int quake2) {
 }
 
 
-static int read_pcx_line (FILE *f, char *buf, int len) {
-	char *ptr;
+static int read_pcx_line (FILE *f, unsigned char *buf, int len) {
+	unsigned char *ptr;
 	int cnt;
 	int c;
 
@@ -120,10 +120,10 @@ static int read_pcx_line (FILE *f, char *buf, int len) {
 }
 
 
-char *read_skin_pcx (char *filename, int quake2) {
+unsigned char *read_skin_pcx (char *filename, int quake2) {
 	FILE *f = NULL;
-	char *buf = NULL;
-	char *ptr;
+	unsigned char *buf = NULL;
+	unsigned char *ptr;
 	int lines = 0;
 	struct pcx_header h;
 

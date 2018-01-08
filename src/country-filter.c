@@ -117,7 +117,8 @@ const char* geoip_name_by_id(int id) {
 int geoip_id_by_code(const char *country) {
 	int i;
 
-	if (!gi) return -1; {
+	if (!gi) {
+		return -1;
 	}
 
 	if (strcmp(country,"00") == 0) {

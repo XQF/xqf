@@ -524,7 +524,7 @@ static void server_filter_init (void) {
 	config_push_prefix(config_section);
 	current_server_filter = config_get_int("current_server_filter=0");
 
-	if (current_server_filter<0 || current_server_filter>server_filters->len)
+	if (current_server_filter > server_filters->len)
 		current_server_filter = 0;
 
 	config_pop_prefix();
@@ -1174,13 +1174,13 @@ static void server_filter_page (GtkWidget *notebook) {
 	cleaned_up = FALSE;
 
 	/* One cannot edit the "None" filter */
-	if (current_server_filter < 0) {
-		current_server_filter = 0;
-		debug(0,"invalid filter nr %d", server_filter_dialog_current_filter);
-	}
-	else if (current_server_filter > server_filters->len) {
+	if (current_server_filter == 0) {
 		current_server_filter = 1;
-		debug(0,"invalid filter nr %d", server_filter_dialog_current_filter);
+	}
+
+	if (current_server_filter > server_filters->len) {
+		debug(0,"invalid filter nr %d", current_server_filter);
+		current_server_filter = server_filters->len;
 	}
 
 	server_filter_deleted = FALSE;

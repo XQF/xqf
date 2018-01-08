@@ -73,6 +73,9 @@ if (USE_GZIP)
 	add_definitions (-DUSE_GZIP)
 endif (USE_GZIP)
 
+# Compiler flags
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+
 # Source list
 set (xqf_HEADERS_DIR ${CMAKE_SOURCE_DIR}/src)
 
