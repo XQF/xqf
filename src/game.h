@@ -31,19 +31,22 @@
 
 // game->flags
 enum {
-	GAME_CONNECT                = 0x0001,
-	GAME_RECORD                 = 0x0002,
-	GAME_SPECTATE               = 0x0004,
-	GAME_PASSWORD               = 0x0008,
-	GAME_RCON                   = 0x0010,
-	GAME_ADMIN                  = 0x0020,
-	GAME_QUAKE1_PLAYER_COLORS   = 0x0100,
-	GAME_QUAKE1_SKIN            = 0x0200,
-	GAME_QUAKE3_MASTERPROTOCOL  = 0x0400, // master server protocol version is in games_data["masterprotocol"]
-	GAME_LAUNCH_HOSTPORT        = 0x0800, // use hostport rule as port when launching
-	GAME_MASTER_CDKEY           = 0x1000, // master server requires CD key
-	GAME_Q3COLORS               = 0x2000, // Q3 color codes
-	GAME_MASTER_STEAM           = 0x4000, // server side filter
+	GAME_CONNECT                = 0x00001,
+	GAME_RECORD                 = 0x00002,
+	GAME_SPECTATE               = 0x00004,
+	GAME_PASSWORD               = 0x00008,
+	GAME_RCON                   = 0x00010,
+	GAME_ADMIN                  = 0x00020,
+	GAME_QUAKE1_PLAYER_COLORS   = 0x00100,
+	GAME_QUAKE1_SKIN            = 0x00200,
+	GAME_LAUNCH_HOSTPORT        = 0x00400, // use hostport rule as port when launching
+	GAME_MASTER_QUAKE3          = 0x01000, // master server protocol version is in games_data["masterprotocol"]
+	GAME_MASTER_CDKEY           = 0x02000, // master server requires CD key
+	GAME_MASTER_STEAM           = 0x04000, // server side filter
+	GAME_COLOR_QUAKE3           = 0x10000, // Quake 3 color codes
+	GAME_COLOR_SAVAGE           = 0x20000, // Savage color codes
+	GAME_COLOR_UNVANQUISHED     = 0x40000, // Unvanquished color codes
+	GAME_COLOR_XONOTIC          = 0x80000, // Xonotic color codes
 };
 
 struct game {
