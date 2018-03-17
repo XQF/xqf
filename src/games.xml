@@ -207,7 +207,7 @@
 		<icon>etl.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>etl</command>
-		<default_home>~/.etlwolf</default_home>
+		<default_home>~/.etlegacy</default_home>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>etmain</main_mod>
