@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# Author: Thomas Debesse
+# License: ISC
+
 #
 # This script automatically updates translation template from the source code of XQF
 #

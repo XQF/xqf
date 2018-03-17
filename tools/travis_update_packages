@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# Author: Thomas Debesse
+# License: ISC
+
 # please run this script as root user
 # please use tabs for indentation (heredocs starting with <<-EOF need tabs)
 

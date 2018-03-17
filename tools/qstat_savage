@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# Author: Thomas Debesse
+# License: ISC
+
 if [ "x${1}" = 'x' -o "x${1}" = 'x--help' ]
 then
 	printf 'Usage: %s -sam http://masterserver.savage.s2games.com/gamelist_full.dat\n' "${0}"
