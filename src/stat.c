@@ -1240,7 +1240,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			arg_type = g_strdup_printf("-gsm,%s,outfile", games[m->type].qstat_str);
 		}
 		// add master arguments
-		else if (games[m->type].flags & GAME_QUAKE3_MASTERPROTOCOL) {
+		else if (games[m->type].flags & GAME_MASTER_QUAKE3) {
 			// TODO: master protocol should be server specific
 			const char* masterprotocol = game_get_attribute(m->type,"masterprotocol");
 
@@ -1251,7 +1251,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 				arg_type = g_strdup_printf("%s,%s,outfile", master_qstat_option(m),masterprotocol);
 			}
 			else {
-				xqf_warning("GAME_QUAKE3_MASTERPROTOCOL flag set, but no protocol specified");
+				xqf_warning("GAME_MASTER_QUAKE3 flag set, but no protocol specified");
 				arg_type = g_strdup_printf("%s,outfile", master_qstat_option(m));
 			}
 		}

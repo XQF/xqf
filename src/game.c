@@ -344,17 +344,23 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 }
 
 
+static gboolean has_flag(unsigned long flags, unsigned long flag) {
+	return (flags & flag) != 0;
+}
+
+static gboolean is_game_string_unescapable(enum server_type type) {
+	return !has_flag(games[type].flags, GAME_COLOR_QUAKE3 | GAME_COLOR_SAVAGE | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC);
+}
+
 /*
  * you MUST allocate dst with g_malloc0 before, this function and others assumes that dst is filled with zeros
  */
-static void q3_unescape (char *dst, const char *src) {
+static void unescape_game_string (char *dst, const char *src, enum server_type type) {
 	/*
-	 * skip color codes and extended color codes
-	 * for extended color codes,
-	 * see http://unvanquished.net/wiki/index.php/Running_the_game#Font_colors
-	 * or https://github.com/Unvanquished/Unvanquished/blob/master/src/engine/qcommon/q_math.c
-	 * or https://github.com/Unvanquished/Osavul/blob/master/unv.cpp
+	 * skip color codes
 	 */
+
+	unsigned long flags = games[type].flags;
 
 	gint idst = 0;
 	gint isrc = 0;
@@ -367,76 +373,102 @@ static void q3_unescape (char *dst, const char *src) {
 			// if ending of Savage clan identifier with the form ^clan number^
 			if (savage_clan_identifier == TRUE) {
 				savage_clan_identifier = FALSE;
+				// write brackets around the clan code like http://masterserver.savage.s2games.com/
 				dst[idst] = ']';
 				idst += 1;
 				step = 1;
 			}
 			else if (src[isrc + 1] != '\0') {
-				// if '^^'
+				// if "^^"
 				if (src[isrc + 1] == '^') {
 					// only skip one '^', display only one '^'
 					step = 1;
 				}
-				else if ((src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
-						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
-						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')
-						|| src[isrc + 1] == ':'
-						|| src[isrc + 1] == ';'
-						|| src[isrc + 1] == '<'
-						|| src[isrc + 1] == '>'
-						|| src[isrc + 1] == '='
-						|| src[isrc + 1] == '?'
-						|| src[isrc + 1] == '@'
-						|| src[isrc + 1] == '*') {
-					// if Savage three chars color code
-					if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
-						if (src[isrc + 2] != '\0' && src[isrc + 2] >= '0' && src[isrc + 2] <= '9') {
-							if (src[isrc + 3] != '\0' && src[isrc + 3] >= '0' && src[isrc + 3] <= '9') {
-								// 4 because ^000
-								step = 4;
+				else {
+					if (has_flag(flags, GAME_COLOR_QUAKE3)) {
+						if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
+							// one-char color code in the form ^# where # is a numeric digit
+							// skip '^' and the next char
+							step = 2;
+						}
+					}
+					if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
+						// if Unvanquished extendended multichar color code, verify if it ends
+						// RGB color code in the form ^P###o or ^P######o where p and o are case-insensitive and # is a numeric digit
+						if (src[1] == 'P' || src[1] == 'p') {
+							gint i;
+							// 8 because P000000o, don't count more
+							for (i = 2; (src[isrc + i] != '\0' && src[isrc + i] != 'O' && src[isrc + i] != 'o')
+									&& (src[isrc + i] >= '0' && src[isrc + i] <= '8')
+									&& (i < 8); i++) {
+								// `for` increments i
+							}
+							// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
+							if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
+								step = i;
+							}
+						}
+						// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
+						if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
+							|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
+							|| src[isrc + 1] == ':'
+							|| src[isrc + 1] == ';'
+							|| src[isrc + 1] == '<'
+							|| src[isrc + 1] == '>'
+							|| src[isrc + 1] == '='
+							|| src[isrc + 1] == '?'
+							|| src[isrc + 1] == '@'
+							|| src[isrc + 1] == '*') {
+							// extended one-char color code in the form ^# where # is a case-insentive alphabetic character
+							// between a and o or a special character from the known list above
+							// skip '^' and the next char
+							step = 2;
+						}
+					}
+					if (has_flag(flags, GAME_COLOR_XONOTIC)) {
+						// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
+						// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
+						if(src[isrc + 1] == 'x') {
+							for (gint i = 2; (src[isrc + i] != '\0'
+								&& ((src[isrc + i] >= '0' && src[isrc + i] <= '9')
+									|| (src[isrc + i] >= 'A' && src[isrc + i] <= 'F')
+									|| (src[isrc + i] >= 'a' && src[isrc + i] <= 'f'))) && i < 6; i++) {
+								// `for` increments i
+							}
+						}
+					}
+					if (has_flag(flags, GAME_COLOR_SAVAGE)) {
+						// if Savage three chars color code in the form ^### where # is a numeric digit
+						if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
+							if (src[isrc + 2] != '\0' && src[isrc + 2] >= '0' && src[isrc + 2] <= '9') {
+								if (src[isrc + 3] != '\0' && src[isrc + 3] >= '0' && src[isrc + 3] <= '9') {
+									// 4 because ^000
+									step = 4;
+								}
+								else {
+									step = 2;
+								}
 							}
 							else {
 								step = 2;
 							}
 						}
-						else {
-							step = 2;
-						}
-					}
-					// if beginning of Savage clan identifier with the form ^clan number^
-					else if (src[isrc + 1] == 'c') {
-						if (src[isrc + 2] == 'l' && src[isrc + 2] != '\0') {
-							if (src[isrc + 3] == 'a' && src[isrc + 3] != '\0') {
-								if (src[isrc + 4] == 'n' && src[isrc + 4] != '\0') {
-									if (src[isrc + 5] == ' ' && src[isrc + 5] != '\0') {
-										savage_clan_identifier = TRUE;
-										// write brackets around the clan code like http://masterserver.savage.s2games.com/
-										dst[idst] = '[';
-										idst += 1;
-										step = 6;
+						// if beginning of Savage clan identifier with the form ^clan ###^ where ### is a number that will not be escaped
+						else if (src[isrc + 1] == 'c') {
+							if (src[isrc + 2] == 'l' && src[isrc + 2] != '\0') {
+								if (src[isrc + 3] == 'a' && src[isrc + 3] != '\0') {
+									if (src[isrc + 4] == 'n' && src[isrc + 4] != '\0') {
+										if (src[isrc + 5] == ' ' && src[isrc + 5] != '\0') {
+											savage_clan_identifier = TRUE;
+											// write brackets around the clan code like http://masterserver.savage.s2games.com/
+											dst[idst] = '[';
+											idst += 1;
+											step = 6;
+										}
 									}
 								}
 							}
 						}
-					}
-					// if Unvanquished extendended multichar color code, verify if it ends
-					else if (src[1] == 'P' || src[1] == 'p') {
-						gint i;
-						// 8 because P000000o, don't count more
-						for (i = 2; (src[isrc + i] != '\0' && src[isrc + i] != 'O' && src[isrc + i] != 'o')
-								&& (src[isrc + i] >= '0' && src[isrc + i] <= '8')
-								&& (i < 8); i++) {
-							// 'for' increments i
-						}
-						// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
-						if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
-							step = i;
-						}
-					}
-					else {
-						// if legacy one char color code
-						// skip '^' and the next char
-						step = 2;
 					}
 				}
 			}
@@ -620,7 +652,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 	if (player->ping == 0) ++s->curbots;
 
 	player->name = (char *) player + sizeof (struct player);
-	q3_unescape (player->name, token[0]);
+	unescape_game_string (player->name, token[0], s->type);
 
 	// show clan name in model column
 	if (clan) {
@@ -629,7 +661,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 		}
 		else {
 			player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1;
-			q3_unescape(player->model, clan);
+			unescape_game_string(player->model, clan, s->type);
 		}
 	}
 
@@ -720,13 +752,13 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 		return;
 
 	if (*(token[2])) {      /* if name is not empty */
-		if ((games[server->type].flags & GAME_Q3COLORS) == 0) {
+		if (is_game_string_unescapable(server->type)) {
 			server->name = g_strdup (token[2]);
 		}
 		else {
 			server->name = g_malloc0 (sizeof (char) * strlen (token[2]) + 1);
 			debug(6, "maxsize:%d", (int) (sizeof (char) * strlen (token[2]) + 1));
-			q3_unescape (server->name, token[2]);
+			unescape_game_string (server->name, token[2], server->type);
 		}
 	}
 
@@ -1909,7 +1941,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 			if (s->gametype) {
 				// unescape in place, for backward compatibility
 				gchar* tmp_gametype = g_malloc0 (sizeof (gchar) * strlen (s->gametype) + 1);
-				q3_unescape(tmp_gametype, s->gametype);
+				unescape_game_string(tmp_gametype, s->gametype, s->type);
 				strcpy(s->gametype, tmp_gametype);
 				g_free(tmp_gametype);
 			}

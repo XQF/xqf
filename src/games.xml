@@ -590,7 +590,7 @@
 	</game>
 	<game>
 		<type>Q3_SERVER</type>
-		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_QUAKE3_MASTERPROTOCOL | GAME_Q3COLORS</flags>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3</flags>
 		<name>Quake III Arena</name>
 		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>
@@ -695,7 +695,7 @@
 	<game>
 		<type>SAS_SERVER</type>
 		<name>Savage</name>
-		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_ADMIN | GAME_Q3COLORS</flags>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_ADMIN | GAME_COLOR_SAVAGE</flags>
 		<default_port>11235</default_port>
 		<id>SAS</id>
 		<qstat_str>SAS</qstat_str>
@@ -938,6 +938,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>UNVANQUISHED_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3 | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC</flags>
 		<name>Unvanquished</name>
 		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>
@@ -1049,6 +1050,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>XONOTIC_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3 | GAME_COLOR_XONOTIC</flags>
 		<name>Xonotic</name>
 		<default_port>26000</default_port>
 		<id>XONOTICS</id>
