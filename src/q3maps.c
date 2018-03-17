@@ -144,6 +144,23 @@ static inline const char* last_two_entries(const char* name) {
 	return name;
 }
 
+static gboolean has_known_image_format(const gchar* name) {
+	guint ext_num = 3;
+	gchar *ext_list[3] = {
+		".jpg",
+		".png",
+		".tga",
+	};
+
+	for (guint i = 0; i < ext_num; i++) {
+		if (!g_ascii_strcasecmp(name+strlen(name)-strlen(ext_list[i]), ext_list[i])) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
 static gboolean is_q3_mapshot(const char* name) {
 	debug(4, "check %s", name);
 	if (*name == '/')
@@ -155,8 +172,7 @@ static gboolean is_q3_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "levelshots/", 11))
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
-			|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
+	if (has_known_image_format(name)) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
@@ -175,9 +191,7 @@ static gboolean is_unvanquished_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "meta/", 5))
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
-			|| !g_ascii_strcasecmp(name+strlen(name)-4, ".png")
-			|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
+	if (has_known_image_format(name)) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
@@ -199,9 +213,7 @@ static gboolean is_xonotic_mapshot(const char* name) {
 	if (g_strrstr(name, "/lm_") != NULL)
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
-		|| !g_ascii_strcasecmp(name+strlen(name)-4, ".png")
-		|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
+	if (has_known_image_format(name)) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
@@ -224,8 +236,7 @@ static gboolean is_doom3_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "guis/assets/splash/", 19))
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
-			|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
+	if (has_known_image_format(name)) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
@@ -247,8 +258,7 @@ static gboolean is_quake4_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "gfx/guis/loadscreens/", 21))
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
-			|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
+	if (has_known_image_format(name)) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
@@ -270,8 +280,7 @@ static gboolean is_etqw_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "levelshots/thumbs/", 18))
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
-			|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
+	if (has_known_image_format(name)) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
