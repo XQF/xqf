@@ -365,106 +365,117 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 	gint idst = 0;
 	gint isrc = 0;
 	gint step;
-	gboolean savage_clan_identifier = FALSE;
 
 	while (src[isrc] != '\0') {
 		step = 0;
 		if (src[isrc] == '^') {
-			// if ending of Savage clan identifier with the form ^clan number^
-			if (savage_clan_identifier == TRUE) {
-				savage_clan_identifier = FALSE;
-				// write brackets around the clan code like http://masterserver.savage.s2games.com/
-				dst[idst] = ']';
-				idst += 1;
-				step = 1;
-			}
-			else if (src[isrc + 1] != '\0') {
+			if (src[isrc + 1] != '\0') {
 				// if "^^"
 				if (src[isrc + 1] == '^') {
 					// only skip one '^', display only one '^'
 					step = 1;
+					goto walk;
 				}
-				else {
-					if (has_flag(flags, GAME_COLOR_QUAKE3)) {
-						if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
-							// one-char color code in the form ^# where # is a numeric digit
-							// skip '^' and the next char
-							step = 2;
+				if (has_flag(flags, GAME_COLOR_QUAKE3)) {
+					if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
+						// one-char color code in the form ^# where # is a numeric digit
+						// skip '^' and the next char
+						step = 2;
+						goto walk;
+					}
+				}
+				if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
+					// if Unvanquished extendended multichar color code, verify if it ends
+					// RGB color code in the form ^P###o or ^P######o where p and o are case-insensitive and # is a numeric digit
+					if (src[1] == 'P' || src[1] == 'p') {
+						gint i;
+						// 8 because P000000o, don't count more
+						for (i = 2; src[isrc + i] != '\0'
+								&& (src[isrc + i] != 'O' && src[isrc + i] != 'o')
+								&& (src[isrc + i] >= '0' && src[isrc + i] <= '8')
+								&& (i < 8); i++) {
+							// `for` increments i
+						}
+						// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
+						if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
+							step = i;
+							goto walk;
 						}
 					}
-					if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
-						// if Unvanquished extendended multichar color code, verify if it ends
-						// RGB color code in the form ^P###o or ^P######o where p and o are case-insensitive and # is a numeric digit
-						if (src[1] == 'P' || src[1] == 'p') {
-							gint i;
-							// 8 because P000000o, don't count more
-							for (i = 2; (src[isrc + i] != '\0' && src[isrc + i] != 'O' && src[isrc + i] != 'o')
-									&& (src[isrc + i] >= '0' && src[isrc + i] <= '8')
-									&& (i < 8); i++) {
-								// `for` increments i
-							}
-							// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
-							if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
-								step = i;
-							}
+					// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
+					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
+						|| src[isrc + 1] == ':'
+						|| src[isrc + 1] == ';'
+						|| src[isrc + 1] == '<'
+						|| src[isrc + 1] == '>'
+						|| src[isrc + 1] == '='
+						|| src[isrc + 1] == '?'
+						|| src[isrc + 1] == '@'
+						|| src[isrc + 1] == '*') {
+						// extended one-char color code in the form ^# where # is a case-insentive alphabetic character
+						// between a and o or a special character from the known list above
+						// skip '^' and the next char
+						step = 2;
+						goto walk;
+					}
+				}
+				if (has_flag(flags, GAME_COLOR_XONOTIC)) {
+					// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
+					// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
+					if(src[isrc + 1] == 'x') {
+						gint i;
+						for (i = 2; (src[isrc + i] != '\0'
+							&& ((src[isrc + i] >= '0' && src[isrc + i] <= '9')
+								|| (src[isrc + i] >= 'A' && src[isrc + i] <= 'F')
+								|| (src[isrc + i] >= 'a' && src[isrc + i] <= 'f')))
+							&& i < 5; i++) {
+							// `for` increments i
 						}
-						// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
-						if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
-							|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
-							|| src[isrc + 1] == ':'
-							|| src[isrc + 1] == ';'
-							|| src[isrc + 1] == '<'
-							|| src[isrc + 1] == '>'
-							|| src[isrc + 1] == '='
-							|| src[isrc + 1] == '?'
-							|| src[isrc + 1] == '@'
-							|| src[isrc + 1] == '*') {
-							// extended one-char color code in the form ^# where # is a case-insentive alphabetic character
-							// between a and o or a special character from the known list above
-							// skip '^' and the next char
-							step = 2;
+						// if complete color code, skip it
+						if (i == 5) {
+							step = i;
+							goto walk;
 						}
 					}
-					if (has_flag(flags, GAME_COLOR_XONOTIC)) {
-						// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
-						// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
-						if(src[isrc + 1] == 'x') {
-							for (gint i = 2; (src[isrc + i] != '\0'
-								&& ((src[isrc + i] >= '0' && src[isrc + i] <= '9')
-									|| (src[isrc + i] >= 'A' && src[isrc + i] <= 'F')
-									|| (src[isrc + i] >= 'a' && src[isrc + i] <= 'f'))) && i < 6; i++) {
-								// `for` increments i
-							}
-						}
+				}
+				if (has_flag(flags, GAME_COLOR_SAVAGE)) {
+					// if Savage three chars color code in the form ^### where # is a numeric digit
+					gint i;
+					for (i = 1; (src[isrc + i] != '\0'
+						&& ((src[isrc + i] >= '0' && src[isrc + i] <= '9')))
+						&& i < 4; i++) {
+						// `for` increments i
 					}
-					if (has_flag(flags, GAME_COLOR_SAVAGE)) {
-						// if Savage three chars color code in the form ^### where # is a numeric digit
-						if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
-							if (src[isrc + 2] != '\0' && src[isrc + 2] >= '0' && src[isrc + 2] <= '9') {
-								if (src[isrc + 3] != '\0' && src[isrc + 3] >= '0' && src[isrc + 3] <= '9') {
-									// 4 because ^000
-									step = 4;
-								}
-								else {
-									step = 2;
-								}
-							}
-							else {
-								step = 2;
-							}
-						}
-						// if beginning of Savage clan identifier with the form ^clan ###^ where ### is a number that will not be escaped
-						else if (src[isrc + 1] == 'c') {
-							if (src[isrc + 2] == 'l' && src[isrc + 2] != '\0') {
-								if (src[isrc + 3] == 'a' && src[isrc + 3] != '\0') {
-									if (src[isrc + 4] == 'n' && src[isrc + 4] != '\0') {
-										if (src[isrc + 5] == ' ' && src[isrc + 5] != '\0') {
-											savage_clan_identifier = TRUE;
-											// write brackets around the clan code like http://masterserver.savage.s2games.com/
-											dst[idst] = '[';
+					// if complete color code, skip it
+					if (i == 4) {
+						step = i;
+						goto walk;
+					}
+					// if beginning of Savage clan identifier with the form ^clan ###^ where ### is a number that will not be escaped
+					// FIXME: this code does not ignore malformed clan code (not ending with a caret) because of the bracket writing
+					else if (src[isrc + 1] == 'c') {
+						if (src[isrc + 2] == 'l' && src[isrc + 2] != '\0') {
+							if (src[isrc + 3] == 'a' && src[isrc + 3] != '\0') {
+								if (src[isrc + 4] == 'n' && src[isrc + 4] != '\0') {
+									if (src[isrc + 5] == ' ' && src[isrc + 5] != '\0') {
+										// write brackets around the clan code like http://masterserver.savage.s2games.com/
+										dst[idst] = '[';
+										idst += 1;
+										step = 6;
+										gint i;
+										for (i = 0; src[isrc + step + i] != '\0' && src[isrc + step + i] != '^'; i++) {
+											dst[idst] = src[isrc + step + i];
 											idst += 1;
-											step = 6;
 										}
+										step += i;
+										if (src[isrc + step] == '^') {
+											// write brackets around the clan code like http://masterserver.savage.s2games.com/
+											dst[idst] = ']';
+											idst += 1;
+											step += 1;
+										}
+										goto walk;
 									}
 								}
 							}
@@ -474,17 +485,21 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 			}
 		}
 
-		// the next caracter is used if not null, will be printed
+		walk:
 		isrc += step;
-		if (src[isrc]) {
+
+		// if not at end of string
+		if (src[isrc] != '\0') {
+			// if not another caret, print the caracter
+			// if another caret, it will escaped on next loop
 			if (src[isrc] != '^') {
 				dst[idst] = src[isrc];
+				isrc += 1;
 				idst += 1;
 			}
 
 			debug(6, "isrc: %d, idst: %d", isrc, idst);
 			debug(6, "src: [%s], dst: [%s]", src, dst);
-			isrc += 1;
 		}
 	}
 	// when finished, do nothing more, the remaining allocated space is already filled with zeros
