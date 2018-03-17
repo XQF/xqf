@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# Author: Thomas Debesse
+# License: ISC
+
 if [ "x${1}" = 'x-h' -o "x${1}" = '--help' -o "x${1}" = 'x' ]
 then
 	echo "Usage: ${0} [XQF's source root directory]"
