@@ -497,11 +497,14 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"",
 	NULL};
 */
+	gchar *copyright;
+	copyright = g_strconcat(_("Copyright \xc2\xa9"), " 1998-2018 ", _("XQF Team"), NULL);
+
 	gtk_show_about_dialog (
 		NULL, //GTK_WINDOW (window),
 		"program-name", _("XQF"),
 		"version", XQF_VERSION,
-		"copyright", _("Copyright \xc2\xa9 1998-2018 XQF Team"),
+		"copyright", copyright,
 //		"license-type", GTK_LICENSE_GPL_2_0,			// TODO
 		"comments", _("Game Server Browser"),
 		"authors", authors,
@@ -511,6 +514,8 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		"logo-icon-name", "xqf",
 		"website", "https://xqf.github.io",
 	NULL);
+
+	g_free(copyright);
 }
 
 /** ok callback for file_dialog that sets the selected filename in the
