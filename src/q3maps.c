@@ -196,7 +196,12 @@ static gboolean is_xonotic_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "maps/", 5))
 		return FALSE;
 
-	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")) {
+	if (g_strrstr(name, "/lm_") != NULL)
+		return FALSE;
+
+	if (!g_ascii_strcasecmp(name+strlen(name)-4, ".jpg")
+		|| !g_ascii_strcasecmp(name+strlen(name)-4, ".png")
+		|| !g_ascii_strcasecmp(name+strlen(name)-4, ".tga")) {
 		debug(3, "found: %s", name);
 		return TRUE;
 	}
@@ -721,7 +726,15 @@ void find_unvanquished_maps(GHashTable* maphash, const char* startdir) {
 }
 
 void find_xonotic_maps(GHashTable* maphash, const char* startdir) {
+	// this code walks .xonotic to walk .xonotic/data
 	traverse_dir(startdir, (FoundFileFunction)xonotic_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+
+	// HACK: this code walks .xonotic/data to walk .xonotic/data/dlcache
+	gchar *datadir;
+	datadir = g_strconcat(startdir, "/data", NULL);
+	traverse_dir(datadir, (FoundFileFunction)xonotic_contains_file, (FoundDirFunction)quake_contains_dir, maphash);
+	g_free(datadir);
+
 	process_levelshots(maphash);
 }
 
