@@ -1,0 +1,24 @@
+#! /bin/sh
+
+# Author: Thomas Debesse
+# License: ISC
+
+tools_dir="$(dirname "$(realpath "${0}")")"
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1
+then
+	root_dir="$(realpath "$(git rev-parse --show-toplevel)")"
+else
+	root_dir="$(dirname "${tools_dir}")"
+fi
+
+build_dir="$(realpath "${root_dir}/build")"
+cmake_install_manifest="${build_dir}/install_manifest.txt"
+
+mkdir -p "${build_dir}" \
+&& cd "${build_dir}" \
+&& cmake -DCMAKE_INSTALL_PREFIX='/usr' -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=1 .. \
+&& make -j$(nproc) \
+&& sudo checkinstall --default --pkgname='xqf' --pkgversion="$(cat VERSION)" --pkglicense='GPLv2' --exclude "${cmake_install_manifest}" --nodoc --deldesc make install
+
+#EOF

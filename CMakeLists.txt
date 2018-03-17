@@ -4,6 +4,26 @@ cmake_minimum_required(VERSION 2.8.7)
 project(xqf)
 
 set (VERSION "1.0.6.2")
+
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
+    find_package(Git)
+    if (GIT_FOUND)
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --tags --long --match xqf-* --dirty=+dirty
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE GIT_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    endif()
+endif()
+
+if (GIT_VERSION)
+    string(REGEX REPLACE "^xqf-" "" GIT_VERSION "${GIT_VERSION}")
+    set(VERSION "${GIT_VERSION}")
+endif ()
+
+file(WRITE "${CMAKE_BINARY_DIR}/VERSION" ${VERSION})
+
 set (DOMAIN "${PROJECT_NAME}")
 
 set (LINGUAS ca da de es fi fr pl ru)
@@ -14,15 +34,15 @@ set (PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/xqf")
 set (LOCALEDIR "${CMAKE_INSTALL_PREFIX}/share/locale")
 
 if (NOT MAN_ENTRY_PATH)
-	set (MAN_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
+    set (MAN_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
 endif (NOT MAN_ENTRY_PATH)
 
 if (NOT PIXMAPS_ENTRY_PATH)
-	set (PIXMAPS_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor")
+    set (PIXMAPS_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor")
 endif (NOT PIXMAPS_ENTRY_PATH)
 
 if (NOT CMAKE_INSTALL_PREFIX)
-	set (CMAKE_INSTALL_PREFIX "/usr")
+    set (CMAKE_INSTALL_PREFIX "/usr")
 endif (NOT CMAKE_INSTALL_PREFIX)
 
 # Definitions
@@ -36,41 +56,41 @@ option(USE_GZIP "Enable gzip compressor support" ON)
 option(RCON_STANDALONE "Build standalone RCON" OFF)
 
 if (NOT WITH_QSTAT)
-	set (WITH_QSTAT "/usr/bin/qstat")
+    set (WITH_QSTAT "/usr/bin/qstat")
 endif (NOT WITH_QSTAT)
 
 add_definitions (-DQSTAT_EXEC="${WITH_QSTAT}")
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-	add_definitions (-DDEBUG)
-	set (CMAKE_C_FLAGS "-g -ggdb -O0")
+    add_definitions (-DDEBUG)
+    set (CMAKE_C_FLAGS "-g -ggdb -O0")
 endif (CMAKE_BUILD_TYPE MATCHES DEBUG)
 
 # Default GUI setting
 if (NOT (GUI MATCHES GTK2 OR GUI MATCHES GTK3))
-	set (GUI ${DEFAULT_GUI})
+    set (GUI ${DEFAULT_GUI})
 endif (NOT (GUI MATCHES GTK2 OR GUI MATCHES GTK3))
 
 # GUI definitions
 if (GUI MATCHES GTK2)
-	add_definitions (-DGUI_GTK2)
+    add_definitions (-DGUI_GTK2)
 endif (GUI MATCHES GTK2)
 
 if (GUI MATCHES GTK3)
-	add_definitions (-DGUI_GTK3)
+    add_definitions (-DGUI_GTK3)
 endif (GUI MATCHES GTK3)
 
 # Other definitions
 if (RCON_STANDALONE)
-	add_definitions (-DRCON_STANDALONE)
+    add_definitions (-DRCON_STANDALONE)
 endif (RCON_STANDALONE)
 
 if (USE_GEOIP)
-	add_definitions (-DUSE_GEOIP)
+    add_definitions (-DUSE_GEOIP)
 endif (USE_GEOIP)
 
 if (USE_GZIP)
-	add_definitions (-DUSE_GZIP)
+    add_definitions (-DUSE_GZIP)
 endif (USE_GZIP)
 
 # Compiler flags
@@ -414,11 +434,9 @@ set (flag_DATA
     ${CMAKE_SOURCE_DIR}/pixmaps/flags/country/zw.png
     )
 
-
 set (xpm_MAIN ${CMAKE_SOURCE_DIR}/pixmaps/xqf.xpm)
 
 set (xpm_DATA
-
      ${CMAKE_SOURCE_DIR}/src/xpm/update.xpm
      ${CMAKE_SOURCE_DIR}/src/xpm/refresh.xpm
      ${CMAKE_SOURCE_DIR}/src/xpm/refrsel.xpm
@@ -435,8 +453,8 @@ set (icon_SIZE 22 32 48 128)
 include_directories (${xqf_HEADERS_DIR} ${CMAKE_BINARY_DIR})
 
 if (DEPRECATED_DISABLE)
-	add_definitions (-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
-	-DG_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES)
+    add_definitions (-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
+    -DG_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES)
 endif (DEPRECATED_DISABLE)
 
 # Use the package PkgConfig to detect GTK+ headers/library files
@@ -445,29 +463,26 @@ find_package (Gettext REQUIRED)
 pkg_check_modules (UNZIP REQUIRED minizip)
 pkg_check_modules (XML REQUIRED libxml-2.0)
 
-
-
 if (GUI MATCHES GTK2)
-	pkg_check_modules (GTK2 REQUIRED gtk+-2.0)
-	include_directories (${GTK2_INCLUDE_DIRS})
-	link_directories (${GTK2_LIBRARY_DIRS})
-	add_definitions (${GTK2_CFLAGS_OTHER})
-	set (GUI_SET ON)
+    pkg_check_modules (GTK2 REQUIRED gtk+-2.0)
+    include_directories (${GTK2_INCLUDE_DIRS})
+    link_directories (${GTK2_LIBRARY_DIRS})
+    add_definitions (${GTK2_CFLAGS_OTHER})
+    set (GUI_SET ON)
 endif (GUI MATCHES GTK2)
 
 if (GUI MATCHES GTK3)
-	pkg_check_modules (GTK3 REQUIRED gtk+-3.0)
-	include_directories (${GTK3_INCLUDE_DIRS})
-	link_directories (${GTK3_LIBRARY_DIRS})
-	add_definitions (${GTK3_CFLAGS_OTHER})
-	set (GUI_SET ON)
+    pkg_check_modules (GTK3 REQUIRED gtk+-3.0)
+    include_directories (${GTK3_INCLUDE_DIRS})
+    link_directories (${GTK3_LIBRARY_DIRS})
+    add_definitions (${GTK3_CFLAGS_OTHER})
+    set (GUI_SET ON)
 endif (GUI MATCHES GTK3)
 
-
 if (USE_GEOIP)
-	pkg_check_modules (GEOIP REQUIRED geoip)
-	include_directories (${GEOIP_INCLUDE_DIRS})
-	link_directories (${GEOIP_LIBRARY_DIRS})
+    pkg_check_modules (GEOIP REQUIRED geoip)
+    include_directories (${GEOIP_INCLUDE_DIRS})
+    link_directories (${GEOIP_LIBRARY_DIRS})
 endif (USE_GEOIP)
 
 include_directories (${UNZIP_INCLUDE_DIRS})
@@ -485,10 +500,10 @@ target_link_libraries (gamesxml2c xml2)
 
 # Custom build rule for converting games.xml to games.c
 add_custom_command (
-	OUTPUT ${CMAKE_BINARY_DIR}/games.c
-	COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml > ${CMAKE_BINARY_DIR}/games.c
-	MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
-	DEPENDS gamesxml2c)
+    OUTPUT ${CMAKE_BINARY_DIR}/games.c
+    COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml > ${CMAKE_BINARY_DIR}/games.c
+    MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
+    DEPENDS gamesxml2c)
 
 # Define games.c filename for including in src/game.c
 add_definitions (-DGAMES_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
@@ -502,39 +517,39 @@ add_executable (xqf ${xqf_SOURCES})
 target_link_libraries (xqf ${UNZIP_LIBRARIES} dl)
 
 if (GUI MATCHES GTK2)
-	target_link_libraries (xqf ${GTK2_LIBRARIES})
+    target_link_libraries (xqf ${GTK2_LIBRARIES})
 endif (GUI MATCHES GTK2)
 
 if (GUI MATCHES GTK3)
-	target_link_libraries (xqf ${GTK3_LIBRARIES})
+    target_link_libraries (xqf ${GTK3_LIBRARIES})
 endif (GUI MATCHES GTK3)
 
 if (USE_GEOIP)
-	target_link_libraries (xqf GeoIP)
+    target_link_libraries (xqf GeoIP)
 endif (USE_GEOIP)
 
 if (RCON_STANDALONE)
-	target_link_libraries (xqf -lreadline)
+    target_link_libraries (xqf -lreadline)
 endif (RCON_STANDALONE)
 
 # i18n
-add_custom_target (translation ALL DEPENDS)
+add_custom_target (translation ALL)
 
 foreach (LANG ${LINGUAS})
-	set (_poFile ${CMAKE_SOURCE_DIR}/po/${LANG}.po)
+    set (_poFile ${CMAKE_SOURCE_DIR}/po/${LANG}.po)
 
-	if (EXISTS ${_poFile})
+    if (EXISTS ${_poFile})
 
-		set (POT_FILE ${CMAKE_SOURCE_DIR}/po/${DOMAIN}.pot)
-		set (PO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.po)
-		set (GMO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.gmo)
+        set (POT_FILE ${CMAKE_SOURCE_DIR}/po/${DOMAIN}.pot)
+        set (PO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.po)
+        set (GMO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.gmo)
 
-		add_custom_command (TARGET translation
+        add_custom_command (TARGET translation
 
-		                    COMMAND msgmerge ${_poFile} ${POT_FILE} -o ${PO_FILE_NEW}
-		                    COMMAND msgfmt -c -o ${GMO_FILE_NEW} ${PO_FILE_NEW})
+                            COMMAND msgmerge ${_poFile} ${POT_FILE} -o ${PO_FILE_NEW}
+                            COMMAND msgfmt -c -o ${GMO_FILE_NEW} ${PO_FILE_NEW})
 
-	endif (EXISTS ${_poFile})
+    endif (EXISTS ${_poFile})
 endforeach (LANG ${LINGUAS})
 
 add_custom_command (TARGET translation
@@ -552,11 +567,11 @@ install (PROGRAMS ${CMAKE_SOURCE_DIR}/tools/qstat_savage.sh DESTINATION "${PACKA
 
 # UI
 if (GUI MATCHES GTK2)
-	install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk2.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
+    install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk2.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
 endif (GUI MATCHES GTK2)
 
 if (GUI MATCHES GTK3)
-	install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk3.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
+    install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk3.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
 endif (GUI MATCHES GTK3)
 
 # Icons
@@ -567,8 +582,8 @@ install (FILES ${xpm_MAIN} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
 install (FILES ${flag_DATA} DESTINATION ${PACKAGE_DATA_DIR}/default/flags)
 
 foreach (SIZE ${icon_SIZE})
-	install (FILES ${CMAKE_SOURCE_DIR}/pixmaps/${SIZE}x${SIZE}/xqf.png
-	         DESTINATION ${PIXMAPS_ENTRY_PATH}/${SIZE}x${SIZE}/apps)
+    install (FILES ${CMAKE_SOURCE_DIR}/pixmaps/${SIZE}x${SIZE}/xqf.png
+             DESTINATION ${PIXMAPS_ENTRY_PATH}/${SIZE}x${SIZE}/apps)
 endforeach (SIZE ${icon_SIZE})
 
 install (FILES ${CMAKE_SOURCE_DIR}/pixmaps/scalable/xqf.svg DESTINATION ${PIXMAPS_ENTRY_PATH}/scalable/apps)
@@ -581,7 +596,7 @@ install (FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6 DESTINATION ${MAN_ENTRY_PAT
 
 # i18n
 foreach (LANG ${LINGUAS})
-	install (FILES ${CMAKE_BINARY_DIR}/${LANG}.gmo DESTINATION ${LOCALEDIR}/${LANG}/LC_MESSAGES RENAME ${DOMAIN}.mo )
+    install (FILES ${CMAKE_BINARY_DIR}/${LANG}.gmo DESTINATION ${LOCALEDIR}/${LANG}/LC_MESSAGES RENAME ${DOMAIN}.mo )
 endforeach (LANG ${LINGUAS})
 
 install (FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
