@@ -70,6 +70,7 @@
 #include "xpm/nexuiz.xpm"
 #include "xpm/xonotic.xpm"
 #include "xpm/warsow.xpm"
+#include "xpm/teeworlds.xpm"
 #include "xpm/tremulous.xpm"
 #include "xpm/tremulousgpp.xpm"
 #include "xpm/tremfusion.xpm"
