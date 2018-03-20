@@ -1130,6 +1130,10 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2018-03-18
+	"ADD TEES master://master2.teeworlds.com teeworlds.com #2",
+	"ADD TEES master://master3.teeworlds.com teeworlds.com #3",
+
 	// added 2017-04-09
 	"ADD CODUOS http://www.qtracker.com/server_list_details.php?game=callofdutyunitedoffensive qtracker.com",
 	"ADD CODUOS master://codmaster.activision.com activision.com",

@@ -792,6 +792,24 @@
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
+		<type>TEEWORLDS_SERVER</type>
+		<name>Teeworlds</name>
+		<default_port>8303</default_port>
+		<default_master_port>8300</default_master_port>
+		<id>TEES</id>
+		<qstat_str>TEES</qstat_str>
+		<qstat_option>-tees</qstat_option>
+		<qstat_master_option>-teem</qstat_master_option>
+		<icon>teeworlds.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<exec_client>teeworlds_exec</exec_client>
+		<command>teeworlds</command>
+		<default_home>~/.teeworlds</default_home>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>teeworlds_update_prefs</update_prefs>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
 		<type>TREMFUSION_SERVER</type>
 		<name>TremFusion</name>
 		<default_port>30720</default_port>

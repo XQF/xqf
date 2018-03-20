@@ -89,6 +89,7 @@ static int write_q1_vars (const struct condef *con);
 static int write_qw_vars (const struct condef *con);
 static int write_q2_vars (const struct condef *con);
 
+static int teeworlds_exec (const struct condef *con, int forkit);
 static int q1_exec_generic (const struct condef *con, int forkit);
 static int qw_exec (const struct condef *con, int forkit);
 static int q2_exec (const struct condef *con, int forkit);
@@ -2476,6 +2477,39 @@ static int is_dir (const char *dir, const char *gamedir) {
 	return res;
 }
 #endif
+
+static int teeworlds_exec (const struct condef *con, int forkit) {
+	char *argv[32];
+	int argi = 0;
+	char buf[128];
+	char *cmd;
+	struct game *g = &games[con->s->type];
+	int retval;
+
+	cmd = strdup_strip (g->cmd);
+
+	argv[argi++] = strtok (cmd, delim);
+	while ((argv[argi] = strtok (NULL, delim)) != NULL)
+		argi++;
+
+	if (con->server) {
+		if (con->s->port != g->default_port) {
+			g_snprintf(buf, 128, "connect %s:%d", con->server, con->s->port);
+		}
+		else {
+			g_snprintf(buf, 128, "connect %s", con->server);
+		}
+		argv[argi++] = buf;
+	}
+
+	argv[argi] = NULL;
+
+	retval = client_launch_exec (forkit, g->real_dir, argv, con->s);
+
+	g_free (cmd);
+	return retval;
+}
+
 
 static int q1_exec_generic (const struct condef *con, int forkit) {
 	char *argv[32];
