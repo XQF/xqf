@@ -181,13 +181,25 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 		if (endptr == token[2]) {
 			if (strcmp (token[2], "DOWN") == 0) {
+				debug(3, "parse_master_output() -- master down");
 				conn->master->state = SOURCE_DOWN;
 			}
 			else if (strcmp (token[2], "TIMEOUT") == 0) {
+				debug(3, "parse_master_output() -- master timeout");
 				conn->master->state = SOURCE_TIMEOUT;
 			}
-			else {
+			else /* if (strcmp (token[2], "ERROR") == 0) */ {
+				const char *error_msg;
+
+				if (n >= 4) {
+					error_msg = token[3];
+				} else {
+					error_msg = _("Unknown error parsing master server address.");
+				}
+
+				debug(3, "parse_master_output() -- master error (%s)", error_msg);
 				conn->master->state = SOURCE_ERROR;
+				dialog_ok (NULL, error_msg);
 			}
 			return FALSE;
 		}
@@ -301,6 +313,8 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 		strncpy(conn->buf + (conn->bufsize - res), buf, res);
 
 		if (status == G_IO_STATUS_EOF) {
+			gboolean unsuccessful = FALSE;
+
 			debug(3, "stat_master_input_callback -- eof");
 			debug(6, "conn->buf: [%d]", buf);
 
@@ -310,12 +324,18 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			while (current) {
 				if (strlen(current->data)) {
 					debug(6, "parse_master_output: [%s]", current->data);
-					parse_master_output(current->data, conn);
+					if (!parse_master_output(current->data, conn)) {
+						unsuccessful = TRUE;
+					}
 				}
 				current = current->next;
 			}
 
-			stat_master_update_done (conn, job, conn->master, SOURCE_UP);
+			if (unsuccessful) {
+				stat_master_update_done (conn, job, conn->master, conn->master->state);
+			} else {
+				stat_master_update_done (conn, job, conn->master, SOURCE_UP);
+			}
 			stat_update_masters (job);
 			debug_decrease_indent();
 			g_free(buf);
@@ -640,6 +660,19 @@ static void parse_qstat_record (struct stat_conn *conn) {
 		return;     /* error, try to recover */
 	}
 
+	if (n >= 3 && token[0][0] == '\0' && token[1][0] == '\0' && strcmp(token[2], "ERROR") == 0) {
+		const char *error_msg;
+
+		if (n >= 4) {
+			error_msg = token[3];
+		} else {
+			error_msg = _("Unknown error parsing qstat server record.");
+		}
+
+		dialog_ok (NULL, error_msg);
+		return;
+	}
+
 	server = parse_server (token, n, time (NULL), FALSE);
 	if (server) {
 		job->need_redraw = TRUE;
@@ -926,10 +959,6 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFun
 	struct stat_conn *conn;
 	pid_t pid;
 	int pipefds[2];
-	const char error_msg[] = QSTAT_DELIM_STR
-		QSTAT_DELIM_STR
-		"ERROR" QSTAT_DELIM_STR
-		"command not found\n";
 
 	debug (3, "start_qstat() -- Job %lx  Setting up/forking pipes to qstat", job);
 	debug_cmd (3, argv, "start_qstat() -- Job %lx", job);
@@ -984,14 +1013,17 @@ static struct stat_conn *start_qstat (struct stat_job *job, char *argv[], GIOFun
 	}
 	else {  /* child */
 		close (pipefds[0]);
-		dup2 (pipefds[1], 1);
+		dup2 (pipefds[1], STDOUT_FILENO);
 		close (pipefds[1]);
 
 		execvp (argv[0], argv);
 
 		failed ("execvp", argv[0]);
 
-		write (1, error_msg, sizeof (error_msg) - 1);
+		fprintf (stdout, QSTAT_DELIM_STR QSTAT_DELIM_STR "ERROR" QSTAT_DELIM_STR);
+		fprintf (stdout, _("%s command not found."), argv[0]);
+		fprintf (stdout, "\n");
+		fflush (stdout);
 
 		_exit (1);
 	}
