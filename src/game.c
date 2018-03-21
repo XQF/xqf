@@ -493,7 +493,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 		if (src[isrc] != '\0') {
 			// if not another caret, print the caracter
 			// if another caret, it will escaped on next loop
-			if (src[isrc] != '^') {
+			if (src[isrc] != '^' || step == 0) {
 				dst[idst] = src[isrc];
 				isrc += 1;
 				idst += 1;
