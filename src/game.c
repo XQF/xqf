@@ -390,7 +390,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 				if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
 					// if Unvanquished extendended multichar color code, verify if it ends
 					// RGB color code in the form ^P###o or ^P######o where p and o are case-insensitive and # is a numeric digit
-					if (src[1] == 'P' || src[1] == 'p') {
+					if (src[isrc + 1] == 'P' || src[isrc + 1] == 'p') {
 						gint i;
 						// 8 because P000000o, don't count more
 						for (i = 2; src[isrc + i] != '\0'
