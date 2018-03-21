@@ -561,7 +561,7 @@
 	</game>
 	<game>
 		<type>Q2_SERVER</type>
-		<flags>GAME_CONNECT | GAME_RECORD | GAME_SPECTATE | GAME_PASSWORD | GAME_RCON</flags>
+		<flags>GAME_CONNECT | GAME_RECORD | GAME_SPECTATE | GAME_PASSWORD | GAME_RCON | GAME_COLOR_QUAKE3</flags>
 		<name>Quake2</name>
 		<default_port>27910</default_port>
 		<default_master_port>27900</default_master_port>
