@@ -817,7 +817,7 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 			conn->strings = NULL;
 
 			while (current) {
-				while (strlen(current->data)) {
+				while (current && strlen(current->data)) {
 					conn->strings = g_slist_append(conn->strings, strdup(current->data));
 					current = current->next;
 				}
@@ -826,7 +826,9 @@ static gboolean stat_servers_input_callback (GIOChannel *chan, GIOCondition cond
 					g_slist_free (conn->strings);
 					conn->strings = NULL;
 				}
-				current = current->next;
+				if (current) {
+					current = current->next;
+				}
 			}
 			g_slist_free(strings);
 
