@@ -1000,6 +1000,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// does no longer work, removed 2018-03-21
+	"DELETE UNS,-gsm,ut gmaster://master.noccer.de:28900 noccer.de",
+
 	// does no longer work, removed 2018-01-07
 	"DELETE WARSOWS master://eu.master.warsow.net:27950 warsow.net",
 	"DELETE WARSOWS master://eu.master.warsow.gg:27950 warsow.gg",
@@ -1130,6 +1133,13 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2018-03-21
+	"ADD UNS,-gsm,unreal gmaster://master.hlkclan.net:28900 master.hlkclan.net (unreal)",
+	"ADD UNS,-gsm,ut gmaster://master.hypercoop.tk:28900 hypercoop.tk (unreal)",
+	"ADD UNS,-gsm,ut gmaster://master.oldunreal.com:28900 oldunreal.com",
+	"ADD UNS,-gsm,ut gmaster://master2.oldunreal.com:28900 oldunreal.com #2",
+	"ADD UNS,-gsm,ut gmaster://master.newbiesplayground.net:28900 newbiesplayground.net",
+
 	// added 2018-03-18
 	"ADD TEES master://master2.teeworlds.com teeworlds.com #2",
 	"ADD TEES master://master3.teeworlds.com teeworlds.com #3",
@@ -1155,7 +1165,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD RUNESRV,-gsm,rune gmaster://master.333networks.com:28900 333networks.com",
 	"ADD UNS,-gsm,ut gmaster://master.333networks.com:28900 333networks.com",
 	"ADD UNS,-gsm,ut gmaster://master.errorist.tk:28900 errorist.tk",
-	"ADD UNS,-gsm,ut gmaster://master.noccer.de:28900 noccer.de",
 
 	// added 2015-08-20
 	"ADD AMS,-gsm,armygame gmaster://gsm.qtracker.com:28900 qtracker.com",
@@ -1223,7 +1232,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD T2S http://t2.plugh.us/t2/serverlist.php t2.plugh.us",
 	"ADD T2S http://master.tribesnext.com/list tribesnext.com",
 	"ADD UNS http://www.gameaholic.com/servers/qspy-unreal gameaholic.com",
-	"ADD UNS gmaster://unreal.epicgames.com:28900 epicgames.com",
+	"ADD UNS,-gsm,ut gmaster://unreal.epicgames.com:28900 epicgames.com",
 	"ADD WARSOWS master://excalibur.nvg.ntnu.no:27950 nvg.ntnu.no",
 	"ADD WOS master://dpmaster.deathmask.net:27950 deathmask.net",
 	"ADD WOS master://wolfmaster.s4ndmod.com:27950 s4ndmod.com",
