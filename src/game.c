@@ -503,7 +503,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 			debug(6, "src: [%s], dst: [%s]", src, dst);
 		}
 	}
-	// when finished, do nothing more, the remaining allocated space is already filled with zeros
+	// when finished, do nothing more, the remaining allocated space is already filled with zeroes
 }
 
 
