@@ -378,8 +378,10 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 					goto walk;
 				}
 				if (has_flag(flags, GAME_COLOR_QUAKE3)) {
-					if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
-						// one-char color code in the form ^# where # is a numeric digit
+					if ( (src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')
+						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')) {
+						// one-char color code in the form ^# where # is a numeric digit or case-insentive alphabetic character
 						// skip '^' and the next char
 						step = 2;
 						goto walk;
