@@ -145,14 +145,14 @@ static inline const char* last_two_entries(const char* name) {
 }
 
 static gboolean has_known_image_format(const gchar* name) {
-	guint ext_num = 3;
+	guint i, ext_num = 3;
 	gchar *ext_list[3] = {
 		".jpg",
 		".png",
 		".tga",
 	};
 
-	for (guint i = 0; i < ext_num; i++) {
+	for (i = 0; i < ext_num; i++) {
 		if (!g_ascii_strcasecmp(name+strlen(name)-strlen(ext_list[i]), ext_list[i])) {
 			return TRUE;
 		}
