@@ -199,7 +199,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 				debug(3, "parse_master_output() -- master error (%s)", error_msg);
 				conn->master->state = SOURCE_ERROR;
-				dialog_ok (NULL, error_msg);
+				dialog_ok (NULL, "%s", error_msg);
 			}
 			return FALSE;
 		}
@@ -669,7 +669,7 @@ static void parse_qstat_record (struct stat_conn *conn) {
 			error_msg = _("Unknown error parsing qstat server record.");
 		}
 
-		dialog_ok (NULL, error_msg);
+		dialog_ok (NULL, "%s", error_msg);
 		return;
 	}
 
