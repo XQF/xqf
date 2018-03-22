@@ -381,34 +381,18 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 					if ( (src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
 						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')
 						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')) {
-						// one-char color code in the form ^# where # is a numeric digit or case-insentive alphabetic character
+						// one-char color code in the form ^# where # is a numeric digit
+						// some Quake 3 based games also allow color code in the form ^# where # is a
+						// case-insentive alphabetic character
 						// skip '^' and the next char
 						step = 2;
 						goto walk;
 					}
 				}
 				if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
-					// if Unvanquished extendended multichar color code, verify if it ends
-					// RGB color code in the form ^P###o or ^P######o where p and o are case-insensitive and # is a numeric digit
-					if (src[isrc + 1] == 'P' || src[isrc + 1] == 'p') {
-						gint i;
-						// 8 because P000000o, don't count more
-						for (i = 2; src[isrc + i] != '\0'
-								&& (src[isrc + i] != 'O' && src[isrc + i] != 'o')
-								&& (src[isrc + i] >= '0' && src[isrc + i] <= '8')
-								&& (i < 8); i++) {
-							// `for` increments i
-						}
-						// if multichar color code ends, skip 6 because ^P000o, 9 because ^P000000o
-						if ((src[isrc + i - 1] == 'O' || src[isrc + i - 1] == 'o') && (i == 6 || i == 9)) {
-							step = i;
-							goto walk;
-						}
-					}
 					// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
-					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
-						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
-						|| src[isrc + 1] == ':'
+					// Unvanquished also supports ^[0-9a-oA-O] but that's already handled by the Quake 3 color filter
+					if (src[isrc + 1] == ':'
 						|| src[isrc + 1] == ';'
 						|| src[isrc + 1] == '<'
 						|| src[isrc + 1] == '>'
@@ -416,8 +400,8 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 						|| src[isrc + 1] == '?'
 						|| src[isrc + 1] == '@'
 						|| src[isrc + 1] == '*') {
-						// extended one-char color code in the form ^# where # is a case-insentive alphabetic character
-						// between a and o or a special character from the known list above
+						// extended one-char color code in the form ^# where # is a case-insentive alphabetic
+						// character between a and o or a special character from the known list above
 						// skip '^' and the next char
 						step = 2;
 						goto walk;
@@ -426,6 +410,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 				if (has_flag(flags, GAME_COLOR_XONOTIC)) {
 					// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
 					// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
+					// Xonotic also supports ^[0-9] but that's already handled by the Quake 3 color filter
 					if(src[isrc + 1] == 'x') {
 						gint i;
 						for (i = 2; (src[isrc + i] != '\0'
