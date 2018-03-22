@@ -123,21 +123,21 @@ static enum server_type selected_country;
 static void server_stats_create (void) {
 #ifdef USE_GEOIP
 	unsigned g;
-	// position GAMES_TOTAL is used for total number of all games
-	unsigned i = (sizeof(struct country_stats) + geoip_num_countries()*sizeof(struct country_num)) * (GAMES_TOTAL+1);
+	// position UNKNOWN_SERVER is used for total number of all games
+	unsigned i = (sizeof(struct country_stats) + geoip_num_countries()*sizeof(struct country_num)) * (UNKNOWN_SERVER+1);
 	srv_countries  = g_malloc0 (i);
 
-	for (g = 0; g < GAMES_TOTAL+1; ++g) {
+	for (g = 0; g < UNKNOWN_SERVER+1; ++g) {
 		srv_countries[g].country = (struct country_num*)((void*)srv_countries
-				+ sizeof(struct country_stats)*(GAMES_TOTAL+1) + g*geoip_num_countries()*sizeof(struct country_num));
+				+ sizeof(struct country_stats)*(UNKNOWN_SERVER+1) + g*geoip_num_countries()*sizeof(struct country_num));
 	}
 #endif
 
-	// position GAMES_TOTAL is used for total number of all games
-	srv_stats = g_malloc0 (sizeof (struct server_stats) * (GAMES_TOTAL+1));
+	// position UNKNOWN_SERVER is used for total number of all games
+	srv_stats = g_malloc0 (sizeof (struct server_stats) * (UNKNOWN_SERVER+1));
 
-	srv_archs  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
-	players  = g_malloc0 (sizeof (struct arch_stats) * GAMES_TOTAL);
+	srv_archs  = g_malloc0 (sizeof (struct arch_stats) * UNKNOWN_SERVER);
+	players  = g_malloc0 (sizeof (struct arch_stats) * UNKNOWN_SERVER);
 
 	servers_count = 0;
 	players_count = 0;
@@ -278,9 +278,9 @@ static void collect_statistics (void) {
 					srv_countries[s->type].country[s->country_id].c = s->country_id;
 					++srv_countries[s->type].nonzero;
 				}
-				if (++srv_countries[GAMES_TOTAL].country[s->country_id].n == 1) {
-					srv_countries[GAMES_TOTAL].country[s->country_id].c = s->country_id;
-					++srv_countries[GAMES_TOTAL].nonzero;
+				if (++srv_countries[UNKNOWN_SERVER].country[s->country_id].n == 1) {
+					srv_countries[UNKNOWN_SERVER].country[s->country_id].c = s->country_id;
+					++srv_countries[UNKNOWN_SERVER].nonzero;
 				}
 			}
 #endif
@@ -321,7 +321,7 @@ static void collect_statistics (void) {
 #ifdef USE_GEOIP
 	{
 		unsigned g;
-		for (g = 0; g < GAMES_TOTAL+1; ++g) {
+		for (g = 0; g < UNKNOWN_SERVER+1; ++g) {
 			qsort(srv_countries[g].country, geoip_num_countries(), sizeof(struct country_num), country_stat_compare_func);
 		}
 	}
@@ -396,7 +396,7 @@ static GtkWidget *server_stats_page (void) {
 	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
 
-	table = gtk_table_new (GAMES_TOTAL + 2, 7, FALSE);
+	table = gtk_table_new (UNKNOWN_SERVER + 2, 7, FALSE);
 	gtk_container_add (GTK_CONTAINER (alignment), table);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
 
@@ -407,12 +407,12 @@ static GtkWidget *server_stats_page (void) {
 	gtk_table_set_col_spacing (GTK_TABLE (table), 1, 20);
 	gtk_table_set_col_spacing (GTK_TABLE (table), 5, 20);
 	gtk_table_set_row_spacing (GTK_TABLE (table), 0, 12);
-	gtk_table_set_row_spacing (GTK_TABLE (table), GAMES_TOTAL, 12);
+	gtk_table_set_row_spacing (GTK_TABLE (table), UNKNOWN_SERVER, 12);
 
 	for (i = 0; i < 6; i++)
 		put_label_to_table (table, _(srv_headers[i]), 1.0, i + 1, 0);
 
-	for (i = 0, row = 1; i < GAMES_TOTAL; i++) {
+	for (i = 0, row = 1; i < UNKNOWN_SERVER; i++) {
 
 		// Skip a game if it's not configured and show only configured is enabled
 		if (!games[i].cmd && default_show_only_configured_games)
@@ -426,12 +426,12 @@ static GtkWidget *server_stats_page (void) {
 		put_server_stats (table, i, row);
 
 		{
-			srv_stats[GAMES_TOTAL].servers += srv_stats[i].servers;
-			srv_stats[GAMES_TOTAL].ok      += srv_stats[i].ok;
-			srv_stats[GAMES_TOTAL].timeout += srv_stats[i].timeout;
-			srv_stats[GAMES_TOTAL].down    += srv_stats[i].down;
-			srv_stats[GAMES_TOTAL].na      += srv_stats[i].na;
-			srv_stats[GAMES_TOTAL].players += srv_stats[i].players;
+			srv_stats[UNKNOWN_SERVER].servers += srv_stats[i].servers;
+			srv_stats[UNKNOWN_SERVER].ok      += srv_stats[i].ok;
+			srv_stats[UNKNOWN_SERVER].timeout += srv_stats[i].timeout;
+			srv_stats[UNKNOWN_SERVER].down    += srv_stats[i].down;
+			srv_stats[UNKNOWN_SERVER].na      += srv_stats[i].na;
+			srv_stats[UNKNOWN_SERVER].players += srv_stats[i].players;
 		}
 
 		row++;
@@ -439,7 +439,7 @@ static GtkWidget *server_stats_page (void) {
 
 	put_label_to_table (table, _("Total"), 0.0, 0, row + 1);
 
-	put_server_stats (table, GAMES_TOTAL, row + 1);
+	put_server_stats (table, UNKNOWN_SERVER, row + 1);
 
 	gtk_widget_show (table);
 	gtk_widget_show (scrollwin);
@@ -554,7 +554,7 @@ static GtkWidget *archs_stats_page (void) {
 
 	to_activate = config_get_int("/" CONFIG_FILE "/Statistics/game");
 
-	for (type = 0; type < GAMES_TOTAL; ++type) {
+	for (type = 0; type < UNKNOWN_SERVER; ++type) {
 		if (!create_server_type_menu_filter_hasharch(type))
 			continue;
 
@@ -679,7 +679,7 @@ static GtkWidget *country_stats_page (void) {
 
 	selected_country = to_activate = config_get_int("/" CONFIG_FILE "/Statistics/country");
 
-	for (type = 0; type <= GAMES_TOTAL; ++type) {
+	for (type = 0; type <= UNKNOWN_SERVER; ++type) {
 		if (!srv_countries[type].nonzero)
 			continue;
 
@@ -692,7 +692,7 @@ static GtkWidget *country_stats_page (void) {
 	hbox = gtk_hbox_new(FALSE,0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
 
-	option_menu = create_server_type_menu (to_activate == GAMES_TOTAL?-1:to_activate,
+	option_menu = create_server_type_menu (to_activate == UNKNOWN_SERVER?-1:to_activate,
 			create_server_type_menu_filter_hascountries,
 			G_CALLBACK(select_country_server_type_callback));
 	{
@@ -709,12 +709,12 @@ static GtkWidget *country_stats_page (void) {
 		gtk_menu_prepend (GTK_MENU (menu), menu_item);
 		gtk_container_add (GTK_CONTAINER (menu_item), label);
 
-		g_signal_connect (menu_item, "activate", G_CALLBACK (select_country_server_type_callback), (gpointer)GAMES_TOTAL);
+		g_signal_connect (menu_item, "activate", G_CALLBACK (select_country_server_type_callback), (gpointer)UNKNOWN_SERVER);
 
 		gtk_widget_show (menu_item);
 		gtk_widget_show (label);
 
-		if (to_activate == GAMES_TOTAL) {
+		if (to_activate == UNKNOWN_SERVER) {
 			gtk_menu_item_activate (GTK_MENU_ITEM (menu_item));
 			gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
 		}

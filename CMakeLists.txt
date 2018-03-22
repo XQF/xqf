@@ -501,7 +501,7 @@ target_link_libraries (gamesxml2c xml2)
 # Custom build rule for converting games.xml to games.c
 add_custom_command (
     OUTPUT ${CMAKE_BINARY_DIR}/games.c
-    COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml > ${CMAKE_BINARY_DIR}/games.c
+    COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h
     MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
     DEPENDS gamesxml2c)
 
