@@ -1673,7 +1673,7 @@ void init_masters (int update) {
 
 	favorites = create_master (N_("Favorites"), UNKNOWN_SERVER, FALSE);
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		m = create_master (games[i].name, i, TRUE);
 		master_groups = g_slist_append (master_groups, m);
 	}

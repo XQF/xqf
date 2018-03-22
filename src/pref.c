@@ -217,9 +217,9 @@ static int q2_skin_is_valid = TRUE;
 
 static GtkWidget *color_menu = NULL;
 
-static GtkWidget *custom_args_add_button[GAMES_TOTAL];
-static GtkWidget *custom_args_entry_game[GAMES_TOTAL];
-static GtkWidget *custom_args_entry_args[GAMES_TOTAL];
+static GtkWidget *custom_args_add_button[UNKNOWN_SERVER];
+static GtkWidget *custom_args_entry_game[UNKNOWN_SERVER];
+static GtkWidget *custom_args_entry_args[UNKNOWN_SERVER];
 static int current_row = -1;
 
 struct generic_prefs {
@@ -1191,7 +1191,7 @@ static void get_new_defaults (void) {
 
 	config_pop_prefix();
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		get_new_defaults_for_game (i);
 	}
 
@@ -3039,7 +3039,7 @@ static void game_listitem_selected_callback (GtkItem *item, enum server_type typ
 
 
 #define GAMES_COLS 3
-#define GAMES_ROWS ((GAMES_TOTAL + GAMES_COLS - 1) / GAMES_COLS)
+#define GAMES_ROWS ((UNKNOWN_SERVER + GAMES_COLS - 1) / GAMES_COLS)
 
 // create dialog where commandline and working dir for all games are configured
 static GtkWidget *games_config_page (int defgame) {
@@ -3075,7 +3075,7 @@ static GtkWidget *games_config_page (int defgame) {
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		genprefs[i].game_button = gtk_list_item_new();
 
 		gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
@@ -3099,7 +3099,7 @@ static GtkWidget *games_config_page (int defgame) {
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (games_notebook), FALSE);
 	gtk_box_pack_start (GTK_BOX (games_hbox), games_notebook, FALSE, FALSE, 15);
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		page = generic_game_frame (i);
 
 		label = gtk_label_new (games[i].name);
@@ -3117,7 +3117,7 @@ static GtkWidget *games_config_page (int defgame) {
 		}
 	}
 
-	if (defgame >= GAMES_TOTAL) {
+	if (defgame >= UNKNOWN_SERVER) {
 		defgame = QW_SERVER;
 	}
 
@@ -3695,7 +3695,7 @@ static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
 static void scan_maps_callback (GtkWidget *widget, gpointer data) {
 	int i;
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		scan_maps_for(i);
 	}
 
@@ -4332,7 +4332,7 @@ static struct generic_prefs* new_generic_prefs (void) {
 
 	struct generic_prefs* new_genprefs;
 
-	new_genprefs = g_malloc0 (sizeof (struct generic_prefs) * GAMES_TOTAL);
+	new_genprefs = g_malloc0 (sizeof (struct generic_prefs) * UNKNOWN_SERVER);
 
 	pref_q1_top_color    = default_q1_top_color;
 	pref_q1_bottom_color = default_q1_bottom_color;
@@ -4387,7 +4387,7 @@ static struct generic_prefs* new_generic_prefs (void) {
 	new_genprefs[TURTLEARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[ALIENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		new_genprefs[i].pref_dir = g_strdup (games[i].dir);
 		new_genprefs[i].real_dir = g_strdup (games[i].real_dir);
 		g_datalist_init(&new_genprefs[i].games_data);
@@ -4403,7 +4403,7 @@ static void generic_prefs_free(struct generic_prefs* prefs) {
 	g_free(pref_qw_skin);
 	g_free(pref_q2_skin);
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		g_free(prefs[i].pref_dir);
 		g_free(prefs[i].real_dir);
 		g_datalist_clear(&prefs[i].games_data);
@@ -4498,7 +4498,7 @@ void preferences_dialog (int page_num) {
 	q2_skin_is_valid = TRUE;
 	update_q2_skins (pref_q2_skin);
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		update_cfgs (i, genprefs[i].real_dir, games[i].game_cfg);
 	}
 
@@ -4577,7 +4577,7 @@ static void user_fix_defaults (void) {
 
 	debug(1, "Setting defaults");
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		files = games[i].command;
 		if (!files) continue;
 		suggested_file = find_file_in_path_list_relative(files);
@@ -4818,7 +4818,7 @@ int prefs_load (void) {
 
 	} while (0);
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		prefs_load_for_game (i);
 	}
 
@@ -4894,7 +4894,7 @@ int prefs_load (void) {
 
 	/* Convert "dir" -> "real_dir" for all game types */
 
-	for (i = 0; i < GAMES_TOTAL; i++) {
+	for (i = 0; i < UNKNOWN_SERVER; i++) {
 		load_game_defaults (i);
 
 		if (default_auto_maps && !skip_startup_mapscan) {

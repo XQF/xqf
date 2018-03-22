@@ -763,7 +763,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 
 	menu = gtk_menu_new ();
 
-	for (i = 0; i < GAMES_TOTAL; ++i) {
+	for (i = 0; i < UNKNOWN_SERVER; ++i) {
 		if (filterfunc && !filterfunc (i))
 			continue;
 

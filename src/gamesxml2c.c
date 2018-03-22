@@ -409,7 +409,6 @@ int main (int argc, char* argv[]) {
 	}
 
 	fputs("};\n", hfile);
-	fputs("#define GAMES_TOTAL UNKNOWN_SERVER\n", hfile);
 
 	fputs("struct game games[] = {\n", cfile);
 
