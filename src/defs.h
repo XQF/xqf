@@ -26,6 +26,8 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
+#include "games.h"
+
 // max 0x8000, server->flags is unsigned
 enum server_flags {
 	PLAYER_GROUP_RED =      0x001,
@@ -46,74 +48,6 @@ enum launch_mode {
 	LAUNCH_SPECTATE,
 	LAUNCH_RECORD
 };
-
-
-// note: there is a limit of 256 servers, see get_server_pixmap in srv-list.c
-enum server_type {
-	ALIENARENA_SERVER = 0,
-	AAO_SERVER,
-	BF1942_SERVER,
-	COD_SERVER,
-	CODUO_SERVER,
-	COD2_SERVER,
-	COD4_SERVER,
-	DESCENT3_SERVER,
-	DOOM3_SERVER,
-	ETL_SERVER,
-	ETQW_SERVER,
-	HL_SERVER_OLD,
-	HL_SERVER,
-	HL2_SERVER,
-	HR_SERVER,
-	H2_SERVER,
-	HW_SERVER,
-	JK2_SERVER,
-	JK3_SERVER,
-	KP_SERVER,
-	MOHAA_SERVER,
-	NETP_SERVER,
-	NEXUIZ_SERVER,
-	OPENARENA_SERVER,
-	OTTD_SERVER,
-	POSTAL2_SERVER,
-	Q3RALLY_SERVER,
-	Q1_SERVER,
-	QW_SERVER,
-	Q2_SERVER,
-	Q3_SERVER,
-	Q4_SERVER,
-	REACTION_SERVER,
-	WO_SERVER,
-	RUNE_SERVER,
-	SAS_SERVER,
-	SSAM_SERVER,
-	SSAMSE_SERVER,
-	SN_SERVER,
-	SMOKINGUNS_SERVER,
-	SFS_SERVER,
-	SOF2S_SERVER,
-	TEEWORLDS_SERVER,
-	TREMFUSION_SERVER,
-	TREMULOUS_SERVER,
-	TREMULOUSGPP_SERVER,
-	T2_SERVER,
-	TURTLEARENA_SERVER,
-	UN_SERVER,
-	UT2_SERVER,
-	UT2004_SERVER,
-	UNVANQUISHED_SERVER,
-	IOURT_SERVER,
-	EF_SERVER,
-	WARSOW_SERVER,
-	WOET_SERVER,
-	WOP_SERVER,
-	XONOTIC_SERVER,
-	ZEQ2LITE_SERVER,
-	GPS_SERVER,
-	UNKNOWN_SERVER,
-};
-
-#define GAMES_TOTAL UNKNOWN_SERVER
 
 enum master_state {
 	SOURCE_NA = 0,
@@ -154,7 +88,6 @@ struct host {
 	time_t refreshed;
 	int ref_count;
 };
-
 
 // server_new, server_free_info, server_move_info must be adapted for changes to this structure
 
