@@ -157,6 +157,7 @@ struct unreal_private
 
 static struct quake_private alienarena_private;
 static struct quake_private cod_private;
+static struct quake_private dday_private;
 static struct quake_private doom3_private;
 static struct quake_private etl_private;
 static struct quake_private etqw_private;
@@ -965,6 +966,11 @@ static void q2_analyze_serverinfo (struct server *s) {
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 		if (strcmp (*info_ptr, "gamedir") == 0) {
 			s->game = info_ptr[1];
+
+			// D-Day: Normandy
+			if (!strcmp(info_ptr[1], "dday")) {
+				s->type=DDAY_SERVER;
+			}
 		}
 		// determine mod
 		else if (strcmp (*info_ptr, "gamename") == 0) {

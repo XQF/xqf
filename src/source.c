@@ -1133,6 +1133,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2018-03-24
+	"ADD DDAYS http://q2servers.com/?g=dday&raw=1 q2servers.com",
+
 	// added 2018-03-21
 	"ADD UNS,-gsm,unreal gmaster://master.hlkclan.net:28900 master.hlkclan.net (unreal)",
 	"ADD UNS,-gsm,ut gmaster://master.hypercoop.tk:28900 hypercoop.tk (unreal)",
@@ -1372,6 +1375,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD CODUOS lan://255.255.255.255 LAN",
 	"ADD COD2S lan://255.255.255.255 LAN",
 	"ADD COD4S lan://255.255.255.255 LAN",
+	"ADD DDAYS lan://255.255.255.255 LAN",
 	"ADD DM3S lan://255.255.255.255 LAN",
 	"ADD EFS lan://255.255.255.255 LAN",
 	"ADD ETLS lan://255.255.255.255 LAN",

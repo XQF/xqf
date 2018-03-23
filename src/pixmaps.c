@@ -46,6 +46,7 @@
 #include "xpm/q3.xpm"
 #include "xpm/q4.xpm"
 #include "xpm/wo.xpm"
+#include "xpm/dday.xpm"
 #include "xpm/et.xpm"
 #include "xpm/etl.xpm"
 #include "xpm/ef.xpm"

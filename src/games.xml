@@ -152,6 +152,16 @@
 		<pd>cod_private</pd>
 	</game>
 	<game>
+		<base>Q2_SERVER</base>
+		<type>DDAY_SERVER</type>
+		<name>D-Day: Normandy</name>
+		<id>DDAYS</id>
+		<icon>dday.xpm</icon>
+		<command>DDaynormandy</command>
+		<main_mod>dday</main_mod>
+		<pd>dday_private</pd>
+	</game>
+	<game>
 		<type>DESCENT3_SERVER</type>
 		<name>Descent3</name>
 		<flags>GAME_CONNECT</flags>
