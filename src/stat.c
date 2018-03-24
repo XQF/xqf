@@ -144,7 +144,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	debug (6, "parse_master_output(%s,%p)",str,conn);
 	n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 
-	// UGLY HACK UGLY HACK UGLY HACK UGLY HACK
+	// HACK: UGLY HACK UGLY HACK UGLY HACK UGLY HACK
 	// output from UT 2003 http server is formatted as
 	// ip port gamespy_port
 	// not the standard ip:port
@@ -210,15 +210,23 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 		switch (n) {
 
+			// line in the form:
+			// <hostname>:<port>
+			// expected to be found in both http list and file list
 			case 1:
 				type = conn->master->type;
 				break;
 
+			// line in the form:
+			// <type>\0<hostname>:<port>
+			// expected to be found in qstat output
 			case 2:
 				type = id2type (token[0]);
 				break;
 
+			// this is not expected at all
 			default:
+				debug(3, "parse_master_output() -- bad string %s",str);
 				return TRUE;
 
 		}
@@ -253,6 +261,9 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 				}
 #endif
 
+				if (conn->master->server_query_type != UNKNOWN_SERVER) {
+					s->server_query_type = conn->master->server_query_type;
+				}
 
 				/*
 				   When the "conn" is freed, it will call the function
@@ -273,6 +284,11 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 
 			port += conn->master->options.portadjust;
 			if ((us = userver_add (addr, port, type)) != NULL) {
+
+				if (conn->master->server_query_type != UNKNOWN_SERVER) {
+					us->server_query_type = conn->master->server_query_type;
+				}
+
 				// conn->uservers = userver_list_add (conn->uservers, us);
 				conn->uservers = g_slist_prepend (conn->uservers, us);
 				userver_ref(us);
@@ -413,11 +429,18 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 	struct host *h;
 	struct server *server;
 	enum server_type type;
-	char *addr;
+	char *addr, *pipe;
 	unsigned short port;
 
 	if (n < 3) {
 		return NULL;
+	}
+
+	pipe = strchr(token[0], '|');
+
+	if (pipe != NULL) {
+		// DESTRUCTIVE
+		*pipe = '\0';
 	}
 
 	type = id2type (token[0]);
@@ -438,7 +461,11 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 
 	server = server_add (h, port, type);
 
-	debug (6, "server %lx retreived", server);
+	if (pipe != NULL) {
+		server->server_query_type = id2type(++pipe);
+	}
+
+	debug (6, "server %lx retrieved", server);
 
 	server->flt_mask &= ~FILTER_SERVER_MASK;
 
@@ -475,7 +502,7 @@ static struct server *parse_server (char *token[], int n, time_t refreshed, int 
 			/*
 			   We have a function to parse the server information,
 			   so first we free all of the data elements of this
-			   structure but not the structure its self.  This
+			   structure but not the structure itself.  This
 			   is because the *_analyse functions should assign values
 			   to each of the elemets.
 			*/
@@ -1076,7 +1103,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 	int argi = 0;
 	char buf1[64];
 	char* arg_type = NULL;
-	char buf3[64];
+	char buf2[64];
 	char buf_rawarg[] = { QSTAT_DELIM, '\0' };
 	struct stat_conn *conn = NULL;
 	char *cmd = NULL;
@@ -1222,6 +1249,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			startprog = 0;
 			file=strdup_strip(m->url + strlen(master_prefixes[MASTER_FILE]));
 		}
+		// if MASTER_HTTP
 		else {
 			cmd = strdup_strip (HTTP_HELPER);
 
@@ -1362,11 +1390,10 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			arg_type = g_strdup_printf ("%s,outfile", master_qstat_option(m));
 		}
 
-
 		argv[argi++] = arg_type;
 
-		argv[argi++] = buf3;
-		g_snprintf (buf3, 64, "%s%s:%d,-", m->master_type == MASTER_LAN?"+":"" ,inet_ntoa (m->host->ip), m->port);
+		argv[argi++] = buf2;
+		g_snprintf (buf2, 64, "%s%s:%d,-", m->master_type == MASTER_LAN?"+":"" ,inet_ntoa (m->host->ip), m->port);
 
 		argv[argi] = NULL;
 
@@ -1400,8 +1427,7 @@ out:
 	return conn;
 }
 
-
-#define MAX_SERVERS_IN_CMDLINE	8
+#define MAX_SERVERS_IN_CMDLINE 16
 
 static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	struct server *s = NULL;
@@ -1412,6 +1438,8 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	char *fn = NULL;
 	GSList *tmp;
 	struct stat_conn *conn;
+	char *qstat_query_option;
+	char *qstat_query_str;
 	char srcport[12] = {0};
 
 	if (!job->servers) {
@@ -1463,12 +1491,19 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 
 	argv[argi++] = "-carets";
 
+
 	if (g_slist_length (job->servers) <= MAX_SERVERS_IN_CMDLINE) {
 		for (tmp = job->servers; tmp; tmp = tmp->next) {
 			s = (struct server *) tmp->data;
 
-			if (games[s->type].qstat_option)
-				argv[argi++] = games[s->type].qstat_option;
+			if (s->server_query_type != UNKNOWN_SERVER) {
+				qstat_query_option = games[s->server_query_type].qstat_option;
+			}
+			else {
+				qstat_query_option = games[s->type].qstat_option;
+			}
+
+			argv[argi++] = qstat_query_option;
 
 			argv[argi++] = &buf[bufi];
 			bufi += 1 + g_snprintf (&buf[bufi], sizeof (buf) - bufi, "%s:%d", inet_ntoa (s->host->ip), s->port);
@@ -1491,9 +1526,17 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 			return NULL;
 		}
 
-		for (tmp =job-> servers; tmp; tmp = tmp->next) {
+		for (tmp =job->servers; tmp; tmp = tmp->next) {
 			s = (struct server *) tmp->data;
-			fprintf (f, "%s %s:%d\n", games[s->type].qstat_str, inet_ntoa (s->host->ip), s->port);
+
+			if (s->server_query_type != UNKNOWN_SERVER) {
+				qstat_query_str = games[s->server_query_type].qstat_str;
+			}
+			else {
+				qstat_query_str = games[s->type].qstat_str;
+			}
+
+			fprintf (f, "%s %s:%d\n", qstat_query_str, inet_ntoa (s->host->ip), s->port);
 		}
 
 		fclose (f);
@@ -1725,6 +1768,8 @@ static void stat_name_resolved_callback (char *id, struct host *h, enum dns_stat
 					us->s->type = us->type;
 					server_free_info (us->s);
 				}
+
+				us->s->server_query_type = us->server_query_type;
 
 				/*
 				   o When the job is freed, the list will

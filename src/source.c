@@ -102,7 +102,12 @@ static void save_list (FILE *f, struct master *m) {
 
 	for (srv = m->servers; srv; srv = srv->next) {
 		s = (struct server *) srv->data;
-		fprintf (f, "%s %s:%d\n", games[s->type].id, inet_ntoa (s->host->ip), s->port);
+		fprintf (f, "%s%s%s %s:%d\n",
+			games[s->type].id,
+			s->server_query_type != UNKNOWN_SERVER? "|":"",
+			s->server_query_type != UNKNOWN_SERVER? games[s->server_query_type].id : "",
+			inet_ntoa (s->host->ip),
+			s->port);
 	}
 
 	fprintf (f, "\n");
@@ -455,7 +460,7 @@ static void read_lists (const char *filename) {
 	char buf[4096];
 	char *ch;
 	struct master *m = NULL;
-	char *token[8];
+	char *token[8], *pipe;
 	int n;
 	enum server_type type;
 
@@ -469,16 +474,18 @@ static void read_lists (const char *filename) {
 
 	while (fgets (buf, 4096, z.f)) {
 		n = tokenize (buf, token, 8, " \t\n\r");
-		if (n < 1)
+		if (n < 1) {
 			continue;
+		}
 
 		if (token[0][0] == '[') {               // line is a master
 			ch = strchr (token[0] + 1, ']');    // does token 0 have a ]?
 			if (ch) {                           // it's a favorites or pre 0.9.4e lists file
 				*ch = '\0';
 
-				if (m && m->servers)
+				if (m && m->servers) {
 					m->servers = g_slist_reverse (m->servers);
+				}
 
 				m = read_list_parse_master (token[0] + 1, NULL);
 			}
@@ -488,26 +495,42 @@ static void read_lists (const char *filename) {
 
 					*ch = '\0';
 
-					if (m && m->servers)
+					if (m && m->servers) {
 						m->servers = g_slist_reverse (m->servers);
+					}
 
 					m = read_list_parse_master (token[1], token[0] + 1);    // master, type
 				}
 			}
 		}
 		else {
-			if (!m || n < 2)
+			if (!m || n < 2) {
 				continue;
+			}
+
+			pipe = strchr(token[0], '|');
+
+			if (pipe != NULL) {
+				// DESTRUCTIVE
+				*pipe = '\0';
+			}
 
 			type = id2type (token[0]);
 
-			if (type != UNKNOWN_SERVER)
+			if (type != UNKNOWN_SERVER) {
 				master_add_server (m, token[1], type);
+
+				if (pipe != NULL) {
+					m->server_query_type = id2type(++pipe);
+				}
+
+			}
 		}
 	}
 
-	if (m && m->servers)
+	if (m && m->servers) {
 		m->servers = g_slist_reverse (m->servers);
+	}
 
 	zstream_close (&z);
 	g_free (realname);
@@ -807,7 +830,7 @@ static void master_options_release(QFMasterOptions* o, gboolean doit) {
 	g_free(o->gsmtype);
 }
 
-struct master *add_master (char *path, char *name, enum server_type type, const char* qstat_query_arg, int user, int lookup_only) {
+struct master *add_master (char *path, char *name, enum server_type type, enum server_type server_query_type, const char* qstat_query_arg, int user, int lookup_only) {
 	char *addr = NULL;
 	unsigned short port = 0;
 	struct master *m = NULL;
@@ -949,6 +972,7 @@ struct master *add_master (char *path, char *name, enum server_type type, const 
 			return NULL;
 	}
 
+	m->server_query_type = server_query_type;
 	m->master_type = query_type;
 	m->options = options;
 	freeoptions = FALSE;
@@ -1000,13 +1024,22 @@ void free_master (struct master *m) {
  * DESTRUCTIVE
  * @return qstat_master_option or NULL
  */
-char* master_id2type(char* token, enum server_type* type) {
+char* master_id2type(char* token, enum server_type* type, enum server_type* server_query_type) {
 	char* ret = NULL;
-	char* coma = strchr(token, ',');
+	char* comma = strchr(token, ',');
+	char* pipe = strchr(token, '|');
 
-	if (coma) {
-		*coma = '\0';
-		ret = ++coma;
+	if (comma != NULL) {
+		*comma = '\0';
+		ret = ++comma;
+	}
+
+	if (pipe != NULL) {
+		*pipe = '\0';
+		*server_query_type = id2type(++pipe);
+	}
+	else {
+		*server_query_type = UNKNOWN_SERVER;
 	}
 
 	*type = id2type(token);
@@ -1023,6 +1056,7 @@ static void update_master_list_action (const char *action) {
 	char *token[4];
 	int n;
 	enum server_type type;
+	enum server_type server_query_type;
 	struct master *m;
 
 	str = strdup_strip (action);
@@ -1033,16 +1067,16 @@ static void update_master_list_action (const char *action) {
 	n = tokenize (str, token, 4, " \t\n\r");
 
 	if (n == 4) {
-		char* qstat_query_arg = master_id2type (token[1], &type);
+		char* qstat_query_arg = master_id2type (token[1], &type, &server_query_type);
 		if (type != UNKNOWN_SERVER) {
 
 			if (g_ascii_strcasecmp (token[0], ACTION_ADD) == 0) {
-				m = add_master (token[2], token[3], type, qstat_query_arg, FALSE, FALSE);
+				m = add_master (token[2], token[3], type, server_query_type, qstat_query_arg, FALSE, FALSE);
 				if (m && source_ctree != NULL)
 					source_ctree_add_master (source_ctree, m);
 			}
 			else if (g_ascii_strcasecmp (token[0], ACTION_DELETE) == 0) {
-				m = add_master (token[2], token[3], type, qstat_query_arg, FALSE, TRUE);
+				m = add_master (token[2], token[3], type, server_query_type, qstat_query_arg, FALSE, TRUE);
 				if (m) {
 					if (source_ctree != NULL)
 						source_ctree_delete_master (source_ctree, m);
@@ -1125,6 +1159,7 @@ void update_master_list_web (void) {
 static void load_master_list (void) {
 	struct master *m;
 	enum server_type type;
+	enum server_type server_query_type;
 	char* qstat_query_arg = NULL;
 	char conf[64];
 	char *token[3];
@@ -1151,10 +1186,11 @@ static void load_master_list (void) {
 			tmp = strrchr (token[0], ',');
 			if (tmp) {
 				user = (g_ascii_strcasecmp (tmp+1, "USER") == 0);
-				if (user)
+				if (user) {
 					*tmp = '\0';
+				}
 			}
-			qstat_query_arg = master_id2type (token[0], &type);
+			qstat_query_arg = master_id2type (token[0], &type, &server_query_type);
 
 			if (type != UNKNOWN_SERVER) {
 
@@ -1162,7 +1198,7 @@ static void load_master_list (void) {
 				 *  and fix m->user after that.
 				 */
 
-				m = add_master (token[1], token[2], type, qstat_query_arg, TRUE, FALSE);
+				m = add_master (token[1], token[2], type, server_query_type, qstat_query_arg, TRUE, FALSE);
 				if (m)
 					m->user = user;
 			}
@@ -1197,11 +1233,13 @@ static void save_master_list (void) {
 
 		g_snprintf (conf, 64, "master%d", n);
 
-		g_snprintf (typeid, sizeof(typeid), "%s%s%s%s",
+		g_snprintf (typeid, sizeof(typeid), "%s%s%s%s%s%s",
 				type2id (m->type),
-				m->_qstat_master_option?",":"",
-				m->_qstat_master_option?m->_qstat_master_option:"",
-				m->user?",USER":"");
+				m->server_query_type != UNKNOWN_SERVER? "|" : "",
+				m->server_query_type != UNKNOWN_SERVER? type2id (m->server_query_type) : "",
+				m->_qstat_master_option? "," : "",
+				m->_qstat_master_option? m->_qstat_master_option : "",
+				m->user? ",USER" : "");
 
 		str = master_to_url(m);
 		confstr = g_strjoin (" ", typeid, str, m->name, NULL);

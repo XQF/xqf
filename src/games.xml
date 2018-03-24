@@ -17,7 +17,7 @@
 		<write_config/>
 		<exec_client>exec_generic</exec_client>
 		<custom_cfgs/>
-		<save_info>quake_save_info</save_info>
+		<save_info>save_server_info</save_info>
 		<init_maps/>
 		<has_map/>
 		<get_mapshot/>

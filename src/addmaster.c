@@ -100,7 +100,8 @@ static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window) {
 		return;
 	}
 
-	master_to_add = add_master (master_addr_result, master_name_result, master_type, NULL, TRUE, FALSE);
+	// FIXME: gui does not allow to set server_query_type (defaults here as UNKNOWN_SERVER)
+	master_to_add = add_master (master_addr_result, master_name_result, master_type, UNKNOWN_SERVER, NULL, TRUE, FALSE);
 	if (!master_to_add) {
 		dialog_ok (NULL, _("Master address \"%s\" is not valid."),
 				master_addr_result);
