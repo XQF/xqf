@@ -111,7 +111,7 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>uo</main_mod>
-		<pd>cod_private</pd>
+		<pd>coduo_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -130,7 +130,7 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod_private</pd>
+		<pd>cod2_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -149,7 +149,7 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod_private</pd>
+		<pd>cod4_private</pd>
 	</game>
 	<game>
 		<base>Q2_SERVER</base>

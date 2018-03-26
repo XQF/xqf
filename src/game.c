@@ -157,6 +157,9 @@ struct unreal_private
 
 static struct quake_private alienarena_private;
 static struct quake_private cod_private;
+static struct quake_private coduo_private;
+static struct quake_private cod2_private;
+static struct quake_private cod4_private;
 static struct quake_private dday_private;
 static struct quake_private doom3_private;
 static struct quake_private etl_private;
