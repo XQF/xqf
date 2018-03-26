@@ -350,7 +350,8 @@ static gboolean has_flag(unsigned long flags, unsigned long flag) {
 }
 
 static gboolean is_game_string_unescapable(enum server_type type) {
-	return !has_flag(games[type].flags, GAME_COLOR_QUAKE3 | GAME_COLOR_SAVAGE | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC);
+	return !has_flag(games[type].flags, GAME_COLOR_QUAKE3_ANY | GAME_COLOR_QUAKE3_NUMERIC
+		| GAME_COLOR_QUAKE3_ALPHA | GAME_COLOR_SAVAGE | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC);
 }
 
 /*
@@ -377,13 +378,19 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 					step = 1;
 					goto walk;
 				}
-				if (has_flag(flags, GAME_COLOR_QUAKE3)) {
-					if ( (src[isrc + 1] >= '0' && src[isrc + 1] <= '9')
-						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')
-						|| (src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')) {
+				if (has_flag(flags, GAME_COLOR_QUAKE3_NUMERIC)) {
+					if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
 						// one-char color code in the form ^# where # is a numeric digit
-						// some Quake 3 based games also allow color code in the form ^# where # is a
-						// case-insentive alphabetic character
+						// skip '^' and the next char
+						step = 2;
+						goto walk;
+					}
+				}
+				if (has_flag(flags, GAME_COLOR_QUAKE3_ALPHA)) {
+					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')) {
+						// one-char color code in the form ^# where # is a case-insentive
+						// alphabetic character
 						// skip '^' and the next char
 						step = 2;
 						goto walk;
@@ -391,8 +398,10 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 				}
 				if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
 					// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
-					// Unvanquished also supports ^[0-9a-oA-O] but that's already handled by the Quake 3 color filter
-					if (src[isrc + 1] == ':'
+					// Unvanquished also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
+					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
+						|| src[isrc + 1] == ':'
 						|| src[isrc + 1] == ';'
 						|| src[isrc + 1] == '<'
 						|| src[isrc + 1] == '>'
@@ -410,7 +419,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 				if (has_flag(flags, GAME_COLOR_XONOTIC)) {
 					// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
 					// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
-					// Xonotic also supports ^[0-9] but that's already handled by the Quake 3 color filter
+					// Xonotic also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
 					if(src[isrc + 1] == 'x') {
 						gint i;
 						for (i = 2; (src[isrc + i] != '\0'
@@ -469,6 +478,12 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 							}
 						}
 					}
+				}
+				if (has_flag(flags, GAME_COLOR_QUAKE3_ANY)) {
+					// one-char color code in the form ^# where # is any character
+					// skip '^' and the next char
+					step = 2;
+					goto walk;
 				}
 			}
 		}

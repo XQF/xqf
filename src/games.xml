@@ -338,6 +338,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>JK2_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC</flags>
 		<name>Jedi Outcast</name>
 		<default_port>28070</default_port>
 		<default_master_port>28060</default_master_port>
@@ -356,6 +357,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>JK3_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC</flags>
 		<name>Jedi Academy</name>
 		<default_port>29070</default_port>
 		<default_master_port>29060</default_master_port>
@@ -441,6 +443,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>OPENARENA_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>OpenArena</name>
 		<id>OPENARENAS</id>
 		<qstat_str>OPENARENAS</qstat_str>
@@ -487,6 +490,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>Q3RALLY_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>Q3 Rally</name>
 		<id>Q3RALLYS</id>
 		<qstat_str>Q3RALLYS</qstat_str>
@@ -561,7 +565,7 @@
 	</game>
 	<game>
 		<type>Q2_SERVER</type>
-		<flags>GAME_CONNECT | GAME_RECORD | GAME_SPECTATE | GAME_PASSWORD | GAME_RCON | GAME_COLOR_QUAKE3</flags>
+		<flags>GAME_CONNECT | GAME_RECORD | GAME_SPECTATE | GAME_PASSWORD | GAME_RCON | GAME_COLOR_QUAKE3_NUMERIC</flags>
 		<name>Quake2</name>
 		<default_port>27910</default_port>
 		<default_master_port>27900</default_master_port>
@@ -590,7 +594,7 @@
 	</game>
 	<game>
 		<type>Q3_SERVER</type>
-		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3</flags>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_ANY</flags>
 		<name>Quake III Arena</name>
 		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>
@@ -650,6 +654,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>REACTION_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>Reaction</name>
 		<id>REACTIONS</id>
 		<qstat_str>REACTIONS</qstat_str>
@@ -743,6 +748,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>SMOKINGUNS_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>Smokin' Guns</name>
 		<id>SMOKINGUNSS</id>
 		<qstat_str>SMOKINGUNSS</qstat_str>
@@ -811,6 +817,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>TREMFUSION_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>TremFusion</name>
 		<default_port>30720</default_port>
 		<default_master_port>30710</default_master_port>
@@ -830,6 +837,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>TREMULOUS_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>Tremulous</name>
 		<default_port>30720</default_port>
 		<default_master_port>30710</default_master_port>
@@ -850,6 +858,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>TREMULOUSGPP_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>Tremulous GPP</name>
 		<default_port>30720</default_port>
 		<default_master_port>30700</default_master_port>
@@ -889,6 +898,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>TURTLEARENA_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC</flags>
 		<name>Turtle Arena</name>
 		<default_port>27960</default_port>
 		<id>TURTLEARENAS</id>
@@ -956,7 +966,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>UNVANQUISHED_SERVER</type>
-		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3 | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC</flags>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC</flags>
 		<name>Unvanquished</name>
 		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>
@@ -1051,6 +1061,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>WOP_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>World of Padman</name>
 		<id>WOPS</id>
 		<qstat_str>WOPS</qstat_str>
@@ -1068,7 +1079,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>XONOTIC_SERVER</type>
-		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3 | GAME_COLOR_XONOTIC</flags>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_XONOTIC</flags>
 		<name>Xonotic</name>
 		<default_port>26000</default_port>
 		<id>XONOTICS</id>
@@ -1088,6 +1099,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>ZEQ2LITE_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
 		<name>ZEQ2 Lite</name>
 		<id>ZEQ2LITES</id>
 		<qstat_str>ZEQ2LITES</qstat_str>

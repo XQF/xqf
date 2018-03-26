@@ -43,10 +43,12 @@ enum {
 	GAME_MASTER_QUAKE3          = 0x01000, // master server protocol version is in games_data["masterprotocol"]
 	GAME_MASTER_CDKEY           = 0x02000, // master server requires CD key
 	GAME_MASTER_STEAM           = 0x04000, // server side filter
-	GAME_COLOR_QUAKE3           = 0x10000, // Quake 3 color codes
-	GAME_COLOR_SAVAGE           = 0x20000, // Savage color codes
-	GAME_COLOR_UNVANQUISHED     = 0x40000, // Unvanquished color codes
-	GAME_COLOR_XONOTIC          = 0x80000, // Xonotic color codes
+	GAME_COLOR_QUAKE3_ANY       = 0x10000, // Quake 3 "^" followed by any character besides "^" color codes
+	GAME_COLOR_QUAKE3_NUMERIC   = 0x20000, // Quake 3 ^[0-9] color codes
+	GAME_COLOR_QUAKE3_ALPHA     = 0x40000, // ioquake3 ^[a-zA-Z] color codes
+	GAME_COLOR_UNVANQUISHED     = 0x80000, // Unvanquished color codes
+	GAME_COLOR_SAVAGE           = 0x100000, // Savage color codes
+	GAME_COLOR_XONOTIC          = 0x200000, // Xonotic color codes
 };
 
 struct game {
