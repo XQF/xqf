@@ -170,7 +170,15 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 		if (n <= 3) {
 			return TRUE;
 		}
-		type = id2type (token[0]);
+
+		// never do that: qstat returns the qstat_str, not the game id
+		// for example we use -cods for COD:UO that will return CODS
+		// instead of CODUOS and XQF will mark the server for the
+		// wrong game, never trust qstat, always trust XQF
+		// type = id2type (token[0]);
+
+		type = conn->master->type;
+
 		n = 2; // we only need type and ip
 	}
 	else if (n >= 3) {
@@ -221,7 +229,13 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 			// <type>\0<hostname>:<port>
 			// expected to be found in qstat output
 			case 2:
-				type = id2type (token[0]);
+				// never do that: qstat returns the qstat_str, not the game id
+				// for example we use -cods for COD:UO that will return CODS
+				// instead of CODUOS and XQF will mark the server for the
+				// wrong game, never trust qstat, always trust XQF
+				// type = id2type (token[0]);
+
+				type = conn->master->type;
 				break;
 
 			// this is not expected at all
@@ -352,6 +366,7 @@ static gboolean stat_master_input_callback (GIOChannel *chan, GIOCondition condi
 			} else {
 				stat_master_update_done (conn, job, conn->master, SOURCE_UP);
 			}
+
 			stat_update_masters (job);
 			debug_decrease_indent();
 			g_free(buf);
@@ -1490,7 +1505,6 @@ static struct stat_conn *stat_open_conn_qstat (struct stat_job *job) {
 	argv[argi++] = "-P";
 
 	argv[argi++] = "-carets";
-
 
 	if (g_slist_length (job->servers) <= MAX_SERVERS_IN_CMDLINE) {
 		for (tmp = job->servers; tmp; tmp = tmp->next) {
