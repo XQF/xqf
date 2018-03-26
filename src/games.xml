@@ -211,9 +211,9 @@
 		<type>ETL_SERVER</type>
 		<name>Enemy Territory: Legacy</name>
 		<id>ETLS</id>
-		<qstat_str>ETLS</qstat_str>
-		<qstat_option>-etls</qstat_option>
-		<qstat_master_option>-etlm</qstat_master_option>
+		<qstat_str>WOETS</qstat_str>
+		<qstat_option>-woets</qstat_option>
+		<qstat_master_option>-woetm</qstat_master_option>
 		<icon>etl.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>etl</command>
@@ -832,9 +832,9 @@
 		<default_port>30720</default_port>
 		<default_master_port>30710</default_master_port>
 		<id>TREMFUSIONS</id>
-		<qstat_str>TREMFUSIONS</qstat_str>
-		<qstat_option>-tremfusions</qstat_option>
-		<qstat_master_option>-tremfusionm</qstat_master_option>
+		<qstat_str>TREMULOUSS</qstat_str>
+		<qstat_option>-tremulouss</qstat_option>
+		<qstat_master_option>-tremulousm</qstat_master_option>
 		<icon>tremfusion.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>tremfusion</command>
