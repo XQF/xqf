@@ -157,6 +157,10 @@ struct unreal_private
 
 static struct quake_private alienarena_private;
 static struct quake_private cod_private;
+static struct quake_private coduo_private;
+static struct quake_private cod2_private;
+static struct quake_private cod4_private;
+static struct quake_private dday_private;
 static struct quake_private doom3_private;
 static struct quake_private etl_private;
 static struct quake_private etqw_private;
@@ -172,9 +176,11 @@ static struct quake_private q2_private;
 static struct quake_private q3_private;
 static struct quake_private q3rally_private;
 static struct quake_private quake4_private;
+static struct quake_private quetoo_private;
 static struct quake_private qw_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
+static struct quake_private teeworlds_private;
 static struct quake_private tremfusion_private;
 static struct quake_private tremulousgpp_private;
 static struct quake_private tremulous_private;
@@ -965,6 +971,11 @@ static void q2_analyze_serverinfo (struct server *s) {
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
 		if (strcmp (*info_ptr, "gamedir") == 0) {
 			s->game = info_ptr[1];
+
+			// D-Day: Normandy
+			if (!strcmp(info_ptr[1], "dday")) {
+				s->type=DDAY_SERVER;
+			}
 		}
 		// determine mod
 		else if (strcmp (*info_ptr, "gamename") == 0) {

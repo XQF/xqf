@@ -111,7 +111,7 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>uo</main_mod>
-		<pd>cod_private</pd>
+		<pd>coduo_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -130,7 +130,7 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod_private</pd>
+		<pd>cod2_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -149,7 +149,17 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod_private</pd>
+		<pd>cod4_private</pd>
+	</game>
+	<game>
+		<base>Q2_SERVER</base>
+		<type>DDAY_SERVER</type>
+		<name>D-Day: Normandy</name>
+		<id>DDAYS</id>
+		<icon>dday.xpm</icon>
+		<command>DDaynormandy</command>
+		<main_mod>dday</main_mod>
+		<pd>dday_private</pd>
 	</game>
 	<game>
 		<type>DESCENT3_SERVER</type>
@@ -201,9 +211,9 @@
 		<type>ETL_SERVER</type>
 		<name>Enemy Territory: Legacy</name>
 		<id>ETLS</id>
-		<qstat_str>ETLS</qstat_str>
-		<qstat_option>-etls</qstat_option>
-		<qstat_master_option>-etlm</qstat_master_option>
+		<qstat_str>WOETS</qstat_str>
+		<qstat_option>-woets</qstat_option>
+		<qstat_master_option>-woetm</qstat_master_option>
 		<icon>etl.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>etl</command>
@@ -268,7 +278,7 @@
 		<qstat_str>HLA2S</qstat_str>
 		<qstat_option>-hla2s</qstat_option>
 		<qstat_master_option>-hla2sm</qstat_master_option>
-		<icon>hl.xpm</icon>
+		<icon>hla2.xpm</icon>
 		<parse_player>hl_parse_player</parse_player>
 		<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>hl_exec</exec_client>
@@ -652,6 +662,22 @@
 		<pd>quake4_private</pd>
 	</game>
 	<game>
+		<base>Q2_SERVER</base>
+		<type>QUETOO_SERVER</type>
+		<name>Quetoo</name>
+		<id>QUETOOS</id>
+		<default_port>1998</default_port>
+		<default_master_port>1996</default_master_port>
+		<qstat_str>QUETOOS</qstat_str>
+		<qstat_option>-quetoos</qstat_option>
+		<qstat_master_option>-quetoom</qstat_master_option>
+		<icon>quetoo.xpm</icon>
+		<command>quetoo</command>
+		<default_home>~/.quetoo</default_home>
+		<main_mod>default</main_mod>
+		<pd>quetoo_private</pd>
+	</game>
+	<game>
 		<base>Q3_SERVER</base>
 		<type>REACTION_SERVER</type>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
@@ -797,8 +823,8 @@
 		<update_prefs>q3_update_prefs_common</update_prefs>
 	</game>
 	<game>
-		<base>Q3_SERVER</base>
 		<type>TEEWORLDS_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON</flags>
 		<name>Teeworlds</name>
 		<default_port>8303</default_port>
 		<default_master_port>8300</default_master_port>
@@ -807,12 +833,10 @@
 		<qstat_option>-tees</qstat_option>
 		<qstat_master_option>-teem</qstat_master_option>
 		<icon>teeworlds.xpm</icon>
-		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<exec_client>teeworlds_exec</exec_client>
 		<command>teeworlds</command>
 		<default_home>~/.teeworlds</default_home>
-		<prefs_load>q3_prefs_load_common</prefs_load>
-		<update_prefs>teeworlds_update_prefs</update_prefs>
+		<pd>teeworlds_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -822,9 +846,9 @@
 		<default_port>30720</default_port>
 		<default_master_port>30710</default_master_port>
 		<id>TREMFUSIONS</id>
-		<qstat_str>TREMFUSIONS</qstat_str>
-		<qstat_option>-tremfusions</qstat_option>
-		<qstat_master_option>-tremfusionm</qstat_master_option>
+		<qstat_str>TREMULOUSS</qstat_str>
+		<qstat_option>-tremulouss</qstat_option>
+		<qstat_master_option>-tremulousm</qstat_master_option>
 		<icon>tremfusion.xpm</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>tremfusion</command>
