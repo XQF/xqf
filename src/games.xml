@@ -278,7 +278,7 @@
 		<qstat_str>HLA2S</qstat_str>
 		<qstat_option>-hla2s</qstat_option>
 		<qstat_master_option>-hla2sm</qstat_master_option>
-		<icon>hl.xpm</icon>
+		<icon>hla2.xpm</icon>
 		<parse_player>hl_parse_player</parse_player>
 		<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>hl_exec</exec_client>
