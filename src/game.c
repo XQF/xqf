@@ -180,6 +180,7 @@ static struct quake_private quetoo_private;
 static struct quake_private qw_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;
+static struct quake_private teeworlds_private;
 static struct quake_private tremfusion_private;
 static struct quake_private tremulousgpp_private;
 static struct quake_private tremulous_private;

@@ -502,9 +502,6 @@ static struct q3_common_prefs_s warsow_prefs = {
 	.defproto  = "22",
 };
 
-static struct q3_common_prefs_s teeworlds_prefs = {
-};
-
 static const char* tremulous_masterprotocols[] = {
 	"auto",
 	"69 - v1.1.0",
@@ -1046,14 +1043,6 @@ void q3_update_prefs (struct game* g) {
 		config_set_int ("com_zonemegs", i);
 		game_set_attribute(type,"com_zonemegs",g_strdup_printf("%d",i));
 	}
-}
-
-void teeworlds_update_prefs (struct game* g) {
-	enum server_type type = g->type;
-	struct q3_common_prefs_s* w;
-
-	w = get_pref_widgets_for_game(type);
-	g_return_if_fail(w != NULL);
 }
 
 static void doom3_detect_version(struct game* g) {
@@ -3217,7 +3206,6 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case NEXUIZ_SERVER: return &nexuiz_prefs;
 		case XONOTIC_SERVER: return &xonotic_prefs;
 		case WARSOW_SERVER: return &warsow_prefs;
-		case TEEWORLDS_SERVER: return &teeworlds_prefs;
 		case TREMULOUS_SERVER: return &tremulous_prefs;
 		case TREMULOUSGPP_SERVER: return &tremulousgpp_prefs;
 		case TREMFUSION_SERVER: return &tremfusion_prefs;
@@ -4372,7 +4360,6 @@ static struct generic_prefs* new_generic_prefs (void) {
 	new_genprefs[NEXUIZ_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[XONOTIC_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
-	new_genprefs[TEEWORLDS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[TREMULOUSGPP_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[TREMFUSION_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
