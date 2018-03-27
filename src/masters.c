@@ -155,6 +155,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2018-03-27
+	"ADD QUETOOS master://master.quetoo.org:1996 quetoo.org",
+
 	// added 2018-03-24
 	"ADD DDAYS http://q2servers.com/?g=dday&raw=1 q2servers.com",
 
@@ -415,6 +418,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD Q3RALLYS lan://255.255.255.255 LAN",
 	"ADD Q3S lan://255.255.255.255 LAN",
 	"ADD Q4S lan://255.255.255.255 LAN",
+	"ADD QUETOOS lan://255.255.255.255 LAN",
 	"ADD QS lan://255.255.255.255 LAN",
 	"ADD QWS lan://255.255.255.255 LAN",
 	"ADD REACTIONS lan://255.255.255.255 LAN",

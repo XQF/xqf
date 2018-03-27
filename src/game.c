@@ -176,6 +176,7 @@ static struct quake_private q2_private;
 static struct quake_private q3_private;
 static struct quake_private q3rally_private;
 static struct quake_private quake4_private;
+static struct quake_private quetoo_private;
 static struct quake_private qw_private;
 static struct quake_private reaction_private;
 static struct quake_private smokinguns_private;

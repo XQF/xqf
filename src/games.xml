@@ -662,6 +662,22 @@
 		<pd>quake4_private</pd>
 	</game>
 	<game>
+		<base>Q2_SERVER</base>
+		<type>QUETOO_SERVER</type>
+		<name>Quetoo</name>
+		<id>QUETOOS</id>
+		<default_port>1998</default_port>
+		<default_master_port>1996</default_master_port>
+		<qstat_str>QUETOOS</qstat_str>
+		<qstat_option>-quetoos</qstat_option>
+		<qstat_master_option>-quetoom</qstat_master_option>
+		<icon>quetoo.xpm</icon>
+		<command>quetoo</command>
+		<default_home>~/.quetoo</default_home>
+		<main_mod>default</main_mod>
+		<pd>quetoo_private</pd>
+	</game>
+	<game>
 		<base>Q3_SERVER</base>
 		<type>REACTION_SERVER</type>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3 | GAME_COLOR_QUAKE3_NUMERIC | GAME_COLOR_QUAKE3_ALPHA</flags>
