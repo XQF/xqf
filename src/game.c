@@ -356,15 +356,7 @@ static gboolean has_flag(unsigned long flags, unsigned long flag) {
 }
 
 static gboolean is_game_string_unescapable(unsigned long flags) {
-	return has_flag(flags, 0
-		| COLOR_QUAKE3_ALPHA
-		| COLOR_QUAKE3_ANY
-		| COLOR_QUAKE3_NUMERIC
-		| COLOR_QUAKE4
-		| COLOR_SAVAGE
-		| COLOR_UNVANQUISHED
-		| COLOR_XONOTIC
-	);
+	return flags != 0;
 }
 
 /*
@@ -385,8 +377,14 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 			if (src[isrc + 1] != '\0') {
 				// if "^^"
 				if (src[isrc + 1] == '^') {
-					// only skip one '^', display only one '^'
-					step = 1;
+					if (has_flag(flags, COLOR_DOOM3)) {
+						// skip the two '^' since Doom 3's ^^ is empty string
+						step = 2;
+					}
+					else {
+						// only skip one '^', display only one '^'
+						step = 1;
+					}
 					goto walk;
 				}
 				if (has_flag(flags, COLOR_QUAKE3_NUMERIC)) {

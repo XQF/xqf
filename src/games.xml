@@ -184,6 +184,7 @@
 		<base>Q3_SERVER</base>
 		<type>DOOM3_SERVER</type>
 		<name>Doom 3</name>
+		<color_flags>COLOR_DOOM3 | COLOR_QUAKE3_NUMERIC | COLOR_QUAKE3_ALPHA</color_flags>
 		<default_port>27666</default_port>
 		<default_master_port>27650</default_master_port>
 		<id>DM3S</id>
@@ -645,7 +646,7 @@
 		<base>Q3_SERVER</base>
 		<type>Q4_SERVER</type>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3</flags>
-		<color_flags>COLOR_QUAKE3_ANY | COLOR_QUAKE4</color_flags>
+		<color_flags>COLOR_DOOM3 | COLOR_QUAKE3_ANY | COLOR_QUAKE4</color_flags>
 		<name>Quake 4</name>
 		<default_port>28004</default_port>
 		<default_master_port>27650</default_master_port>
