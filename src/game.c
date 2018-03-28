@@ -356,8 +356,15 @@ static gboolean has_flag(unsigned long flags, unsigned long flag) {
 }
 
 static gboolean is_game_string_unescapable(unsigned long flags) {
-	return has_flag(flags, COLOR_QUAKE3_ANY | COLOR_QUAKE3_NUMERIC
-		| COLOR_QUAKE3_ALPHA | COLOR_SAVAGE | COLOR_UNVANQUISHED | COLOR_XONOTIC);
+	return has_flag(flags, 0
+		| COLOR_QUAKE3_ALPHA
+		| COLOR_QUAKE3_ANY
+		| COLOR_QUAKE3_NUMERIC
+		| COLOR_QUAKE4
+		| COLOR_SAVAGE
+		| COLOR_UNVANQUISHED
+		| COLOR_XONOTIC
+	);
 }
 
 /*
@@ -390,14 +397,45 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 						goto walk;
 					}
 				}
-				if (has_flag(flags, COLOR_QUAKE3_ALPHA)) {
-					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
-						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')) {
-						// one-char color code in the form ^# where # is a case-insentive
-						// alphabetic character
-						// skip '^' and the next char
-						step = 2;
-						goto walk;
+				if (has_flag(flags, COLOR_QUAKE4)) {
+					// escape code in the form ^n# where # is any character
+					// escape code is case insensitive
+					if(src[isrc + 1] == 'n' || src[isrc + 1] == 'N') {
+						if (src[isrc + 2] != '\0') {
+							step = 2;
+							goto walk;
+						}
+					}
+					// color code in the form ^c### where # is a numeric digit or any character
+					// color code is case insensitive
+					else if(src[isrc + 1] == 'c' || src[isrc + 1] == 'C') {
+						gint i;
+						for (i = 2; src[isrc + i] != '\0'
+							&& i < 5; i++) {
+							// `for` increments i
+						}
+						// if complete color code, skip it
+						if (i == 5) {
+							step = i;
+							goto walk;
+						}
+					}
+					// icon code in the form ^i### where # is an alphanumeric digit or any character
+					// for example ^iw06 is the rocket launcher icon
+					// icon code is case insensitive
+					else if(src[isrc + 1] == 'i' || src[isrc + 1] == 'I') {
+						gint i;
+						for (i = 2; src[isrc + i] != '\0'
+							&& i < 5; i++) {
+							// `for` increments i
+						}
+						// if complete icon code, use a placeholder and skip remaining chars
+						if (i == 5) {
+							dst[idst] = '_';
+							idst += 1;
+							step = i;
+							goto walk;
+						}
 					}
 				}
 				if (has_flag(flags, COLOR_UNVANQUISHED)) {
@@ -422,7 +460,7 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 				}
 				if (has_flag(flags, COLOR_XONOTIC)) {
 					// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
-					// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
+					// RGB color code in the form ^x### where # is a case-insensitive hexadecimal digit
 					// Xonotic also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
 					if(src[isrc + 1] == 'x') {
 						gint i;
@@ -481,6 +519,16 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 								}
 							}
 						}
+					}
+				}
+				if (has_flag(flags, COLOR_QUAKE3_ALPHA)) {
+					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
+						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')) {
+						// one-char color code in the form ^# where # is a case-insentive
+						// alphabetic character
+						// skip '^' and the next char
+						step = 2;
+						goto walk;
 					}
 				}
 				if (has_flag(flags, COLOR_QUAKE3_ANY)) {
