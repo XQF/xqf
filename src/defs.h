@@ -105,7 +105,7 @@ struct server {
 	int country_id;
 #endif
 
-	unsigned flags;
+	unsigned long flags;
 
 	unsigned flt_last;  // time of the last filtering
 

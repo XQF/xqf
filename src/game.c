@@ -355,20 +355,18 @@ static gboolean has_flag(unsigned long flags, unsigned long flag) {
 	return (flags & flag) != 0;
 }
 
-static gboolean is_game_string_unescapable(enum server_type type) {
-	return !has_flag(games[type].flags, GAME_COLOR_QUAKE3_ANY | GAME_COLOR_QUAKE3_NUMERIC
-		| GAME_COLOR_QUAKE3_ALPHA | GAME_COLOR_SAVAGE | GAME_COLOR_UNVANQUISHED | GAME_COLOR_XONOTIC);
+static gboolean is_game_string_unescapable(unsigned long flags) {
+	return has_flag(flags, COLOR_QUAKE3_ANY | COLOR_QUAKE3_NUMERIC
+		| COLOR_QUAKE3_ALPHA | COLOR_SAVAGE | COLOR_UNVANQUISHED | COLOR_XONOTIC);
 }
 
 /*
  * you MUST allocate dst with g_malloc0 before, this function and others assumes that dst is filled with zeros
  */
-static void unescape_game_string (char *dst, const char *src, enum server_type type) {
+static void unescape_game_string (char *dst, const char *src, unsigned long flags) {
 	/*
 	 * skip color codes
 	 */
-
-	unsigned long flags = games[type].flags;
 
 	gint idst = 0;
 	gint isrc = 0;
@@ -384,7 +382,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 					step = 1;
 					goto walk;
 				}
-				if (has_flag(flags, GAME_COLOR_QUAKE3_NUMERIC)) {
+				if (has_flag(flags, COLOR_QUAKE3_NUMERIC)) {
 					if (src[isrc + 1] >= '0' && src[isrc + 1] <= '9') {
 						// one-char color code in the form ^# where # is a numeric digit
 						// skip '^' and the next char
@@ -392,7 +390,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 						goto walk;
 					}
 				}
-				if (has_flag(flags, GAME_COLOR_QUAKE3_ALPHA)) {
+				if (has_flag(flags, COLOR_QUAKE3_ALPHA)) {
 					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'Z')
 						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'z')) {
 						// one-char color code in the form ^# where # is a case-insentive
@@ -402,7 +400,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 						goto walk;
 					}
 				}
-				if (has_flag(flags, GAME_COLOR_UNVANQUISHED)) {
+				if (has_flag(flags, COLOR_UNVANQUISHED)) {
 					// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
 					// Unvanquished also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
 					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
@@ -422,7 +420,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 						goto walk;
 					}
 				}
-				if (has_flag(flags, GAME_COLOR_XONOTIC)) {
+				if (has_flag(flags, COLOR_XONOTIC)) {
 					// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
 					// RGB color codes in the form ^x### where # is a case-insensitive hexadecimal digit
 					// Xonotic also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
@@ -442,7 +440,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 						}
 					}
 				}
-				if (has_flag(flags, GAME_COLOR_SAVAGE)) {
+				if (has_flag(flags, COLOR_SAVAGE)) {
 					// if Savage three chars color code in the form ^### where # is a numeric digit
 					gint i;
 					for (i = 1; (src[isrc + i] != '\0'
@@ -485,7 +483,7 @@ static void unescape_game_string (char *dst, const char *src, enum server_type t
 						}
 					}
 				}
-				if (has_flag(flags, GAME_COLOR_QUAKE3_ANY)) {
+				if (has_flag(flags, COLOR_QUAKE3_ANY)) {
 					// one-char color code in the form ^# where # is any character
 					// skip '^' and the next char
 					step = 2;
@@ -676,7 +674,8 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 	if (player->ping == 0) ++s->curbots;
 
 	player->name = (char *) player + sizeof (struct player);
-	unescape_game_string (player->name, token[0], s->type);
+	// overwrite in place
+	unescape_game_string (player->name, token[0], games[s->type].color_flags);
 
 	// show clan name in model column
 	if (clan) {
@@ -685,7 +684,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 		}
 		else {
 			player->model = (char *) player + sizeof (struct player) + strlen(player->name) + 1;
-			unescape_game_string(player->model, clan, s->type);
+			unescape_game_string(player->model, clan, games[s->type].color_flags);
 		}
 	}
 
@@ -776,13 +775,13 @@ static void quake_parse_server (char *token[], int n, struct server *server) {
 		return;
 
 	if (*(token[2])) {      /* if name is not empty */
-		if (is_game_string_unescapable(server->type)) {
+		if (!is_game_string_unescapable(games[server->type].flags)) {
 			server->name = g_strdup (token[2]);
 		}
 		else {
 			server->name = g_malloc0 (sizeof (char) * strlen (token[2]) + 1);
 			debug(6, "maxsize:%d", (int) (sizeof (char) * strlen (token[2]) + 1));
-			unescape_game_string (server->name, token[2], server->type);
+			unescape_game_string (server->name, token[2], games[server->type].color_flags);
 		}
 	}
 
@@ -1970,7 +1969,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 			if (s->gametype) {
 				// unescape in place, for backward compatibility
 				gchar* tmp_gametype = g_malloc0 (sizeof (gchar) * strlen (s->gametype) + 1);
-				unescape_game_string(tmp_gametype, s->gametype, s->type);
+				unescape_game_string(tmp_gametype, s->gametype, games[s->type].color_flags);
 				strcpy(s->gametype, tmp_gametype);
 				g_free(tmp_gametype);
 			}
@@ -2126,15 +2125,13 @@ static void doom3_analyze_serverinfo (struct server *s) {
 	/* Clear out the flags */
 	s->flags = 0;
 
-	if ((games[s->type].flags & GAME_SPECTATE) != 0)
+	if ((games[s->type].flags & GAME_SPECTATE) != 0) {
 		s->flags |= SERVER_SPECTATE;
-
+	}
 	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
-
 		if (strcmp (*info_ptr, "fs_game") == 0) {
 			fs_game  = info_ptr[1];
 		}
-
 		else if (strcmp (*info_ptr, "si_version") == 0) {
 			if (strstr (info_ptr[1], "linux")) {
 				s->sv_os = 'L';
@@ -2146,7 +2143,6 @@ static void doom3_analyze_serverinfo (struct server *s) {
 				s->sv_os = '?';
 			}
 		}
-
 		else if (!s->gametype && strcmp (*info_ptr, "si_gameType") == 0) {
 			s->gametype = info_ptr[1];
 		}
