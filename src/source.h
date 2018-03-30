@@ -26,10 +26,6 @@
 #define FILENAME_LISTS      "lists"
 #define FILENAME_SRVINFO    "srvinfo"
 
-// #define PREFIX_MASTER       "master://"
-// #define PREFIX_GMASTER      "gmaster://"
-// #define PREFIX_URL_HTTP     "http://"
-
 #define ACTION_ADD          "ADD"
 #define ACTION_DELETE       "DELETE"
 
@@ -42,6 +38,7 @@ extern GSList *master_groups;
 extern struct master *add_master (char *path,
 		char *name,
 		enum server_type type,
+		enum server_type server_query_type,
 		const char* qstat_query_arg,
 		int user,
 		int lookup_only);

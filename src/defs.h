@@ -115,6 +115,7 @@ struct server {
 	int ref_count;
 
 	enum server_type type;
+	enum server_type server_query_type;
 	unsigned short port;
 
 	unsigned short maxplayers;
@@ -135,7 +136,8 @@ struct userver {
 	struct server *s;
 	int ref_count;
 	unsigned short port;
-	unsigned char type;     // enum server_type type;
+	enum server_type type;                  // enum server_type type;
+	enum server_type server_query_type;     // enum server_type type;
 };
 
 typedef struct {
@@ -146,6 +148,7 @@ typedef struct {
 typedef struct master {
 	char *name;
 	enum server_type type;
+	enum server_type server_query_type;
 	int isgroup;            // is it a real master or master group?
 	int user;               // is it added or edited by user?
 	QFMasterOptions options;

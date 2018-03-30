@@ -116,7 +116,7 @@ static int ottd_exec (const struct condef *con, int forkit);
 
 static GList *quake_custom_cfgs (struct game* this, const char *path, const char *mod);
 
-static void quake_save_info (FILE *f, struct server *s);
+static void save_server_info (FILE *f, struct server *s);
 
 char **get_custom_arguments(enum server_type type, const char *gamestring);
 
@@ -3599,7 +3599,7 @@ static void quake_save_server_rules (FILE *f, struct server *s) {
 }
 
 
-static void quake_save_info (FILE *f, struct server *s) {
+static void save_server_info (FILE *f, struct server *s) {
 	struct player *p;
 	GSList *list;
 
@@ -3615,7 +3615,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 		case Q1_SERVER:
 		case H2_SERVER:
 			fprintf (f,
-					"%s" QSTAT_DELIM_STR
+					"%s%s%s" QSTAT_DELIM_STR
 					"%s:%d" QSTAT_DELIM_STR
 					"%s" QSTAT_DELIM_STR
 					"%s:%d" QSTAT_DELIM_STR
@@ -3626,6 +3626,8 @@ static void quake_save_info (FILE *f, struct server *s) {
 					"%d" QSTAT_DELIM_STR
 					"%d\n",
 					games[s->type].id,
+					s->server_query_type != UNKNOWN_SERVER? "|" : "",
+					s->server_query_type != UNKNOWN_SERVER? games[s->server_query_type].id : "",
 					inet_ntoa (s->host->ip), s->port,
 					(s->name)? s->name : "",
 					inet_ntoa (s->host->ip), s->port,
@@ -3640,7 +3642,7 @@ static void quake_save_info (FILE *f, struct server *s) {
 
 		default:
 			fprintf (f,
-					"%s" QSTAT_DELIM_STR
+					"%s%s%s" QSTAT_DELIM_STR
 					"%s:%d" QSTAT_DELIM_STR
 					"%s" QSTAT_DELIM_STR
 					"%s" QSTAT_DELIM_STR
@@ -3649,6 +3651,8 @@ static void quake_save_info (FILE *f, struct server *s) {
 					"%d" QSTAT_DELIM_STR
 					"%d\n",
 					games[s->type].id,
+					s->server_query_type != UNKNOWN_SERVER? "|" : "",
+					s->server_query_type != UNKNOWN_SERVER? games[s->server_query_type].id : "",
 					inet_ntoa (s->host->ip), s->port,
 					(s->name)? s->name : "",
 					(s->map)? s->map : "",

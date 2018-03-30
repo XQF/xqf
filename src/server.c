@@ -95,6 +95,7 @@ static struct server *server_new (struct host *h, unsigned short port,
 	server->type = type;
 	server->ping = -1;
 	server->retries = -1;
+	server->server_query_type = UNKNOWN_SERVER;
 
 #ifdef USE_GEOIP
 	server->country_id = geoip_id_by_ip(h->ip);
@@ -116,6 +117,7 @@ static struct userver *userver_new (const char *hostname, unsigned short port,
 	userver->hostname = g_strdup (hostname);
 	userver->port = port;
 	userver->type = type;
+	userver->server_query_type = UNKNOWN_SERVER;
 
 	return userver;
 }
@@ -473,6 +475,7 @@ struct server *userver_set_host (struct userver *us, struct host *h) {
 	server = server_add (h, us->port, us->type);
 	if (server) {
 		us->s = server;
+		us->s->server_query_type = us->server_query_type;
 	}
 
 	return server;

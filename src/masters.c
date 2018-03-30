@@ -22,6 +22,24 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// uses http list instead, replaced 2018-03-24
+	"DELETE AMS,-gsm,armygame gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE BF1942,-gsm,bfield1942 gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE MHS,-gsm,mohaa gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE Q2S:KP,-gsm,kingpin gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE RUNESRV,-gsm,rune gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE SMS,-gsm,serioussam gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE SMSSE,-gsm,serioussamse gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE UNS,-gsm,ut gmaster://gsm.qtracker.com:28900 qtracker.com (ut99)",
+	"DELETE UNS,-gsm,unreal gmaster://gsm.qtracker.com:28900 qtracker.com (unreal)",
+	"DELETE UT2004S,-gsm,ut2004 gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE UT2S,-gsm,ut2 gmaster://gsm.qtracker.com:28900 qtracker.com",
+	"DELETE SNS,-gsm,sin gmaster://gsm.qtracker.com:28900 qtracker.com",
+
+	// does no longer work, removed 2018-03-24
+	"DELETE Q2S master://netdome.biz:27900 netdome.biz",
+	"DELETE Q2S master://masterserver.exhale.de:27900 exhale.de", // down since 2011
+
 	// does no longer work, removed 2018-03-21
 	"DELETE UNS,-gsm,ut gmaster://master.noccer.de:28900 noccer.de",
 
@@ -160,6 +178,22 @@ static char *builtin_masters_update_info[] = {
 
 	// added 2018-03-24
 	"ADD DDAYS http://q2servers.com/?g=dday&raw=1 q2servers.com",
+	"ADD MHS,-gsm,mohaa gmaster://master.x-null.net:28900 x-null.net",
+	"ADD Q2S master://master.rlogin.dk:27900 rlogin.dk",
+	"ADD Q2S http://q2servers.com/?raw=1 q2servers.com",
+	"ADD Q3S master://master.huxxer.de:27950 huxxer.de",
+	"ADD AMS|GPS http://www.qtracker.com/server_list_details.php?game=armyoperations qtracker.com",
+	"ADD BF1942|GPS http://www.qtracker.com/server_list_details.php?game=battlefield1942 qtracker.com",
+	"ADD MHS|GPS http://www.qtracker.com/server_list_details.php?game=medalofhonoralliedassault qtracker.com",
+	"ADD Q2S:KP|GPS http://www.qtracker.com/server_list_details.php?game=kingpin qtracker.com",
+	"ADD RUNESRV|GPS http://www.qtracker.com/server_list_details.php?game=rune qtracker.com",
+	"ADD SMS|GPS http://www.qtracker.com/server_list_details.php?game=serioussam qtracker.com",
+	"ADD SMSSE|GPS http://www.qtracker.com/server_list_details.php?game=serioussamse qtracker.com",
+	"ADD UNS|GPS http://www.qtracker.com/server_list_details.php?game=unrealtournament qtracker.com (ut99)",
+	"ADD UNS|GPS http://www.qtracker.com/server_list_details.php?game=unreal qtracker.com (unreal)",
+	"ADD UT2004S|GPS http://www.qtracker.com/server_list_details.php?game=unrealtournament2004 qtracker.com",
+	"ADD UT2S|GPS http://www.qtracker.com/server_list_details.php?game=unrealtournament2003 qtracker.com",
+	"ADD SNS|GPS http://www.qtracker.com/server_list_details.php?game=sin qtracker.com",
 
 	// added 2018-03-21
 	"ADD UNS,-gsm,unreal gmaster://master.hlkclan.net:28900 master.hlkclan.net (unreal)",
@@ -193,20 +227,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD RUNESRV,-gsm,rune gmaster://master.333networks.com:28900 333networks.com",
 	"ADD UNS,-gsm,ut gmaster://master.333networks.com:28900 333networks.com",
 	"ADD UNS,-gsm,ut gmaster://master.errorist.tk:28900 errorist.tk",
-
-	// added 2015-08-20
-	"ADD AMS,-gsm,armygame gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD BF1942,-gsm,bfield1942 gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD MHS,-gsm,mohaa gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD Q2S:KP,-gsm,kingpin gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD RUNESRV,-gsm,rune gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD SMS,-gsm,serioussam gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD SMSSE,-gsm,serioussamse gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD UNS,-gsm,ut gmaster://gsm.qtracker.com:28900 qtracker.com (ut99)",
-	"ADD UNS,-gsm,unreal gmaster://gsm.qtracker.com:28900 qtracker.com (unreal)",
-	"ADD UT2004S,-gsm,ut2004 gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD UT2S,-gsm,ut2 gmaster://gsm.qtracker.com:28900 qtracker.com",
-	"ADD SNS,-gsm,sin gmaster://gsm.qtracker.com:28900 qtracker.com",
 
 	// added 2015-08-19
 	"ADD ETLS master://master.etlegacy.com:27950 etlegacy.com",
@@ -352,9 +372,6 @@ static char *builtin_masters_update_info[] = {
 	// added 2004-10-14
 	"ADD D3G http://d3.descent.cx/d3cxraw.d3?terse=y descent.cx",
 
-	// added 2004-09-26
-	"ADD Q2S master://netdome.biz netdome.biz",
-
 	// added 2004-08-07
 	"ADD DM3S master://idnet.ua-corp.com:27650 ua-corp.com",
 
@@ -425,6 +442,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD RUNESRV lan://255.255.255.255 LAN",
 	"ADD SFS lan://255.255.255.255 LAN",
 	"ADD SMOKINGUNSS lan://255.255.255.255 LAN",
+	"ADD TEES lan://255.255.255.255 LAN",
 	"ADD T2S lan://255.255.255.255 LAN",
 	"ADD TREMFUSIONS lan://255.255.255.255 LAN",
 	"ADD TREMULOUSGPPS lan://255.255.255.255 LAN",
