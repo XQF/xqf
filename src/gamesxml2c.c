@@ -30,6 +30,7 @@ typedef enum
 	TAG_start_basic = Tag_0,
 	TAG_type = TAG_start_basic,
 	TAG_flags,
+	TAG_color_flags,
 	TAG_name,
 	TAG_default_port,
 	TAG_default_master_port,
@@ -104,6 +105,7 @@ static void add_tag(GameTag nr, TagInherit inherit, TagType type, const xmlChar*
 static void tags_init() {
 	add_tag(TAG_type,                   Tag_no_inherit, Tag_type_literal, (xmlChar*) "type");
 	add_tag(TAG_flags,                  Tag_do_inherit, Tag_type_literal, (xmlChar*) "flags");
+	add_tag(TAG_color_flags,            Tag_do_inherit, Tag_type_literal, (xmlChar*) "color_flags");
 	add_tag(TAG_name,                   Tag_no_inherit, Tag_type_string,  (xmlChar*) "name");
 	add_tag(TAG_default_port,           Tag_do_inherit, Tag_type_literal, (xmlChar*) "default_port");
 	add_tag(TAG_default_master_port,    Tag_do_inherit, Tag_type_literal, (xmlChar*) "default_master_port");
