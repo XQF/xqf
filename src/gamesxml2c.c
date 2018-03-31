@@ -434,6 +434,7 @@ int main (int argc, char* argv[]) {
 					}
 					*c = tolower(*c);
 				}
+
 				ptr->game->basic[TAG_pd] = malloc(xmlStrlen(buf) + 9);
 				xmlStrPrintf(ptr->game->basic[TAG_pd], xmlStrlen(buf) + 9, "%s_private", buf);
 
