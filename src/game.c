@@ -154,53 +154,7 @@ struct unreal_private
 	const char* suffix;
 };
 
-
-static struct quake_private alienarena_private;
-static struct quake_private cod_private;
-static struct quake_private coduo_private;
-static struct quake_private cod2_private;
-static struct quake_private cod4_private;
-static struct quake_private dday_private;
-static struct quake_private doom3_private;
-static struct quake_private etl_private;
-static struct quake_private etqw_private;
-static struct quake_private hl_private;
-static struct quake_private iourt_private;
-static struct quake_private jk2_private;
-static struct quake_private jk3_private;
-static struct quake_private mohaa_private;
-static struct quake_private nexuiz_private;
-static struct quake_private openarena_private;
-static struct quake_private q1_private;
-static struct quake_private q2_private;
-static struct quake_private q3_private;
-static struct quake_private q3rally_private;
-static struct quake_private quake4_private;
-static struct quake_private quetoo_private;
-static struct quake_private qw_private;
-static struct quake_private reaction_private;
-static struct quake_private smokinguns_private;
-static struct quake_private teeworlds_private;
-static struct quake_private tremfusion_private;
-static struct quake_private tremulousgpp_private;
-static struct quake_private tremulous_private;
-static struct quake_private turtlearena_private;
-static struct quake_private unvanquished_private;
-static struct quake_private warsow_private;
-static struct quake_private wolfet_private;
-static struct quake_private wolf_private;
-static struct quake_private wop_private;
-static struct quake_private xonotic_private;
-static struct quake_private zeq2lite_private;
-
-static struct unreal_private aao_private = { NULL, ".aao" };
-static struct unreal_private postal2_private = { NULL, ".fuk" };
-static struct unreal_private rune_private = { NULL, ".run" };
-static struct unreal_private ut2004_private = { NULL, ".ut2" };
-static struct unreal_private ut2_private = { NULL, ".ut2" };
-static struct unreal_private ut_private = { NULL, ".unr" };
-
-#include GAMES_INCLUDE
+#include GAMES_C_INCLUDE
 
 struct gsname2type_s
 {
