@@ -35,6 +35,16 @@
 		<pd/>
 	</game>
 	<game>
+		<base>Q2_SERVER</base>
+		<type>AQ2_SERVER</type>
+		<name>Action Quake 2</name>
+		<id>AQ2S</id>
+		<icon>aq2.xpm</icon>
+		<command>q2pro-linux-x86_64</command>
+		<default_home>~/.q2online</default_home>
+		<main_mod>action</main_mod>
+	</game>
+	<game>
 		<base>Q3_SERVER</base>
 		<type>ALIENARENA_SERVER</type>
 		<name>Alien Arena</name>
