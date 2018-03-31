@@ -65,6 +65,10 @@ typedef enum
 	TAG_pd,
 	TAG_end_basic = TAG_pd,
 
+	TAG_start_unlisted_basic,
+	TAG_private_suffix = TAG_start_unlisted_basic,
+	TAG_end_unlisted_basic = TAG_private_suffix,
+
 	TAG_start_multi,
 	TAG_data = TAG_start_multi,
 	TAG_main_mod,
@@ -72,7 +76,6 @@ typedef enum
 	TAG_attributes,
 	TAG_end_multi = TAG_attributes,
 
-	TAG_private_suffix,
 	TAG_base,
 
 	TAG_count,
@@ -182,7 +185,7 @@ typedef struct _RawGame
 {
 	struct _RawGame* base;
 	xmlChar* basestr;
-	xmlChar* basic[TAG_end_basic - TAG_start_basic + 1];
+	xmlChar* basic[TAG_end_unlisted_basic - TAG_start_basic + 1];
 	struct MultiTag* multi[TAG_end_multi - TAG_start_multi + 1];
 	unsigned num_multitags;
 } RawGame;
@@ -228,7 +231,7 @@ RawGame* parseGame(xmlDocPtr doc, xmlNodePtr node) {
 
 		val = xmlNodeListGetString(doc, node->xmlChildrenNode, 1);
 
-		if (tag <= TAG_end_basic) {
+		if (tag >= TAG_start_basic  && tag <= TAG_end_unlisted_basic) {
 			rawgame->basic[tag] = val;
 		}
 		else if (tag >= TAG_start_multi && tag <= TAG_end_multi) {
@@ -395,8 +398,9 @@ int main (int argc, char* argv[]) {
 		if (!ptr->game->basestr) continue;
 		for (l = list; l; l = l->next) {
 			if (!xmlStrcmp(l->game->basic[TAG_type], ptr->game->basestr)) {
-				if (l->game->base)
+				if (l->game->base) {
 					fprintf(stderr,"%s: base server must not base on another one\n", ptr->game->basic[TAG_type]);
+				}
 				ptr->game->base = l->game;
 				xmlFree(ptr->game->basestr);
 				break;
@@ -408,33 +412,40 @@ int main (int argc, char* argv[]) {
 	fprintf(games_h_file, "%s\n", WARNING_HEADER);
 	fprintf(icons_c_file, "%s\n", WARNING_HEADER);
 
-	// write quake_private then unreal_private
-	for(i = 0; i <= 1; i++) {
+	// write unreal_private then quake_private
+	for (i = 0; i <= 1; i++) {
 		for (ptr = list; ptr; ptr = ptr->next) {
-			buf = xmlStrdup(ptr->game->basic[TAG_type]);
-
-			for (c = buf; *c; ++c) {
-				if (*c == '_') {
-					*c = '\0';
-					break;
-				}
-				*c = tolower(*c);
+			int is_unreal = 0;
+			int is_quake = 0;
+			if (ptr->game->basic[TAG_private_suffix] != NULL && i == 0) {
+				is_unreal = 1;
+			}
+			else if (ptr->game->basic[TAG_private_suffix] == NULL && i == 1) {
+				is_quake = 1;
 			}
 
-			ptr->game->basic[TAG_pd] = malloc(xmlStrlen(buf) + 9);
-			xmlStrPrintf(ptr->game->basic[TAG_pd], xmlStrlen(buf) + 9, "%s_private", buf);
+			if (is_unreal || is_quake) {
+				buf = xmlStrdup(ptr->game->basic[TAG_type]);
 
-			free(buf);
-
-			if (ptr->game->basic[TAG_private_suffix] == NULL) {
-				if (i == 0) {
-					fprintf(games_c_file, "static struct quake_private %s;\n", ptr->game->basic[TAG_pd]);
+				for (c = buf; *c; ++c) {
+					if (*c == '_') {
+						*c = '\0';
+						break;
+					}
+					*c = tolower(*c);
 				}
+				ptr->game->basic[TAG_pd] = malloc(xmlStrlen(buf) + 9);
+				xmlStrPrintf(ptr->game->basic[TAG_pd], xmlStrlen(buf) + 9, "%s_private", buf);
+
+				free(buf);
 			}
-			else {
-				if (i == 1) {
-					fprintf(games_c_file, "static struct unreal_private %s = { NULL, \"%s\" };\n", ptr->game->basic[TAG_pd], ptr->game->basic[TAG_private_suffix]);
-				}
+
+			if (is_unreal) {
+				fprintf(games_c_file, "static struct unreal_private %s = { NULL, \"%s\" };\n", ptr->game->basic[TAG_pd], ptr->game->basic[TAG_private_suffix]);
+			}
+
+			if (is_quake) {
+				fprintf(games_c_file, "static struct quake_private %s;\n", ptr->game->basic[TAG_pd]);
 			}
 		}
 	}
