@@ -1,0 +1,20 @@
+#! /bin/sh
+
+# Author: Thomas Debesse
+# License: ISC
+
+tools_dir="$(dirname "$(realpath "${0}")")"
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1
+then
+	root_dir="$(realpath "$(git rev-parse --show-toplevel)")"
+else
+	root_dir="$(dirname "${tools_dir}")"
+fi
+
+printf 'XQF supports these games:\n\n'
+
+cd "${root_dir}"
+grep '<name>' src/games.xml | head -n -2 | sed -e 's/^.*>\([^<>]*\)<.*$/\1/;s/^/- /'
+
+#EOF
