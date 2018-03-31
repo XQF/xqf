@@ -436,9 +436,14 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 						}
 					}
 				}
-				if (has_flag(flags, COLOR_UNVANQUISHED)) {
+				if (has_flag(flags, COLOR_WOLFET)) {
+					// see https://github.com/etlegacy/etlegacy/blob/master/src/qcommon/q_math.h
+					// Wolf:ET also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
+					// Wolf:ET also supports ^* so that flag is to be used by games that
+					// inherit Wolf:ET color codes without having support for COLOR_QUAKE3_ANY
+					// like Unvanquished that inherits these color codes from Wolf:ET through ET:XreaL
+					// but does not filter out unknown codes
 					// see https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
-					// Unvanquished also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
 					if ((src[isrc + 1] >= 'A' && src[isrc + 1] <= 'O')
 						|| (src[isrc + 1] >= 'a' && src[isrc + 1] <= 'o')
 						|| src[isrc + 1] == ':'

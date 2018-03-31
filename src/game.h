@@ -53,7 +53,7 @@ enum {
 	COLOR_QUAKE3_NUMERIC        = 0x00008, // Quake 3 ^[0-9] color codes
 	COLOR_QUAKE4                = 0x00010, // Quake 4 color codes
 	COLOR_SAVAGE                = 0x00020, // Savage color codes
-	COLOR_UNVANQUISHED          = 0x00040, // Unvanquished color codes
+	COLOR_WOLFET                = 0x00040, // Wolfenstein: Enemy Territory color codes
 	COLOR_XONOTIC               = 0x00080, // Xonotic color codes
 };
 
