@@ -135,7 +135,9 @@ struct game {
 	char *game_cfg;
 	GData *games_data;
 	GSList *custom_args;
+
 	/** game specific private data */
+	// char *private_suffix;
 	void *pd;
 };
 

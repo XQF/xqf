@@ -27,7 +27,7 @@
 // hack to make dlsym work
 #define static
 
-#include "icons.c"
+#include ICONS_C_INCLUDE
 
 #include "xpm/update.xpm"
 #include "xpm/refresh.xpm"

@@ -31,6 +31,7 @@
 		<update_prefs/>
 		<default_home/>
 		<main_mod/>
+		<private_suffix/>
 		<pd/>
 	</game>
 	<game>
@@ -48,7 +49,6 @@
 		<prefs_load>q2_prefs_load</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>arena</main_mod>
-		<pd>alienarena_private</pd>
 	</game>
 	<game>
 		<base>UN_SERVER</base>
@@ -61,7 +61,7 @@
 		<qstat_option>-ams</qstat_option>
 		<icon>aao.xpm</icon>
 		<command>armyops</command>
-		<pd>aao_private</pd>
+		<private_suffix>.aao</private_suffix>
 	</game>
 	<game>
 		<type>BF1942_SERVER</type>
@@ -93,7 +93,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -112,7 +111,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>uo</main_mod>
-		<pd>coduo_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -131,7 +129,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod2_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -150,7 +147,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>main</main_mod>
-		<pd>cod4_private</pd>
 	</game>
 	<game>
 		<base>Q2_SERVER</base>
@@ -160,7 +156,6 @@
 		<icon>dday.xpm</icon>
 		<command>DDaynormandy</command>
 		<main_mod>dday</main_mod>
-		<pd>dday_private</pd>
 	</game>
 	<game>
 		<type>DESCENT3_SERVER</type>
@@ -206,7 +201,6 @@
 		<main_mod>base</main_mod>
 		<attributes>+net_clientRemoteConsolePassword</attributes>
 		<attributes>+rconpassword</attributes>
-		<pd>doom3_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -223,7 +217,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>etmain</main_mod>
-		<pd>etl_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -248,7 +241,6 @@
 		<main_mod>base</main_mod>
 		<attributes>+net_clientRemoteConsolePassword</attributes>
 		<attributes>+rconpassword</attributes>
-		<pd>etqw_private</pd>
 	</game>
 	<game>
 		<type>HL_SERVER_OLD</type>
@@ -268,7 +260,6 @@
 		<has_map>quake_has_map</has_map>
 		<arch_identifier>sv_os</arch_identifier>
 		<identify_os>identify_os</identify_os>
-		<pd>hl_private</pd>
 	</game>
 	<game>
 		<type>HL_SERVER</type>
@@ -288,7 +279,6 @@
 		<has_map>quake_has_map</has_map>
 		<arch_identifier>sv_os</arch_identifier>
 		<identify_os>identify_os</identify_os>
-		<pd>hl_private</pd>
 	</game>
 	<game>
 		<type>HL2_SERVER</type>
@@ -365,7 +355,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>base</main_mod>
-		<pd>jk2_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -387,7 +376,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>base</main_mod>
-		<pd>jk3_private</pd>
 	</game>
 	<game>
 		<type>KP_SERVER</type>
@@ -418,7 +406,6 @@
 		<command>mohaa</command>
 		<default_home>~/.mohaa</default_home>
 		<main_mod>main</main_mod>
-		<pd>mohaa_private</pd>
 	</game>
 	<game>
 		<type>NETP_SERVER</type>
@@ -452,7 +439,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>data</main_mod>
-		<pd>nexuiz_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -471,7 +457,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>baseq3</main_mod>
-		<pd>openarena_private</pd>
 	</game>
 	<game>
 		<type>OTTD_SERVER</type>
@@ -500,7 +485,7 @@
 		<icon>postal2.xpm</icon>
 		<command>postal2mpdemo</command>
 		<command>postal2mp</command>
-		<pd>postal2_private</pd>
+		<private_suffix>.fuk</private_suffix>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -519,7 +504,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>baseq3</main_mod>
-		<pd>q3rally_private</pd>
 	</game>
 	<game>
 		<type>Q1_SERVER</type>
@@ -546,7 +530,6 @@
 		<prefs_load>q1_prefs_load</prefs_load>
 		<update_prefs>q1_update_prefs</update_prefs>
 		<main_mod>id1</main_mod>
-		<pd>q1_private</pd>
 	</game>
 	<game>
 		<type>QW_SERVER</type>
@@ -577,7 +560,6 @@
 		<update_prefs>qw_update_prefs</update_prefs>
 		<main_mod>qw</main_mod>
 		<main_mod>id1</main_mod>
-		<pd>qw_private</pd>
 	</game>
 	<game>
 		<type>Q2_SERVER</type>
@@ -607,7 +589,6 @@
 		<prefs_load>q2_prefs_load</prefs_load>
 		<update_prefs>q2_update_prefs</update_prefs>
 		<main_mod>baseq2</main_mod>
-		<pd>q2_private</pd>
 	</game>
 	<game>
 		<type>Q3_SERVER</type>
@@ -640,7 +621,6 @@
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>demoq3</main_mod>
 		<main_mod>baseq3</main_mod>
-		<pd>q3_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -669,7 +649,6 @@
 		<main_mod>q4base</main_mod>
 		<attributes>+net_clientRemoteConsolePassword</attributes>
 		<attributes>+rconpassword</attributes>
-		<pd>quake4_private</pd>
 	</game>
 	<game>
 		<base>Q2_SERVER</base>
@@ -685,7 +664,6 @@
 		<command>quetoo</command>
 		<default_home>~/.quetoo</default_home>
 		<main_mod>default</main_mod>
-		<pd>quetoo_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -704,7 +682,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>rq3</main_mod>
-		<pd>reaction_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -723,7 +700,6 @@
 		<main_mod>demomain</main_mod>
 		<main_mod>main</main_mod>
 		<main_mod>wolfmp</main_mod>
-		<pd>wolf_private</pd>
 	</game>
 	<game>
 		<base>UN_SERVER</base>
@@ -732,7 +708,7 @@
 		<id>RUNESRV</id>
 		<icon>rune.xpm</icon>
 		<command>rune</command>
-		<pd>rune_private</pd>
+		<private_suffix>.run</private_suffix>
 	</game>
 	<game>
 		<type>SAS_SERVER</type>
@@ -800,7 +776,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>smokinguns</main_mod>
-		<pd>smokinguns_private</pd>
 	</game>
 	<game>
 		<type>SFS_SERVER</type>
@@ -849,7 +824,6 @@
 		<exec_client>teeworlds_exec</exec_client>
 		<command>teeworlds</command>
 		<default_home>~/.teeworlds</default_home>
-		<pd>teeworlds_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -870,7 +844,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>base</main_mod>
-		<pd>tremfusion_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -892,7 +865,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>base</main_mod>
-		<pd>tremulous_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -913,7 +885,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>base</main_mod>
-		<pd>tremulousgpp_private</pd>
 	</game>
 	<game>
 		<type>T2_SERVER</type>
@@ -953,7 +924,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>baseturtle</main_mod>
-		<pd>turtlearena_private</pd>
 	</game>
 	<game>
 		<type>UN_SERVER</type>
@@ -970,7 +940,7 @@
 		<init_maps>unreal_init_maps</init_maps>
 		<has_map>unreal_has_map</has_map>
 		<command>ut</command>
-		<pd>ut_private</pd>
+		<private_suffix>.unr</private_suffix>
 	</game>
 	<game>
 		<base>UN_SERVER</base>
@@ -984,7 +954,7 @@
 		<command>ut2003_demo</command>
 		<command>ut2003</command>
 		<default_home>~/.ut2003</default_home>
-		<pd>ut2_private</pd>
+		<private_suffix>.ut2</private_suffix>
 	</game>
 	<game>
 		<base>UN_SERVER</base>
@@ -1002,7 +972,7 @@
 		<cmd_or_dir_changed>ut2004_cmd_or_dir_changed</cmd_or_dir_changed>
 		<update_prefs>ut2004_update_prefs</update_prefs>
 		<default_home>~/.ut2004</default_home>
-		<pd>ut2004_private</pd>
+		<private_suffix>.ut2</private_suffix>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1024,7 +994,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>pkg</main_mod>
-		<pd>unvanquished_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1045,7 +1014,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>q3ut4</main_mod>
-		<pd>iourt_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1081,7 +1049,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>basewsw</main_mod>
-		<pd>warsow_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1098,7 +1065,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>etmain</main_mod>
-		<pd>wolfet_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1117,7 +1083,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>wop</main_mod>
-		<pd>wop_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1138,7 +1103,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs_common</update_prefs>
 		<main_mod>data</main_mod>
-		<pd>xonotic_private</pd>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
@@ -1157,7 +1121,6 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>ZEQ2</main_mod>
-		<pd>zeq2lite_private</pd>
 	</game>
 	<game>
 		<type>GPS_SERVER</type>

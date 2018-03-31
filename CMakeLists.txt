@@ -506,7 +506,9 @@ add_custom_command (
     DEPENDS gamesxml2c)
 
 # Define games.c filename for including in src/game.c
-add_definitions (-DGAMES_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
+add_definitions (-DGAMES_C_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
+add_definitions (-DGAMES_H_INCLUDE="${CMAKE_BINARY_DIR}/games.h")
+add_definitions (-DICONS_C_INCLUDE="${CMAKE_BINARY_DIR}/icons.c")
 
 # Make src/game.c depend on games.c so that src/game.c is rebuilt when games.c changes,
 # this must be manually specified due to the include name being a define

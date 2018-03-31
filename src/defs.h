@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
-#include "games.h"
+#include GAMES_H_INCLUDE
 
 // max 0x8000, server->flags is unsigned
 enum server_flags {
