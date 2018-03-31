@@ -431,12 +431,14 @@ int main (int argc, char* argv[]) {
 			free(buf);
 
 			if (ptr->game->basic[TAG_private_suffix] == NULL) {
-				if (i == 0)
-				fprintf(games_c_file, "static struct quake_private %s;\n", ptr->game->basic[TAG_pd]);
+				if (i == 0) {
+					fprintf(games_c_file, "static struct quake_private %s;\n", ptr->game->basic[TAG_pd]);
+				}
 			}
 			else {
-				if (i == 1)
-				fprintf(games_c_file, "static struct unreal_private %s = { NULL, \"%s\" };\n", ptr->game->basic[TAG_pd], ptr->game->basic[TAG_private_suffix]);
+				if (i == 1) {
+					fprintf(games_c_file, "static struct unreal_private %s = { NULL, \"%s\" };\n", ptr->game->basic[TAG_pd], ptr->game->basic[TAG_private_suffix]);
+				}
 			}
 		}
 	}
