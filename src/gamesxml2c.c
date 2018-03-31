@@ -62,7 +62,6 @@ typedef enum
 	TAG_prefs_load,
 	TAG_update_prefs,
 	TAG_default_home,
-	TAG_private_suffix,
 	TAG_pd,
 	TAG_end_basic = TAG_pd,
 
@@ -73,6 +72,7 @@ typedef enum
 	TAG_attributes,
 	TAG_end_multi = TAG_attributes,
 
+	TAG_private_suffix,
 	TAG_base,
 
 	TAG_count,
@@ -294,10 +294,6 @@ void printGame(FILE* games_c_file, RawGame* rg, RawGame* template) {
 	fputs("\t{\n", games_c_file);
 	for (tag = TAG_start_basic; tag <= TAG_end_basic; ++tag) {
 		xmlChar* val = rg->basic[tag];
-
-		if (tag == TAG_private_suffix) {
-			continue;
-		}
 
 		if (!val && rg->base && tag_inherit(tag)) {
 			val = rg->base->basic[tag];

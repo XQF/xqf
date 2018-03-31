@@ -137,7 +137,6 @@ struct game {
 	GSList *custom_args;
 
 	/** game specific private data */
-	// char *private_suffix;
 	void *pd;
 };
 
