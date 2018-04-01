@@ -197,7 +197,7 @@ void free_pixmaps (void) {
 	free_pixmap (&punkbuster_pix);
 	free_pixmap (&locked_punkbuster_pix);
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		free_pixmap(games[i].pix);
 		g_free(games[i].pix);
 		games[i].pix = NULL;

@@ -823,7 +823,6 @@ char *master_to_url(QFMaster* m) {
 		return NULL;
 }
 
-
 /** only free content, not pointer itself */
 static void master_options_release(QFMasterOptions* o, gboolean doit) {
 	if (!doit || !o) return;
@@ -860,6 +859,11 @@ struct master *add_master (char *path, char *name, enum server_type type, enum s
 		case MASTER_NATIVE:
 		case MASTER_GAMESPY:
 		case MASTER_LAN:
+			if (query_type == MASTER_LAN) {
+				// override master “LAN” name with game name
+				name = games[type].name;
+			}
+
 			// check for valid hostname/ip
 			if (parse_address (path + strlen(master_prefixes[query_type]), &addr, &port)) {
 				// if no port was specified, add default master port if available or fail
@@ -978,6 +982,7 @@ struct master *add_master (char *path, char *name, enum server_type type, enum s
 	freeoptions = FALSE;
 
 	if (m) {
+		type = query_type == MASTER_LAN? LAN_SERVER : type;
 		group = (struct master *) g_slist_nth_data (master_groups, type);
 		group->masters = g_slist_append (group->masters, m);
 		m->user = user;
@@ -999,7 +1004,12 @@ void free_master (struct master *m) {
 	}
 	else {
 		if (m->type != UNKNOWN_SERVER) {
-			group = (struct master *) g_slist_nth_data (master_groups, m->type);
+			if (m->master_type == MASTER_LAN) {
+				group = (struct master *) g_slist_nth_data (master_groups, LAN_SERVER);
+			}
+			else{
+				group = (struct master *) g_slist_nth_data (master_groups, m->type);
+			}
 			group->masters = g_slist_remove (group->masters, m);
 		}
 		all_masters = g_slist_remove (all_masters, m);
@@ -1019,8 +1029,7 @@ void free_master (struct master *m) {
 	g_free (m);
 }
 
-
-/** parse type of the form <TYPE>[,QSTAT_MASTER_OPION]
+/** parse type of the form <TYPE>[,QSTAT_MASTER_OPTION]
  * DESTRUCTIVE
  * @return qstat_master_option or NULL
  */
@@ -1263,8 +1272,15 @@ void init_masters (int update) {
 
 	favorites = create_master (N_("Favorites"), UNKNOWN_SERVER, FALSE);
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		m = create_master (games[i].name, i, TRUE);
+
+		if (i == LAN_SERVER) {
+			m->master_type = MASTER_LAN;
+			g_free(m->name);
+			m->name = g_strdup(N_("Local network"));
+		}
+
 		master_groups = g_slist_append (master_groups, m);
 	}
 

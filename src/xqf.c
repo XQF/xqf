@@ -2521,7 +2521,7 @@ gboolean check_cmdline_launch (gpointer nothing) {
 		if (port) // guess the type from the port
 		{
 			unsigned i = 0;
-			for (i = 0; i < UNKNOWN_SERVER; i++) {
+			for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
 				if (games[i].default_port == port) {
 					++matches;
 					if (type == UNKNOWN_SERVER) type = i;
