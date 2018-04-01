@@ -18,6 +18,7 @@ cmake_install_manifest="${build_dir}/install_manifest.txt"
 mkdir -p "${build_dir}" \
 && cd "${build_dir}" \
 && cmake -DCMAKE_INSTALL_PREFIX='/usr' -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=1 .. \
+&& make clean \
 && make -j$(nproc) \
 && sudo checkinstall --default --pkgname='xqf' --pkgversion="$(cat VERSION)" --pkglicense='GPLv2' --exclude "${cmake_install_manifest}" --nodoc --deldesc make install
 
