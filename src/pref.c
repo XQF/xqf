@@ -383,6 +383,16 @@ static struct q3_common_prefs_s cod4_prefs = {
 	.defproto  = "6",
 };
 
+static const char* codwaw_masterprotocols[] = {
+	"101 - current",
+	NULL
+};
+
+static struct q3_common_prefs_s codwaw_prefs = {
+	.protocols = codwaw_masterprotocols,
+	.defproto  = "101",
+};
+
 static const char* jk2_masterprotocols[] = {
 	"16 - v1.04",
 	"15 - v1.02",
@@ -3201,6 +3211,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case CODUO_SERVER: return &coduo_prefs;
 		case COD2_SERVER: return &cod2_prefs;
 		case COD4_SERVER: return &cod4_prefs;
+		case CODWAW_SERVER: return &codwaw_prefs;
 		case JK2_SERVER: return &jk2_prefs;
 		case JK3_SERVER: return &jk3_prefs;
 		case NEXUIZ_SERVER: return &nexuiz_prefs;
@@ -4352,6 +4363,7 @@ static struct generic_prefs* new_generic_prefs (void) {
 	new_genprefs[CODUO_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[COD2_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[COD4_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
+	new_genprefs[CODWAW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[JK2_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[JK3_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[SOF2S_SERVER].add_options_to_notebook = add_q3_options_to_notebook;

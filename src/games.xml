@@ -159,6 +159,20 @@
 		<main_mod>main</main_mod>
 	</game>
 	<game>
+		<base>Q3_SERVER</base>
+		<type>CODWAW_SERVER</type>
+		<name>Call of Duty: World at War</name>
+		<default_port>28960</default_port>
+		<id>CODWAWS</id>
+		<qstat_str>WAWS</qstat_str>
+		<qstat_option>-waws</qstat_option>
+		<icon>codwaw.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<arch_identifier>NULL</arch_identifier>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+	</game>
+	<game>
 		<base>Q2_SERVER</base>
 		<type>DDAY_SERVER</type>
 		<name>D-Day: Normandy</name>

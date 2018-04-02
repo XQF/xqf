@@ -173,6 +173,8 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	"ADD CODWAWS http://www.qtracker.com/server_list_details.php?game=callofdutyworldatwar qtracker.com",
+
 	// added 2018-03-31
 	"ADD AQ2S http://q2servers.com/?g=action&raw=1 q2servers.com",
 
@@ -421,6 +423,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD CODUOS lan://255.255.255.255 LAN",
 	"ADD COD2S lan://255.255.255.255 LAN",
 	"ADD COD4S lan://255.255.255.255 LAN",
+	"ADD CODWAWS lan://255.255.255.255 LAN",
 	"ADD DDAYS lan://255.255.255.255 LAN",
 	"ADD DM3S lan://255.255.255.255 LAN",
 	"ADD EFS lan://255.255.255.255 LAN",
