@@ -3038,7 +3038,7 @@ static void game_listitem_selected_callback (GtkItem *item, enum server_type typ
 
 
 #define GAMES_COLS 3
-#define GAMES_ROWS ((UNKNOWN_SERVER + GAMES_COLS - 1) / GAMES_COLS)
+#define GAMES_ROWS ((UNKNOWN_SERVER - KNOWN_SERVER_START + GAMES_COLS - 1) / GAMES_COLS)
 
 // create dialog where commandline and working dir for all games are configured
 static GtkWidget *games_config_page (int defgame) {
@@ -3074,7 +3074,7 @@ static GtkWidget *games_config_page (int defgame) {
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
-	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		genprefs[i].game_button = gtk_list_item_new();
 
 		gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
@@ -3098,7 +3098,7 @@ static GtkWidget *games_config_page (int defgame) {
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (games_notebook), FALSE);
 	gtk_box_pack_start (GTK_BOX (games_hbox), games_notebook, FALSE, FALSE, 15);
 
-	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		page = generic_game_frame (i);
 
 		label = gtk_label_new (games[i].name);

@@ -317,7 +317,7 @@ void init_pixmaps (GtkWidget *window) {
 	create_pixmap (window, "punkbuster.xpm", &punkbuster_pix);
 	cat_pixmaps(window, &locked_punkbuster_pix, &punkbuster_pix, &locked_pix);
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		struct pixmap* pix = NULL;
 
 		pix = g_malloc0(sizeof(struct pixmap));
