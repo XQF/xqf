@@ -35,6 +35,12 @@
 		<pd/>
 	</game>
 	<game>
+		<type>LAN_SERVER</type>
+		<id>LAN</id>
+		<name>LAN</name>
+		<icon>lan.xpm</icon>
+	</game>
+	<game>
 		<base>Q2_SERVER</base>
 		<type>AQ2_SERVER</type>
 		<name>Action Quake 2</name>

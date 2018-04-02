@@ -183,11 +183,11 @@ void init_games() {
 
 	debug(3, "initializing games");
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
 		g_datalist_init(&games[i].games_data);
 	}
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
 		for (j = 0; games[i].attributes && games[i].attributes[j]; j += 2) {
 			game_set_attribute_const(i, games[i].attributes[j], games[i].attributes[j+1]);
 		}
@@ -213,7 +213,7 @@ void init_games() {
 void games_done() {
 	int i;
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
 		g_free(games[i].real_home);
 	}
 }
@@ -242,13 +242,13 @@ enum server_type id2type (const char *id) {
 
 	g_return_val_if_fail(id != NULL, UNKNOWN_SERVER);
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		g_return_val_if_fail(games[i].id != NULL, UNKNOWN_SERVER);
 		if (g_ascii_strcasecmp (id, games[i].id) == 0)
 			return games[i].type;
 	}
 
-	for (i = 0; i < UNKNOWN_SERVER; i++) {
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
 		if (g_ascii_strcasecmp (id, games[i].qstat_str) == 0)
 			return games[i].type;
 	}

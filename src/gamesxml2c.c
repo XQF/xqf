@@ -499,6 +499,7 @@ int main (int argc, char* argv[]) {
 
 	fclose(games_c_file);
 
+	fputs("#define KNOWN_SERVER_START LAN_SERVER + 1\n", games_h_file);
 	fputs("enum server_type {\n", games_h_file);
 
 	// write server_type enum
@@ -512,6 +513,7 @@ int main (int argc, char* argv[]) {
 	}
 
 	fputs("};\n", games_h_file);
+	fputs("#define KNOWN_SERVER_START LAN_SERVER + 1\n", games_h_file);
 
 	fclose(games_h_file);
 	fclose(icons_c_file);

@@ -123,18 +123,21 @@ static enum server_type selected_country;
 static void server_stats_create (void) {
 #ifdef USE_GEOIP
 	unsigned g;
-	// position UNKNOWN_SERVER is used for total number of all games
-	unsigned i = (sizeof(struct country_stats) + geoip_num_countries()*sizeof(struct country_num)) * (UNKNOWN_SERVER+1);
+
+	// HACK: position UNKNOWN_SERVER is used for total number of all games
+	unsigned i = (sizeof(struct country_stats) + geoip_num_countries()*sizeof(struct country_num)) * (UNKNOWN_SERVER + 1);
+
 	srv_countries  = g_malloc0 (i);
 
-	for (g = 0; g < UNKNOWN_SERVER+1; ++g) {
+	// HACK: position UNKNOWN_SERVER is used for total number of all games
+	for (g = KNOWN_SERVER_START; g <= UNKNOWN_SERVER; ++g) {
 		srv_countries[g].country = (struct country_num*)((void*)srv_countries
-				+ sizeof(struct country_stats)*(UNKNOWN_SERVER+1) + g*geoip_num_countries()*sizeof(struct country_num));
+				+ sizeof(struct country_stats)*(UNKNOWN_SERVER + 1) + g*geoip_num_countries()*sizeof(struct country_num));
 	}
 #endif
 
-	// position UNKNOWN_SERVER is used for total number of all games
-	srv_stats = g_malloc0 (sizeof (struct server_stats) * (UNKNOWN_SERVER+1));
+	// HACK: position UNKNOWN_SERVER is used for total number of all games
+	srv_stats = g_malloc0 (sizeof (struct server_stats) * (UNKNOWN_SERVER + 1));
 
 	srv_archs  = g_malloc0 (sizeof (struct arch_stats) * UNKNOWN_SERVER);
 	players  = g_malloc0 (sizeof (struct arch_stats) * UNKNOWN_SERVER);
@@ -278,6 +281,7 @@ static void collect_statistics (void) {
 					srv_countries[s->type].country[s->country_id].c = s->country_id;
 					++srv_countries[s->type].nonzero;
 				}
+				// HACK: position UNKNOWN_SERVER is used for total number of all games
 				if (++srv_countries[UNKNOWN_SERVER].country[s->country_id].n == 1) {
 					srv_countries[UNKNOWN_SERVER].country[s->country_id].c = s->country_id;
 					++srv_countries[UNKNOWN_SERVER].nonzero;
@@ -321,7 +325,8 @@ static void collect_statistics (void) {
 #ifdef USE_GEOIP
 	{
 		unsigned g;
-		for (g = 0; g < UNKNOWN_SERVER+1; ++g) {
+		// HACK: position UNKNOWN_SERVER is used for total number of all games
+		for (g = KNOWN_SERVER_START; g <= UNKNOWN_SERVER; ++g) {
 			qsort(srv_countries[g].country, geoip_num_countries(), sizeof(struct country_num), country_stat_compare_func);
 		}
 	}
@@ -412,7 +417,7 @@ static GtkWidget *server_stats_page (void) {
 	for (i = 0; i < 6; i++)
 		put_label_to_table (table, _(srv_headers[i]), 1.0, i + 1, 0);
 
-	for (i = 0, row = 1; i < UNKNOWN_SERVER; i++) {
+	for (i = KNOWN_SERVER_START, row = 1; i < UNKNOWN_SERVER; i++) {
 
 		// Skip a game if it's not configured and show only configured is enabled
 		if (!games[i].cmd && default_show_only_configured_games)
@@ -426,6 +431,7 @@ static GtkWidget *server_stats_page (void) {
 		put_server_stats (table, i, row);
 
 		{
+			// HACK: position UNKNOWN_SERVER is used for total number of all games
 			srv_stats[UNKNOWN_SERVER].servers += srv_stats[i].servers;
 			srv_stats[UNKNOWN_SERVER].ok      += srv_stats[i].ok;
 			srv_stats[UNKNOWN_SERVER].timeout += srv_stats[i].timeout;
@@ -554,7 +560,7 @@ static GtkWidget *archs_stats_page (void) {
 
 	to_activate = config_get_int("/" CONFIG_FILE "/Statistics/game");
 
-	for (type = 0; type < UNKNOWN_SERVER; ++type) {
+	for (type = KNOWN_SERVER_START; type < UNKNOWN_SERVER; ++type) {
 		if (!create_server_type_menu_filter_hasharch(type))
 			continue;
 
@@ -679,7 +685,8 @@ static GtkWidget *country_stats_page (void) {
 
 	selected_country = to_activate = config_get_int("/" CONFIG_FILE "/Statistics/country");
 
-	for (type = 0; type <= UNKNOWN_SERVER; ++type) {
+	// HACK: position UNKNOWN_SERVER is used for total number of all games
+	for (type = KNOWN_SERVER_START; type <= UNKNOWN_SERVER; ++type) {
 		if (!srv_countries[type].nonzero)
 			continue;
 

@@ -458,7 +458,8 @@ void source_ctree_add_master (GtkWidget *ctree, struct master *m) {
 		return;
 
 	if (m->type != UNKNOWN_SERVER) {
-		group = (struct master *) g_slist_nth_data (master_groups, m->type);
+		enum server_type type = m->master_type == MASTER_LAN? LAN_SERVER : m->type;
+		group = (struct master *) g_slist_nth_data (master_groups, type);
 		source_ctree_enable_master_group (ctree, group, TRUE);
 	}
 
@@ -763,7 +764,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 
 	menu = gtk_menu_new ();
 
-	for (i = 0; i < UNKNOWN_SERVER; ++i) {
+	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; ++i) {
 		if (filterfunc && !filterfunc (i))
 			continue;
 
