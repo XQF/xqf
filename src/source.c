@@ -1279,6 +1279,8 @@ void init_masters (int update) {
 			m->master_type = MASTER_LAN;
 			g_free(m->name);
 			m->name = g_strdup(N_("Local network"));
+			// HACK: make LAN server name translatable
+			games[i].name = m->name;
 		}
 
 		master_groups = g_slist_append (master_groups, m);
