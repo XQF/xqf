@@ -342,6 +342,7 @@ static const char* cod_masterprotocols[] = {
 static struct q3_common_prefs_s cod_prefs = {
 	.protocols = cod_masterprotocols,
 	.defproto  = "6",
+	.flags     = Q3_PREF_PB,
 };
 
 static const char* coduo_masterprotocols[] = {
@@ -353,6 +354,7 @@ static const char* coduo_masterprotocols[] = {
 static struct q3_common_prefs_s coduo_prefs = {
 	.protocols = coduo_masterprotocols,
 	.defproto  = "22",
+	.flags     = Q3_PREF_PB,
 };
 
 static const char* cod2_masterprotocols[] = {
@@ -366,6 +368,7 @@ static const char* cod2_masterprotocols[] = {
 static struct q3_common_prefs_s cod2_prefs = {
 	.protocols = cod2_masterprotocols,
 	.defproto  = "118",
+	.flags     = Q3_PREF_PB,
 };
 
 static const char* cod4_masterprotocols[] = {
@@ -381,6 +384,7 @@ static const char* cod4_masterprotocols[] = {
 static struct q3_common_prefs_s cod4_prefs = {
 	.protocols = cod4_masterprotocols,
 	.defproto  = "6",
+	.flags     = Q3_PREF_PB,
 };
 
 static const char* codwaw_masterprotocols[] = {
@@ -391,6 +395,7 @@ static const char* codwaw_masterprotocols[] = {
 static struct q3_common_prefs_s codwaw_prefs = {
 	.protocols = codwaw_masterprotocols,
 	.defproto  = "101",
+	.flags     = Q3_PREF_PB,
 };
 
 static const char* jk2_masterprotocols[] = {
