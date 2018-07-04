@@ -1316,7 +1316,7 @@ static char *q3a_excessiveplus_gametypes[MAX_Q3A_EXCESSIVEPLUS_TYPES] = {
 	"Protect the Leader"    /* 9 = Protect the Leader */
 };
 
-#define MAX_OPENARENA_TYPES MAX_Q3A_WQ3_TYPES
+#define MAX_OPENARENA_TYPES MAX_Q3A_TYPES
 #define openarena_gametypes q3a_gametypes
 
 #define MAX_SMOKINGUNS_TYPES MAX_Q3A_WQ3_TYPES
