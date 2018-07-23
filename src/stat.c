@@ -1133,15 +1133,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 	}
 
 	if (m->url) {
-
-		/* savage hack */
-		if (m->type == SAS_SERVER) {
-			argv[argi++] = PACKAGE_DATA_DIR "/tools/qstat_savage";
-			argv[argi++] = "-sam";
-			argv[argi++] = m->url;
-			argv[argi++] = NULL;
-		}
-		else if (m->master_type == MASTER_GSLIST) {
+		if (m->master_type == MASTER_GSLIST) {
 			int ret = 0;
 			startprog = 1;
 

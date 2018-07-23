@@ -564,9 +564,6 @@ add_custom_command (TARGET translation
 # Executable
 install (TARGETS xqf DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
-# Query script
-install (PROGRAMS ${CMAKE_SOURCE_DIR}/tools/qstat_savage DESTINATION "${PACKAGE_DATA_DIR}/tools")
-
 # UI
 if (GUI MATCHES GTK2)
     install (FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk2.ui DESTINATION ${PACKAGE_DATA_DIR}/ui)
