@@ -22,6 +22,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// does no longer work, removed 2018-07-23
+	"DELETE SAS http://masterserver.savage.s2games.com/gamelist_full.dat s2games.com",
+
 	// uses http list instead, replaced 2018-03-24
 	"DELETE AMS,-gsm,armygame gmaster://gsm.qtracker.com:28900 qtracker.com",
 	"DELETE BF1942,-gsm,bfield1942 gmaster://gsm.qtracker.com:28900 qtracker.com",
@@ -361,9 +364,6 @@ static char *builtin_masters_update_info[] = {
 
 	// added 2005-10-07
 	"ADD Q4S master://q4master.idsoftware.com idsoftware.com",
-
-	// added 2005-09-07
-	"ADD SAS http://masterserver.savage.s2games.com/gamelist_full.dat s2games.com",
 
 	// added 2005-06-04
 	"ADD NEXUIZS master://dpmaster.deathmask.net:27950 deathmask.net",
