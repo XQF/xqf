@@ -56,7 +56,7 @@ option(USE_GZIP "Enable gzip compressor support" ON)
 option(RCON_STANDALONE "Build standalone RCON" OFF)
 
 if (NOT WITH_QSTAT)
-    set (WITH_QSTAT "/usr/bin/qstat")
+    set (WITH_QSTAT "qstat")
 endif (NOT WITH_QSTAT)
 
 add_definitions (-DQSTAT_EXEC="${WITH_QSTAT}")
