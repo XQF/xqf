@@ -22,6 +22,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// use master subdomain instead, replaced 2018-08-13
+	"DELETE UNVANQUISHEDS master://unvanquished.net:27950 unvanquished.net",
+
 	// does no longer work, removed 2018-07-23
 	"DELETE SAS http://masterserver.savage.s2games.com/gamelist_full.dat s2games.com",
 
@@ -176,6 +179,11 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2018-08-13
+	"ADD UNVANQUISHEDS master://master.unvanquished.net:27950 unvanquished.net",
+	"ADD UNVANQUISHEDS master://master2.unvanquished.net:27950 unvanquished.net #2",
+
+	// added 2018-04-02
 	"ADD CODWAWS http://www.qtracker.com/server_list_details.php?game=callofdutyworldatwar qtracker.com",
 
 	// added 2018-03-31
@@ -342,7 +350,6 @@ static char *builtin_masters_update_info[] = {
 	// added 2013-10-26
 	"ADD SMOKINGUNSS master://master.smokin-guns.org:27950 smokin-guns.org",
 	"ADD SMOKINGUNSS master://parttimegeeks.net:27950 parttimegeeks.net",
-	"ADD UNVANQUISHEDS master://unvanquished.net:27950 unvanquished.net",
 
 	// added 2013-10-25
 	"ADD XONOTICS master://dpmaster.deathmask.net:27950 deathmask.net",
