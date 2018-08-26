@@ -1586,6 +1586,11 @@ struct q3a_gametype_s smokinguns_gametype_map[] =
 		"smokinguns",
 		smokinguns_gametypes,
 		MAX_SMOKINGUNS_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1610,6 +1615,11 @@ struct q3a_gametype_s wop_gametype_map[] =
 		"pcs",
 		worldofpadman_gametypes,
 		MAX_WORLDOFPADMAN_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1644,6 +1654,11 @@ struct q3a_gametype_s wolf_gametype_map[] =
 		"shrubmod",
 		wolf_gametypes,
 		MAX_WOLF_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1659,6 +1674,11 @@ struct q3a_gametype_s ef_gametype_map[] =
 		"EliteForce",
 		q3a_gametypes,
 		MAX_Q3A_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1678,6 +1698,11 @@ struct q3a_gametype_s wolfet_gametype_map[] =
 		"cqbtest",
 		wolfet_tcetest_gametypes,
 		MAX_WOLFET_TCETEST_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1697,6 +1722,11 @@ struct q3a_gametype_s jk2_gametype_map[] =
 		"SaberMod",
 		jk2_sabermod_gametypes,
 		MAX_JK2_SABERMOD_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1716,6 +1746,11 @@ struct q3a_gametype_s jk3_gametype_map[] =
 		"japlus",
 		jk3_gametypes,
 		MAX_JK3_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1725,6 +1760,11 @@ struct q3a_gametype_s iourt_gametype_map[] =
 		"q3ut4",
 		q3a_ut3_gametypes,
 		MAX_Q3A_UT3_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1734,6 +1774,11 @@ struct q3a_gametype_s zeq2lite_gametype_map[] =
 		"ZEQ2",
 		zeq2lite_gametypes,
 		MAX_ZEQ2LITE_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
@@ -1748,6 +1793,11 @@ struct q3a_gametype_s q3rally_gametype_map[] =
 		"Q3Rally",
 		q3rally_gametypes,
 		MAX_Q3RALLY_TYPES
+	},
+	{
+		NULL,
+		NULL,
+		0
 	}
 };
 
