@@ -159,6 +159,7 @@ int geoip_id_by_ip(struct in_addr in) {
 
 static char* find_flag_file(int id) {
 	gchar file[] = "flags/lan.png";
+	gchar* file_lwr;
 	gchar* filename;
 
 	if (id != LAN_GeoIPid) {
@@ -168,7 +169,9 @@ static char* find_flag_file(int id) {
 		strcpy(file+strlen("flags/")+2, ".png");
 	}
 
-	filename = find_pixmap_directory(g_ascii_strdown(file, -1));
+	file_lwr = g_ascii_strdown(file, -1);
+	filename = find_pixmap_directory(file_lwr);
+	g_free(file_lwr);
 
 	return filename;
 }

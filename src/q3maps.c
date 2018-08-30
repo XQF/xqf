@@ -525,11 +525,10 @@ void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFu
 	dirstack = g_slist_prepend(dirstack, dse);
 
 	while (dirstack) {
-		GSList* current = dirstack;
-		dirstack = g_slist_remove_link(dirstack, dirstack);
-
-		dse = current->data;
+		dse = dirstack->data;
 		curdir = dse->name;
+
+		dirstack = g_slist_delete_link(dirstack, dirstack);
 
 		dir = opendir(curdir);
 		if (!dir) {
