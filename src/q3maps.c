@@ -232,13 +232,21 @@ static char* is_xonotic_mapshot(const char* name) {
 }
 
 // must free
-static char* is_q3_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/", 5)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".bsp")) {
-		const char* basename = name + 5;
-		return g_strndup(basename, strlen(basename)-4);
-	}
+static gchar *strip_suffix(const gchar *name, const gchar *suffix) {
+	if (g_str_has_suffix(name, suffix))
+		return g_strndup(name, strlen(name) - strlen(suffix));
 	return NULL;
+}
+
+// must free
+static char* is_q3_map(const char* name) {
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/", 5))
+		return NULL;
+
+	return strip_suffix(name + 5, ".bsp");
 }
 
 // must free
@@ -256,13 +264,13 @@ static char* is_doom3_mapshot(const char* name) {
 }
 
 static char* is_doom3_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/game/", 10)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".map")) {
-		char* basename = g_path_get_basename(name);
-		basename[strlen(name)-4] = '\0';
-		return basename;
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/game/", 10))
+		return NULL;
+
+	return strip_suffix(name + 10, ".map");
 }
 
 // must free
@@ -280,13 +288,13 @@ static char* is_quake4_mapshot(const char* name) {
 }
 
 static char* is_quake4_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/", 5)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".map")) {
-		char* basename = g_path_get_basename(name);
-		basename[strlen(name)-4] = '\0';
-		return basename;
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/", 5))
+		return NULL;
+
+	return strip_suffix(name + 5, ".map");
 }
 
 // must free
@@ -304,13 +312,13 @@ static char* is_etqw_mapshot(const char* name) {
 }
 
 static char* is_etqw_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/", 5)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".stm")) {
-		char* basename = g_path_get_basename(name);
-		basename[strlen(name)-4] = '\0';
-		return basename;
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/", 5))
+		return NULL;
+
+	return strip_suffix(name + 5, ".stm");
 }
 
 static gboolean if_map_insert(const char* path, GHashTable* maphash, char* (*is_map_func)(const char* name)) {
