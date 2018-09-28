@@ -242,6 +242,7 @@ static void collect_statistics (void) {
 	enum OS os;
 	enum CPU cpu;
 	int countthisserver;
+	int count_players;
 
 	servers = all_servers (); /* Free at end of this function */
 
@@ -255,10 +256,16 @@ static void collect_statistics (void) {
 
 			servers_count++;
 
-			srv_stats[s->type].servers++;
-			srv_stats[s->type].players += s->curplayers;
+			if (serverlist_countbots) {
+			    count_players = s->curplayers;
+			} else {
+			    count_players = s->curplayers - s->curbots;
+			}
 
-			players_count += s->curplayers;
+			srv_stats[s->type].servers++;
+			srv_stats[s->type].players += count_players;
+
+			players_count += count_players;
 
 			if (s->ping < MAX_PING) {
 				if (s->ping >= 0) {
@@ -313,8 +320,8 @@ static void collect_statistics (void) {
 				if (countthisserver) {
 					srv_archs[s->type].oscpu[os][cpu]++;
 					srv_archs[s->type].count++;
-					players[s->type].on_os[os] += s->curplayers;
-					players[s->type].total += s->curplayers;
+					players[s->type].on_os[os] += count_players;
+					players[s->type].total += count_players;
 				}
 			}
 		}

@@ -172,7 +172,12 @@ int compare_servers (const struct server *s1, const struct server *s2,
 		case SORT_SERVER_MAXPLAYERS:
 			res = s1->maxplayers - s2->maxplayers;
 			if (!res) {
-				res = s1->curplayers - s2->curplayers;
+				if (serverlist_countbots) {
+					res = s1->curplayers - s1->curbots - (s2->curplayers - s2->curbots);
+				}
+				else {
+					res = s1->curplayers - s2->curplayers;
+				}
 			}
 			break;
 

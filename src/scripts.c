@@ -834,6 +834,7 @@ void script_action_gamequit(struct game* g, struct server* s) {
 
 void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data) {
 	const char *filename = NULL;
+	char *basename;
 	char dest[PATH_MAX];
 	GtkWidget* filesel = topmost_parent(widget);
 	const char* msg;
@@ -846,7 +847,9 @@ void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data) {
 
 	mkdir((const char*)scriptdirs->data, 0777);
 
-	snprintf(dest, sizeof(dest), "%s/%s", (const char*)scriptdirs->data, g_path_get_basename(filename));
+	basename = g_path_get_basename(filename);
+	snprintf(dest, sizeof(dest), "%s/%s", (const char*)scriptdirs->data, basename);
+	g_free(basename);
 
 	if (!access(dest, F_OK)) {
 		if (!dialog_yesno(NULL, 0, NULL, NULL, _("Script %s already exists, overwrite?"), dest)) {
@@ -859,7 +862,9 @@ void install_file_dialog_ok_callback (GtkWidget *widget, gpointer data) {
 		return;
 	}
 
-	g_datalist_remove_data(&scriptdata, g_path_get_basename(filename));
+	basename = g_path_get_basename(filename);
+	g_datalist_remove_data(&scriptdata, basename);
+	g_free(basename);
 	scripts_load();
 
 	dialog_ok(NULL, _("Script saved as\n%s\nPlease close and reopen the preferences dialog"), dest);

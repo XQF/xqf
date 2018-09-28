@@ -64,7 +64,7 @@ void find_ut_maps_dir(GHashTable* maphash, const char* startdir, const char* suf
 		curdir = dse->name;
 		if (dse->level == 1) {
 			if (mod) g_free(mod);
-			mod=g_strdup(g_path_get_basename(curdir));
+			mod=g_path_get_basename(curdir);
 		}
 
 		dir = opendir(curdir);

@@ -35,8 +35,9 @@
 
 struct q3mapinfo
 {
-	char* zipfile;                  // may be NULL
-	char* levelshot;
+	gchar* mapname;
+	gchar* zipfile;                  // may be NULL
+	gchar* levelshot;
 };
 
 static GSList* shotslist = NULL;    // temporary
@@ -126,6 +127,14 @@ static void find__maps_pak(const char* packfile, GHashTable* maphash) {
 	return;
 }
 
+static void free_q3mapinfo(struct q3mapinfo* mi) {
+	g_free(mi->mapname);
+	g_free(mi->levelshot);
+	if (mi->zipfile)
+		g_free(mi->zipfile);
+	g_free(mi);
+}
+
 /** return pointer to last two path entries */
 static inline const char* last_two_entries(const char* name) {
 	const char *l = name;
@@ -144,7 +153,7 @@ static inline const char* last_two_entries(const char* name) {
 	return name;
 }
 
-static gboolean has_known_image_format(const gchar* name) {
+static gchar* has_known_image_format(const gchar* name) {
 	guint i, ext_num = 3;
 	gchar *ext_list[3] = {
 		".jpg",
@@ -153,148 +162,163 @@ static gboolean has_known_image_format(const gchar* name) {
 	};
 
 	for (i = 0; i < ext_num; i++) {
-		if (!g_ascii_strcasecmp(name+strlen(name)-strlen(ext_list[i]), ext_list[i])) {
-			return TRUE;
+		size_t name_len = strlen(name);
+		size_t ext_len = strlen(ext_list[i]);
+
+		if (name_len <= ext_len) {
+			continue;
+		}
+
+		if (!g_ascii_strcasecmp(name + name_len - ext_len, ext_list[i])) {
+			return g_strndup(name, name_len - ext_len);
 		}
 	}
 
-	return FALSE;
+	return NULL;
 }
 
-static gboolean is_q3_mapshot(const char* name) {
+static char* is_q3_mapshot(const char* name) {
+	gchar *mapname;
 	debug(4, "check %s", name);
 	if (*name == '/')
 		name = last_two_entries(name);
-
-	if (!name)
-		return FALSE;
 
 	if (g_ascii_strncasecmp(name, "levelshots/", 11))
-		return FALSE;
+		return NULL;
 
-	if (has_known_image_format(name)) {
+	if ((mapname = has_known_image_format(name + 11))) {
 		debug(3, "found: %s", name);
-		return TRUE;
+		return mapname;
 	}
 
-	return FALSE;
+	return NULL;
 }
 
-static gboolean is_unvanquished_mapshot(const char* name) {
+static char* is_unvanquished_mapshot(const char* name) {
+	gchar *mapname;
 	debug(4, "check %s", name);
 	if (*name == '/')
 		name = last_two_entries(name);
-
-	if (!name)
-		return FALSE;
 
 	if (g_ascii_strncasecmp(name, "meta/", 5))
-		return FALSE;
+		return NULL;
 
-	if (has_known_image_format(name)) {
+	if ((mapname = has_known_image_format(name + 5))) {
 		debug(3, "found: %s", name);
-		return TRUE;
+		return mapname;
 	}
 
-	return FALSE;
+	return NULL;
 }
 
-static gboolean is_xonotic_mapshot(const char* name) {
+static char* is_xonotic_mapshot(const char* name) {
+	char* mapname;
 	debug(4, "check %s", name);
 	if (*name == '/')
 		name = last_two_entries(name);
 
-	if (!name)
-		return FALSE;
-
 	if (g_ascii_strncasecmp(name, "maps/", 5))
-		return FALSE;
+		return NULL;
 
 	if (g_strrstr(name, "/lm_") != NULL)
-		return FALSE;
+		return NULL;
 
-	if (has_known_image_format(name)) {
+	if ((mapname = has_known_image_format(name + 5))) {
 		debug(3, "found: %s", name);
-		return TRUE;
+		return mapname;
 	}
 
-	return FALSE;
+	return NULL;
+}
+
+// must free
+static gchar *strip_suffix(const gchar *name, const gchar *suffix) {
+	if (g_str_has_suffix(name, suffix))
+		return g_strndup(name, strlen(name) - strlen(suffix));
+	return NULL;
 }
 
 // must free
 static char* is_q3_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/", 5)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".bsp")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/", 5))
+		return NULL;
+
+	return strip_suffix(name + 5, ".bsp");
 }
 
 // must free
-static gboolean is_doom3_mapshot(const char* name) {
+static char* is_doom3_mapshot(const char* name) {
+	char* mapname;
 	if (g_ascii_strncasecmp(name, "guis/assets/splash/", 19))
-		return FALSE;
+		return NULL;
 
-	if (has_known_image_format(name)) {
+	if ((mapname = has_known_image_format(name + 19))) {
 		debug(3, "found: %s", name);
-		return TRUE;
+		return mapname;
 	}
 
-	return FALSE;
+	return NULL;
 }
 
 static char* is_doom3_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/game/", 10)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".map")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/game/", 10))
+		return NULL;
+
+	return strip_suffix(name + 10, ".map");
 }
 
 // must free
-static gboolean is_quake4_mapshot(const char* name) {
+static char* is_quake4_mapshot(const char* name) {
+	char* mapname;
 	if (g_ascii_strncasecmp(name, "gfx/guis/loadscreens/", 21))
-		return FALSE;
+		return NULL;
 
-	if (has_known_image_format(name)) {
+	if ((mapname = has_known_image_format(name + 21))) {
 		debug(3, "found: %s", name);
-		return TRUE;
+		return mapname;
 	}
 
-	return FALSE;
+	return NULL;
 }
 
 static char* is_quake4_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/", 5)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".map")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/", 5))
+		return NULL;
+
+	return strip_suffix(name + 5, ".map");
 }
 
 // must free
-static gboolean is_etqw_mapshot(const char* name) {
+static char* is_etqw_mapshot(const char* name) {
+	char* mapname;
 	if (g_ascii_strncasecmp(name, "levelshots/thumbs/", 18))
-		return FALSE;
+		return NULL;
 
-	if (has_known_image_format(name)) {
+	if ((mapname = has_known_image_format(name + 18))) {
 		debug(3, "found: %s", name);
-		return TRUE;
+		return mapname;
 	}
 
-	return FALSE;
+	return NULL;
 }
 
 static char* is_etqw_map(const char* name) {
-	if (!g_ascii_strncasecmp(name, "maps/", 5)
-			&& !g_ascii_strcasecmp(name+strlen(name)-4, ".stm")) {
-		const char* basename = g_path_get_basename(name);
-		return g_strndup(basename, strlen(basename)-4);
-	}
-	return NULL;
+	if (*name == '/')
+		name = last_two_entries(name);
+
+	if (g_ascii_strncasecmp(name, "maps/", 5))
+		return NULL;
+
+	return strip_suffix(name + 5, ".stm");
 }
 
 static gboolean if_map_insert(const char* path, GHashTable* maphash, char* (*is_map_func)(const char* name)) {
@@ -319,29 +343,21 @@ static gboolean if_map_insert(const char* path, GHashTable* maphash, char* (*is_
 }
 
 static gboolean if_shot_insert(const char* path,
-		gboolean (*is_mapshot_func)(const char* name),
+		char* (*is_mapshot_func)(const char* name),
 		const char* zipfile) {
+	gchar* mapname;
 	//    debug(0, "check (%d) %s", (int)(zipfile!=NULL), path);
-	if (is_mapshot_func(path)) {
-		struct q3mapinfo* mi = NULL;
-		size_t psize = 0, nsize;
+	mapname = is_mapshot_func(path);
+	if (mapname) {
+		struct q3mapinfo* mi = g_malloc0(sizeof(struct q3mapinfo));
 
-		nsize = strlen(path)+1;
+		mi->mapname = g_ascii_strdown(mapname, -1);
+		mi->levelshot = g_strdup(path);
 		if (zipfile)
-			psize = strlen(zipfile)+1;
-
-		mi = g_malloc0(sizeof(struct q3mapinfo) + psize + nsize);
-		if (!mi) return TRUE;
-
-		if (zipfile) {
-			mi->zipfile=(char*)mi+sizeof(struct q3mapinfo);
-			strcpy(mi->zipfile, zipfile);
-		}
-
-		mi->levelshot=(char*)mi+sizeof(struct q3mapinfo)+psize;
-		strcpy(mi->levelshot, path);
+			mi->zipfile = g_strdup(zipfile);
 
 		shotslist = g_slist_prepend(shotslist, mi);
+		g_free(mapname);
 		//		debug(0, "found shot %s", mi->levelshot);
 		return TRUE;
 	}
@@ -352,7 +368,7 @@ static gboolean if_shot_insert(const char* path,
 /** open zip file and insert all contained .bsp into maphash */
 static void find_q3_maps_zip(const char* zipfile, GHashTable* maphash,
 		char* (*is_map_func)(const char* name),
-		gboolean (*is_mapshot_func)(const char* name)) {
+		char* (*is_mapshot_func)(const char* name)) {
 	unzFile f;
 	int ret;
 
@@ -407,7 +423,7 @@ void quake_contains_file(const char* name, int level, GHashTable* maphash) {
 		find__maps_pak(name, maphash);
 	}
 	if (strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4, ".bsp") && level == 2) {
-		const gchar* basename = g_path_get_basename(name);
+		gchar* basename=g_path_get_basename(name);
 		gchar* mapname=g_ascii_strdown(basename, strlen(basename)-4);    /* g_ascii_strdown does implicit strndup */
 		if (g_hash_table_lookup(maphash, mapname)) {
 			g_free(mapname);
@@ -415,12 +431,13 @@ void quake_contains_file(const char* name, int level, GHashTable* maphash) {
 		else {
 			g_hash_table_insert(maphash, mapname, GUINT_TO_POINTER(-1));
 		}
+		g_free(basename);
 	}
 }
 
 static void _q3_contains_file(const char* name, int level, GHashTable* maphash,
 		char* (*is_map_func)(const char* name),
-		gboolean (*is_mapshot_func)(const char* name)) {
+		char* (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n", name, level);
 	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pk3") && strlen(name) > 4) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
@@ -441,7 +458,7 @@ void xonotic_contains_file(const char* name, int level, GHashTable* maphash) {
 
 static void _daemon_contains_file(const char* name, int level, GHashTable* maphash,
 		char* (*is_map_func)(const char* name),
-		gboolean (*is_mapshot_func)(const char* name)) {
+		char* (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n", name, level);
 	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".dpk") && strlen(name) > 4) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
@@ -461,7 +478,7 @@ void unvanquished_contains_file(const char* name, int level, GHashTable* maphash
 
 static void _doom3_contains_file(const char* name, int level, GHashTable* maphash,
 		char* (*is_map_func)(const char* name),
-		gboolean (*is_mapshot_func)(const char* name)) {
+		char* (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n", name, level);
 	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pk4") && strlen(name) > 4) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
@@ -508,11 +525,10 @@ void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFu
 	dirstack = g_slist_prepend(dirstack, dse);
 
 	while (dirstack) {
-		GSList* current = dirstack;
-		dirstack = g_slist_remove_link(dirstack, dirstack);
-
-		dse = current->data;
+		dse = dirstack->data;
 		curdir = dse->name;
+
+		dirstack = g_slist_delete_link(dirstack, dirstack);
 
 		dir = opendir(curdir);
 		if (!dir) {
@@ -560,8 +576,9 @@ void traverse_dir(const char* startdir, FoundFileFunction found_file, FoundDirFu
 
 static gboolean maphashforeachremovefunc(gpointer key, gpointer value, gpointer user_data) {
 	g_free(key);
-	if (value && value!=GINT_TO_POINTER(-1))
-		g_free(value);
+	if (value && value!=GINT_TO_POINTER(-1)) {
+		free_q3mapinfo((struct q3mapinfo*)value);
+	}
 	return TRUE;
 }
 
@@ -587,7 +604,10 @@ gboolean q3_lookup_map(GHashTable* maphash, const char* mapname) {
 
 /** return true if mapname is contained in maphash, false otherwise */
 gboolean doom3_lookup_map(GHashTable* maphash, const char* mapname) {
-	if (g_hash_table_lookup(maphash, g_path_get_basename(mapname)))
+	char* basename = g_path_get_basename(mapname);
+	gpointer p = g_hash_table_lookup(maphash, basename);
+	g_free(basename);
+	if (p)
 		return TRUE;
 	return FALSE;
 }
@@ -688,7 +708,9 @@ size_t q3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf)
  * same as q3_lookup_mapshot except that the basename of the map is used
  */
 size_t doom3_lookup_mapshot(GHashTable* maphash, const char* mapname, guchar** buf) {
-	struct q3mapinfo* mi = g_hash_table_lookup(maphash, g_path_get_basename(mapname));
+	char* basename = g_path_get_basename(mapname);
+	struct q3mapinfo* mi = g_hash_table_lookup(maphash, basename);
+	g_free(basename);
 	if (mi && mi != GINT_TO_POINTER(-1) && mi->zipfile) {
 		return readimagefromzip(buf, mi->zipfile, mi->levelshot);
 	}
@@ -701,24 +723,21 @@ static void process_levelshots(GHashTable* maphash) {
 	for (ptr=shotslist;ptr;ptr=g_slist_next(ptr)) {
 		struct q3mapinfo* mi = ptr->data;
 		struct q3mapinfo* mih = NULL;
-		gchar* mapname = NULL;
-		const gchar* mapbase = NULL;
 		char* origkey = NULL;
 		gboolean found = FALSE;
-		if (!mi->levelshot || strlen(mi->levelshot) <= 4) { g_free(mi); continue; }
-		mapbase = g_path_get_basename(mi->levelshot);
-		mapname = g_ascii_strdown(mapbase, strlen(mapbase)-4);  /* g_ascii_strdown does implicit strndup */
-		found = g_hash_table_lookup_extended(maphash, mapname, (gpointer)&origkey, (gpointer)&mih);
+
+		found = g_hash_table_lookup_extended(maphash, mi->mapname, (gpointer)&origkey, (gpointer)&mih);
+
 		if (found != TRUE || mih != GINT_TO_POINTER(-1)) // not in hash or mapinfo alread defined
 		{
 			// debug(0, "drop shot %s %p", mapname, mih);
-			g_free(mi);
+			free_q3mapinfo(mi);
 		}
 		else {
 			// debug(0, "insert shot %s", mapname);
 			g_hash_table_insert(maphash, origkey, mi);
 		}
-		g_free(mapname);
+
 	}
 	g_slist_free(shotslist);
 	shotslist=NULL;
