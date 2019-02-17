@@ -59,6 +59,12 @@ if (NOT WITH_QSTAT)
     set (WITH_QSTAT "qstat")
 endif (NOT WITH_QSTAT)
 
+if (NOT WITH_QSTATCFG)
+  set (QSTATCFG "${CMAKE_SOURCE_DIR}/src/qstat.cfg")
+else ()
+  add_definitions (-DQSTAT_CFG="${WITH_QSTATCFG}")
+endif (NOT WITH_QSTATCFG)
+
 add_definitions (-DQSTAT_EXEC="${WITH_QSTAT}")
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -588,7 +594,9 @@ endforeach (SIZE ${icon_SIZE})
 install (FILES ${CMAKE_SOURCE_DIR}/pixmaps/scalable/xqf.svg DESTINATION ${PIXMAPS_ENTRY_PATH}/scalable/apps)
 
 # Config
-install (FILES ${CMAKE_SOURCE_DIR}/src/qstat.cfg DESTINATION ${PACKAGE_DATA_DIR})
+if (NOT WITH_QSTATCFG)
+  install (FILES "${QSTATCFG}" DESTINATION ${PACKAGE_DATA_DIR})
+endif (NOT WITH_QSTATCFG)
 
 # Man pages
 install (FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6 DESTINATION ${MAN_ENTRY_PATH}/man6)

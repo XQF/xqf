@@ -2683,7 +2683,11 @@ int main (int argc, char *argv[]) {
 	add_pixmap_path_for_theme ("default");
 	add_pixmap_directory (xqf_PACKAGE_DATA_DIR);
 
+#ifdef QSTAT_CFG
+	qstat_configfile = g_build_filename (QSTAT_CFG, NULL);
+#else
 	qstat_configfile = g_build_filename (xqf_PACKAGE_DATA_DIR, "qstat.cfg", NULL);
+#endif
 
 	dns_gtk_init ();
 
