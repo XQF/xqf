@@ -22,6 +22,11 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// does not work yet, not added 2019-02-17
+	"DELETE Q2S:KP master://master.kingpin.info:27900 kingpin.info", // alias for gsm.qtracker.com on 2019-02-17
+	"DELETE Q2S:KP master://master0.kingpin.info:27900 kingpin.info #2", // alias for hypo.hambloch.com on 2019-02-17
+	"DELETE Q2S:KP master://master.hambloch.com:27900 hambloch.com", // alias for kp.servegame.com on 2019-02-17
+
 	// use master subdomain instead, replaced 2018-08-13
 	"DELETE UNVANQUISHEDS master://unvanquished.net:27950 unvanquished.net",
 
@@ -179,6 +184,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2019-02-17
+	"ADD Q2S:KP http://kingpin.hambloch.com/gspylitefavors.txt hambloch.com",
+
 	// added 2018-08-13
 	"ADD UNVANQUISHEDS master://master.unvanquished.net:27950 unvanquished.net",
 	"ADD UNVANQUISHEDS master://master2.unvanquished.net:27950 unvanquished.net #2",
@@ -309,7 +317,7 @@ static char *builtin_masters_update_info[] = {
 
 	// added 2014-11-14
 	"ADD IOURTS master://master2.urbanterror.info:27900 urbanterror.info #2",
-	"ADD Q3S master://master3.idsoftware.com:27950 idsoftware.com", // same as monster.idsoftware.com
+	"ADD Q3S master://master3.idsoftware.com:27950 idsoftware.com", // alias for monster.idsoftware.com on 2014-11-14
 	"ADD Q3S master://master.quake3arena.com:27950 quake3arena.com",
 
 	// added 2014-11-06
