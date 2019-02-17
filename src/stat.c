@@ -144,23 +144,35 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 	debug (6, "parse_master_output(%s,%p)",str,conn);
 	n = tokenize_bychar (str, token, 8, QSTAT_DELIM);
 
-	// HACK: UGLY HACK UGLY HACK UGLY HACK UGLY HACK
-	// output from UT 2003 http server is formatted as
-	// ip port gamespy_port
-	// not the standard ip:port
-	// If the master type is http and there are three columns
-	// then it merges ip and port into one so it is handled
-	// like other http master servers.
-	// This is done by modifying token[0] which points somewhere
-	// inside str so malloc/free is not necessary. It is guaranteed
-	// that token[0] has enough space as there is at least a
-	// whitespace character where the colon is placed now.
-	if (conn->master->type == UT2_SERVER && conn->master->master_type == MASTER_HTTP && n == 3) {
-		int off = strlen(token[0]);
-		token[0][off]=':';
-		strcpy(token[0]+off+1,token[1]);
+	if (conn->master->master_type == MASTER_HTTP) {
+		// HACK: UGLY HACK UGLY HACK UGLY HACK UGLY HACK
+		// output from UT 2003 http server is formatted as
+		// ip port gamespy_port
+		// not the standard ip:port
+		// If the master type is http and there are three columns
+		// then it merges ip and port into one so it is handled
+		// like other http master servers.
+		// This is done by modifying token[0] which points somewhere
+		// inside str so malloc/free is not necessary. It is guaranteed
+		// that token[0] has enough space as there is at least a
+		// whitespace character where the colon is placed now.
+		if (conn->master->type == UT2_SERVER && n == 3) {
+			int off = strlen(token[0]);
+			token[0][off]=':';
+			strcpy(token[0]+off+1,token[1]);
 
-		n=1;
+			n=1;
+		}
+
+		// HACK: UGLY HACK UGLY HACK UGLY HACK UGLY HACK
+		// gameaholic has '#' comments
+		// hambloch.com has '::' comments and empty lines
+		// hostname always starts with a letter or a number
+		// ignore everything else
+		if ( (token[0][0] < '0' || token[0][0] > '9') &&
+			(token[0][0] < 'a' || token[0][0] > 'z') ) {
+			return TRUE;
+		}
 	}
 
 	// output from broadcast, last line contains
@@ -293,7 +305,7 @@ static int parse_master_output (char *str, struct stat_conn *conn) {
 		else {  /* hostname */
 
 			tmp = g_ascii_strdown (addr, -1);   /* g_ascii_strdown does not modify string in place */
-			addr = tmp;
+			strcpy(addr, tmp);
 			g_free(tmp);
 
 			port += conn->master->options.portadjust;
