@@ -53,7 +53,7 @@ static GtkWidget *delete_button;
 static GtkWidget *up_button;
 static GtkWidget *down_button;
 
-GtkTextBuffer *comment_text_buffer;
+static GtkTextBuffer *comment_text_buffer;
 
 static int current_row = -1;
 

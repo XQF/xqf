@@ -49,7 +49,7 @@ static  GtkWidget *customcfg_combo;
 static  GtkWidget *sucks_check_button;
 static  GtkWidget *comment_text;
 
-GtkTextBuffer *comment_text_buffer;
+static GtkTextBuffer *comment_text_buffer;
 GtkTextIter start, end;
 
 /*pulp*/

@@ -139,8 +139,6 @@ static int pref_q2_noskins;
 static char *pref_qw_skin;
 static char *pref_q2_skin;
 
-GtkBuilder *builder;
-
 static GtkWidget *games_notebook;
 static GtkWidget *pref_notebook;
 

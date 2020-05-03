@@ -73,6 +73,7 @@ static gboolean server_filter_changed = FALSE;
 static gboolean server_filter_deleted = FALSE;
 
 GArray* server_filters;
+unsigned int current_server_filter;
 
 static GArray* backup_server_filters; // copy of server_filters, for restoring on cancel
 
