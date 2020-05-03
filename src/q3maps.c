@@ -24,6 +24,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdint.h>
+#include <ctype.h>      /* tolower */
 
 #include <glib.h>
 #include <unzip.h>
@@ -612,6 +614,29 @@ gboolean doom3_lookup_map(GHashTable* maphash, const char* mapname) {
 	return FALSE;
 }
 
+int q3_compare_zip_filename(unzFile file, const char *filename1, const char *filename2) {
+	for (;;) {
+		char ch1 = *filename1++;
+		char ch2 = *filename2++;
+
+		if (ch1 == '\0' || ch2 == '\0') {
+			return ch1 != ch2;
+		}
+
+		if (ch1 == '\\') {
+			ch1 = '/';
+		}
+
+		if (ch2 == '\\') {
+			ch2 = '/';
+		}
+
+		if (tolower(ch1) != tolower(ch2)) {
+			return 1;
+		}
+	}
+}
+
 /***************/
 static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* filename) {
 	unzFile zf;
@@ -633,7 +658,7 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 
 	do
 	{
-		ret = unzLocateFile(zf, filename, 2);
+		ret = unzLocateFile(zf, filename, q3_compare_zip_filename);
 		if (ret!=UNZ_OK) {
 			g_warning("unable to locate %s inside zip archive %s\n", filename, zipfile);
 			error = 1;
