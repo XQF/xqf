@@ -658,7 +658,11 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 
 	do
 	{
+#ifdef MZ_VERSION // minizip 2
 		ret = unzLocateFile(zf, filename, q3_compare_zip_filename);
+#else // minizip 1.2 from zlib/contrib
+		ret = unzLocateFile(zf, filename, 2);
+#endif
 		if (ret!=UNZ_OK) {
 			g_warning("unable to locate %s inside zip archive %s\n", filename, zipfile);
 			error = 1;
