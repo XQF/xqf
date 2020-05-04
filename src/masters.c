@@ -328,7 +328,7 @@ static char *builtin_masters_update_info[] = {
 
 	// added 2014-10-23
 	"ADD JK2S master://masterjk2.ravensoft.com:28060 ravensoft.com",
-	"ADD JK2S master://master.ouned.de:28060 ouned.de",
+	"ADD JK2S master://master.jk2mv.org:28060 jk2mv.org",
 
 	// added 2014-10-14
 	"ADD TURTLEARENAS master://dpmaster.deathmask.net:27950 deathmask.net",
