@@ -589,13 +589,8 @@ int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
 }
 #endif
 
-void set_toolbar_appearance (GtkToolbar *toolbar, int style) {
-	switch (style) {
-		case 0: gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_ICONS); break;
-		case 1: gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_TEXT);  break;
-		case 2: gtk_toolbar_set_style (toolbar, GTK_TOOLBAR_BOTH);  break;
-		default: break;
-	}
+void set_toolbar_appearance (GtkToolbar *toolbar) {
+	gtk_toolbar_set_style(toolbar, GTK_TOOLBAR_BOTH);
 	gtk_toolbar_set_tooltips(toolbar, TRUE);
 }
 

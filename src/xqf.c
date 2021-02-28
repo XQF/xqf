@@ -379,7 +379,7 @@ void server_filter_select_callback (GtkWidget *widget, int number) {
 
 void start_preferences_dialog (GtkWidget *widget, int page_num) {
 	preferences_dialog (page_num);
-	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")), default_toolbar_style);
+	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")));
 }
 
 
@@ -2154,7 +2154,7 @@ void populate_main_toolbar (void) {
 		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (filter_buttons[i]), ((cur_filter & mask) != 0)? TRUE : FALSE);
 	}
 
-	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")), default_toolbar_style);
+	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")));
 }
 
 	// build server filter menu for toolbar
