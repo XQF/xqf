@@ -19,8 +19,6 @@
 #ifndef __SRV_LIST_H__
 #define __SRV_LIST_H__
 
-#include <gtk/gtk.h>
-
 #include "xqf.h"
 
 

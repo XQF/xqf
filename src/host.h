@@ -19,8 +19,6 @@
 #ifndef __HOST_H__
 #define __HOST_H__
 
-#include <gtk/gtk.h>
-
 
 #define HOST_CACHE_MAX_AGE  (7 * 24 * 60 * 60)  /* one week */
 #define HOST_CACHE_MAX_SIZE 5000

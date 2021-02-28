@@ -19,10 +19,6 @@
 #ifndef __RC_H__
 #define __RC_H__
 
-
-#include <gtk/gtk.h>
-
-
 enum keyword_type {
 	KEYWORD_INT,
 	KEYWORD_BOOL,

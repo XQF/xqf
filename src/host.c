@@ -24,7 +24,7 @@
 #include <time.h>       /* time */
 #include <stdlib.h>     /* strtoul */
 
-#include <gtk/gtk.h>
+#include <glib.h>
 
 #include "xqf.h"
 #include "pref.h"

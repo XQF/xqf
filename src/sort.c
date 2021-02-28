@@ -19,8 +19,6 @@
 #include <sys/types.h>
 #include <string.h> /* strcmp */
 
-#include <gtk/gtk.h>
-
 #include "xqf.h"
 #include "xqf-ui.h" /* for deprecated functions */
 #include "pref.h"
