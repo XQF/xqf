@@ -505,8 +505,8 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	{
 		GString* s = g_string_new(script->summary);
 
-		g_string_sprintfa(s, "\nAuthor: %s", script->author);
-		g_string_sprintfa(s, "\nLicense: %s", script->license);
+		g_string_append_printf(s, "\nAuthor: %s", script->author);
+		g_string_append_printf(s, "\nLicense: %s", script->license);
 
 		label = gtk_label_new (s->str);
 		gtk_container_add (GTK_CONTAINER (frame), label);
