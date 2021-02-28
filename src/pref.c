@@ -3780,19 +3780,6 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_widget_show (vbox);
 	gtk_widget_show (frame);
 
-
-	/* Toolbar */
-
-	frame = gtk_frame_new (_("Toolbar"));
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-
-	gtk_widget_show (hbox);
-	gtk_widget_show (frame);
-
 	gtk_widget_show (page_vbox);
 
 	return page_vbox;
