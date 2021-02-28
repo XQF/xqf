@@ -379,7 +379,6 @@ void server_filter_select_callback (GtkWidget *widget, int number) {
 
 void start_preferences_dialog (GtkWidget *widget, int page_num) {
 	preferences_dialog (page_num);
-	set_toolbar_appearance (GTK_TOOLBAR (gtk_builder_get_object (builder, "main-toolbar")));
 }
 
 
