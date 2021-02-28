@@ -19,8 +19,6 @@
 #ifndef __FILTER_H__
 #define __FILTER_H__
 
-#include <gtk/gtk.h>
-
 #include "xqf.h"
 #include "pixmaps.h"
 

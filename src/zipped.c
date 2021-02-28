@@ -21,7 +21,7 @@
 #include <unistd.h>     /* unlink, stat */
 #include <sys/stat.h>   /* stat */
 
-#include <gtk/gtk.h>
+#include <glib.h>
 
 #include "zipped.h"
 

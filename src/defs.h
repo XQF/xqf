@@ -23,7 +23,6 @@
 #include <arpa/inet.h>      /* struct in_addr */
 #include <time.h>           /* time_t */
 
-#include <gtk/gtk.h>
 #include <glib.h>
 
 #include GAMES_H_INCLUDE
