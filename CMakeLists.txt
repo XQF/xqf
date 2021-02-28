@@ -95,6 +95,10 @@ endif (USE_GZIP)
 
 # Compiler flags
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+if (GUI MATCHES GTK2)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
+endif (GUI MATCHES GTK2)
+
 
 # Source list
 set (xqf_HEADERS_DIR ${CMAKE_SOURCE_DIR}/src)
