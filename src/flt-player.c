@@ -1178,8 +1178,7 @@ static void player_filter_load_patterns (void) {
 	scanner = g_scanner_new (&patterns_scanner_config);
 
 	for (i = TOKEN_STRING; i <= TOKEN_REGEXP; i++) {
-		g_scanner_add_symbol (scanner, mode_symbols[i - TOKEN_STRING],
-				GINT_TO_POINTER(i));
+		g_scanner_scope_add_symbol (scanner, 0, mode_symbols[i - TOKEN_STRING], GINT_TO_POINTER(i));
 	}
 
 	g_scanner_input_file (scanner, fd);

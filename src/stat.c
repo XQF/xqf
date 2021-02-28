@@ -1368,7 +1368,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 			}
 
 			str = g_string_new(NULL);
-			g_string_sprintf(str, "%s,outfile,cdkey=%s", master_qstat_option(m), cdkey);
+			g_string_printf(str, "%s,outfile,cdkey=%s", master_qstat_option(m), cdkey);
 
 			if (current_server_filter > 0 && (cur_filter & FILTER_SERVER_MASK)) {
 				struct server_filter_vars* filter = g_array_index (server_filters, struct server_filter_vars*, current_server_filter-1);
@@ -1389,11 +1389,11 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 					}
 
 					if (filter->game_contains&&*filter->game_contains) {
-						g_string_sprintfa(str, ",gametype=%s", filter->game_contains);
+						g_string_append_printf(str, ",gametype=%s", filter->game_contains);
 					}
 
 					if (status->str && *status->str) {
-						g_string_sprintfa(str, ",status=%s", status->str);
+						g_string_append_printf(str, ",status=%s", status->str);
 					}
 					g_string_free(status, TRUE);
 				}

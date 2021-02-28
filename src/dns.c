@@ -616,7 +616,7 @@ static void dns_input_callback (struct dns_stream *stream, int fd,
 
 	if (first_used > 0) {
 		if (first_used != stream->pos) {
-			g_memmove (stream->buf, stream->buf + first_used,
+			memmove (stream->buf, stream->buf + first_used,
 					stream->pos - first_used);
 		}
 		stream->pos -= first_used;
