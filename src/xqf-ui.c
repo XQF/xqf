@@ -737,7 +737,7 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {
 		widget = parent;
 	}
 
-	found_widget = (GtkWidget*) gtk_object_get_data (GTK_OBJECT (widget), widget_name);
+	found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget), widget_name);
 	if (!found_widget)
 		g_warning ("Widget not found: %s", widget_name);
 	return found_widget;
@@ -782,7 +782,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 		gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
 
 		if (callback)
-			g_signal_connect (GTK_OBJECT (menu_item), "activate", G_CALLBACK (callback), GINT_TO_POINTER (i));
+			g_signal_connect (G_OBJECT (menu_item), "activate", G_CALLBACK (callback), GINT_TO_POINTER (i));
 
 		gtk_widget_show (menu_item);
 

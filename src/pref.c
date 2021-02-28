@@ -1758,7 +1758,7 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (q1_top_color_button, 40, -1);
-	g_signal_connect (GTK_OBJECT (q1_top_color_button), "event",
+	g_signal_connect (G_OBJECT (q1_top_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), q1_top_color_button,
 			1, 2, 0, 1);
@@ -1774,7 +1774,7 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (q1_bottom_color_button, 40, -1);
-	g_signal_connect (GTK_OBJECT (q1_bottom_color_button), "event",
+	g_signal_connect (G_OBJECT (q1_bottom_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), q1_bottom_color_button,
 			1, 2, 1, 2);
@@ -1834,7 +1834,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_widget_set_usize(GTK_COMBO(qw_skin_combo)->entry, 112, -1);
 	gtk_combo_set_use_arrows_always(GTK_COMBO(qw_skin_combo), TRUE);
 	gtk_combo_set_case_sensitive(GTK_COMBO(qw_skin_combo), TRUE);
-	g_signal_connect (GTK_OBJECT(GTK_COMBO(qw_skin_combo)->entry),
+	g_signal_connect (G_OBJECT(GTK_COMBO(qw_skin_combo)->entry),
 			"changed", G_CALLBACK(qw_skin_combo_changed_callback), NULL);
 	gtk_container_add(GTK_CONTAINER(alignment), qw_skin_combo);
 	gtk_widget_show(qw_skin_combo);
@@ -1857,7 +1857,7 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (qw_top_color_button, 40, -1);
-	g_signal_connect (GTK_OBJECT (qw_top_color_button), "event",
+	g_signal_connect (G_OBJECT (qw_top_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), qw_top_color_button,
 			1, 2, 0, 1);
@@ -1873,7 +1873,7 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_usize (qw_bottom_color_button, 40, -1);
-	g_signal_connect (GTK_OBJECT (qw_bottom_color_button), "event", G_CALLBACK (color_button_event_callback), NULL);
+	g_signal_connect (G_OBJECT (qw_bottom_color_button), "event", G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), qw_bottom_color_button, 1, 2, 1, 2);
 	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
 	gtk_widget_show (qw_bottom_color_button);
@@ -1974,7 +1974,7 @@ static GtkWidget *q2_skin_box_create (void) {
 	gtk_widget_set_usize(GTK_COMBO(q2_skin_combo)->entry, 144, -1);
 	gtk_combo_set_use_arrows_always(GTK_COMBO(q2_skin_combo), TRUE);
 	gtk_combo_set_case_sensitive(GTK_COMBO(q2_skin_combo), TRUE);
-	g_signal_connect(GTK_OBJECT(GTK_COMBO(q2_skin_combo)->entry), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
+	g_signal_connect(G_OBJECT(GTK_COMBO(q2_skin_combo)->entry), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
 	gtk_container_add(GTK_CONTAINER(alignment), q2_skin_combo);
 	gtk_widget_show(q2_skin_combo);
 
@@ -2316,7 +2316,7 @@ static GtkWidget *create_wb_switch_menu(void(*callback)(GtkWidget *, int)) {
 
 	for (i = 0; i < 9; i++) {
 		menu_item = gtk_menu_item_new_with_label(_(wb_switch_labels[i]));
-		g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), GINT_TO_POINTER(i));
+		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), GINT_TO_POINTER(i));
 		gtk_menu_append(GTK_MENU(menu), menu_item);
 		gtk_widget_show(menu_item);
 	}
@@ -2341,17 +2341,17 @@ static GtkWidget *create_noskins_menu (int qworq2) {
 	menu = gtk_menu_new();
 
 	menu_item = gtk_menu_item_new_with_label(_("Use skins"));
-	g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 0);
+	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 0);
 	gtk_menu_append(GTK_MENU(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	menu_item = gtk_menu_item_new_with_label(_("Don\'t use skins"));
-	g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 1);
+	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 1);
 	gtk_menu_append(GTK_MENU(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	menu_item = gtk_menu_item_new_with_label(_("Don\'t download new skins"));
-	g_signal_connect(GTK_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 2);
+	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 2);
 	gtk_menu_append(GTK_MENU(menu), menu_item);
 	gtk_widget_show(menu_item);
 
@@ -2742,18 +2742,18 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 		gtk_entry_set_text(GTK_ENTRY(genprefs[type].cmd_entry), games[type].cmd);
 		gtk_entry_set_position(GTK_ENTRY(genprefs[type].cmd_entry), 0);
 	}
-	g_signal_connect_swapped(GTK_OBJECT(genprefs[type].cmd_entry), "activate", G_CALLBACK(game_file_activate_callback), GINT_TO_POINTER(type));
+	g_signal_connect_swapped(G_OBJECT(genprefs[type].cmd_entry), "activate", G_CALLBACK(game_file_activate_callback), GINT_TO_POINTER(type));
 	gtk_box_pack_start(GTK_BOX(hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
 	gtk_widget_show(genprefs[type].cmd_entry);
 
 	button = gtk_button_new_with_label("...");
-	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(game_file_dialog), GINT_TO_POINTER(type));
+	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(game_file_dialog), GINT_TO_POINTER(type));
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 3);
 	gtk_widget_show(button);
 
 	// translator: button for command suggestion
 	button = gtk_button_new_with_label(_("Suggest"));
-	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(pref_suggest_command), GINT_TO_POINTER(type));
+	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(pref_suggest_command), GINT_TO_POINTER(type));
 	gtk_widget_set_sensitive(button, pref_can_suggest(type));
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
@@ -2781,13 +2781,13 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	gtk_box_pack_start(GTK_BOX(hbox),genprefs[type].dir_entry , TRUE, TRUE, 0);
 
 	button = gtk_button_new_with_label("...");
-	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(game_dir_dialog), (gpointer)type);
+	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(game_dir_dialog), (gpointer)type);
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 3);
 	gtk_widget_show(button);
 
 	// translator: button for directory guess
 	button = gtk_button_new_with_label(_("Suggest"));
-	g_signal_connect_swapped(GTK_OBJECT(button), "clicked", G_CALLBACK(game_file_activate_callback), (gpointer)type);
+	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(game_file_activate_callback), (gpointer)type);
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
 	gtk_tooltips_set_tip(tooltips, button, _("Tries to guess the working directory based on the command line"), NULL);
@@ -2795,11 +2795,11 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	if (games[type].custom_cfgs) {
 		gtk_object_set_user_data(GTK_OBJECT(genprefs[type].dir_entry), (gpointer) type);
-		g_signal_connect(GTK_OBJECT(genprefs[type].dir_entry),
+		g_signal_connect(G_OBJECT(genprefs[type].dir_entry),
 				"activate",
 				G_CALLBACK(dir_entry_activate_callback),
 				NULL);
-		g_signal_connect(GTK_OBJECT(genprefs[type].dir_entry),
+		g_signal_connect(G_OBJECT(genprefs[type].dir_entry),
 				"focus_out_event",
 				G_CALLBACK(dir_entry_activate_callback),
 				NULL);
@@ -2876,21 +2876,21 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 	hbox1 = gtk_hbox_new(FALSE, 0);
 	gtk_widget_ref(hbox1);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "hbox1", hbox1, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "hbox1", hbox1, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(hbox1);
 	gtk_container_add(GTK_CONTAINER(page_vbox), hbox1);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox1), 3);
 
 	vbox1 = gtk_vbox_new(FALSE, 0);
 	gtk_widget_ref(vbox1);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "vbox1", vbox1, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "vbox1", vbox1, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(vbox1);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbox1, TRUE, TRUE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox1), 2);
 
 	scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_ref(scrolledwindow1);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "scrolledwindow1", scrolledwindow1, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "scrolledwindow1", scrolledwindow1, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(scrolledwindow1);
 	gtk_box_pack_start(GTK_BOX(vbox1), scrolledwindow1, TRUE, TRUE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 2);
@@ -2898,37 +2898,37 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 	arguments_clist = gtk_clist_new(2);
 	gtk_widget_ref(arguments_clist);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "arguments_clist", arguments_clist, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_clist", arguments_clist, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(arguments_clist);
 	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_clist);
 	gtk_clist_column_titles_show(GTK_CLIST(arguments_clist));
-	g_signal_connect(GTK_OBJECT(arguments_clist), "select_row", G_CALLBACK(custom_args_clist_select_row_callback), arguments_clist);
+	g_signal_connect(G_OBJECT(arguments_clist), "select_row", G_CALLBACK(custom_args_clist_select_row_callback), arguments_clist);
 	gtk_object_set_user_data(GTK_OBJECT(arguments_clist), (gpointer) type);
 
 	game_label = gtk_label_new(_("Game"));
 	gtk_widget_ref(game_label);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "game_label", game_label, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "game_label", game_label, (GDestroyNotify) gtk_widget_unref);
 	gtk_label_set_justify(GTK_LABEL(game_label), GTK_JUSTIFY_LEFT);
 	gtk_widget_show(game_label);
 	gtk_clist_set_column_widget(GTK_CLIST(arguments_clist), 0, game_label);
 
 	arguments_label = gtk_label_new(_("Arguments"));
 	gtk_widget_ref(arguments_label);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "arguments_label", arguments_label, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_label", arguments_label, (GDestroyNotify) gtk_widget_unref);
 	gtk_label_set_justify(GTK_LABEL(arguments_label), GTK_JUSTIFY_LEFT);
 	gtk_widget_show(arguments_label);
 	gtk_clist_set_column_widget(GTK_CLIST(arguments_clist), 1, arguments_label);
 
 	frame1 = gtk_frame_new(_("Game and Arguments"));
 	gtk_widget_ref(frame1);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "frame1", frame1, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "frame1", frame1, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(frame1);
 	gtk_box_pack_start(GTK_BOX(vbox1), frame1, FALSE, FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(frame1), 3);
 
 	hbox2 = gtk_hbox_new(FALSE, 0);
 	gtk_widget_ref(hbox2);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "hbox2", hbox2, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "hbox2", hbox2, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(hbox2);
 	gtk_container_add(GTK_CONTAINER(frame1), hbox2);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 4);
@@ -2936,9 +2936,9 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	custom_args_entry_game[type] = gtk_entry_new();
 	gtk_widget_ref(custom_args_entry_game[type]);
 	gtk_widget_set_usize(custom_args_entry_game[type], 90, -2);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "custom_args_entry_game[type]",
+	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_game[type]",
 		custom_args_entry_game[type],
-		(GtkDestroyNotify) gtk_widget_unref);
+		(GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(custom_args_entry_game[type]);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_game[type], FALSE, TRUE, 0);
 	gtk_tooltips_set_tip(tooltips, custom_args_entry_game[type], _("Enter the game name from the game column"), NULL);
@@ -2946,9 +2946,9 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 	custom_args_entry_args[type] = gtk_entry_new();
 	gtk_widget_ref(custom_args_entry_args[type]);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "custom_args_entry_args[type]",
+	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_args[type]",
 		custom_args_entry_args[type],
-		(GtkDestroyNotify) gtk_widget_unref);
+		(GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(custom_args_entry_args[type]);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_args[type], TRUE, TRUE, 0);
 	gtk_tooltips_set_tip(tooltips, custom_args_entry_args[type], _("Enter the arguments separated by spaces"), NULL);
@@ -2956,56 +2956,56 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 	vbuttonbox1 = gtk_vbox_new(FALSE, 0);
 	gtk_widget_ref(vbuttonbox1);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "vbuttonbox1", vbuttonbox1, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "vbuttonbox1", vbuttonbox1, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(vbuttonbox1);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbuttonbox1, FALSE, TRUE, 0);
 
 	new_button = gtk_button_new_with_label(_("New"));
 	gtk_widget_ref(new_button);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "new_button", new_button, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "new_button", new_button, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(new_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), new_button, FALSE, FALSE, 5);
 	GTK_WIDGET_SET_FLAGS(new_button, GTK_CAN_DEFAULT);
 
 	delete_button = gtk_button_new_with_label(_("Delete"));
 	gtk_widget_ref(delete_button);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "delete_button", delete_button, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "delete_button", delete_button, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(delete_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), delete_button, FALSE, FALSE, 5);
 	GTK_WIDGET_SET_FLAGS(delete_button, GTK_CAN_DEFAULT);
 
 	defaults_button = gtk_button_new_with_label(_("Add Defaults"));
 	gtk_widget_ref(defaults_button);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "defaults_button", defaults_button, (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "defaults_button", defaults_button, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(defaults_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), defaults_button, FALSE, FALSE, 5);
 	GTK_WIDGET_SET_FLAGS(defaults_button, GTK_CAN_DEFAULT);
 
 	custom_args_add_button[type] = gtk_button_new_with_label(_("Add/Update"));
 	gtk_widget_ref(custom_args_add_button[type]);
-	gtk_object_set_data_full(GTK_OBJECT(page_vbox), "add_button", custom_args_add_button[type], (GtkDestroyNotify) gtk_widget_unref);
+	g_object_set_data_full(G_OBJECT(page_vbox), "add_button", custom_args_add_button[type], (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(custom_args_add_button[type]);
 	gtk_box_pack_end(GTK_BOX(vbuttonbox1), custom_args_add_button[type], FALSE, FALSE, 7);
 	gtk_widget_set_sensitive(custom_args_add_button[type], FALSE);
 	GTK_WIDGET_SET_FLAGS(custom_args_add_button[type], GTK_CAN_DEFAULT);
 
 	gtk_object_set_user_data(GTK_OBJECT(new_button), (gpointer) type);
-	g_signal_connect(GTK_OBJECT(new_button), "clicked",
+	g_signal_connect(G_OBJECT(new_button), "clicked",
 		G_CALLBACK(new_custom_args_callback),
 		(gpointer) arguments_clist);
 
 	gtk_object_set_user_data(GTK_OBJECT(delete_button), (gpointer) type);
-	g_signal_connect(GTK_OBJECT(delete_button), "clicked",
+	g_signal_connect(G_OBJECT(delete_button), "clicked",
 		G_CALLBACK(delete_custom_args_callback),
 		(gpointer) arguments_clist);
 
 	gtk_object_set_user_data(GTK_OBJECT(defaults_button), (gpointer) type);
-	g_signal_connect(GTK_OBJECT(defaults_button), "clicked",
+	g_signal_connect(G_OBJECT(defaults_button), "clicked",
 		G_CALLBACK(add_custom_args_defaults),
 		(gpointer) arguments_clist);
 
 	gtk_object_set_user_data(GTK_OBJECT(custom_args_add_button[type]), (gpointer) type);
-	g_signal_connect(GTK_OBJECT(custom_args_add_button[type]), "clicked",
+	g_signal_connect(G_OBJECT(custom_args_add_button[type]), "clicked",
 		G_CALLBACK(add_custom_args_callback),
 		(gpointer) arguments_clist);
 
@@ -3083,7 +3083,7 @@ static GtkWidget *games_config_page (int defgame) {
 
 		gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
 
-		g_signal_connect (GTK_OBJECT (genprefs[i].game_button), "select",
+		g_signal_connect (G_OBJECT (genprefs[i].game_button), "select",
 			G_CALLBACK (game_listitem_selected_callback), GINT_TO_POINTER(i));
 
 		gtk_widget_show(genprefs[i].game_button);
@@ -3417,17 +3417,17 @@ static GtkWidget *q3_mem_options_page (void) {
 
 	button = gtk_button_new_with_label(_("Default"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 0);
+	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 0);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label(_("128MB"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 1);
+	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 1);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label(_(">256MB"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 2);
+	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 2);
 	gtk_widget_show (button);
 
 	gtk_widget_show (hbox2);
@@ -3924,7 +3924,7 @@ static GtkWidget *general_options_page (void) {
 		GtkWidget* button = gtk_button_new_with_label(_("scan now"));
 		gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 		gtk_misc_set_padding(GTK_MISC(GTK_BIN(button)->child),4,0);
-		g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (scan_maps_callback), NULL);
+		g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (scan_maps_callback), NULL);
 		gtk_widget_show (button);
 	}
 
@@ -3949,7 +3949,7 @@ static GtkWidget *general_options_page (void) {
 
 	terminate_check_button = gtk_check_button_new_with_label (_("Terminate XQF"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (terminate_check_button), default_terminate);
-	g_signal_connect (GTK_OBJECT (terminate_check_button), "toggled", G_CALLBACK (terminate_toggled_callback), NULL);
+	g_signal_connect (G_OBJECT (terminate_check_button), "toggled", G_CALLBACK (terminate_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (terminate_check_button);
 
@@ -3962,7 +3962,7 @@ static GtkWidget *general_options_page (void) {
 
 	launchinfo_check_button = gtk_check_button_new_with_label (_("Create LaunchInfo.txt"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
-	g_signal_connect (GTK_OBJECT (launchinfo_check_button), "toggled", G_CALLBACK (launchinfo_toggled_callback), NULL);
+	g_signal_connect (G_OBJECT (launchinfo_check_button), "toggled", G_CALLBACK (launchinfo_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
 	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
 	gtk_widget_show (launchinfo_check_button);
@@ -3976,7 +3976,7 @@ static GtkWidget *general_options_page (void) {
 
 	prelaunchexec_check_button = gtk_check_button_new_with_label (_("Execute prelaunch"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
-	g_signal_connect (GTK_OBJECT (prelaunchexec_check_button), "toggled", G_CALLBACK (prelaunchexec_toggled_callback), NULL);
+	g_signal_connect (G_OBJECT (prelaunchexec_check_button), "toggled", G_CALLBACK (prelaunchexec_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
 	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"), NULL);
 	gtk_widget_show (prelaunchexec_check_button);
@@ -4015,7 +4015,7 @@ static GtkWidget *general_options_page (void) {
 	save_srvinfo_check_button = gtk_check_button_new_with_label (_("Save server information"));
 	gtk_box_pack_start (GTK_BOX (hbox), save_srvinfo_check_button, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (save_srvinfo_check_button), default_save_srvinfo);
-	g_signal_connect (GTK_OBJECT (save_srvinfo_check_button), "toggled", G_CALLBACK (save_srvinfo_toggled_callback), NULL);
+	g_signal_connect (G_OBJECT (save_srvinfo_check_button), "toggled", G_CALLBACK (save_srvinfo_toggled_callback), NULL);
 	gtk_widget_show (save_srvinfo_check_button);
 
 	gtk_widget_show (hbox);
@@ -4516,14 +4516,14 @@ void preferences_dialog (int page_num) {
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (ok_callback), GTK_OBJECT(window));
+	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (ok_callback), G_OBJECT(window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);

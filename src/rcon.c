@@ -593,7 +593,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_combo_set_case_sensitive (GTK_COMBO (rcon_combo), TRUE);
 	gtk_combo_set_use_arrows_always (GTK_COMBO (rcon_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (rcon_combo));
-	g_signal_connect (GTK_OBJECT (GTK_COMBO (rcon_combo)->entry), "activate",
+	g_signal_connect (G_OBJECT (GTK_COMBO (rcon_combo)->entry), "activate",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
 	GTK_WIDGET_SET_FLAGS (GTK_COMBO (rcon_combo)->entry, GTK_CAN_FOCUS);
 	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (rcon_combo)->button, GTK_CAN_FOCUS);
@@ -610,7 +610,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	/* Send Button */
 
 	button = gtk_button_new_with_label (_("Send"));
-	g_signal_connect (GTK_OBJECT (button), "clicked",
+	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
 	GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
@@ -619,7 +619,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	/* Status Button */
 
 	button = gtk_button_new_with_label (_("Status"));
-	g_signal_connect (GTK_OBJECT (button), "clicked",
+	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_status_button_clicked_callback), NULL);
 	GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
@@ -628,7 +628,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	/* Clear Button */
 
 	button = gtk_button_new_with_label (_("Clear"));
-	g_signal_connect (GTK_OBJECT (button), "clicked",
+	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_clear_button_clicked_callback), NULL);
 	GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
@@ -652,8 +652,8 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	button = gtk_button_new_with_label (_("Close"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);

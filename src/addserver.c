@@ -109,11 +109,11 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_combo_set_use_arrows_always (GTK_COMBO (server_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (server_combo));
 	g_signal_connect (
-			GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
+			G_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
 			G_CALLBACK (server_combo_activate_callback), NULL);
 	g_signal_connect_swapped (
-			GTK_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+			G_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 
 	GTK_WIDGET_SET_FLAGS (GTK_COMBO (server_combo)->entry, GTK_CAN_FOCUS);
 	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (server_combo)->button, GTK_CAN_FOCUS);
@@ -150,8 +150,8 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
@@ -160,11 +160,11 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	button = gtk_button_new_with_label ("OK");
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (server_combo_activate_callback),
-			GTK_OBJECT (GTK_COMBO (server_combo)->entry));
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+			G_OBJECT (GTK_COMBO (server_combo)->entry));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);

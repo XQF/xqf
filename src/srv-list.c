@@ -457,7 +457,7 @@ int server_clist_refresh_server (struct server *s) {
 			debug (6, "server_clist_refresh_server() -- Server %lx needs to be added.");
 			row = server_clist_refresh_row (s, -1);
 			gtk_clist_set_row_data_full (server_clist, row, s,
-					(GtkDestroyNotify) server_unref);
+					(GDestroyNotify) server_unref);
 			server_ref (s);
 			return TRUE;
 		}
@@ -621,7 +621,7 @@ void server_clist_set_list (GSList *servers) {
 			server = (struct server *) list->data;
 			row = server_clist_refresh_row (server, -1);
 			gtk_clist_set_row_data_full (server_clist, row, server,
-					(GtkDestroyNotify) server_unref);
+					(GDestroyNotify) server_unref);
 			/*
 			   Because the a destroy event on the server_clist will
 			   call server_unref, we want to add a reference to

@@ -22,8 +22,10 @@
 #include <gtk/gtk.h>
 
 static inline GtkWidget* topmost_parent(GtkWidget* widget) {
-	for (; widget && widget->parent; widget = widget->parent);
-	return widget;
+	GtkWidget *previous_widget = widget;
+	while ( (widget = gtk_widget_get_parent (widget)) )
+		previous_widget = widget;
+	return previous_widget;
 }
 
 extern GtkWidget *dialog_create_modal_transient_window (const char *title, int close_on_esc, int allow_resize, GtkSignalFunc on_destroy);
