@@ -51,17 +51,17 @@ GtkWidget *dialog_create_modal_transient_window (const char *title,
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-	g_signal_connect (GTK_OBJECT (window), "delete_event",
+	g_signal_connect (G_OBJECT (window), "delete_event",
 			G_CALLBACK (window_delete_event_callback), NULL);
 	if (on_destroy) {
-		g_signal_connect (GTK_OBJECT (window), "destroy",
+		g_signal_connect (G_OBJECT (window), "destroy",
 				G_CALLBACK (on_destroy), NULL);
 	}
-	g_signal_connect (GTK_OBJECT (window), "destroy",
+	g_signal_connect (G_OBJECT (window), "destroy",
 			G_CALLBACK (gtk_main_quit), NULL);
 
 	if (close_on_esc) {
-		g_signal_connect (GTK_OBJECT (window), "key_press_event",
+		g_signal_connect (G_OBJECT (window), "key_press_event",
 				G_CALLBACK (destroy_on_escape), NULL);
 	}
 
@@ -136,8 +136,8 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_usize (button, 96, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
@@ -211,10 +211,10 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 	button = gtk_button_new_with_label ((yes)? yes : _("Yes"));
 	gtk_widget_set_usize (button, 96, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked",
+	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (yes_button_clicked_callback), &res);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	if (defbutton == 0)
 		gtk_widget_grab_default (button);
@@ -223,8 +223,8 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 	button = gtk_button_new_with_label ((no)? no : _("No"));
 	gtk_widget_set_usize (button, 96, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	if (defbutton == 1)
 		gtk_widget_grab_default (button);
@@ -291,10 +291,10 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	button = gtk_button_new_with_label ((yes)? yes : _("Yes"));
 	gtk_widget_set_usize (button, 96, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked",
+	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (yes_button_clicked_callback), &res);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	if (defbutton == 0)
 		gtk_widget_grab_default (button);
@@ -303,8 +303,8 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	button = gtk_button_new_with_label ((no)? no : _("No"));
 	gtk_widget_set_usize (button, 96, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	if (defbutton == 1)
 		gtk_widget_grab_default (button);
@@ -313,10 +313,10 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	button = gtk_button_new_with_label ((redial)? redial : _("Redial"));
 	gtk_widget_set_usize (button, 96, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (button), "clicked",
+	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (redial_button_clicked_callback), &res);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	if (defbutton == 2)
 		gtk_widget_grab_default (button);
@@ -384,21 +384,21 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	gtk_entry_set_visibility (GTK_ENTRY (enter_string_entry), visible);
 	gtk_widget_set_usize (enter_string_entry, 128, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), enter_string_entry, TRUE, TRUE, 0);
-	g_signal_connect (GTK_OBJECT (enter_string_entry), "activate",
+	g_signal_connect (G_OBJECT (enter_string_entry), "activate",
 			G_CALLBACK (enter_string_activate_callback), NULL);
-	g_signal_connect_swapped (GTK_OBJECT (enter_string_entry), "activate",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (enter_string_entry), "activate",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_grab_focus (enter_string_entry);
 	gtk_widget_show (enter_string_entry);
 
 	/* OK Button */
 
 	button = gtk_button_new_with_label (_("OK"));
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (enter_string_activate_callback),
-			GTK_OBJECT (enter_string_entry));
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+			G_OBJECT (enter_string_entry));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_show (button);
 
@@ -406,8 +406,8 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked",
+			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_show (button);
 
 	gtk_widget_show (hbox);
@@ -543,19 +543,19 @@ GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer da
 
 	gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
 
-	// g_signal_connect (GTK_OBJECT (file_selector), "destroy", (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
+	// g_signal_connect (G_OBJECT (file_selector), "destroy", (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
 
-	g_signal_connect (GTK_OBJECT (file_selector->ok_button),
+	g_signal_connect (G_OBJECT (file_selector->ok_button),
 			"clicked", ok_callback, data);
 
-	g_signal_connect_swapped (GTK_OBJECT (file_selector->ok_button),
+	g_signal_connect_swapped (G_OBJECT (file_selector->ok_button),
 			"clicked", (GtkSignalFunc) gtk_widget_destroy,
-			GTK_OBJECT (file_selector));
+			G_OBJECT (file_selector));
 
 	/* Connect the cancel_button to destroy the widget */
-	g_signal_connect_swapped (GTK_OBJECT (file_selector->cancel_button),
+	g_signal_connect_swapped (G_OBJECT (file_selector->cancel_button),
 			"clicked", (GtkSignalFunc) gtk_widget_destroy,
-			GTK_OBJECT (file_selector));
+			G_OBJECT (file_selector));
 
 	gtk_widget_show(GTK_WIDGET(file_selector));
 

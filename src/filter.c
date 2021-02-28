@@ -558,17 +558,17 @@ static struct server_filter_vars* server_filter_new_from_widgets() {
 	struct server_filter_vars* filter = server_filter_vars_new();
 	if (!filter) return NULL;
 
-	filter->filter_retries = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(filter_retries_spinner));
-	filter->filter_ping = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(filter_ping_spinner));
-	filter->filter_not_full = GTK_TOGGLE_BUTTON(filter_not_full_check_button)->active;
-	filter->filter_not_empty = GTK_TOGGLE_BUTTON(filter_not_empty_check_button)->active;
-	filter->filter_no_password = GTK_TOGGLE_BUTTON(filter_no_password_check_button)->active;
-	filter->filter_no_cheats = GTK_TOGGLE_BUTTON(filter_no_cheats_check_button)->active;
-	filter->game_type = gtk_editable_get_chars(GTK_EDITABLE(filter_game_type_entry), 0, -1);
-	filter->version_contains = gtk_editable_get_chars(GTK_EDITABLE(version_contains_entry), 0, -1);
-	filter->game_contains = gtk_editable_get_chars(GTK_EDITABLE(game_contains_entry), 0, -1);
-	filter->map_contains = gtk_editable_get_chars(GTK_EDITABLE(map_contains_entry), 0, -1);
-	filter->server_name_contains = gtk_editable_get_chars(GTK_EDITABLE(server_name_contains_entry), 0, -1);
+	filter->filter_retries = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_retries_spinner));
+	filter->filter_ping    = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_ping_spinner));
+	filter->filter_not_full    = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(filter_not_full_check_button));
+	filter->filter_not_empty   = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_not_empty_check_button));
+	filter->filter_no_password = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_no_password_check_button));
+	filter->filter_no_cheats   = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_no_cheats_check_button));
+	filter->game_type            = gtk_editable_get_chars (GTK_EDITABLE (filter_game_type_entry), 0, -1);
+	filter->version_contains     = gtk_editable_get_chars (GTK_EDITABLE (version_contains_entry), 0, -1);
+	filter->game_contains        = gtk_editable_get_chars (GTK_EDITABLE (game_contains_entry), 0, -1);
+	filter->map_contains         = gtk_editable_get_chars (GTK_EDITABLE (map_contains_entry), 0, -1);
+	filter->server_name_contains = gtk_editable_get_chars (GTK_EDITABLE (server_name_contains_entry), 0, -1);
 
 #ifdef USE_GEOIP
 
@@ -1796,7 +1796,7 @@ static void populate_country_clist(GtkWidget* clist, gboolean all) {
 }
 
 static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *clist) {
-	populate_country_clist(clist,gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
+	populate_country_clist(clist, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
 }
 
 /* country selection window */

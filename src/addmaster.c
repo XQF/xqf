@@ -127,8 +127,7 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
 		if (current_master_query_type == MASTER_NATIVE) {
-			gtk_toggle_button_set_active
-				(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 		}
 	}
 	else {
@@ -137,12 +136,12 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 	}
 }
 
-static void master_type_radio_callback (GtkWidget *widget, enum master_query_type type) {
+static void master_type_radio_callback(GtkWidget *widget, enum master_query_type type) {
 	const gchar* master_name;
 
 	// This gets called when a button is made inactive AND when it's made active
 	// so only do this if it's set to active
-	if (GTK_TOGGLE_BUTTON (master_query_type_radios[type])->active) {
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (master_query_type_radios[type]))) {
 		current_master_query_type = type;
 		master_check_master_addr_prefix();
 
@@ -248,8 +247,8 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_combo_set_use_arrows_always (GTK_COMBO (master_name_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (master_name_combo));
 	g_signal_connect(
-			GTK_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
-			G_CALLBACK (master_okbutton_callback), GTK_OBJECT (window));
+			G_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
+			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 
 	GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_name_combo)->entry, GTK_CAN_FOCUS);
 	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (master_name_combo)->button, GTK_CAN_FOCUS);
@@ -295,10 +294,10 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_combo_set_use_arrows_always (GTK_COMBO (master_addr_combo), TRUE);
 	gtk_combo_disable_activate (GTK_COMBO (master_addr_combo));
 	g_signal_connect (
-			GTK_OBJECT (GTK_COMBO (master_addr_combo)->entry), "activate",
-			G_CALLBACK (master_okbutton_callback), GTK_OBJECT (window));
+			G_OBJECT (GTK_COMBO (master_addr_combo)->entry), "activate",
+			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 	g_signal_connect (
-			GTK_OBJECT (GTK_COMBO (master_addr_combo)->list),
+			G_OBJECT (GTK_COMBO (master_addr_combo)->list),
 			"selection-changed",
 			G_CALLBACK
 			(master_address_from_history_selected_callback),NULL);
@@ -332,7 +331,7 @@ struct master *add_master_dialog (struct master *m) {
 		if (master_to_edit) {
 			gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);
 		}
-		g_signal_connect(GTK_OBJECT (master_query_type_radios[i]), "toggled",
+		g_signal_connect(G_OBJECT (master_query_type_radios[i]), "toggled",
 				G_CALLBACK (master_type_radio_callback), (gpointer)i);
 
 		gtk_widget_show (master_query_type_radios[i]);
@@ -370,7 +369,7 @@ struct master *add_master_dialog (struct master *m) {
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), GTK_OBJECT (window));
+	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_show (button);
 
@@ -379,7 +378,7 @@ struct master *add_master_dialog (struct master *m) {
 	button = gtk_button_new_with_label ("OK");
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
-	g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
+	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
