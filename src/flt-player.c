@@ -1001,44 +1001,38 @@ int player_filter_add_player (char *name, unsigned mask) {
 
 
 static GScannerConfig patterns_scanner_config = {
-	(
-		" \t\n"
-	)       /* cset_skip_characters */,
-	(
-		G_CSET_a_2_z
-		"_"
-		G_CSET_A_2_Z
-	)       /* cset_identifier_first */,
-	(
-		G_CSET_a_2_z
-		"_0123456789"
-		G_CSET_A_2_Z
-		G_CSET_LATINS
-		G_CSET_LATINC
-	)       /* cset_identifier_nth */,
-	( "#\n" )   /* cpair_comment_single */,
-
-	TRUE    /* case_sensitive */,
-
-	TRUE    /* skip_comment_multi */,
-	TRUE    /* skip_comment_single */,
-	FALSE   /* scan_comment_multi */,
-	TRUE    /* scan_identifier */,
-	FALSE   /* scan_identifier_1char */,
-	FALSE   /* scan_identifier_NULL */,
-	TRUE    /* scan_symbols */,
-	FALSE   /* scan_binary */,
-	FALSE   /* scan_octal */,
-	FALSE   /* scan_float */,
-	TRUE    /* scan_hex */,
-	FALSE   /* scan_hex_dollar */,
-	FALSE   /* scan_string_sq */,
-	TRUE    /* scan_string_dq */,
-	TRUE    /* numbers_2_int */,
-	FALSE   /* int_2_float */,
-	TRUE    /* identifier_2_string */,
-	TRUE    /* char_2_token */,
-	TRUE    /* symbol_2_token */,
+	.cset_skip_characters = " \t\n",
+	.cset_identifier_first =
+			G_CSET_a_2_z
+			"_"
+			G_CSET_A_2_Z,
+	.cset_identifier_nth =
+			G_CSET_a_2_z
+			"_0123456789"
+			G_CSET_A_2_Z
+			G_CSET_LATINS
+			G_CSET_LATINC,
+	.cpair_comment_single = "#\n",
+	.case_sensitive = TRUE,
+	.skip_comment_multi = TRUE,
+	.skip_comment_single = TRUE,
+	.scan_comment_multi = FALSE,
+	.scan_identifier = TRUE,
+	.scan_identifier_1char = FALSE,
+	.scan_identifier_NULL = FALSE,
+	.scan_symbols = TRUE,
+	.scan_binary = FALSE,
+	.scan_octal = FALSE,
+	.scan_float = FALSE,
+	.scan_hex = TRUE,
+	.scan_hex_dollar = FALSE,
+	.scan_string_sq = FALSE,
+	.scan_string_dq = TRUE,
+	.numbers_2_int = TRUE,
+	.int_2_float = FALSE,
+	.identifier_2_string = TRUE,
+	.char_2_token = TRUE,
+	.symbol_2_token = TRUE,
 };
 
 
