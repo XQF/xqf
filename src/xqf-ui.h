@@ -101,7 +101,7 @@ extern void source_ctree_select_source (struct master *m);
 
 extern int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap);
 
-extern void set_toolbar_appearance (GtkToolbar *toolbar, int style);
+extern void set_toolbar_appearance (GtkToolbar *toolbar);
 
 extern GtkWidget *create_progress_bar (void);
 extern void progress_bar_reset (GtkWidget *pbar);

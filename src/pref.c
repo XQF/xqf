@@ -98,7 +98,6 @@ int default_save_plrinfo;
 int default_auto_favorites;
 int default_auto_maps;
 int skip_startup_mapscan;
-int default_toolbar_style;
 int default_refresh_sorts;
 int default_refresh_on_update;
 int default_resolve_on_update;
@@ -171,7 +170,6 @@ static GtkWidget *auto_maps_check_button;
 
 static GtkWidget *show_hostnames_check_button;
 static GtkWidget *show_defport_check_button;
-static GtkWidget *toolbar_style_radio_buttons[3];
 static GtkWidget *countbots_check_button;
 static GtkWidget *refresh_sorts_check_button;
 static GtkWidget *refresh_on_update_check_button;
@@ -1195,15 +1193,6 @@ static void get_new_defaults (void) {
 	/* Appearance */
 
 	config_push_prefix ("/" CONFIG_FILE "/Appearance");
-
-	for (i = 0; i < 3; i++) {
-		if (GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[i])->active) {
-			if (i != default_toolbar_style) {
-				config_set_int  ("toolbar style", default_toolbar_style = i);
-			}
-			break;
-		}
-	}
 
 	i = GTK_TOGGLE_BUTTON (countbots_check_button)->active;
 	if (i != serverlist_countbots) {
@@ -3688,9 +3677,6 @@ static GtkWidget *appearance_options_page (void) {
 	GtkWidget *frame;
 	GtkWidget *hbox;
 	GtkWidget *vbox;
-	GSList *group = NULL;
-	static const char *toolbar_styles[] = { N_("Icons"), N_("Text"), N_("Both") };
-	int i;
 
 	page_vbox = gtk_vbox_new (FALSE, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
@@ -3803,17 +3789,6 @@ static GtkWidget *appearance_options_page (void) {
 	hbox = gtk_hbox_new (FALSE, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_container_add (GTK_CONTAINER (frame), hbox);
-
-	/* Toolbar Style */
-
-	for (i = 0; i < 3; i++) {
-		toolbar_style_radio_buttons[i] = gtk_radio_button_new_with_label (group, _(toolbar_styles[i]));
-		group = gtk_radio_button_group (GTK_RADIO_BUTTON (toolbar_style_radio_buttons[i]));
-		gtk_box_pack_start (GTK_BOX (hbox), toolbar_style_radio_buttons[i], FALSE, FALSE, 0);
-		gtk_widget_show (toolbar_style_radio_buttons[i]);
-	}
-
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[default_toolbar_style]), TRUE);
 
 	gtk_widget_show (hbox);
 	gtk_widget_show (frame);
@@ -4754,7 +4729,6 @@ int prefs_load (void) {
 	show_hostnames =                        config_get_bool("show hostnames=true");
 	show_default_port =                     config_get_bool("show default port=true");
 	serverlist_countbots =                  config_get_bool("count bots=true");
-	default_toolbar_style =                 config_get_int("toolbar style=2");
 	default_refresh_sorts =                 config_get_bool("sort on refresh=true");
 	default_refresh_on_update =             config_get_bool("refresh on update=true");
 	default_resolve_on_update =             config_get_bool("resolve on update=false");

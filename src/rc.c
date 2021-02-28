@@ -81,8 +81,6 @@ static struct keyword  keywords[] = {
 
 	{ "autofavorites",	KEYWORD_BOOL,	"/" CONFIG_FILE "/General/refresh favorites" },
 
-	{ "tb_style",		KEYWORD_INT,	"/" CONFIG_FILE "/Appearance/toolbar style" },
-
 	{ "sort_on_refresh",	KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/sort on refresh" },
 	{ "ref_on_update",	KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/refresh on update" },
 	{ "alwaysresolve",	KEYWORD_BOOL,	"/" CONFIG_FILE "/Appearance/show hostnames" },

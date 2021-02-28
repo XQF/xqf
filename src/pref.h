@@ -89,7 +89,6 @@ extern int default_save_srvinfo;
 extern int default_save_plrinfo;
 extern int default_auto_favorites;
 extern int default_always_resolve;
-extern int default_toolbar_style;
 extern int default_refresh_sorts;
 extern int default_refresh_on_update;
 extern int default_resolve_on_update;
