@@ -99,7 +99,6 @@ int default_auto_favorites;
 int default_auto_maps;
 int skip_startup_mapscan;
 int default_toolbar_style;
-int default_toolbar_tips;
 int default_refresh_sorts;
 int default_refresh_on_update;
 int default_resolve_on_update;
@@ -173,7 +172,6 @@ static GtkWidget *auto_maps_check_button;
 static GtkWidget *show_hostnames_check_button;
 static GtkWidget *show_defport_check_button;
 static GtkWidget *toolbar_style_radio_buttons[3];
-static GtkWidget *toolbar_tips_check_button;
 static GtkWidget *countbots_check_button;
 static GtkWidget *refresh_sorts_check_button;
 static GtkWidget *refresh_on_update_check_button;
@@ -1207,11 +1205,6 @@ static void get_new_defaults (void) {
 		}
 	}
 
-	i = GTK_TOGGLE_BUTTON (toolbar_tips_check_button)->active;
-	if (i != default_toolbar_tips) {
-		config_set_bool ("toolbar tips", default_toolbar_tips = i);
-	}
-
 	i = GTK_TOGGLE_BUTTON (countbots_check_button)->active;
 	if (i != serverlist_countbots) {
 		config_set_bool ("count bots", serverlist_countbots = i);
@@ -1447,14 +1440,6 @@ static void ok_callback (GtkWidget *widget, GtkWidget* window) {
 	// Refresh list of sources on screen in case the 'Show only configured games'
 	// setting has changes, or a game command line has been added or removed.
 	refresh_source_list();
-
-	// Enable / disable tooltips after config change
-	if (default_toolbar_tips) {
-		gtk_tooltips_enable(tooltips);
-	}
-	else {
-		gtk_tooltips_disable(tooltips);
-	}
 }
 
 static void update_q1_skin (void) {
@@ -3830,13 +3815,6 @@ static GtkWidget *appearance_options_page (void) {
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_style_radio_buttons[default_toolbar_style]), TRUE);
 
-	/* Toolbar Tips */
-
-	toolbar_tips_check_button = gtk_check_button_new_with_label (_("Tooltips"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_tips_check_button), default_toolbar_tips);
-	gtk_box_pack_end (GTK_BOX (hbox), toolbar_tips_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (toolbar_tips_check_button);
-
 	gtk_widget_show (hbox);
 	gtk_widget_show (frame);
 
@@ -4777,7 +4755,6 @@ int prefs_load (void) {
 	show_default_port =                     config_get_bool("show default port=true");
 	serverlist_countbots =                  config_get_bool("count bots=true");
 	default_toolbar_style =                 config_get_int("toolbar style=2");
-	default_toolbar_tips =                  config_get_bool("toolbar tips=true");
 	default_refresh_sorts =                 config_get_bool("sort on refresh=true");
 	default_refresh_on_update =             config_get_bool("refresh on update=true");
 	default_resolve_on_update =             config_get_bool("resolve on update=false");
