@@ -3157,7 +3157,7 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 		pushlatency_mode_radio_buttons[i] = gtk_radio_button_new_with_label (group, _(pushlatency_modes[i]));
-		group = gtk_radio_button_group (GTK_RADIO_BUTTON (pushlatency_mode_radio_buttons[i]));
+		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (pushlatency_mode_radio_buttons[i]));
 		gtk_box_pack_start (GTK_BOX (hbox), pushlatency_mode_radio_buttons[i], FALSE, FALSE, 0);
 		gtk_widget_show (pushlatency_mode_radio_buttons[i]);
 

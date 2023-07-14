@@ -676,7 +676,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
 	for (i = 0; i < 3; i++) {
 		mode_buttons[i] = gtk_radio_button_new_with_label (group, _(mode_names[i]));
-		group = gtk_radio_button_group (GTK_RADIO_BUTTON (mode_buttons[i]));
+		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (mode_buttons[i]));
 
 		g_signal_connect (mode_buttons[i], "clicked", G_CALLBACK (sync_pattern_data), NULL);
 

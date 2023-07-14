@@ -237,7 +237,7 @@ int find_player_dialog (void) {
 	for (i = 0; i < 3; i++) {
 		mode_buttons[i] = gtk_radio_button_new_with_label (group,
 				_(mode_names[i]));
-		group = gtk_radio_button_group (GTK_RADIO_BUTTON (mode_buttons[i]));
+		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (mode_buttons[i]));
 		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
 		gtk_widget_show (mode_buttons[i]);
 	}
