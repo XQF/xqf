@@ -2170,14 +2170,14 @@ GtkWidget* create_filter_menu () {
 	menu = gtk_menu_new ();
 
 	menu_item = gtk_menu_item_new_with_label (_("Configure"));
-	gtk_menu_append (GTK_MENU (menu), menu_item);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 	gtk_widget_show (menu_item);
 
 	g_signal_connect (menu_item, "activate", G_CALLBACK (start_filters_cfg_dialog), (gpointer) FILTER_SERVER);
 
 	menu_item = gtk_menu_item_new ();
 	gtk_widget_set_sensitive (menu_item, FALSE);
-	gtk_menu_append (GTK_MENU (menu), menu_item);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 	gtk_widget_show (menu_item);
 
 	for (i = 0; i <= server_filters->len; i++) {
@@ -2196,7 +2196,7 @@ GtkWidget* create_filter_menu () {
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), FALSE);
 		filter_menu_radio_buttons = g_slist_append (filter_menu_radio_buttons, menu_item);
 
-		gtk_menu_append (GTK_MENU (menu), menu_item);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 		gtk_widget_show (menu_item);
 
 		// array starts from zero but filters from 1
