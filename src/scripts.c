@@ -474,7 +474,7 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 			break;
 	}
 
-	gtk_widget_ref(opt->widget);
+	g_object_ref(G_OBJECT(opt->widget));
 
 	return ret;
 }
@@ -484,7 +484,7 @@ void unref_option_widgets(Script* script) {
 
 	for (optlist = script->options; optlist; optlist = g_slist_next(optlist)) {
 		ScriptOption* opt = optlist->data;
-		gtk_widget_unref(opt->widget);
+		g_object_unref(G_OBJECT(opt->widget));
 		opt->widget = NULL;
 	}
 }

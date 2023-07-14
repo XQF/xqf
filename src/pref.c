@@ -2847,30 +2847,30 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 8);
 
 	hbox1 = gtk_hbox_new(FALSE, 0);
-	gtk_widget_ref(hbox1);
-	g_object_set_data_full(G_OBJECT(page_vbox), "hbox1", hbox1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(hbox1));
+	g_object_set_data_full(G_OBJECT(page_vbox), "hbox1", hbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(hbox1);
 	gtk_container_add(GTK_CONTAINER(page_vbox), hbox1);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox1), 3);
 
 	vbox1 = gtk_vbox_new(FALSE, 0);
-	gtk_widget_ref(vbox1);
-	g_object_set_data_full(G_OBJECT(page_vbox), "vbox1", vbox1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(vbox1));
+	g_object_set_data_full(G_OBJECT(page_vbox), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(vbox1);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbox1, TRUE, TRUE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox1), 2);
 
 	scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
-	gtk_widget_ref(scrolledwindow1);
-	g_object_set_data_full(G_OBJECT(page_vbox), "scrolledwindow1", scrolledwindow1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(scrolledwindow1));
+	g_object_set_data_full(G_OBJECT(page_vbox), "scrolledwindow1", scrolledwindow1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(scrolledwindow1);
 	gtk_box_pack_start(GTK_BOX(vbox1), scrolledwindow1, TRUE, TRUE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 2);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	arguments_clist = gtk_clist_new(2);
-	gtk_widget_ref(arguments_clist);
-	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_clist", arguments_clist, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(arguments_clist));
+	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_clist", arguments_clist, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(arguments_clist);
 	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_clist);
 	gtk_clist_column_titles_show(GTK_CLIST(arguments_clist));
@@ -2878,84 +2878,84 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_object_set_user_data(GTK_OBJECT(arguments_clist), (gpointer) type);
 
 	game_label = gtk_label_new(_("Game"));
-	gtk_widget_ref(game_label);
-	g_object_set_data_full(G_OBJECT(page_vbox), "game_label", game_label, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(game_label));
+	g_object_set_data_full(G_OBJECT(page_vbox), "game_label", game_label, (GDestroyNotify) g_object_unref);
 	gtk_label_set_justify(GTK_LABEL(game_label), GTK_JUSTIFY_LEFT);
 	gtk_widget_show(game_label);
 	gtk_clist_set_column_widget(GTK_CLIST(arguments_clist), 0, game_label);
 
 	arguments_label = gtk_label_new(_("Arguments"));
-	gtk_widget_ref(arguments_label);
-	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_label", arguments_label, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(arguments_label));
+	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_label", arguments_label, (GDestroyNotify) g_object_unref);
 	gtk_label_set_justify(GTK_LABEL(arguments_label), GTK_JUSTIFY_LEFT);
 	gtk_widget_show(arguments_label);
 	gtk_clist_set_column_widget(GTK_CLIST(arguments_clist), 1, arguments_label);
 
 	frame1 = gtk_frame_new(_("Game and Arguments"));
-	gtk_widget_ref(frame1);
-	g_object_set_data_full(G_OBJECT(page_vbox), "frame1", frame1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(frame1));
+	g_object_set_data_full(G_OBJECT(page_vbox), "frame1", frame1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(frame1);
 	gtk_box_pack_start(GTK_BOX(vbox1), frame1, FALSE, FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(frame1), 3);
 
 	hbox2 = gtk_hbox_new(FALSE, 0);
-	gtk_widget_ref(hbox2);
-	g_object_set_data_full(G_OBJECT(page_vbox), "hbox2", hbox2, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(hbox2));
+	g_object_set_data_full(G_OBJECT(page_vbox), "hbox2", hbox2, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(hbox2);
 	gtk_container_add(GTK_CONTAINER(frame1), hbox2);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 4);
 
 	custom_args_entry_game[type] = gtk_entry_new();
-	gtk_widget_ref(custom_args_entry_game[type]);
+	g_object_ref(G_OBJECT(custom_args_entry_game[type]));
 	gtk_widget_set_size_request(custom_args_entry_game[type], 90, -2);
 	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_game[type]",
 		custom_args_entry_game[type],
-		(GDestroyNotify) gtk_widget_unref);
+		(GDestroyNotify) g_object_unref);
 	gtk_widget_show(custom_args_entry_game[type]);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_game[type], FALSE, TRUE, 0);
 	gtk_tooltips_set_tip(tooltips, custom_args_entry_game[type], _("Enter the game name from the game column"), NULL);
 	gtk_widget_set_sensitive(custom_args_entry_game[type], FALSE);
 
 	custom_args_entry_args[type] = gtk_entry_new();
-	gtk_widget_ref(custom_args_entry_args[type]);
+	g_object_ref(G_OBJECT(custom_args_entry_args[type]));
 	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_args[type]",
 		custom_args_entry_args[type],
-		(GDestroyNotify) gtk_widget_unref);
+		(GDestroyNotify) g_object_unref);
 	gtk_widget_show(custom_args_entry_args[type]);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_args[type], TRUE, TRUE, 0);
 	gtk_tooltips_set_tip(tooltips, custom_args_entry_args[type], _("Enter the arguments separated by spaces"), NULL);
 	gtk_widget_set_sensitive(custom_args_entry_args[type], FALSE);
 
 	vbuttonbox1 = gtk_vbox_new(FALSE, 0);
-	gtk_widget_ref(vbuttonbox1);
-	g_object_set_data_full(G_OBJECT(page_vbox), "vbuttonbox1", vbuttonbox1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(vbuttonbox1));
+	g_object_set_data_full(G_OBJECT(page_vbox), "vbuttonbox1", vbuttonbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(vbuttonbox1);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbuttonbox1, FALSE, TRUE, 0);
 
 	new_button = gtk_button_new_with_label(_("New"));
-	gtk_widget_ref(new_button);
-	g_object_set_data_full(G_OBJECT(page_vbox), "new_button", new_button, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(new_button));
+	g_object_set_data_full(G_OBJECT(page_vbox), "new_button", new_button, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(new_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), new_button, FALSE, FALSE, 5);
 	gtk_widget_set_can_default(new_button, TRUE);
 
 	delete_button = gtk_button_new_with_label(_("Delete"));
-	gtk_widget_ref(delete_button);
-	g_object_set_data_full(G_OBJECT(page_vbox), "delete_button", delete_button, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(delete_button));
+	g_object_set_data_full(G_OBJECT(page_vbox), "delete_button", delete_button, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(delete_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), delete_button, FALSE, FALSE, 5);
 	gtk_widget_set_can_default(delete_button, TRUE);
 
 	defaults_button = gtk_button_new_with_label(_("Add Defaults"));
-	gtk_widget_ref(defaults_button);
-	g_object_set_data_full(G_OBJECT(page_vbox), "defaults_button", defaults_button, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(defaults_button));
+	g_object_set_data_full(G_OBJECT(page_vbox), "defaults_button", defaults_button, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(defaults_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), defaults_button, FALSE, FALSE, 5);
 	gtk_widget_set_can_default(defaults_button, TRUE);
 
 	custom_args_add_button[type] = gtk_button_new_with_label(_("Add/Update"));
-	gtk_widget_ref(custom_args_add_button[type]);
-	g_object_set_data_full(G_OBJECT(page_vbox), "add_button", custom_args_add_button[type], (GDestroyNotify) gtk_widget_unref);
+	g_object_ref(G_OBJECT(custom_args_add_button[type]));
+	g_object_set_data_full(G_OBJECT(page_vbox), "add_button", custom_args_add_button[type], (GDestroyNotify) g_object_unref);
 	gtk_widget_show(custom_args_add_button[type]);
 	gtk_box_pack_end(GTK_BOX(vbuttonbox1), custom_args_add_button[type], FALSE, FALSE, 7);
 	gtk_widget_set_sensitive(custom_args_add_button[type], FALSE);

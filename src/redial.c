@@ -173,42 +173,42 @@ static GtkWidget* create_redialwindow (void) {
 #endif
 
 	vbox1 = gtk_vbox_new (FALSE, 5);
-	gtk_widget_ref (vbox1);
-	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref (G_OBJECT(vbox1));
+	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (vbox1);
 	gtk_container_add (GTK_CONTAINER (redialwindow), vbox1);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 14);
 
 	label = gtk_label_new (_("***\n***"));
-	gtk_widget_ref (label);
-	g_object_set_data_full (G_OBJECT (redialwindow), "label", label, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref (G_OBJECT(label));
+	g_object_set_data_full (G_OBJECT (redialwindow), "label", label, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (label);
 	gtk_box_pack_start (GTK_BOX (vbox1), label, FALSE, FALSE, 0);
 
 	secondsprogress = gtk_progress_bar_new ();
-	gtk_widget_ref (secondsprogress);
-	g_object_set_data_full (G_OBJECT (redialwindow), "secondsprogress", secondsprogress, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref (G_OBJECT(secondsprogress));
+	g_object_set_data_full (G_OBJECT (redialwindow), "secondsprogress", secondsprogress, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (secondsprogress);
 	gtk_box_pack_start (GTK_BOX (vbox1), secondsprogress, FALSE, FALSE, 10);
 	gtk_progress_configure (GTK_PROGRESS (secondsprogress), 4, 0, 10);
 
 	hbuttonbox1 = gtk_hbutton_box_new ();
-	gtk_widget_ref (hbuttonbox1);
-	g_object_set_data_full (G_OBJECT (redialwindow), "hbuttonbox1", hbuttonbox1, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref (G_OBJECT(hbuttonbox1));
+	g_object_set_data_full (G_OBJECT (redialwindow), "hbuttonbox1", hbuttonbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (hbuttonbox1);
 	gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, TRUE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_SPREAD);
 
 	launchbutton = gtk_button_new_with_label (_("Launch now"));
-	gtk_widget_ref (launchbutton);
-	g_object_set_data_full (G_OBJECT (redialwindow), "launchbutton", launchbutton, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref (G_OBJECT(launchbutton));
+	g_object_set_data_full (G_OBJECT (redialwindow), "launchbutton", launchbutton, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (launchbutton);
 	gtk_container_add (GTK_CONTAINER (hbuttonbox1), launchbutton);
 	gtk_widget_set_can_default (launchbutton, TRUE);
 
 	cancelbutton = gtk_button_new_with_label (_("Cancel"));
-	gtk_widget_ref (cancelbutton);
-	g_object_set_data_full (G_OBJECT (redialwindow), "cancelbutton", cancelbutton, (GDestroyNotify) gtk_widget_unref);
+	g_object_ref (G_OBJECT(cancelbutton));
+	g_object_set_data_full (G_OBJECT (redialwindow), "cancelbutton", cancelbutton, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (cancelbutton);
 	gtk_container_add (GTK_CONTAINER (hbuttonbox1), cancelbutton);
 	gtk_widget_set_can_default (cancelbutton, TRUE);
