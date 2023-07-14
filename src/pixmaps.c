@@ -227,7 +227,7 @@ struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixma
 	GdkGC *white_gc;
 	int h1, w1, h2, w2;
 
-	if (!GTK_WIDGET_REALIZED (window))
+	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
 	gdk_window_get_size (s1->pix, &w1, &h1);
@@ -272,7 +272,7 @@ void init_pixmaps (GtkWidget *window) {
 
 	free_pixmaps ();
 
-	if (!GTK_WIDGET_REALIZED (window))
+	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
 	create_pixmap (window, "update.xpm", &update_pix);
@@ -351,7 +351,7 @@ void ensure_buddy_pix (GtkWidget *window, int n) {
 	if (!pri || !sec)
 		return;
 
-	if (!GTK_WIDGET_REALIZED (window))
+	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
 	gdk_window_get_size (buddy_pix[1].pix, &width, &height);
@@ -408,7 +408,7 @@ void create_server_pixmap (GtkWidget *window, struct pixmap *stype,
 	GdkGC *white_gc;
 	int hb, wb, hs, ws;
 
-	if (!GTK_WIDGET_REALIZED (window))
+	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
 	gdk_window_get_size (buddy_pix[1].pix, &wb, &hb);

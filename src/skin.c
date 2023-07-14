@@ -409,7 +409,7 @@ GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsign
 			return pixmap;
 	}
 
-	if (!GTK_WIDGET_REALIZED (window))
+	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
 	h = player_clist->row_height - 2;

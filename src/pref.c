@@ -4352,7 +4352,7 @@ void preferences_dialog (int page_num) {
 	genprefs = new_generic_prefs ();
 
 	window = dialog_create_modal_transient_window (_("XQF: Preferences"), TRUE, FALSE, NULL);
-	if (!GTK_WIDGET_REALIZED (window)) {
+	if (!gtk_widget_get_realized (window)) {
 		gtk_widget_realize (window);
 	}
 
