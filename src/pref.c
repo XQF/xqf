@@ -1371,7 +1371,7 @@ static int check_qstat_source_port() {
 	if (val && *val) {
 		if (!inet_aton(val, &in)) {
 			dialog_ok(NULL, _("Invalid source IP address"));
-			gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), PREF_PAGE_QSTAT);
+			gtk_notebook_set_current_page (GTK_NOTEBOOK (pref_notebook), PREF_PAGE_QSTAT);
 			return FALSE;
 		}
 		else {
@@ -1381,7 +1381,7 @@ static int check_qstat_source_port() {
 
 	if ((low != 0 || high != 0) && (low < 1024 || high < 1024 || low > high)) {
 		dialog_ok(NULL, _("Invalid source port range"));
-		gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), PREF_PAGE_QSTAT);
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (pref_notebook), PREF_PAGE_QSTAT);
 		return FALSE;
 	}
 
@@ -2244,7 +2244,7 @@ static GtkWidget *player_profile_page(void) {
 		g_free(typestr);
 	}
 
-	gtk_notebook_set_page(GTK_NOTEBOOK(profile_notebook),
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(profile_notebook),
 			(type == Q2_SERVER)? 2 :(type == Q1_SERVER)? 0 : 1);
 
 	gtk_widget_show(profile_notebook);
@@ -2809,7 +2809,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	gtk_widget_show(vbox);
 
-	gtk_notebook_set_page(GTK_NOTEBOOK(notebook), 0);
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
 
 	gtk_widget_show(notebook);
 	gtk_widget_show(page_vbox);
@@ -3009,7 +3009,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 
 static void game_listitem_selected_callback (GtkItem *item, enum server_type type) {
-	gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), type);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (games_notebook), type);
 }
 
 
@@ -3096,7 +3096,7 @@ static GtkWidget *games_config_page (int defgame) {
 		defgame = QW_SERVER;
 	}
 
-	gtk_notebook_set_page (GTK_NOTEBOOK (games_notebook), defgame);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (games_notebook), defgame);
 
 	gtk_list_item_select(GTK_LIST_ITEM(genprefs[defgame].game_button));
 
@@ -4408,7 +4408,7 @@ void preferences_dialog (int page_num) {
 	gtk_widget_show (label);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
-	gtk_notebook_set_page (GTK_NOTEBOOK (pref_notebook), page_num);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (pref_notebook), page_num);
 
 	/* Initialize skins and custom cfgs */
 

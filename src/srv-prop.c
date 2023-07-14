@@ -817,7 +817,7 @@ void properties_dialog (struct server *s) {
 	gtk_widget_show (label);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
-	gtk_notebook_set_page (GTK_NOTEBOOK (notebook), 0);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
 
 	gtk_widget_show (notebook);
 

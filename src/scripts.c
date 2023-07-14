@@ -561,7 +561,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 static void scripts_page_select_callback(GtkItem *item, gpointer d) {
 	unsigned i = GPOINTER_TO_INT(d);
-	gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), i);
 }
 
 GtkWidget *scripts_config_page () {
