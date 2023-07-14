@@ -2403,10 +2403,6 @@ void populate_main_window (void) {
 	gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
 	g_object_unref (G_OBJECT (accel_group));
 
-	// Set tooltips - also in prefs_load
-	tooltips = gtk_tooltips_new ();
-	gtk_tooltips_enable (tooltips);
-
 	gtk_widget_grab_focus (entry);
 }
 

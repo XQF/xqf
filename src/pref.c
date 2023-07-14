@@ -122,8 +122,6 @@ char *sound_stop = NULL;
 char *sound_server_connect = NULL;
 char *sound_redial_success = NULL;
 
-GtkTooltips *tooltips;
-
 static int pref_q1_top_color;
 static int pref_q1_bottom_color;
 static int pref_qw_top_color;
@@ -2732,7 +2730,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	gtk_widget_set_sensitive(button, pref_can_suggest(type));
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
-	gtk_tooltips_set_tip(tooltips, button, _("Searches the path for the game executable"), NULL);
+	gtk_widget_set_tooltip_text(button, _("Searches the path for the game executable"));
 	gtk_widget_show(button);
 
 
@@ -2765,7 +2763,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(game_file_activate_callback), (gpointer)type);
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
-	gtk_tooltips_set_tip(tooltips, button, _("Tries to guess the working directory based on the command line"), NULL);
+	gtk_widget_set_tooltip_text(button, _("Tries to guess the working directory based on the command line"));
 	gtk_widget_show(button);
 
 	if (games[type].custom_cfgs) {
@@ -2839,8 +2837,6 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	GtkWidget *page_vbox;
 	struct game *g;
 	int width;
-
-	//tooltips = gtk_tooltips_new();
 
 	g = &games[type];
 
@@ -2916,7 +2912,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		(GDestroyNotify) g_object_unref);
 	gtk_widget_show(custom_args_entry_game[type]);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_game[type], FALSE, TRUE, 0);
-	gtk_tooltips_set_tip(tooltips, custom_args_entry_game[type], _("Enter the game name from the game column"), NULL);
+	gtk_widget_set_tooltip_text(custom_args_entry_game[type], _("Enter the game name from the game column"));
 	gtk_widget_set_sensitive(custom_args_entry_game[type], FALSE);
 
 	custom_args_entry_args[type] = gtk_entry_new();
@@ -2926,7 +2922,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		(GDestroyNotify) g_object_unref);
 	gtk_widget_show(custom_args_entry_args[type]);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_args[type], TRUE, TRUE, 0);
-	gtk_tooltips_set_tip(tooltips, custom_args_entry_args[type], _("Enter the arguments separated by spaces"), NULL);
+	gtk_widget_set_tooltip_text(custom_args_entry_args[type], _("Enter the arguments separated by spaces"));
 	gtk_widget_set_sensitive(custom_args_entry_args[type], FALSE);
 
 	vbuttonbox1 = gtk_vbox_new(FALSE, 0);
@@ -3705,7 +3701,7 @@ static GtkWidget *appearance_options_page (void) {
 	show_hostnames_check_button = gtk_check_button_new_with_label (_("Show host names"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_hostnames_check_button), show_hostnames);
 	gtk_box_pack_start (GTK_BOX (hbox), show_hostnames_check_button, FALSE, FALSE, 0);
-	gtk_tooltips_set_tip (tooltips, show_hostnames_check_button, _("Show hostnames instead of IP addresses if possible"), NULL);
+	gtk_widget_set_tooltip_text (show_hostnames_check_button, _("Show hostnames instead of IP addresses if possible"));
 	gtk_widget_show (show_hostnames_check_button);
 
 	gtk_widget_show (hbox);
@@ -3766,7 +3762,7 @@ static GtkWidget *appearance_options_page (void) {
 
 	resolve_on_update_check_button = gtk_check_button_new_with_label (_("Resolve hostnames on update"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (resolve_on_update_check_button), default_resolve_on_update);
-	gtk_tooltips_set_tip (tooltips, resolve_on_update_check_button, _("Enable or disable DNS resolution of IP addresses"), NULL);
+	gtk_widget_set_tooltip_text (resolve_on_update_check_button, _("Enable or disable DNS resolution of IP addresses"));
 	gtk_box_pack_start (GTK_BOX (hbox), resolve_on_update_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (resolve_on_update_check_button);
 
@@ -3837,9 +3833,9 @@ static GtkWidget *general_options_page (void) {
 	auto_maps_check_button = gtk_check_button_new_with_label (_("Scan for maps"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_maps_check_button), default_auto_maps);
 
-	gtk_tooltips_set_tip (tooltips, auto_maps_check_button,
+	gtk_widget_set_tooltip_text (auto_maps_check_button,
 		_("Scan game directories for installed maps. xqf will"
-		" take longer to start up when enabled."), NULL);
+		" take longer to start up when enabled."));
 	gtk_box_pack_start (GTK_BOX (hbox), auto_maps_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (auto_maps_check_button);
 
@@ -3887,7 +3883,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
 	g_signal_connect (G_OBJECT (launchinfo_check_button), "toggled", G_CALLBACK (launchinfo_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
-	gtk_tooltips_set_tip (tooltips, launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"), NULL);
+	gtk_widget_set_tooltip_text (launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"));
 	gtk_widget_show (launchinfo_check_button);
 
 	gtk_widget_show (hbox);
@@ -3901,7 +3897,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
 	g_signal_connect (G_OBJECT (prelaunchexec_check_button), "toggled", G_CALLBACK (prelaunchexec_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
-	gtk_tooltips_set_tip (tooltips, prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"), NULL);
+	gtk_widget_set_tooltip_text (prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"));
 	gtk_widget_show (prelaunchexec_check_button);
 
 	gtk_widget_show (hbox);
