@@ -841,7 +841,7 @@ void statistics_dialog (void) {
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect (button, "clicked", G_CALLBACK (grab_defaults), NULL);
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 

@@ -832,7 +832,7 @@ void properties_dialog (struct server *s) {
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
@@ -842,7 +842,7 @@ void properties_dialog (struct server *s) {
 			G_CALLBACK (set_new_properties), (gpointer) s);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 

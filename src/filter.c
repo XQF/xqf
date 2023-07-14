@@ -1531,7 +1531,7 @@ int filters_cfg_dialog (int page_num) {
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
 	gtk_box_pack_end (GTK_BOX(hbox), button, FALSE, FALSE, 0);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
@@ -1539,7 +1539,7 @@ int filters_cfg_dialog (int page_num) {
 	g_signal_connect(button, "clicked",	G_CALLBACK (filters_on_ok), NULL);
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 
@@ -1885,7 +1885,7 @@ static void country_create_popup_window(void) {
 	g_signal_connect (button3, "clicked", G_CALLBACK (country_add_button), NULL);
 	gtk_widget_show (button3);
 	gtk_container_add (GTK_CONTAINER (vbuttonbox1), button3);
-	GTK_WIDGET_SET_FLAGS (button3, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button3, TRUE);
 
 
 	// <<
@@ -1893,7 +1893,7 @@ static void country_create_popup_window(void) {
 	g_signal_connect (button4, "clicked", G_CALLBACK (country_delete_button), NULL);
 	gtk_widget_show (button4);
 	gtk_container_add (GTK_CONTAINER (vbuttonbox1), button4);
-	GTK_WIDGET_SET_FLAGS (button4, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button4, TRUE);
 
 
 	// right clist
@@ -1965,14 +1965,14 @@ static void country_create_popup_window(void) {
 
 	gtk_widget_show (button1);
 	gtk_container_add (GTK_CONTAINER (hbuttonbox1), button1);
-	GTK_WIDGET_SET_FLAGS (button1, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button1, TRUE);
 
 	button2 = gtk_button_new_with_label (_("Cancel"));
 	g_signal_connect_swapped (button2, "clicked", G_CALLBACK (gtk_widget_destroy), country_popup_window);
 
 	gtk_widget_show(button2);
 	gtk_container_add(GTK_CONTAINER(hbuttonbox1), button2);
-	GTK_WIDGET_SET_FLAGS(button2, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button2, TRUE);
 
 	gtk_widget_show (country_popup_window);
 

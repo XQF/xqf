@@ -250,8 +250,8 @@ struct master *add_master_dialog (struct master *m) {
 			G_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 
-	GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_name_combo)->entry, GTK_CAN_FOCUS);
-	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (master_name_combo)->button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (GTK_COMBO (master_name_combo)->entry, TRUE);
+	gtk_widget_set_can_focus (GTK_COMBO (master_name_combo)->button, FALSE);
 	gtk_widget_grab_focus (GTK_COMBO (master_name_combo)->entry);
 
 	gtk_widget_show (master_name_combo);
@@ -302,8 +302,8 @@ struct master *add_master_dialog (struct master *m) {
 			G_CALLBACK
 			(master_address_from_history_selected_callback),NULL);
 
-	GTK_WIDGET_SET_FLAGS (GTK_COMBO (master_addr_combo)->entry, GTK_CAN_FOCUS);
-	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (master_addr_combo)->button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (GTK_COMBO (master_addr_combo)->entry, TRUE);
+	gtk_widget_set_can_focus (GTK_COMBO (master_addr_combo)->button, FALSE);
 	// gtk_widget_grab_focus (GTK_COMBO (master_addr_combo)->entry);
 
 	gtk_widget_show (master_addr_combo);
@@ -370,7 +370,7 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
 
 	/* OK Button */
@@ -379,7 +379,7 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 

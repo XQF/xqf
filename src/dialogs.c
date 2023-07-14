@@ -138,7 +138,7 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 
@@ -215,7 +215,7 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 			G_CALLBACK (yes_button_clicked_callback), &res);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 0)
 		gtk_widget_grab_default (button);
 	gtk_widget_show (button);
@@ -225,7 +225,7 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 1)
 		gtk_widget_grab_default (button);
 	gtk_widget_show (button);
@@ -295,7 +295,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 			G_CALLBACK (yes_button_clicked_callback), &res);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 0)
 		gtk_widget_grab_default (button);
 	gtk_widget_show (button);
@@ -305,7 +305,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 1)
 		gtk_widget_grab_default (button);
 	gtk_widget_show (button);
@@ -317,7 +317,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 			G_CALLBACK (redial_button_clicked_callback), &res);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 2)
 		gtk_widget_grab_default (button);
 	gtk_widget_show (button);

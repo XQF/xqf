@@ -115,8 +115,8 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 			G_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 
-	GTK_WIDGET_SET_FLAGS (GTK_COMBO (server_combo)->entry, GTK_CAN_FOCUS);
-	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (server_combo)->button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (GTK_COMBO (server_combo)->entry, TRUE);
+	gtk_widget_set_can_focus (GTK_COMBO (server_combo)->button, FALSE);
 	gtk_widget_grab_focus (GTK_COMBO (server_combo)->entry);
 	gtk_widget_show (server_combo);
 
@@ -152,7 +152,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
 
 	/* OK Button */
@@ -165,7 +165,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 			G_OBJECT (GTK_COMBO (server_combo)->entry));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 

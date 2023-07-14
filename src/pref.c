@@ -2931,21 +2931,21 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	g_object_set_data_full(G_OBJECT(page_vbox), "new_button", new_button, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(new_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), new_button, FALSE, FALSE, 5);
-	GTK_WIDGET_SET_FLAGS(new_button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(new_button, TRUE);
 
 	delete_button = gtk_button_new_with_label(_("Delete"));
 	gtk_widget_ref(delete_button);
 	g_object_set_data_full(G_OBJECT(page_vbox), "delete_button", delete_button, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(delete_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), delete_button, FALSE, FALSE, 5);
-	GTK_WIDGET_SET_FLAGS(delete_button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(delete_button, TRUE);
 
 	defaults_button = gtk_button_new_with_label(_("Add Defaults"));
 	gtk_widget_ref(defaults_button);
 	g_object_set_data_full(G_OBJECT(page_vbox), "defaults_button", defaults_button, (GDestroyNotify) gtk_widget_unref);
 	gtk_widget_show(defaults_button);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), defaults_button, FALSE, FALSE, 5);
-	GTK_WIDGET_SET_FLAGS(defaults_button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(defaults_button, TRUE);
 
 	custom_args_add_button[type] = gtk_button_new_with_label(_("Add/Update"));
 	gtk_widget_ref(custom_args_add_button[type]);
@@ -2953,7 +2953,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_widget_show(custom_args_add_button[type]);
 	gtk_box_pack_end(GTK_BOX(vbuttonbox1), custom_args_add_button[type], FALSE, FALSE, 7);
 	gtk_widget_set_sensitive(custom_args_add_button[type], FALSE);
-	GTK_WIDGET_SET_FLAGS(custom_args_add_button[type], GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(custom_args_add_button[type], TRUE);
 
 	gtk_object_set_user_data(GTK_OBJECT(new_button), (gpointer) type);
 	g_signal_connect(G_OBJECT(new_button), "clicked",
@@ -4432,14 +4432,14 @@ void preferences_dialog (int page_num) {
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (ok_callback), G_OBJECT(window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 
