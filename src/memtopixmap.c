@@ -68,7 +68,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len) {
 	}
 	else {
 		pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-		g_object_ref(pixbuf);
+		g_object_ref(G_OBJECT(pixbuf));
 		g_object_unref(G_OBJECT(loader));
 	}
 
