@@ -660,7 +660,8 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 0, 0, 0, 0);
 	gtk_widget_show (label);
 
-	pattern_entry = gtk_entry_new_with_max_length (256);
+	pattern_entry = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (pattern_entry), 256);
 	gtk_table_attach_defaults (GTK_TABLE (table), pattern_entry, 1, 2, 0, 1);
 	g_signal_connect (pattern_entry, "activate",
 			G_CALLBACK (sync_pattern_data), NULL);

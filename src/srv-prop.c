@@ -649,7 +649,8 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, pos, pos + 1);
 	gtk_widget_show (label);
 
-	entry = gtk_entry_new_with_max_length (32);
+	entry = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (entry), 32);
 	gtk_widget_set_size_request (entry, 112, -1);
 	if (passwd) {
 		gtk_entry_set_text (GTK_ENTRY (entry), passwd);

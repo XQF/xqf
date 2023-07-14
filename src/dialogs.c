@@ -380,7 +380,8 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 
 	/* Entry */
 
-	enter_string_entry = gtk_entry_new_with_max_length (128);
+	enter_string_entry = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (enter_string_entry), 128);
 	gtk_entry_set_visibility (GTK_ENTRY (enter_string_entry), visible);
 	gtk_widget_set_size_request (enter_string_entry, 128, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), enter_string_entry, TRUE, TRUE, 0);

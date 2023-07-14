@@ -1978,7 +1978,8 @@ static GtkWidget *player_profile_q1_page (void) {
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
 	gtk_widget_show(label);
 
-	name_q1_entry = gtk_entry_new_with_max_length(32);
+	name_q1_entry = gtk_entry_new();
+	gtk_entry_set_max_length(GTK_ENTRY (name_q1_entry), 32);
 	gtk_widget_set_size_request(name_q1_entry, 96, -1);
 	if (default_q1_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_q1_entry), default_q1_name);
@@ -2032,7 +2033,8 @@ static GtkWidget *player_profile_t2_page (void) {
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
 	gtk_widget_show(label);
 
-	name_t2_entry = gtk_entry_new_with_max_length(32);
+	name_t2_entry = gtk_entry_new();
+	gtk_entry_set_max_length(GTK_ENTRY (name_t2_entry), 32);
 	gtk_widget_set_size_request(name_t2_entry, 96, -1);
 	if (default_t2_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_t2_entry), default_t2_name);
@@ -2089,7 +2091,8 @@ static GtkWidget *player_profile_qw_page (void) {
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
 	gtk_widget_show(label);
 
-	name_qw_entry = gtk_entry_new_with_max_length(32);
+	name_qw_entry = gtk_entry_new();
+	gtk_entry_set_max_length(GTK_ENTRY (name_qw_entry), 32);
 	gtk_widget_set_size_request(name_qw_entry, 96, -1);
 	if (default_qw_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_qw_entry), default_qw_name);
@@ -2110,7 +2113,8 @@ static GtkWidget *player_profile_qw_page (void) {
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
 	gtk_widget_show(label);
 
-	team_qw_entry = gtk_entry_new_with_max_length(32);
+	team_qw_entry = gtk_entry_new();
+	gtk_entry_set_max_length(GTK_ENTRY (team_qw_entry), 32);
 	gtk_widget_set_size_request(team_qw_entry, 96, -1);
 	if (default_qw_team) {
 		gtk_entry_set_text(GTK_ENTRY(team_qw_entry), default_qw_team);
@@ -2149,7 +2153,8 @@ static GtkWidget *player_profile_q2_page (void) {
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show(label);
 
-	name_q2_entry = gtk_entry_new_with_max_length(32);
+	name_q2_entry = gtk_entry_new();
+	gtk_entry_set_max_length(GTK_ENTRY (name_q2_entry), 32);
 	gtk_widget_set_size_request(name_q2_entry, 96, -1);
 	if (default_q2_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_q2_entry), default_q2_name);
@@ -2201,7 +2206,8 @@ static GtkWidget *player_profile_page(void) {
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show(label);
 
-	name_entry = gtk_entry_new_with_max_length(32);
+	name_entry = gtk_entry_new();
+	gtk_entry_set_max_length(GTK_ENTRY (name_entry), 32);
 	gtk_widget_set_size_request(name_entry, 96, -1);
 	if (default_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_entry), default_name);
