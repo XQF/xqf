@@ -709,7 +709,7 @@ void restore_main_window_geometry (void) {
 	config_pop_prefix ();
 
 	if (height && width) {
-		/* gtk_widget_set_usize (GTK_WIDGET (main_window), width, height); */
+		/* gtk_widget_set_size_request (GTK_WIDGET (main_window), width, height); */
 		gtk_window_set_default_size (GTK_WINDOW (main_window), width, height);
 	}
 

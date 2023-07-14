@@ -2386,10 +2386,10 @@ void populate_main_window (void) {
 	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox-status-bar"));
 	main_filter_status_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-filter-status-bar"));
 
-	gtk_widget_set_usize (main_filter_status_bar, 100, -1);         // ???
+	gtk_widget_set_size_request (main_filter_status_bar, 100, -1);         // ???
 
 	main_progress_bar = create_progress_bar ();
-	gtk_widget_set_usize (main_progress_bar, 200, -1);
+	gtk_widget_set_size_request (main_progress_bar, 200, -1);
 	gtk_box_pack_end (GTK_BOX (hbox), main_progress_bar, FALSE, FALSE, 0);
 	gtk_widget_show (main_progress_bar);
 

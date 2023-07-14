@@ -651,7 +651,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	button = gtk_button_new_with_label (_("Close"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);

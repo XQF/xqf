@@ -1723,7 +1723,7 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_widget_show (label);
 
 	q1_top_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_usize (q1_top_color_button, 40, -1);
+	gtk_widget_set_size_request (q1_top_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (q1_top_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), q1_top_color_button,
@@ -1739,7 +1739,7 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_widget_show (label);
 
 	q1_bottom_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_usize (q1_bottom_color_button, 40, -1);
+	gtk_widget_set_size_request (q1_bottom_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (q1_bottom_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), q1_bottom_color_button,
@@ -1797,7 +1797,7 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_skin_combo = gtk_combo_new();
 	gtk_entry_set_max_length(GTK_ENTRY(GTK_COMBO(qw_skin_combo)->entry), 256);
-	gtk_widget_set_usize(GTK_COMBO(qw_skin_combo)->entry, 112, -1);
+	gtk_widget_set_size_request(GTK_COMBO(qw_skin_combo)->entry, 112, -1);
 	gtk_combo_set_use_arrows_always(GTK_COMBO(qw_skin_combo), TRUE);
 	gtk_combo_set_case_sensitive(GTK_COMBO(qw_skin_combo), TRUE);
 	g_signal_connect (G_OBJECT(GTK_COMBO(qw_skin_combo)->entry),
@@ -1822,7 +1822,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_widget_show(label);
 
 	qw_top_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_usize (qw_top_color_button, 40, -1);
+	gtk_widget_set_size_request (qw_top_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (qw_top_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), qw_top_color_button,
@@ -1838,7 +1838,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_widget_show (label);
 
 	qw_bottom_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_usize (qw_bottom_color_button, 40, -1);
+	gtk_widget_set_size_request (qw_bottom_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (qw_bottom_color_button), "event", G_CALLBACK (color_button_event_callback), NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), qw_bottom_color_button, 1, 2, 1, 2);
 	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
@@ -1937,7 +1937,7 @@ static GtkWidget *q2_skin_box_create (void) {
 
 	q2_skin_combo = gtk_combo_new();
 	gtk_entry_set_max_length(GTK_ENTRY(GTK_COMBO(q2_skin_combo)->entry), 256);
-	gtk_widget_set_usize(GTK_COMBO(q2_skin_combo)->entry, 144, -1);
+	gtk_widget_set_size_request(GTK_COMBO(q2_skin_combo)->entry, 144, -1);
 	gtk_combo_set_use_arrows_always(GTK_COMBO(q2_skin_combo), TRUE);
 	gtk_combo_set_case_sensitive(GTK_COMBO(q2_skin_combo), TRUE);
 	g_signal_connect(G_OBJECT(GTK_COMBO(q2_skin_combo)->entry), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
@@ -1979,7 +1979,7 @@ static GtkWidget *player_profile_q1_page (void) {
 	gtk_widget_show(label);
 
 	name_q1_entry = gtk_entry_new_with_max_length(32);
-	gtk_widget_set_usize(name_q1_entry, 96, -1);
+	gtk_widget_set_size_request(name_q1_entry, 96, -1);
 	if (default_q1_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_q1_entry), default_q1_name);
 		gtk_entry_set_position(GTK_ENTRY(name_q1_entry), 0);
@@ -2033,7 +2033,7 @@ static GtkWidget *player_profile_t2_page (void) {
 	gtk_widget_show(label);
 
 	name_t2_entry = gtk_entry_new_with_max_length(32);
-	gtk_widget_set_usize(name_t2_entry, 96, -1);
+	gtk_widget_set_size_request(name_t2_entry, 96, -1);
 	if (default_t2_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_t2_entry), default_t2_name);
 		gtk_entry_set_position(GTK_ENTRY(name_t2_entry), 0);
@@ -2090,7 +2090,7 @@ static GtkWidget *player_profile_qw_page (void) {
 	gtk_widget_show(label);
 
 	name_qw_entry = gtk_entry_new_with_max_length(32);
-	gtk_widget_set_usize(name_qw_entry, 96, -1);
+	gtk_widget_set_size_request(name_qw_entry, 96, -1);
 	if (default_qw_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_qw_entry), default_qw_name);
 		gtk_entry_set_position(GTK_ENTRY(name_qw_entry), 0);
@@ -2111,7 +2111,7 @@ static GtkWidget *player_profile_qw_page (void) {
 	gtk_widget_show(label);
 
 	team_qw_entry = gtk_entry_new_with_max_length(32);
-	gtk_widget_set_usize(team_qw_entry, 96, -1);
+	gtk_widget_set_size_request(team_qw_entry, 96, -1);
 	if (default_qw_team) {
 		gtk_entry_set_text(GTK_ENTRY(team_qw_entry), default_qw_team);
 		gtk_entry_set_position(GTK_ENTRY(team_qw_entry), 0);
@@ -2150,7 +2150,7 @@ static GtkWidget *player_profile_q2_page (void) {
 	gtk_widget_show(label);
 
 	name_q2_entry = gtk_entry_new_with_max_length(32);
-	gtk_widget_set_usize(name_q2_entry, 96, -1);
+	gtk_widget_set_size_request(name_q2_entry, 96, -1);
 	if (default_q2_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_q2_entry), default_q2_name);
 		gtk_entry_set_position(GTK_ENTRY(name_q2_entry), 0);
@@ -2202,7 +2202,7 @@ static GtkWidget *player_profile_page(void) {
 	gtk_widget_show(label);
 
 	name_entry = gtk_entry_new_with_max_length(32);
-	gtk_widget_set_usize(name_entry, 96, -1);
+	gtk_widget_set_size_request(name_entry, 96, -1);
 	if (default_name) {
 		gtk_entry_set_text(GTK_ENTRY(name_entry), default_name);
 		gtk_entry_set_position(GTK_ENTRY(name_entry), 0);
@@ -2901,7 +2901,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 	custom_args_entry_game[type] = gtk_entry_new();
 	gtk_widget_ref(custom_args_entry_game[type]);
-	gtk_widget_set_usize(custom_args_entry_game[type], 90, -2);
+	gtk_widget_set_size_request(custom_args_entry_game[type], 90, -2);
 	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_game[type]",
 		custom_args_entry_game[type],
 		(GDestroyNotify) gtk_widget_unref);
@@ -3039,7 +3039,7 @@ static GtkWidget *games_config_page (int defgame) {
 
 	gtklist = gtk_list_new ();
 
-	gtk_widget_set_usize (gtklist, 136, -1);
+	gtk_widget_set_size_request (gtklist, 136, -1);
 
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
@@ -3161,7 +3161,7 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 
 	pushlatency_value_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (pushlatency_value_spinner), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (pushlatency_value_spinner, 64, -1);
+	gtk_widget_set_size_request (pushlatency_value_spinner, 64, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), pushlatency_value_spinner, FALSE, FALSE, 0);
 	gtk_widget_show (pushlatency_value_spinner);
 }
@@ -3311,7 +3311,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	adj = gtk_adjustment_new (com_hunkmegs, 32, 1024, 8, 32, 0);
 	com_hunkmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_hunkmegs_spinner), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (com_hunkmegs_spinner, 64, -1);
+	gtk_widget_set_size_request (com_hunkmegs_spinner, 64, -1);
 
 	gtk_box_pack_start (GTK_BOX (hbox), com_hunkmegs_spinner, FALSE, FALSE, 0);
 	gtk_widget_show (com_hunkmegs_spinner);
@@ -3333,7 +3333,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	adj = gtk_adjustment_new (com_zonemegs, 16, 1024, 4, 8, 0);
 	com_zonemegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_zonemegs_spinner), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (com_zonemegs_spinner, 64, -1);
+	gtk_widget_set_size_request (com_zonemegs_spinner, 64, -1);
 
 	gtk_box_pack_start (GTK_BOX (hbox), com_zonemegs_spinner, FALSE, FALSE, 0);
 	gtk_widget_show (com_zonemegs_spinner);
@@ -3355,7 +3355,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	adj = gtk_adjustment_new (com_soundmegs, 8, 1024, 4, 8, 0);
 	com_soundmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_soundmegs_spinner), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (com_soundmegs_spinner, 64, -1);
+	gtk_widget_set_size_request (com_soundmegs_spinner, 64, -1);
 
 	gtk_box_pack_start (GTK_BOX (hbox), com_soundmegs_spinner, FALSE, FALSE, 0);
 	gtk_widget_show (com_soundmegs_spinner);
@@ -3553,7 +3553,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 
 	rate_spinner[qworq2] = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (rate_spinner[qworq2]), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (rate_spinner[qworq2], 64, -1);
+	gtk_widget_set_size_request (rate_spinner[qworq2], 64, -1);
 	gtk_box_pack_end (GTK_BOX (hbox2), rate_spinner[qworq2], FALSE, FALSE, 0);
 	gtk_widget_show (rate_spinner[qworq2]);
 
@@ -4000,7 +4000,7 @@ static GtkWidget *qstat_options_page (void) {
 
 	maxsimultaneous_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (maxsimultaneous_spinner), GTK_UPDATE_ALWAYS);
-	gtk_widget_set_usize (maxsimultaneous_spinner, 48, -1);
+	gtk_widget_set_size_request (maxsimultaneous_spinner, 48, -1);
 
 	alignment = gtk_alignment_new (1, 0.5, 0, 0);
 	gtk_container_add (GTK_CONTAINER (alignment), maxsimultaneous_spinner);
@@ -4020,7 +4020,7 @@ static GtkWidget *qstat_options_page (void) {
 
 	adj = gtk_adjustment_new (maxretries, 1.0, MAX_RETRIES, 1.0, 1.0, 0.0);
 	maxretries_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
-	gtk_widget_set_usize (maxretries_spinner, 48, -1);
+	gtk_widget_set_size_request (maxretries_spinner, 48, -1);
 
 	alignment = gtk_alignment_new (1, 0.5, 0, 0);
 	gtk_container_add (GTK_CONTAINER (alignment), maxretries_spinner);
@@ -4071,7 +4071,7 @@ static GtkWidget *qstat_options_page (void) {
 		gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_low), 5);
 		gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_low), buf);
 		gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_low, FALSE, FALSE, 0);
-		gtk_widget_set_usize (qstat_srcport_entry_low, 70, -1);
+		gtk_widget_set_size_request (qstat_srcport_entry_low, 70, -1);
 
 		label = gtk_label_new ("-");
 		gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
@@ -4087,7 +4087,7 @@ static GtkWidget *qstat_options_page (void) {
 		gtk_entry_set_max_length(GTK_ENTRY(qstat_srcport_entry_high), 5);
 		gtk_entry_set_text (GTK_ENTRY (qstat_srcport_entry_high), buf);
 		gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_high, FALSE, FALSE, 0);
-		gtk_widget_set_usize (qstat_srcport_entry_high, 70, -1);
+		gtk_widget_set_size_request (qstat_srcport_entry_high, 70, -1);
 
 		alignment = gtk_alignment_new (1, 0.5, 0, 0);
 		gtk_container_add (GTK_CONTAINER (alignment), hbox);
@@ -4429,14 +4429,14 @@ void preferences_dialog (int page_num) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Cancel"));
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (ok_callback), G_OBJECT(window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_can_default (button, TRUE);

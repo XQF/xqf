@@ -606,7 +606,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	customcfg_combo = gtk_combo_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry),
 			256);
-	gtk_widget_set_usize (GTK_COMBO (customcfg_combo)->entry, 112, -1);
+	gtk_widget_set_size_request (GTK_COMBO (customcfg_combo)->entry, 112, -1);
 
 	if ((games[s->type].flags & GAME_CONNECT) != 0 &&
 			games[s->type].custom_cfgs) {
@@ -650,7 +650,7 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 	gtk_widget_show (label);
 
 	entry = gtk_entry_new_with_max_length (32);
-	gtk_widget_set_usize (entry, 112, -1);
+	gtk_widget_set_size_request (entry, 112, -1);
 	if (passwd) {
 		gtk_entry_set_text (GTK_ENTRY (entry), passwd);
 	}
@@ -734,7 +734,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	if (comment) {
 		gtk_text_buffer_set_text (comment_text_buffer, comment, strlen (comment));
 	}
-	//  gtk_widget_set_usize (comment_text, -1, 80);
+	//  gtk_widget_set_size_request (comment_text, -1, 80);
 	gtk_container_add (GTK_CONTAINER (scrollwin), comment_text);
 	gtk_widget_show (comment_text);
 
@@ -828,7 +828,7 @@ void properties_dialog (struct server *s) {
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Cancel"));
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
@@ -836,7 +836,7 @@ void properties_dialog (struct server *s) {
 	gtk_widget_show (button);
 
 	button = gtk_button_new_with_label (_("OK"));
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (set_new_properties), (gpointer) s);

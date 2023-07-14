@@ -595,7 +595,7 @@ GtkWidget *scripts_config_page () {
 
 	gtklist = gtk_list_new ();
 
-	gtk_widget_set_usize (gtklist, 136, -1);
+	gtk_widget_set_size_request (gtklist, 136, -1);
 
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);

@@ -700,7 +700,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	comment_text_buffer = gtk_text_buffer_new (NULL);
 	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
 
-	gtk_widget_set_usize (comment_text, -1, 80);
+	gtk_widget_set_size_request (comment_text, -1, 80);
 	gtk_box_pack_start (GTK_BOX (hbox), comment_text, TRUE, TRUE, 0);
 	gtk_widget_show (comment_text);
 
@@ -765,7 +765,7 @@ void player_filter_page (GtkWidget *notebook) {
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	pattern_clist = gtk_clist_new_with_titles (5, titles);
-	gtk_widget_set_usize (pattern_clist, 260, 200);
+	gtk_widget_set_size_request (pattern_clist, 260, 200);
 	gtk_clist_set_selection_mode (GTK_CLIST (pattern_clist),
 			GTK_SELECTION_BROWSE);
 	gtk_clist_set_reorderable (GTK_CLIST (pattern_clist), TRUE);
