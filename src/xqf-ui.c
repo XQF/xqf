@@ -591,7 +591,6 @@ int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
 
 void set_toolbar_appearance (GtkToolbar *toolbar) {
 	gtk_toolbar_set_style(toolbar, GTK_TOOLBAR_BOTH);
-	gtk_toolbar_set_tooltips(toolbar, TRUE);
 }
 
 /*******************************  Progress Bar  *****************************/
