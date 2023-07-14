@@ -1557,7 +1557,7 @@ int filters_cfg_dialog (int page_num) {
 	for (i = 0; i < FILTERS_TOTAL; i++)
 		filters[i].changed = FILTER_NOT_CHANGED;
 
-	gtk_notebook_set_page (GTK_NOTEBOOK (notebook), page_num);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page_num);
 
 	gtk_main ();
 
