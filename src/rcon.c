@@ -566,12 +566,12 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	rcon_text = gtk_text_view_new_with_buffer (rcon_text_buffer);
 
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (rcon_text), FALSE);
-	GTK_WIDGET_UNSET_FLAGS (rcon_text, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (rcon_text, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox), rcon_text, TRUE, TRUE, 0);
 	gtk_widget_show (rcon_text);
 
 	vscrollbar = gtk_vscrollbar_new (GTK_TEXT_VIEW (rcon_text)->vadjustment);
-	GTK_WIDGET_UNSET_FLAGS (vscrollbar, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (vscrollbar, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
 	gtk_widget_show (vscrollbar);
 
@@ -595,8 +595,8 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_combo_disable_activate (GTK_COMBO (rcon_combo));
 	g_signal_connect (G_OBJECT (GTK_COMBO (rcon_combo)->entry), "activate",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
-	GTK_WIDGET_SET_FLAGS (GTK_COMBO (rcon_combo)->entry, GTK_CAN_FOCUS);
-	GTK_WIDGET_UNSET_FLAGS (GTK_COMBO (rcon_combo)->button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (GTK_COMBO (rcon_combo)->entry, TRUE);
+	gtk_widget_set_can_focus (GTK_COMBO (rcon_combo)->button, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox), rcon_combo, TRUE, TRUE, 0);
 	gtk_widget_grab_focus (GTK_COMBO (rcon_combo)->entry);
 	gtk_widget_show (rcon_combo);
@@ -612,7 +612,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	button = gtk_button_new_with_label (_("Send"));
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
-	GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (button, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
 	gtk_widget_show (button);
 
@@ -621,7 +621,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	button = gtk_button_new_with_label (_("Status"));
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_status_button_clicked_callback), NULL);
-	GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (button, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
 	gtk_widget_show (button);
 
@@ -630,7 +630,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	button = gtk_button_new_with_label (_("Clear"));
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_clear_button_clicked_callback), NULL);
-	GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (button, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
 	gtk_widget_show (button);
 
@@ -654,7 +654,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_widget_set_usize (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
 	gtk_widget_show (button);
 
