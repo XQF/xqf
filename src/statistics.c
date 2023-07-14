@@ -544,6 +544,7 @@ static void select_server_type_callback(GtkWidget *widget, enum server_type type
 }
 
 static GtkWidget *archs_stats_page (void) {
+	GValue hborder = G_VALUE_INIT;
 	GtkWidget *page_vbox;
 	GtkWidget *alignment;
 	GtkWidget *option_menu;
@@ -561,7 +562,9 @@ static GtkWidget *archs_stats_page (void) {
 	arch_notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (arch_notebook), FALSE);
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (arch_notebook), GTK_POS_TOP);
-	gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (arch_notebook), 4);
+	g_value_init (&hborder, G_TYPE_INT);
+	g_value_set_int (&hborder, 4);
+	g_object_set_property (G_OBJECT (arch_notebook), "tab-hborder", &hborder);
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(arch_notebook), FALSE);
 	gtk_container_add (GTK_CONTAINER (alignment), arch_notebook);
 
@@ -674,6 +677,7 @@ static void select_country_server_type_callback(GtkWidget *widget, enum server_t
 }
 
 static GtkWidget *country_stats_page (void) {
+	GValue hborder = G_VALUE_INIT;
 	GtkWidget *page_vbox;
 	GtkWidget *option_menu;
 	GtkWidget *hbox;
@@ -687,7 +691,9 @@ static GtkWidget *country_stats_page (void) {
 	country_notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (country_notebook), FALSE);
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (country_notebook), GTK_POS_TOP);
-	gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (country_notebook), 4);
+	g_value_init (&hborder, G_TYPE_INT);
+	g_value_set_int (&hborder, 4);
+	g_object_set_property (G_OBJECT (country_notebook), "tab-hborder", &hborder);
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(country_notebook), FALSE);
 
 	selected_country = to_activate = config_get_int("/" CONFIG_FILE "/Statistics/country");
@@ -779,6 +785,7 @@ static void statistics_restore_geometry (GtkWidget *window) {
 }
 
 void statistics_dialog (void) {
+	GValue hborder = G_VALUE_INIT;
 	GtkWidget *window;
 	GtkWidget *main_vbox;
 	GtkWidget *page;
@@ -805,7 +812,9 @@ void statistics_dialog (void) {
 
 	stat_notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (stat_notebook), GTK_POS_TOP);
-	gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (stat_notebook), 4);
+	g_value_init (&hborder, G_TYPE_INT);
+	g_value_set_int (&hborder, 4);
+	g_object_set_property (G_OBJECT (stat_notebook), "tab-hborder", &hborder);
 	gtk_box_pack_start (GTK_BOX (main_vbox), stat_notebook, TRUE, TRUE, 0);
 
 	page = server_stats_page ();
