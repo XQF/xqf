@@ -771,7 +771,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 		else if (!first_menu_item)
 			first_menu_item = menu_item;
 
-		gtk_menu_append (GTK_MENU (menu), menu_item);
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 
 		gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
 

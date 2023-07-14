@@ -956,7 +956,7 @@ static GtkWidget *create_filter_menu() {
 			continue;
 		}
 		menu_item = gtk_menu_item_new_with_label(filter->filter_name?filter->filter_name:"(null)");
-		gtk_menu_append(GTK_MENU(menu), menu_item);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 		gtk_widget_show(menu_item);
 
 		g_signal_connect(menu_item, "activate", G_CALLBACK (filter_select_callback), GINT_TO_POINTER(i+1)); // array starts from zero but filters from 1

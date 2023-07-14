@@ -2292,7 +2292,7 @@ static GtkWidget *create_wb_switch_menu(void(*callback)(GtkWidget *, int)) {
 	for (i = 0; i < 9; i++) {
 		menu_item = gtk_menu_item_new_with_label(_(wb_switch_labels[i]));
 		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), GINT_TO_POINTER(i));
-		gtk_menu_append(GTK_MENU(menu), menu_item);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 		gtk_widget_show(menu_item);
 	}
 
@@ -2317,17 +2317,17 @@ static GtkWidget *create_noskins_menu (int qworq2) {
 
 	menu_item = gtk_menu_item_new_with_label(_("Use skins"));
 	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 0);
-	gtk_menu_append(GTK_MENU(menu), menu_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	menu_item = gtk_menu_item_new_with_label(_("Don\'t use skins"));
 	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 1);
-	gtk_menu_append(GTK_MENU(menu), menu_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	menu_item = gtk_menu_item_new_with_label(_("Don\'t download new skins"));
 	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 2);
-	gtk_menu_append(GTK_MENU(menu), menu_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 	gtk_widget_show(menu_item);
 
 	return menu;
