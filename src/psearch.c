@@ -188,7 +188,7 @@ int find_player_dialog (void) {
 
 	psearch_combo = gtk_combo_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 128);
-	gtk_widget_set_usize (GTK_COMBO (psearch_combo)->entry, 160, -1);
+	gtk_widget_set_size_request (GTK_COMBO (psearch_combo)->entry, 160, -1);
 	gtk_combo_disable_activate (GTK_COMBO (psearch_combo));
 	if (psearch_history->items) {
 		gtk_combo_set_popdown_strings (GTK_COMBO (psearch_combo),

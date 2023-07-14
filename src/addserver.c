@@ -102,7 +102,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_widget_show (label);
 
 	server_combo = gtk_combo_new ();
-	gtk_widget_set_usize (server_combo, 200, -1);
+	gtk_widget_set_size_request (server_combo, 200, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), server_combo, TRUE, TRUE, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (server_combo)->entry), 128);
 	gtk_combo_set_case_sensitive (GTK_COMBO (server_combo), TRUE);
@@ -149,7 +149,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
@@ -159,7 +159,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 
 	button = gtk_button_new_with_label ("OK");
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (server_combo_activate_callback),
 			G_OBJECT (GTK_COMBO (server_combo)->entry));

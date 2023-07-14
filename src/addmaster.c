@@ -240,7 +240,7 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
 
 	master_name_combo = gtk_combo_new ();
-	gtk_widget_set_usize (master_name_combo, 200, -1);
+	gtk_widget_set_size_request (master_name_combo, 200, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), master_name_combo, TRUE, TRUE, 0);
 	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (master_name_combo)->entry), 256);
 	gtk_combo_set_case_sensitive (GTK_COMBO (master_name_combo), TRUE);
@@ -368,7 +368,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_show (button);
@@ -377,7 +377,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	button = gtk_button_new_with_label ("OK");
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_usize (button, 80, -1);
+	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);

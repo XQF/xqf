@@ -379,7 +379,7 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
 		button = gtk_button_new_with_label (" ");
 		gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button, FALSE);
-		gtk_widget_set_usize (button, 40, -1);
+		gtk_widget_set_size_request (button, 40, -1);
 		gtk_widget_show (button);
 
 		menu_item = gtk_menu_item_new ();
