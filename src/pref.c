@@ -1569,7 +1569,7 @@ static gboolean dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
 	struct generic_prefs *prefs;
 	enum server_type type;
 
-	type = GPOINTER_TO_INT(gtk_object_get_user_data (GTK_OBJECT (widget)));
+	type = GPOINTER_TO_INT(g_object_get_data (G_OBJECT (widget), "user_data"));
 	prefs = &genprefs[type];
 
 	debug (3, "type=%d",type);
@@ -2468,7 +2468,7 @@ static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type 
 static void add_custom_args_defaults (GtkWidget *widget, gpointer data) {
 	enum server_type type;
 
-	type = GPOINTER_TO_INT(gtk_object_get_user_data(GTK_OBJECT(widget)));
+	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
 	switch(type) {
 
@@ -2520,7 +2520,7 @@ static void new_custom_args_callback (GtkWidget *widget, gpointer data) {
 
 	enum server_type type;
 
-	type = GPOINTER_TO_INT(gtk_object_get_user_data(GTK_OBJECT(widget)));
+	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
 	current_row = -1;
 
@@ -2540,7 +2540,7 @@ static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
 	char *temp[2];
 	enum server_type type;
 
-	type = GPOINTER_TO_INT(gtk_object_get_user_data(GTK_OBJECT(widget)));
+	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
 	temp[0] = strdup_strip(gtk_entry_get_text(GTK_ENTRY(custom_args_entry_game[type])));
 	temp[1] = strdup_strip(gtk_entry_get_text(GTK_ENTRY(custom_args_entry_args[type])));
@@ -2585,7 +2585,7 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
 	int row;
 	enum server_type type;
 
-	type = GPOINTER_TO_INT(gtk_object_get_user_data(GTK_OBJECT(widget)));
+	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
 	if (current_row < 0) {
 		return;
@@ -2616,7 +2616,7 @@ static void custom_args_clist_select_row_callback (GtkWidget *widget, int row, i
 	char* argstr;
 	char* game_args[2] = {0} ;
 
-	type = GPOINTER_TO_INT(gtk_object_get_user_data(GTK_OBJECT(widget)));
+	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
 	current_row = row;
 
@@ -2766,7 +2766,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	gtk_widget_show(button);
 
 	if (games[type].custom_cfgs) {
-		gtk_object_set_user_data(GTK_OBJECT(genprefs[type].dir_entry), (gpointer) type);
+		g_object_set_data(G_OBJECT(genprefs[type].dir_entry), "user_data", (gpointer) type);
 		g_signal_connect(G_OBJECT(genprefs[type].dir_entry),
 				"activate",
 				G_CALLBACK(dir_entry_activate_callback),
@@ -2875,7 +2875,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_clist);
 	gtk_clist_column_titles_show(GTK_CLIST(arguments_clist));
 	g_signal_connect(G_OBJECT(arguments_clist), "select_row", G_CALLBACK(custom_args_clist_select_row_callback), arguments_clist);
-	gtk_object_set_user_data(GTK_OBJECT(arguments_clist), (gpointer) type);
+	g_object_set_data(G_OBJECT(arguments_clist), "user_data", (gpointer) type);
 
 	game_label = gtk_label_new(_("Game"));
 	g_object_ref(G_OBJECT(game_label));
@@ -2961,22 +2961,22 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_widget_set_sensitive(custom_args_add_button[type], FALSE);
 	gtk_widget_set_can_default(custom_args_add_button[type], TRUE);
 
-	gtk_object_set_user_data(GTK_OBJECT(new_button), (gpointer) type);
+	g_object_set_data(G_OBJECT(new_button), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(new_button), "clicked",
 		G_CALLBACK(new_custom_args_callback),
 		(gpointer) arguments_clist);
 
-	gtk_object_set_user_data(GTK_OBJECT(delete_button), (gpointer) type);
+	g_object_set_data(G_OBJECT(delete_button), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(delete_button), "clicked",
 		G_CALLBACK(delete_custom_args_callback),
 		(gpointer) arguments_clist);
 
-	gtk_object_set_user_data(GTK_OBJECT(defaults_button), (gpointer) type);
+	g_object_set_data(G_OBJECT(defaults_button), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(defaults_button), "clicked",
 		G_CALLBACK(add_custom_args_defaults),
 		(gpointer) arguments_clist);
 
-	gtk_object_set_user_data(GTK_OBJECT(custom_args_add_button[type]), (gpointer) type);
+	g_object_set_data(G_OBJECT(custom_args_add_button[type]), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(custom_args_add_button[type]), "clicked",
 		G_CALLBACK(add_custom_args_callback),
 		(gpointer) arguments_clist);
