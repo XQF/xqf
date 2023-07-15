@@ -1441,7 +1441,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_widget_show (vbuttonbox1);
 	gtk_table_attach_defaults (GTK_TABLE (table), vbuttonbox1, 1, 2, 7, 8);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
-	gtk_button_box_set_spacing (GTK_BUTTON_BOX (vbuttonbox1), 1);
+	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 1);
 	gtk_button_box_set_child_size (GTK_BUTTON_BOX (vbuttonbox1), 80, 0);
 	gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (vbuttonbox1), 5, -1);
 
@@ -1887,7 +1887,7 @@ static void country_create_popup_window(void) {
 	gtk_widget_show (vbuttonbox1);
 	gtk_box_pack_start (GTK_BOX (hbox1), vbuttonbox1, FALSE, TRUE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_SPREAD);
-	gtk_button_box_set_spacing (GTK_BUTTON_BOX (vbuttonbox1), 0);
+	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 0);
 
 	button3 = gtk_button_new_with_label (">>");
 	g_signal_connect (button3, "clicked", G_CALLBACK (country_add_button), NULL);
@@ -1965,7 +1965,7 @@ static void country_create_popup_window(void) {
 	gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, TRUE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox1), 4);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_END);
-	gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbuttonbox1), 1);
+	gtk_box_set_spacing (GTK_BOX (hbuttonbox1), 1);
 
 	button1 = gtk_button_new_with_label (_("OK"));
 	g_signal_connect (button1, "clicked", G_CALLBACK (country_selection_on_ok), NULL);
