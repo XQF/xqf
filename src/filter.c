@@ -1442,7 +1442,6 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_table_attach_defaults (GTK_TABLE (table), vbuttonbox1, 1, 2, 7, 8);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
 	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 1);
-	gtk_button_box_set_child_size (GTK_BUTTON_BOX (vbuttonbox1), 80, 0);
 	gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (vbuttonbox1), 5, -1);
 
 	country_selection_button = gtk_button_new_with_label(_("select..."));
@@ -1457,6 +1456,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	country_clear_button = gtk_button_new_with_label(_("clear"));
 	gtk_widget_set_sensitive(country_clear_button,FALSE);
+	gtk_widget_set_size_request (country_clear_button, 80, -1);
 	g_signal_connect(country_clear_button, "clicked", G_CALLBACK (country_clear_list), NULL);
 	g_signal_connect_swapped(country_clear_button, "clicked", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
