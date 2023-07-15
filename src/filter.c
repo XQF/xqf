@@ -1281,7 +1281,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	game_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (game_contains_entry), 32);
 	gtk_widget_set_size_request(game_contains_entry, 64, -1);
-	gtk_entry_set_editable (GTK_ENTRY(game_contains_entry), TRUE);
+	gtk_editable_set_editable (GTK_EDITABLE(game_contains_entry), TRUE);
 	g_signal_connect_swapped (game_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), game_contains_entry, 4, 5, row, row+1);
@@ -1317,7 +1317,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_game_type_entry = gtk_entry_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (filter_game_type_entry), 32);
 	gtk_widget_set_size_request (filter_game_type_entry, 64, -1);
-	gtk_entry_set_editable (GTK_ENTRY (filter_game_type_entry), TRUE);
+	gtk_editable_set_editable (GTK_EDITABLE (filter_game_type_entry), TRUE);
 	g_signal_connect_swapped (filter_game_type_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults (GTK_TABLE (table), filter_game_type_entry, 4, 5, row, row+1);
@@ -1341,7 +1341,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	version_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (version_contains_entry), 32);
 	gtk_widget_set_size_request(version_contains_entry, 64, -1);
-	gtk_entry_set_editable(GTK_ENTRY(version_contains_entry), TRUE);
+	gtk_editable_set_editable(GTK_EDITABLE(version_contains_entry), TRUE);
 	g_signal_connect_swapped (version_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), version_contains_entry, 4, 5, row, row+1);
@@ -1367,7 +1367,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	map_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (map_contains_entry), 32);
 	gtk_widget_set_size_request (map_contains_entry, 64, -1);
-	gtk_entry_set_editable (GTK_ENTRY (map_contains_entry), TRUE);
+	gtk_editable_set_editable (GTK_EDITABLE (map_contains_entry), TRUE);
 	g_signal_connect_swapped (map_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table), map_contains_entry, 4, 5, row, row+1);
@@ -1392,7 +1392,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	server_name_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (server_name_contains_entry), 32);
 	gtk_widget_set_size_request (server_name_contains_entry, 64, -1);
-	gtk_entry_set_editable (GTK_ENTRY (server_name_contains_entry), TRUE);
+	gtk_editable_set_editable (GTK_EDITABLE (server_name_contains_entry), TRUE);
 	g_signal_connect_swapped (server_name_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
 	gtk_table_attach_defaults(GTK_TABLE(table),server_name_contains_entry , 4, 5, row, row+1);

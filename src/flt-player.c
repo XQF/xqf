@@ -245,7 +245,7 @@ static void pattern_clist_sync_selection (void) {
 
 		gtk_entry_set_text (GTK_ENTRY (pattern_entry),
 				(pp->pattern)? pp->pattern : "");
-		gtk_entry_set_editable (GTK_ENTRY (pattern_entry), TRUE);
+		gtk_editable_set_editable (GTK_EDITABLE (pattern_entry), TRUE);
 
 		gtk_widget_set_sensitive (mode_buttons[PATTERN_MODE_STRING], TRUE);
 		gtk_widget_set_sensitive (mode_buttons[PATTERN_MODE_SUBSTR], TRUE);
@@ -260,7 +260,7 @@ static void pattern_clist_sync_selection (void) {
 	}
 	else {
 		gtk_entry_set_text (GTK_ENTRY (pattern_entry), "");
-		gtk_entry_set_editable (GTK_ENTRY (pattern_entry), FALSE);
+		gtk_editable_set_editable (GTK_EDITABLE (pattern_entry), FALSE);
 
 		gtk_widget_set_sensitive (mode_buttons[PATTERN_MODE_STRING], FALSE);
 		gtk_widget_set_sensitive (mode_buttons[PATTERN_MODE_SUBSTR], FALSE);
