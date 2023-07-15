@@ -2192,7 +2192,7 @@ GtkWidget* create_filter_menu () {
 		}
 
 		menu_item = gtk_radio_menu_item_new_with_label (rbgroup, name);
-		rbgroup = gtk_radio_menu_item_group (GTK_RADIO_MENU_ITEM (menu_item));
+		rbgroup = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), FALSE);
 		filter_menu_radio_buttons = g_slist_append (filter_menu_radio_buttons, menu_item);
 
