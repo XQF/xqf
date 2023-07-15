@@ -1442,7 +1442,9 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_table_attach_defaults (GTK_TABLE (table), vbuttonbox1, 1, 2, 7, 8);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
 	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 1);
+#if defined(GUI_GTK2) && !defined(GTK_DISABLE_DEPRECATED)
 	gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (vbuttonbox1), 5, -1);
+#endif
 
 	country_selection_button = gtk_button_new_with_label(_("select..."));
 	gtk_widget_set_sensitive (country_selection_button, FALSE);
