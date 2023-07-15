@@ -123,7 +123,8 @@ struct external_program_connection
 {
 	pid_t pid;
 	int fd;
-	gint tag; // for gdkinput
+	GIOChannel *chan;
+	gint tag; // for gio
 	char* buf;
 	size_t bufsize;
 	size_t pos;
@@ -144,7 +145,7 @@ struct external_program_connection
 };
 
 int start_prog_and_return_fd(char *const argv[], pid_t *pid);
-void external_program_input_callback(struct external_program_connection* conn, int fd, GIOCondition condition);
+gboolean external_program_input_callback(GIOChannel *chan, GIOCondition condition, void *user_data);
 
 /** enters gtk main loop */
 int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data);

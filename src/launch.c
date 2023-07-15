@@ -51,6 +51,7 @@ struct running_client {
 	pid_t	pid;
 
 	int fd;
+	GIOChannel *chan;
 	int tag;
 
 	char *buffer;
@@ -74,7 +75,10 @@ static void client_free (struct running_client *cl) {
 	debug(3, "client detached (pid:%d, fd:%d)\n", cl->pid, cl->fd);
 
 	if (cl->fd >= 0) {
-		gdk_input_remove (cl->tag);
+		// FIXME GError
+		g_io_channel_shutdown (cl->chan, TRUE, NULL);
+		g_io_channel_unref (cl->chan);
+		g_source_remove (cl->tag);
 		close (cl->fd);
 	}
 
@@ -153,7 +157,10 @@ void client_init (void) {
 }
 
 
-static void client_input_callback (struct running_client *cl, int fd, GdkInputCondition condition) {
+static gboolean client_input_callback (GIOChannel *chan, GIOCondition condition,
+                                       void *user_data) {
+	struct running_client *cl = (struct running_client *) user_data;
+	int fd = cl->fd;
 	int res;
 	int pid;
 	char *tmp;
@@ -161,17 +168,18 @@ static void client_input_callback (struct running_client *cl, int fd, GdkInputCo
 	if (!cl->buffer)
 		cl->buffer = g_malloc (CLIENT_ERROR_BUFFER);
 
+	// TODO?: Use g_io_channel_read_chars()?
 	res = read (fd, cl->buffer + cl->pos, CLIENT_ERROR_BUFFER - 1 - cl->pos);
 
 	if (res < 0) {  /* read error or EOF */
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			return;
+			return TRUE;
 
 		client_detach (cl);
-		return;
+		return FALSE;
 	} else if (res == 0) {
 		client_detach (cl);
-		return;
+		return FALSE;
 	}
 
 	if (cl->pos + res == CLIENT_ERROR_BUFFER - 1) {
@@ -184,7 +192,14 @@ static void client_input_callback (struct running_client *cl, int fd, GdkInputCo
 	}
 
 	if (tmp) {
-		gdk_input_remove (cl->tag);
+		// FIXME GError
+		g_io_channel_shutdown(cl->chan, TRUE, NULL);
+		g_io_channel_unref(cl->chan);
+		cl->chan = 0;
+
+		g_source_remove (cl->tag);
+		cl->tag = -1;
+
 		close (cl->fd);
 		cl->fd = -1;
 
@@ -200,7 +215,11 @@ static void client_input_callback (struct running_client *cl, int fd, GdkInputCo
 		else {
 			client_detach (cl);
 		}
+
+		return FALSE;
 	}
+
+	return TRUE;
 }
 
 
@@ -212,8 +231,10 @@ static void client_attach (pid_t pid, int fd, struct server *s) {
 	cl->pid = pid;
 
 	cl->fd = fd;
-	cl->tag = gdk_input_add (cl->fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
-			(GdkInputFunction) client_input_callback, cl);
+	cl->chan = g_io_channel_unix_new (cl->fd);
+	cl->tag = g_io_add_watch (cl->chan,
+	                          G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
+	                          client_input_callback, cl);
 	cl->server = s;
 	server_ref (s);
 
