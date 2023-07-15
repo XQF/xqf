@@ -60,6 +60,7 @@ extern int h_errno;     /* h_errno */
 
 struct dns_stream {
 	int fd;
+	GIOChannel *chan;
 
 	char buf[DNS_BUF_SIZE];
 	int pos;
@@ -71,7 +72,7 @@ struct dns_stream {
 
 struct dns_helper_descr {
 	int pid;
-	int tag;            /* GDK tag */
+	int tag;            /* GIO tag */
 	int output;         /* fd */
 	struct dns_stream *input;
 	void (*resolved) (char *str, struct host *h, enum dns_status status, void *user_data);
@@ -191,6 +192,12 @@ void dns_helper_shutdown (void) {
 	}
 
 	if (dns_helper.input) {
+		if (dns_helper.input->chan) {
+			// FIXME GError
+			g_io_channel_shutdown(dns_helper.input->chan, TRUE, NULL);
+			g_io_channel_unref(dns_helper.input->chan);
+			dns_helper.input->chan = 0;
+		}
 		if (dns_helper.input->fd >= 0)
 			close (dns_helper.input->fd);
 		g_free (dns_helper.input);
@@ -198,7 +205,7 @@ void dns_helper_shutdown (void) {
 	}
 
 	if (dns_helper.tag >= 0) {
-		gdk_input_remove (dns_helper.tag);
+		g_source_remove (dns_helper.tag);
 		dns_helper.tag = -1;
 	}
 
@@ -299,6 +306,10 @@ static void worker_close_callback (int error, void *data) {
 
 	dns_workers[n].pid = -1;
 	dns_workers_num--;
+
+	g_io_channel_shutdown(dns_workers[n].input->chan, TRUE, NULL);
+	g_io_channel_unref(dns_workers[n].input->chan);
+	dns_workers[n].input->chan = 0;
 
 	close (dns_workers[n].input->fd);
 	dns_workers[n].input->fd = -1;
@@ -417,6 +428,7 @@ static int fork_worker (int n, char *str) {
 			dns_workers[n].input = malloc (sizeof (struct dns_stream));
 
 		dns_workers[n].input->fd = fdset[0];
+		dns_workers[n].input->chan = g_io_channel_unix_new (dns_workers[n].input->fd);
 		if (set_nonblock (dns_workers[n].input->fd) == -1)
 			failed ("fcntl", NULL);
 		dns_workers[n].input->pos = 0;
@@ -511,8 +523,16 @@ static void dns_master_reset (void) {
 			dns_workers[i].pid = -1;
 		}
 		if (dns_workers[i].input) {
+			// FIXME GError
+			if (dns_workers[i].input->chan) {
+				g_io_channel_shutdown(dns_workers[i].input->chan, TRUE, NULL);
+				g_io_channel_unref(dns_workers[i].input->chan);
+				dns_workers[i].input->chan = NULL;
+			}
+
 			if (dns_workers[i].input->fd >= 0)
 				close (dns_workers[i].input->fd);
+
 			free (dns_workers[i].input);
 			dns_workers[i].input = NULL;
 		}
@@ -558,6 +578,7 @@ static void dns_master_init (void) {
 	dns_master_input = malloc (sizeof (struct dns_stream));
 
 	dns_master_input->fd = 0;   /* stdin */
+	dns_master_input->chan = g_io_channel_unix_new (dns_master_input->fd);
 	if (set_nonblock (dns_master_input->fd) == -1)
 		failed ("fcntl", NULL);
 
@@ -581,45 +602,54 @@ static void dns_master_init (void) {
 }
 
 
-static void dns_input_callback (struct dns_stream *stream, int fd,
-		GdkInputCondition condition) {
+static gboolean dns_input_callback (GIOChannel *chan, GIOCondition condition,
+		void *user_data ) {
+	struct dns_stream *stream = (struct dns_stream *)user_data;
 	char *tmp;
 	int first_used = 0;
-	int res;
+	gsize res;
+	GError *err = NULL;
+	GIOStatus status;
 
-	res = read (fd, stream->buf + stream->pos, DNS_BUF_SIZE - stream->pos);
+	/* return FALSE when there is nothing (more) to do */
+	while (TRUE) {
+		status = g_io_channel_read_chars(chan, stream->buf + stream->pos,
+		                                 DNS_BUF_SIZE - stream->pos, &res, &err);
 
-	if (res < 0) {
-		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			return;
-		failed ("read", NULL);
-		(*stream->close) (TRUE, stream->data);
-		return;
-	}
-
-	if (res == 0) { /* EOF */
-		(*stream->close) (FALSE, stream->data);
-		return;
-	}
-
-	tmp = stream->buf + stream->pos;
-	stream->pos += res;
-
-	while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
-		*tmp++ = '\0';
-
-		(*stream->parse) (stream->buf + first_used, stream->data);
-
-		first_used = tmp - stream->buf;
-		res = stream->buf + stream->pos - tmp;
-	}
-
-	if (first_used > 0) {
-		if (first_used != stream->pos) {
-			memmove (stream->buf, stream->buf + first_used,
-					stream->pos - first_used);
+		if (status == G_IO_STATUS_EOF) {
+			(*stream->close) (FALSE, stream->data);
+			return FALSE;
 		}
-		stream->pos -= first_used;
+		else if (status == G_IO_STATUS_AGAIN) {
+			return TRUE;
+		}
+		else if (status == G_IO_STATUS_ERROR) {
+			failed ("read", NULL);
+			(*stream->close) (TRUE, stream->data);
+			return FALSE;
+		}
+
+		/* G_IO_STATUS_NORMAL */
+
+		tmp = stream->buf + stream->pos;
+		stream->pos += res;
+
+		while (res && (tmp = memchr (tmp, '\n', res)) != NULL) {
+			*tmp++ = '\0';
+
+			(*stream->parse) (stream->buf + first_used, stream->data);
+
+			first_used = tmp - stream->buf;
+			res = stream->buf + stream->pos - tmp;
+		}
+
+		if (first_used > 0) {
+			if (first_used != stream->pos) {
+				memmove (stream->buf, stream->buf + first_used,
+						stream->pos - first_used);
+			}
+			stream->pos -= first_used;
+		}
 	}
 }
 
@@ -662,13 +692,13 @@ static void dns_master_mainloop (void) {
 		for (i = 0; i < DNS_MAX_CHILDREN; i++) {
 			if (dns_workers[i].pid > 0 &&
 					FD_ISSET (dns_workers[i].input->fd, &readfds)) {
-				dns_input_callback (dns_workers[i].input,
-						dns_workers[i].input->fd, GDK_INPUT_READ);
+				dns_input_callback (dns_workers[i].input->chan, G_IO_IN,
+				                    dns_workers[i].input);
 			}
 		}
 
-		if (FD_ISSET (0, &readfds))
-			dns_input_callback (dns_master_input, 0, GDK_INPUT_READ);
+		if (FD_ISSET (dns_master_input->fd, &readfds))
+			dns_input_callback (dns_master_input->chan, G_IO_IN, dns_master_input);
 	}
 
 	/* NOT REACHED */
@@ -704,6 +734,7 @@ int dns_spawn_helper (void) {
 
 		dns_helper.input = malloc (sizeof (struct dns_stream));
 		dns_helper.input->fd  = fdset1[0];
+		dns_helper.input->chan = g_io_channel_unix_new (dns_helper.input->fd);
 		if (set_nonblock (dns_helper.input->fd) == -1)
 			failed("fcntl", NULL);
 
@@ -744,10 +775,9 @@ int dns_spawn_helper (void) {
 
 void dns_gtk_init (void) {
 	if (dns_helper.input && dns_helper.input->fd > 0) {
-		dns_helper.tag = gdk_input_add (dns_helper.input->fd,
-				GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
-				(GdkInputFunction) dns_input_callback,
-				dns_helper.input);
+		dns_helper.tag = g_io_add_watch (dns_helper.input->chan,
+		                G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
+		                dns_input_callback, dns_helper.input);
 	}
 }
 

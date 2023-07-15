@@ -987,41 +987,50 @@ void external_program_close_input(struct external_program_connection* conn) {
 	if (!conn) {
 		return;
 	}
-	gdk_input_remove(conn->tag);
+	// FIXME GError
+	g_io_channel_shutdown (conn->chan, TRUE, NULL);
+	g_io_channel_unref (conn->chan);
+	g_source_remove(conn->tag);
 	close(conn->fd);
 	if (conn->pid > 0) kill(conn->pid,SIGTERM);
 	if (conn->do_quit) gtk_main_quit();
 }
 
-void external_program_input_callback(struct external_program_connection* conn, int fd, GIOCondition condition) {
+gboolean external_program_input_callback(GIOChannel *chan, GIOCondition condition,
+                                   void *user_data) {
+	struct external_program_connection* conn = (struct external_program_connection*) user_data;
+	int fd;
 	int bytes;
 	char* sol; // start of line pointer
 	char* eol; // end of line pointer
 
 	if (!conn) {
-		return;
+		return FALSE;
 	}
+
+	fd = conn->fd;
 
 	if (conn->pos >= conn->bufsize) {
 		xqf_error("line %d too long",conn->linenr+1);
 		external_program_close_input(conn);
-		return;
+		return FALSE;
 	}
 
+	// TODO?: Use g_io_channel_read_chars()?
 	bytes = read (fd, conn->buf + conn->pos, conn->bufsize - conn->pos);
 
 	if (bytes < 0) {
 		if (errno == EAGAIN || errno == EWOULDBLOCK) {
-			return;
+			return TRUE;
 		}
 
 		xqf_error("Error reading from child: %s",g_strerror(errno));
 		external_program_close_input(conn);
-		return;
+		return FALSE;
 	}
 	if (bytes == 0) {   /* EOF */
 		external_program_close_input(conn);
-		return;
+		return FALSE;
 	}
 
 
@@ -1046,6 +1055,8 @@ void external_program_input_callback(struct external_program_connection* conn, i
 		}
 		conn->pos = bytes;
 	}
+
+	return TRUE;
 }
 
 int external_program_foreach_line(char* argv[], void (*linefunc)(struct external_program_connection* conn), gpointer data) {
@@ -1065,8 +1076,10 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
 	conn.linefunc = linefunc;
 	conn.data = data;
 
-	conn.tag = gdk_input_add (conn.fd, GDK_INPUT_READ | GDK_INPUT_EXCEPTION,
-			(GdkInputFunction) external_program_input_callback, &conn);
+	conn.chan = g_io_channel_unix_new (conn.fd);
+	conn.tag = g_io_add_watch (conn.chan,
+	                          G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
+	                          external_program_input_callback, &conn);
 
 	gtk_main();
 

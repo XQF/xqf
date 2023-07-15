@@ -433,8 +433,8 @@ static char* rcon_receive() {
 
 
 #ifndef RCON_STANDALONE
-static void rcon_input_callback (gpointer data, int fd,
-		GdkInputCondition condition) {
+static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
+                                     void *user_data) {
 	char* msg = rcon_receive();
 
 	gtk_text_buffer_set_text (rcon_text_buffer, msg, strlen(msg));
@@ -442,6 +442,8 @@ static void rcon_input_callback (gpointer data, int fd,
 			GTK_TEXT_VIEW (rcon_text)->vadjustment->upper -
 			GTK_TEXT_VIEW (rcon_text)->vadjustment->page_size);
 	g_free(msg);
+
+	return TRUE;
 }
 #endif
 
@@ -503,6 +505,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	GtkWidget *hseparator;
 	char srv[256];
 	char buf[256];
+	GIOChannel *rcon_chan;
 	int rcon_tag;
 
 	if (!s || !passwd)
@@ -664,12 +667,19 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_widget_show (main_vbox);
 	gtk_widget_show (window);
 
-	rcon_tag = gdk_input_add (rcon_fd, GDK_INPUT_READ,
-			(GdkInputFunction) rcon_input_callback, NULL);
+	rcon_chan = g_io_channel_unix_new (rcon_fd);
+	rcon_tag = g_io_add_watch (rcon_chan,
+	                          G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
+	                          rcon_input_callback, NULL);
 
 	gtk_main ();
 
-	gdk_input_remove (rcon_tag);
+	// FIXME GError
+	g_io_channel_shutdown (rcon_chan, TRUE, NULL);
+	g_io_channel_unref (rcon_chan);
+
+	g_source_remove (rcon_tag);
+
 	close (rcon_fd);
 	rcon_fd = -1;
 
