@@ -1761,7 +1761,6 @@ void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, in
 
 		server_mapshot_popup_pixmap = gtk_pixmap_new (pix, mask);
 		gtk_container_add (GTK_CONTAINER (frame), server_mapshot_popup_pixmap);
-		// gtk_preview_size (GTK_PREVIEW (pixmap), 320, 200);
 		gtk_widget_show (server_mapshot_popup_pixmap);
 	}
 	else {
@@ -2016,9 +2015,8 @@ void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, i
 		gtk_container_add (GTK_CONTAINER (player_skin_popup), frame);
 		gtk_widget_show (frame);
 
-		player_skin_popup_preview = gtk_preview_new (GTK_PREVIEW_COLOR);
+		player_skin_popup_preview = gtk_image_new ();
 		gtk_container_add (GTK_CONTAINER (frame), player_skin_popup_preview);
-		gtk_preview_size (GTK_PREVIEW (player_skin_popup_preview), 320, 200);
 		gtk_widget_show (player_skin_popup_preview);
 	}
 	else {
@@ -2695,8 +2693,6 @@ int main (int argc, char *argv[]) {
 #ifdef USE_GEOIP
 	geoip_init ();
 #endif
-
-	gtk_preview_set_gamma (1.5);
 
 	props_load ();
 	filters_init ();

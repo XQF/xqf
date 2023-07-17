@@ -1759,8 +1759,7 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
 	gtk_container_add (GTK_CONTAINER (alignment), frame);
 
-	q1_skin_preview = gtk_preview_new (GTK_PREVIEW_COLOR);
-	gtk_preview_size (GTK_PREVIEW (q1_skin_preview), 320, 200);
+	q1_skin_preview = gtk_image_new ();
 	gtk_container_add (GTK_CONTAINER (frame), q1_skin_preview);
 	gtk_widget_show (q1_skin_preview);
 
@@ -1855,8 +1854,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
 	gtk_container_add (GTK_CONTAINER (alignment), frame);
 
-	qw_skin_preview = gtk_preview_new (GTK_PREVIEW_COLOR);
-	gtk_preview_size (GTK_PREVIEW (qw_skin_preview), 320, 200);
+	qw_skin_preview = gtk_image_new ();
 	gtk_container_add (GTK_CONTAINER (frame), qw_skin_preview);
 	gtk_widget_show (qw_skin_preview);
 
@@ -1920,8 +1918,7 @@ static GtkWidget *q2_skin_box_create (void) {
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_IN);
 	gtk_container_add(GTK_CONTAINER(alignment), frame);
 
-	q2_skin_preview = gtk_preview_new(GTK_PREVIEW_COLOR);
-	gtk_preview_size(GTK_PREVIEW(q2_skin_preview), 32 * Q2_SKIN_SCALE, 32 * Q2_SKIN_SCALE);
+	q2_skin_preview = gtk_image_new();
 	gtk_container_add(GTK_CONTAINER(frame), q2_skin_preview);
 	gtk_widget_show(q2_skin_preview);
 

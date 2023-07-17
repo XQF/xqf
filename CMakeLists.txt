@@ -520,7 +520,7 @@ set_property (SOURCE ${CMAKE_SOURCE_DIR}/src/game.c APPEND PROPERTY OBJECT_DEPEN
 
 # Compile and link
 add_executable (xqf ${xqf_SOURCES})
-target_link_libraries (xqf ${UNZIP_LIBRARIES} dl)
+target_link_libraries (xqf ${UNZIP_LIBRARIES} dl m)
 
 if (GUI MATCHES GTK2)
     target_link_libraries (xqf ${GTK2_LIBRARIES})

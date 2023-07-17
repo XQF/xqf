@@ -28,9 +28,9 @@
 extern GList *get_qw_skin_list (const char *dir);
 extern GList *get_q2_skin_list (const char *dir);
 
-extern void draw_qw_skin (GtkWidget *preview, guchar *data, int top, int bottom);
+extern void draw_qw_skin (GtkWidget *image, guchar *data, int top, int bottom);
 
-extern void draw_q2_skin (GtkWidget *preview, guchar *data, int scale);
+extern void draw_q2_skin (GtkWidget *image, guchar *data, int scale);
 
 extern guchar *get_qw_skin (char *filename, char *path);
 extern guchar *get_q2_skin (char *skin, char *path);
