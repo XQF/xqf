@@ -4813,27 +4813,24 @@ void prefs_save (void) {
 }
 */
 
-void game_file_dialog_ok_callback (GtkWidget *ok_button, gpointer data) {
-	enum server_type type;
-	const char *filename = NULL;
-	GtkWidget* filesel = topmost_parent(ok_button);
-
-	if (!filesel) {
-		return;
-	}
-
-	type = (enum server_type) GPOINTER_TO_INT(data);
+void game_file_dialog_response_callback (GtkWidget *dialog, int response, gpointer data) {
+	enum server_type type = (enum server_type) GPOINTER_TO_INT(data);
 
 	if (type >= UNKNOWN_SERVER) {
 		return;
 	}
 
-	filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+	if (response == GTK_RESPONSE_ACCEPT) {
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+		char *filename = gtk_file_chooser_get_filename (chooser);
 
-	if (filename) {
 		gtk_entry_set_text (GTK_ENTRY (genprefs[type].cmd_entry), filename);
 		pref_guess_dir (type, filename, TRUE);
+
+		g_free (filename);
 	}
+
+	gtk_widget_destroy (dialog);
 }
 
 void game_file_activate_callback (enum server_type type) {
@@ -4843,7 +4840,7 @@ void game_file_activate_callback (enum server_type type) {
 }
 
 void game_file_dialog(enum server_type type) {
-	file_dialog(_("Game Command Selection"), G_CALLBACK(game_file_dialog_ok_callback), GINT_TO_POINTER(type));
+	file_dialog(_("Game Command Selection"), G_CALLBACK(game_file_dialog_response_callback), GINT_TO_POINTER(type));
 }
 
 void game_dir_dialog(enum server_type type) {

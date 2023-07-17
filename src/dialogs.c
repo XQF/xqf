@@ -519,55 +519,51 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 	g_free(copyright);
 }
 
-/** ok callback for file_dialog that sets the selected filename in the
+/** response callback for file_dialog that sets the selected filename in the
  * textentry that was passed as user data to file_dialog()
  */
-static void file_dialog_ok_set_textentry (GtkWidget *widget, gpointer textentry) {
-	const char *filename = NULL;
-	GtkWidget* filesel = topmost_parent(widget);
+static void file_dialog_response_set_textentry (GtkWidget *dialog, int response, gpointer textentry) {
+	if (response == GTK_RESPONSE_ACCEPT) {
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+		char *filename = gtk_file_chooser_get_filename (chooser);
 
-	filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+		gtk_entry_set_text (GTK_ENTRY (textentry), filename);
 
-	if (!filename)
-		return;
+		g_free (filename);
+	}
 
-	gtk_entry_set_text (GTK_ENTRY (textentry), filename);
+	gtk_widget_destroy (dialog);
 }
 
-GtkWidget* file_dialog(const char *title, GtkSignalFunc ok_callback, gpointer data) {
-	GtkFileSelection* file_selector;
+GtkWidget* file_dialog(const char *title, GtkSignalFunc response_callback, gpointer data) {
+	GtkWidget* dialog;
 
-	file_selector = GTK_FILE_SELECTION(gtk_file_selection_new (title));
+	dialog = gtk_file_chooser_dialog_new (title,
+			NULL,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			_("_Cancel"),
+			GTK_RESPONSE_CANCEL,
+			_("_Open"),
+			GTK_RESPONSE_ACCEPT,
+			NULL);
 
-	if (!file_selector)
+	if (!dialog)
 		return NULL;
 
-	gtk_window_set_modal (GTK_WINDOW(file_selector),TRUE);
+	gtk_window_set_modal (GTK_WINDOW(dialog),TRUE);
 
-	// g_signal_connect (G_OBJECT (file_selector), "destroy", (GtkSignalFunc) file_dialog_destroy_callback, &file_selector);
+	gtk_widget_show(GTK_WIDGET(dialog));
 
-	g_signal_connect (G_OBJECT (file_selector->ok_button),
-			"clicked", ok_callback, data);
+	g_signal_connect (dialog, "response", G_CALLBACK (response_callback), data);
 
-	g_signal_connect_swapped (G_OBJECT (file_selector->ok_button),
-			"clicked", (GtkSignalFunc) gtk_widget_destroy,
-			G_OBJECT (file_selector));
-
-	/* Connect the cancel_button to destroy the widget */
-	g_signal_connect_swapped (G_OBJECT (file_selector->cancel_button),
-			"clicked", (GtkSignalFunc) gtk_widget_destroy,
-			G_OBJECT (file_selector));
-
-	gtk_widget_show(GTK_WIDGET(file_selector));
-
-	return GTK_WIDGET(file_selector);
+	return dialog;
 }
 
 GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry) {
-	GtkWidget* filesel = file_dialog(title, G_CALLBACK(file_dialog_ok_set_textentry), entry);
+	GtkWidget *dialog = file_dialog(title, G_CALLBACK(file_dialog_response_set_textentry), entry);
 	const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
 	if (text && *text) {
-		gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), text);
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), text);
 	}
-	return filesel;
+	return dialog;
 }
