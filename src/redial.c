@@ -71,7 +71,7 @@ static gboolean redial_countdown (struct server* s) {
 	countdown++;
 	if (countdown>default_redial_wait) {
 		countdown=0;
-		gtk_progress_set_value (GTK_PROGRESS (blub), countdown);
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (blub), countdown / (gdouble) default_redial_wait);
 		debug(3,"countdown 0, querying server");
 		con = condef_new (s);
 		stat_process = stat_job_create (NULL, NULL,
@@ -91,7 +91,7 @@ static gboolean redial_countdown (struct server* s) {
 		return FALSE;
 	}
 	else {
-		gtk_progress_set_value (GTK_PROGRESS (blub), countdown);
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (blub), countdown / (gdouble) default_redial_wait);
 		return TRUE;
 	}
 }
@@ -190,7 +190,6 @@ static GtkWidget* create_redialwindow (void) {
 	g_object_set_data_full (G_OBJECT (redialwindow), "secondsprogress", secondsprogress, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (secondsprogress);
 	gtk_box_pack_start (GTK_BOX (vbox1), secondsprogress, FALSE, FALSE, 10);
-	gtk_progress_configure (GTK_PROGRESS (secondsprogress), 4, 0, 10);
 
 	hbuttonbox1 = gtk_hbutton_box_new ();
 	g_object_ref (G_OBJECT(hbuttonbox1));
@@ -226,8 +225,6 @@ static GtkWidget* create_redialwindow (void) {
 /** open redial dialog, return true if game should be launched, false otherwise */
 
 gboolean redial_dialog (struct server* s, struct server_props* props) {
-	GtkWidget* progress;
-
 	if (!s)
 		return FALSE;
 
@@ -238,8 +235,6 @@ gboolean redial_dialog (struct server* s, struct server_props* props) {
 	srv_props = props;
 
 	redial_window = create_redialwindow();
-	progress = g_object_get_data(G_OBJECT(redial_window), "secondsprogress");
-	gtk_progress_configure (GTK_PROGRESS (progress), 0, 0, default_redial_wait);
 
 	set_redial_label(s->name, TRUE);
 
