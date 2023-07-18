@@ -582,7 +582,7 @@ void launch_close_handler (struct stat_job *job, int killed) {
 		return;
 	}
 
-	gtk_timeout_add (0,(GtkFunction)check_launch, (gpointer)con);
+	g_timeout_add (0,(GSourceFunc)check_launch, (gpointer)con);
 }
 
 /** called from inside timer, always return FALSE to stop it */
