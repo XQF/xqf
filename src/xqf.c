@@ -1779,7 +1779,7 @@ void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, in
 
 	// debug (0,"%d %d %d %d %d %d",scr_w,scr_h,x,y,w,h);
 
-	gtk_widget_set_uposition (server_mapshot_popup, x, y);
+	gtk_window_move (GTK_WINDOW (server_mapshot_popup), x, y);
 	gtk_widget_show (server_mapshot_popup);
 }
 
@@ -2033,7 +2033,7 @@ void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, i
 	x = (x + 320 > scr_w) ? scr_w - 320 : x;
 	y = (y + 200 > scr_h) ? scr_h - 200 : y;
 
-	gtk_widget_set_uposition (player_skin_popup, x, y);
+	gtk_window_move (GTK_WINDOW (player_skin_popup), x, y);
 	gtk_widget_show (player_skin_popup);
 
 	draw_qw_skin (player_skin_popup_preview, skin, top, bottom);
