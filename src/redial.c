@@ -49,7 +49,7 @@ static void set_redial_label(const char* name, gboolean waiting);
 static void on_launchbutton_clicked (GtkButton *button, gpointer user_data) {
 	launchnow = TRUE;
 	if (timeoutid!=-1)
-		gtk_timeout_remove(timeoutid);
+		g_source_remove(timeoutid);
 	gtk_widget_destroy(redial_window);
 }
 
@@ -57,7 +57,7 @@ static void on_launchbutton_clicked (GtkButton *button, gpointer user_data) {
 static void on_cancelbutton_clicked (GtkButton *button, gpointer user_data) {
 	launchnow = FALSE;
 	if (timeoutid!=-1)
-		gtk_timeout_remove(timeoutid);
+		g_source_remove(timeoutid);
 	gtk_widget_destroy(redial_window);
 }
 
@@ -139,7 +139,7 @@ static void stat_redial_close_handler (struct stat_job *job, int killed) {
 			gtk_widget_destroy(redial_window);
 		}
 		else {
-			timeoutid = gtk_timeout_add (1000, (GtkFunction)redial_countdown, (gpointer)con->s);
+			timeoutid = g_timeout_add (1000, (GSourceFunc)redial_countdown, (gpointer)con->s);
 			set_redial_label(con->s->name, TRUE);
 		}
 	}
@@ -245,7 +245,7 @@ gboolean redial_dialog (struct server* s, struct server_props* props) {
 
 	gtk_widget_show(redial_window);
 
-	timeoutid = gtk_timeout_add (1000, (GtkFunction)redial_countdown, (gpointer)s);
+	timeoutid = g_timeout_add (1000, (GSourceFunc)redial_countdown, (gpointer)s);
 
 	gtk_main ();
 
