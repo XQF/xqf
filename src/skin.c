@@ -340,7 +340,7 @@ void allocate_quake_player_colors (GdkWindow *window) {
 			pcolors[i].red   = convert_color (quake_pallete [(i*16 + j)*3 + 0]);
 			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]);
 			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]);
-			if (!gdk_color_alloc (colormap, &pcolors[i])) {
+			if (!gdk_colormap_alloc_color (colormap, &pcolors[i], FALSE, TRUE)) {
 				g_warning ("unable to allocate color: ( %d %d %d )",
 						pcolors[i].red, pcolors[i].green, pcolors[i].blue);
 			}
