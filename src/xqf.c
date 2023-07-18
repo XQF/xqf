@@ -2401,7 +2401,7 @@ void populate_main_window (void) {
 	gtk_window_set_default_icon_name ("xqf");
 
 	gtk_window_add_accel_group (GTK_WINDOW (main_window), accel_group);
-	gtk_accel_group_unref (accel_group);
+	g_object_unref (G_OBJECT (accel_group));
 
 	// Set tooltips - also in prefs_load
 	tooltips = gtk_tooltips_new ();
