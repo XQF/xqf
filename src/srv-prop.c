@@ -882,7 +882,7 @@ void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
 
 	if (str) {
 		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), str);
-		gtk_entry_set_position (GTK_ENTRY (GTK_COMBO (combo)->entry), 0);
+		gtk_editable_set_position (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0);
 	}
 	else {
 		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), "");
