@@ -332,7 +332,7 @@ void allocate_quake_player_colors (GdkWindow *window) {
 	int i, j;
 
 	if (!pcolors_allocated) {
-		colormap = gdk_window_get_colormap (window);
+		colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (window));
 
 		for (i = 0; i < 14; i++) {
 			j = (i<8)? 11 : 15 - 11;
