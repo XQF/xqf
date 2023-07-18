@@ -33,7 +33,7 @@
 
 static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
 
-	if (event->keyval == GDK_Escape) {
+	if (event->keyval == GDK_KEY_Escape) {
 		gtk_widget_destroy (widget);
 		return TRUE;
 	}

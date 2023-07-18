@@ -1658,17 +1658,17 @@ void server_clist_unselect_callback (GtkWidget *widget, int row,
 gboolean server_clist_keypress_callback (GtkWidget *widget, GdkEventKey *event) {
 
 	debug (7, "server_clist_keypress_callback() -- CLIST Key %x", event->keyval);
-	if (event->keyval == GDK_Delete) {
+	if (event->keyval == GDK_KEY_Delete) {
 		del_server_callback (widget, event);
 		return TRUE;
-	} else if (event->keyval == GDK_Insert) {
+	} else if (event->keyval == GDK_KEY_Insert) {
 		if (event->state & GDK_SHIFT_MASK){
 			add_to_favorites_callback (widget, event);
 		} else {
 			add_server_callback (widget, event);
 		}
 		return TRUE;
-	} else if (event->keyval == GDK_Return || event->keyval == GDK_KP_Enter) {
+	} else if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter) {
 		launch_normal_callback (widget);
 		return TRUE;
 	}
