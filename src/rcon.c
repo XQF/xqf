@@ -525,7 +525,8 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	window = dialog_create_modal_transient_window (buf, TRUE, TRUE,
 			G_CALLBACK(rcon_save_geometry));
-	gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
+	gtk_widget_set_size_request (window, 0, 0);
+	gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
 	rcon_restore_geometry (window);
 
 	main_vbox = gtk_vbox_new (FALSE, 0);
