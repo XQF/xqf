@@ -1752,7 +1752,7 @@ void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, in
 
 	if (!server_mapshot_popup) {
 		server_mapshot_popup = gtk_window_new (GTK_WINDOW_POPUP);
-		gtk_window_set_policy (GTK_WINDOW (server_mapshot_popup), FALSE, FALSE, TRUE);
+		gtk_window_set_resizable (GTK_WINDOW (server_mapshot_popup), FALSE);
 
 		frame = gtk_frame_new (NULL);
 		gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
@@ -2009,7 +2009,7 @@ void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, i
 
 	if (!player_skin_popup) {
 		player_skin_popup = gtk_window_new (GTK_WINDOW_POPUP);
-		gtk_window_set_policy (GTK_WINDOW (player_skin_popup), FALSE, FALSE, TRUE);
+		gtk_window_set_resizable (GTK_WINDOW (player_skin_popup), FALSE);
 
 		frame = gtk_frame_new (NULL);
 		gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
