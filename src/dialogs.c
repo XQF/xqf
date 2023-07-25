@@ -70,11 +70,11 @@ GtkWidget *dialog_create_modal_transient_window (const char *title,
 
 	gtk_widget_realize (window);
 
-	gdk_window_set_decorations (window->window, (allow_resize)?
+	gdk_window_set_decorations (gtk_widget_get_window (window), (allow_resize)?
 			GDK_DECOR_BORDER | GDK_DECOR_TITLE | GDK_DECOR_RESIZEH :
 			GDK_DECOR_BORDER | GDK_DECOR_TITLE);
 
-	gdk_window_set_functions (window->window, (allow_resize)?
+	gdk_window_set_functions (gtk_widget_get_window (window), (allow_resize)?
 			GDK_FUNC_MOVE | GDK_FUNC_CLOSE | GDK_FUNC_RESIZE :
 			GDK_FUNC_MOVE | GDK_FUNC_CLOSE);
 
@@ -345,7 +345,7 @@ static int *enter_string_optval;
 static void enter_string_activate_callback (GtkWidget *widget, gpointer data) {
 	enter_string_res = strdup_strip (gtk_entry_get_text (GTK_ENTRY (widget)));
 	if (enter_string_optval) {
-		*enter_string_optval = GTK_TOGGLE_BUTTON (enter_string_opt_button)->active;
+		*enter_string_optval = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enter_string_opt_button));
 	}
 }
 

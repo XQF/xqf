@@ -281,7 +281,7 @@ static int player_clist_refresh_row (struct server *s, struct player *p,
 	int col;
 
 	if ((games[s->type].flags & GAME_QUAKE1_PLAYER_COLORS) != 0)
-		allocate_quake_player_colors (main_window->window);
+		allocate_quake_player_colors (gtk_widget_get_window (main_window));
 
 	text[0] = text[1] = text[2] = text[3] = text[4] = text[5] = NULL;
 

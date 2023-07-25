@@ -763,9 +763,13 @@ static void grab_defaults (GtkWidget *w, gpointer data) {
 }
 
 static void statistics_save_geometry (GtkWidget *window, gpointer data) {
+	GtkAllocation allocation;
+
+	gtk_widget_get_allocation (window, &allocation);
+
 	config_push_prefix ("/" CONFIG_FILE "/Statistics Window Geometry/");
-	config_set_int ("height", window->allocation.height);
-	config_set_int ("width", window->allocation.width);
+	config_set_int ("height", allocation.height);
+	config_set_int ("width", allocation.width);
 	config_pop_prefix ();
 }
 

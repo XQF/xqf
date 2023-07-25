@@ -167,7 +167,7 @@ void set_widgets_sensitivity (GtkBuilder *builder) {
 		}
 		gtk_widget_set_state (filter_buttons[i], GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (filter_buttons[i], sens);
-		if (GTK_IS_TOGGLE_BUTTON (filter_buttons[i]) && GTK_TOGGLE_BUTTON (filter_buttons[i])->active) {
+		if (GTK_IS_TOGGLE_BUTTON (filter_buttons[i]) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_buttons[i]))) {
 			gtk_widget_set_state (filter_buttons[i], GTK_STATE_ACTIVE);
 		}
 	}

@@ -325,9 +325,9 @@ static void sync_pattern_data (void) {
 	list = g_slist_nth (curplrs, current_row);
 	pp = (struct player_pattern *) list->data;
 
-	if (GTK_TOGGLE_BUTTON (mode_buttons[PATTERN_MODE_STRING])->active)
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PATTERN_MODE_STRING])))
 		mode = PATTERN_MODE_STRING;
-	else if (GTK_TOGGLE_BUTTON (mode_buttons[PATTERN_MODE_SUBSTR])->active)
+	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PATTERN_MODE_SUBSTR])))
 		mode = PATTERN_MODE_SUBSTR;
 	else
 		mode = PATTERN_MODE_REGEXP;
@@ -705,7 +705,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	gtk_box_pack_start (GTK_BOX (hbox), comment_text, TRUE, TRUE, 0);
 	gtk_widget_show (comment_text);
 
-	vscrollbar = gtk_vscrollbar_new (GTK_TEXT_VIEW (comment_text)->vadjustment);
+	vscrollbar = gtk_vscrollbar_new (gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (comment_text)));
 	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
 	gtk_widget_show (vscrollbar);
 
