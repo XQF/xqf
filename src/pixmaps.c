@@ -233,10 +233,10 @@ struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixma
 	gdk_window_get_size (s1->pix, &w1, &h1);
 	gdk_window_get_size (s2->pix, &w2, &h2);
 
-	dest->pix  = gdk_pixmap_new (window->window, w1 + w2, MAX (h1, h2), -1);
-	dest->mask = gdk_pixmap_new (window->window, w1 + w2, MAX (h1, h2), 1);
+	dest->pix  = gdk_pixmap_new (gtk_widget_get_window (window), w1 + w2, MAX (h1, h2), -1);
+	dest->mask = gdk_pixmap_new (gtk_widget_get_window (window), w1 + w2, MAX (h1, h2), 1);
 
-	white_gc = window->style->base_gc[GTK_STATE_NORMAL];
+	white_gc = gtk_widget_get_style (window)->base_gc[GTK_STATE_NORMAL];
 
 	if (!masks_gc) {
 		masks_gc = gdk_gc_new (dest->mask);
@@ -356,17 +356,17 @@ void ensure_buddy_pix (GtkWidget *window, int n) {
 
 	gdk_window_get_size (buddy_pix[1].pix, &width, &height);
 
-	buddy_pix[n].pix = gdk_pixmap_new (window->window, width, height, -1);
-	buddy_pix[n].mask = gdk_pixmap_new (window->window, width, height, 1);
+	buddy_pix[n].pix = gdk_pixmap_new (gtk_widget_get_window (window), width, height, -1);
+	buddy_pix[n].mask = gdk_pixmap_new (gtk_widget_get_window (window), width, height, 1);
 
-	white_gc = window->style->white_gc;
+	white_gc = gtk_widget_get_style (window)->white_gc;
 
 	if (!masks_gc) {
 		masks_gc = gdk_gc_new (buddy_pix[n].mask);
 		gdk_gc_set_exposures (masks_gc, FALSE);
 	}
 
-	gdk_gc_set_foreground (masks_gc, &window->style->white);
+	gdk_gc_set_foreground (masks_gc, &gtk_widget_get_style (window)->white);
 
 	gdk_draw_pixmap (buddy_pix[n].pix, white_gc, buddy_pix[pri].pix,
 			0, 0, 0, 0, width, height);
@@ -414,10 +414,10 @@ void create_server_pixmap (GtkWidget *window, struct pixmap *stype,
 	gdk_window_get_size (buddy_pix[1].pix, &wb, &hb);
 	gdk_window_get_size (stype->pix, &ws, &hs);
 
-	*pix  = gdk_pixmap_new (window->window, wb + ws, MAX (hs, hb), -1);
-	*mask = gdk_pixmap_new (window->window, wb + ws, MAX (hs, hb), 1);
+	*pix  = gdk_pixmap_new (gtk_widget_get_window (window), wb + ws, MAX (hs, hb), -1);
+	*mask = gdk_pixmap_new (gtk_widget_get_window (window), wb + ws, MAX (hs, hb), 1);
 
-	white_gc = window->style->base_gc[GTK_STATE_NORMAL];
+	white_gc = gtk_widget_get_style (window)->base_gc[GTK_STATE_NORMAL];
 
 	if (!masks_gc) {
 		masks_gc = gdk_gc_new (*mask);

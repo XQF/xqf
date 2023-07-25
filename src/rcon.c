@@ -110,6 +110,7 @@ static int huff_check (void) {
 
 static void rcon_print (char *fmt, ...) {
 #ifndef RCON_STANDALONE
+	GtkAdjustment *vadjustment;
 	char buf[2048];
 	va_list ap;
 
@@ -119,9 +120,11 @@ static void rcon_print (char *fmt, ...) {
 		va_end (ap);
 
 		gtk_text_buffer_set_text(rcon_text_buffer, buf, strlen(buf));
-		gtk_adjustment_set_value (GTK_TEXT_VIEW (rcon_text)->vadjustment,
-				GTK_TEXT_VIEW (rcon_text)->vadjustment->upper -
-				GTK_TEXT_VIEW (rcon_text)->vadjustment->page_size);
+
+		vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
+		gtk_adjustment_set_value (vadjustment,
+				gtk_adjustment_get_upper (vadjustment) -
+				gtk_adjustment_get_page_size (vadjustment));
 	}
 #endif
 }
@@ -435,12 +438,16 @@ static char* rcon_receive() {
 #ifndef RCON_STANDALONE
 static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
                                      void *user_data) {
+	GtkAdjustment *vadjustment;
 	char* msg = rcon_receive();
 
 	gtk_text_buffer_set_text (rcon_text_buffer, msg, strlen(msg));
-	gtk_adjustment_set_value (GTK_TEXT_VIEW (rcon_text)->vadjustment,
-			GTK_TEXT_VIEW (rcon_text)->vadjustment->upper -
-			GTK_TEXT_VIEW (rcon_text)->vadjustment->page_size);
+
+	vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
+	gtk_adjustment_set_value (vadjustment,
+			gtk_adjustment_get_upper (vadjustment) -
+			gtk_adjustment_get_page_size (vadjustment));
+
 	g_free(msg);
 
 	return TRUE;
@@ -465,9 +472,13 @@ static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
 
 #ifndef RCON_STANDALONE
 static void rcon_save_geometry (GtkWidget *window, gpointer data) {
+	GtkAllocation allocation;
+
+	gtk_widget_get_allocation (window, &allocation);
+
 	config_push_prefix ("/" CONFIG_FILE "/RCON Window Geometry/");
-	config_set_int ("height", window->allocation.height);
-	config_set_int ("width", window->allocation.width);
+	config_set_int ("height", allocation.height);
+	config_set_int ("width", allocation.width);
 	config_pop_prefix ();
 }
 #endif
@@ -574,7 +585,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_box_pack_start (GTK_BOX (hbox), rcon_text, TRUE, TRUE, 0);
 	gtk_widget_show (rcon_text);
 
-	vscrollbar = gtk_vscrollbar_new (GTK_TEXT_VIEW (rcon_text)->vadjustment);
+	vscrollbar = gtk_vscrollbar_new (gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text)));
 	gtk_widget_set_can_focus (vscrollbar, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
 	gtk_widget_show (vscrollbar);

@@ -654,6 +654,7 @@ void save_cwidget_geometry (GtkWidget *clist, struct clist_def *cldef) {
 
 
 void ui_done (void) {
+	GtkAllocation allocation;
 	GtkCTreeNode *node;
 	char cfgkey[128];
 	int expanded;
@@ -666,11 +667,18 @@ void ui_done (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/Main Window Geometry/");
 
-	config_set_int ("height", main_window->allocation.height);
-	config_set_int ("width", main_window->allocation.width);
-	config_set_int ("pane1", GTK_PANED (pane1_widget)->child1->allocation.width);
-	config_set_int ("pane2", GTK_PANED (pane2_widget)->child1->allocation.height);
-	config_set_int ("pane3", GTK_PANED (pane3_widget)->child1->allocation.width);
+	gtk_widget_get_allocation (main_window, &allocation);
+	config_set_int ("height", allocation.height);
+	config_set_int ("width", allocation.width);
+
+	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane1_widget)), &allocation);
+	config_set_int ("pane1", allocation.width);
+
+	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane2_widget)), &allocation);
+	config_set_int ("pane2", allocation.height);
+
+	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane3_widget)), &allocation);
+	config_set_int ("pane3", allocation.width);
 
 	config_pop_prefix ();
 
@@ -724,7 +732,7 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {
 		if (GTK_IS_MENU (widget))
 			parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
 		else
-			parent = widget->parent;
+			parent = gtk_widget_get_parent (widget);
 		if (parent == NULL)
 			break;
 		widget = parent;

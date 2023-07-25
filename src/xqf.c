@@ -357,7 +357,7 @@ void server_filter_select_callback (GtkWidget *widget, int number) {
 		return;
 	}
 
-	if (GTK_CHECK_MENU_ITEM (widget)->active == 0) {
+	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)) == 0) {
 		// signal was triggered for deactivation
 		return;
 	}
@@ -1526,8 +1526,8 @@ void show_hostnames_callback (GtkWidget *widget, gpointer data) {
 		return;
 	}
 
-	if (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item"))->active != show_hostnames) {
-		show_hostnames = GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item"))->active;
+	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item"))) != show_hostnames) {
+		show_hostnames = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item")));
 		server_clist_redraw ();
 		config_set_bool ("/" CONFIG_FILE "/Appearance/show hostnames", show_hostnames);
 	}
@@ -1540,8 +1540,8 @@ void show_default_port_callback (GtkWidget *widget, gpointer data) {
 		return;
 	}
 
-	if (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item"))->active != show_default_port) {
-		show_default_port = GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item"))->active;
+	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item"))) != show_default_port) {
+		show_default_port = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item")));
 		server_clist_redraw ();
 		config_set_bool ("/" CONFIG_FILE "/Appearance/show default port", show_default_port);
 	}

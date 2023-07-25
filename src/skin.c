@@ -427,7 +427,7 @@ void allocate_quake_player_colors (GdkWindow *window) {
 void set_bg_color (GtkWidget *widget, int color) {
 	GtkStyle *style;
 
-	style = gtk_style_copy (widget->style);
+	style = gtk_style_copy (gtk_widget_get_style (widget));
 	style->bg [GTK_STATE_NORMAL]   = pcolors [color];
 	style->bg [GTK_STATE_ACTIVE]   = pcolors [color];
 	style->bg [GTK_STATE_PRELIGHT] = pcolors [color];
@@ -489,7 +489,7 @@ GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsign
 	h = player_clist->row_height - 2;
 	w = h * 3 / 2;
 
-	pixmap = two_colors_pixmap (window->window, w, h, &pcolors[top],
+	pixmap = two_colors_pixmap (gtk_widget_get_window (window), w, h, &pcolors[top],
 			&pcolors[bottom]);
 	if (cache)
 		pixmap_cache_add (cache, pixmap, NULL, key);

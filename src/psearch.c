@@ -139,9 +139,9 @@ static void psearch_combo_activate_callback (GtkWidget *widget,
 		gpointer data) {
 	psearch_free_pattern ();
 
-	if (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_STRING])->active)
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_STRING])))
 		psearch.mode = PSEARCH_MODE_STRING;
-	else if (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_SUBSTR])->active)
+	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_SUBSTR])))
 		psearch.mode = PSEARCH_MODE_SUBSTR;
 	else
 		psearch.mode = PSEARCH_MODE_REGEXP;
