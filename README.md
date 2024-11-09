@@ -20,7 +20,7 @@ See the Wiki page: [wiki/Downloads](https://github.com/XQF/xqf/wiki/Downloads).
 INSTALLATION
 ------------
 
-[![Build status](https://travis-ci.org/XQF/xqf.svg?branch=master)](https://travis-ci.org/XQF/xqf)
+[![Build](https://github.com/XQF/xqf/actions/workflows/build.yml/badge.svg)](https://github.com/XQF/xqf/actions/workflows/build.yml)
 
 ```sh
 git clone https://github.com/XQF/xqf.git
@@ -42,13 +42,11 @@ LINKS
 
 * Current home page: [xqf.github.io](http://xqf.github.io)
 * XQF Wiki: [github.com/XQF/xqf/wiki](https://github.com/XQF/xqf/wiki)
-* IRC Channel: [#xqf@Freenode](irc://chat.freenode.net/xqf) (active)
+* IRC Channel: [#xqf@Libera.Chat](https://web.libera.chat/?channel=#xqf)
 * Source code repository: [github.com/XQF/xqf](https://github.com/XQF/xqf/) (up to date Git repository)
-* Online translation tool: [transifex.com/projects/p/xqf](https://www.transifex.com/projects/p/xqf/)
-* Continuous integration tool: [travis-ci.org/XQF/xqf](https://travis-ci.org/XQF/xqf)
-* Historical mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/) (havn't seen mail since years)
+* Historical mail list: [sf.net/p/xqf/mailman/](https://sourceforge.net/p/xqf/mailman/) (havn't seen mail in years)
 * Historical archives: [sf.net/p/xqf](https://sourceforge.net/projects/xqf/) (previously published files, old SVN repository, and old ticket list)
-* QStat, the tool on which XQF is based: [github.com/multiplay/qstat](https://github.com/multiplay/qstat)
+* QStat, the tool XQF is based on: [github.com/Unity-Technologies/qstat](https://github.com/Unity-Technologies/qstat)
 
 
 HOW TO CONTRIBUTE
@@ -72,11 +70,11 @@ HISTORY
 
 XQF was originally written by Roman Pozlevich in 1998. It has been maintained and improved by a devoted team over the years with following major developers:
 
-1998-2000 Roman Pozlevich <roma@botik.ru>  
-2000-2002 Bill Adams <bill@evilbill.org>  
-2000-2003 Alex Burger <alex_b@users.sf.net>  
-2001-2010 Ludwig Nussel <ludwig.nussel@suse.de>  
-2001-2015 Jordi Mallach <jordi@debian.org>  
-2014-2015 Zack Middleton <zturtleman@gmail.com>  
-2015-2015 Artem Vorotnikov <artem@vorotnikov.me>  
-2013-2017 Thomas Debesse <xqf@illwieckz.net>  
+1998-2000 Roman Pozlevich <hidden email="roma@botik.ru"/>  
+2000-2002 Bill Adams <hidden email="bill@evilbill.org"/>  
+2000-2003 Alex Burger <hidden email="alex_b@users.sf.net"/>  
+2001-2010 Ludwig Nussel <hidden email="ludwig.nussel@suse.de"/>  
+2001-2015 Jordi Mallach <hidden email="jordi@debian.org"/>  
+2015-2015 Artem Vorotnikov <hidden email="artem@vorotnikov.me"/>  
+2014-2024 Zack Middleton <hidden email="zturtleman@gmail.com"/>  
+2013-2024 Thomas Debesse <hidden email="dev@illwieckz.net"/>  
