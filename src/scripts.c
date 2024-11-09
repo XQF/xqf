@@ -89,6 +89,7 @@ typedef struct
 	GPtrArray* list;    // list of strings, only valid for list type
 } ScriptOption;
 
+static GtkWidget* scripts_list;
 static GtkWidget* notebook;
 
 static void install_file_dialog_response_callback (GtkWidget *widget, int response, gpointer data);
@@ -559,10 +560,133 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	return page_vbox;
 }
 
+#if 1 // GTK2 and GTK3
+enum {
+	SCRIPTSLIST_ATTR_INDEX,
+	SCRIPTSLIST_ATTR_NAME,
+	SCRIPTSLIST_ATTR_COUNT
+};
+
+static void script_selection_changed_callback (GtkTreeSelection *selection, gpointer data) {
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	gint index;
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		gtk_tree_model_get (model, &iter, SCRIPTSLIST_ATTR_INDEX, &index, -1);
+
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), index);
+	}
+}
+
+static GtkWidget *create_scripts_list (void) {
+	GtkTreeStore *store;
+	GtkWidget *tree;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	GtkTreeSelection *select;
+	int i;
+	GList *s;
+
+	store = gtk_tree_store_new (SCRIPTSLIST_ATTR_COUNT,
+	                            G_TYPE_INT,
+	                            G_TYPE_STRING
+	                            );
+
+	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
+		const char* filename = s->data;
+		GtkTreeIter iter;
+
+		gtk_tree_store_append (store, &iter, NULL);
+
+		gtk_tree_store_set (store, &iter,
+		                    SCRIPTSLIST_ATTR_INDEX, i,
+		                    SCRIPTSLIST_ATTR_NAME, filename,
+		                    -1);
+	}
+
+	tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+
+	g_object_unref (G_OBJECT (store));
+
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree), FALSE);
+	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (tree), FALSE);
+
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title (column, "Script");
+
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_set_attributes (column,
+	                                     renderer,
+	                                     "text", SCRIPTSLIST_ATTR_NAME,
+	                                     NULL);
+
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
+
+	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
+	gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
+	g_signal_connect (G_OBJECT (select), "changed",
+	                  G_CALLBACK (script_selection_changed_callback),
+	                  NULL);
+
+	scripts_list = tree;
+
+	return tree;
+}
+
+static void scripts_list_select (int index) {
+	GtkTreeSelection *select = gtk_tree_view_get_selection (GTK_TREE_VIEW (scripts_list));
+	GtkTreePath *path;
+
+	gtk_tree_selection_unselect_all (select);
+
+	path = gtk_tree_path_new_from_indices (index, -1);
+	gtk_tree_selection_select_path (select, path);
+
+	gtk_tree_path_free(path);
+}
+#else // GTK1 (deprecated)
 static void scripts_page_select_callback(GtkItem *item, gpointer d) {
 	unsigned i = GPOINTER_TO_INT(d);
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), i);
 }
+
+static GtkWidget *create_scripts_list (void) {
+	GtkWidget *gtklist;
+	unsigned i;
+	GList* s;
+
+	gtklist = gtk_list_new ();
+
+	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
+		const char* filename = s->data;
+		GtkWidget* item;
+
+		item = gtk_list_item_new();
+
+		gtk_container_add (GTK_CONTAINER (item), gtk_label_new(filename));
+
+		g_signal_connect (G_OBJECT (item), "select",
+				G_CALLBACK(scripts_page_select_callback), GINT_TO_POINTER(i));
+
+		gtk_widget_show_all(item);
+		gtk_container_add (GTK_CONTAINER (gtklist), item);
+	}
+
+	scripts_list = gtklist;
+
+	return gtklist;
+}
+
+static void scripts_list_select (int index) {
+	GList *node = g_list_nth (gtk_container_get_children( GTK_CONTAINER (scripts_list)), index);
+
+	if (node) {
+		gtk_list_item_select (GTK_LIST_ITEM (node->data));
+	}
+}
+#endif
 
 GtkWidget *scripts_config_page () {
 	GtkWidget *page_vbox;
@@ -573,7 +697,7 @@ GtkWidget *scripts_config_page () {
 	GtkWidget *gtklist=NULL;
 	GtkWidget *scrollwin=NULL;
 	GtkWidget *games_hbox;
-	unsigned i = 0;
+	unsigned i;
 	GList* s;
 
 	page_vbox = gtk_vbox_new (FALSE, 0);
@@ -593,7 +717,7 @@ GtkWidget *scripts_config_page () {
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin),
 			GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-	gtklist = gtk_list_new ();
+	gtklist = create_scripts_list();
 
 	gtk_widget_set_size_request (gtklist, 136, -1);
 
@@ -622,26 +746,12 @@ GtkWidget *scripts_config_page () {
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
 	gtk_box_pack_start (GTK_BOX (games_hbox), notebook, FALSE, FALSE, 15);
 
-	for (s = scripts; s; s = g_list_next(s), ++i) {
+	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
 		const char* filename = s->data;
 		GtkWidget *page;
-		GtkWidget* item;
 		Script* script;
 
 		script = g_datalist_get_data(&scriptdata, filename);
-
-		item = gtk_list_item_new();
-		if (s == scripts) {
-			gtk_list_item_select(GTK_LIST_ITEM(item));
-		}
-
-		gtk_container_add (GTK_CONTAINER (item), gtk_label_new(filename));
-
-		g_signal_connect (G_OBJECT (item), "select",
-				G_CALLBACK(scripts_page_select_callback), GINT_TO_POINTER(i));
-
-		gtk_widget_show_all(item);
-		gtk_container_add (GTK_CONTAINER (gtklist), item);
 
 		label = gtk_label_new (filename);
 
@@ -658,6 +768,8 @@ GtkWidget *scripts_config_page () {
 
 		gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 	}
+
+	scripts_list_select (0);
 
 	gtk_widget_show_all (page_vbox);
 
