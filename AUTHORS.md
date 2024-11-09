@@ -5,15 +5,15 @@
 * Roman Pozlevich <hidden email="roma@botik.ru">
 
 
-## Maintainers
+## Maintainer
 
 * Thomas Debesse <hidden email="xqf@illwieckz.net">
-* Jordi Mallach <hidden email="jordi@debian.org">
-* Ludwig Nussel <hidden email="ludwig.nussel@suse.de">
 
 
 ## Former maintainers
 
+* Jordi Mallach <hidden email="jordi@debian.org">
+* Ludwig Nussel <hidden email="ludwig.nussel@suse.de">
 * Alex Burger <hidden email="alex_b@users.sf.net">
 * Bill Adams <hidden email="bill@evilbill.org">
 
