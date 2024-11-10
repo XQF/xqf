@@ -547,7 +547,7 @@ void stat_lists (GSList *masters, GSList *names, GSList *servers, GSList *hosts)
 
 	stat_process = stat_job_create (masters, names, servers, hosts);
 
-	stat_process->delayed.refresh_handler = (GtkFunction) stat_lists_refresh;
+	stat_process->delayed.refresh_handler = (GSourceFunc) stat_lists_refresh;
 
 	stat_process->state_handlers = g_slist_prepend (stat_process->state_handlers, stat_lists_state_handler);
 	stat_process->close_handlers = g_slist_prepend (stat_process->close_handlers, stat_lists_close_handler);

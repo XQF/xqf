@@ -73,7 +73,7 @@ struct stat_conn {
 struct delayed_refresh {
 	GSList *queued_servers;
 	GSList *queued_hosts;
-	GtkFunction refresh_handler;
+	GSourceFunc refresh_handler;
 	unsigned timeout_id;
 };
 
