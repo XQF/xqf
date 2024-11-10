@@ -44,7 +44,7 @@ static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
 GtkWidget *dialog_create_modal_transient_window (const char *title,
 		int close_on_esc,
 		int allow_resize,
-		GtkSignalFunc on_destroy) {
+		GCallback on_destroy) {
 	GtkWidget *window;
 	GtkWidget *parent;
 
@@ -535,7 +535,7 @@ static void file_dialog_response_set_textentry (GtkWidget *dialog, int response,
 	gtk_widget_destroy (dialog);
 }
 
-GtkWidget* file_dialog(const char *title, GtkSignalFunc response_callback, gpointer data) {
+GtkWidget* file_dialog(const char *title, GCallback response_callback, gpointer data) {
 	GtkWidget* dialog;
 
 	dialog = gtk_file_chooser_dialog_new (title,

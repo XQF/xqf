@@ -752,7 +752,7 @@ gboolean create_server_type_menu_filter_configured (enum server_type type) {
 		return TRUE;
 }
 
-GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GtkSignalFunc callback) {
+GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback) {
 	GtkWidget *option_menu = NULL;
 	GtkWidget *menu = NULL;
 	GtkWidget *menu_item = NULL;

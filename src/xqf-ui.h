@@ -130,7 +130,7 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name);
   the user_data will be set to the game type
   @return a GtkOptionMenu
   */
-GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GtkSignalFunc callback);
+GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback);
 
 
 /** Skip a game if it's not configured and show only configured is enabled */
