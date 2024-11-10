@@ -214,7 +214,21 @@ void games_done() {
 	int i;
 
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
+		g_free(games[i].cmd);
+		g_free(games[i].dir);
+		g_free(games[i].real_dir);
 		g_free(games[i].real_home);
+		g_free(games[i].game_cfg);
+		g_slist_free(games[i].custom_args);
+		g_datalist_clear(&games[i].games_data);
+
+		games[i].cmd = NULL;
+		games[i].dir = NULL;
+		games[i].real_dir = NULL;
+		games[i].real_home = NULL;
+		games[i].game_cfg = NULL;
+		games[i].custom_args = NULL;
+		games[i].games_data = NULL;
 	}
 }
 
