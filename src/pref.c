@@ -2264,66 +2264,43 @@ static char *wb_switch_labels[9] = {
 	N_("ThunderBolt")
 };
 
-
-static void set_w_switch_callback(GtkWidget *widget, int i) {
-	pref_w_switch = i;
+static void set_w_switch_callback(GtkWidget *widget, gpointer userdata) {
+	pref_w_switch = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 }
 
-
-static void set_b_switch_callback(GtkWidget *widget, int i) {
-	pref_b_switch = i;
+static void set_b_switch_callback(GtkWidget *widget, gpointer userdata) {
+	pref_b_switch = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 }
 
-
-static GtkWidget *create_wb_switch_menu(void(*callback)(GtkWidget *, int)) {
-	GtkWidget *menu;
-	GtkWidget *menu_item;
+static void set_wb_switch_menu(GtkWidget *option_menu) {
 	int i;
 
-	menu = gtk_menu_new();
-
 	for (i = 0; i < 9; i++) {
-		menu_item = gtk_menu_item_new_with_label(_(wb_switch_labels[i]));
-		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), GINT_TO_POINTER(i));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-		gtk_widget_show(menu_item);
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu), _(wb_switch_labels[i]));
 	}
-
-	return menu;
 }
 
 
-static void qw_noskins_option_menu_callback (GtkWidget *widget, int i) {
-	pref_qw_noskins = i;
+static char *noskins_labels[3] = {
+	N_("Use skins"),
+	N_("Don\'t use skins"),
+	N_("Don\'t download new skins")
+};
+
+static void qw_noskins_option_menu_callback (GtkWidget *widget, gpointer userdata) {
+	pref_qw_noskins = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 }
 
-static void q2_noskins_option_menu_callback (GtkWidget *widget, int i) {
-	pref_q2_noskins = i;
+static void q2_noskins_option_menu_callback (GtkWidget *widget, gpointer userdata) {
+	pref_q2_noskins = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 }
 
-static GtkWidget *create_noskins_menu (int qworq2) {
-	GtkWidget *menu;
-	GtkWidget *menu_item;
-	void(*callback)=qworq2?q2_noskins_option_menu_callback:qw_noskins_option_menu_callback;
+static void set_noskins_menu (GtkWidget *option_menu) {
+	int i;
 
-	menu = gtk_menu_new();
-
-	menu_item = gtk_menu_item_new_with_label(_("Use skins"));
-	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 0);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-	gtk_widget_show(menu_item);
-
-	menu_item = gtk_menu_item_new_with_label(_("Don\'t use skins"));
-	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 1);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-	gtk_widget_show(menu_item);
-
-	menu_item = gtk_menu_item_new_with_label(_("Don\'t download new skins"));
-	g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(callback), (gpointer) 2);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-	gtk_widget_show(menu_item);
-
-	return menu;
+	for (i = 0; i < 3; i++) {
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu), _(noskins_labels[i]));
+	}
 }
 
 // fill working directory with result of the directory guess function for first
@@ -3564,9 +3541,10 @@ static GtkWidget *qw_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	option_menu = gtk_option_menu_new ();
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), create_wb_switch_menu (set_w_switch_callback));
-	gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), pref_w_switch);
+	option_menu = gtk_combo_box_text_new ();
+	set_wb_switch_menu (option_menu);
+	g_signal_connect(option_menu, "changed", G_CALLBACK (set_w_switch_callback), NULL);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), pref_w_switch);
 	gtk_box_pack_end (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 	gtk_widget_show (option_menu);
 
@@ -3581,9 +3559,10 @@ static GtkWidget *qw_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	option_menu = gtk_option_menu_new ();
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), create_wb_switch_menu (set_b_switch_callback));
-	gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), pref_b_switch);
+	option_menu = gtk_combo_box_text_new ();
+	set_wb_switch_menu (option_menu);
+	g_signal_connect(option_menu, "changed", G_CALLBACK (set_b_switch_callback), NULL);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), pref_b_switch);
 	gtk_box_pack_end (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 	gtk_widget_show (option_menu);
 
@@ -3638,9 +3617,11 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	option_menu = gtk_option_menu_new ();
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), create_noskins_menu (qworq2));
-	gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), qworq2?pref_q2_noskins:pref_qw_noskins);
+	option_menu = gtk_combo_box_text_new ();
+	g_signal_connect(option_menu, "changed", G_CALLBACK
+	    (qworq2 ? q2_noskins_option_menu_callback : qw_noskins_option_menu_callback), NULL);
+	set_noskins_menu (option_menu);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), qworq2?pref_q2_noskins:pref_qw_noskins);
 	gtk_box_pack_end (GTK_BOX (hbox2), option_menu, FALSE, FALSE, 0);
 	gtk_widget_show (option_menu);
 

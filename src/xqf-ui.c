@@ -752,51 +752,85 @@ gboolean create_server_type_menu_filter_configured (enum server_type type) {
 		return TRUE;
 }
 
+typedef void (*SeverTypeSelectedFunction)(GtkWidget *widget, enum server_type type);
+
+static void create_server_type_menu_callback (GtkWidget *widget, SeverTypeSelectedFunction callback) {
+	GtkComboBox *combo = GTK_COMBO_BOX (widget);
+	GtkTreeModel *model = gtk_combo_box_get_model (combo);
+	GtkTreeIter iter;
+
+	if (gtk_combo_box_get_active_iter (combo, &iter)) {
+		gint value;
+
+		gtk_tree_model_get (model, &iter, SERVERTYPE_ATTR_TYPE, &value, -1);
+
+		callback (widget, value);
+	}
+}
+
 GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback) {
-	GtkWidget *option_menu = NULL;
-	GtkWidget *menu = NULL;
-	GtkWidget *menu_item = NULL;
-	GtkWidget *first_menu_item = NULL;
-	int i;
-	int j = 0;
-	int menu_type = 0;
+	GtkListStore *store;
+	GtkWidget *combo;
+	GtkCellRenderer *renderer;
+	int i, row = 0, first_row = 0;
 
-	option_menu = gtk_option_menu_new ();
-
-	menu = gtk_menu_new ();
+	store = gtk_list_store_new (SERVERTYPE_ATTR_COUNT,
+	                            G_TYPE_INT,
+	                            GDK_TYPE_PIXBUF,
+	                            G_TYPE_STRING
+	                            );
 
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; ++i) {
+		GtkTreeIter iter;
+		GdkPixbuf *pixbuf = games[i].pix->pixbuf;
+		char *name = _(games[i].name);
+
 		if (filterfunc && !filterfunc (i))
 			continue;
 
-		menu_item = gtk_menu_item_new ();
+		gtk_list_store_append (store, &iter);
+
+		gtk_list_store_set (store, &iter,
+		                    SERVERTYPE_ATTR_TYPE, i,
+		                    SERVERTYPE_ATTR_ICON, pixbuf,
+		                    SERVERTYPE_ATTR_NAME, name,
+		                    -1);
 
 		if (i == active_type) {
-			first_menu_item = menu_item;
-			menu_type = j;
+			first_row = row;
 		}
-		else if (!first_menu_item)
-			first_menu_item = menu_item;
+		else if (!first_row)
+			first_row = row;
 
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-
-		gtk_container_add (GTK_CONTAINER (menu_item), game_pixmap_with_label (i));
-
-		if (callback)
-			g_signal_connect (G_OBJECT (menu_item), "activate", G_CALLBACK (callback), GINT_TO_POINTER (i));
-
-		gtk_widget_show (menu_item);
-
-		++j; // must be here in case the continue was used
+		++row; // must be here in case the continue was used
 	}
 
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
+	combo = gtk_combo_box_new_with_model (GTK_TREE_MODEL (store));
+
+	g_object_unref (G_OBJECT (store));
+
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
+	                                renderer,
+	                                "pixbuf", SERVERTYPE_ATTR_ICON,
+	                                 NULL);
+
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
+	                                renderer,
+	                                "text", SERVERTYPE_ATTR_NAME,
+	                                NULL);
+
+	g_signal_connect (G_OBJECT (combo), "changed",
+	                  G_CALLBACK (create_server_type_menu_callback),
+	                  (SeverTypeSelectedFunction) callback);
 
 	// initiates callback to set servertype to first configured game
-	if (active_type != -1 && first_menu_item) {
-		gtk_menu_item_activate (GTK_MENU_ITEM (first_menu_item));
-		gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), menu_type);
+	if (active_type != -1 && first_row) {
+		gtk_combo_box_set_active (GTK_COMBO_BOX (combo), first_row);
 	}
 
-	return option_menu;
+	return combo;
 }

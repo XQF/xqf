@@ -716,27 +716,19 @@ static GtkWidget *country_stats_page (void) {
 			create_server_type_menu_filter_hascountries,
 			G_CALLBACK(select_country_server_type_callback));
 	{
-		GtkWidget* menu_item = gtk_menu_item_new ();
-		GtkWidget* label = gtk_label_new(_("All Games"));
-		GtkWidget* menu = gtk_option_menu_get_menu(GTK_OPTION_MENU(option_menu));
+		GtkListStore *store = GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (option_menu)));
+		GtkTreeIter iter;
 
-		// separator
-		gtk_widget_set_sensitive (menu_item, FALSE);
-		gtk_menu_prepend (GTK_MENU (menu), menu_item);
-		gtk_widget_show (menu_item);
+		gtk_list_store_insert (store, &iter, 0);
 
-		menu_item = gtk_menu_item_new ();
-		gtk_menu_prepend (GTK_MENU (menu), menu_item);
-		gtk_container_add (GTK_CONTAINER (menu_item), label);
-
-		g_signal_connect (menu_item, "activate", G_CALLBACK (select_country_server_type_callback), (gpointer)UNKNOWN_SERVER);
-
-		gtk_widget_show (menu_item);
-		gtk_widget_show (label);
+		gtk_list_store_set (store, &iter,
+		                    SERVERTYPE_ATTR_TYPE, UNKNOWN_SERVER,
+		                    SERVERTYPE_ATTR_ICON, NULL,
+		                    SERVERTYPE_ATTR_NAME, _("All Games"),
+		                    -1);
 
 		if (to_activate == UNKNOWN_SERVER) {
-			gtk_menu_item_activate (GTK_MENU_ITEM (menu_item));
-			gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
+			gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), 0);
 		}
 	}
 
