@@ -56,7 +56,7 @@ static void master_check_master_addr_prefix(void) {
 	const gchar *master_addr;
 	gchar *master_tmp_addr;
 
-	master_addr= gtk_entry_get_text(GTK_ENTRY (GTK_COMBO(master_addr_combo)->entry));
+	master_addr = gtk_entry_get_text (combo_get_entry (master_addr_combo));
 
 	// Replace up to :// with master type selected from radio buttons
 	if (g_ascii_strncasecmp(master_addr, master_prefixes[current_master_query_type],
@@ -73,15 +73,14 @@ static void master_check_master_addr_prefix(void) {
 		// Add lan://255.255.255.255 if user picks LAN and has not already entered an address
 		if (current_master_query_type == MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr))) {
 			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type], "255.255.255.255");
-			gtk_entry_set_text(
-					GTK_ENTRY(GTK_COMBO(master_addr_combo)->entry), txt);
+			gtk_entry_set_text (combo_get_entry (master_addr_combo), txt);
 			g_free(txt);
 		}
 
 		// Otherwise, just change the master type (xxx://)
 		else {
 			master_tmp_addr = g_strconcat(master_prefixes[current_master_query_type], pos, NULL);
-			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(master_addr_combo)->entry), master_tmp_addr);
+			gtk_entry_set_text (combo_get_entry (master_addr_combo), master_tmp_addr);
 			g_free(master_tmp_addr);
 		}
 	}
@@ -90,8 +89,8 @@ static void master_check_master_addr_prefix(void) {
 static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window) {
 	master_check_master_addr_prefix();
 
-	master_addr_result = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry)));
-	master_name_result = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (master_name_combo)->entry)));
+	master_addr_result = strdup_strip (gtk_entry_get_text (combo_get_entry (master_addr_combo)));
+	master_name_result = strdup_strip (gtk_entry_get_text (combo_get_entry (master_name_combo)));
 
 	config_set_string ("/" CONFIG_FILE "/Add Master/game", type2id (master_type));
 
@@ -145,12 +144,11 @@ static void master_type_radio_callback(GtkWidget *widget, enum master_query_type
 		current_master_query_type = type;
 		master_check_master_addr_prefix();
 
-		master_name = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (master_name_combo)->entry));
+		master_name = gtk_entry_get_text (combo_get_entry (master_name_combo));
 
 		if (current_master_query_type == MASTER_LAN
 				&& (!master_name || !strlen(master_name))) {
-			gtk_entry_set_text(
-					GTK_ENTRY(GTK_COMBO(master_name_combo)->entry), _("LAN"));
+			gtk_entry_set_text (combo_get_entry (master_name_combo), _("LAN"));
 		}
 	}
 }
@@ -163,12 +161,21 @@ static void master_activate_radio_for_type(enum master_query_type type) {
 	}
 }
 
-static void master_address_from_history_selected_callback (GtkWidget *widget, gpointer data) {
-	const gchar* str = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry));
-	enum master_query_type type = get_master_query_type_from_address(str);
-	master_activate_radio_for_type(type);
-}
+static void master_address_changed_callback (GtkWidget *widget, gpointer data) {
+	const gchar* str = gtk_entry_get_text (combo_get_entry (master_addr_combo));
+	enum master_query_type type;
 
+	// Don't switch type when backspacing the protocol scheme.
+	if (!strstr(str, "://")) {
+		type = MASTER_INVALID_TYPE;
+	} else {
+		type = get_master_query_type_from_address(str);
+	}
+
+	if (type != MASTER_INVALID_TYPE) {
+		master_activate_radio_for_type(type);
+	}
+}
 
 struct master *add_master_dialog (struct master *m) {
 	GtkWidget *window;
@@ -239,20 +246,15 @@ struct master *add_master_dialog (struct master *m) {
 	hbox = gtk_hbox_new (FALSE, 4);
 	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
 
-	master_name_combo = gtk_combo_new ();
+	master_name_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_widget_set_size_request (master_name_combo, 200, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), master_name_combo, TRUE, TRUE, 0);
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (master_name_combo)->entry), 256);
-	gtk_combo_set_case_sensitive (GTK_COMBO (master_name_combo), TRUE);
-	gtk_combo_set_use_arrows_always (GTK_COMBO (master_name_combo), TRUE);
-	gtk_combo_disable_activate (GTK_COMBO (master_name_combo));
+	gtk_entry_set_max_length (combo_get_entry (master_name_combo), 256);
 	g_signal_connect(
-			G_OBJECT (GTK_COMBO (master_name_combo)->entry), "activate",
+			G_OBJECT (combo_get_entry (master_name_combo)), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 
-	gtk_widget_set_can_focus (GTK_COMBO (master_name_combo)->entry, TRUE);
-	gtk_widget_set_can_focus (GTK_COMBO (master_name_combo)->button, FALSE);
-	gtk_widget_grab_focus (GTK_COMBO (master_name_combo)->entry);
+	gtk_widget_grab_focus (GTK_WIDGET (master_name_combo));
 
 	gtk_widget_show (master_name_combo);
 
@@ -260,7 +262,7 @@ struct master *add_master_dialog (struct master *m) {
 		combo_set_vals (master_name_combo, master_history_name->items, "");
 
 	if (master_to_edit) {
-		gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_name_combo)->entry), master_to_edit->name);
+		gtk_entry_set_text(combo_get_entry (master_name_combo), master_to_edit->name);
 	}
 
 
@@ -287,24 +289,19 @@ struct master *add_master_dialog (struct master *m) {
 			GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 
-	master_addr_combo = gtk_combo_new ();
+	master_addr_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_table_attach_defaults (GTK_TABLE (table), master_addr_combo, 1, 2, 1, 2);
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry), 4096);
-	gtk_combo_set_case_sensitive (GTK_COMBO (master_addr_combo), TRUE);
-	gtk_combo_set_use_arrows_always (GTK_COMBO (master_addr_combo), TRUE);
-	gtk_combo_disable_activate (GTK_COMBO (master_addr_combo));
+	gtk_entry_set_max_length (combo_get_entry (master_addr_combo), 4096);
 	g_signal_connect (
-			G_OBJECT (GTK_COMBO (master_addr_combo)->entry), "activate",
+			G_OBJECT (combo_get_entry (master_addr_combo)), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 	g_signal_connect (
-			G_OBJECT (GTK_COMBO (master_addr_combo)->list),
-			"selection-changed",
+			G_OBJECT (master_addr_combo),
+			"changed",
 			G_CALLBACK
-			(master_address_from_history_selected_callback),NULL);
+			(master_address_changed_callback),NULL);
 
-	gtk_widget_set_can_focus (GTK_COMBO (master_addr_combo)->entry, TRUE);
-	gtk_widget_set_can_focus (GTK_COMBO (master_addr_combo)->button, FALSE);
-	// gtk_widget_grab_focus (GTK_COMBO (master_addr_combo)->entry);
+	// gtk_widget_grab_focus (GTK_WIDGET (master_addr_combo));
 
 	gtk_widget_show (master_addr_combo);
 
@@ -313,7 +310,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	if (master_to_edit) {
 		char* url = master_to_url(master_to_edit);
-		gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (master_addr_combo)->entry), url);
+		gtk_entry_set_text(combo_get_entry (master_addr_combo), url);
 		gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);
 		g_free(url);

@@ -276,7 +276,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	int res;
 
 	cmd = strdup_strip (
-			gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry)));
+			gtk_entry_get_text (combo_get_entry (rcon_combo)));
 
 	if (cmd) {
 		res = rcon_send(cmd);
@@ -290,7 +290,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 		g_free (cmd);
 	}
 	else {
-		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry), "");
+		gtk_entry_set_text (combo_get_entry (rcon_combo), "");
 	}
 }
 #endif
@@ -457,7 +457,7 @@ static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
 
 #ifndef RCON_STANDALONE
 static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
-	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry), "status");
+	gtk_entry_set_text (combo_get_entry (rcon_combo), "status");
 	rcon_combo_activate_callback (rcon_combo, data);
 }
 #endif
@@ -602,17 +602,12 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	/* Entry */
 
-	rcon_combo = gtk_combo_new ();
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (rcon_combo)->entry), 256);
-	gtk_combo_set_case_sensitive (GTK_COMBO (rcon_combo), TRUE);
-	gtk_combo_set_use_arrows_always (GTK_COMBO (rcon_combo), TRUE);
-	gtk_combo_disable_activate (GTK_COMBO (rcon_combo));
-	g_signal_connect (G_OBJECT (GTK_COMBO (rcon_combo)->entry), "activate",
+	rcon_combo = gtk_combo_box_text_new_with_entry ();
+	gtk_entry_set_max_length (combo_get_entry (rcon_combo), 256);
+	g_signal_connect (G_OBJECT (combo_get_entry (rcon_combo)), "activate",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
-	gtk_widget_set_can_focus (GTK_COMBO (rcon_combo)->entry, TRUE);
-	gtk_widget_set_can_focus (GTK_COMBO (rcon_combo)->button, FALSE);
 	gtk_box_pack_start (GTK_BOX (hbox), rcon_combo, TRUE, TRUE, 0);
-	gtk_widget_grab_focus (GTK_COMBO (rcon_combo)->entry);
+	gtk_widget_grab_focus (GTK_WIDGET (rcon_combo));
 	gtk_widget_show (rcon_combo);
 
 	if (rcon_history->items)

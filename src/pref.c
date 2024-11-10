@@ -710,7 +710,7 @@ static void get_new_defaults_for_game (enum server_type type) {
 
 	if (prefs->cfg_combo) {
 		if (g->game_cfg) g_free(g->game_cfg);
-		g->game_cfg = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (prefs->cfg_combo)->entry)));
+		g->game_cfg = strdup_strip (gtk_entry_get_text (combo_get_entry (prefs->cfg_combo)));
 	}
 
 	g_snprintf (buf, sizeof(buf), "/" CONFIG_FILE "/Game: %s", type2id (type));
@@ -978,7 +978,7 @@ void q3_update_prefs_common (struct game* g) {
 	w = get_pref_widgets_for_game(type);
 	g_return_if_fail(w != NULL);
 
-	str = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w->proto_entry)->entry)));
+	str = strdup_strip (gtk_entry_get_text (combo_get_entry (w->proto_entry)));
 	// locate first space and mark it as str's end
 	str1 = strchr(str,' ');
 	if (str1) *str1='\0';
@@ -1472,7 +1472,7 @@ static void update_qw_skins (char *initstr) {
 		combo_set_vals (qw_skin_combo, list, initstr);
 	}
 	else {
-		str = g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (qw_skin_combo)->entry)));
+		str = g_strdup (gtk_entry_get_text (combo_get_entry (qw_skin_combo)));
 		combo_set_vals (qw_skin_combo, list, str);
 	}
 
@@ -1512,7 +1512,7 @@ static void update_q2_skins (char *initstr) {
 		combo_set_vals (q2_skin_combo, list, initstr);
 	}
 	else {
-		str = g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (q2_skin_combo)->entry)));
+		str = g_strdup (gtk_entry_get_text (combo_get_entry (q2_skin_combo)));
 		combo_set_vals (q2_skin_combo, list, str);
 	}
 
@@ -1550,7 +1550,7 @@ static void update_cfgs (enum server_type type, char *dir, char *initstr) {
 		combo_set_vals (prefs->cfg_combo, cfgs, initstr);
 	}
 	else {
-		str = g_strdup (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (prefs->cfg_combo)->entry)));
+		str = g_strdup (gtk_entry_get_text (combo_get_entry (prefs->cfg_combo)));
 		combo_set_vals (prefs->cfg_combo, cfgs, str);
 	}
 
@@ -1593,7 +1593,7 @@ static gboolean dir_entry_activate_callback (GtkWidget *widget, gpointer data) {
 static void qw_skin_combo_changed_callback (GtkWidget *widget, gpointer data) {
 	char *new_skin;
 
-	new_skin = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (qw_skin_combo)->entry)));
+	new_skin = strdup_strip (gtk_entry_get_text (combo_get_entry (qw_skin_combo)));
 
 	if (!pref_qw_skin && !new_skin) {
 		return;
@@ -1794,12 +1794,10 @@ static GtkWidget *qw_skin_box_create (void) {
 	alignment = gtk_alignment_new (0, 0, 0, 0);
 	gtk_box_pack_start(GTK_BOX (hbox), alignment, FALSE, FALSE, 0);
 
-	qw_skin_combo = gtk_combo_new();
-	gtk_entry_set_max_length(GTK_ENTRY(GTK_COMBO(qw_skin_combo)->entry), 256);
-	gtk_widget_set_size_request(GTK_COMBO(qw_skin_combo)->entry, 112, -1);
-	gtk_combo_set_use_arrows_always(GTK_COMBO(qw_skin_combo), TRUE);
-	gtk_combo_set_case_sensitive(GTK_COMBO(qw_skin_combo), TRUE);
-	g_signal_connect (G_OBJECT(GTK_COMBO(qw_skin_combo)->entry),
+	qw_skin_combo = gtk_combo_box_text_new_with_entry();
+	gtk_entry_set_max_length(combo_get_entry(qw_skin_combo), 256);
+	gtk_widget_set_size_request(GTK_WIDGET(combo_get_entry(qw_skin_combo)), 112, -1);
+	g_signal_connect (G_OBJECT(combo_get_entry(qw_skin_combo)),
 			"changed", G_CALLBACK(qw_skin_combo_changed_callback), NULL);
 	gtk_container_add(GTK_CONTAINER(alignment), qw_skin_combo);
 	gtk_widget_show(qw_skin_combo);
@@ -1873,7 +1871,7 @@ static GtkWidget *qw_skin_box_create (void) {
 static void q2_skin_combo_changed_callback (GtkWidget *widget, gpointer data) {
 	char *new_skin;
 
-	new_skin = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (q2_skin_combo)->entry)));
+	new_skin = strdup_strip (gtk_entry_get_text (combo_get_entry (q2_skin_combo)));
 
 	if (!pref_q2_skin && !new_skin) {
 		return;
@@ -1932,12 +1930,10 @@ static GtkWidget *q2_skin_box_create (void) {
 	alignment = gtk_alignment_new(1.0, 0, 0, 0);
 	gtk_box_pack_end(GTK_BOX(hbox), alignment, FALSE, FALSE, 0);
 
-	q2_skin_combo = gtk_combo_new();
-	gtk_entry_set_max_length(GTK_ENTRY(GTK_COMBO(q2_skin_combo)->entry), 256);
-	gtk_widget_set_size_request(GTK_COMBO(q2_skin_combo)->entry, 144, -1);
-	gtk_combo_set_use_arrows_always(GTK_COMBO(q2_skin_combo), TRUE);
-	gtk_combo_set_case_sensitive(GTK_COMBO(q2_skin_combo), TRUE);
-	g_signal_connect(G_OBJECT(GTK_COMBO(q2_skin_combo)->entry), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
+	q2_skin_combo = gtk_combo_box_text_new_with_entry();
+	gtk_entry_set_max_length(GTK_ENTRY(combo_get_entry(q2_skin_combo)), 256);
+	gtk_widget_set_size_request(GTK_WIDGET(combo_get_entry(q2_skin_combo)), 144, -1);
+	g_signal_connect(G_OBJECT(combo_get_entry(q2_skin_combo)), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
 	gtk_container_add(GTK_CONTAINER(alignment), q2_skin_combo);
 	gtk_widget_show(q2_skin_combo);
 
@@ -2784,9 +2780,8 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 		gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
 		gtk_widget_show(label);
 
-		prefs->cfg_combo = gtk_combo_new();
-		gtk_entry_set_max_length(GTK_ENTRY(GTK_COMBO(prefs->cfg_combo)->entry), 256);
-		gtk_combo_set_case_sensitive(GTK_COMBO(prefs->cfg_combo), TRUE);
+		prefs->cfg_combo = gtk_combo_box_text_new_with_entry();
+		gtk_entry_set_max_length(combo_get_entry(prefs->cfg_combo), 256);
 		gtk_table_attach_defaults(GTK_TABLE(table), prefs->cfg_combo, 1, 2, 2, 3);
 		gtk_widget_show(prefs->cfg_combo);
 	}
@@ -3326,6 +3321,8 @@ static GtkWidget *q3_options_page (enum server_type type) {
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	if (w->protocols) {
+		GList *list;
+
 		hbox = gtk_hbox_new (FALSE, 8);
 		gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
@@ -3333,12 +3330,13 @@ static GtkWidget *q3_options_page (enum server_type type) {
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		gtk_widget_show (label);
 
-		w->proto_entry = gtk_combo_new ();
-		gtk_combo_set_use_arrows_always (GTK_COMBO (w->proto_entry), TRUE);
-		gtk_combo_set_popdown_strings(GTK_COMBO (w->proto_entry), createGListfromchar((char**)w->protocols));
-		gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (w->proto_entry)->list), GTK_SELECTION_BROWSE);
+		w->proto_entry = gtk_combo_box_text_new_with_entry ();
 
-		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w->proto_entry)->entry), game_get_attribute(type,"masterprotocol"));
+		list = createGListfromchar ((char**)w->protocols);
+
+		combo_set_vals (w->proto_entry, list, game_get_attribute(type,"masterprotocol"));
+
+		g_list_free (list);
 
 		gtk_box_pack_start (GTK_BOX (hbox), w->proto_entry, FALSE, FALSE, 0);
 		gtk_widget_show (w->proto_entry);

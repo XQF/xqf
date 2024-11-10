@@ -27,6 +27,7 @@
 #include "xqf.h"
 #include "xqf-ui.h"
 #include "srv-list.h"
+#include "srv-prop.h"
 #include "dialogs.h"
 #include "sort.h"
 #include "utils.h"
@@ -149,7 +150,7 @@ static void psearch_combo_activate_callback (GtkWidget *widget,
 	config_set_int ("/" CONFIG_FILE "/Find Player/mode", psearch.mode);
 
 	psearch.pattern = strdup_strip (
-			gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry)));
+			gtk_entry_get_text (GTK_ENTRY (combo_get_entry (psearch_combo))));
 
 	if (psearch.pattern && psearch.pattern[0]) {
 		history_add (psearch_history, psearch.pattern);
@@ -186,25 +187,23 @@ int find_player_dialog (void) {
 
 	/* ComboBox */
 
-	psearch_combo = gtk_combo_new ();
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 128);
-	gtk_widget_set_size_request (GTK_COMBO (psearch_combo)->entry, 160, -1);
-	gtk_combo_disable_activate (GTK_COMBO (psearch_combo));
-	if (psearch_history->items) {
-		gtk_combo_set_popdown_strings (GTK_COMBO (psearch_combo),
-				psearch_history->items);
-		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry),
-				(char *) psearch_history->items->data);
-		gtk_entry_select_region (GTK_ENTRY (GTK_COMBO (psearch_combo)->entry), 0,
-				strlen ((char *) psearch_history->items->data));
-	}
-	g_signal_connect (G_OBJECT (GTK_COMBO (psearch_combo)->entry),
+	psearch_combo = gtk_combo_box_text_new_with_entry ();
+	gtk_entry_set_max_length (GTK_ENTRY (combo_get_entry (psearch_combo)), 128);
+	gtk_widget_set_size_request (GTK_WIDGET (combo_get_entry (psearch_combo)), 160, -1);
+	g_signal_connect (G_OBJECT (combo_get_entry (psearch_combo)),
 			"activate", G_CALLBACK (psearch_combo_activate_callback), NULL);
-	g_signal_connect_swapped (G_OBJECT (GTK_COMBO (psearch_combo)->entry),
+	g_signal_connect_swapped (G_OBJECT (combo_get_entry (psearch_combo)),
 			"activate", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), psearch_combo, TRUE, TRUE, 0);
-	gtk_widget_grab_focus (GTK_COMBO (psearch_combo)->entry);
+	gtk_widget_grab_focus (GTK_WIDGET (combo_get_entry (psearch_combo)));
 	gtk_widget_show (psearch_combo);
+
+	if (psearch_history->items) {
+		combo_set_vals (psearch_combo, psearch_history->items, "");
+
+		gtk_combo_box_set_active (GTK_COMBO_BOX (psearch_combo), 0);
+		gtk_editable_select_region (GTK_EDITABLE (combo_get_entry (psearch_combo)), 0, -1);
+	}
 
 	/* OK Button */
 
