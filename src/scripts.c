@@ -33,6 +33,7 @@
 #include "scripts.h"
 #include "config.h"
 #include "dialogs.h"
+#include "srv-prop.h"
 
 static unsigned MAX_SCRIPT_VERSION = 1;
 
@@ -440,7 +441,7 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 			{
 				GtkWidget* hbox = ret = gtk_hbox_new(FALSE, 0);
 				GtkWidget* label = gtk_label_new(opt->name);
-				GtkWidget* combo = gtk_combo_new ();
+				GtkWidget* combo = gtk_combo_box_text_new_with_entry ();
 				GList* list = NULL;
 				unsigned i;
 
@@ -448,18 +449,11 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 					list = g_list_append(list, g_ptr_array_index(opt->list, i));
 				}
 
-				gtk_combo_set_popdown_strings(GTK_COMBO (combo), list);
+				combo_set_vals (combo, list, opt->defval);
 
 				g_list_free(list);
 
-				gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
-				gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (combo)->list), GTK_SELECTION_BROWSE);
-
-				if (opt->defval) {
-					gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), opt->defval);
-				}
-
-				opt->widget = GTK_COMBO(combo)->entry;
+				opt->widget = GTK_WIDGET (combo_get_entry (combo));
 
 				gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
 				gtk_box_pack_start(GTK_BOX(hbox), combo, FALSE, FALSE, 4);

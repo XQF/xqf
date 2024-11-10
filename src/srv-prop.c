@@ -327,7 +327,7 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
 	int   sucks;
 	char* comment = NULL;
 
-	customcfg = strdup_strip (gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry)));
+	customcfg = strdup_strip (gtk_entry_get_text (combo_get_entry (customcfg_combo)));
 
 	srvpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (password_entry)));
 	spectpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (spectator_entry)));
@@ -603,10 +603,9 @@ static GtkWidget *server_info_page (struct server *s) {
 	hbox = gtk_hbox_new (FALSE, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
-	customcfg_combo = gtk_combo_new ();
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (customcfg_combo)->entry),
-			256);
-	gtk_widget_set_size_request (GTK_COMBO (customcfg_combo)->entry, 112, -1);
+	customcfg_combo = gtk_combo_box_text_new_with_entry ();
+	gtk_entry_set_max_length (combo_get_entry (customcfg_combo), 256);
+	gtk_widget_set_size_request (GTK_WIDGET (combo_get_entry (customcfg_combo)), 112, -1);
 
 	if ((games[s->type].flags & GAME_CONNECT) != 0 &&
 			games[s->type].custom_cfgs) {
@@ -858,32 +857,34 @@ void properties_dialog (struct server *s) {
 }
 
 
+GtkEntry *combo_get_entry (GtkWidget *widget) {
+	if ( !GTK_IS_COMBO_BOX( widget ) ) {
+		return NULL;
+	}
+
+	return GTK_ENTRY (gtk_bin_get_child (GTK_BIN (widget)));
+}
+
 void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
+	GList *s;
 
-	g_return_if_fail(GTK_IS_COMBO(combo));
+	g_return_if_fail(GTK_IS_COMBO_BOX_TEXT(combo));
 
-	if (!strlist) {
-		gtk_list_clear_items (GTK_LIST (GTK_COMBO (combo)->list), 0, -1);
-	} else {
-		/*
-		 *  gtk_combo_set_popdown_strings (actually gtk_list_insert_items)
-		 *  automatically selects the first one and puts it into entry.
-		 *  That should not happen.  Drop selection mode for a moment
-		 *  to prevent that.
-		 */
+#ifdef GUI_GTK3
+	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (combo));
+#else
+	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (combo))));
+#endif
 
-		gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (combo)->list),
-				GTK_SELECTION_SINGLE);
-		gtk_combo_set_popdown_strings (GTK_COMBO (combo), strlist);
-		gtk_list_set_selection_mode (GTK_LIST (GTK_COMBO (combo)->list),
-				GTK_SELECTION_BROWSE);
+	for (s = strlist; s; s = s->next) {
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), (char *) s->data);
 	}
 
 	if (str) {
-		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), str);
-		gtk_editable_set_position (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0);
+		gtk_entry_set_text (combo_get_entry (combo), str);
+		gtk_editable_set_position (GTK_EDITABLE (combo_get_entry (combo)), 0);
 	}
 	else {
-		gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), "");
+		gtk_entry_set_text (combo_get_entry (combo), "");
 	}
 }

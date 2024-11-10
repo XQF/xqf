@@ -45,6 +45,7 @@ extern void props_load (void);
 
 extern void properties_dialog (struct server *s);
 
+extern GtkEntry *combo_get_entry (GtkWidget *widget);
 extern void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str);
 
 static inline int server_need_redial(struct server* s, struct server_props* props) {

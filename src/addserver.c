@@ -38,7 +38,7 @@ static GtkWidget *server_combo;
 
 static void server_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	enter_server_result = strdup_strip (gtk_entry_get_text (
-				GTK_ENTRY (GTK_COMBO (server_combo)->entry)));
+				combo_get_entry (server_combo)));
 	history_add (server_history, enter_server_result);
 
 	config_set_string ("/" CONFIG_FILE "/Add Server/game",
@@ -101,23 +101,18 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	server_combo = gtk_combo_new ();
+	server_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_widget_set_size_request (server_combo, 200, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), server_combo, TRUE, TRUE, 0);
-	gtk_entry_set_max_length (GTK_ENTRY (GTK_COMBO (server_combo)->entry), 128);
-	gtk_combo_set_case_sensitive (GTK_COMBO (server_combo), TRUE);
-	gtk_combo_set_use_arrows_always (GTK_COMBO (server_combo), TRUE);
-	gtk_combo_disable_activate (GTK_COMBO (server_combo));
+	gtk_entry_set_max_length (combo_get_entry (server_combo), 128);
 	g_signal_connect (
-			G_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
+			G_OBJECT (combo_get_entry (server_combo)), "activate",
 			G_CALLBACK (server_combo_activate_callback), NULL);
 	g_signal_connect_swapped (
-			G_OBJECT (GTK_COMBO (server_combo)->entry), "activate",
+			G_OBJECT (combo_get_entry (server_combo)), "activate",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 
-	gtk_widget_set_can_focus (GTK_COMBO (server_combo)->entry, TRUE);
-	gtk_widget_set_can_focus (GTK_COMBO (server_combo)->button, FALSE);
-	gtk_widget_grab_focus (GTK_COMBO (server_combo)->entry);
+	gtk_widget_grab_focus (GTK_WIDGET (server_combo));
 	gtk_widget_show (server_combo);
 
 	combo_set_vals (server_combo, server_history->items, addr);
@@ -162,7 +157,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (server_combo_activate_callback),
-			G_OBJECT (GTK_COMBO (server_combo)->entry));
+			G_OBJECT (combo_get_entry (server_combo)));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
