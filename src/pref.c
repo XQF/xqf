@@ -761,6 +761,7 @@ static void get_new_defaults_for_game (enum server_type type) {
 			g_free(str);
 			str = config_get_string_with_default (buf,&isdefault);
 		}
+		g_free(str);
 	}
 
 	if (g->update_prefs) {
@@ -807,8 +808,10 @@ static void load_game_defaults (enum server_type type) {
 
 		++j;
 		g_snprintf (conf, sizeof(conf), "custom_arg%d", j);
+		g_free(str2);
 		str2 = config_get_string_with_default (conf,&isdefault);
 	}
+	g_free(str2);
 
 	config_pop_prefix();
 }
@@ -4112,9 +4115,13 @@ static GtkWidget *qstat_options_page (void) {
 }
 
 void pref_sound_play (GtkWidget *dialog_button) {
-	const char *file   = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog_button));
-	const char *player = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button));
+	char *file   = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog_button));
+	char *player = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button));
+
 	play_sound_with (player, file, 1);
+
+	g_free (file);
+	g_free (player);
 }
 
 void pref_sound_conf_clear(GtkWidget *dialog_button) {
@@ -4703,6 +4710,7 @@ int prefs_load (void) {
 			xqf_warning("could not set core size %lu: %s",rlim.rlim_cur,strerror(errno));
 		}
 
+		g_free(coresize);
 	} while (0);
 
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; i++) {
@@ -4790,6 +4798,49 @@ int prefs_load (void) {
 	}
 
 	return newversion;
+}
+
+void prefs_done (void) {
+	g_free(default_icontheme);
+	default_icontheme = NULL;
+
+	g_free (qstat_srcip);
+	qstat_srcip = NULL;
+
+	g_free(sound_player);
+	g_free(sound_xqf_start);
+	g_free(sound_xqf_quit);
+	g_free(sound_update_done);
+	g_free(sound_refresh_done);
+	g_free(sound_stop);
+	g_free(sound_server_connect);
+	g_free(sound_redial_success);
+	sound_player = NULL;
+	sound_xqf_start = NULL;
+	sound_xqf_quit = NULL;
+	sound_update_done = NULL;
+	sound_refresh_done = NULL;
+	sound_stop = NULL;
+	sound_server_connect = NULL;
+	sound_redial_success = NULL;
+
+	g_free(default_q1_name);
+	default_q1_name = NULL;
+
+	g_free(default_qw_name);
+	g_free(default_qw_team);
+	g_free(default_qw_skin);
+	default_qw_name = NULL;
+	default_qw_team = NULL;
+	default_qw_skin = NULL;
+
+	g_free(default_q2_name);
+	g_free(default_q2_skin);
+	default_q2_name = NULL;
+	default_q2_skin = NULL;
+
+	g_free(default_t2_name);
+	default_t2_name = NULL;
 }
 
 static void scan_maps_for(enum server_type type) {

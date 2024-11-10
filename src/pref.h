@@ -138,5 +138,6 @@ extern int init_user_info (void);
 extern void free_user_info (void);
 
 extern int prefs_load (void);
+extern void prefs_done (void);
 
 #endif /* __PREF_H__ */

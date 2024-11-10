@@ -2816,6 +2816,7 @@ int main (int argc, char *argv[]) {
 #endif
 
 	games_done ();
+	prefs_done ();
 
 	debug (6, "EXIT: Done.");
 
