@@ -64,7 +64,7 @@ static void server_filter_fill_widgets (guint num);
 
 static void server_filter_save_settings (int number, struct server_filter_vars* oldfilter, struct server_filter_vars* newfilter);
 
-static void filter_select_callback (GtkWidget *widget, guint number);
+static void filter_select (guint number);
 
 void server_filter_print (struct server_filter_vars* f);
 
@@ -599,7 +599,7 @@ static void server_filter_on_ok() {
 		return;
 	}
 */
-	filter_select_callback(NULL,server_filter_dialog_current_filter);
+	filter_select(server_filter_dialog_current_filter);
 
 /*
 	newfilter = server_filter_vars_new();
@@ -914,7 +914,7 @@ static void server_filter_save_settings (int number,
 }
 
 // store changed widget values
-static void filter_select_callback(GtkWidget *widget, guint number) {
+static void filter_select(guint number) {
 	struct server_filter_vars** filter = NULL;
 	char* name;
 
@@ -925,7 +925,7 @@ static void filter_select_callback(GtkWidget *widget, guint number) {
 				_("Cancel"),
 				_("Your changes will be lost if you change server filters now"));
 		if (!cont) {
-			gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu), server_filter_dialog_current_filter-1);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
 			return FALSE;
 		}
 		*/
@@ -941,13 +941,25 @@ static void filter_select_callback(GtkWidget *widget, guint number) {
 	return;
 }
 
-static GtkWidget *create_filter_menu() {
-	GtkWidget *menu;
-	GtkWidget *menu_item;
+static void filter_select_callback(GtkWidget *widget, gpointer userdata) {
+	gint index = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+
+	if (index < 0) {
+		return;
+	}
+
+	filter_select(index + 1); // array starts from zero but filters from 1
+}
+
+static void set_filter_menu (GtkWidget *option_menu) {
 	guint i;
 	struct server_filter_vars* filter;
 
-	menu = gtk_menu_new();
+#ifdef GUI_GTK3
+	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (option_menu));
+#else
+	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (option_menu))));
+#endif
 
 	for (i = 0;i<server_filters->len;i++) {
 		filter = g_array_index(server_filters, struct server_filter_vars*, i);
@@ -955,16 +967,10 @@ static GtkWidget *create_filter_menu() {
 			debug(0,"Bug: filter is NULL");
 			continue;
 		}
-		menu_item = gtk_menu_item_new_with_label(filter->filter_name?filter->filter_name:"(null)");
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-		gtk_widget_show(menu_item);
 
-		g_signal_connect(menu_item, "activate", G_CALLBACK (filter_select_callback), GINT_TO_POINTER(i+1)); // array starts from zero but filters from 1
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu),
+		                                filter->filter_name ? filter->filter_name : "(null)");
 	}
-
-	gtk_widget_show (menu);
-
-	return menu;
 }
 
 // create new filter if number == 0, rename current filter number if number >0
@@ -980,7 +986,7 @@ static void filter_new_rename_callback (int number) {
 
 	// remember changes
 	if (!number) {
-		filter_select_callback(NULL,server_filter_dialog_current_filter);
+		filter_select(server_filter_dialog_current_filter);
 	}
 
 	str = enter_string_dialog(TRUE,_("Enter filter name"));
@@ -999,9 +1005,9 @@ static void filter_new_rename_callback (int number) {
 			filter->filter_name = str;
 		}
 
-		gtk_option_menu_set_menu(GTK_OPTION_MENU(filter_option_menu), create_filter_menu());
+		set_filter_menu(filter_option_menu);
 
-		gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu), server_filter_dialog_current_filter-1);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
 		server_filter_fill_widgets(server_filter_dialog_current_filter);
 
 		server_filter_changed = TRUE;
@@ -1033,8 +1039,8 @@ static void filter_delete_callback (void* dummy) {
 	server_filter_dialog_current_filter = server_filters->len;
 	debug(3,"number of filters: %d",server_filter_dialog_current_filter);
 
-	gtk_option_menu_set_menu(GTK_OPTION_MENU(filter_option_menu), create_filter_menu());
-	gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu), server_filter_dialog_current_filter-1);
+	set_filter_menu(filter_option_menu);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 
 }
@@ -1212,9 +1218,10 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_box_pack_start (GTK_BOX(page_vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show(hbox);
 
-	filter_option_menu = gtk_option_menu_new();
+	filter_option_menu = gtk_combo_box_text_new();
+	set_filter_menu (filter_option_menu);
+	g_signal_connect(filter_option_menu, "changed", G_CALLBACK (filter_select_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), filter_option_menu, FALSE, FALSE, 0);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (filter_option_menu), create_filter_menu ());
 	gtk_widget_show (filter_option_menu);
 
 	button = gtk_button_new_with_label (_("New"));
@@ -1473,7 +1480,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_widget_show(frame);
 	gtk_widget_show(page_vbox);
 
-	gtk_option_menu_set_history(GTK_OPTION_MENU(filter_option_menu), server_filter_dialog_current_filter-1);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 }
 
