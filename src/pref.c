@@ -3216,7 +3216,7 @@ static GtkWidget *games_config_page (int defgame) {
 
 static void add_pushlatency_options (GtkWidget *vbox) {
 	GtkWidget *hbox;
-	GtkObject *adj;
+	GtkAdjustment *adj;
 	GSList *group = NULL;
 	int i;
 
@@ -3240,7 +3240,7 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pushlatency_mode_radio_buttons[pushlatency_mode]), TRUE);
 
-	adj = gtk_adjustment_new (pushlatency_value, -1000.0, -10.0, 10.0, 50.0, 0.0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (pushlatency_value, -1000.0, -10.0, 10.0, 50.0, 0.0);
 
 	pushlatency_value_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (pushlatency_value_spinner), GTK_UPDATE_ALWAYS);
@@ -3375,7 +3375,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	GtkWidget *hbox2;
 	GtkWidget *label;
 	GtkWidget *frame;
-	GtkObject *adj;
+	GtkAdjustment *adj;
 	GtkWidget *button;
 
 	int pass_memory_options = str2bool(game_get_attribute(Q3_SERVER,"pass_memory_options"));
@@ -3394,7 +3394,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	hbox = gtk_hbox_new (FALSE, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
-	adj = gtk_adjustment_new (com_hunkmegs, 32, 1024, 8, 32, 0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (com_hunkmegs, 32, 1024, 8, 32, 0);
 	com_hunkmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_hunkmegs_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (com_hunkmegs_spinner, 64, -1);
@@ -3416,7 +3416,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	hbox = gtk_hbox_new (FALSE, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
-	adj = gtk_adjustment_new (com_zonemegs, 16, 1024, 4, 8, 0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (com_zonemegs, 16, 1024, 4, 8, 0);
 	com_zonemegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_zonemegs_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (com_zonemegs_spinner, 64, -1);
@@ -3438,7 +3438,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	hbox = gtk_hbox_new (FALSE, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
-	adj = gtk_adjustment_new (com_soundmegs, 8, 1024, 4, 8, 0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (com_soundmegs, 8, 1024, 4, 8, 0);
 	com_soundmegs_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (com_soundmegs_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (com_soundmegs_spinner, 64, -1);
@@ -3597,7 +3597,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	GtkWidget *hbox2;
 	GtkWidget *vbox2;
 	GtkWidget *option_menu;
-	GtkObject *adj;
+	GtkAdjustment *adj;
 
 	debug (5, "qw_q2_options_page(%d)",qworq2);
 
@@ -3639,7 +3639,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	adj = gtk_adjustment_new (qworq2?default_q2_rate:default_qw_rate, 0.0, 25000.0, 500.0, 1000.0, 0.0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (qworq2?default_q2_rate:default_qw_rate, 0.0, 25000.0, 500.0, 1000.0, 0.0);
 
 	rate_spinner[qworq2] = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (rate_spinner[qworq2]), GTK_UPDATE_ALWAYS);
@@ -4059,7 +4059,7 @@ static GtkWidget *qstat_options_page (void) {
 	GtkWidget *frame;
 	GtkWidget *table;
 	GtkWidget *label;
-	GtkObject *adj;
+	GtkAdjustment *adj;
 	GtkWidget* alignment;
 	GtkWidget* hbox;
 	unsigned row = 0;
@@ -4086,7 +4086,7 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_widget_show (label);
 
 
-	adj = gtk_adjustment_new (maxsimultaneous, 1.0, FD_SETSIZE, 1.0, 5.0, 0.0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (maxsimultaneous, 1.0, FD_SETSIZE, 1.0, 5.0, 0.0);
 
 	maxsimultaneous_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (maxsimultaneous_spinner), GTK_UPDATE_ALWAYS);
@@ -4108,7 +4108,7 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
 	gtk_widget_show (label);
 
-	adj = gtk_adjustment_new (maxretries, 1.0, MAX_RETRIES, 1.0, 1.0, 0.0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (maxretries, 1.0, MAX_RETRIES, 1.0, 1.0, 0.0);
 	maxretries_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_widget_set_size_request (maxretries_spinner, 48, -1);
 

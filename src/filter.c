@@ -1168,7 +1168,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GtkWidget *button;
-	GtkObject *adj;
+	GtkAdjustment *adj;
 
 #ifdef USE_GEOIP
 	GtkWidget *vbuttonbox1;
@@ -1268,7 +1268,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 
-	adj = gtk_adjustment_new (MAX_PING, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
+	adj = (GtkAdjustment *) gtk_adjustment_new (MAX_PING, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
 
 	filter_ping_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0, 0);
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (filter_ping_spinner), GTK_UPDATE_ALWAYS);
@@ -1305,7 +1305,7 @@ static void server_filter_page (GtkWidget *notebook) {
 			0, 0);
 	gtk_widget_show(label);
 
-	adj = gtk_adjustment_new(2, 0.0, MAX_RETRIES, 1.0, 1.0, 0.0);
+	adj = (GtkAdjustment *) gtk_adjustment_new(2, 0.0, MAX_RETRIES, 1.0, 1.0, 0.0);
 
 	filter_retries_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0, 0);
 	gtk_widget_set_size_request(filter_retries_spinner, 64, -1);
