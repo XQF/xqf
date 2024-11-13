@@ -197,10 +197,6 @@ struct pixmap* get_pixmap_for_country(int id) {
 		return pix;
 	}
 
-	if (!GDK_PIXBUF_INSTALLED) {
-		return NULL;
-	}
-
 	filename = find_flag_file(id);
 
 	if (!filename || access(filename,R_OK)) {
