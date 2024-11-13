@@ -651,9 +651,9 @@ static void country_notebook_page (GtkWidget *notebook,
 			GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
 			struct pixmap* pix = get_pixmap_for_country_with_fallback(id);
 			if (pix) {
-				GtkWidget *pixmap = gtk_pixmap_new(pix->pix,pix->mask);
-				gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
-				gtk_widget_show (pixmap);
+				GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
+				gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+				gtk_widget_show (image);
 			}
 
 			label = gtk_label_new (geoip_name_by_id(id));

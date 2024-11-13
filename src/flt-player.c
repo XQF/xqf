@@ -619,15 +619,15 @@ static void pattern_clist_row_move_callback (GtkWidget *widget,
 }
 
 
-static GtkWidget *aligned_pixmap (GdkPixmap *pix, GdkBitmap *mask) {
-	GtkWidget *pixmap;
+static GtkWidget *aligned_image (struct pixmap *pix) {
+	GtkWidget *image;
 	GtkWidget *alignment;
 
 	alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
 
-	pixmap = gtk_pixmap_new (pix, mask);
-	gtk_container_add (GTK_CONTAINER (alignment), pixmap);
-	gtk_widget_show (pixmap);
+	image = gtk_image_new_from_pixbuf (pix->pixbuf);
+	gtk_container_add (GTK_CONTAINER (alignment), image);
+	gtk_widget_show (image);
 
 	return alignment;
 }
@@ -743,7 +743,7 @@ void player_filter_page (GtkWidget *notebook) {
 	GtkWidget *vbox;
 	GtkWidget *vbox2;
 	GtkWidget *alignment;
-	GtkWidget *pixmap;
+	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *peditor;
 	char *titles[5] = { "", "", "", _("Mode"), _("Pattern") };
@@ -776,11 +776,11 @@ void player_filter_page (GtkWidget *notebook) {
 	g_signal_connect (pattern_clist, "row_move", G_CALLBACK (pattern_clist_row_move_callback), NULL);
 
 	for (i = 0; i < 3; i++) {
-		pixmap = aligned_pixmap (group_pix[i].pix, group_pix[i].mask);
+		image = aligned_image (&group_pix[i]);
 		gtk_clist_set_column_width (GTK_CLIST (pattern_clist), i,
-				pixmap_width (group_pix[i].pix));
-		gtk_clist_set_column_widget (GTK_CLIST (pattern_clist), i, pixmap);
-		gtk_widget_show (pixmap);
+				pixmap_width (&group_pix[i]));
+		gtk_clist_set_column_widget (GTK_CLIST (pattern_clist), i, image);
+		gtk_widget_show (image);
 
 		gtk_clist_set_column_resizeable (GTK_CLIST (pattern_clist), i, FALSE);
 	}

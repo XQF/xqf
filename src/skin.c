@@ -470,17 +470,16 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
 }
 
 
-GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache) {
-	GdkPixmap *pixmap;
+void qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache, struct pixmap *pix) {
 	unsigned key;
 	int w, h;
 
 	key = (top << 8) + bottom;
 
 	if (cache) {
-		pixmap_cache_lookup (*cache, &pixmap, NULL, key);
-		if (pixmap)
-			return pixmap;
+		if (pixmap_cache_lookup (*cache, pix, key)) {
+			return;
+		}
 	}
 
 	if (!gtk_widget_get_realized (window))
@@ -489,10 +488,7 @@ GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsign
 	h = player_clist->row_height - 2;
 	w = h * 3 / 2;
 
-	pixmap = two_colors_pixmap (gtk_widget_get_window (window), w, h, &pcolors[top],
-			&pcolors[bottom]);
+	two_colors_pixmap (gtk_widget_get_window (window), w, h, &pcolors[top], &pcolors[bottom], pix);
 	if (cache)
-		pixmap_cache_add (cache, pixmap, NULL, key);
-
-	return pixmap;
+		pixmap_cache_add (cache, pix, key);
 }

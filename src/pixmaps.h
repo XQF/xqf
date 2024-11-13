@@ -30,6 +30,7 @@ struct pixmap {
 
 struct cached_pixmap {
 	unsigned key;
+	GdkPixbuf *pixbuf;
 	GdkPixmap *pix;
 	GdkBitmap *mask;
 	int weight;
@@ -69,8 +70,8 @@ extern struct pixmap locked_pix;
 extern struct pixmap punkbuster_pix;
 extern struct pixmap locked_punkbuster_pix;
 
-extern int pixmap_height (GdkPixmap *pixmap);
-extern int pixmap_width (GdkPixmap *pixmap);
+extern int pixmap_height (struct pixmap *pix);
+extern int pixmap_width (struct pixmap *pix);
 
 extern void free_pixmap (struct pixmap *pixmap);
 extern void free_pixmaps (void);
@@ -78,12 +79,12 @@ extern void init_pixmaps (GtkWidget *window);
 
 extern void ensure_buddy_pix (GtkWidget *window, int n);
 
-extern GdkPixmap *two_colors_pixmap (GdkWindow *window, int width, int height, GdkColor *top, GdkColor *bottom);
+extern void two_colors_pixmap (GdkWindow *window, int width, int height, GdkColor *top, GdkColor *bottom, struct pixmap *pix);
 
-extern void create_server_pixmap (GtkWidget *window, struct pixmap *stype, int n, GdkPixmap **pix, GdkBitmap **mask);
+extern void create_server_pixmap (GtkWidget *window, struct pixmap *stype, int n, struct pixmap *pix);
 
-extern void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask, unsigned key);
-extern void pixmap_cache_add (GSList **cache, GdkPixmap *pix, GdkBitmap *mask, unsigned key);
+extern gboolean pixmap_cache_lookup (GSList *cache, struct pixmap *pix, unsigned key);
+extern void pixmap_cache_add (GSList **cache, struct pixmap *pix, unsigned key);
 extern void pixmap_cache_clear (GSList **cache, int maxitems);
 
 /** \brief concatenate two pixmaps
