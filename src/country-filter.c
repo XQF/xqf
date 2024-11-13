@@ -215,7 +215,9 @@ struct pixmap* get_pixmap_for_country(int id) {
 		return NULL;
 	}
 
+#ifdef GUI_GTK2
 	gdk_pixbuf_render_pixmap_and_mask(pix->pixbuf,&pix->pix,&pix->mask,255);
+#endif
 
 	g_free (filename);
 
@@ -236,8 +238,10 @@ struct pixmap* get_pixmap_for_country_with_fallback(int id) {
 		flags[0].pixbuf = gdk_pixbuf_new_from_xpm_data( (const char **)noflag_xpm);
 		if (!flags[0].pixbuf)
 			flags[0].pixbuf = GINT_TO_POINTER(-1);
+#ifdef GUI_GTK2
 		else
 			gdk_pixbuf_render_pixmap_and_mask(flags[0].pixbuf,&flags[0].pix,&flags[0].mask,255);
+#endif
 	}
 	return &flags[0];
 }

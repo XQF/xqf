@@ -21,18 +21,25 @@
 
 #include <gtk/gtk.h>
 
+#ifdef GUI_GTK3
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#endif
 
 struct pixmap {
 	GdkPixbuf *pixbuf;
+#ifdef GUI_GTK2
 	GdkPixmap *pix;
 	GdkBitmap *mask;
+#endif
 };
 
 struct cached_pixmap {
 	unsigned key;
 	GdkPixbuf *pixbuf;
+#ifdef GUI_GTK2
 	GdkPixmap *pix;
 	GdkBitmap *mask;
+#endif
 	int weight;
 };
 

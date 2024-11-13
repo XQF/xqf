@@ -54,8 +54,10 @@ static void get_server_pixmap (GtkWidget *window, struct server *s, GSList **cac
 
 	if (!s || !window || !buddy_pix[1].pixbuf) {
 		pix->pixbuf = NULL;
+#ifdef GUI_GTK2
 		pix->pix = NULL;
 		pix->mask = NULL;
+#endif
 		return;
 	}
 

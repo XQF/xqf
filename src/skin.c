@@ -402,11 +402,15 @@ static gushort convert_color (unsigned c) {
 
 
 void allocate_quake_player_colors (GdkWindow *window) {
+#ifdef GUI_GTK2
 	GdkColormap *colormap;
+#endif
 	int i, j;
 
 	if (!pcolors_allocated) {
+#ifdef GUI_GTK2
 		colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (window));
+#endif
 
 		for (i = 0; i < 14; i++) {
 			j = (i<8)? 11 : 15 - 11;
@@ -414,10 +418,12 @@ void allocate_quake_player_colors (GdkWindow *window) {
 			pcolors[i].red   = convert_color (quake_pallete [(i*16 + j)*3 + 0]);
 			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]);
 			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]);
+#ifdef GUI_GTK2
 			if (!gdk_colormap_alloc_color (colormap, &pcolors[i], FALSE, TRUE)) {
 				g_warning ("unable to allocate color: ( %d %d %d )",
 						pcolors[i].red, pcolors[i].green, pcolors[i].blue);
 			}
+#endif
 		}
 		pcolors_allocated = TRUE;
 	}

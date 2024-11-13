@@ -165,11 +165,15 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 		debug(4, "loading gdk_pixbuf from file: %s", found_filename);
 	}
 
+#ifdef GUI_GTK2
 	if (pix->pixbuf) {
 		gdk_pixbuf_render_pixmap_and_mask (pix->pixbuf, &pix->pix, &pix->mask, 255);
 	}
 
 	if (pix->pixbuf == NULL || pix->pix == NULL) {
+#else
+	if (pix->pixbuf == NULL) {
+#endif
 		// translator: %s = file name
 		xqf_warning (_("Error loading pixmap file: %s"), found_filename?found_filename:filename);
 		g_free (found_filename);
