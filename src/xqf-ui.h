@@ -99,7 +99,7 @@ extern void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m
 extern GtkWidget *create_source_ctree (GtkWidget *scrollwin);
 extern void source_ctree_select_source (struct master *m);
 
-extern int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap);
+extern int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix);
 
 extern void set_toolbar_appearance (GtkToolbar *toolbar);
 

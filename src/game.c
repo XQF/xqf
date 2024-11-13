@@ -285,14 +285,14 @@ const char *type2id (enum server_type type) {
 GtkWidget *game_pixmap_with_label (enum server_type type) {
 	GtkWidget *hbox;
 	GtkWidget *label;
-	GtkWidget *pixmap;
+	GtkWidget *image;
 
 	hbox = gtk_hbox_new (FALSE, 4);
 
 	if (games[type].pix) {
-		pixmap = gtk_pixmap_new (games[type].pix->pix, games[type].pix->mask);
-		gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
-		gtk_widget_show (pixmap);
+		image = gtk_image_new_from_pixbuf (games[type].pix->pixbuf);
+		gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+		gtk_widget_show (image);
 	}
 
 	label = gtk_label_new (_(games[type].name));

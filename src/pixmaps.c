@@ -103,26 +103,13 @@ struct pixmap locked_pix;
 struct pixmap punkbuster_pix;
 struct pixmap locked_punkbuster_pix;
 
-
-int pixmap_height (GdkPixmap *pixmap) {
-	int height, width;
-
-	if (!pixmap)
-		return 0;
-
-	gdk_window_get_size (pixmap, &width, &height);
-	return height;
+int pixmap_height (struct pixmap *pix) {
+	return gdk_pixbuf_get_height (pix->pixbuf);
 }
 
 
-int pixmap_width (GdkPixmap *pixmap) {
-	int height, width;
-
-	if (!pixmap)
-		return 0;
-
-	gdk_window_get_size (pixmap, &width, &height);
-	return width;
+int pixmap_width (struct pixmap *pix) {
+	return gdk_pixbuf_get_width (pix->pixbuf);
 }
 
 
@@ -342,63 +329,48 @@ static guint GdkColorToColor32 (GdkColor *color) {
 	return ( r << 24 ) | ( g << 16 ) | ( b << 8 ) | a;
 }
 
-GdkPixmap *two_colors_pixmap (GdkWindow *window, int width, int height,
-		GdkColor *top, GdkColor *bottom) {
-	struct pixmap dest;
+void two_colors_pixmap (GdkWindow *window, int width, int height, GdkColor *top, GdkColor *bottom, struct pixmap *dest) {
 	GdkPixbuf *half_pixbuf;
 	guint color32;
 
-	dest.pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height);
+	dest->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height);
 	half_pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height/2);
 
 	color32 = GdkColorToColor32 (top);
 	gdk_pixbuf_fill (half_pixbuf, color32);
-	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest.pixbuf, 0, 0);
+	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest->pixbuf, 0, 0);
 
 	color32 = GdkColorToColor32 (bottom);
 	gdk_pixbuf_fill (half_pixbuf, color32);
-	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest.pixbuf, 0, height/2);
+	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest->pixbuf, 0, height/2);
 
 	g_object_unref (G_OBJECT (half_pixbuf));
 
-	gdk_pixbuf_render_pixmap_and_mask (dest.pixbuf, &dest.pix, &dest.mask, 255);
-
-	g_object_unref (G_OBJECT (dest.pixbuf));
-	gdk_bitmap_unref (G_OBJECT (dest.mask));
-
-	return dest.pix;
+	gdk_pixbuf_render_pixmap_and_mask (dest->pixbuf, &dest->pix, &dest->mask, 255);
 }
 
 
-void create_server_pixmap (GtkWidget *window, struct pixmap *stype,
-		int n, GdkPixmap **pix, GdkBitmap **mask) {
-	struct pixmap dest;
-
+void create_server_pixmap (GtkWidget *window, struct pixmap *stype, int n, struct pixmap *dest) {
 	ensure_buddy_pix (window, n);
 
-	cat_pixmaps (window, &dest, &buddy_pix[n], stype);
-
-	g_object_unref (G_OBJECT (dest.pixbuf));
-	dest.pixbuf = NULL;
-
-	*pix = dest.pix;
-	*mask = dest.mask;
+	cat_pixmaps (window, dest, &buddy_pix[n], stype);
 }
 
 
-void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask,
-		unsigned key) {
+gboolean pixmap_cache_lookup (GSList *cache, struct pixmap *pix, unsigned key) {
 	struct cached_pixmap *cp;
+	GdkPixbuf *res_pixbuf = NULL;
 	GdkPixmap *res_pix = NULL;
 	GdkBitmap *res_mask = NULL;
 
 	if (!pix)
-		return;
+		return FALSE;
 
 	while (cache) {
 		cp = (struct cached_pixmap *) cache->data;
 		if (cp->key == key) {
 			cp->weight += 2;
+			res_pixbuf = cp->pixbuf;
 			res_pix = cp->pix;
 			res_mask = cp->mask;
 			break;
@@ -406,32 +378,37 @@ void pixmap_cache_lookup (GSList *cache, GdkPixmap **pix, GdkBitmap **mask,
 		cache = cache->next;
 	}
 
-	*pix = res_pix;
+	pix->pixbuf = res_pixbuf;
+	if (res_pixbuf)
+		g_object_ref (G_OBJECT (res_pixbuf));
+
+	pix->pix = res_pix;
 	if (res_pix)
 		gdk_pixmap_ref (res_pix);
 
-	if (mask) {
-		*mask = res_mask;
-		if (res_mask)
-			gdk_bitmap_ref (res_mask);
-	}
+	pix->mask = res_mask;
+	if (res_mask)
+		gdk_bitmap_ref (res_mask);
+
+	return (pix->pixbuf != NULL);
 }
 
 
-void pixmap_cache_add (GSList **cache, GdkPixmap *pix, GdkBitmap *mask,
-		unsigned key) {
+void pixmap_cache_add (GSList **cache, struct pixmap *pix, unsigned key) {
 	struct cached_pixmap *cp;
 
 	if (pix && cache) {
 		cp = g_malloc0 (sizeof (struct cached_pixmap));
 
-		cp->pix = pix;
-		gdk_pixmap_ref (pix);
+		cp->pixbuf = pix->pixbuf;
+		g_object_ref (G_OBJECT (cp->pixbuf));
 
-		if (mask) {
-			cp->mask = mask;
-			gdk_bitmap_ref (mask);
-		}
+		cp->pix = pix->pix;
+		gdk_pixmap_ref (cp->pix);
+
+		cp->mask = pix->mask;
+		if (cp->mask)
+			gdk_bitmap_ref (cp->mask);
 
 		cp->key = key;
 		cp->weight = 10;
@@ -449,6 +426,7 @@ static int cached_pixmap_cmp (const struct cached_pixmap *a,
 
 static void free_cached_pixmap (struct cached_pixmap *cp) {
 
+	g_object_unref (G_OBJECT (cp->pixbuf));
 	gdk_pixmap_unref (cp->pix);
 
 	if (cp->mask)

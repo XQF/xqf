@@ -577,11 +577,11 @@ void source_ctree_select_source (struct master *m) {
 }
 
 
-int calculate_clist_row_height (GtkWidget *clist, GdkPixmap *pixmap) {
-	int pix_h, pix_w;
+int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix) {
+	int pix_h;
 	int height;
 
-	gdk_window_get_size (pixmap, &pix_w, &pix_h);
+	pix_h = pixmap_height (pix);
 
 	height=pix_h+1;
 

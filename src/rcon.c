@@ -510,7 +510,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	GtkWidget *hbox;
 	GtkWidget *hbox2;
 	GtkWidget *label;
-	GtkWidget *pixmap;
+	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *vscrollbar;
 	GtkWidget *hseparator;
@@ -559,10 +559,9 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
 
 	if (games[s->type].pix) {
-		pixmap = gtk_pixmap_new (games[s->type].pix->pix,
-				games[s->type].pix->mask);
-		gtk_box_pack_start (GTK_BOX (hbox2), pixmap, FALSE, FALSE, 0);
-		gtk_widget_show (pixmap);
+		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
+		gtk_box_pack_start (GTK_BOX (hbox2), image, FALSE, FALSE, 0);
+		gtk_widget_show (image);
 	}
 
 	label = gtk_label_new (buf);

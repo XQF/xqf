@@ -49,28 +49,27 @@ GSList *server_pixmap_cache = NULL;
 static int sync_selection_blocked = FALSE;
 
 
-static void get_server_pixmap (GtkWidget *window, struct server *s,
-		GSList **cache, GdkPixmap **pix, GdkBitmap **mask) {
+static void get_server_pixmap (GtkWidget *window, struct server *s, GSList **cache, struct pixmap *pix) {
 	unsigned key;
 
-	if (!s || !window || !buddy_pix[1].pix) {
-		*pix = NULL;
-		*mask = NULL;
+	if (!s || !window || !buddy_pix[1].pixbuf) {
+		pix->pixbuf = NULL;
+		pix->pix = NULL;
+		pix->mask = NULL;
 		return;
 	}
 
 	key = ((s->flags & PLAYER_GROUP_MASK) << 8) + s->type;
 
 	if (cache) {
-		pixmap_cache_lookup (*cache, pix, mask, key);
-		if (*pix)
+		if (pixmap_cache_lookup (*cache, pix, key)) {
 			return;
+		}
 	}
 
-	create_server_pixmap (window, games[s->type].pix,
-			s->flags & PLAYER_GROUP_MASK, pix, mask);
+	create_server_pixmap (window, games[s->type].pix, s->flags & PLAYER_GROUP_MASK, pix);
 	if (cache)
-		pixmap_cache_add (cache, *pix, *mask, key);
+		pixmap_cache_add (cache, pix, key);
 }
 
 enum pixmap2flags
@@ -111,8 +110,7 @@ void assemble_server_address (char *buf, int size, const struct server *s) {
 
 
 static int server_clist_refresh_row (struct server *s, int row) {
-	GdkPixmap *server_pixmap;
-	GdkBitmap *server_pixmask;
+	struct pixmap serverpix;
 	char *text[9];
 #ifdef USE_GEOIP
 	struct pixmap* countrypix = NULL;
@@ -239,10 +237,9 @@ static int server_clist_refresh_row (struct server *s, int row) {
 			gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask);
 	}
 
-	get_server_pixmap (main_window, s, &server_pixmap_cache, &server_pixmap,
-			&server_pixmask);
+	get_server_pixmap (main_window, s, &server_pixmap_cache, &serverpix);
 	gtk_clist_set_pixtext (server_clist, row, 0,
-			(s->name)? s->name : "", 2, server_pixmap, server_pixmask);
+			(s->name)? s->name : "", 2, serverpix.pix, serverpix.mask);
 
 #ifdef USE_GEOIP
 	countrypix = get_pixmap_for_country_with_fallback(s->country_id);
@@ -265,8 +262,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 		}
 	}
 
-	gdk_pixmap_unref (server_pixmap);
-	gdk_bitmap_unref (server_pixmask);
+	free_pixmap (&serverpix);
 
 	return row;
 }
@@ -274,7 +270,7 @@ static int server_clist_refresh_row (struct server *s, int row) {
 
 static int player_clist_refresh_row (struct server *s, struct player *p,
 		int row) {
-	GdkPixmap *qw_colors_pixmap = NULL;
+	struct pixmap qw_colors_pixmap;
 	char *text[6];
 	char buf1[32], buf2[32], buf3[32], buf4[32];
 	char skin_buf[128];
@@ -322,19 +318,19 @@ static int player_clist_refresh_row (struct server *s, struct player *p,
 	}
 
 	if ((games[s->type].flags & GAME_QUAKE1_PLAYER_COLORS) != 0) {
-		qw_colors_pixmap = qw_colors_pixmap_create (main_window,
-				p->shirt, p->pants, &qw_colors_pixmap_cache);
+		qw_colors_pixmap_create (main_window, p->shirt, p->pants, &qw_colors_pixmap_cache, &qw_colors_pixmap);
 
 		g_snprintf (buf2, 32, "%d:%d", p->shirt, p->pants);
 		gtk_clist_set_pixtext (player_clist, row, 2, buf2, 2,
-				qw_colors_pixmap, NULL);
-		gdk_pixmap_unref (qw_colors_pixmap);
+				qw_colors_pixmap.pix, qw_colors_pixmap.mask);
+
+		free_pixmap (&qw_colors_pixmap);
 	}
 
 	if ((p->flags & PLAYER_GROUP_MASK) == 0) {
 		gtk_clist_set_text (player_clist, row, 0, (p->name)? p->name : "");
 		gtk_clist_set_shift (player_clist, row, 0, 0,
-				pixmap_width (buddy_pix[1].pix) + 2);
+				pixmap_width (&buddy_pix[1]) + 2);
 	}
 	else {
 		ensure_buddy_pix (main_window, p->flags & PLAYER_GROUP_MASK);

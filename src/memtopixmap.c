@@ -75,7 +75,7 @@ GdkPixbuf* renderMemToPixbuf(const guchar* mem, size_t len) {
 	return pixbuf;
 }
 
-void renderMemToGtkPixmap(const guchar* mem, size_t len, GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, gushort overBrightBits) {
+void renderMemToGtkPixbuf(const guchar* mem, size_t len, GdkPixbuf **pix, guint* width, guint* height, gushort overBrightBits) {
 	GdkPixbuf* pixbuf = renderMemToPixbuf(mem, len);
 
 	if (pixbuf) {
@@ -109,9 +109,8 @@ void renderMemToGtkPixmap(const guchar* mem, size_t len, GdkPixmap **pix, GdkBit
 			}
 		}
 
-		gdk_pixbuf_render_pixmap_and_mask(pixbuf, pix, mask, 0);
+		*pix = pixbuf;
 
-		g_object_unref(pixbuf);
 		g_object_unref(pixbuf_tmp);
 	}
 	else {

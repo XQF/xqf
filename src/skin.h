@@ -41,7 +41,7 @@ extern void set_bg_color (GtkWidget *widget, int color);
 
 extern GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int));
 
-extern GdkPixmap *qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache);
+extern void qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache, struct pixmap *pix);
 
 
 #endif /* __SKIN_H__ */

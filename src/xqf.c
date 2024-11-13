@@ -1732,22 +1732,19 @@ int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
 }
 
 GtkWidget *server_mapshot_popup = NULL;
-GtkWidget *server_mapshot_popup_pixmap = NULL;
+GtkWidget *server_mapshot_popup_image = NULL;
 
 void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y, gushort overBrightBits) {
 	GtkWidget *frame;
 	int win_x, win_y, scr_w, scr_h;
 	guint w = 0, h = 0;
-	GdkPixmap *pix = NULL;
-	GdkBitmap *mask = NULL;
+	GdkPixbuf *pixbuf = NULL;
 
-	renderMemToGtkPixmap (imagedata, len, &pix, &mask, &w, &h, overBrightBits);
+	renderMemToGtkPixbuf (imagedata, len, &pixbuf, &w, &h, overBrightBits);
 
-	if (!pix || !w || !h) {
-		if (pix) gdk_pixmap_unref (pix);
-		if (mask) gdk_bitmap_unref (mask);
-		pix=stop_pix.pix;
-		mask=stop_pix.mask;
+	if (!pixbuf || !w || !h) {
+		if (pixbuf) g_object_unref (G_OBJECT (pixbuf));
+		pixbuf=stop_pix.pixbuf;
 	}
 
 	if (!server_mapshot_popup) {
@@ -1759,13 +1756,13 @@ void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, in
 		gtk_container_add (GTK_CONTAINER (server_mapshot_popup), frame);
 		gtk_widget_show (frame);
 
-		server_mapshot_popup_pixmap = gtk_pixmap_new (pix, mask);
-		gtk_container_add (GTK_CONTAINER (frame), server_mapshot_popup_pixmap);
-		gtk_widget_show (server_mapshot_popup_pixmap);
+		server_mapshot_popup_image = gtk_image_new_from_pixbuf (pixbuf);
+		gtk_container_add (GTK_CONTAINER (frame), server_mapshot_popup_image);
+		gtk_widget_show (server_mapshot_popup_image);
 	}
 	else {
 		gtk_widget_hide (server_mapshot_popup);
-		gtk_pixmap_set (GTK_PIXMAP (server_mapshot_popup_pixmap), pix, mask);
+		gtk_image_set_from_pixbuf (GTK_IMAGE (server_mapshot_popup_image), pixbuf);
 	}
 
 	gdk_window_get_origin (server_clist->clist_window, &win_x, &win_y);
@@ -2269,7 +2266,7 @@ void populate_main_window (void) {
 	GtkWidget *hbox;
 	GtkWidget *entry;
 	GtkWidget *button;
-	GtkWidget *pixmap;
+	GtkWidget *image;
 	GtkAccelGroup *accel_group;
 	int i;
 
@@ -2327,8 +2324,8 @@ void populate_main_window (void) {
 	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox"));
 
 	button = GTK_WIDGET (gtk_builder_get_object (builder, "button"));
-	pixmap = gtk_pixmap_new (delete_pix.pix, delete_pix.mask);
-	gtk_container_add (GTK_CONTAINER (button), pixmap);
+	image = gtk_image_new_from_pixbuf (delete_pix.pixbuf);
+	gtk_container_add (GTK_CONTAINER (button), image);
 	gtk_widget_show_all (button);
 
 	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
@@ -2373,7 +2370,7 @@ void populate_main_window (void) {
 	gtk_widget_show (GTK_WIDGET (srvinf_ctree));
 
 	gtk_widget_ensure_style (GTK_WIDGET (server_clist));
-	i = calculate_clist_row_height (GTK_WIDGET (server_clist), games[Q1_SERVER].pix->pix);
+	i = calculate_clist_row_height (GTK_WIDGET (server_clist), games[Q1_SERVER].pix);
 	gtk_clist_set_row_height (server_clist, i);
 	gtk_clist_set_row_height (player_clist, i);
 	gtk_clist_set_row_height (GTK_CLIST (srvinf_ctree), i);

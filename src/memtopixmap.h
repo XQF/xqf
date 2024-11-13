@@ -20,6 +20,6 @@
 #ifndef _MEMTOPIXMAP_H_
 #define _MEMTOPIXMAP_H_
 
-void renderMemToGtkPixmap(const guchar* mem, size_t len, GdkPixmap **pix, GdkBitmap **mask, guint* width, guint* height, gushort overBrightBits);
+void renderMemToGtkPixbuf(const guchar* mem, size_t len, GdkPixbuf **pix, guint* width, guint* height, gushort overBrightBits);
 
 #endif

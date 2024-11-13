@@ -465,9 +465,9 @@ static GtkWidget *server_info_page (struct server *s) {
 		GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
 		struct pixmap* pix = get_pixmap_for_country(s->country_id);
 		if (pix) {
-			GtkWidget *pixmap = gtk_pixmap_new(pix->pix,pix->mask);
-			gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
-			gtk_widget_show (pixmap);
+			GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
+			gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+			gtk_widget_show (image);
 		}
 
 		label = gtk_label_new (geoip_name_by_id(s->country_id));
@@ -754,7 +754,7 @@ void properties_dialog (struct server *s) {
 	GtkWidget *notebook;
 	GtkWidget *page;
 	GtkWidget *button;
-	GtkWidget *pixmap;
+	GtkWidget *image;
 	GtkWidget *label;
 	char buf[256];
 
@@ -775,10 +775,9 @@ void properties_dialog (struct server *s) {
 	gtk_box_pack_start (GTK_BOX (hbox), hbox2, TRUE, FALSE, 0);
 
 	if (games[s->type].pix) {
-		pixmap = gtk_pixmap_new (games[s->type].pix->pix,
-				games[s->type].pix->mask);
-		gtk_box_pack_start (GTK_BOX (hbox2), pixmap, FALSE, FALSE, 0);
-		gtk_widget_show (pixmap);
+		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
+		gtk_box_pack_start (GTK_BOX (hbox2), image, FALSE, FALSE, 0);
+		gtk_widget_show (image);
 	}
 
 	if (s->name) {
