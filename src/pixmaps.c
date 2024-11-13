@@ -103,10 +103,6 @@ struct pixmap locked_pix;
 struct pixmap punkbuster_pix;
 struct pixmap locked_punkbuster_pix;
 
-static GdkGC *pixmaps_gc;
-static GdkGC *masks_gc;
-static GdkColor mask_pattern;
-
 
 int pixmap_height (GdkPixmap *pixmap) {
 	int height, width;
@@ -134,6 +130,10 @@ void free_pixmap (struct pixmap *pixmap) {
 	if (!pixmap)
 		return;
 
+	if (pixmap->pixbuf) {
+		g_object_unref (G_OBJECT (pixmap->pixbuf));
+		pixmap->pixbuf = NULL;
+	}
 	if (pixmap->pix) {
 		gdk_pixmap_unref (pixmap->pix);
 		pixmap->pix = NULL;
@@ -148,9 +148,11 @@ void free_pixmap (struct pixmap *pixmap) {
 static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *pix) {
 	load_pixmap_as_pixmap(widget, file, pix);
 
-	if (!pix->pix) {
+	if (!pix->pixbuf) {
+		pix->pixbuf = error_pix.pixbuf;
 		pix->pix = error_pix.pix;
 		pix->mask = error_pix.mask;
+		g_object_ref (G_OBJECT (pix->pixbuf));
 		gdk_pixmap_ref(pix->pix);
 		gdk_bitmap_ref(pix->mask);
 	}
@@ -202,16 +204,6 @@ void free_pixmaps (void) {
 		g_free(games[i].pix);
 		games[i].pix = NULL;
 	}
-
-	if (pixmaps_gc) {
-		gdk_gc_destroy (pixmaps_gc);
-		pixmaps_gc = NULL;
-	}
-
-	if (masks_gc) {
-		gdk_gc_destroy (masks_gc);
-		masks_gc = NULL;
-	}
 }
 
 /** \brief concatenate two pixmaps
@@ -224,44 +216,22 @@ void free_pixmaps (void) {
  * @returns dest for convenience
  */
 struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixmap* s1, struct pixmap* s2) {
-	GdkGC *white_gc;
 	int h1, w1, h2, w2;
+	gboolean has_alpha;
 
-	if (!gtk_widget_get_realized (window))
-		gtk_widget_realize (window);
+	w1 = gdk_pixbuf_get_width (s1->pixbuf);
+	h1 = gdk_pixbuf_get_height (s1->pixbuf);
+	w2 = gdk_pixbuf_get_width (s2->pixbuf);
+	h2 = gdk_pixbuf_get_height (s2->pixbuf);
 
-	gdk_window_get_size (s1->pix, &w1, &h1);
-	gdk_window_get_size (s2->pix, &w2, &h2);
+	has_alpha = gdk_pixbuf_get_has_alpha (s1->pixbuf) || gdk_pixbuf_get_has_alpha (s2->pixbuf);
 
-	dest->pix  = gdk_pixmap_new (gtk_widget_get_window (window), w1 + w2, MAX (h1, h2), -1);
-	dest->mask = gdk_pixmap_new (gtk_widget_get_window (window), w1 + w2, MAX (h1, h2), 1);
+	dest->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, has_alpha, 8, w1 + w2, MAX (h1, h2));
 
-	white_gc = gtk_widget_get_style (window)->base_gc[GTK_STATE_NORMAL];
+	gdk_pixbuf_copy_area (s1->pixbuf, 0, 0, w1, h1, dest->pixbuf, 0, 0);
+	gdk_pixbuf_copy_area (s2->pixbuf, 0, 0, w2, h2, dest->pixbuf, w1, 0);
 
-	if (!masks_gc) {
-		masks_gc = gdk_gc_new (dest->mask);
-		gdk_gc_set_exposures (masks_gc, FALSE);
-	}
-
-	mask_pattern.pixel = 0;
-	gdk_gc_set_foreground (masks_gc, &mask_pattern);
-	gdk_draw_rectangle (dest->mask, masks_gc, TRUE, 0, 0, -1, -1);
-
-	mask_pattern.pixel = 1;
-	gdk_gc_set_foreground (masks_gc, &mask_pattern);
-
-	gdk_gc_set_clip_origin (white_gc, 0, 0);
-	gdk_gc_set_clip_mask (white_gc, s1->mask);
-	gdk_draw_pixmap (dest->pix, white_gc, s1->pix, 0, 0, 0, 0, w1, h1);
-	gdk_draw_pixmap (dest->mask, masks_gc, s1->mask, 0, 0, 0, 0, w1, h1);
-
-	gdk_gc_set_clip_origin (white_gc, w1, 0);
-	gdk_gc_set_clip_mask (white_gc, s2->mask);
-	gdk_draw_pixmap (dest->pix, white_gc, s2->pix, 0, 0, w1, 0, w2, h2);
-	gdk_draw_pixmap (dest->mask, masks_gc, s2->mask, 0, 0, w1, 0, w2, h2);
-
-	gdk_gc_set_clip_origin (white_gc, 0, 0);
-	gdk_gc_set_clip_mask (white_gc, NULL);
+	gdk_pixbuf_render_pixmap_and_mask (dest->pixbuf, &dest->pix, &dest->mask, 255);
 
 	return dest;
 }
@@ -333,122 +303,86 @@ void init_pixmaps (GtkWidget *window) {
 
 void ensure_buddy_pix (GtkWidget *window, int n) {
 	int width, height;
-	GdkGC *white_gc;
-	int pri;
-	int sec;
+	struct pixmap *dest;
 
-	if (!buddy_pix[1].pix)  /* not initialized */
+	if (!buddy_pix[1].pixbuf)  /* not initialized */
 		return;
 
-	if (n < 0 || n > 9 || buddy_pix[n].pix)
+	if (n < 0 || n > 9 || buddy_pix[n].pixbuf)
 		return;
 
-	sec = ((n & 0x04) != 0)? 0x04 : 0x02;
-	pri = n & ~sec;
+	width = gdk_pixbuf_get_width (buddy_pix[1].pixbuf);
+	height = gdk_pixbuf_get_height (buddy_pix[1].pixbuf);
 
-	ensure_buddy_pix (window, pri);
+	dest = &buddy_pix[n];
+	dest->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
 
-	if (!pri || !sec)
-		return;
-
-	if (!gtk_widget_get_realized (window))
-		gtk_widget_realize (window);
-
-	gdk_window_get_size (buddy_pix[1].pix, &width, &height);
-
-	buddy_pix[n].pix = gdk_pixmap_new (gtk_widget_get_window (window), width, height, -1);
-	buddy_pix[n].mask = gdk_pixmap_new (gtk_widget_get_window (window), width, height, 1);
-
-	white_gc = gtk_widget_get_style (window)->white_gc;
-
-	if (!masks_gc) {
-		masks_gc = gdk_gc_new (buddy_pix[n].mask);
-		gdk_gc_set_exposures (masks_gc, FALSE);
+	if (n & 1) {
+		gdk_pixbuf_composite (buddy_pix[1].pixbuf, dest->pixbuf, 0, 0, width, height, 0, 0, 1.0, 1.0, GDK_INTERP_NEAREST, 255);
 	}
 
-	gdk_gc_set_foreground (masks_gc, &gtk_widget_get_style (window)->white);
+	if (n & 2) {
+		gdk_pixbuf_composite (buddy_pix[2].pixbuf, dest->pixbuf, 0, 0, width, height, 0, 0, 1.0, 1.0, GDK_INTERP_NEAREST, 255);
+	}
 
-	gdk_draw_pixmap (buddy_pix[n].pix, white_gc, buddy_pix[pri].pix,
-			0, 0, 0, 0, width, height);
-	gdk_draw_pixmap (buddy_pix[n].mask, masks_gc, buddy_pix[pri].mask,
-			0, 0, 0, 0, width, height);
+	if (n & 4) {
+		gdk_pixbuf_composite (buddy_pix[4].pixbuf, dest->pixbuf, 0, 0, width, height, 0, 0, 1.0, 1.0, GDK_INTERP_NEAREST, 255);
+	}
 
-	gdk_gc_set_clip_mask (white_gc, buddy_pix[sec].mask);
-	gdk_draw_pixmap (buddy_pix[n].pix, white_gc, buddy_pix[sec].pix,
-			0, 0, 0, 0, width, height);
-	gdk_gc_set_clip_mask (white_gc, NULL);
-
-	gdk_gc_set_clip_mask (masks_gc, buddy_pix[sec].mask);
-	gdk_draw_rectangle (buddy_pix[n].mask, masks_gc, TRUE, 0, 0, width, height);
-	gdk_gc_set_clip_mask (masks_gc, NULL);
+	gdk_pixbuf_render_pixmap_and_mask (dest->pixbuf, &dest->pix, &dest->mask, 255);
 }
 
 
+static guint GdkColorToColor32 (GdkColor *color) {
+	guint r = color->red >> 8;
+	guint g = color->green >> 8;
+	guint b = color->blue >> 8;
+	guint a = 255;
+
+	return ( r << 24 ) | ( g << 16 ) | ( b << 8 ) | a;
+}
+
 GdkPixmap *two_colors_pixmap (GdkWindow *window, int width, int height,
 		GdkColor *top, GdkColor *bottom) {
-	GdkPixmap *pixmap;
+	struct pixmap dest;
+	GdkPixbuf *half_pixbuf;
+	guint color32;
 
-	pixmap = gdk_pixmap_new (window, width, height, -1);
+	dest.pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height);
+	half_pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height/2);
 
-	if (!pixmaps_gc)
-		pixmaps_gc = gdk_gc_new (window);
+	color32 = GdkColorToColor32 (top);
+	gdk_pixbuf_fill (half_pixbuf, color32);
+	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest.pixbuf, 0, 0);
 
-	gdk_gc_set_foreground (pixmaps_gc, top);
-	gdk_draw_rectangle (pixmap, pixmaps_gc, TRUE, 0, 0, width, height/2);
+	color32 = GdkColorToColor32 (bottom);
+	gdk_pixbuf_fill (half_pixbuf, color32);
+	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest.pixbuf, 0, height/2);
 
-	gdk_gc_set_foreground (pixmaps_gc, bottom);
-	gdk_draw_rectangle (pixmap, pixmaps_gc, TRUE, 0, height/2, width,
-			height - height/2);
-	return pixmap;
+	g_object_unref (G_OBJECT (half_pixbuf));
+
+	gdk_pixbuf_render_pixmap_and_mask (dest.pixbuf, &dest.pix, &dest.mask, 255);
+
+	g_object_unref (G_OBJECT (dest.pixbuf));
+	gdk_bitmap_unref (G_OBJECT (dest.mask));
+
+	return dest.pix;
 }
 
 
 void create_server_pixmap (GtkWidget *window, struct pixmap *stype,
 		int n, GdkPixmap **pix, GdkBitmap **mask) {
-	GdkGC *white_gc;
-	int hb, wb, hs, ws;
+	struct pixmap dest;
 
-	if (!gtk_widget_get_realized (window))
-		gtk_widget_realize (window);
+	ensure_buddy_pix (window, n);
 
-	gdk_window_get_size (buddy_pix[1].pix, &wb, &hb);
-	gdk_window_get_size (stype->pix, &ws, &hs);
+	cat_pixmaps (window, &dest, &buddy_pix[n], stype);
 
-	*pix  = gdk_pixmap_new (gtk_widget_get_window (window), wb + ws, MAX (hs, hb), -1);
-	*mask = gdk_pixmap_new (gtk_widget_get_window (window), wb + ws, MAX (hs, hb), 1);
+	g_object_unref (G_OBJECT (dest.pixbuf));
+	dest.pixbuf = NULL;
 
-	white_gc = gtk_widget_get_style (window)->base_gc[GTK_STATE_NORMAL];
-
-	if (!masks_gc) {
-		masks_gc = gdk_gc_new (*mask);
-		gdk_gc_set_exposures (masks_gc, FALSE);
-	}
-
-	mask_pattern.pixel = 0;
-	gdk_gc_set_foreground (masks_gc, &mask_pattern);
-	gdk_draw_rectangle (*mask, masks_gc, TRUE, 0, 0, -1, -1);
-
-	mask_pattern.pixel = 1;
-	gdk_gc_set_foreground (masks_gc, &mask_pattern);
-
-	if (n) {
-		ensure_buddy_pix (window, n);
-
-		gdk_gc_set_clip_origin (white_gc, 0, 0);
-		gdk_gc_set_clip_mask (white_gc, buddy_pix[n].mask);
-		gdk_draw_pixmap (*pix, white_gc, buddy_pix[n].pix, 0, 0, 0, 0, wb, hb);
-
-		gdk_draw_pixmap (*mask, masks_gc, buddy_pix[n].mask, 0, 0, 0, 0, wb, hb);
-	}
-
-	gdk_gc_set_clip_origin (white_gc, wb, 0);
-	gdk_gc_set_clip_mask (white_gc, stype->mask);
-	gdk_draw_pixmap (*pix, white_gc, stype->pix, 0, 0, wb, 0, ws, hs);
-
-	gdk_draw_pixmap (*mask, masks_gc, stype->mask, 0, 0, wb, 0, ws, hs);
-
-	gdk_gc_set_clip_origin (white_gc, 0, 0);
-	gdk_gc_set_clip_mask (white_gc, NULL);
+	*pix = dest.pix;
+	*mask = dest.mask;
 }
 
 

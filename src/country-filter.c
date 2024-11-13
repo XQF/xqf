@@ -177,7 +177,6 @@ static char* find_flag_file(int id) {
 }
 
 struct pixmap* get_pixmap_for_country(int id) {
-	GdkPixbuf* pixbuf = NULL;
 	struct pixmap* pix = NULL;
 
 	char* filename = NULL;
@@ -191,10 +190,10 @@ struct pixmap* get_pixmap_for_country(int id) {
 
 	pix = &flags[id];
 
-	if (pix->pix == GINT_TO_POINTER(-1)) {
+	if (pix->pixbuf == GINT_TO_POINTER(-1)) {
 		return NULL;
 	}
-	if (pix->pix) {
+	if (pix->pixbuf) {
 		return pix;
 	}
 
@@ -211,18 +210,17 @@ struct pixmap* get_pixmap_for_country(int id) {
 
 	debug(4, "loading gdk_pixbuf from file: %s", filename);
 
-	pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+	pix->pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
-	if (pixbuf == NULL) {
-		pix->pix=GINT_TO_POINTER(-1);
+	if (pix->pixbuf == NULL) {
+		pix->pixbuf=GINT_TO_POINTER(-1);
 		g_warning (_("Error loading pixmap file: %s"), filename);
 		g_free (filename);
 		return NULL;
 	}
 
-	gdk_pixbuf_render_pixmap_and_mask(pixbuf,&pix->pix,&pix->mask,255);
+	gdk_pixbuf_render_pixmap_and_mask(pix->pixbuf,&pix->pix,&pix->mask,255);
 
-	g_object_unref(pixbuf);
 	g_free (filename);
 
 	return pix;
@@ -234,18 +232,16 @@ struct pixmap* get_pixmap_for_country_with_fallback(int id) {
 		return pix;
 	}
 
-	if (!flags || flags[0].pix == GINT_TO_POINTER(-1)) {
+	if (!flags || flags[0].pixbuf == GINT_TO_POINTER(-1)) {
 		return NULL;
 	}
 
-	if (!flags[0].pix) {
-		flags[0].pix = gdk_pixmap_colormap_create_from_xpm_d(NULL,
-				gdk_colormap_get_system(),
-				&flags[0].mask,
-				NULL,
-				noflag_xpm);
-		if (!flags[0].pix)
-			flags[0].pix = GINT_TO_POINTER(-1);
+	if (!flags[0].pixbuf) {
+		flags[0].pixbuf = gdk_pixbuf_new_from_xpm_data( (const char **)noflag_xpm);
+		if (!flags[0].pixbuf)
+			flags[0].pixbuf = GINT_TO_POINTER(-1);
+		else
+			gdk_pixbuf_render_pixmap_and_mask(flags[0].pixbuf,&flags[0].pix,&flags[0].mask,255);
 	}
 	return &flags[0];
 }

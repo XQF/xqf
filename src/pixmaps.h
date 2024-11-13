@@ -23,6 +23,7 @@
 
 
 struct pixmap {
+	GdkPixbuf *pixbuf;
 	GdkPixmap *pix;
 	GdkBitmap *mask;
 };

@@ -38,9 +38,6 @@
 /* This is an internally used function to check if a pixmap file exists. */
 static char* check_file_exists (const char *directory, const char *filename);
 
-/* This is an internally used function to create pixmaps. */
-static GtkWidget* create_dummy_pixmap (GtkWidget *widget);
-
 
 /* This is a dummy pixmap we use when a pixmap can't be found. */
 static char *dummy_pixmap_xpm[] = {
@@ -52,20 +49,14 @@ static char *dummy_pixmap_xpm[] = {
 };
 
 /* This is an internally used function to create pixmaps. */
-	static GtkWidget* create_dummy_pixmap (GtkWidget *widget) {
-	GdkColormap *colormap;
-	GdkPixmap *gdkpixmap;
-	GdkBitmap *mask;
-	GtkWidget *pixmap;
+static GdkPixbuf* create_dummy_pixmap (GtkWidget *widget) {
+	GdkPixbuf *pixbuf;
 
-	colormap = gtk_widget_get_colormap (widget);
-	gdkpixmap = gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, &mask, NULL, dummy_pixmap_xpm);
-	if (gdkpixmap == NULL)
+	pixbuf = gdk_pixbuf_new_from_xpm_data ( (const char**)dummy_pixmap_xpm);
+	if (pixbuf == NULL)
 		xqf_error ("Couldn't create replacement pixmap.");
-	pixmap = gtk_pixmap_new (gdkpixmap, mask);
-	gdk_pixmap_unref (gdkpixmap);
-	gdk_bitmap_unref (mask);
-	return pixmap;
+
+	return pixbuf;
 }
 
 static GList *pixmaps_directories = NULL;
@@ -90,16 +81,15 @@ gchar* find_pixmap_directory(const gchar* filename) {
 }
 
 GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename) {
-	GtkWidget *pixmap;
-	struct pixmap pix = { 0, 0 };
+	GtkWidget *image;
+	struct pixmap pix = { 0, 0, 0 };
 	if (!load_pixmap_as_pixmap(widget, filename, &pix)) {
-		return create_dummy_pixmap(widget);
+		pix.pixbuf = create_dummy_pixmap(widget);
 	}
 
-	pixmap = gtk_pixmap_new (pix.pix, pix.mask);
-	if (pix.pix) gdk_pixmap_unref (pix.pix);
-	if (pix.mask) gdk_bitmap_unref (pix.mask);
-	return pixmap;
+	image = gtk_image_new_from_pixbuf (pix.pixbuf);
+	free_pixmap (&pix);
+	return image;
 }
 
 /** find a pixmap file either absolute or in the pixmap search path.
@@ -128,7 +118,6 @@ static int is_suffix(const char* filename, const char* suffix) {
 
 struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix) {
 	gchar *found_filename = NULL;
-	GdkColormap *colormap = NULL;
 
 	g_return_val_if_fail(widget!=NULL, NULL);
 	g_return_val_if_fail(pix!=NULL, NULL);
@@ -167,40 +156,29 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 
 			xpm = dlsym(NULL, found_filename);
 			if (xpm) {
-				colormap = gtk_widget_get_colormap (widget);
-				pix->pix = gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, &pix->mask, NULL, xpm);
+				pix->pixbuf = gdk_pixbuf_new_from_xpm_data (xpm);
 			}
 		}
 	}
-	else if (is_suffix(found_filename, ".xpm")) {
-		debug(4, "loading gdk_pixmap from file: %s", found_filename);
-		colormap = gtk_widget_get_colormap (widget);
-		pix->pix = gdk_pixmap_colormap_create_from_xpm (NULL, colormap, &pix->mask, NULL, found_filename);
-	}
 	else if (GDK_PIXBUF_INSTALLED) {
 
-		GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
+		pix->pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
 		debug(4, "loading gdk_pixbuf from file: %s", found_filename);
-		if (pixbuf == NULL) {
-			// translator: %s = file name
-			xqf_warning (_("Error loading pixmap file: %s"), found_filename);
-			g_free (found_filename);
-			return NULL;
-		}
-
-		gdk_pixbuf_render_pixmap_and_mask(pixbuf, &pix->pix, &pix->mask, 255);
-
-		g_object_unref(pixbuf);
 	}
 	else {
 		g_free (found_filename);
 		return NULL;
 	}
 
-	if (pix->pix == NULL) {
+	if (pix->pixbuf) {
+		gdk_pixbuf_render_pixmap_and_mask (pix->pixbuf, &pix->pix, &pix->mask, 255);
+	}
+
+	if (pix->pixbuf == NULL || pix->pix == NULL) {
 		// translator: %s = file name
 		xqf_warning (_("Error loading pixmap file: %s"), found_filename?found_filename:filename);
 		g_free (found_filename);
+		free_pixmap (pix);
 		return NULL;
 	}
 	g_free (found_filename);
