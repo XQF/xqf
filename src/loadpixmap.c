@@ -160,14 +160,9 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 			}
 		}
 	}
-	else if (GDK_PIXBUF_INSTALLED) {
-
+	else {
 		pix->pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
 		debug(4, "loading gdk_pixbuf from file: %s", found_filename);
-	}
-	else {
-		g_free (found_filename);
-		return NULL;
 	}
 
 	if (pix->pixbuf) {
@@ -184,32 +179,6 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 	g_free (found_filename);
 
 	return pix;
-}
-
-void* load_pixmap_as_pixbuf (const gchar* filename) {
-	gchar *found_filename = NULL;
-	GdkPixbuf* pixbuf = NULL;
-
-	if (!GDK_PIXBUF_INSTALLED)
-		return NULL;
-
-	found_filename = find_pixmap_file(filename);
-
-	if (!found_filename) {
-		// translator: %s = file name
-		xqf_warning (_("Error loading pixmap file: %s"), filename);
-		return NULL;
-	}
-
-	debug(3, "loading gdk_pixbuf from file: %s", found_filename);
-	pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
-	if (pixbuf == NULL)
-		// translator: %s = file name
-		xqf_warning (_("Error loading pixmap file: %s"), found_filename);
-
-	g_free (found_filename);
-
-	return pixbuf;
 }
 
 /** directory may be null */
