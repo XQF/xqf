@@ -52,7 +52,7 @@ LINKS
 HOW TO CONTRIBUTE
 -----------------
 
-The best way to contribute code is to fork this project. To contribute translation please visit our Transifex project. You will find more details on the wiki: [wiki/How-to-contribute](https://github.com/XQF/xqf/wiki/How-to-contribute).
+The best way to contribute code is to fork this project. You will find more details on the wiki: [wiki/How-to-contribute](https://github.com/XQF/xqf/wiki/How-to-contribute).
 
 
 COPYRIGHT
