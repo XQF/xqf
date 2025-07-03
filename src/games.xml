@@ -1008,7 +1008,7 @@
 		<base>Q3_SERVER</base>
 		<type>UNVANQUISHED_SERVER</type>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3</flags>
-		<color_flags>COLOR_QUAKE3_NUMERIC | COLOR_WOLFET | COLOR_XONOTIC</color_flags>
+		<color_flags>COLOR_QUAKE3_NUMERIC | COLOR_WOLFET | COLOR_XONOTIC | COLOR_DAEMON</color_flags>
 		<name>Unvanquished</name>
 		<default_port>27960</default_port>
 		<default_master_port>27950</default_master_port>

@@ -55,6 +55,7 @@ enum {
 	COLOR_SAVAGE                = 0x00020, // Savage color codes
 	COLOR_WOLFET                = 0x00040, // Wolfenstein: Enemy Territory color codes
 	COLOR_XONOTIC               = 0x00080, // Xonotic color codes
+	COLOR_DAEMON                = 0x00100, // Dæmon color codes
 };
 
 struct game {

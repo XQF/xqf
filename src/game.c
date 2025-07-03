@@ -406,7 +406,7 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 				}
 				if (has_flag(flags, COLOR_WOLFET)) {
 					// see https://github.com/etlegacy/etlegacy/blob/master/src/qcommon/q_math.h
-					// Wolf:ET also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
+					// Wolf:ET also supports COLOR_QUAKE3_NUMERIC
 					// Wolf:ET also supports ^* so that flag is to be used by games that
 					// inherit Wolf:ET color codes without having support for COLOR_QUAKE3_ANY
 					// like Unvanquished that inherits these color codes from Wolf:ET through ET:XreaL
@@ -432,7 +432,7 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 				if (has_flag(flags, COLOR_XONOTIC)) {
 					// see https://xonotic.org/faq/#how-can-i-use-colors-in-my-nickname-and-messages
 					// RGB color code in the form ^x### where # is a case-insensitive hexadecimal digit
-					// Xonotic also supports ^[0-9] but that's already handled by the Quake 3 numeric color filter
+					// Xonotic also supports COLOR_QUAKE3_NUMERIC
 					if(src[isrc + 1] == 'x') {
 						gint i;
 						for (i = 2; (src[isrc + i] != '\0'
@@ -444,6 +444,26 @@ static void unescape_game_string (char *dst, const char *src, unsigned long flag
 						}
 						// if complete color code, skip it
 						if (i == 5) {
+							step = i;
+							goto walk;
+						}
+					}
+				}
+				if (has_flag(flags, COLOR_DAEMON)) {
+					// See https://github.com/DaemonEngine/Daemon/blob/master/src/common/Color.cpp
+					// RGB color code in the form ^#NNNNNN where N is a case-insensitive hexadecimal digit
+					// Dæmon also supports COLOR_QUAKE3_NUMERIC, COLOR_WOLFET and COLOR_XONOTIC.
+					if(src[isrc + 1] == '#') {
+						gint i;
+						for (i = 2; (src[isrc + i] != '\0'
+							&& ((src[isrc + i] >= '0' && src[isrc + i] <= '9')
+								|| (src[isrc + i] >= 'A' && src[isrc + i] <= 'F')
+								|| (src[isrc + i] >= 'a' && src[isrc + i] <= 'f')))
+							&& i < 8; i++) {
+							// `for` increments i
+						}
+						// if complete color code, skip it
+						if (i == 8) {
 							step = i;
 							goto walk;
 						}
