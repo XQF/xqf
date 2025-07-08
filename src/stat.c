@@ -1402,8 +1402,7 @@ static struct stat_conn *stat_update_master_qstat (struct stat_job *job, struct 
 				str = g_string_append(str, ",status=nostandard");
 			}
 
-			arg_type = str->str;
-			g_string_free(str, FALSE);
+			arg_type = g_string_free_and_steal(str);
 		}
 		else {
 			arg_type = g_strdup_printf ("%s,outfile", master_qstat_option(m));
