@@ -157,12 +157,13 @@ static inline const char* last_two_entries(const char* name) {
 }
 
 static gchar* has_known_image_format(const gchar* name) {
-	guint i, ext_num = 6;
-	gchar *ext_list[6] = {
+	guint i, ext_num = 7;
+	gchar *ext_list[7] = {
 		// Native GdkPixbuf loader.
 		".jpg",
 		".png",
 		".tga",
+		".webp",
 		// Crunch TGA conversion before GdkPixbuf.
 		".crn",
 		".dds",
