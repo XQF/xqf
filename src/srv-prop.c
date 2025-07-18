@@ -221,7 +221,9 @@ void props_load (void) {
 		return;
 
 	while (!feof (f)) {
-		fgets (buf, 1024, f);
+		if (!fgets (buf, 1024, f)) {
+			return;
+		}
 
 		if (buf[0] == '\n') {
 			if (p)
