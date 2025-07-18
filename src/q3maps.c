@@ -156,11 +156,12 @@ static inline const char* last_two_entries(const char* name) {
 }
 
 static gchar* has_known_image_format(const gchar* name) {
-	guint i, ext_num = 3;
-	gchar *ext_list[3] = {
+	guint i, ext_num = 4;
+	gchar *ext_list[4] = {
 		".jpg",
 		".png",
 		".tga",
+		".webp",
 	};
 
 	for (i = 0; i < ext_num; i++) {
