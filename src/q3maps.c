@@ -167,11 +167,7 @@ static gchar* has_known_image_format(const gchar* name) {
 		size_t name_len = strlen(name);
 		size_t ext_len = strlen(ext_list[i]);
 
-		if (name_len <= ext_len) {
-			continue;
-		}
-
-		if (!g_ascii_strcasecmp(name + name_len - ext_len, ext_list[i])) {
+		if (stri_has_ext_n(name, name_len, ext_list[i], ext_len)) {
 			return g_strndup(name, name_len - ext_len);
 		}
 	}
@@ -424,9 +420,9 @@ gboolean quake_contains_dir(const char* name, int level, GHashTable* maphash) {
 
 	len = strlen(name);
 
-	if (level == 1 && len > 4 && !g_ascii_strcasecmp(name+len-4, "maps"))
+	if (level == 1 && len > 4 && stri_ends_with(name, "maps"))
 		return TRUE;
-	if (level == 1 && len > 10 && !g_ascii_strcasecmp(name+len-10, "levelshots"))
+	if (level == 1 && len > 10 && stri_ends_with(name, "levelshots"))
 		return TRUE;
 
 	return FALSE;
@@ -434,10 +430,10 @@ gboolean quake_contains_dir(const char* name, int level, GHashTable* maphash) {
 
 void quake_contains_file(const char* name, int level, GHashTable* maphash) {
 	// printf("%s at level %d\n", name, level);
-	if (strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pak") && level == 1) {
+	if (stri_has_ext(name, ".pak")) {
 		find__maps_pak(name, maphash);
 	}
-	if (strlen(name)>4 && !g_ascii_strcasecmp(name+strlen(name)-4, ".bsp") && level == 2) {
+	if (level == 2 && stri_has_ext(name, ".bsp")) {
 		gchar* basename=g_path_get_basename(name);
 		gchar* mapname=g_ascii_strdown(basename, strlen(basename)-4);    /* g_ascii_strdown does implicit strndup */
 		if (g_hash_table_lookup(maphash, mapname)) {
@@ -454,7 +450,7 @@ static void _q3_contains_file(const char* name, int level, GHashTable* maphash,
 		char* (*is_map_func)(const char* name),
 		char* (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n", name, level);
-	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pk3") && strlen(name) > 4) {
+	if (level == 1 && stri_has_ext(name, ".pk3")) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
 	}
 	else if (level == 2 && if_map_insert(name, maphash, is_map_func)) {
@@ -475,10 +471,10 @@ static void _daemon_contains_file(const char* name, int level, GHashTable* mapha
 		char* (*is_map_func)(const char* name),
 		char* (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n", name, level);
-	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".dpk") && strlen(name) > 4) {
+	if (level == 1 && stri_has_ext(name, ".dpk")) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
 	}
-	else if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pk3") && strlen(name) > 4) {
+	else if (level == 1 && stri_has_ext(name, ".pk3")) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
 	}
 	else if (level == 2 && if_map_insert(name, maphash, is_map_func)) {
@@ -495,7 +491,7 @@ static void _doom3_contains_file(const char* name, int level, GHashTable* maphas
 		char* (*is_map_func)(const char* name),
 		char* (*is_mapshot_func)(const char* name)) {
 	// printf("%s at level %d\n", name, level);
-	if (level == 1 && !g_ascii_strcasecmp(name+strlen(name)-4, ".pk4") && strlen(name) > 4) {
+	if (level == 1 && stri_has_ext(name, ".pk4")) {
 		find_q3_maps_zip(name, maphash, is_map_func, is_mapshot_func);
 	}
 }

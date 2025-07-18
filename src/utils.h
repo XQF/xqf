@@ -172,4 +172,9 @@ char* load_file_mem(const char* name, size_t* size);
 
 void close_fds(int exclude);
 
+int stri_ends_with_n(const char *name, size_t namelen, const char* suffix, size_t suffixlen);
+int stri_ends_with(const char *name, const char* suffix);
+int stri_has_ext_n(const char *name, size_t namelen, const char* ext, size_t extlen);
+int stri_has_ext(const char *name, const char* ext);
+
 #endif /* __UTILS_H__ */

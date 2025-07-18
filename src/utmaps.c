@@ -27,6 +27,7 @@
 #include <glib.h>
 
 #include "debug.h"
+#include "utils.h"
 
 
 /**
@@ -100,7 +101,7 @@ void find_ut_maps_dir(GHashTable* maphash, const char* startdir, const char* suf
 				}
 			}
 			else {
-				if (strlen(dire->d_name)>strlen(suffix) && !g_ascii_strcasecmp(dire->d_name+strlen(dire->d_name)-strlen(suffix), suffix)) {
+				if (stri_has_ext(dire->d_name, suffix)) {
 					// s#(.*)suffix#\1#
 					gchar* mapname = g_ascii_strdown(dire->d_name, strlen(dire->d_name)-strlen(suffix)); /* g_ascii_strdown does implicit strndup */
 					if (g_hash_table_lookup(maphash, mapname)) {
