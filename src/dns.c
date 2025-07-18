@@ -297,7 +297,8 @@ static void worker_parse_callback (char *str, void *data) {
 
 	len = strlen (str);
 	str[len] = '\n';
-	write (1, str, len + 1);    /* stdout */
+	// HACK: Silence: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’.
+	if (write (1, str, len + 1)) {}    /* stdout */
 }
 
 
@@ -788,7 +789,8 @@ void dns_cancel_requests (void) {
 	dns_set_callback (NULL, NULL);
 
 	if (dns_helper.output >= 0) {
-		write (dns_helper.output, cmd, sizeof (cmd) - 1);
+		// HACK: Silence: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’.
+		if (write (dns_helper.output, cmd, sizeof (cmd) - 1)) {}
 	}
 }
 
@@ -804,7 +806,8 @@ void dns_lookup (const char *str) {
 		strcpy (host, str);
 		host[len] = '\n';
 		host[len + 1] = '\0';
-		write (dns_helper.output, host, len + 1);
+		// HACK: Silence: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’.
+		if (write (dns_helper.output, host, len + 1)) {}
 	}
 }
 

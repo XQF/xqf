@@ -307,7 +307,8 @@ int client_launch_exec (int forkit, char *dir, char* argv[], struct server *s) {
 					CLIENT_ERROR_MSG_HEAD, argv[0], g_strerror (errno));
 
 			error_out:
-			write (pipefds[1], msg, strlen (msg) + 1);
+			// HACK: Silence: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’.
+			if (write (pipefds[1], msg, strlen (msg) + 1)) {}
 			close (pipefds[1]);
 
 			on_sig (SIGHUP,  _exit);
