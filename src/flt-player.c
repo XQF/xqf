@@ -223,7 +223,7 @@ static struct player_pattern *player_pattern_new (struct player_pattern *src) {
 
 static void pattern_clist_sync_selection (void) {
 	GSList *list;
-	struct player_pattern *pp;
+	struct player_pattern *pp = NULL;
 
 	if (current_row >= 0) {
 		list = g_slist_nth (curplrs, current_row);
