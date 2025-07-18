@@ -106,7 +106,7 @@ void assemble_server_address (char *buf, int size, const struct server *s) {
 	}
 	else {
 		strncpy (buf, (show_hostnames && s->host->name)?
-				s->host->name : inet_ntoa (s->host->ip), size);
+				s->host->name : inet_ntoa (s->host->ip), size - 1);
 	}
 }
 
@@ -314,7 +314,7 @@ static int player_clist_refresh_row (struct server *s, struct player *p,
 		row = gtk_clist_append (player_clist, text);
 	}
 	else {
-		for (col = 1; col < 7; col++) {
+		for (col = 1; col < 6; col++) {
 			gtk_clist_set_text (player_clist, row, col, text[col]);
 		}
 	}

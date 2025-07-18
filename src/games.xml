@@ -1020,7 +1020,7 @@
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>unvanquished_init_maps</init_maps>
 		<command>unvanquished</command>
-		<default_home>~/.unvanquished</default_home>
+		<default_home>~/.local/share/unvanquished</default_home>
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>pkg</main_mod>

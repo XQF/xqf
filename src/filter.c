@@ -1122,7 +1122,7 @@ static void server_filter_fill_widgets(guint num) {
 				f_number=g_array_index(filter->countries,int,i);
 
 				// gtk_clist_insert third parameter is not const!
-				strncpy(buf,geoip_name_by_id(f_number),sizeof(buf));
+				strncpy(buf,geoip_name_by_id(f_number),sizeof(buf) - 1);
 				gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
 				countrypix = get_pixmap_for_country_with_fallback(f_number);
 				if (countrypix) {
@@ -1681,7 +1681,7 @@ static void country_add_selection_to_right_list() {
 	countrypix = get_pixmap_for_country(flag_id);
 
 	// gtk_clist_insert third parameter is not const!
-	strncpy (buf,geoip_name_by_id (flag_id), sizeof (buf));
+	strncpy (buf,geoip_name_by_id (flag_id), sizeof (buf) - 1);
 	gtk_clist_append (GTK_CLIST (country_right_list), text);
 	if (countrypix) {
 		gtk_clist_set_pixtext (GTK_CLIST (country_right_list), last_row_right_list, 0, geoip_name_by_id (flag_id), 4, countrypix->pix, countrypix->mask);
@@ -1749,7 +1749,7 @@ static void country_selection_on_ok(void) {
 		countrypix = get_pixmap_for_country(country_nr);
 
 		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id(country_nr),sizeof(buf));
+		strncpy(buf,geoip_name_by_id(country_nr),sizeof(buf) - 1);
 		gtk_clist_insert(GTK_CLIST(country_filter_list), i, text);
 		if (countrypix) {
 			gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), i, 0,
@@ -1795,7 +1795,7 @@ static void populate_country_clist(GtkWidget* clist, gboolean all) {
 		++row_number;
 
 		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id(i),sizeof(buf));
+		strncpy(buf,geoip_name_by_id(i),sizeof(buf) - 1);
 		gtk_clist_insert(GTK_CLIST(clist), row_number, text);
 		if (countrypix) {
 			gtk_clist_set_pixtext(GTK_CLIST(clist), row_number, 0,
@@ -1941,7 +1941,7 @@ static void country_create_popup_window(void) {
 		countrypix = get_pixmap_for_country_with_fallback (flag_nr);
 
 		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id (flag_nr), sizeof (buf));
+		strncpy(buf,geoip_name_by_id (flag_nr), sizeof (buf) - 1);
 		gtk_clist_insert (GTK_CLIST (country_right_list), i, text);
 
 		if (countrypix) {
@@ -2058,7 +2058,7 @@ void filter_quick_set (const char* str) {
 	if (str) {
 		unsigned num;
 		size_t max = sizeof (quick_filter_token) / sizeof (quick_filter_token[0]);
-		strncpy (quick_filter_str, str, sizeof (quick_filter_str));
+		strncpy (quick_filter_str, str, sizeof (quick_filter_str) - 1);
 		num = tokenize (quick_filter_str, quick_filter_token, max, " ");
 		if (num < max)
 			quick_filter_token[num] = NULL;
