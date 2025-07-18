@@ -314,7 +314,7 @@ static int player_clist_refresh_row (struct server *s, struct player *p,
 		row = gtk_clist_append (player_clist, text);
 	}
 	else {
-		for (col = 1; col < 7; col++) {
+		for (col = 1; col < 6; col++) {
 			gtk_clist_set_text (player_clist, row, col, text[col]);
 		}
 	}
