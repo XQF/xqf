@@ -1216,3 +1216,25 @@ void close_fds(int exclude) {
 		close(i);
 	}
 }
+
+int stri_ends_with_n(const char *name, size_t name_len, const char* suffix, size_t suffix_len) {
+	return name_len >= suffix_len && !g_ascii_strcasecmp(name + name_len - suffix_len, suffix);
+}
+
+int stri_ends_with(const char *name, const char* suffix) {
+	size_t name_len = strlen(name);
+	size_t suffix_len = strlen(suffix);
+
+	return stri_ends_with_n(name, name_len, suffix, suffix_len);
+}
+
+int stri_has_ext_n(const char *name, size_t name_len, const char* ext, size_t ext_len) {
+	return name_len > ext_len && !g_ascii_strcasecmp(name + name_len - ext_len, ext);
+}
+
+int stri_has_ext(const char *name, const char* ext) {
+	size_t name_len = strlen(name);
+	size_t ext_len = strlen(ext);
+
+	return stri_has_ext_n(name, name_len, ext, ext_len);
+}

@@ -34,6 +34,7 @@
 #include "loadpixmap.h"
 #include "pixmaps.h"
 #include "debug.h"
+#include "utils.h"
 
 /* This is an internally used function to check if a pixmap file exists. */
 static char* check_file_exists (const char *directory, const char *filename);
@@ -112,10 +113,6 @@ static char* find_pixmap_file(const char* filename) {
 	return found_filename;
 }
 
-static int is_suffix(const char* filename, const char* suffix) {
-	return(strlen(filename)>strlen(suffix) && !strcmp(filename+strlen(filename)-strlen(suffix), suffix));
-}
-
 struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix) {
 	gchar *found_filename = NULL;
 
@@ -123,7 +120,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 	g_return_val_if_fail(pix!=NULL, NULL);
 
 	found_filename = find_pixmap_file(filename);
-	if (is_suffix(filename, ".xpm")) // try png instead
+	if (stri_has_ext(filename, ".xpm")) // try png instead
 	{
 		char* tmp = g_strdup(filename);
 		strcpy(tmp+strlen(tmp)-3, "png");
@@ -133,7 +130,7 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 
 	if (!found_filename) {
 		// not file on disk maybe xpm compiled into binary
-		if (is_suffix(filename, ".xpm")) {
+		if (stri_has_ext(filename, ".xpm")) {
 			void* xpm;
 			char* p;
 			p = found_filename = g_strdup(filename);
