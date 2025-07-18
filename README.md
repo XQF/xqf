@@ -23,13 +23,19 @@ INSTALLATION
 [![Build](https://github.com/XQF/xqf/actions/workflows/build.yml/badge.svg)](https://github.com/XQF/xqf/actions/workflows/build.yml)
 
 ```sh
-git clone https://github.com/XQF/xqf.git
+git clone --recurse-submodules https://github.com/XQF/xqf.git
 cd xqf
 mkdir build
 cd build
 cmake ..
 make
 make install
+```
+
+If you already cloned, you can fetch the submodule after entring the `xqf` folder this way:
+
+```sh
+git submodule update --init --recursive
 ```
 
 On Debian or Ubuntu, use ``cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_INSTALL_PREFIX=/usr ..``.
@@ -70,11 +76,11 @@ HISTORY
 
 XQF was originally written by Roman Pozlevich in 1998. It has been maintained and improved by a devoted team over the years with following major developers:
 
-1998-2000 Roman Pozlevich <hidden email="roma@botik.ru"/>  
-2000-2002 Bill Adams <hidden email="bill@evilbill.org"/>  
-2000-2003 Alex Burger <hidden email="alex_b@users.sf.net"/>  
-2001-2010 Ludwig Nussel <hidden email="ludwig.nussel@suse.de"/>  
-2001-2015 Jordi Mallach <hidden email="jordi@debian.org"/>  
-2015-2015 Artem Vorotnikov <hidden email="artem@vorotnikov.me"/>  
-2014-2024 Zack Middleton <hidden email="zturtleman@gmail.com"/>  
-2013-2024 Thomas Debesse <hidden email="dev@illwieckz.net"/>  
+1998-2000 Roman Pozlevich <hidden email="roma [ad] botik.ru"/>  
+2000-2002 Bill Adams <hidden email="bill [ad] evilbill.org"/>  
+2000-2003 Alex Burger <hidden email="alex_b [ad] users.sf.net"/>  
+2001-2010 Ludwig Nussel <hidden email="ludwig.nussel [ad] suse.de"/>  
+2001-2015 Jordi Mallach <hidden email="jordi [ad] debian.org"/>  
+2015-2015 Artem Vorotnikov <hidden email="artem [ad] vorotnikov.me"/>  
+2014-2024 Zack Middleton <hidden email="zturtleman [ad] gmail.com"/>  
+2013-2025 Thomas Debesse <hidden email="dev [ad] illwieckz.net"/>  
