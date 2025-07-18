@@ -106,7 +106,7 @@ void assemble_server_address (char *buf, int size, const struct server *s) {
 	}
 	else {
 		strncpy (buf, (show_hostnames && s->host->name)?
-				s->host->name : inet_ntoa (s->host->ip), size);
+				s->host->name : inet_ntoa (s->host->ip), size - 1);
 	}
 }
 
