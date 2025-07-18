@@ -197,7 +197,9 @@ static char* is_q3_mapshot(const char* name) {
 }
 
 static char* is_unvanquished_mapshot(const char* name) {
-	gchar *mapname;
+	// Name in the form meta/<mapname>/<mapname>.<ext>
+
+	gchar *metaname, *mapname;
 	debug(4, "check %s", name);
 	if (*name == '/')
 		name = last_two_entries(name);
@@ -205,8 +207,19 @@ static char* is_unvanquished_mapshot(const char* name) {
 	if (g_ascii_strncasecmp(name, "meta/", 5))
 		return NULL;
 
-	if ((mapname = has_known_image_format(name + 5))) {
+	if ((metaname = has_known_image_format(name + 5))) {
 		debug(3, "found: %s", name);
+
+		gchar* sep = strchr(metaname, '/');
+
+		if (sep == NULL) {
+			return NULL;
+		}
+
+		gchar *next = sep + 1;
+		mapname = g_strndup(next, strlen(metaname) - (next - metaname));
+		g_free(metaname);
+
 		return mapname;
 	}
 
