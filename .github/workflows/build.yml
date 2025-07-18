@@ -14,7 +14,7 @@ jobs:
     - name: cmake
       run: CC=gcc CXX=g++ cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
     - name: make
-      run: make
+      run: make -j"$(nproc)"
     - name: make install
       run: sudo make install
 
@@ -30,6 +30,6 @@ jobs:
     - name: cmake
       run: CC=clang CXX=clang++ cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
     - name: make
-      run: make
+      run: make -j"$(nproc)"
     - name: make install
       run: sudo make install
