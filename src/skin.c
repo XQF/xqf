@@ -62,7 +62,7 @@ static char *dir_qw_skin_filter (const char *dir, const char *str) {
 
 	len = strlen (str);
 
-	if (len <= 4 || strcmp (str + len - 4, ".pcx"))
+	if (!stri_has_ext(str, ".pcx"))
 		return NULL;
 
 	len -= 4;
@@ -84,7 +84,7 @@ static char *dir_q2_skin_filter (const char *dir, const char *str) {
 
 	len = strlen (str);
 
-	if (len <= 6 || strcmp (str + len - 6, "_i.pcx"))
+	if (!stri_has_ext(str, "_i.pcx"))
 		return NULL;
 
 	len -= 6;
@@ -343,15 +343,13 @@ guchar *get_qw_skin (char *skin, char *path) {
 	char *filename;
 	char *skinsdir;
 	guchar *pcx;
-	int skinlen;
 
 	if (!skin || skin[0] == '\0')
 		skin = "base.pcx";
 
 	skinsdir = file_in_dir (path, "qw/skins/");
-	skinlen = strlen (skin);
 
-	if (skinlen > 4 && g_ascii_strcasecmp (skin + skinlen - 4, ".pcx") == 0)
+	if (stri_has_ext(skin, ".pcx"))
 		filename = file_in_dir (skinsdir, skin);
 	else
 		filename = skin_filename (skin, skinsdir, ".pcx");

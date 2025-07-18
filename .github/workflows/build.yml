@@ -11,10 +11,12 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev
+    - name: Update submodules
+      run: git submodule update --init --recursive
     - name: cmake
       run: CC=gcc CXX=g++ cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
     - name: make
-      run: make
+      run: make -j"$(nproc)"
     - name: make install
       run: sudo make install
 
@@ -27,9 +29,11 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev
+    - name: Update submodules
+      run: git submodule update --init --recursive
     - name: cmake
       run: CC=clang CXX=clang++ cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
     - name: make
-      run: make
+      run: make -j"$(nproc)"
     - name: make install
       run: sudo make install

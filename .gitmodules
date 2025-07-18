@@ -1,0 +1,3 @@
+[submodule "libs/crunch"]
+	path = libs/crunch
+	url = https://github.com/DaemonEngine/crunch.git
