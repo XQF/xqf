@@ -53,6 +53,7 @@ option(DEPRECATED_DISABLE "Disable deprecated parts of GLib, GObject, GDK and GT
 
 option(USE_GEOIP "Depend on GeoIP library for geolocation" ON)
 option(USE_GZIP "Enable gzip compressor support" ON)
+option(USE_CRUNCH "Enable Crunch decompressor support (DDS, KTX, CRN)" ON)
 option(RCON_STANDALONE "Build standalone RCON" OFF)
 
 if (NOT WITH_QSTAT)
@@ -145,6 +146,7 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/loadpixmap.c
      ${CMAKE_SOURCE_DIR}/src/scripts.c
      ${CMAKE_SOURCE_DIR}/src/memtopixmap.c
+     ${CMAKE_SOURCE_DIR}/src/crntotga.cpp
 
      ${CMAKE_SOURCE_DIR}/src/addmaster.h
      ${CMAKE_SOURCE_DIR}/src/addserver.h
@@ -190,6 +192,7 @@ set (xqf_SOURCES
      ${CMAKE_SOURCE_DIR}/src/loadpixmap.h
      ${CMAKE_SOURCE_DIR}/src/scripts.h
      ${CMAKE_SOURCE_DIR}/src/memtopixmap.h
+     ${CMAKE_SOURCE_DIR}/src/crntotga.h
      )
 
 set (flag_DATA
@@ -534,6 +537,21 @@ endif (GUI MATCHES GTK3)
 if (USE_GEOIP)
     target_link_libraries (xqf GeoIP)
 endif (USE_GEOIP)
+
+if (USE_CRUNCH)
+	set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
+	set(BUILD_CRUNCH OFF)
+	set(BUILD_EXAMPLES OFF)
+	set(BUILD_SHARED_LIBCRN OFF)
+	set(BUILD_STATIC_LIBCRN ON)
+
+	add_subdirectory(${CMAKE_SOURCE_DIR}/libs/crunch)
+
+	target_include_directories(xqf PRIVATE ${CMAKE_SOURCE_DIR}/libs/crunch/crnlib)
+	target_link_directories(xqf PRIVATE ${CMAKE_BINARY_DIR}/libs/crunch/crnlib)
+    target_link_libraries(xqf crn)
+endif()
 
 if (RCON_STANDALONE)
     target_link_libraries (xqf -lreadline)
