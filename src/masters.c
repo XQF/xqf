@@ -189,6 +189,7 @@ static char *builtin_masters_update_info[] = {
 	 */
 
 	// added 2025-07-19
+	"ADD DDNETS master://master.ddnet.org ddnet.org",
 	"ADD TEES master://master4.teeworlds.com teeworlds.com #4",
 
 	// added 2019-02-17
@@ -443,6 +444,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD COD4S lan://255.255.255.255 LAN",
 	"ADD CODWAWS lan://255.255.255.255 LAN",
 	"ADD DDAYS lan://255.255.255.255 LAN",
+	"ADD DDNETS lan://255.255.255.255 LAN",
 	"ADD DM3S lan://255.255.255.255 LAN",
 	"ADD EFS lan://255.255.255.255 LAN",
 	"ADD ETLS lan://255.255.255.255 LAN",
