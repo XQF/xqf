@@ -160,6 +160,13 @@ int compare_qstat_version (const char* have, const char* expected) {
 		return 0;
 	}
 
+	/* Newer version string are written this way: v2.16
+	so we need to strip the starting v. */
+	if (*have == 'v')
+	{
+		have++;
+	}
+
 	have_pos1 = strchr (have, '.');
 	expected_pos1 = strchr (expected, '.');
 
@@ -193,6 +200,15 @@ int compare_qstat_version (const char* have, const char* expected) {
 			expected_pos2++);
 
 	buf = g_strndup (have_pos1, have_pos2 - have_pos1);
+
+	/* Strip extra string after the number, for example 2.16-modified
+	becomes 2.16 to get the minor number properly parsed. */
+	char* have_dash = strchr (buf, '-');
+	if (have_dash)
+	{
+		*have_dash = '\0';
+	}
+
 	have_minor = atoi (buf);
 	g_free (buf);
 	buf = g_strndup (expected_pos1, expected_pos2 - expected_pos1);
