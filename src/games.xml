@@ -188,6 +188,22 @@
 		<main_mod>dday</main_mod>
 	</game>
 	<game>
+		<type>DDNET_SERVER</type>
+		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON</flags>
+		<name>DDrace Network</name>
+		<default_port>8303</default_port>
+		<default_master_port>8300</default_master_port>
+		<id>DDNETS</id>
+		<qstat_str>TEES</qstat_str>
+		<qstat_option>-tees</qstat_option>
+		<qstat_master_option>-teem</qstat_master_option>
+		<icon>ddnet.xpm</icon>
+		<exec_client>teeworlds_exec</exec_client>
+		<command>DDNet</command>
+		<!-- It's the same as Teeworlds. -->
+		<default_home>~/.teeworlds</default_home>
+	</game>
+	<game>
 		<type>DESCENT3_SERVER</type>
 		<name>Descent3</name>
 		<flags>GAME_CONNECT</flags>
