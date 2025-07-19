@@ -22,6 +22,10 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// does no longer work, removed 2025-07-19
+	"DELETE TEES master://master2.teeworlds.com teeworlds.com #2",
+	"DELETE TEES master://master3.teeworlds.com teeworlds.com #3",
+
 	// does not work yet, not added 2019-02-17
 	"DELETE Q2S:KP master://master.kingpin.info:27900 kingpin.info", // alias for gsm.qtracker.com on 2019-02-17
 	"DELETE Q2S:KP master://master0.kingpin.info:27900 kingpin.info #2", // alias for hypo.hambloch.com on 2019-02-17
@@ -184,6 +188,9 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2025-07-19
+	"ADD TEES master://master4.teeworlds.com teeworlds.com #4",
+
 	// added 2019-02-17
 	"ADD Q2S:KP http://kingpin.hambloch.com/gspylitefavors.txt hambloch.com",
 
@@ -225,10 +232,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD UNS,-gsm,ut gmaster://master.oldunreal.com:28900 oldunreal.com",
 	"ADD UNS,-gsm,ut gmaster://master2.oldunreal.com:28900 oldunreal.com #2",
 	"ADD UNS,-gsm,ut gmaster://master.newbiesplayground.net:28900 newbiesplayground.net",
-
-	// added 2018-03-18
-	"ADD TEES master://master2.teeworlds.com teeworlds.com #2",
-	"ADD TEES master://master3.teeworlds.com teeworlds.com #3",
 
 	// added 2017-04-09
 	"ADD CODUOS http://www.qtracker.com/server_list_details.php?game=callofdutyunitedoffensive qtracker.com",
