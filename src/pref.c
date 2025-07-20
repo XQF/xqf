@@ -982,17 +982,20 @@ void q3_update_prefs_common (struct game* g) {
 	g_return_if_fail(w != NULL);
 
 	str = strdup_strip (gtk_entry_get_text (combo_get_entry (w->proto_entry)));
-	// locate first space and mark it as str's end
-	str1 = strchr(str,' ');
-	if (str1) *str1='\0';
+	if (str)
+	{
+		// locate first space and mark it as str's end
+		str1 = strchr(str,' ');
+		if (str1) *str1='\0';
 
-	strold = game_get_attribute(type,"masterprotocol");
-	if (strcmp(str, strold?strold:"")) {
-		game_set_attribute(type,"masterprotocol",strdup_strip(str));
-		config_set_string ("protocol", (str)? str : "");
+		strold = game_get_attribute(type,"masterprotocol");
+		if (strcmp(str, strold?strold:"")) {
+			game_set_attribute(type,"masterprotocol",strdup_strip(str));
+			config_set_string ("protocol", (str)? str : "");
+		}
+		g_free(str);
+		str=NULL;
 	}
-	g_free(str);
-	str=NULL;
 
 	if (w->setfs_gamebutton) {
 		int o;
