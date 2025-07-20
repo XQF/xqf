@@ -475,7 +475,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 		_("Creator:"),
 		"   Roman Pozlevich <roma@botik.ru>",
 		_("Maintainers:"),
-		"   Thomas Debesse <xqf@illwieckz.net>",
+		"   Thomas Debesse <dev@illwieckz.net>",
 		"   Zack Middleton <zturtleman@gmail.com>",
 		"   Jordi Mallach <jordi@sindominio.net>",
 		"   Artem Vorotnikov <artem@vorotnikov.me>",
@@ -499,7 +499,7 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 	NULL};
 */
 	gchar *copyright;
-	copyright = g_strconcat(_("Copyright \xc2\xa9"), " 1998-2018 ", _("XQF Team"), NULL);
+	copyright = g_strconcat(_("Copyright \xc2\xa9"), " 1998-2025 ", _("XQF Team"), NULL);
 
 	gtk_show_about_dialog (
 		NULL, //GTK_WINDOW (window),

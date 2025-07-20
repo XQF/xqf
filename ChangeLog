@@ -11,11 +11,11 @@ Jun 21, 2015: Artem Vorotnikov <artem@vorotnikov.me>
  * add deprecated disabling switch (allow to track down them)
  * clean the repository from mistakenly tracked files
 
-Jun 20, 2015: Thomas Debesse <xqf@illwieckz.net>
+Jun 20, 2015: Thomas Debesse <dev@illwieckz.net>
 
  * move game launch option to appear before exit option
 
-Jun 19, 2015: Thomas Debesse <xqf@illwieckz.net>
+Jun 19, 2015: Thomas Debesse <dev@illwieckz.net>
 
  * remove xmms support
 
@@ -71,7 +71,7 @@ Jan 23, 2015: Artem Vorotnikov <artem@vorotnikov.me>
  * fix automake warnings
  * remove splash
 
-Jan 18, 2015: Thomas Debesse <xqf@illwieckz.net>
+Jan 18, 2015: Thomas Debesse <dev@illwieckz.net>
 
  * fix Wolf:ET and ET:Legacy empty server query
 
@@ -79,17 +79,17 @@ Nov 25, 2014: Zack Middleton <zturtleman@gmail.com>
 
  * fix Q3Rally and Warsow support
 
-Nov 14, 2014: Thomas Debesse <xqf@illwieckz.net>
+Nov 14, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * recognize some OpenArena games hosted with Q3Arena and Q3Arena games
    hosted by OpenArena
 
-Nov 8, 2014: Thomas Debesse <xqf@illwieckz.net>
+Nov 8, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * add some Wolf:ET and ET:Legacy mods (like TrueCombat mods)
  * filter escape codes in Call Of Duty gametypes
 
-Nov 7, 2014: Thomas Debesse <xqf@illwieckz.net>
+Nov 7, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * synchronize translation files to source tree
  * fix some translations
@@ -99,11 +99,11 @@ Nov 4, 2014: Arnaud Bonatti <arnaud.bonatti@gmail.com>
  * use GtkBuilder for main window and toolbar
  * use GtkAboutDialog
 
-Nov 3, 2014: Thomas Debesse <xqf@illwieckz.net>
+Nov 3, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * update master server list
 
-Nov 2, 2014: Thomas Debesse <xqf@illwieckz.net>
+Nov 2, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * fix Unvanquished, Turtle Arena, Xonotic and Urban Terror LAN server browsing
 
@@ -112,11 +112,11 @@ Nov 1, 2014: Zack Middleton <zturtleman@gmail.com>
  * fix gametype strings for a few games
  * fix ioquake3 and iostvef basegame gametype strings
 
-Oct 31, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 31, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * improve French translation
 
-Oct 27, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 27, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * fix gamesxml2c compilation warnings
 
@@ -124,7 +124,7 @@ Oct 26, 2014: Jordi Mallach <jordi@sindominio.net>
 
  * fix a build issue related to the Savage hack
 
-Oct 26, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 26, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * use a new Savage hack to query Savage master server
  * filter Savage color codes
@@ -139,7 +139,7 @@ Oct 24, 2014: Zack Middleton <zturtleman@gmail.com>
  * fix debug build compiling using clang
  * fix gamesxml2c compilation
 
-Oct 24, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 24, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * fix another overflow in q3_unescape when the string ends with an escape code
  * filter more color codes from Wolfenstein: Enemy Territory
@@ -148,30 +148,30 @@ Oct 23, 2014: Witold Piłat <witold.pilat@gmail.com>
 
  * fix Jedi Outcast support
 
-Oct 23, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 23, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * fix an overflow in q3_unescape (14+ years old bug)
 
-Oct 22, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 22, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * workaround non ASCII characters in servers strings
  * rewrite stat_master_input_callback and stat_servers_input_callback
 
-Oct 16, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 16, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * use Gstatus to check GIOChannel reads
 
-Oct 15, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 15, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * reuse mod and gametype descriptions for similar games
  * rewrite deprecated gdk_pixbuf_*ref calls
 
-Oct 14, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 14, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * add the Turtle Arena game (thanks to Zack Middleton help)
  * rewrite deprecated g_str* calls, and g_basename calls
 
-Oct 13, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 13, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * fix Quake 2 game properties
 
@@ -181,60 +181,60 @@ Oct 11, 2014: Thomas Debesse <xqf@ilwieckz.net>
    his precious and generous help)
  * fix the "source id not found" bug due to "g_source_remove" duplication
 
-Oct 10, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 10, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * add ZEQ2 Lite game
 
-Oct 02, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 02, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * add Jedi Outcast (JK2) game (VictorBE patch)
 
-Oct 01, 2014: Thomas Debesse <xqf@illwieckz.net>
+Oct 01, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * fix Unvanquished status packet
  * detect some Wolf:ET server with unusual version name
 
-Sep 30, 2014: Thomas Debesse <xqf@illwieckz.net>
+Sep 30, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * add Enemy Territory:Legacy game
 
-Sep 28, 2014: Thomas Debesse <xqf@illwieckz.net>
+Sep 28, 2014: Thomas Debesse <dev@illwieckz.net>
 
  * distinguish Tremulous, Tremulous GPP and TremFusion
  * some cleaning (id tech 3 derivatives are not described as tremulous anymore)
  * rename tremulous server qstat variable to 'gamename'+'s' like others
  * master server for Urban Terror updated
 
-Nov 11, 2013: Thomas Debesse <xqf@illwieckz.net>
+Nov 11, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * follow XDG Base Directory Specification for user configuration directory
    and migrate old directory to the new one
 
-Nov 10, 2013: Thomas Debesse <xqf@illwieckz.net>
+Nov 10, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * add World of Padman game
 
-Nov 06, 2013: Thomas Debesse <xqf@illwieckz.net>
+Nov 06, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * filter Unvanquished extended color codes
 
-Nov 01, 2013: Thomas Debesse <xqf@illwieckz.net>
+Nov 01, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * complete French translation (100%)
 
-Oct 31, 2013: Thomas Debesse <xqf@illwieckz.net>
+Oct 31, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * detect more ioquake3 variant as ioquake3
  * launch some Quake3 derivatives as ioquake3 mod if standalone isn't installed
  * add another master for Xonotic (dpmaster.tchr.no)
 
-Oct 30, 2013: Thomas Debesse <xqf@illwieckz.net>
+Oct 30, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * recognize Urban Terror in Quake3 server list even if engine is bare ioquake3
  * update and improve French translation (near 100%),
    use French typography (thin space, apostrophe, French quote, etc.)
 
-Oct 27, 2013: Thomas Debesse <xqf@illwieckz.net>
+Oct 27, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * add Alien Arena, Reaction and Q3 Rally games
  * add LAN broadcast for Nexuiz, Xonotic, Warsow, Tremulous, Unvanquished,
@@ -242,11 +242,11 @@ Oct 27, 2013: Thomas Debesse <xqf@illwieckz.net>
  * update Warsow protocol version and improve Warsow icon
  * detect ioquake3 server as Quake3 server
 
-Oct 26, 2013: Thomas Debesse <xqf@illwieckz.net>
+Oct 26, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * add Unvanquished, Xonotic and Smokin' Guns games
 
-Oct 25, 2013: Thomas Debesse <xqf@illwieckz.net>
+Oct 25, 2013: Thomas Debesse <dev@illwieckz.net>
 
  * fix "dlsym" compilation problem
  * fix spelling (Debian patch, Jordi Mallach)

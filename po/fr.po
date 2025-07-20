@@ -133,7 +133,7 @@ msgid "Game Server Browser"
 msgstr "Explorateur de serveur de jeu"
 
 msgid "translator-credits"
-msgstr "Thomas Debesse <xqf@illwieckz.net>\nMichel Briand <michelbriand@free.fr>\nFrançois Perichon"
+msgstr "Thomas Debesse <dev@illwieckz.net>\nMichel Briand <michelbriand@free.fr>\nFrançois Perichon"
 
 msgid "Server"
 msgstr "Serveur"
