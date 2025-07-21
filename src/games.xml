@@ -198,6 +198,7 @@
 		<qstat_option>-tees</qstat_option>
 		<qstat_master_option>-teem</qstat_master_option>
 		<icon>ddnet.xpm</icon>
+		<analyze_serverinfo>teeworlds_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>teeworlds_exec</exec_client>
 		<command>DDNet</command>
 		<!-- It's the same as Teeworlds. -->
@@ -867,6 +868,7 @@
 		<qstat_option>-tees</qstat_option>
 		<qstat_master_option>-teem</qstat_master_option>
 		<icon>teeworlds.xpm</icon>
+		<analyze_serverinfo>teeworlds_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>teeworlds_exec</exec_client>
 		<command>teeworlds</command>
 		<default_home>~/.teeworlds</default_home>
