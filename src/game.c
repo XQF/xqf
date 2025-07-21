@@ -1958,10 +1958,6 @@ static void q3_analyze_serverinfo (struct server *s) {
 			else if (!strncmp(info_ptr[1], "KoRx", 4)) {
 				s->type=TREMULOUS_SERVER;
 			}
-			// Tremfusion
-			else if (!strncmp(info_ptr[1], "tremfusion", 10)) {
-				s->type=TREMFUSION_SERVER;
-			}
 			// Unvanquished
 			else if (!strncmp(info_ptr[1], "Unvanquished", 12)) {
 				s->type=UNVANQUISHED_SERVER;

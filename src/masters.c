@@ -22,6 +22,10 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// removed game variant, removed 2025-07-21
+	"DELETE TREMFUSIONS http://www.qtracker.com/server_list_details.php?game=tremulous qtracker.com",
+	"DELETE TREMFUSIONS master://master.tremulous.net:30710 tremulous.net",
+
 	// does no longer work, removed 2025-07-19
 	"DELETE TEES master://master2.teeworlds.com teeworlds.com #2",
 	"DELETE TEES master://master3.teeworlds.com teeworlds.com #3",
@@ -288,7 +292,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD SFS http://www.qtracker.com/server_list_details.php?game=soldieroffortune qtracker.com",
 	"ADD SOF2S http://www.qtracker.com/server_list_details.php?game=soldieroffortune2 qtracker.com",
 	"ADD T2S http://www.qtracker.com/server_list_details.php?game=tribes2 qtracker.com",
-	"ADD TREMFUSIONS http://www.qtracker.com/server_list_details.php?game=tremulous qtracker.com",
 	"ADD TREMULOUSS http://www.qtracker.com/server_list_details.php?game=tremulous qtracker.com",
 	"ADD WARSOWS http://www.qtracker.com/server_list_details.php?game=warsow qtracker.com",
 	"ADD WOETS http://www.qtracker.com/server_list_details.php?game=wolfensteinenemyterritory qtracker.com",
@@ -342,7 +345,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD ETLS master://etmaster.idsoftware.com:27950 idsoftware.com",
 
 	// added 2014-09-28
-	"ADD TREMFUSIONS master://master.tremulous.net:30710 tremulous.net",
 	"ADD TREMULOUSGPPS master://master.tremulous.net:30700 tremulous.net",
 	"ADD TREMULOUSS master://master.tremulous.net:30710 tremulous.net",
 
@@ -434,6 +436,9 @@ static char *builtin_masters_update_info[] = {
 	"ADD QS http://www.gameaholic.com/servers/qspy-quake gameaholic.com",
 	"ADD SNS http://www.gameaholic.com/servers/qspy-sin gameaholic.com",
 
+	// lan servers from deleted games
+	"DELETE TREMFUSIONS lan://255.255.255.255 LAN",
+
 	// lan servers
 	"ADD ALIENARENAS lan://255.255.255.255 LAN",
 	"ADD AMS lan://255.255.255.255 LAN",
@@ -471,7 +476,6 @@ static char *builtin_masters_update_info[] = {
 	"ADD SMOKINGUNSS lan://255.255.255.255 LAN",
 	"ADD TEES lan://255.255.255.255 LAN",
 	"ADD T2S lan://255.255.255.255 LAN",
-	"ADD TREMFUSIONS lan://255.255.255.255 LAN",
 	"ADD TREMULOUSGPPS lan://255.255.255.255 LAN",
 	"ADD TREMULOUSS lan://255.255.255.255 LAN",
 	"ADD TURTLEARENAS lan://255.255.255.255 LAN",
