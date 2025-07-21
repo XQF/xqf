@@ -873,26 +873,6 @@
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
-		<type>TREMFUSION_SERVER</type>
-		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3</flags>
-		<color_flags>COLOR_QUAKE3_NUMERIC | COLOR_QUAKE3_ALPHA</color_flags>
-		<name>TremFusion</name>
-		<default_port>30720</default_port>
-		<default_master_port>30710</default_master_port>
-		<id>TREMFUSIONS</id>
-		<qstat_str>TREMULOUSS</qstat_str>
-		<qstat_option>-tremulouss</qstat_option>
-		<qstat_master_option>-tremulousm</qstat_master_option>
-		<icon>tremfusion.xpm</icon>
-		<config_is_valid>config_is_valid_generic</config_is_valid>
-		<command>tremfusion</command>
-		<default_home>~/.tremulous</default_home>
-		<prefs_load>q3_prefs_load_common</prefs_load>
-		<update_prefs>q3_update_prefs</update_prefs>
-		<main_mod>base</main_mod>
-	</game>
-	<game>
-		<base>Q3_SERVER</base>
 		<type>TREMULOUS_SERVER</type>
 		<flags>GAME_CONNECT | GAME_PASSWORD | GAME_RCON | GAME_MASTER_QUAKE3</flags>
 		<color_flags>COLOR_QUAKE3_NUMERIC | COLOR_QUAKE3_ALPHA</color_flags>

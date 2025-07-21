@@ -530,17 +530,6 @@ static struct q3_common_prefs_s tremulousgpp_prefs = {
 	.defproto  = "70",
 };
 
-static const char* tremfusion_masterprotocols[] = {
-	"auto",
-	"69 - v0.99",
-	NULL
-};
-
-static struct q3_common_prefs_s tremfusion_prefs = {
-	.protocols = tremfusion_masterprotocols,
-	.defproto  = "69",
-};
-
 static const char* unvanquished_masterprotocols[] = {
 	"auto",
 	"86",
@@ -3278,7 +3267,6 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case WARSOW_SERVER: return &warsow_prefs;
 		case TREMULOUS_SERVER: return &tremulous_prefs;
 		case TREMULOUSGPP_SERVER: return &tremulousgpp_prefs;
-		case TREMFUSION_SERVER: return &tremfusion_prefs;
 		case UNVANQUISHED_SERVER: return &unvanquished_prefs;
 		case OPENARENA_SERVER: return &openarena_prefs;
 		case Q3RALLY_SERVER: return &q3rally_prefs;
@@ -4392,7 +4380,6 @@ static struct generic_prefs* new_generic_prefs (void) {
 	new_genprefs[WARSOW_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[TREMULOUS_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[TREMULOUSGPP_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
-	new_genprefs[TREMFUSION_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[UNVANQUISHED_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[OPENARENA_SERVER].add_options_to_notebook = add_q3_options_to_notebook;
 	new_genprefs[Q3RALLY_SERVER].add_options_to_notebook = add_q3_options_to_notebook;

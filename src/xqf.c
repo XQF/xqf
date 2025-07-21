@@ -1829,7 +1829,6 @@ int server_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
 							case Q4_SERVER:
 							case REACTION_SERVER:
 							case SMOKINGUNS_SERVER:
-							case TREMFUSION_SERVER:
 							case TREMULOUSGPP_SERVER:
 							case TREMULOUS_SERVER:
 							case WO_SERVER:
