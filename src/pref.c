@@ -3286,6 +3286,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case JK2_SERVER: return &jk2_prefs;
 		case JK3_SERVER: return &jk3_prefs;
 		case NEXUIZ_SERVER: return &nexuiz_prefs;
+		case REXUIZ_SERVER: return &nexuiz_prefs;
 		case XONOTIC_SERVER: return &xonotic_prefs;
 		case WARFORK_SERVER: return &warfork_prefs;
 		case WARSOW_SERVER: return &warsow_prefs;
