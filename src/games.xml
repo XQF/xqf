@@ -492,6 +492,7 @@
 	<game>
 		<base>Q3_SERVER</base>
 		<type>NEXUIZ_SERVER</type>
+		<color_flags>COLOR_QUAKE3_NUMERIC</color_flags>
 		<name>Nexuiz</name>
 		<default_port>26000</default_port>
 		<id>NEXUIZS</id>
@@ -749,6 +750,25 @@
 		<prefs_load>q3_prefs_load_common</prefs_load>
 		<update_prefs>q3_update_prefs</update_prefs>
 		<main_mod>rq3</main_mod>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
+		<type>REXUIZ_SERVER</type>
+		<color_flags>COLOR_QUAKE3_NUMERIC</color_flags>
+		<name>Rexuiz</name>
+		<default_port>26000</default_port>
+		<id>REXUIZS</id>
+		<qstat_str>REXUIZS</qstat_str>
+		<qstat_option>-rexuizs</qstat_option>
+		<qstat_master_option>-rexuizm</qstat_master_option>
+		<icon>rexuiz.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<init_maps>xonotic_init_maps</init_maps>
+		<command>rexuiz</command>
+		<default_home>~/.rexuiz</default_home>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>data</main_mod>
 	</game>
 	<game>
 		<base>Q3_SERVER</base>

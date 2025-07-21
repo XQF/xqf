@@ -192,6 +192,10 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2025-07-22
+	"ADD REXUIZS master://dpmaster.tchr.no:27950 tchr.no",
+	"ADD REXUIZS master://dpmaster.deathmask.net:27950 deathmask.net",
+
 	// added 2025-07-21
 	"ADD WARFORKS master://master1.forbidden.gg:27950 forbidden.gg #1",
 	"ADD WARFORKS master://master2.forbidden.gg:27777 forbidden.gg #2",
@@ -479,6 +483,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD QS lan://255.255.255.255 LAN",
 	"ADD QWS lan://255.255.255.255 LAN",
 	"ADD REACTIONS lan://255.255.255.255 LAN",
+	"ADD REXUIZS lan://255.255.255.255 LAN",
 	"ADD RUNESRV lan://255.255.255.255 LAN",
 	"ADD SFS lan://255.255.255.255 LAN",
 	"ADD SMOKINGUNSS lan://255.255.255.255 LAN",
