@@ -196,6 +196,8 @@ static char *builtin_masters_update_info[] = {
 	"ADD WARFORKS master://master1.forbidden.gg:27950 forbidden.gg #1",
 	"ADD WARFORKS master://master2.forbidden.gg:27777 forbidden.gg #2",
 	"ADD WARFORKS master://master3.forbidden.gg:42863 forbidden.gg #3",
+	"ADD CDIESELS master://dpmaster.deathmask.net deathmask.net",
+	"ADD CDIESELS master://excalibur.nvg.ntnu.no nvg.ntnu.no",
 
 	// added 2025-07-19
 	"ADD DDNETS master://master.ddnet.org ddnet.org",
@@ -448,6 +450,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD ALIENARENAS lan://255.255.255.255 LAN",
 	"ADD AMS lan://255.255.255.255 LAN",
 	"ADD AQ2S lan://255.255.255.255 LAN",
+	"ADD CDIESELS lan://255.255.255.255 LAN",
 	"ADD CODS lan://255.255.255.255 LAN",
 	"ADD CODUOS lan://255.255.255.255 LAN",
 	"ADD COD2S lan://255.255.255.255 LAN",

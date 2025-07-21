@@ -489,6 +489,17 @@ static struct q3_common_prefs_s xonotic_prefs = {
 	.defproto  = "3",
 };
 
+static const char* cdiesel_masterprotocols[] = {
+	"auto",
+	"11908000 - v0.1.0.82",
+	NULL
+};
+
+static struct q3_common_prefs_s cdiesel_prefs = {
+	.protocols = cdiesel_masterprotocols,
+	.defproto  = "11908000",
+};
+
 static const char* warfork_masterprotocols[] = {
 	"auto",
 	"26 - v2.15",
@@ -3266,6 +3277,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case ETQW_SERVER: return &etqw_prefs;
 		case EF_SERVER: return &ef_prefs;
 		case SOF2S_SERVER: return &sof2_prefs;
+		case CDIESEL_SERVER: return &cdiesel_prefs;
 		case COD_SERVER: return &cod_prefs;
 		case CODUO_SERVER: return &coduo_prefs;
 		case COD2_SERVER: return &cod2_prefs;
