@@ -697,7 +697,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 		clanlen = strlen(clan)+1;
 	}
 
-	if (s->type == WARSOW_SERVER && clan) {
+	if ((s->type == WARSOW_SERVER || s->type == WARFORK_SERVER) && clan) {
 		static const char* colors[] = { "spectator", "", "red", "blue", "green", "yellow" };
 		unsigned i = atoi(clan);
 		if (i > 5) i = 1;
@@ -718,7 +718,7 @@ static struct player *q3_parse_player (char *token[], int n, struct server *s) {
 
 	// show clan name in model column
 	if (clan) {
-		if (s->type == WARSOW_SERVER) {
+		if (s->type == WARSOW_SERVER || s->type == WARFORK_SERVER) {
 			player->model = (char*)clan;
 		}
 		else {
@@ -2040,7 +2040,7 @@ static void q3_analyze_serverinfo (struct server *s) {
 				strcmp (*info_ptr, "g_gametypestring") == 0) {
 			s->gametype = info_ptr[1];
 		}
-		else if (s->type == WARSOW_SERVER &&
+		else if ((s->type == WARSOW_SERVER || s->type == WARFORK_SERVER) &&
 				strcmp (*info_ptr, "gametype") == 0) {
 			s->gametype = info_ptr[1];
 		}

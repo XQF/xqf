@@ -192,6 +192,11 @@ static char *builtin_masters_update_info[] = {
 	 *
 	 */
 
+	// added 2025-07-21
+	"ADD WARFORKS master://master1.forbidden.gg:27950 forbidden.gg #1",
+	"ADD WARFORKS master://master2.forbidden.gg:27777 forbidden.gg #2",
+	"ADD WARFORKS master://master3.forbidden.gg:42863 forbidden.gg #3",
+
 	// added 2025-07-19
 	"ADD DDNETS master://master.ddnet.org ddnet.org",
 	"ADD TEES master://master4.teeworlds.com teeworlds.com #4",
@@ -483,6 +488,7 @@ static char *builtin_masters_update_info[] = {
 	"ADD UNVANQUISHEDS lan://255.255.255.255 LAN",
 	"ADD UT2004S lan://255.255.255.255 LAN",
 	"ADD UT2S lan://255.255.255.255 LAN",
+	"ADD WARFORKS lan://255.255.255.255 LAN",
 	"ADD WARSOWS lan://255.255.255.255 LAN",
 	"ADD WOETS lan://255.255.255.255 LAN",
 	"ADD WOPS lan://255.255.255.255 LAN",

@@ -1058,6 +1058,26 @@
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
+		<type>WARFORK_SERVER</type>
+		<name>Warfork</name>
+		<default_port>44400</default_port>
+		<id>WARFORKS</id>
+		<qstat_str>WARFORKS</qstat_str>
+		<qstat_option>-warforks</qstat_option>
+		<qstat_master_option>-warforkm</qstat_master_option>
+		<icon>warfork.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<init_maps>q3_init_maps</init_maps>
+		<has_map>quake_has_map</has_map>
+		<get_mapshot>q3_get_mapshot</get_mapshot>
+		<command>warfork</command>
+		<default_home>~/.warfork</default_home>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>basewf</main_mod>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
 		<type>WARSOW_SERVER</type>
 		<name>Warsow</name>
 		<default_port>44400</default_port>
