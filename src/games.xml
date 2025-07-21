@@ -250,22 +250,6 @@
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
-		<type>ETL_SERVER</type>
-		<name>Enemy Territory: Legacy</name>
-		<id>ETLS</id>
-		<qstat_str>WOETS</qstat_str>
-		<qstat_option>-woets</qstat_option>
-		<qstat_master_option>-woetm</qstat_master_option>
-		<icon>etl.xpm</icon>
-		<config_is_valid>config_is_valid_generic</config_is_valid>
-		<command>etl</command>
-		<default_home>~/.etlegacy</default_home>
-		<prefs_load>q3_prefs_load_common</prefs_load>
-		<update_prefs>q3_update_prefs_common</update_prefs>
-		<main_mod>etmain</main_mod>
-	</game>
-	<game>
-		<base>Q3_SERVER</base>
 		<type>ETQW_SERVER</type>
 		<name>Enemy Territory: Quake Wars</name>
 		<default_port>27733</default_port>
@@ -287,6 +271,22 @@
 		<main_mod>base</main_mod>
 		<attributes>+net_clientRemoteConsolePassword</attributes>
 		<attributes>+rconpassword</attributes>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
+		<type>ETL_SERVER</type>
+		<name>ET: Legacy</name>
+		<id>ETLS</id>
+		<qstat_str>WOETS</qstat_str>
+		<qstat_option>-woets</qstat_option>
+		<qstat_master_option>-woetm</qstat_master_option>
+		<icon>etl.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<command>etl</command>
+		<default_home>~/.etlegacy</default_home>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>etmain</main_mod>
 	</game>
 	<game>
 		<type>HL_SERVER_OLD</type>
