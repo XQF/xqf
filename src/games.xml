@@ -94,6 +94,26 @@
 	</game>
 	<game>
 		<base>Q3_SERVER</base>
+		<type>CDIESEL_SERVER</type>
+		<name>Cocaine Diesel</name>
+		<default_port>44400</default_port>
+		<id>CDIESELS</id>
+		<qstat_str>CDIESELS</qstat_str>
+		<qstat_option>-cdiesels</qstat_option>
+		<qstat_master_option>-cdieselm</qstat_master_option>
+		<icon>cdiesel.xpm</icon>
+		<config_is_valid>config_is_valid_generic</config_is_valid>
+		<init_maps>q3_init_maps</init_maps>
+		<has_map>quake_has_map</has_map>
+		<get_mapshot>q3_get_mapshot</get_mapshot>
+		<command>client</command>
+		<default_home>~/.local/share/Cocaine Diesel</default_home>
+		<prefs_load>q3_prefs_load_common</prefs_load>
+		<update_prefs>q3_update_prefs_common</update_prefs>
+		<main_mod>base</main_mod>
+	</game>
+	<game>
+		<base>Q3_SERVER</base>
 		<type>COD_SERVER</type>
 		<name>Call of Duty</name>
 		<default_port>28960</default_port>
