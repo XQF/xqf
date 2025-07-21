@@ -489,6 +489,17 @@ static struct q3_common_prefs_s xonotic_prefs = {
 	.defproto  = "3",
 };
 
+static const char* warfork_masterprotocols[] = {
+	"auto",
+	"26 - v2.15",
+	NULL
+};
+
+static struct q3_common_prefs_s warfork_prefs = {
+	.protocols = warfork_masterprotocols,
+	.defproto  = "26",
+};
+
 static const char* warsow_masterprotocols[] = {
 	"auto",
 	"22 - v2.1.0",
@@ -3264,6 +3275,7 @@ static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type
 		case JK3_SERVER: return &jk3_prefs;
 		case NEXUIZ_SERVER: return &nexuiz_prefs;
 		case XONOTIC_SERVER: return &xonotic_prefs;
+		case WARFORK_SERVER: return &warfork_prefs;
 		case WARSOW_SERVER: return &warsow_prefs;
 		case TREMULOUS_SERVER: return &tremulous_prefs;
 		case TREMULOUSGPP_SERVER: return &tremulousgpp_prefs;
