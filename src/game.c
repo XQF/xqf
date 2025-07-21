@@ -81,6 +81,7 @@ static void bf1942_analyze_serverinfo (struct server *s);
 static void descent3_analyze_serverinfo (struct server *s);
 static void savage_analyze_serverinfo (struct server *s);
 static void ottd_analyze_serverinfo (struct server *s);
+static void teeworlds_analyze_serverinfo (struct server *s);
 
 static int quake_config_is_valid (struct server *s);
 static int config_is_valid_generic (struct server *s);
@@ -2256,6 +2257,16 @@ static void doom3_analyze_serverinfo (struct server *s) {
 
 	if (fs_game) {
 		s->game=fs_game;
+	}
+}
+
+static void teeworlds_analyze_serverinfo (struct server *s) {
+	char **info_ptr;
+
+	for (info_ptr = s->info; info_ptr && *info_ptr; info_ptr += 2) {
+		if (strcmp (*info_ptr, "gametype") == 0) {
+			s->gametype = info_ptr[1];
+		}
 	}
 }
 
