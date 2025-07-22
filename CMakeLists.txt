@@ -163,9 +163,7 @@ endif()
 
 # GUI definitions
 if (GTK_TARGET STREQUAL "2")
-	set(GUI_GTK2 ON)
-elseif (GTK_TARGET STREQUAL "3")
-	set(GUI_GTK3 ON)
+	set_c_cxx_flag("-Wno-deprecated-declarations")
 endif()
 
 add_definitions(-DGUI_GTK${GTK_TARGET})
@@ -182,10 +180,6 @@ endif()
 # Compiler flags
 # Only set -Wall on the C compiler for now.
 set_c_flag("-Wall")
-
-if (GUI_GTK2)
-	set_c_cxx_flag("-Wno-deprecated-declarations")
-endif()
 
 option(USE_LTO "Enable link-time optimization" OFF)
 
@@ -586,20 +580,11 @@ find_package(PkgConfig REQUIRED)
 find_package(Gettext REQUIRED)
 pkg_check_modules(UNZIP REQUIRED minizip)
 pkg_check_modules(XML REQUIRED libxml-2.0)
+pkg_check_modules(GTK REQUIRED gtk+-${GTK_TARGET}.0)
 
-if (GUI_GTK2)
-	pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
-	include_directories(${GTK2_INCLUDE_DIRS})
-	link_directories(${GTK2_LIBRARY_DIRS})
-	add_definitions(${GTK2_CFLAGS_OTHER})
-	set(GUI_SET ON)
-elseif (GUI_GTK3)
-	pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-	include_directories(${GTK3_INCLUDE_DIRS})
-	link_directories(${GTK3_LIBRARY_DIRS})
-	add_definitions(${GTK3_CFLAGS_OTHER})
-	set(GUI_SET ON)
-endif()
+include_directories(${GTK_INCLUDE_DIRS})
+link_directories(${GTK_LIBRARY_DIRS})
+add_definitions(${GTK_CFLAGS_OTHER})
 
 # XQF also requires GLib but it comes with GTK.
 if (RCON_STANDALONE)
@@ -652,13 +637,7 @@ endif()
 
 # Compile and link
 add_executable(xqf ${xqf_SOURCES})
-target_link_libraries(xqf ${UNZIP_LIBRARIES} dl m)
-
-if (GUI_GTK2)
-	target_link_libraries(xqf ${GTK2_LIBRARIES})
-elseif (GUI_GTK3)
-	target_link_libraries(xqf ${GTK3_LIBRARIES})
-endif()
+target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} dl m)
 
 if (USE_GEOIP)
 	target_link_libraries(xqf GeoIP)
@@ -712,13 +691,8 @@ install(TARGETS xqf
 	DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
 # UI
-if (GUI_GTK2)
-	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk2.ui
-	DESTINATION ${PACKAGE_DATA_DIR}/ui)
-elseif (GUI_GTK3)
-	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk3.ui
-	DESTINATION ${PACKAGE_DATA_DIR}/ui)
-endif()
+install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk${GTK_TARGET}.ui
+DESTINATION ${PACKAGE_DATA_DIR}/ui)
 
 # Icons
 install(FILES ${xpm_DATA}
