@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.7)
 
+include(CheckCXXCompilerFlag)
+
 # Project information
 project(xqf LANGUAGES C CXX)
 
@@ -28,6 +30,64 @@ set(DOMAIN "${PROJECT_NAME}")
 
 set(LINGUAS ca da de es fi fr pl ru)
 set(DEFAULT_GUI GTK2)
+
+# Macros
+macro(set_c_flag FLAG)
+	if (${ARGC} GREATER 1)
+		set(CMAKE_C_FLAGS_${ARGV1} "${CMAKE_CXX_FLAGS_${ARGV1}} ${FLAG}")
+	else()
+		set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG}")
+	endif()
+endmacro()
+
+macro(set_cxx_flag FLAG)
+	if (${ARGC} GREATER 1)
+		set(CMAKE_CXX_FLAGS_${ARGV1} "${CMAKE_CXX_FLAGS_${ARGV1}} ${FLAG}")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG}")
+	endif()
+endmacro()
+
+macro(set_c_cxx_flag FLAG)
+	set_c_flag(${FLAG})
+	set_cxx_flag(${FLAG})
+endmacro()
+
+macro(set_linker_flag FLAG)
+	if (${ARGC} GREATER 1)
+		set(CMAKE_EXE_LINKER_FLAGS_${ARGV1} "${CMAKE_EXE_LINKER_FLAGS_${ARGV1}} ${FLAG}")
+		set(CMAKE_SHARED_LINKER_FLAGS_${ARGV1} "${CMAKE_SHARED_LINKER_FLAGS_${ARGV1}} ${FLAG}")
+		set(CMAKE_MODULE_LINKER_FLAGS_${ARGV1} "${CMAKE_MODULE_LINKER_FLAGS_${ARGV1}} ${FLAG}")
+	else()
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAG}")
+		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${FLAG}")
+		set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${FLAG}")
+	endif()
+endmacro()
+
+macro(try_c_flag FLAG PROP)
+	check_C_compiler_flag(${FLAG} FLAG_${PROP})
+
+	if (FLAG_${PROP})
+		set_c_flag(${FLAG})
+	endif()
+endmacro()
+
+macro(try_cxx_flag FLAG PROP)
+	check_CXX_compiler_flag(${FLAG} FLAG_${PROP})
+
+	if (FLAG_${PROP})
+		set_cxx_flag(${FLAG})
+	endif()
+endmacro()
+
+macro(try_c_cxx_flag FLAG PROP)
+	# Only try the flag once on the C++ compiler.
+	try_cxx_flag(${PROP} ${FLAG} ${ARGV2})
+	if (FLAG_${PROP})
+		set_c_flag(${FLAG} ${ARGV2})
+	endif()
+endmacro()
 
 # Paths
 set(PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/xqf")
