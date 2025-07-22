@@ -742,4 +742,9 @@ if (BUILD_RCON)
 	add_executable(rcon ${rcon_SOURCES})
 	target_compile_definitions(rcon PUBLIC BUILD_RCON)
 	target_link_libraries(rcon ${GLIB_LIBRARIES} -lreadline)
+
+	# Installation
+	# Executable
+	install(TARGETS rcon
+		DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 endif()
