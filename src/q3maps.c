@@ -34,7 +34,10 @@
 #include "utils.h"
 
 #include "q3maps.h"
+
+#if defined(USE_CRUNCH)
 #include "crntotga.h"
+#endif
 
 struct q3mapinfo
 {
@@ -156,18 +159,31 @@ static inline const char* last_two_entries(const char* name) {
 	return name;
 }
 
+#define GDKPIXBUF_EXT_NUM 4
+
+#if defined(USE_CRUNCH)
+	#define CRUNCH_EXT_NUM 3
+#else
+	#define CRUNCH_EXT_NUM 0
+#endif
+
+#define PIC_EXT_NUM GDKPIXBUF_EXT_NUM + CRUNCH_EXT_NUM
+
 static gchar* has_known_image_format(const gchar* name) {
-	guint i, ext_num = 7;
-	gchar *ext_list[7] = {
+	guint i, ext_num = PIC_EXT_NUM;
+	gchar *ext_list[PIC_EXT_NUM] = {
 		// Native GdkPixbuf loader.
 		".jpg",
 		".png",
 		".tga",
 		".webp",
+
+#if defined(USE_CRUNCH)
 		// Crunch TGA conversion before GdkPixbuf.
 		".crn",
 		".dds",
 		".ktx",
+#endif
 	};
 
 	for (i = 0; i < ext_num; i++) {
@@ -729,6 +745,7 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 
 	if (!error)
 	{
+#if defined(USE_CRUNCH)
 		enum crunchFormat_t format = CRUNCH_NONE;
 
 		if (stri_has_ext(filename, ".crn"))
@@ -758,6 +775,9 @@ static size_t readimagefromzip(guchar** buf, const char* zipfile, const char* fi
 			*buf = tgabuf;
 			return tgabuf_len;
 		}
+#else
+		return buflen;
+#endif
 	}
 
 	g_free(*buf);
