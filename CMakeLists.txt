@@ -1,8 +1,22 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.27)
 
 # Required since CMake 3.4 otherwise symbols are not exported and
 # XQF can't find some internal resources like compiled XPM images.
-set(CMAKE_ENABLE_EXPORTS ON)
+#
+# See:
+# - https://cmake.org/cmake/help/latest/release/3.4.html
+# - https://cmake.org/cmake/help/v3.4/variable/CMAKE_ENABLE_EXPORTS.html
+# - https://cmake.org/cmake/help/v3.27/variable/CMAKE_ENABLE_EXPORTS.html
+# - https://cmake.org/cmake/help/v3.27/variable/CMAKE_EXECUTABLE_ENABLE_EXPORTS.html
+# - https://cmake.org/cmake/help/v3.27/prop_tgt/ENABLE_EXPORTS.html
+#
+# > Normally an executable does not export any symbols because it is the final program.
+# > It is possible for an executable to export symbols to be used by loadable modules.
+# > When this property is set to true CMake will allow other targets to "link" to the executable.
+#
+# For some reasons we need that for the executable to find embedded
+# data at run time.
+set(CMAKE_EXECUTABLE_ENABLE_EXPORTS ON)
 
 include(CheckCXXCompilerFlag)
 
