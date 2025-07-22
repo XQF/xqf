@@ -251,7 +251,6 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/loadpixmap.c
 	 ${CMAKE_SOURCE_DIR}/src/scripts.c
 	 ${CMAKE_SOURCE_DIR}/src/memtopixmap.c
-	 ${CMAKE_SOURCE_DIR}/src/crntotga.cpp
 
 	 ${CMAKE_SOURCE_DIR}/src/addmaster.h
 	 ${CMAKE_SOURCE_DIR}/src/addserver.h
@@ -297,8 +296,12 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/loadpixmap.h
 	 ${CMAKE_SOURCE_DIR}/src/scripts.h
 	 ${CMAKE_SOURCE_DIR}/src/memtopixmap.h
-	 ${CMAKE_SOURCE_DIR}/src/crntotga.h
  )
+
+set(crntotga_SOURCES
+	 ${CMAKE_SOURCE_DIR}/src/crntotga.cpp
+	 ${CMAKE_SOURCE_DIR}/src/crntotga.h
+)
 
 set(flag_DATA
 	${CMAKE_SOURCE_DIR}/pixmaps/flags/lan.png
@@ -625,6 +628,11 @@ add_definitions(-DICONS_C_INCLUDE="${CMAKE_BINARY_DIR}/icons.c")
 # this must be manually specified due to the include name being a define
 set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game.c
 	APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_BINARY_DIR}/games.c)
+
+if (USE_CRUNCH)
+	add_definitions(-DUSE_CRUNCH)
+	list(APPEND xqf_SOURCES ${crntotga_SOURCES})
+endif()
 
 # Compile and link
 add_executable (xqf ${xqf_SOURCES})
