@@ -10,7 +10,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev
+        sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev libreadline-dev
     - name: Update submodules
       run: git submodule update --init --recursive
     - name: cmake
@@ -28,7 +28,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev
+        sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev libreadline-dev
     - name: Update submodules
       run: git submodule update --init --recursive
     - name: cmake
