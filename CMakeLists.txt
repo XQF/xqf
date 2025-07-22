@@ -169,6 +169,22 @@ if (GUI MATCHES GTK2)
 	set_c_cxx_flag("-Wno-deprecated-declarations")
 endif()
 
+option(USE_LTO "Enable link-time optimization" OFF)
+
+# It should be done at the very end because it copies all compiler flags
+# to the linker flags.
+if (USE_LTO)
+	try_cxx_flag("-flto=auto" FLTO_AUTO)
+
+	if (NOT FLAG_FLTO_AUTO)
+		try_cxx_flag("-flto" FLTO)
+	endif()
+
+	set_linker_flag("${CMAKE_CXX_FLAGS}" RELEASE)
+	set_linker_flag("${CMAKE_CXX_FLAGS}" RELWITHDEBINFO)
+	set_linker_flag("${CMAKE_CXX_FLAGS}" MINSIZEREL)
+endif()
+
 # Source list
 set(xqf_HEADERS_DIR ${CMAKE_SOURCE_DIR}/src)
 
