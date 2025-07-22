@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.5)
 
 # Required since CMake 3.4 otherwise symbols are not exported and
 # XQF can't find some internal resources like compiled XPM images.
