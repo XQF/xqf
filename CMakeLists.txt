@@ -123,6 +123,11 @@ endif()
 
 add_definitions(-DQSTAT_EXEC="${WITH_QSTAT}")
 
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE
+		STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel" FORCE)
+endif()
+
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
 	add_definitions(-DDEBUG)
 endif()
