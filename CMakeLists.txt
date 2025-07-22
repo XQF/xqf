@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.7)
 
 # Project information
-project(xqf)
+project(xqf LANGUAGES C CXX)
 
 set(VERSION "1.0.6.2")
 
