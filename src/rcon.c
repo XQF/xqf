@@ -29,28 +29,25 @@
 
 #include <sys/time.h>   // select
 
-#ifdef RCON_STANDALONE
+#include "utils.h"
+#include "rcon.h"
+
+#if defined(BUILD_RCON)
 #include <locale.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "game.h"
 #endif
 
-#include <glib.h>
-#include <glib/gi18n.h>
-
-#include "xqf.h"
-#include "utils.h"
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 #include "xqf-ui.h"
 #include "srv-prop.h"
 #include "srv-list.h"
-#include "game.h"
 #include "dialogs.h"
 #include "history.h"
 #include "config.h"
 #endif
-#include "rcon.h"
 
 enum { PACKET_MAXSIZE = (64 * 1024) };
 
@@ -60,7 +57,7 @@ static const char* rcon_password = NULL;
 static char* rcon_challenge = NULL;         // halflife challenge
 static enum server_type rcon_servertype;
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static struct history *rcon_history = NULL;
 
 static GtkWidget *rcon_combo = NULL;
@@ -109,7 +106,7 @@ static int huff_check (void) {
 }
 
 static void rcon_print (char *fmt, ...) {
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 	GtkAdjustment *vadjustment;
 	char buf[2048];
 	va_list ap;
@@ -270,7 +267,7 @@ static int rcon_send(const char* cmd) {
 	return ret;
 }
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	char *cmd;
 	int res;
@@ -435,7 +432,7 @@ static char* rcon_receive() {
 }
 
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
                                      void *user_data) {
 	GtkAdjustment *vadjustment;
@@ -455,7 +452,7 @@ static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
 #endif
 
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
 	gtk_entry_set_text (combo_get_entry (rcon_combo), "status");
 	rcon_combo_activate_callback (rcon_combo, data);
@@ -463,14 +460,14 @@ static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
 #endif
 
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
 	gtk_text_buffer_set_text (rcon_text_buffer, "", 0);
 }
 #endif
 
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static void rcon_save_geometry (GtkWidget *window, gpointer data) {
 	GtkAllocation allocation;
 
@@ -484,7 +481,7 @@ static void rcon_save_geometry (GtkWidget *window, gpointer data) {
 #endif
 
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 static void rcon_restore_geometry (GtkWidget *window) {
 	char buf[256];
 	int height, width;
@@ -502,7 +499,7 @@ static void rcon_restore_geometry (GtkWidget *window) {
 #endif
 
 
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 void rcon_dialog (const struct server *s, const char *passwd) {
 	GtkWidget *window;
 	GtkWidget *main_vbox;
@@ -702,14 +699,14 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 
 void rcon_init (void) {
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 	rcon_history = history_new ("RCON");
 #endif
 }
 
 
 void rcon_done (void) {
-#ifndef RCON_STANDALONE
+#if defined(BUILD_XQF)
 	if (rcon_history) {
 		history_free (rcon_history);
 		rcon_history = NULL;
@@ -717,7 +714,7 @@ void rcon_done (void) {
 #endif
 }
 
-#ifdef RCON_STANDALONE
+#if defined(BUILD_RCON)
 int main(int argc, char* argv[]) {
 	struct in_addr ip;
 	int argpos = 1;

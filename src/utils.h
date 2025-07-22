@@ -24,7 +24,7 @@
 #include <time.h>
 
 #include <glib.h>
-
+#include <glib/gi18n.h>
 
 extern short strtosh (const char *str);
 extern unsigned short strtoush (const char *str);

@@ -32,9 +32,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include <glib.h>
-#include <glib/gi18n.h>
+#if defined(BUILD_XQF)
 #include <gtk/gtk.h>
+#endif
 
 #include "utils.h"
 #include "debug.h"
@@ -933,7 +933,7 @@ int set_nonblock (int fd) {
 
 // TODO: code is generic enough to move into separate file
 
-#if !defined(RCON_STANDALONE)
+#if defined(BUILD_XQF)
 int start_prog_and_return_fd(char *const argv[], pid_t *pid) {
 	int pipefds[2];
 
@@ -1204,7 +1204,7 @@ out:
 
 	return buf;
 }
-#endif  // ! RCON_STANDALONE
+#endif // BUILD_XQF
 
 void close_fds(int exclude) {
 	unsigned i;

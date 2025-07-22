@@ -21,7 +21,6 @@
 
 #include "xqf.h"
 
-
 struct condef {
 	struct server *s;
 	char *server;
@@ -44,6 +43,4 @@ extern int client_launch (const struct condef *con, int forkit);
 extern struct condef *condef_new (struct server *s);
 extern void condef_free (struct condef *con);
 
-
 #endif /* __LAUNCH_H__ */
-

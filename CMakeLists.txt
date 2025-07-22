@@ -127,10 +127,13 @@ add_definitions(-DPACKAGE="${PROJECT_NAME}" -DPACKAGE_VERSION="${VERSION}" -DXQF
 # Options
 option(DEPRECATED_DISABLE "Disable deprecated parts of GLib, GObject, GDK and GTK+" OFF)
 
+option(USE_LTO "Enable link-time optimization" OFF)
 option(USE_GEOIP "Depend on GeoIP library for geolocation" ON)
 option(USE_GZIP "Enable gzip compressor support" ON)
 option(USE_CRUNCH "Enable Crunch decompressor support (DDS, KTX, CRN)" ON)
-option(RCON_STANDALONE "Build standalone RCON" OFF)
+
+option(BUILD_XQF "Build XQF" ON)
+option(BUILD_RCON "Build standalone RCON" OFF)
 
 set(QSTAT_HELP "QStat binary name")
 set(WITH_QSTAT "${DEFAULT_QSTAT}" CACHE STRING "${QSTAT_HELP}")
@@ -150,38 +153,18 @@ if (CMAKE_BUILD_TYPE MATCHES "DEBUG")
 	add_definitions(-DDEBUG)
 endif()
 
+# Compiler flags
 set_c_cxx_flag("-g3" DEBUG)
 set_c_cxx_flag("-g3" RELWITHDEBINFO)
 
-set(GTK_TARGET_HELP "GTK target (2 or 3)")
-set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}")
-
-# Default GTK_TARGET setting
-if (NOT (GTK_TARGET STREQUAL "2" OR GTK_TARGET STREQUAL "3"))
-	set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}" FORCE)
-endif()
-
-# GUI definitions
-if (GTK_TARGET STREQUAL "2")
-	set_c_cxx_flag("-Wno-deprecated-declarations")
-endif()
-
-add_definitions(-DGUI_GTK${GTK_TARGET})
-
-# Other definitions
-if (USE_GEOIP)
-	add_definitions(-DUSE_GEOIP)
-endif()
-
-if (USE_GZIP)
-	add_definitions(-DUSE_GZIP)
-endif()
-
-# Compiler flags
 # Only set -Wall on the C compiler for now.
 set_c_flag("-Wall")
 
-option(USE_LTO "Enable link-time optimization" OFF)
+if (DEPRECATED_DISABLE)
+	add_definitions(-DGSEAL_ENABLE
+	-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
+	-DG_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES)
+endif()
 
 # It should be done at the very end because it copies all compiler flags
 # to the linker flags.
@@ -569,163 +552,189 @@ set(icon_SIZE 22 32 48 128)
 
 include_directories(${xqf_HEADERS_DIR} ${CMAKE_BINARY_DIR})
 
-if (DEPRECATED_DISABLE)
-	add_definitions(-DGSEAL_ENABLE
-	-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
-	-DG_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_SINGLE_INCLUDES -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES -DGTK_DISABLE_SINGLE_INCLUDES)
-endif()
-
 # Use the package PkgConfig to detect GTK+ headers/library files
 find_package(PkgConfig REQUIRED)
-find_package(Gettext REQUIRED)
-pkg_check_modules(UNZIP REQUIRED minizip)
-pkg_check_modules(XML REQUIRED libxml-2.0)
-pkg_check_modules(GTK REQUIRED gtk+-${GTK_TARGET}.0)
 
-include_directories(${GTK_INCLUDE_DIRS})
-link_directories(${GTK_LIBRARY_DIRS})
-add_definitions(${GTK_CFLAGS_OTHER})
+if (BUILD_XQF OR BUILD_RCON)
+	pkg_check_modules(XML REQUIRED libxml-2.0)
 
-# XQF also requires GLib but it comes with GTK.
-if (RCON_STANDALONE)
-	pkg_check_modules(GLIB REQUIRED glib-2.0)
-	include_directories(${GLIB_INCLUDE_DIRS})
-	link_directories(${GLIB_LIBRARY_DIRS})
-	add_definitions(${GLIB_CFLAGS_OTHER})
+	include_directories(${XML_INCLUDE_DIRS})
+	link_directories(${XML_LIBRARY_DIRS})
+
+	# Compile and link
+	add_executable(gamesxml2c ${CMAKE_SOURCE_DIR}/src/gamesxml2c.c)
+	target_link_libraries(gamesxml2c xml2)
+
+	# Custom build rule for converting games.xml to games.c
+	add_custom_command(
+		OUTPUT ${CMAKE_BINARY_DIR}/games.c
+		COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h ${CMAKE_BINARY_DIR}/icons.c
+		MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
+		DEPENDS gamesxml2c)
+
+	# Define games.c filename for including in src/game.c
+	add_definitions(-DGAMES_C_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
+	add_definitions(-DGAMES_H_INCLUDE="${CMAKE_BINARY_DIR}/games.h")
+	add_definitions(-DICONS_C_INCLUDE="${CMAKE_BINARY_DIR}/icons.c")
 endif()
 
-if (USE_GEOIP)
-	pkg_check_modules(GEOIP REQUIRED geoip)
-	include_directories(${GEOIP_INCLUDE_DIRS})
-	link_directories(${GEOIP_LIBRARY_DIRS})
-endif()
+if (BUILD_XQF)
+	set(GTK_TARGET_HELP "GTK target (2 or 3)")
+	set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}")
 
-include_directories(${UNZIP_INCLUDE_DIRS})
-link_directories(${UNZIP_LIBRARY_DIRS})
-
-include_directories(${XML_INCLUDE_DIRS})
-link_directories(${XML_LIBRARY_DIRS})
-
-include_directories(${GETTEXT_INCLUDE_DIRS})
-link_directories(${GETTEXT_LIBRARY_DIRS})
-
-# Compile and link
-add_executable(gamesxml2c ${CMAKE_SOURCE_DIR}/src/gamesxml2c.c)
-target_link_libraries(gamesxml2c xml2)
-
-# Custom build rule for converting games.xml to games.c
-add_custom_command(
-	OUTPUT ${CMAKE_BINARY_DIR}/games.c
-	COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h ${CMAKE_BINARY_DIR}/icons.c
-	MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
-	DEPENDS gamesxml2c)
-
-# Define games.c filename for including in src/game.c
-add_definitions(-DGAMES_C_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
-add_definitions(-DGAMES_H_INCLUDE="${CMAKE_BINARY_DIR}/games.h")
-add_definitions(-DICONS_C_INCLUDE="${CMAKE_BINARY_DIR}/icons.c")
-
-# Make src/game.c depend on games.c so that src/game.c is rebuilt when games.c changes,
-# this must be manually specified due to the include name being a define
-set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game.c
-	APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_BINARY_DIR}/games.c)
-
-if (USE_CRUNCH)
-	add_definitions(-DUSE_CRUNCH)
-	list(APPEND xqf_SOURCES ${crntotga_SOURCES})
-endif()
-
-# Compile and link
-add_executable(xqf ${xqf_SOURCES})
-target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} dl m)
-
-if (USE_GEOIP)
-	target_link_libraries(xqf GeoIP)
-endif()
-
-if (USE_CRUNCH)
-	set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-
-	set(BUILD_CRUNCH OFF)
-	set(BUILD_EXAMPLES OFF)
-	set(BUILD_SHARED_LIBCRN OFF)
-	set(BUILD_STATIC_LIBCRN ON)
-
-	add_subdirectory(${CMAKE_SOURCE_DIR}/libs/crunch)
-
-	target_include_directories(xqf PRIVATE ${CMAKE_SOURCE_DIR}/libs/crunch/crnlib)
-	target_link_directories(xqf PRIVATE ${CMAKE_BINARY_DIR}/libs/crunch/crnlib)
-	target_link_libraries(xqf crn)
-endif()
-
-if (RCON_STANDALONE)
-	add_executable(rcon ${rcon_SOURCES})
-	target_link_libraries(rcon ${GLIB_LIBRARIES} -lreadline)
-	target_compile_definitions(rcon PUBLIC RCON_STANDALONE)
-endif()
-
-# i18n
-add_custom_target(translation ALL)
-
-foreach (LANG ${LINGUAS})
-	set(_poFile ${CMAKE_SOURCE_DIR}/po/${LANG}.po)
-
-	if (EXISTS ${_poFile})
-		set(POT_FILE ${CMAKE_SOURCE_DIR}/po/${DOMAIN}.pot)
-		set(PO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.po)
-		set(GMO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.gmo)
-
-		add_custom_command(TARGET translation
-			COMMAND msgmerge ${_poFile} ${POT_FILE} -o ${PO_FILE_NEW}
-			COMMAND msgfmt -c -o ${GMO_FILE_NEW} ${PO_FILE_NEW})
+	# Default GTK_TARGET setting
+	if (NOT (GTK_TARGET STREQUAL "2" OR GTK_TARGET STREQUAL "3"))
+		set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}" FORCE)
 	endif()
-endforeach()
 
-add_custom_command(TARGET translation
-	COMMAND echo ${LINGUAS} > ${CMAKE_BINARY_DIR}/LINGUAS
-	COMMAND msgfmt --desktop -d ${CMAKE_BINARY_DIR} --template=${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.desktop.in -c -o ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop)
+	# GUI definitions
+	if (GTK_TARGET STREQUAL "2")
+		set_c_cxx_flag("-Wno-deprecated-declarations")
+	endif()
 
-# Installation
-# Executable
-install(TARGETS xqf
-	DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+	# Other definitions
+	if (USE_GEOIP)
+		add_definitions(-DUSE_GEOIP)
+	endif()
 
-# UI
-install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk${GTK_TARGET}.ui
-DESTINATION ${PACKAGE_DATA_DIR}/ui)
+	if (USE_GZIP)
+		add_definitions(-DUSE_GZIP)
+	endif()
 
-# Icons
-install(FILES ${xpm_DATA}
-	DESTINATION ${PACKAGE_DATA_DIR}/xpm)
+	find_package(Gettext REQUIRED)
 
-install(FILES ${xpm_MAIN}
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+	pkg_check_modules(UNZIP REQUIRED minizip)
+	pkg_check_modules(GTK REQUIRED gtk+-${GTK_TARGET}.0)
 
-install(FILES ${flag_DATA}
-	DESTINATION ${PACKAGE_DATA_DIR}/default/flags)
+	include_directories(${GTK_INCLUDE_DIRS})
+	link_directories(${GTK_LIBRARY_DIRS})
+	add_definitions(${GTK_CFLAGS_OTHER})
 
-foreach (SIZE ${icon_SIZE})
-	install(FILES ${CMAKE_SOURCE_DIR}/pixmaps/${SIZE}x${SIZE}/xqf.png
-		DESTINATION ${PIXMAPS_ENTRY_PATH}/${SIZE}x${SIZE}/apps)
-endforeach()
+	if (USE_GEOIP)
+		pkg_check_modules(GEOIP REQUIRED geoip)
+		include_directories(${GEOIP_INCLUDE_DIRS})
+		link_directories(${GEOIP_LIBRARY_DIRS})
+	endif()
 
-install(FILES ${CMAKE_SOURCE_DIR}/pixmaps/scalable/xqf.svg
-	DESTINATION ${PIXMAPS_ENTRY_PATH}/scalable/apps)
+	include_directories(${UNZIP_INCLUDE_DIRS})
+	link_directories(${UNZIP_LIBRARY_DIRS})
 
-# Config
-install(FILES ${CMAKE_SOURCE_DIR}/src/qstat.cfg
-	DESTINATION ${PACKAGE_DATA_DIR})
+	include_directories(${GETTEXT_INCLUDE_DIRS})
+	link_directories(${GETTEXT_LIBRARY_DIRS})
 
-# Man pages
-install(FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6
-	DESTINATION ${MAN_ENTRY_PATH}/man6)
+	# Make src/game.c depend on games.c so that src/game.c is rebuilt when games.c changes,
+	# this must be manually specified due to the include name being a define
+	set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game.c
+		APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_BINARY_DIR}/games.c)
 
-# i18n
-foreach (LANG ${LINGUAS})
-	install(FILES ${CMAKE_BINARY_DIR}/${LANG}.gmo
-		DESTINATION ${LOCALEDIR}/${LANG}/LC_MESSAGES
-		RENAME ${DOMAIN}.mo)
-endforeach()
+	if (USE_CRUNCH)
+		list(APPEND xqf_SOURCES ${crntotga_SOURCES})
+	endif()
 
-install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+	# Compile and link
+	add_executable(xqf ${xqf_SOURCES})
+	target_compile_definitions(xqf PUBLIC BUILD_XQF)
+	target_compile_definitions(xqf PUBLIC GUI_GTK${GTK_TARGET})
+	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} dl m)
+
+	if (USE_GEOIP)
+		target_link_libraries(xqf GeoIP)
+	endif()
+
+	if (USE_CRUNCH)
+		set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
+		set(BUILD_CRUNCH OFF)
+		set(BUILD_EXAMPLES OFF)
+		set(BUILD_SHARED_LIBCRN OFF)
+		set(BUILD_STATIC_LIBCRN ON)
+
+		add_subdirectory(${CMAKE_SOURCE_DIR}/libs/crunch)
+
+		target_include_directories(xqf PRIVATE ${CMAKE_SOURCE_DIR}/libs/crunch/crnlib)
+		target_compile_definitions(xqf PUBLIC USE_CRUNCH)
+		target_link_directories(xqf PRIVATE ${CMAKE_BINARY_DIR}/libs/crunch/crnlib)
+		target_link_libraries(xqf crn)
+	endif()
+
+	# i18n
+	add_custom_target(translation ALL)
+
+	foreach (LANG ${LINGUAS})
+		set(_poFile ${CMAKE_SOURCE_DIR}/po/${LANG}.po)
+
+		if (EXISTS ${_poFile})
+			set(POT_FILE ${CMAKE_SOURCE_DIR}/po/${DOMAIN}.pot)
+			set(PO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.po)
+			set(GMO_FILE_NEW ${CMAKE_BINARY_DIR}/${LANG}.gmo)
+
+			add_custom_command(TARGET translation
+				COMMAND msgmerge ${_poFile} ${POT_FILE} -o ${PO_FILE_NEW}
+				COMMAND msgfmt -c -o ${GMO_FILE_NEW} ${PO_FILE_NEW})
+		endif()
+	endforeach()
+
+	add_custom_command(TARGET translation
+		COMMAND echo ${LINGUAS} > ${CMAKE_BINARY_DIR}/LINGUAS
+		COMMAND msgfmt --desktop -d ${CMAKE_BINARY_DIR} --template=${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.desktop.in -c -o ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop)
+
+	# Installation
+	# Executable
+	install(TARGETS xqf
+		DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+
+	# UI
+	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk${GTK_TARGET}.ui
+	DESTINATION ${PACKAGE_DATA_DIR}/ui)
+
+	# Icons
+	install(FILES ${xpm_DATA}
+		DESTINATION ${PACKAGE_DATA_DIR}/xpm)
+
+	install(FILES ${xpm_MAIN}
+		DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+
+	install(FILES ${flag_DATA}
+		DESTINATION ${PACKAGE_DATA_DIR}/default/flags)
+
+	foreach (SIZE ${icon_SIZE})
+		install(FILES ${CMAKE_SOURCE_DIR}/pixmaps/${SIZE}x${SIZE}/xqf.png
+			DESTINATION ${PIXMAPS_ENTRY_PATH}/${SIZE}x${SIZE}/apps)
+	endforeach()
+
+	install(FILES ${CMAKE_SOURCE_DIR}/pixmaps/scalable/xqf.svg
+		DESTINATION ${PIXMAPS_ENTRY_PATH}/scalable/apps)
+
+	# Config
+	install(FILES ${CMAKE_SOURCE_DIR}/src/qstat.cfg
+		DESTINATION ${PACKAGE_DATA_DIR})
+
+	# Man pages
+	install(FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.6
+		DESTINATION ${MAN_ENTRY_PATH}/man6)
+
+	# i18n
+	foreach (LANG ${LINGUAS})
+		install(FILES ${CMAKE_BINARY_DIR}/${LANG}.gmo
+			DESTINATION ${LOCALEDIR}/${LANG}/LC_MESSAGES
+			RENAME ${DOMAIN}.mo)
+	endforeach()
+
+	install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop
+		DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+endif()
+
+if (BUILD_RCON)
+	pkg_check_modules(GLIB REQUIRED glib-2.0)
+
+	# XQF also requires GLib but it already comes with GTK.
+	if (NOT BUILD_XQF)
+		include_directories(${GLIB_INCLUDE_DIRS})
+		link_directories(${GLIB_LIBRARY_DIRS})
+		add_definitions(${GLIB_CFLAGS_OTHER})
+	endif()
+
+	add_executable(rcon ${rcon_SOURCES})
+	target_compile_definitions(rcon PUBLIC BUILD_RCON)
+	target_link_libraries(rcon ${GLIB_LIBRARIES} -lreadline)
+endif()

@@ -24,8 +24,11 @@
 #include <arpa/inet.h>      /* struct in_addr */
 #include <time.h>           /* time_t */
 
-#include <gtk/gtk.h>
 #include <glib.h>
+
+#if defined(BUILD_XQF)
+#include <gtk/gtk.h>
+#endif
 
 #include "defs.h"
 #include "game.h"
@@ -65,7 +68,9 @@ extern struct server *cur_server;
 
 extern struct stat_job *stat_process;
 
+#if defined(BUILD_XQF)
 extern GtkBuilder *builder;
+#endif
 
 int compare_qstat_version (const char* have, const char* expected);
 int start_prog_and_return_fd(char *const argv[], pid_t *pid);
@@ -81,9 +86,13 @@ extern int event_type;
 extern int dontlaunch;
 
 extern void refresh_source_list (void);
+
+#if defined(BUILD_XQF)
 extern void update_source_callback (GtkWidget *widget, gpointer data);
 extern void refresh_n_server(GtkWidget * button, gpointer *data);
 extern void stop_callback (GtkWidget *widget, gpointer data);
+#endif
+
 void add_to_player_filter (unsigned mask);
 
 #endif /* __XQF_H__ */

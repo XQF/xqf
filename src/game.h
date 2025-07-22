@@ -22,12 +22,11 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
-
-#include "xqf.h"
 #include "launch.h"
-#include "pixmaps.h"
 
+#if defined(BUILD_XQF)
+#include "pixmaps.h"
+#endif
 
 // game->flags
 enum {
@@ -145,7 +144,10 @@ extern struct game games[];
 
 extern enum server_type id2type (const char *id);
 extern const char *type2id (enum server_type type);
+
+#if defined(BUILD_XQF)
 extern GtkWidget *game_pixmap_with_label (enum server_type type);
+#endif
 
 // retreive game specific value that belongs to key, do not free return value!
 const char* game_get_attribute(enum server_type type, const char* key);
