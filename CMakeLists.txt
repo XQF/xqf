@@ -31,7 +31,7 @@ set(DOMAIN "${PROJECT_NAME}")
 set(LINGUAS ca da de es fi fr pl ru)
 
 set(DEFAULT_QSTAT "qstat")
-set(DEFAULT_GUI GTK2)
+set(DEFAULT_GTK_TARGET 2)
 
 # Macros
 macro(set_c_flag FLAG)
@@ -128,26 +128,29 @@ if (NOT CMAKE_BUILD_TYPE)
 		STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel" FORCE)
 endif()
 
-if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+if (CMAKE_BUILD_TYPE MATCHES "DEBUG")
 	add_definitions(-DDEBUG)
 endif()
 
 set_c_cxx_flag("-g3" DEBUG)
 set_c_cxx_flag("-g3" RELWITHDEBINFO)
 
-# Default GUI setting
-if (NOT (GUI MATCHES GTK2 OR GUI MATCHES GTK3))
-	set(GUI ${DEFAULT_GUI})
+set(GTK_TARGET_HELP "GTK target (2 or 3)")
+set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}")
+
+# Default GTK_TARGET setting
+if (NOT (GTK_TARGET STREQUAL "2" OR GTK_TARGET STREQUAL "3"))
+	set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}" FORCE)
 endif()
 
 # GUI definitions
-if (GUI MATCHES GTK2)
-	add_definitions(-DGUI_GTK2)
+if (GTK_TARGET STREQUAL "2")
+	set(GUI_GTK2 ON)
+elseif (GTK_TARGET STREQUAL "3")
+	set(GUI_GTK3 ON)
 endif()
 
-if (GUI MATCHES GTK3)
-	add_definitions(-DGUI_GTK3)
-endif()
+add_definitions(-DGUI_GTK${GTK_TARGET})
 
 # Other definitions
 if (RCON_STANDALONE)
@@ -166,7 +169,7 @@ endif()
 # Only set -Wall on the C compiler for now.
 set_c_flag("-Wall")
 
-if (GUI MATCHES GTK2)
+if (GUI_GTK2)
 	set_c_cxx_flag("-Wno-deprecated-declarations")
 endif()
 
@@ -555,15 +558,13 @@ find_package(Gettext REQUIRED)
 pkg_check_modules(UNZIP REQUIRED minizip)
 pkg_check_modules(XML REQUIRED libxml-2.0)
 
-if (GUI MATCHES GTK2)
+if (GUI_GTK2)
 	pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 	include_directories(${GTK2_INCLUDE_DIRS})
 	link_directories(${GTK2_LIBRARY_DIRS})
 	add_definitions(${GTK2_CFLAGS_OTHER})
 	set(GUI_SET ON)
-endif()
-
-if (GUI MATCHES GTK3)
+elseif (GUI_GTK3)
 	pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 	include_directories(${GTK3_INCLUDE_DIRS})
 	link_directories(${GTK3_LIBRARY_DIRS})
@@ -611,11 +612,9 @@ set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game.c
 add_executable (xqf ${xqf_SOURCES})
 target_link_libraries(xqf ${UNZIP_LIBRARIES} dl m)
 
-if (GUI MATCHES GTK2)
+if (GUI_GTK2)
 	target_link_libraries(xqf ${GTK2_LIBRARIES})
-endif()
-
-if (GUI MATCHES GTK3)
+elseif (GUI_GTK3)
 	target_link_libraries(xqf ${GTK3_LIBRARIES})
 endif()
 
@@ -669,12 +668,10 @@ install(TARGETS xqf
 	DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
 # UI
-if (GUI MATCHES GTK2)
+if (GUI_GTK2)
 	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk2.ui
 	DESTINATION ${PACKAGE_DATA_DIR}/ui)
-endif()
-
-if (GUI MATCHES GTK3)
+elseif (GUI_GTK3)
 	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk3.ui
 	DESTINATION ${PACKAGE_DATA_DIR}/ui)
 endif()
