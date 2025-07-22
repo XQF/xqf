@@ -171,10 +171,6 @@ endif()
 add_definitions(-DGUI_GTK${GTK_TARGET})
 
 # Other definitions
-if (RCON_STANDALONE)
-	add_definitions(-DRCON_STANDALONE)
-endif()
-
 if (USE_GEOIP)
 	add_definitions(-DUSE_GEOIP)
 endif()
@@ -301,6 +297,18 @@ set(xqf_SOURCES
 set(crntotga_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/crntotga.cpp
 	 ${CMAKE_SOURCE_DIR}/src/crntotga.h
+)
+
+set(rcon_SOURCES
+	${CMAKE_SOURCE_DIR}/src/debug.c
+	${CMAKE_SOURCE_DIR}/src/huffman.c
+	${CMAKE_SOURCE_DIR}/src/rcon.c
+	${CMAKE_SOURCE_DIR}/src/utils.c
+
+	${CMAKE_SOURCE_DIR}/src/debug.h
+	${CMAKE_SOURCE_DIR}/src/huffman.h
+	${CMAKE_SOURCE_DIR}/src/rcon.h
+	${CMAKE_SOURCE_DIR}/src/utils.h
 )
 
 set(flag_DATA
@@ -593,6 +601,14 @@ elseif (GUI_GTK3)
 	set(GUI_SET ON)
 endif()
 
+# XQF also requires GLib but it comes with GTK.
+if (RCON_STANDALONE)
+	pkg_check_modules(GLIB REQUIRED glib-2.0)
+	include_directories(${GLIB_INCLUDE_DIRS})
+	link_directories(${GLIB_LIBRARY_DIRS})
+	add_definitions(${GLIB_CFLAGS_OTHER})
+endif()
+
 if (USE_GEOIP)
 	pkg_check_modules(GEOIP REQUIRED geoip)
 	include_directories(${GEOIP_INCLUDE_DIRS})
@@ -664,7 +680,9 @@ if (USE_CRUNCH)
 endif()
 
 if (RCON_STANDALONE)
-	target_link_libraries(xqf -lreadline)
+	add_executable(rcon ${rcon_SOURCES})
+	target_link_libraries(rcon ${GLIB_LIBRARIES} -lreadline)
+	target_compile_definitions(rcon PUBLIC RCON_STANDALONE)
 endif()
 
 # i18n
