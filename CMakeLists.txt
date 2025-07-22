@@ -609,7 +609,7 @@ include_directories(${GETTEXT_INCLUDE_DIRS})
 link_directories(${GETTEXT_LIBRARY_DIRS})
 
 # Compile and link
-add_executable (gamesxml2c ${CMAKE_SOURCE_DIR}/src/gamesxml2c.c)
+add_executable(gamesxml2c ${CMAKE_SOURCE_DIR}/src/gamesxml2c.c)
 target_link_libraries(gamesxml2c xml2)
 
 # Custom build rule for converting games.xml to games.c
@@ -635,7 +635,7 @@ if (USE_CRUNCH)
 endif()
 
 # Compile and link
-add_executable (xqf ${xqf_SOURCES})
+add_executable(xqf ${xqf_SOURCES})
 target_link_libraries(xqf ${UNZIP_LIBRARIES} dl m)
 
 if (GUI_GTK2)
