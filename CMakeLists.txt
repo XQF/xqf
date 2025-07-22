@@ -29,6 +29,8 @@ file(WRITE "${CMAKE_BINARY_DIR}/VERSION" ${VERSION})
 set(DOMAIN "${PROJECT_NAME}")
 
 set(LINGUAS ca da de es fi fr pl ru)
+
+set(DEFAULT_QSTAT "qstat")
 set(DEFAULT_GUI GTK2)
 
 # Macros
@@ -116,8 +118,11 @@ option(USE_GZIP "Enable gzip compressor support" ON)
 option(USE_CRUNCH "Enable Crunch decompressor support (DDS, KTX, CRN)" ON)
 option(RCON_STANDALONE "Build standalone RCON" OFF)
 
+set(QSTAT_HELP "QStat binary name")
+set(WITH_QSTAT "${DEFAULT_QSTAT}" CACHE STRING "${QSTAT_HELP}")
+
 if (NOT WITH_QSTAT)
-	set(WITH_QSTAT "qstat")
+	set(WITH_QSTAT "qstat" CACHE STRING "${QSTAT_HELP}" FORCE)
 endif()
 
 add_definitions(-DQSTAT_EXEC="${WITH_QSTAT}")
