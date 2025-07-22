@@ -133,7 +133,7 @@ option(USE_GZIP "Enable gzip compressor support" ON)
 option(USE_CRUNCH "Enable Crunch decompressor support (DDS, KTX, CRN)" ON)
 
 option(BUILD_XQF "Build XQF" ON)
-option(BUILD_RCON "Build standalone RCON" OFF)
+option(BUILD_RCON "Build standalone RCON" ON)
 
 set(QSTAT_HELP "QStat binary name")
 set(WITH_QSTAT "${DEFAULT_QSTAT}" CACHE STRING "${QSTAT_HELP}")
@@ -623,7 +623,7 @@ if (BUILD_XQF)
 	link_directories(${GETTEXT_LIBRARY_DIRS})
 
 	# Make src/game.c depend on games.c so that src/game.c is rebuilt when games.c changes,
-	# this must be manually specified due to the include name being a define
+	# this must be manually specified due to the include name being a define.
 	set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game.c
 		APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_BINARY_DIR}/games.c)
 
@@ -733,6 +733,11 @@ if (BUILD_RCON)
 		link_directories(${GLIB_LIBRARY_DIRS})
 		add_definitions(${GLIB_CFLAGS_OTHER})
 	endif()
+
+	# Make src/game.c depend on games.c so that src/rcon.c is rebuilt when games.c changes,
+	# this must be manually specified due to the include name being a define.
+	set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/rcon.c
+		APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_BINARY_DIR}/games.c)
 
 	add_executable(rcon ${rcon_SOURCES})
 	target_compile_definitions(rcon PUBLIC BUILD_RCON)
