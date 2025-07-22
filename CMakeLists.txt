@@ -124,8 +124,10 @@ add_definitions(-DQSTAT_EXEC="${WITH_QSTAT}")
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
 	add_definitions(-DDEBUG)
-	set(CMAKE_C_FLAGS "-g -ggdb -O0")
 endif()
+
+set_c_cxx_flag("-g3" DEBUG)
+set_c_cxx_flag("-g3" RELWITHDEBINFO)
 
 # Default GUI setting
 if (NOT (GUI MATCHES GTK2 OR GUI MATCHES GTK3))
@@ -155,9 +157,11 @@ if (USE_GZIP)
 endif()
 
 # Compiler flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+# Only set -Wall on the C compiler for now.
+set_c_flag("-Wall")
+
 if (GUI MATCHES GTK2)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
+	set_c_cxx_flag("-Wno-deprecated-declarations")
 endif()
 
 # Source list
