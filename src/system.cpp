@@ -49,7 +49,7 @@ void setDefaultDirs()
 	std::string locale_dir = share_dir + sep + "locale";
 
 	strncpy(xqf_PACKAGE_DATA_DIR, data_dir.c_str(), std::min(data_dir.size(), size_t(XQF_MAX_PATH)));
-	strncpy(xqf_LOCALEDIR, locale_dir.c_str(), std::min(data_dir.size(), size_t(XQF_MAX_PATH)));
+	strncpy(xqf_LOCALEDIR, locale_dir.c_str(), std::min(locale_dir.size(), size_t(XQF_MAX_PATH)));
 }
 
 // The following is copied from https://github.com/DaemonEngine/Daemon
