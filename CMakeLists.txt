@@ -110,8 +110,9 @@ macro(try_c_cxx_flag FLAG PROP)
 endmacro()
 
 # Paths
-set(PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/xqf")
-set(LOCALEDIR "${CMAKE_INSTALL_PREFIX}/share/locale")
+set(SHARE_DIR "${CMAKE_INSTALL_PREFIX}/share")
+set(PACKAGE_DATA_DIR "${SHARE_DIR}/xqf")
+set(LOCALEDIR "${SHARE_DIR}/locale")
 
 if (NOT MAN_ENTRY_PATH)
 	set(MAN_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/man")
@@ -120,6 +121,7 @@ endif()
 if (NOT PIXMAPS_ENTRY_PATH)
 	set(PIXMAPS_ENTRY_PATH "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor")
 endif()
+
 
 # Definitions
 add_definitions(-DPACKAGE="${PROJECT_NAME}" -DPACKAGE_VERSION="${VERSION}" -DXQF_VERSION="${VERSION}" -DDOMAIN="${DOMAIN}" -DLOCALEDIR="${LOCALEDIR}" -DPACKAGE_DATA_DIR="${PACKAGE_DATA_DIR}")
@@ -151,6 +153,21 @@ endif()
 
 if (CMAKE_BUILD_TYPE MATCHES "DEBUG")
 	add_definitions(-DDEBUG)
+endif()
+
+option(USE_RELATIVE_PREFIX "Make the executable look around for its own files." OFF)
+
+if (USE_RELATIVE_PREFIX)
+	add_definitions(-DUSE_RELATIVE_PREFIX)
+endif()
+
+option(USE_FHS "Install files following the File Hierarchy Standard." ON)
+
+if (USE_FHS)
+	set(XQF_BIN_DIR "/bin")
+	add_definitions(-DUSE_FHS)
+else()
+	set(XQF_BIN_DIR "")
 endif()
 
 # Compiler flags
@@ -214,6 +231,7 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/srv-prop.c
 	 ${CMAKE_SOURCE_DIR}/src/stat.c
 	 ${CMAKE_SOURCE_DIR}/src/statistics.c
+	 ${CMAKE_SOURCE_DIR}/src/system.cpp
 	 ${CMAKE_SOURCE_DIR}/src/utils.c
 	 ${CMAKE_SOURCE_DIR}/src/xqf.c
 	 ${CMAKE_SOURCE_DIR}/src/xqf-ui.c
@@ -259,6 +277,7 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/srv-prop.h
 	 ${CMAKE_SOURCE_DIR}/src/stat.h
 	 ${CMAKE_SOURCE_DIR}/src/statistics.h
+	 ${CMAKE_SOURCE_DIR}/src/system.h
 	 ${CMAKE_SOURCE_DIR}/src/utils.h
 	 ${CMAKE_SOURCE_DIR}/src/xqf-ui.h
 	 ${CMAKE_SOURCE_DIR}/src/xqf.h
@@ -280,11 +299,13 @@ set(rcon_SOURCES
 	${CMAKE_SOURCE_DIR}/src/debug.c
 	${CMAKE_SOURCE_DIR}/src/huffman.c
 	${CMAKE_SOURCE_DIR}/src/rcon.c
+	${CMAKE_SOURCE_DIR}/src/system.cpp
 	${CMAKE_SOURCE_DIR}/src/utils.c
 
 	${CMAKE_SOURCE_DIR}/src/debug.h
 	${CMAKE_SOURCE_DIR}/src/huffman.h
 	${CMAKE_SOURCE_DIR}/src/rcon.h
+	${CMAKE_SOURCE_DIR}/src/system.h
 	${CMAKE_SOURCE_DIR}/src/utils.h
 )
 
@@ -681,7 +702,7 @@ if (BUILD_XQF)
 	# Installation
 	# Executable
 	install(TARGETS xqf
-		DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+		DESTINATION "${CMAKE_INSTALL_PREFIX}${XQF_BIN_DIR}")
 
 	# UI
 	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk${GTK_TARGET}.ui
@@ -746,5 +767,5 @@ if (BUILD_RCON)
 	# Installation
 	# Executable
 	install(TARGETS rcon
-		DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+		DESTINATION "${CMAKE_INSTALL_PREFIX}${XQF_BIN_DIR}")
 endif()
