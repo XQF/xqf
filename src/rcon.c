@@ -29,6 +29,7 @@
 
 #include <sys/time.h>   // select
 
+#include "system.h"
 #include "utils.h"
 #include "rcon.h"
 
@@ -727,8 +728,12 @@ int main(int argc, char* argv[]) {
 	char* buf = NULL;
 	int res;
 
+#if defined(USE_RELATIVE_PREFIX)
+	setDefaultDirs();
+#endif
+
 	setlocale(LC_ALL, "");
-	bindtextdomain(PACKAGE, LOCALEDIR);
+	bindtextdomain(PACKAGE, xqf_LOCALEDIR);
 	textdomain(PACKAGE);
 
 	rcon_servertype = Q3_SERVER;

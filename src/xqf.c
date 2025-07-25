@@ -69,6 +69,7 @@
 #include "addserver.h"
 #include "addmaster.h"
 #include "sort.h"
+#include "system.h"
 #include "config.h"
 #include "debug.h"
 #include "redial.h"
@@ -89,9 +90,6 @@ time_t xqf_start_time;
 int dontlaunch = 0;
 
 int event_type = 0;
-
-char* xqf_PACKAGE_DATA_DIR = PACKAGE_DATA_DIR;
-char* xqf_LOCALEDIR = LOCALEDIR;
 
 char* qstat_configfile = NULL;
 
@@ -2640,15 +2638,9 @@ int main (int argc, char *argv[]) {
 
 	redialserver = 0;
 
-	var = getenv ("xqf_PACKAGE_DATA_DIR");
-	if (var) {
-		xqf_PACKAGE_DATA_DIR = var;
-	}
-
-	var = getenv ("xqf_LOCALEDIR");
-	if (var) {
-		xqf_LOCALEDIR = var;
-	}
+#if defined(USE_RELATIVE_PREFIX)
+	setDefaultDirs();
+#endif
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, xqf_LOCALEDIR);

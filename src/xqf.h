@@ -54,9 +54,6 @@ void master_set_qstat_option(struct master* m, const char* opt);
 char* master_to_url(QFMaster* m);
 
 extern time_t xqf_start_time;
-extern char* xqf_PACKAGE_DATA_DIR;
-extern char* xqf_LOCALEDIR;
-extern char* xqf_PIXMAPSDIR;
 
 extern char* qstat_configfile;
 
