@@ -67,7 +67,7 @@ extern GtkWidget *pane3_widget;
 
 
 extern GtkWidget *main_window;
-extern GtkWidget *source_ctree;
+extern GtkWidget *source_treeview;
 extern GtkWidget *server_view;   /* GtkColumnView */
 extern GtkWidget *player_view;   /* GtkColumnView */
 extern GtkWidget *srvinf_treeview;
@@ -84,13 +84,14 @@ extern GtkWidget *server_filter_widget[];
 
 extern void print_status (GtkWidget *sbar, char *fmt, ...);
 
-extern void source_ctree_show_node_status (GtkWidget *ctree, struct master *m);
+extern void source_treeview_show_node_status (struct master *m);
 
-extern void source_ctree_add_master (GtkWidget *ctree, struct master *m);
-extern void source_ctree_delete_master (GtkWidget *ctree, struct master *m);
-extern void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m);
-extern GtkWidget *create_source_ctree (GtkWidget *scrollwin);
-extern void source_ctree_select_source (struct master *m);
+extern void source_treeview_add_master (struct master *m);
+extern void source_treeview_delete_master (struct master *m);
+extern void source_treeview_remove_master_group (struct master *m);
+extern gboolean source_treeview_has_master (struct master *m);
+extern GtkWidget *create_source_treeview (GtkWidget *scrollwin);
+extern void source_treeview_select_source (struct master *m);
 
 extern int calculate_row_height (GtkWidget *widget, struct pixmap *pix);
 

@@ -37,6 +37,41 @@
 
 static GSList *xqf_windows = NULL;
 static GtkWidget *target_window = NULL;
+static GtkTreeStore *source_store = NULL;
+
+enum source_col {
+	SOURCE_COL_MASTER = 0,
+	SOURCE_COL_PIXBUF,
+	SOURCE_COL_NAME,
+	SOURCE_COL_COUNT
+};
+
+struct _source_find_ctx { struct master *target; GtkTreeIter result; gboolean found; };
+
+static gboolean
+_source_find_cb (GtkTreeModel *model, GtkTreePath *path G_GNUC_UNUSED,
+                 GtkTreeIter *iter, gpointer data)
+{
+	struct _source_find_ctx *ctx = data;
+	gpointer mp = NULL;
+	gtk_tree_model_get (model, iter, SOURCE_COL_MASTER, &mp, -1);
+	if (mp == ctx->target) {
+		ctx->result = *iter;
+		ctx->found  = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static gboolean
+source_find_master (struct master *m, GtkTreeIter *out)
+{
+	struct _source_find_ctx ctx = { m, { 0 }, FALSE };
+	gtk_tree_model_foreach (GTK_TREE_MODEL (source_store), _source_find_cb, &ctx);
+	if (ctx.found && out)
+		*out = ctx.result;
+	return ctx.found;
+}
 
 GtkWidget *pane1_widget;
 GtkWidget *pane2_widget;
@@ -238,208 +273,237 @@ GtkWidget *top_window (void) {
 }
 
 
-void source_ctree_show_node_status (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
+void source_treeview_show_node_status (struct master *m) {
+	GtkTreeIter iter;
 	struct pixmap *pix = NULL;
-	int is_leaf;
-	int expanded;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
+	if (!source_find_master (m, &iter))
+		return;
 
-	if (m->isgroup || m == favorites) {
+	if (m->isgroup || m == favorites)
 		pix = games[m->type].pix;
-	}
-	else {
+	else
 		pix = &server_status[m->state];
-	}
 
-	gtk_ctree_get_node_info (GTK_CTREE (ctree), node, NULL, NULL, NULL, NULL, NULL, NULL, &is_leaf, &expanded);
-
-	gtk_ctree_set_node_info (GTK_CTREE (ctree), node, _(m->name), 4,
-			(pix)? pix->pix : NULL, (pix)? pix->mask : NULL,
-			(pix)? pix->pix : NULL, (pix)? pix->mask : NULL,
-			is_leaf, expanded);
+	gtk_tree_store_set (source_store, &iter,
+		SOURCE_COL_PIXBUF, pix ? pix->pixbuf : NULL,
+		SOURCE_COL_NAME,   _(m->name),
+		-1);
 }
 
 
-static void source_ctree_enable_master_group (GtkWidget *ctree, struct master *m, int expand) {
-	GtkCTreeNode *node;
-	GtkCTreeNode *sibling = NULL;
-	char cfgkey[128];
+static void source_treeview_enable_master_group (struct master *m) {
+	GtkTreeIter iter, sibling_iter;
+	gboolean has_sibling = FALSE;
 	GSList *list;
-	int expanded;
 
 	if (!m->isgroup)
 		return;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
+	if (source_find_master (m, NULL))
+		return; /* already exists */
 
-	if (node != NULL) {
-		if (expand)
-			gtk_ctree_expand (GTK_CTREE (ctree), node);
-		return;
-	}
-
-	g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", m->name);
-
-	if (expand)
-		config_set_bool (cfgkey, expanded = TRUE);
-	else
-		expanded = TRUE - config_get_bool (cfgkey);
-
-	/* Find the place to insert new master group */
-
+	/* Find where to insert: before the first already-present later group */
 	list = g_slist_nth (master_groups, m->type);
 	if (list)
 		list = list->next;
-
-	while (!sibling && list) {
-		sibling = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, (struct master *) list->data);
+	while (!has_sibling && list) {
+		has_sibling = source_find_master ((struct master *) list->data, &sibling_iter);
 		list = list->next;
 	}
 
-	node = gtk_ctree_insert_node (GTK_CTREE (ctree), NULL, sibling, NULL, 4, NULL, NULL, NULL, NULL, FALSE, expanded);
-	gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
-	source_ctree_show_node_status (ctree, m);
+	if (has_sibling)
+		gtk_tree_store_insert_before (source_store, &iter, NULL, &sibling_iter);
+	else
+		gtk_tree_store_append (source_store, &iter, NULL);
+
+	gtk_tree_store_set (source_store, &iter,
+		SOURCE_COL_MASTER, m,
+		SOURCE_COL_PIXBUF, NULL,
+		SOURCE_COL_NAME,   "",
+		-1);
+	source_treeview_show_node_status (m);
 }
 
 
 /*
- *  Add master or update master's name if master is already in tree
- *  This function works only on non-group masters
+ *  Add master or update master's name/icon if master is already in tree.
+ *  This function works only on non-group masters.
  */
-
-void source_ctree_add_master (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
-	GtkCTreeNode *parent = NULL;
+void source_treeview_add_master (struct master *m) {
+	GtkTreeIter parent_iter, iter;
+	gboolean has_parent = FALSE;
 	struct master *group = NULL;
 
 	if (m->isgroup)
 		return;
 
-	// If set to display only configured games, and game is not configured,
-	// and it's not the 'Favorites' master, just return so the display
-	// isn't updated with the game type and masters.
+	/* If showing only configured games, skip unconfigured non-favorites */
 	if (!(games[m->type].cmd) && default_show_only_configured_games && m != favorites)
 		return;
 
 	if (m->type != UNKNOWN_SERVER) {
-		enum server_type type = m->master_type == MASTER_LAN? LAN_SERVER : m->type;
+		enum server_type type = m->master_type == MASTER_LAN ? LAN_SERVER : m->type;
 		group = (struct master *) g_slist_nth_data (master_groups, type);
-		source_ctree_enable_master_group (ctree, group, TRUE);
+		source_treeview_enable_master_group (group);
 	}
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
-
-	if (!node) {
-		if (group) {
-			parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
-		}
-		node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL, NULL, 4, NULL, NULL, NULL, NULL, TRUE, FALSE);
-		gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
+	if (source_find_master (m, &iter)) {
+		source_treeview_show_node_status (m);
+		return;
 	}
-	source_ctree_show_node_status (ctree, m);
+
+	if (group)
+		has_parent = source_find_master (group, &parent_iter);
+
+	gtk_tree_store_append (source_store, &iter, has_parent ? &parent_iter : NULL);
+	gtk_tree_store_set (source_store, &iter,
+		SOURCE_COL_MASTER, m,
+		SOURCE_COL_PIXBUF, NULL,
+		SOURCE_COL_NAME,   "",
+		-1);
+	source_treeview_show_node_status (m);
+
+	/* Expand parent so the new child is visible */
+	if (has_parent) {
+		GtkTreePath *path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &parent_iter);
+		gtk_tree_view_expand_row (GTK_TREE_VIEW (source_treeview), path, FALSE);
+		gtk_tree_path_free (path);
+	}
 }
 
 
-//static void source_ctree_remove_master_group (GtkWidget *ctree,
-void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
+void source_treeview_remove_master_group (struct master *m) {
+	GtkTreeIter iter;
 
 	if (!m->isgroup)
 		return;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
-	if (node) {
-		gtk_ctree_remove_node (GTK_CTREE (ctree), node);
-	}
+	if (source_find_master (m, &iter))
+		gtk_tree_store_remove (source_store, &iter);
 }
 
 
-void source_ctree_delete_master (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
+void source_treeview_delete_master (struct master *m) {
+	GtkTreeIter iter;
 	struct master *group;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
-	if (!node)
+	if (!source_find_master (m, &iter))
 		return;
 
-	gtk_ctree_remove_node (GTK_CTREE (ctree), node);
+	gtk_tree_store_remove (source_store, &iter);
 
-	/* Remove empty master group from the tree */
-
+	/* Remove parent group if it is now empty */
 	if (m->type != UNKNOWN_SERVER) {
 		group = (struct master *) g_slist_nth_data (master_groups, m->type);
-		if (group && (group->masters == NULL || (g_slist_length (group->masters) == 1 && group->masters->data == m))) {
-			source_ctree_remove_master_group (ctree, group);
-		}
+		if (group && (group->masters == NULL ||
+		              (g_slist_length (group->masters) == 1 && group->masters->data == m)))
+			source_treeview_remove_master_group (group);
 	}
 }
 
 
-static void fill_source_ctree (GtkWidget *ctree) {
-	GSList *list;
-	GSList *list2;
-	GtkCTreeNode *node;
-	GtkCTreeNode *parent;
-	struct master *group;
-	struct master *m;
+gboolean source_treeview_has_master (struct master *m) {
+	return source_find_master (m, NULL);
+}
 
-	source_ctree_add_master (ctree, favorites);
+
+static void fill_source_treeview (void) {
+	GSList *list, *list2;
+	GtkTreeIter parent_iter, iter;
+	struct master *group, *m;
+	char cfgkey[128];
+
+	source_treeview_add_master (favorites);
 
 	for (list = master_groups; list; list = list->next) {
 		group = (struct master *) list->data;
-		if (group->masters) {
-			// If set to display only configured games, and game is not configured,
-			// don't update the display with the master.
-			if (games[group->type].cmd || !default_show_only_configured_games) {
-				source_ctree_enable_master_group (ctree, group, FALSE);
-				parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
+		if (!group->masters)
+			continue;
+		if (!games[group->type].cmd && default_show_only_configured_games)
+			continue;
 
-				for (list2 = group->masters; list2; list2 = list2->next) {
-					m = (struct master *) list2->data;
-					node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL, NULL, 4, NULL, NULL, NULL, NULL, TRUE, FALSE);
-					gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
-					source_ctree_show_node_status (ctree, m);
-				}
-			}
+		source_treeview_enable_master_group (group);
+
+		if (!source_find_master (group, &parent_iter))
+			continue;
+
+		for (list2 = group->masters; list2; list2 = list2->next) {
+			m = (struct master *) list2->data;
+			gtk_tree_store_append (source_store, &iter, &parent_iter);
+			gtk_tree_store_set (source_store, &iter,
+				SOURCE_COL_MASTER, m,
+				SOURCE_COL_PIXBUF, NULL,
+				SOURCE_COL_NAME,   "",
+				-1);
+			source_treeview_show_node_status (m);
+		}
+
+		/* Restore expand/collapse state from config */
+		g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", group->name);
+		if (!config_get_bool (cfgkey)) {
+			GtkTreePath *path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &parent_iter);
+			gtk_tree_view_expand_row (GTK_TREE_VIEW (source_treeview), path, FALSE);
+			gtk_tree_path_free (path);
 		}
 	}
 }
 
-GtkWidget *create_source_ctree (GtkWidget *scrollwin) {
-	char *titles[1] = { _("Source") };
-	GtkWidget *ctree;
+GtkWidget *create_source_treeview (GtkWidget *scrollwin) {
+	GtkWidget *tv;
+	GtkCellRenderer *cr;
+	GtkTreeViewColumn *col;
+	GtkTreeSelection *sel;
 
-/*	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-*/
-	ctree = gtk_ctree_new_with_titles (1, 0, titles);
-	gtk_container_add (GTK_CONTAINER (scrollwin), ctree);
+	source_store = gtk_tree_store_new (SOURCE_COL_COUNT,
+	                                   G_TYPE_POINTER,  /* MASTER */
+	                                   GDK_TYPE_PIXBUF, /* PIXBUF */
+	                                   G_TYPE_STRING);  /* NAME   */
 
-	gtk_clist_set_selection_mode (GTK_CLIST (ctree), GTK_SELECTION_EXTENDED);
+	tv = gtk_tree_view_new_with_model (GTK_TREE_MODEL (source_store));
+	g_object_unref (source_store);
 
-	gtk_ctree_set_line_style (GTK_CTREE (ctree), GTK_CTREE_LINES_NONE);
-	gtk_ctree_set_expander_style (GTK_CTREE (ctree), GTK_CTREE_EXPANDER_TRIANGLE);
-	gtk_ctree_set_indent (GTK_CTREE (ctree), 10);
+	col = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title (col, _("Source"));
 
-	fill_source_ctree (ctree);
+	cr = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (col, cr, FALSE);
+	gtk_tree_view_column_set_attributes (col, cr, "pixbuf", SOURCE_COL_PIXBUF, NULL);
 
-	return ctree;
+	cr = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (col, cr, TRUE);
+	gtk_tree_view_column_set_attributes (col, cr, "text", SOURCE_COL_NAME, NULL);
+
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), col);
+
+	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tv));
+	gtk_tree_selection_set_mode (sel, GTK_SELECTION_EXTENDED);
+
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), tv);
+
+	fill_source_treeview ();
+
+	return tv;
 }
 
 
-void source_ctree_select_source (struct master *m) {
-	GtkCTreeNode *node;
-	GtkVisibility vis;
+void source_treeview_select_source (struct master *m) {
+	GtkTreeView      *tv  = GTK_TREE_VIEW (source_treeview);
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (tv);
+	GtkTreeIter       iter;
+	GtkTreePath      *path;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (source_ctree), NULL, m);
-	gtk_ctree_unselect_recursive (GTK_CTREE (source_ctree), NULL);
-	gtk_ctree_select (GTK_CTREE (source_ctree), node);
+	if (!source_find_master (m, &iter))
+		return;
 
-	vis = gtk_ctree_node_is_visible (GTK_CTREE (source_ctree), node);
+	gtk_tree_selection_unselect_all (sel);
+	gtk_tree_selection_select_iter (sel, &iter);
 
-	if (vis != GTK_VISIBILITY_FULL)
-		gtk_ctree_node_moveto (GTK_CTREE (source_ctree), node, 0, 0.2, 0.0);
+	path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &iter);
+	gtk_tree_view_scroll_to_cell (tv, path, NULL, FALSE, 0.2f, 0.0f);
+	gtk_tree_path_free (path);
 }
 
 
@@ -520,9 +584,7 @@ void save_view_geometry (GtkWidget *widget, struct list_def *cldef) {
 
 void ui_done (void) {
 	GtkAllocation allocation;
-	GtkCTreeNode *node;
 	char cfgkey[128];
-	int expanded;
 	GSList *list;
 	struct master *m;
 
@@ -551,13 +613,16 @@ void ui_done (void) {
 	for (list = master_groups; list; list = list->next) {
 		m = (struct master *) list->data;
 		if (m->isgroup) {
-			node = gtk_ctree_find_by_row_data (GTK_CTREE (source_ctree), NULL, m);
-			if (node) {
-				gtk_ctree_get_node_info (GTK_CTREE (source_ctree), node,
-						NULL, NULL, NULL, NULL, NULL, NULL, NULL, &expanded);
+			GtkTreeIter iter;
+			if (source_find_master (m, &iter)) {
+				GtkTreePath *path = gtk_tree_model_get_path (
+				        GTK_TREE_MODEL (source_store), &iter);
+				gboolean expanded = gtk_tree_view_row_expanded (
+				        GTK_TREE_VIEW (source_treeview), path);
+				gtk_tree_path_free (path);
 				if (!expanded) {
 					g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", m->name);
-					config_set_bool (cfgkey, TRUE - expanded);
+					config_set_bool (cfgkey, TRUE);
 				}
 			}
 		}

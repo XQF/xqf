@@ -116,7 +116,7 @@ void set_widgets_sensitivity (GtkBuilder *builder) {
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_player_menu_item")), sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_again_menu_item")), sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "player_filter_menu_item")), sens);
-	gtk_widget_set_sensitive (source_ctree, sens);
+	gtk_widget_set_sensitive (source_treeview, sens);
 
 	sens = (!stat_process && selected && !source_is_favorites);
 

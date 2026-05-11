@@ -98,7 +98,7 @@ char* qstat_configfile = NULL;
 
 GtkBuilder *builder = NULL;
 GtkWidget  *main_window = NULL;
-GtkWidget  *source_ctree = NULL;
+GtkWidget  *source_treeview = NULL;
 GtkWidget  *server_view = NULL;
 GtkWidget  *player_view = NULL;
 GtkWidget  *srvinf_treeview = NULL;
@@ -550,7 +550,7 @@ void stat_lists_server_handler (struct stat_job *job, struct server *s) {
 
 
 void stat_lists_master_handler (struct stat_job *job, struct master *m) {
-	source_ctree_show_node_status (source_ctree, m);
+	source_treeview_show_node_status (m);
 }
 
 
@@ -1136,7 +1136,7 @@ void new_server_to_favorites (struct stat_job *job, struct server *s) {
 	favorites->servers = server_list_append (favorites->servers, s);
 	save_favorites ();
 
-	source_ctree_select_source (favorites);
+	source_treeview_select_source (favorites);
 
 	if (cur_filter != 0) {
 		set_filters (0);	/* turn off filters */
@@ -1405,8 +1405,8 @@ void add_master_callback (GtkWidget *widget, gpointer data) {
 	m = add_master_dialog (NULL);
 
 	if (m) {
-		source_ctree_add_master (source_ctree, m);
-		source_ctree_select_source (m);
+		source_treeview_add_master (m);
+		source_treeview_select_source (m);
 	}
 }
 
@@ -1419,11 +1419,11 @@ void edit_master_callback (GtkWidget *widget, gpointer data) {
 	}
 
 	master_to_edit = (struct master *) cur_source->data;
-	source_ctree_select_source (master_to_edit);
+	source_treeview_select_source (master_to_edit);
 	master_to_add = add_master_dialog (master_to_edit);
 	if (master_to_add) {
-		source_ctree_add_master (source_ctree, master_to_add);
-		source_ctree_select_source (master_to_add);
+		source_treeview_add_master (master_to_add);
+		source_treeview_select_source (master_to_add);
 	}
 }
 
@@ -1474,7 +1474,7 @@ void del_master_callback (GtkWidget *widget, gpointer data) {
 	if (delete) {
 		for (list = masters; list; list = list->next) {
 			m = (struct master *) list->data;
-			source_ctree_delete_master (source_ctree, m);
+			source_treeview_delete_master (m);
 			free_master (m);
 		}
 	}
@@ -1637,12 +1637,6 @@ gboolean server_view_keypress_cb (GtkWidget *widget, GdkEventKey *event) {
 	return FALSE;
 }
 
-/* TODO: re-implement with GtkGestureClick + GtkPopoverMenu (Phase 1) */
-int source_ctree_event_callback (GtkWidget *widget, GdkEvent *event) {
-	(void)widget; (void)event;
-	return FALSE;
-}
-
 GtkWidget *server_mapshot_popup = NULL;
 GtkWidget *server_mapshot_popup_image = NULL;
 
@@ -1659,23 +1653,26 @@ int server_view_event_cb (GtkWidget *widget, GdkEvent *event) {
 
 
 void source_selection_changed (void) {
-	GList *selection = gtk_clist_get_selection (GTK_CLIST (source_ctree));
-	GtkCTreeNode *node;
-	struct master *m;
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (source_treeview));
+	GtkTreeModel *model;
+	GList *rows, *l;
 
-	debug (6, "souce_selection_changed() --");
+	debug (6, "source_selection_changed() --");
 	if (cur_source) {
 		g_slist_free (cur_source);
 		cur_source = NULL;
 	}
 
-	while (selection) {
-		node = (GtkCTreeNode *) selection->data;
-		m = (struct master *) gtk_ctree_node_get_row_data (
-				GTK_CTREE (source_ctree), node);
-		cur_source = g_slist_append (cur_source, m);
-		selection = selection->next;
+	rows = gtk_tree_selection_get_selected_rows (sel, &model);
+	for (l = rows; l; l = l->next) {
+		GtkTreeIter iter;
+		gpointer mp = NULL;
+		gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) l->data);
+		gtk_tree_model_get (model, &iter, 0 /* SOURCE_COL_MASTER */, &mp, -1);
+		if (mp)
+			cur_source = g_slist_append (cur_source, mp);
 	}
+	g_list_free_full (rows, (GDestroyNotify) gtk_tree_path_free);
 
 	update_server_lists_from_selected_source ();
 	server_list_set_list (cur_server_list);
@@ -1684,9 +1681,8 @@ void source_selection_changed (void) {
 }
 
 
-void source_ctree_selection_changed_callback (GtkWidget *widget,
-		int row, int column, GdkEvent *event, GtkWidget *button) {
-	debug (6, "source_ctree_selection_changed_callback(%p,%d,%d,%p,%p)", widget, row, column, event, button);
+static void source_selection_changed_callback (GtkTreeSelection *sel G_GNUC_UNUSED,
+                                               gpointer data G_GNUC_UNUSED) {
 	source_selection_changed ();
 }
 
@@ -1961,15 +1957,14 @@ void populate_main_window (void) {
 
 	pane1_widget = GTK_WIDGET (gtk_builder_get_object (builder, "hpaned"));
 
-	// Sources CTree
+	// Sources TreeView
 
-	source_ctree = create_source_ctree (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
+	source_treeview = create_source_treeview (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
 
-	gtk_widget_show (source_ctree);
+	gtk_widget_show (source_treeview);
 
-	g_signal_connect (source_ctree, "tree_select_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
-	g_signal_connect (source_ctree, "tree_unselect_row", G_CALLBACK (source_ctree_selection_changed_callback), NULL);
-	g_signal_connect (source_ctree, "event", G_CALLBACK (source_ctree_event_callback), NULL);
+	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (source_treeview)),
+	                  "changed", G_CALLBACK (source_selection_changed_callback), NULL);
 
 	gtk_widget_show (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
 
@@ -2007,8 +2002,7 @@ void populate_main_window (void) {
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")));
 	gtk_widget_show (srvinf_treeview);
 
-	i = calculate_row_height (GTK_WIDGET (server_view), games[Q1_SERVER].pix);
-	gtk_clist_set_row_height (GTK_CLIST (source_ctree), i);
+	(void) calculate_row_height (GTK_WIDGET (server_view), games[Q1_SERVER].pix);
 
 	// Status Bar & Progress Bar
 
@@ -2353,7 +2347,7 @@ int main (int argc, char *argv[]) {
 
 	gtk_widget_show (main_window);
 
-	source_ctree_select_source (favorites);
+	source_treeview_select_source (favorites);
 	filter_menu_activate_current ();
 
 	print_status (GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar")), NULL);
