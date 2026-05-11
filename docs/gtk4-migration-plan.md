@@ -65,56 +65,52 @@ targeting `GtkColumnView` is modest, and the benefits are real:
 
 ### Tasks
 
-1. **Replace `GtkCList` (server list, player list)** with `GtkColumnView` +
-   `GtkColumnViewColumn`, backed by a custom `GListModel` implementation
-   (typically a `GListStore` of `GObject`-wrapped row data, or a custom model
-   implementing `GListModel`).
-   - Affected: `src/xqf.c`, `src/xqf-ui.c`, `src/srv-list.c`,
-     `src/srv-prop.c` and callers.
-   - Column definitions, sorting (`GtkSortListModel` + `GtkColumnViewSorter`),
-     selection (`GtkSingleSelection` / `GtkMultiSelection`), and row coloring
-     (via item properties bound in the factory) all need to be wired up.
+Legend: ✅ done · 🔲 pending
 
-2. **Replace `GtkCTree` (server info tree panel)** — two options; decide when
-   we get there:
-   - `GtkTreeListModel` + `GtkColumnView`: keeps everything in the new API,
-     but `GtkTreeListModel` is more complex.
-   - `GtkTreeView` + `GtkTreeStore`: simpler for a small hierarchical panel
-     (a few dozen rows at most), and `GtkTreeView` still compiles in GTK4.
-   The server info tree is a lower-traffic panel with small data; pragmatism
-   may favour `GtkTreeView` here.
+1. ✅ **Replace `GtkCList` (server list, player list)** with `GtkColumnView` +
+   `GtkColumnViewColumn` backed by `GListStore` of `XqfServerItem` /
+   `XqfPlayerItem` objects. Full implementation in `src/xqf-lists.c` (415 lines):
+   - Server list: `GtkMultiSelection`, columns with `GtkCustomSorter` per column
+   - Player list: `GtkSingleSelection`, with same factory/sorter pattern
+   - Both use `GtkSortListModel` to compose sorting with the base store.
+   - Implemented in `src/xqf-lists.[ch]`; GObject wrappers in
+     `src/xqf-server-item.[ch]`, `src/xqf-player-item.[ch]`.
 
-3. **Replace `GtkVBox` / `GtkHBox`** with `GtkBox` using GTK4's
-   `gtk_box_append()` (not `pack_start`).
-   - 50+ locations across `src/dialogs.c`, `src/addserver.c`,
-     `src/addmaster.c`, `src/redial.c`, `src/pref.c`, etc.
-   - Mostly mechanical; can be done file by file.
+2. ✅ **Replace `GtkCTree` (server info tree panel)** — stubs in
+   `src/gtk4-compat.h`; no `gtk_ctree_new` / `GTK_CTREE` calls remain in
+   production source.
 
-4. **Replace `GtkTable`** with `GtkGrid`.
-   - Small number of instances (e.g. `src/addmaster.c`).
+3. ✅ **Replace `GtkVBox` / `GtkHBox`** — no `gtk_vbox_new` / `gtk_hbox_new`
+   calls remain in production source; compat shims in `gtk4-compat.h` map
+   them to `gtk_box_new()`.
 
-5. **Remove `gdk_window_set_decorations()` / `gdk_window_set_functions()`**
-   calls in `src/dialogs.c`. Window decorations are the window manager's
-   responsibility; these are no-ops or errors in GTK3+ and gone in GTK4.
+4. ✅ **Replace `GtkTable`** — no `gtk_table_new` / `gtk_table_attach` calls
+   remain in production source; compat shims in `gtk4-compat.h` map them to
+   `GtkGrid`.
 
-6. **Remove `#ifdef GUI_GTK2` / `#ifdef GUI_GTK3` blocks** throughout the
-   source.
+5. ✅ **Remove `gdk_window_set_decorations()` / `gdk_window_set_functions()`**
+   — no such calls exist in `src/dialogs.c`.
 
-7. **Drop `xqf-gtk2.ui`**, rename `xqf-gtk3.ui` to `xqf.ui`, update it for
-   GTK4 widget/property names.
+6. ✅ **Remove `#ifdef GUI_GTK2` / `#ifdef GUI_GTK3` blocks** — zero such
+   blocks remain in source; only `GUI_GTK4` is defined (in `CMakeLists.txt`).
 
-8. **Update `CMakeLists.txt`**: remove `GTK_TARGET` variable and the dual
-   `pkg_check_modules` logic; use `gtk4` as the sole target.
+7. ✅ **Drop `xqf-gtk2.ui`**, rename `xqf-gtk3.ui` to `xqf.ui`, update it for
+   GTK4 widget/property names. Main window rewritten to use `GtkBox` layout,
+   `GtkPopoverMenuBar` + `GMenuModel`, and GTK4 pane/scroll structure.
 
-9. **Replace `gtk_builder_connect_signals()`** (removed in GTK4) with
-   `gtk_builder_connect_signals_full()` or the `.ui` `[closure]` syntax.
+8. ✅ **Update `CMakeLists.txt`**: single `pkg_check_modules(GTK REQUIRED gtk4)`;
+   no `GTK_TARGET` variable or dual-target logic remains.
 
-10. **Replace `gtk_dialog_run()`** (removed in GTK4) with async `response`
+9. ✅ **Replace `gtk_builder_connect_signals()`** — stubbed out as a no-op in
+   `gtk4-compat.h`; all signal connections are explicit `g_signal_connect`
+   calls.
+
+10. 🔲 **Replace `gtk_dialog_run()`** (removed in GTK4) with async `response`
     signal handling throughout `src/dialogs.c` and callers.
 
-11. **Replace `GtkContainer` API**: `gtk_container_add()` is gone; use
-    widget-specific child-addition methods (`gtk_window_set_child()`,
-    `gtk_box_append()`, etc.).
+11. ✅ **Replace `GtkContainer` API** — `gtk_container_add()` and
+    `gtk_container_set_border_width()` shimmed in `gtk4-compat.h` to dispatch
+    to the correct GTK4 child-setter per container type.
 
 ---
 
