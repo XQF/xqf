@@ -956,35 +956,6 @@ void server_list_set_sort_mode (enum ssort_mode mode) {
 	server_list_sort_mode = mode;
 }
 
-int server_list_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
-	int res, mode;
-	GtkCListRow *row1 = (GtkCListRow *) ptr1;
-	GtkCListRow *row2 = (GtkCListRow *) ptr2;
-	struct server *s1 = (struct server *) row1->data;
-	struct server *s2 = (struct server *) row2->data;
-	debug (7, "");
-
-	mode = server_list_def.cols[gtk_clist_get_sort_column(clist)].sort_mode[server_list_def.cols[gtk_clist_get_sort_column(clist)].current_sort_mode];
-	res = compare_servers (s1, s2, mode);
-
-	// fallback
-	if (res == 0 && mode != SORT_SERVER_PING) {
-		res = compare_servers (s1, s2, SORT_SERVER_PING);
-	}
-
-	return res;
-}
-
-
-int player_list_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
-	GtkCListRow *row1 = (GtkCListRow *) ptr1;
-	GtkCListRow *row2 = (GtkCListRow *) ptr2;
-	struct player *p1 = (struct player *) row1->data;
-	struct player *p2 = (struct player *) row2->data;
-
-	return compare_players (p1, p2, gtk_clist_get_sort_column (clist));
-}
-
 
 
 void update_source_callback (GtkWidget *widget, gpointer data) {

@@ -46,11 +46,15 @@ static void country_delete_button (GtkWidget * widget, gpointer data);
 static void country_clear_list (GtkWidget * widget, gpointer data);
 static void country_create_popup_window (void);
 
-// TODO: get rid of global variables
+enum {
+	COUNTRY_COL_ID = 0,   /* G_TYPE_INT  — geoip country id */
+	COUNTRY_COL_FLAG,     /* GDK_TYPE_PIXBUF — flag (may be NULL) */
+	COUNTRY_COL_NAME,     /* G_TYPE_STRING */
+	COUNTRY_COL_COUNT
+};
+
 static gint selected_row_left_list=-1;
 static gint selected_row_right_list=-1;
-static int last_row_right_list = 0;
-static int last_row_country_list = 0;
 #endif
 
 static void server_filter_vars_free (struct server_filter_vars* v);
@@ -571,12 +575,17 @@ static struct server_filter_vars* server_filter_new_from_widgets() {
 	filter->server_name_contains = gtk_editable_get_chars (GTK_EDITABLE (server_name_contains_entry), 0, -1);
 
 #ifdef USE_GEOIP
-
-	for (i = 0; i < last_row_country_list; ++i) {
-		country_nr=GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_filter_list), i));
-		g_array_append_val(filter->countries,country_nr);
+	if (country_filter_list) {
+		GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW (country_filter_list));
+		GtkTreeIter iter;
+		if (gtk_tree_model_get_iter_first (model, &iter)) {
+			do {
+				gint country_nr_val;
+				gtk_tree_model_get (model, &iter, COUNTRY_COL_ID, &country_nr_val, -1);
+				g_array_append_val (filter->countries, country_nr_val);
+			} while (gtk_tree_model_iter_next (model, &iter));
+		}
 	}
-
 #endif
 
 	return filter;
@@ -1063,7 +1072,7 @@ static void server_filter_set_widgets_sensitive(gboolean sensitive) {
 		gtk_widget_set_sensitive(country_selection_button, sensitive);
 		gtk_widget_set_sensitive(country_clear_button, sensitive);
 		if (!sensitive) {
-			gtk_clist_clear(GTK_CLIST(country_filter_list));
+			gtk_list_store_clear (GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_filter_list))));
 		}
 	}
 #endif
@@ -1075,9 +1084,8 @@ static void server_filter_fill_widgets(guint num) {
 	gboolean dofree = FALSE;
 #ifdef USE_GEOIP
 	int f_number;
-	int rw = 0;
-
 	struct pixmap* countrypix = NULL;
+	unsigned i;
 #endif
 
 	if (num > 0) {
@@ -1101,38 +1109,24 @@ static void server_filter_fill_widgets(guint num) {
 	gtk_entry_set_text(GTK_ENTRY(map_contains_entry), filter->map_contains?filter->map_contains:"");
 	gtk_entry_set_text(GTK_ENTRY(server_name_contains_entry), filter->server_name_contains?filter->server_name_contains:"");
 #ifdef USE_GEOIP
-	gtk_clist_clear(GTK_CLIST(country_filter_list));
+	if (country_filter_list) {
+		GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_filter_list)));
+		gtk_list_store_clear (store);
 
-	last_row_country_list=0;
-
-	// fill the country_filter_list from filter->countries
-	if (geoip_is_working()) {
-		unsigned i;
-		gchar buf[64] = {0};
-		gchar *text[1] = {buf};
-
-		if (filter->countries != NULL) {
-
+		if (geoip_is_working() && filter->countries != NULL) {
 			for (i = 0; i < filter->countries->len; ++i) {
-
-				f_number=g_array_index(filter->countries,int,i);
-
-				// gtk_clist_insert third parameter is not const!
-				strncpy(buf,geoip_name_by_id(f_number),sizeof(buf) - 1);
-				gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
-				countrypix = get_pixmap_for_country_with_fallback(f_number);
-				if (countrypix) {
-					gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), rw, 0,geoip_name_by_id(f_number), 4,
-							countrypix->pix, countrypix->mask);
-				}
-				gtk_clist_set_row_data(GTK_CLIST(country_filter_list),rw,GINT_TO_POINTER(f_number));
-
-				last_row_country_list++;
-				++rw;
+				GtkTreeIter iter;
+				f_number = g_array_index (filter->countries, int, i);
+				countrypix = get_pixmap_for_country_with_fallback (f_number);
+				gtk_list_store_append (store, &iter);
+				gtk_list_store_set (store, &iter,
+						COUNTRY_COL_ID,   f_number,
+						COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+						COUNTRY_COL_NAME, geoip_name_by_id (f_number),
+						-1);
 			}
 		}
 	}
-
 #endif
 
 	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
@@ -1424,13 +1418,22 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_widget_set_sensitive (scrolledwindow_fcountry, FALSE);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow_fcountry), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-	country_filter_list = gtk_clist_new(1);
-	gtk_clist_set_shadow_type (GTK_CLIST (country_filter_list), GTK_SHADOW_NONE);
+	{
+		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
+				G_TYPE_INT, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+		country_filter_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+		g_object_unref (store);
+		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (country_filter_list), FALSE);
+		GtkCellRenderer *pbr = gtk_cell_renderer_pixbuf_new ();
+		GtkCellRenderer *tr  = gtk_cell_renderer_text_new ();
+		GtkTreeViewColumn *col = gtk_tree_view_column_new ();
+		gtk_tree_view_column_pack_start (col, pbr, FALSE);
+		gtk_tree_view_column_add_attribute (col, pbr, "pixbuf", COUNTRY_COL_FLAG);
+		gtk_tree_view_column_pack_start (col, tr, TRUE);
+		gtk_tree_view_column_add_attribute (col, tr, "text", COUNTRY_COL_NAME);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (country_filter_list), col);
+	}
 	gtk_widget_set_sensitive (country_filter_list, FALSE);
-
-
-	gtk_clist_set_column_justification (GTK_CLIST (country_filter_list), 0, GTK_JUSTIFY_LEFT);
-	gtk_clist_set_column_width (GTK_CLIST (country_filter_list), 0, 100);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (scrolledwindow_fcountry), country_filter_list);
 
 	gtk_widget_set_size_request (scrolledwindow_fcountry, 100, 100);
@@ -1614,31 +1617,32 @@ void filters_done (void) {
  *
  */
 
-/* callback: row selection left list*/
-void country_selection_left_list(GtkWidget * list,
-		gint row_select,
-		gint column,
-		GdkEventButton * event, gpointer data) {
-	selected_row_left_list = row_select;
-	return;
+/* callback: selection changed in left list */
+void country_selection_left_list(GtkTreeSelection *sel, gpointer data) {
+	(void) data;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		selected_row_left_list = -1;
+		return;
+	}
+	GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+	selected_row_left_list = gtk_tree_path_get_indices(path)[0];
+	gtk_tree_path_free(path);
 }
 
-/* callback: row selection right list*/
-void country_selection_right_list(GtkWidget * list,
-		gint row_select,
-		gint column,
-		GdkEventButton * event, gpointer data) {
-	selected_row_right_list = row_select;
-	return;
-}
-
-/* callback: no row is selected*/
-void country_unselection_right_list(GtkWidget * list,
-		gint row_select,
-		gint column,
-		GdkEventButton * event, gpointer data) {
-	selected_row_right_list = -1;
-	return;
+/* callback: selection changed in right list */
+void country_selection_right_list(GtkTreeSelection *sel, gpointer data) {
+	(void) data;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		selected_row_right_list = -1;
+		return;
+	}
+	GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+	selected_row_right_list = gtk_tree_path_get_indices(path)[0];
+	gtk_tree_path_free(path);
 }
 
 /* show the country selection popup window*/
@@ -1648,41 +1652,47 @@ static void country_select_button_pressed(GtkWidget * widget, gpointer data) {
 
 /* callback: clear button*/
 static void country_clear_list(GtkWidget * widget, gpointer data) {
-	gtk_clist_clear(GTK_CLIST(country_filter_list));
-	last_row_country_list=0;
+	(void) widget; (void) data;
+	gtk_list_store_clear (GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_filter_list))));
 }
 
 /** add the country selected in the left list to the right list */
 static void country_add_selection_to_right_list() {
-	gint i;
 	gint flag_id;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
 	struct pixmap* countrypix = NULL;
 
 	if (selected_row_left_list < 0)
 		return;
 
-	flag_id = GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_left_list),
-				selected_row_left_list));
+	GtkListStore *left_store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_left_list)));
+	GtkTreePath *lpath = gtk_tree_path_new_from_indices (selected_row_left_list, -1);
+	GtkTreeIter liter;
+	if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (left_store), &liter, lpath)) {
+		gtk_tree_path_free (lpath);
+		return;
+	}
+	gtk_tree_path_free (lpath);
+	gtk_tree_model_get (GTK_TREE_MODEL (left_store), &liter, COUNTRY_COL_ID, &flag_id, -1);
 
 	/* do nothing if country is already in right list */
-	for (i = 0; i < last_row_right_list; i++)
-		if (flag_id == GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_right_list), i)))
-			return;
-
-	countrypix = get_pixmap_for_country(flag_id);
-
-	// gtk_clist_insert third parameter is not const!
-	strncpy (buf,geoip_name_by_id (flag_id), sizeof (buf) - 1);
-	gtk_clist_append (GTK_CLIST (country_right_list), text);
-	if (countrypix) {
-		gtk_clist_set_pixtext (GTK_CLIST (country_right_list), last_row_right_list, 0, geoip_name_by_id (flag_id), 4, countrypix->pix, countrypix->mask);
+	GtkListStore *right_store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_right_list)));
+	GtkTreeIter riter;
+	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (right_store), &riter)) {
+		do {
+			gint existing_id;
+			gtk_tree_model_get (GTK_TREE_MODEL (right_store), &riter, COUNTRY_COL_ID, &existing_id, -1);
+			if (existing_id == flag_id)
+				return;
+		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (right_store), &riter));
 	}
 
-	gtk_clist_set_row_data (GTK_CLIST (country_right_list), last_row_right_list, GINT_TO_POINTER (flag_id));
-
-	++last_row_right_list;
+	countrypix = get_pixmap_for_country (flag_id);
+	gtk_list_store_append (right_store, &riter);
+	gtk_list_store_set (right_store, &riter,
+			COUNTRY_COL_ID,   flag_id,
+			COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+			COUNTRY_COL_NAME, geoip_name_by_id (flag_id),
+			-1);
 }
 
 /* callback: >> button*/
@@ -1692,11 +1702,16 @@ static void country_add_button(GtkWidget * widget, gpointer data) {
 
 /* callback: << button*/
 static void country_delete_button(GtkWidget * widget, gpointer data) {
-
-	if ((selected_row_right_list != -1) && (last_row_right_list > 0)) {
-		gtk_clist_remove(GTK_CLIST(country_right_list), selected_row_right_list);
-		last_row_right_list--;
-	}
+	(void) widget; (void) data;
+	if (selected_row_right_list < 0)
+		return;
+	GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_right_list)));
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_indices (selected_row_right_list, -1);
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path))
+		gtk_list_store_remove (store, &iter);
+	gtk_tree_path_free (path);
+	selected_row_right_list = -1;
 }
 
 
@@ -1720,34 +1735,27 @@ gint country_mouse_click_right_list(GtkWidget * widget,
 
 /* callback: ready with country selection*/
 static void country_selection_on_ok(void) {
-	int i;
-	gint country_nr;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
+	selected_row_right_list = -1;
 
-	struct pixmap* countrypix = NULL;
+	GtkListStore *filter_store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_filter_list)));
+	GtkListStore *right_store  = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_right_list)));
+	gtk_list_store_clear (filter_store);
 
-	selected_row_right_list=-1;
-	gtk_clist_freeze(GTK_CLIST(country_filter_list));
-	gtk_clist_clear(GTK_CLIST(country_filter_list));
-
-	for (i = 0; i < last_row_right_list; ++i) {
-		country_nr = GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_right_list), i));
-
-		countrypix = get_pixmap_for_country(country_nr);
-
-		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id(country_nr),sizeof(buf) - 1);
-		gtk_clist_insert(GTK_CLIST(country_filter_list), i, text);
-		if (countrypix) {
-			gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), i, 0,
-					text[0], 4,countrypix->pix,countrypix->mask);
-		}
-		gtk_clist_set_row_data(GTK_CLIST(country_filter_list),i,GINT_TO_POINTER(country_nr));
-
+	GtkTreeIter riter;
+	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (right_store), &riter)) {
+		do {
+			gint country_nr;
+			gtk_tree_model_get (GTK_TREE_MODEL (right_store), &riter, COUNTRY_COL_ID, &country_nr, -1);
+			struct pixmap *countrypix = get_pixmap_for_country (country_nr);
+			GtkTreeIter fiter;
+			gtk_list_store_append (filter_store, &fiter);
+			gtk_list_store_set (filter_store, &fiter,
+					COUNTRY_COL_ID,   country_nr,
+					COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+					COUNTRY_COL_NAME, geoip_name_by_id (country_nr),
+					-1);
+		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (right_store), &riter));
 	}
-	gtk_clist_thaw(GTK_CLIST(country_filter_list));
-	last_row_country_list=last_row_right_list;
 }
 
 static void country_selection_on_cancel(void) {
@@ -1759,45 +1767,27 @@ static void country_selection_on_cancel(void) {
  * @param all if false only show countries that have a flag
  */
 static void populate_country_list(GtkWidget* list, gboolean all) {
-	struct pixmap* countrypix = NULL;
-	int row_number = -1;
+	GtkListStore *store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (list)));
 	unsigned i;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
 
-	g_return_if_fail(GTK_IS_CLIST(list));
-
-	gtk_clist_freeze(GTK_CLIST(list));
-
-	gtk_clist_clear(GTK_CLIST(list));
+	gtk_list_store_clear (store);
 
 	for (i = 0; i <= geoip_num_countries(); ++i) {
-		if (all)
-			countrypix = get_pixmap_for_country_with_fallback(i);
-		else
-			countrypix = get_pixmap_for_country(i);
+		struct pixmap *countrypix = all
+			? get_pixmap_for_country_with_fallback (i)
+			: get_pixmap_for_country (i);
 
 		if (!all && !countrypix)
 			continue;
 
-		++row_number;
-
-		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id(i),sizeof(buf) - 1);
-		gtk_clist_insert(GTK_CLIST(list), row_number, text);
-		if (countrypix) {
-			gtk_clist_set_pixtext(GTK_CLIST(list), row_number, 0,
-					geoip_name_by_id(i), 4,
-					countrypix->pix,
-					countrypix->mask);
-		}
-
-		/* save the flag number */
-		gtk_clist_set_row_data(GTK_CLIST(list),
-				row_number, GINT_TO_POINTER(i));
+		GtkTreeIter iter;
+		gtk_list_store_append (store, &iter);
+		gtk_list_store_set (store, &iter,
+				COUNTRY_COL_ID,   (gint) i,
+				COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+				COUNTRY_COL_NAME, geoip_name_by_id (i),
+				-1);
 	}
-
-	gtk_clist_thaw(GTK_CLIST(list));
 }
 
 static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *list) {
@@ -1824,12 +1814,6 @@ static void country_create_popup_window(void) {
 	GtkWidget *button1;
 	GtkWidget *button2;
 
-	int i;
-	int flag_nr;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
-
-	struct pixmap* countrypix = NULL;
 
 	// window caption for country filter
 	country_popup_window = dialog_create_modal_transient_window (_("Configure Country Filter"), TRUE, TRUE, country_selection_on_cancel);
@@ -1854,21 +1838,28 @@ static void country_create_popup_window(void) {
 	gtk_widget_show (hbox1);
 	gtk_box_pack_start (GTK_BOX (vbox2), hbox1, TRUE, TRUE, 0);
 
-	// left clist
+	// left list
 	scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 8);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-	country_left_list = gtk_clist_new (1);
-	gtk_clist_set_shadow_type (GTK_CLIST(country_left_list), GTK_SHADOW_NONE);
-	gtk_clist_set_selection_mode (GTK_CLIST(country_left_list), GTK_SELECTION_SINGLE);
-	gtk_clist_set_column_justification (GTK_CLIST (country_left_list), 0, GTK_JUSTIFY_LEFT);
-	gtk_clist_set_column_width(GTK_CLIST (country_left_list), 0, 100);
-	
-	g_signal_connect (country_left_list, "select_row", G_CALLBACK (country_selection_left_list), NULL);
-	
-	g_signal_connect (country_left_list, "button_press_event", G_CALLBACK (country_mouse_click_left_list), NULL);
-
-	// fill the list with all countries if the flag is available
+	{
+		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
+				G_TYPE_INT, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+		country_left_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+		g_object_unref (store);
+		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (country_left_list), FALSE);
+		GtkCellRenderer *pbr = gtk_cell_renderer_pixbuf_new ();
+		GtkCellRenderer *tr  = gtk_cell_renderer_text_new ();
+		GtkTreeViewColumn *col = gtk_tree_view_column_new ();
+		gtk_tree_view_column_pack_start (col, pbr, FALSE);
+		gtk_tree_view_column_add_attribute (col, pbr, "pixbuf", COUNTRY_COL_FLAG);
+		gtk_tree_view_column_pack_start (col, tr, TRUE);
+		gtk_tree_view_column_add_attribute (col, tr, "text", COUNTRY_COL_NAME);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (country_left_list), col);
+		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (country_left_list));
+		gtk_tree_selection_set_mode (sel, GTK_SELECTION_SINGLE);
+		g_signal_connect (sel, "changed", G_CALLBACK (country_selection_left_list), NULL);
+	}
 
 	populate_country_list (country_left_list, FALSE);
 
@@ -1901,47 +1892,49 @@ static void country_create_popup_window(void) {
 	gtk_widget_set_can_default (button4, TRUE);
 
 
-	// right clist
+	// right list
 	scrolledwindow2 = gtk_scrolled_window_new (NULL, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow2), 8);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	country_right_list = gtk_clist_new(1);
-	gtk_clist_set_shadow_type (GTK_CLIST (country_right_list),GTK_SHADOW_NONE);
-	gtk_clist_set_selection_mode (GTK_CLIST (country_right_list), GTK_SELECTION_SINGLE);
-
-	gtk_clist_set_column_justification (GTK_CLIST(country_right_list), 0, GTK_JUSTIFY_LEFT);
-	gtk_clist_set_column_width (GTK_CLIST (country_right_list), 0, 100);
-
-
-	g_signal_connect (country_right_list, "select_row", G_CALLBACK (country_selection_right_list), NULL);
-
-	g_signal_connect (country_right_list, "unselect_row", G_CALLBACK (country_unselection_right_list), NULL);
-
-	g_signal_connect (country_right_list, "button_press_event", G_CALLBACK (country_mouse_click_right_list), NULL);
-
-
-	// fill the clist with the same countries as in country_filter_list
-
-	for (i = 0; i < last_row_country_list; i++) {
-
-		flag_nr = GPOINTER_TO_INT (gtk_clist_get_row_data (GTK_CLIST (country_filter_list), i));
-
-		countrypix = get_pixmap_for_country_with_fallback (flag_nr);
-
-		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id (flag_nr), sizeof (buf) - 1);
-		gtk_clist_insert (GTK_CLIST (country_right_list), i, text);
-
-		if (countrypix) {
-			gtk_clist_set_pixtext (GTK_CLIST (country_right_list),i, 0, geoip_name_by_id (flag_nr), 4, countrypix->pix, countrypix->mask);
-		}
-
-		gtk_clist_set_row_data (GTK_CLIST (country_right_list), i, GINT_TO_POINTER (flag_nr));
-
+	{
+		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
+				G_TYPE_INT, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+		country_right_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+		g_object_unref (store);
+		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (country_right_list), FALSE);
+		GtkCellRenderer *pbr = gtk_cell_renderer_pixbuf_new ();
+		GtkCellRenderer *tr  = gtk_cell_renderer_text_new ();
+		GtkTreeViewColumn *col = gtk_tree_view_column_new ();
+		gtk_tree_view_column_pack_start (col, pbr, FALSE);
+		gtk_tree_view_column_add_attribute (col, pbr, "pixbuf", COUNTRY_COL_FLAG);
+		gtk_tree_view_column_pack_start (col, tr, TRUE);
+		gtk_tree_view_column_add_attribute (col, tr, "text", COUNTRY_COL_NAME);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (country_right_list), col);
+		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (country_right_list));
+		gtk_tree_selection_set_mode (sel, GTK_SELECTION_SINGLE);
+		g_signal_connect (sel, "changed", G_CALLBACK (country_selection_right_list), NULL);
 	}
 
-	last_row_right_list=last_row_country_list;
-
+	// fill right list with same countries as in country_filter_list
+	{
+		GtkTreeModel *fmodel = gtk_tree_view_get_model (GTK_TREE_VIEW (country_filter_list));
+		GtkListStore *rstore = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (country_right_list)));
+		GtkTreeIter fiter;
+		if (gtk_tree_model_get_iter_first (fmodel, &fiter)) {
+			do {
+				gint flag_nr;
+				gtk_tree_model_get (fmodel, &fiter, COUNTRY_COL_ID, &flag_nr, -1);
+				struct pixmap *countrypix = get_pixmap_for_country_with_fallback (flag_nr);
+				GtkTreeIter riter;
+				gtk_list_store_append (rstore, &riter);
+				gtk_list_store_set (rstore, &riter,
+						COUNTRY_COL_ID,   flag_nr,
+						COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+						COUNTRY_COL_NAME, geoip_name_by_id (flag_nr),
+						-1);
+			} while (gtk_tree_model_iter_next (fmodel, &fiter));
+		}
+	}
 
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow2), country_right_list);
 	gtk_box_pack_start (GTK_BOX (hbox1), scrolledwindow2, TRUE, TRUE, 0);

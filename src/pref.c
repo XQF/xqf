@@ -2420,17 +2420,16 @@ static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
 
 static void add_custom_args_defaults2 (char *str1, char *str2, enum server_type type, gpointer data) {
 	char *temp;
-	char *temp2[2];
 
 	temp = g_strconcat(str1, ",", str2, NULL);
-
-	temp2[0] = strdup_strip(str1);
-	temp2[1] = strdup_strip(str2);
 
 	if (str1 && str2) {
 		if (g_slist_find_custom(genprefs[type].custom_args, str1, custom_args_compare_func) == NULL) {
 			genprefs[type].custom_args = g_slist_append(genprefs[type].custom_args, g_strdup(temp));
-			gtk_clist_append(GTK_CLIST((GtkCList *) data), temp2);
+			GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(data)));
+			GtkTreeIter iter;
+			gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 0, str1, 1, str2, -1);
 		}
 		else {
 			dialog_ok(NULL, _("An entry already exists for the game %s.\n\n"
@@ -2516,30 +2515,35 @@ static void new_custom_args_callback (GtkWidget *widget, gpointer data) {
 static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
 	GSList *link;
 	int row;
-	char *temp[2];
 	enum server_type type;
 
 	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
-	temp[0] = strdup_strip(gtk_entry_get_text(GTK_ENTRY(custom_args_entry_game[type])));
-	temp[1] = strdup_strip(gtk_entry_get_text(GTK_ENTRY(custom_args_entry_args[type])));
+	char *temp0 = strdup_strip(gtk_entry_get_text(GTK_ENTRY(custom_args_entry_game[type])));
+	char *temp1 = strdup_strip(gtk_entry_get_text(GTK_ENTRY(custom_args_entry_args[type])));
+
+	GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(data)));
 
 	if (current_row > -1) {
 		row = current_row;
-
 		link = g_slist_nth(genprefs[type].custom_args, current_row);
-
 		genprefs[type].custom_args = g_slist_remove_link(genprefs[type].custom_args, link);
-
 		current_row = -1;
-		gtk_clist_remove(GTK_CLIST((GtkCList *) data), row);
+
+		GtkTreeIter iter;
+		GtkTreePath *path = gtk_tree_path_new_from_indices(row, -1);
+		gtk_tree_model_get_iter(GTK_TREE_MODEL(store), &iter, path);
+		gtk_tree_path_free(path);
+		gtk_list_store_remove(store, &iter);
 	}
 
-	if (temp[0] && temp[1]) {
-		if (g_slist_find_custom(genprefs[type].custom_args, temp[0], custom_args_compare_func) == NULL) {
-			genprefs[type].custom_args = g_slist_append(genprefs[type].custom_args, g_strconcat(temp[0], ",",temp[1], NULL));
+	if (temp0 && temp1) {
+		if (g_slist_find_custom(genprefs[type].custom_args, temp0, custom_args_compare_func) == NULL) {
+			genprefs[type].custom_args = g_slist_append(genprefs[type].custom_args, g_strconcat(temp0, ",", temp1, NULL));
 
-			gtk_clist_append(GTK_CLIST((GtkCList *) data), temp);
+			GtkTreeIter iter;
+			gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 0, temp0, 1, temp1, -1);
 
 			gtk_widget_set_sensitive(custom_args_entry_game[type], FALSE);
 			gtk_widget_set_sensitive(custom_args_entry_args[type], FALSE);
@@ -2555,8 +2559,8 @@ static void add_custom_args_callback (GtkWidget *widget, gpointer data) {
 	else
 		dialog_ok(NULL, _("You must enter both a game and at least one argument."));
 
-	g_free(temp[0]);
-	g_free(temp[1]);
+	g_free(temp0);
+	g_free(temp1);
 }
 
 static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
@@ -2566,20 +2570,20 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
 
 	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
 
-	if (current_row < 0) {
+	if (current_row < 0)
 		return;
-	}
 
 	row = current_row;
-
 	link = g_slist_nth(genprefs[type].custom_args, current_row);
-
 	genprefs[type].custom_args = g_slist_remove_link(genprefs[type].custom_args, link);
-
 	current_row = -1;
-	gtk_clist_remove(GTK_CLIST((GtkCList *) data), row);
 
-	current_row = -1;
+	GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(data)));
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_indices(row, -1);
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(store), &iter, path);
+	gtk_tree_path_free(path);
+	gtk_list_store_remove(store, &iter);
 
 	gtk_widget_set_sensitive(custom_args_entry_game[type], FALSE);
 	gtk_widget_set_sensitive(custom_args_entry_args[type], FALSE);
@@ -2589,27 +2593,37 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
 	gtk_entry_set_text(GTK_ENTRY(custom_args_entry_args[type]), "");
 }
 
-static void custom_args_list_select_row_callback (GtkWidget *widget, int row, int column, GdkEventButton *event, GtkCList *clist) {
-	enum server_type type;
-	GSList* item;
-	char* argstr;
-	char* game_args[2] = {0} ;
+static void custom_args_list_select_row_callback (GtkTreeView *tv, gpointer data) {
+	(void) data;
+	enum server_type type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(tv), "user_data"));
 
-	type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "user_data"));
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tv);
+	GtkTreeModel *model;
+	GtkTreeIter iter;
 
-	current_row = row;
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		current_row = -1;
+		gtk_widget_set_sensitive(custom_args_entry_game[type], FALSE);
+		gtk_widget_set_sensitive(custom_args_entry_args[type], FALSE);
+		gtk_widget_set_sensitive(custom_args_add_button[type], FALSE);
+		gtk_entry_set_text(GTK_ENTRY(custom_args_entry_game[type]), "");
+		gtk_entry_set_text(GTK_ENTRY(custom_args_entry_args[type]), "");
+		return;
+	}
 
-	if (row<0) return;
+	GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+	current_row = gtk_tree_path_get_indices(path)[0];
+	gtk_tree_path_free(path);
 
-	item = g_slist_nth(genprefs[type].custom_args, row);
-
+	GSList *item = g_slist_nth(genprefs[type].custom_args, current_row);
 	if (!item) return;
 
-	argstr = g_strdup(item->data);
+	char *argstr = g_strdup(item->data);
+	char *game_args[2] = {NULL, NULL};
 	tokenize(argstr, game_args, 2, ",");
 
-	gtk_entry_set_text(GTK_ENTRY(custom_args_entry_game[type]), game_args[0]);
-	gtk_entry_set_text(GTK_ENTRY(custom_args_entry_args[type]), game_args[1]);
+	gtk_entry_set_text(GTK_ENTRY(custom_args_entry_game[type]), game_args[0] ? game_args[0] : "");
+	gtk_entry_set_text(GTK_ENTRY(custom_args_entry_args[type]), game_args[1] ? game_args[1] : "");
 
 	gtk_widget_set_sensitive(custom_args_entry_game[type], TRUE);
 	gtk_widget_set_sensitive(custom_args_entry_args[type], TRUE);
@@ -2803,8 +2817,6 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	GtkWidget *vbox1;
 	GtkWidget *scrolledwindow1;
 	GtkWidget *arguments_list;
-	GtkWidget *game_label;
-	GtkWidget *arguments_label;
 	GtkWidget *frame1;
 	GtkWidget *hbox2;
 	GtkWidget *vbuttonbox1;
@@ -2813,7 +2825,6 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	GtkWidget *defaults_button;
 	GtkWidget *page_vbox;
 	struct game *g;
-	int width;
 
 	g = &games[type];
 
@@ -2844,28 +2855,29 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 2);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	arguments_list = gtk_clist_new(2);
-	g_object_ref(G_OBJECT(arguments_list));
-	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_list", arguments_list, (GDestroyNotify) g_object_unref);
+	{
+		GtkListStore *args_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+		arguments_list = gtk_tree_view_new_with_model(GTK_TREE_MODEL(args_store));
+		g_object_unref(args_store);
+
+		GtkCellRenderer *renderer;
+		GtkTreeViewColumn *col;
+
+		renderer = gtk_cell_renderer_text_new();
+		col = gtk_tree_view_column_new_with_attributes(_("Game"), renderer, "text", 0, NULL);
+		gtk_tree_view_column_set_resizable(col, TRUE);
+		gtk_tree_view_column_set_min_width(col, 60);
+		gtk_tree_view_append_column(GTK_TREE_VIEW(arguments_list), col);
+
+		renderer = gtk_cell_renderer_text_new();
+		col = gtk_tree_view_column_new_with_attributes(_("Arguments"), renderer, "text", 1, NULL);
+		gtk_tree_view_column_set_resizable(col, TRUE);
+		gtk_tree_view_append_column(GTK_TREE_VIEW(arguments_list), col);
+	}
 	gtk_widget_show(arguments_list);
 	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_list);
-	gtk_clist_column_titles_show(GTK_CLIST(arguments_list));
-	g_signal_connect(G_OBJECT(arguments_list), "select_row", G_CALLBACK(custom_args_list_select_row_callback), arguments_list);
-	g_object_set_data(G_OBJECT(arguments_list), "user_data", (gpointer) type);
-
-	game_label = gtk_label_new(_("Game"));
-	g_object_ref(G_OBJECT(game_label));
-	g_object_set_data_full(G_OBJECT(page_vbox), "game_label", game_label, (GDestroyNotify) g_object_unref);
-	gtk_label_set_justify(GTK_LABEL(game_label), GTK_JUSTIFY_LEFT);
-	gtk_widget_show(game_label);
-	gtk_clist_set_column_widget(GTK_CLIST(arguments_list), 0, game_label);
-
-	arguments_label = gtk_label_new(_("Arguments"));
-	g_object_ref(G_OBJECT(arguments_label));
-	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_label", arguments_label, (GDestroyNotify) g_object_unref);
-	gtk_label_set_justify(GTK_LABEL(arguments_label), GTK_JUSTIFY_LEFT);
-	gtk_widget_show(arguments_label);
-	gtk_clist_set_column_widget(GTK_CLIST(arguments_list), 1, arguments_label);
+	g_object_set_data(G_OBJECT(arguments_list), "user_data", GINT_TO_POINTER(type));
+	g_signal_connect(arguments_list, "cursor-changed", G_CALLBACK(custom_args_list_select_row_callback), NULL);
 
 	frame1 = gtk_frame_new(_("Game and Arguments"));
 	g_object_ref(G_OBJECT(frame1));
@@ -2957,25 +2969,21 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		G_CALLBACK(add_custom_args_callback),
 		(gpointer) arguments_list);
 
-	// Populate clist with custom_args from g_slist
+	// Populate list store with custom_args
 	{
-		GSList *list;
-		char *token[2];
-
-		list = genprefs[type].custom_args;
+		GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(arguments_list)));
+		GSList *list = genprefs[type].custom_args;
 		while (list) {
-			char* tmp = g_strdup((char *)list->data);
+			char *tmp = g_strdup((char *) list->data);
+			char *token[2] = {NULL, NULL};
 			tokenize(tmp, token, 2, ",");
-			gtk_clist_append(GTK_CLIST(arguments_list), token);
+			GtkTreeIter iter;
+			gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 0, token[0] ? token[0] : "", 1, token[1] ? token[1] : "", -1);
 			g_free(tmp);
-
 			list = g_slist_next(list);
 		}
 	}
-
-	width = gtk_clist_optimal_column_width(GTK_CLIST(arguments_list), 0);
-	gtk_clist_set_column_width(GTK_CLIST(arguments_list), 0, width?width:60);
-	gtk_clist_set_column_width(GTK_CLIST(arguments_list), 1, gtk_clist_optimal_column_width(GTK_CLIST(arguments_list), 1));
 
 
 	gtk_widget_show(page_vbox);

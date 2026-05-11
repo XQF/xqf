@@ -45,6 +45,16 @@
 static GSList *players = NULL;  /* GSList <struct player_pattern *> */
 static GSList *curplrs = NULL;  /* GSList <struct player_pattern *> */
 
+enum {
+	PLT_COL_GRP0 = 0,
+	PLT_COL_GRP1,
+	PLT_COL_GRP2,
+	PLT_COL_MODE,
+	PLT_COL_PATTERN,
+	PLT_COL_COUNT
+};
+
+static GtkListStore *pattern_store = NULL;
 static GtkWidget *pattern_list;
 static GtkWidget *pattern_entry;
 static GtkWidget *comment_text;
@@ -275,38 +285,46 @@ static void pattern_list_sync_selection (void) {
 
 static void pattern_list_update_groups (int row, unsigned newstate,
 		unsigned oldstate) {
-	int i;
-	unsigned mask;
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
+	if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path)) {
+		gtk_tree_path_free (path);
+		return;
+	}
+	gtk_tree_path_free (path);
 
-	for (i = 0, mask = 1; i < 3; i++, mask <<= 1) {
-		if ((newstate & mask) != 0) {
-			if ((oldstate & mask) == 0) {
-				gtk_clist_set_pixmap (GTK_CLIST (pattern_list), row, i,
-						group_pix[i].pix, group_pix[i].mask);
-			}
-		}
-		else {
-			if ((oldstate & mask) != 0)
-				gtk_clist_set_text (GTK_CLIST (pattern_list), row, i, "");
-		}
+	for (int i = 0; i < 3; i++) {
+		unsigned mask = 1u << i;
+		int col = PLT_COL_GRP0 + i;
+		if ((newstate & mask) != 0)
+			gtk_list_store_set (pattern_store, &iter, col, group_pix[i].pixbuf, -1);
+		else if ((oldstate & mask) != 0)
+			gtk_list_store_set (pattern_store, &iter, col, NULL, -1);
 	}
 }
 
 
 static void pattern_list_update_row (struct player_pattern *pp, int row) {
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
+	if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path)) {
+		gtk_tree_path_free (path);
+		return;
+	}
+	gtk_tree_path_free (path);
 
-	pattern_list_update_groups (row, pp->groups, ~pp->groups); /* update all */
+	pattern_list_update_groups (row, pp->groups, ~pp->groups);
 
+	char mode_buf[64];
+	const char *mode_str = _(mode_symbols[pp->mode]);
 	if (pp->error) {
-		gtk_clist_set_pixtext (GTK_CLIST (pattern_list), row, 3,
-				mode_symbols[pp->mode], 2, error_pix.pix, error_pix.mask);
+		g_snprintf (mode_buf, sizeof (mode_buf), "(!) %s", mode_str);
+		mode_str = mode_buf;
 	}
-	else {
-		gtk_clist_set_text (GTK_CLIST (pattern_list), row, 3,
-				mode_symbols[pp->mode]);
-	}
-
-	gtk_clist_set_text (GTK_CLIST (pattern_list), row, 4, pp->pattern);
+	gtk_list_store_set (pattern_store, &iter,
+			PLT_COL_MODE, mode_str,
+			PLT_COL_PATTERN, pp->pattern ? pp->pattern : "",
+			-1);
 }
 
 
@@ -384,15 +402,14 @@ static void sync_pattern_data (void) {
 
 
 static int pattern_list_insert_row (struct player_pattern *pp, int row) {
-	char *text[6];
-
-	text[0] = text[1] = text[2] = text[3] = text[4] = text[5] = NULL;
-
-	if (row < 0)
-		row = gtk_clist_append (GTK_CLIST (pattern_list), text);
-	else
-		gtk_clist_insert (GTK_CLIST (pattern_list), row, text);
-
+	GtkTreeIter iter;
+	if (row < 0) {
+		gtk_list_store_append (pattern_store, &iter);
+		int n = gtk_tree_model_iter_n_children (GTK_TREE_MODEL (pattern_store), NULL);
+		row = n - 1;
+	} else {
+		gtk_list_store_insert (pattern_store, &iter, row);
+	}
 	pattern_list_update_row (pp, row);
 	return row;
 }
@@ -444,23 +461,46 @@ static void show_pattern_error (int row) {
 }
 
 
-static int pattern_list_event_callback (GtkWidget *widget, GdkEvent *event) {
-	/* TODO: re-implement with GtkGestureClick when pattern_list is
-	 * replaced by a GtkColumnView-based widget (Phase 1). */
-	(void)widget; (void)event;
-	return FALSE;
+static void on_pattern_list_click (GtkGestureClick *gesture, int n_press,
+		double x, double y, gpointer data) {
+	(void) n_press; (void) data;
+	GtkTreePath *path;
+	GtkTreeViewColumn *col;
+
+	if (!gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (pattern_list),
+				(int) x, (int) y, &path, &col, NULL, NULL))
+		return;
+
+	int row = gtk_tree_path_get_indices (path)[0];
+	gtk_tree_path_free (path);
+
+	GList *cols = gtk_tree_view_get_columns (GTK_TREE_VIEW (pattern_list));
+	int col_idx = g_list_index (cols, col);
+	g_list_free (cols);
+
+	if (col_idx >= 0 && col_idx < 3)
+		pattern_set_groups (row, col_idx, TRUE);
 }
 
 
-static void pattern_list_select_row_callback (GtkWidget *widget,
-		int row, int column, GdkEventButton *event) {
+static void pattern_list_selection_changed (GtkTreeSelection *sel, gpointer data) {
+	(void) data;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+
 	sync_pattern_data ();
 
-	// for some reason this function is called when a row gets deleted, would
-	// segfault later when row was the last one
-	if (row>=g_slist_length(curplrs)) return;
-
-	current_row = row;
+	if (!gtk_tree_selection_get_selected (sel, &model, &iter)) {
+		current_row = -1;
+	} else {
+		GtkTreePath *path = gtk_tree_model_get_path (model, &iter);
+		int row = gtk_tree_path_get_indices (path)[0];
+		gtk_tree_path_free (path);
+		if (row >= (int) g_slist_length (curplrs))
+			current_row = -1;
+		else
+			current_row = row;
+	}
 
 	pattern_list_sync_selection ();
 }
@@ -483,8 +523,14 @@ static void new_pattern_callback (GtkWidget *widget, gpointer data) {
 	curplrs = g_slist_insert (curplrs, pp, row);
 	pattern_list_insert_row (pp, row);
 
-	if (curplrs && curplrs->next)
-		gtk_clist_select_row (GTK_CLIST (pattern_list), row, 0);
+	if (curplrs && curplrs->next) {
+		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list));
+		GtkTreeIter iter;
+		GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
+		if (gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path))
+			gtk_tree_selection_select_iter (sel, &iter);
+		gtk_tree_path_free (path);
+	}
 
 	gtk_widget_grab_focus (pattern_entry);
 }
@@ -509,23 +555,14 @@ static void delete_pattern_callback (GtkWidget *widget, gpointer data) {
 
 	row = current_row;
 	current_row = -1;
-	gtk_clist_remove (GTK_CLIST (pattern_list), row);
 
-	if (current_row < 0)
-		pattern_list_sync_selection ();
-}
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path))
+		gtk_list_store_remove (pattern_store, &iter);
+	gtk_tree_path_free (path);
 
-
-static void pattern_list_adjust_visibility (int row, int direction) {
-	GtkVisibility vis;
-
-	debug(5,"pattern_list_adjust_visibility(row=%d,direction=%d)",row,direction);
-
-	vis = gtk_clist_row_is_visible (GTK_CLIST (pattern_list), row);
-	if (vis != GTK_VISIBILITY_FULL) {
-		gtk_clist_moveto (GTK_CLIST (pattern_list), row, 0,
-				(direction == 0)? 0.5 : ((direction > 0)? 1.0 : 0.0), 0.0);
-	}
+	pattern_list_sync_selection ();
 }
 
 
@@ -535,45 +572,30 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
 	debug(5,"move_up_down_pattern_callback(widget=%x, dir=%d) row=%d",widget,dir,row);
 
 	if ((dir != -1 || row <= 0) &&
-			(dir != 1  || row < 0 || row == g_slist_length (curplrs) - 1)) {
-		return;
-	}
-	/*
-	   link = g_slist_nth (curplrs, row + dir);
-	   pp = (struct player_pattern *) link->data;
-	   curplrs = g_slist_remove_link (curplrs, link);
-	   curplrs = g_slist_insert (curplrs, pp, row);
-	*/
-	debug(5,"gtk_clist_swap_rows(..., %d,%d)",row,row+dir);
-	gtk_clist_swap_rows (GTK_CLIST (pattern_list), row, row + dir);
-
-	// adjust current_row because pattern_list_row_move_callback
-	// does not know about the direction
-	current_row = row+dir;
-
-	pattern_list_adjust_visibility (current_row, dir);
-}
-
-
-static void pattern_list_row_move_callback (GtkWidget *widget,
-		int source, int dest, gpointer data) {
-	GtkCList *clist = GTK_CLIST (widget);
-	GSList *link;
-	struct player_pattern *pp;
-
-	debug(5,"pattern_list_row_move_callback(widget=%d,source=%d,dest=%d)",widget,source,dest);
-
-	if (source < 0 || dest < 0 || source == dest ||
-			source > gtk_clist_get_rows (clist) || dest > gtk_clist_get_rows (clist)) {
+			(dir != 1  || row < 0 || row == (int) g_slist_length (curplrs) - 1)) {
 		return;
 	}
 
-	link = g_slist_nth (curplrs, source);
-	pp = (struct player_pattern *) link->data;
-	curplrs = g_slist_remove_link (curplrs, link);
-	curplrs = g_slist_insert (curplrs, pp, dest);
+	/* Swap data in the GSList */
+	GSList *link_a = g_slist_nth (curplrs, row);
+	GSList *link_b = g_slist_nth (curplrs, row + dir);
+	gpointer tmp = link_a->data;
+	link_a->data = link_b->data;
+	link_b->data = tmp;
 
-	current_row = dest;
+	/* Refresh both rows in the store */
+	pattern_list_update_row ((struct player_pattern *) link_a->data, row);
+	pattern_list_update_row ((struct player_pattern *) link_b->data, row + dir);
+
+	current_row = row + dir;
+
+	/* Scroll to the moved row */
+	GtkTreePath *path = gtk_tree_path_new_from_indices (current_row, -1);
+	gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (pattern_list), path, NULL, FALSE, 0.0f, 0.0f);
+	GtkTreeIter iter;
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path))
+		gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list)), &iter);
+	gtk_tree_path_free (path);
 }
 
 
@@ -704,7 +726,6 @@ void player_filter_page (GtkWidget *notebook) {
 	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *peditor;
-	char *titles[5] = { "", "", "", _("Mode"), _("Pattern") };
 	int i;
 
 	page_hbox = gtk_hbox_new (FALSE, 8);
@@ -715,44 +736,65 @@ void player_filter_page (GtkWidget *notebook) {
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_hbox, label);
 
-	/* Pattern CList */
+	/* Pattern list (GtkTreeView) */
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_box_pack_start (GTK_BOX (page_hbox), scrollwin, FALSE, FALSE, 0);
-
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	pattern_list = gtk_clist_new_with_titles (5, titles);
+	pattern_store = gtk_list_store_new (PLT_COL_COUNT,
+			GDK_TYPE_PIXBUF, GDK_TYPE_PIXBUF, GDK_TYPE_PIXBUF,
+			G_TYPE_STRING, G_TYPE_STRING);
+	pattern_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (pattern_store));
+	g_object_unref (pattern_store);
 	gtk_widget_set_size_request (pattern_list, 260, 200);
-	gtk_clist_set_selection_mode (GTK_CLIST (pattern_list),
-			GTK_SELECTION_BROWSE);
-	gtk_clist_set_reorderable (GTK_CLIST (pattern_list), TRUE);
-
-	g_signal_connect (pattern_list, "event", G_CALLBACK (pattern_list_event_callback), NULL);
-	g_signal_connect (pattern_list, "select_row", G_CALLBACK (pattern_list_select_row_callback), NULL);
-	g_signal_connect (pattern_list, "row_move", G_CALLBACK (pattern_list_row_move_callback), NULL);
 
 	for (i = 0; i < 3; i++) {
-		image = aligned_image (&group_pix[i]);
-		gtk_clist_set_column_width (GTK_CLIST (pattern_list), i,
-				pixmap_width (&group_pix[i]));
-		gtk_clist_set_column_widget (GTK_CLIST (pattern_list), i, image);
+		GtkCellRenderer *pbr = gtk_cell_renderer_pixbuf_new ();
+		GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes (
+				"", pbr, "pixbuf", PLT_COL_GRP0 + i, NULL);
+		gtk_tree_view_column_set_resizable (col, FALSE);
+		gtk_tree_view_column_set_fixed_width (col, pixmap_width (&group_pix[i]) + 8);
+		gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
+		image = gtk_image_new_from_pixbuf (group_pix[i].pixbuf);
 		gtk_widget_show (image);
-
-		gtk_clist_set_column_resizeable (GTK_CLIST (pattern_list), i, FALSE);
+		gtk_tree_view_column_set_widget (col, image);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
 	}
 
-	gtk_clist_set_column_width (GTK_CLIST (pattern_list), 3, 45);
+	{
+		GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+		GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes (
+				_("Mode"), renderer, "text", PLT_COL_MODE, NULL);
+		gtk_tree_view_column_set_resizable (col, TRUE);
+		gtk_tree_view_column_set_fixed_width (col, 55);
+		gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
+
+		renderer = gtk_cell_renderer_text_new ();
+		col = gtk_tree_view_column_new_with_attributes (
+				_("Pattern"), renderer, "text", PLT_COL_PATTERN, NULL);
+		gtk_tree_view_column_set_resizable (col, TRUE);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
+	}
+
+	{
+		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list));
+		gtk_tree_selection_set_mode (sel, GTK_SELECTION_BROWSE);
+		g_signal_connect (sel, "changed", G_CALLBACK (pattern_list_selection_changed), NULL);
+	}
+
+	{
+		GtkGesture *click = gtk_gesture_click_new ();
+		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 0);
+		g_signal_connect (click, "pressed", G_CALLBACK (on_pattern_list_click), NULL);
+		gtk_widget_add_controller (pattern_list, GTK_EVENT_CONTROLLER (click));
+	}
 
 	gtk_container_add (GTK_CONTAINER (scrollwin), pattern_list);
-	gtk_clist_column_titles_passive (GTK_CLIST (pattern_list));
-
 	gtk_widget_show (pattern_list);
-
 	gtk_widget_show (scrollwin);
-
-	gtk_widget_ensure_style (pattern_list);
 
 	/* Buttons */
 
