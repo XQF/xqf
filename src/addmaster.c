@@ -180,7 +180,7 @@ static void master_address_changed_callback (GtkWidget *widget, gpointer data) {
 struct master *add_master_dialog (struct master *m) {
 	GtkWidget *window;
 	GtkWidget *main_vbox;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *option_menu;
 	GtkWidget *hbox;
 	GtkWidget *label;
@@ -229,22 +229,22 @@ struct master *add_master_dialog (struct master *m) {
 	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 16);
-	gtk_box_pack_start (GTK_BOX (main_vbox), table, FALSE, FALSE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 16);
+	gtk_box_pack_start (GTK_BOX (main_vbox), grid, FALSE, FALSE, 0);
 
 	/* Master Name (Description) */
 
 	label = gtk_label_new (_("Master Name"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-			GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 0, 1, 1);
+	gtk_widget_set_hexpand (hbox, TRUE);
 
 	master_name_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_widget_set_size_request (master_name_combo, 200, -1);
@@ -284,13 +284,13 @@ struct master *add_master_dialog (struct master *m) {
 	/* Master Address */
 
 	label = gtk_label_new (_("Master Address"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-			GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	master_addr_combo = gtk_combo_box_text_new_with_entry ();
-	gtk_table_attach_defaults (GTK_TABLE (table), master_addr_combo, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), master_addr_combo, 1, 1, 1, 1);
+	gtk_widget_set_hexpand (master_addr_combo, TRUE);
 	gtk_entry_set_max_length (combo_get_entry (master_addr_combo), 4096);
 	g_signal_connect (
 			G_OBJECT (combo_get_entry (master_addr_combo)), "activate",
@@ -316,7 +316,7 @@ struct master *add_master_dialog (struct master *m) {
 		g_free(url);
 	}
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
 	/* query type */
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);

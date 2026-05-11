@@ -1154,7 +1154,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	GtkWidget *page_vbox;
 	GtkWidget *alignment;
 	GtkWidget *frame;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GtkWidget *button;
@@ -1239,23 +1239,18 @@ static void server_filter_page (GtkWidget *notebook) {
 	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 	gtk_container_add (GTK_CONTAINER (frame), alignment);
 
-#ifdef USE_GEOIP
-	table = gtk_table_new(8, 5, FALSE);
-#else
-	table = gtk_table_new(6, 5, FALSE);
-#endif
-
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_container_add (GTK_CONTAINER (alignment), table);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_container_add (GTK_CONTAINER (alignment), grid);
 
 	/* row=0..1 */
 
 	/* max ping */
 	label = gtk_label_new(_("ping is less than"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (MAX_PING, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
@@ -1264,16 +1259,15 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (filter_ping_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (filter_ping_spinner, 64, -1);
 	g_signal_connect_swapped (filter_ping_spinner, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_ping_spinner, 1, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_ping_spinner, 1, row, 1, 1);
 	gtk_widget_show(filter_ping_spinner);
 
 
-	/* GAMECONTAINS Filter -- baa */
-	/* http://developer.gnome.org/doc/API/gtk/gtktable.html */
+	/* GAMECONTAINS Filter */
 
 	label = gtk_label_new (_("the game contains the string"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE(table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
 	gtk_widget_show (label);
 	game_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (game_contains_entry), 32);
@@ -1281,7 +1275,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_editable_set_editable (GTK_EDITABLE(game_contains_entry), TRUE);
 	g_signal_connect_swapped (game_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table), game_contains_entry, 4, 5, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), game_contains_entry, 4, row, 1, 1);
 	gtk_widget_show(game_contains_entry);
 	row++;
 
@@ -1290,9 +1284,8 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	/* max timeouts */
 	label = gtk_label_new(_("the number of retries is fewer than"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL,
-			0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show(label);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new(2, 0.0, MAX_RETRIES, 1.0, 1.0, 0.0);
@@ -1300,16 +1293,14 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_retries_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0, 0);
 	gtk_widget_set_size_request(filter_retries_spinner, 64, -1);
 	g_signal_connect_swapped (filter_retries_spinner, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_retries_spinner,
-			1, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_retries_spinner, 1, row, 1, 1);
 	gtk_widget_show(filter_retries_spinner);
 
-	/* GAMETYPE Filter -- baa */
-	/* http://developer.gnome.org/doc/API/gtk/gtktable.html */
+	/* GAMETYPE Filter */
 
 	label = gtk_label_new (_("the game type contains the string"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
 	gtk_widget_show (label);
 	filter_game_type_entry = gtk_entry_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (filter_game_type_entry), 32);
@@ -1317,7 +1308,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_editable_set_editable (GTK_EDITABLE (filter_game_type_entry), TRUE);
 	g_signal_connect_swapped (filter_game_type_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults (GTK_TABLE (table), filter_game_type_entry, 4, 5, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_game_type_entry, 4, row, 1, 1);
 	gtk_widget_show (filter_game_type_entry);
 	row++;
 
@@ -1326,14 +1317,13 @@ static void server_filter_page (GtkWidget *notebook) {
 	/*not full */
 	filter_not_full_check_button =gtk_check_button_new_with_label(_("it is not full"));
 	g_signal_connect_swapped (filter_not_full_check_button,"toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table),filter_not_full_check_button, 0, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_not_full_check_button, 0, row, 2, 1);
 	gtk_widget_show(filter_not_full_check_button);
 
-	/* Version Filter -- baa */
+	/* Version Filter */
 	label = gtk_label_new(_("the version contains the string"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL,
-			0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
 	gtk_widget_show(label);
 	version_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (version_contains_entry), 32);
@@ -1341,7 +1331,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_editable_set_editable(GTK_EDITABLE(version_contains_entry), TRUE);
 	g_signal_connect_swapped (version_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table), version_contains_entry, 4, 5, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), version_contains_entry, 4, row, 1, 1);
 	gtk_widget_show(version_contains_entry);
 	row++;
 
@@ -1351,15 +1341,14 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_not_empty_check_button =
 		gtk_check_button_new_with_label(_("it is not empty"));
 	g_signal_connect_swapped (filter_not_empty_check_button, "toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_not_empty_check_button,
-			0, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_not_empty_check_button, 0, row, 2, 1);
 	gtk_widget_show(filter_not_empty_check_button);
 
 
 	/* Map filter*/
 	label = gtk_label_new (_("the map contains the string"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
 	gtk_widget_show (label);
 	map_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (map_contains_entry), 32);
@@ -1367,7 +1356,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_editable_set_editable (GTK_EDITABLE (map_contains_entry), TRUE);
 	g_signal_connect_swapped (map_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table), map_contains_entry, 4, 5, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), map_contains_entry, 4, row, 1, 1);
 	gtk_widget_show(map_contains_entry);
 	row++;
 
@@ -1377,14 +1366,14 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_no_cheats_check_button =
 		gtk_check_button_new_with_label(_("cheats are not allowed"));
 	g_signal_connect_swapped (filter_no_cheats_check_button, "toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_no_cheats_check_button, 0, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_no_cheats_check_button, 0, row, 2, 1);
 	gtk_widget_show(filter_no_cheats_check_button);
 
 
 	/* Server name filter*/
 	label = gtk_label_new (_("the server name contains the string"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
 	gtk_widget_show (label);
 	server_name_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (server_name_contains_entry), 32);
@@ -1392,7 +1381,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_editable_set_editable (GTK_EDITABLE (server_name_contains_entry), TRUE);
 	g_signal_connect_swapped (server_name_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table),server_name_contains_entry , 4, 5, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), server_name_contains_entry, 4, row, 1, 1);
 	gtk_widget_show(server_name_contains_entry);
 	row++;
 
@@ -1401,7 +1390,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	/* no password */
 	filter_no_password_check_button = gtk_check_button_new_with_label (_("no password required"));
 	g_signal_connect_swapped (filter_no_password_check_button, "toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE (table), filter_no_password_check_button, 0, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), filter_no_password_check_button, 0, row, 2, 1);
 	gtk_widget_show (filter_no_password_check_button);
 
 	row++;
@@ -1409,9 +1398,10 @@ static void server_filter_page (GtkWidget *notebook) {
 	/*country list */
 #ifdef USE_GEOIP
 	label = gtk_label_new (_("Country filter:"));
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 6, 7);
-	gtk_misc_set_padding (GTK_MISC (label), 0, 15);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 6, 1, 1);
+	gtk_widget_set_margin_top (label, 15);
+	gtk_widget_set_margin_bottom (label, 15);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_widget_show (label);
 
 	scrolledwindow_fcountry = gtk_scrolled_window_new (NULL, NULL);
@@ -1438,14 +1428,14 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	gtk_widget_set_size_request (scrolledwindow_fcountry, 100, 100);
 
-	gtk_table_attach_defaults (GTK_TABLE (table), scrolledwindow_fcountry, 0, 1, 7, 8);
+	gtk_grid_attach (GTK_GRID (grid), scrolledwindow_fcountry, 0, 7, 1, 1);
 	gtk_widget_show (scrolledwindow_fcountry);
 	gtk_widget_show (country_filter_list);
 
 	/*select and clear buttons */
 	vbuttonbox1 = gtk_vbutton_box_new ();
 	gtk_widget_show (vbuttonbox1);
-	gtk_table_attach_defaults (GTK_TABLE (table), vbuttonbox1, 1, 2, 7, 8);
+	gtk_grid_attach (GTK_GRID (grid), vbuttonbox1, 1, 7, 1, 1);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
 	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 1);
 
@@ -1471,7 +1461,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_widget_set_size_request(country_clear_button, 80, -1);
 #endif
 
-	gtk_widget_show(table);
+	gtk_widget_show(grid);
 	gtk_widget_show(alignment);
 	gtk_widget_show(frame);
 	gtk_widget_show(page_vbox);

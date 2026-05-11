@@ -388,7 +388,7 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
 
 static GtkWidget *server_info_page (struct server *s) {
 	GtkWidget *page_vbox;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *frame;
 	GtkWidget *hbox;
 	GtkWidget *vbox;
@@ -412,54 +412,53 @@ static GtkWidget *server_info_page (struct server *s) {
 
 	/* Address */
 
-	table = gtk_table_new (6, 4, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), table, FALSE, FALSE, 0);
-
-	gtk_table_set_col_spacing (GTK_TABLE (table), 1, 16);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), grid, FALSE, FALSE, 0);
 
 	label = gtk_label_new (_("IP Address:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new (inet_ntoa (s->host->ip));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 2, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_widget_set_margin_start (label, 8);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, row, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new (_("Port:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 2, 3, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 2, row, 1, 1);
 	gtk_widget_show (label);
 
 	g_snprintf (buf, 32, "%d", s->port);
 
 	label = gtk_label_new (buf);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 3, 4, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
 	gtk_widget_show (label);
 
 	row++;
 
 	label = gtk_label_new (_("Host Name:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	if (s->host->name) {
 		label = gtk_label_new (s->host->name);
-		gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-		gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+		gtk_grid_attach (GTK_GRID (grid), label, 1, row, 3, 1);
 		gtk_widget_show (label);
 	}
 
 	row++;
 
 	label = gtk_label_new (_("Country:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 #ifdef USE_GEOIP
@@ -473,11 +472,11 @@ static GtkWidget *server_info_page (struct server *s) {
 		}
 
 		label = gtk_label_new (geoip_name_by_id(s->country_id));
-		gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		gtk_widget_show (label);
 
-		gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 4, row, row+1);
+		gtk_grid_attach (GTK_GRID (grid), hbox, 1, row, 3, 1);
 		gtk_widget_show (hbox);
 	}
 #endif
@@ -485,8 +484,8 @@ static GtkWidget *server_info_page (struct server *s) {
 	row++;
 
 	label = gtk_label_new (_("Refreshed:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	if (s->refreshed) {
@@ -494,8 +493,8 @@ static GtkWidget *server_info_page (struct server *s) {
 
 		label = gtk_label_new (str);
 		g_free(str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-		gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+		gtk_grid_attach (GTK_GRID (grid), label, 1, row, 3, 1);
 		gtk_widget_show (label);
 	}
 
@@ -503,8 +502,8 @@ static GtkWidget *server_info_page (struct server *s) {
 
 	// translator: last time and date the server answered the query
 	label = gtk_label_new (_("Last answer:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	if (s->last_answer) {
@@ -515,8 +514,8 @@ static GtkWidget *server_info_page (struct server *s) {
 
 		label = gtk_label_new (str);
 		g_free(str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-		gtk_table_attach_defaults (GTK_TABLE (table), label, 1, 4, row, row+1);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+		gtk_grid_attach (GTK_GRID (grid), label, 1, row, 3, 1);
 
 		if (s->last_answer + max_days*24*60*60 < s->refreshed) {
 			// XXX: I don't know if that is the correct way, it's undocumented :-(
@@ -559,8 +558,8 @@ static GtkWidget *server_info_page (struct server *s) {
 
 
 	label = gtk_label_new (_("Reserved Slots:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 
@@ -568,12 +567,12 @@ static GtkWidget *server_info_page (struct server *s) {
 	spinner = gtk_spin_button_new (adj, 0, 0);
 	gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinner), TRUE);
 	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON (spinner), GTK_UPDATE_IF_VALID);
-	gtk_table_attach_defaults (GTK_TABLE (table), spinner, 1, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), spinner, 1, row, 1, 1);
 	gtk_widget_show (spinner);
 
 
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
 	/* Sources */
 
@@ -641,13 +640,13 @@ static GtkWidget *server_info_page (struct server *s) {
 
 
 static GtkWidget *passwd_entry (char *str, char *passwd,
-		GtkWidget *table, int pos) {
+		GtkWidget *grid, int pos) {
 	GtkWidget *label;
 	GtkWidget *entry;
 
 	label = gtk_label_new (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, pos, pos + 1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, pos, 1, 1);
 	gtk_widget_show (label);
 
 	entry = gtk_entry_new ();
@@ -656,7 +655,7 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 	if (passwd) {
 		gtk_entry_set_text (GTK_ENTRY (entry), passwd);
 	}
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, pos, pos + 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, pos, 1, 1);
 	gtk_widget_show (entry);
 
 	return entry;
@@ -665,7 +664,7 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 
 static GtkWidget *server_passwords_page (struct server *s) {
 	GtkWidget *page_vbox;
-	GtkWidget *table;
+	GtkWidget *grid;
 	struct server_props *props;
 
 	props = properties (s);
@@ -673,32 +672,32 @@ static GtkWidget *server_passwords_page (struct server *s) {
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-	table = gtk_table_new (3, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), table, FALSE, FALSE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
+	gtk_box_pack_start (GTK_BOX (page_vbox), grid, FALSE, FALSE, 0);
 
 	password_entry = passwd_entry (_("Server Password"), (props)? props->server_password : NULL,
-			table, 0);
+			grid, 0);
 
 	if ((games[s->type].flags & GAME_PASSWORD) == 0)
 		gtk_widget_set_sensitive (password_entry, FALSE);
 
 	spectator_entry = passwd_entry (_("Spectator Password"),
 			(props)? props->spectator_password : NULL,
-			table, 1);
+			grid, 1);
 
 	if ((games[s->type].flags & GAME_SPECTATE) == 0)
 		gtk_widget_set_sensitive (spectator_entry, FALSE);
 
 	rcon_entry = passwd_entry (_("RCon/Admin Password"),
 			(props)? props->rcon_password : NULL,
-			table, 2);
+			grid, 2);
 
 	if ((games[s->type].flags & GAME_RCON) == 0 && (games[s->type].flags & GAME_ADMIN) == 0)
 		gtk_widget_set_sensitive (rcon_entry, FALSE);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
 	gtk_widget_show (page_vbox);
 

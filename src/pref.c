@@ -1705,7 +1705,7 @@ static GtkWidget *q1_skin_box_create (void) {
 	GtkWidget *hbox;
 	GtkWidget *alignment;
 	GtkWidget *frame;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
@@ -1716,45 +1716,43 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	/* Top and Bottom Colors */
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_box_pack_end (GTK_BOX (hbox), table, FALSE, FALSE, 2);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_box_pack_end (GTK_BOX (hbox), grid, FALSE, FALSE, 2);
 
 	/* Top (Shirt) Color */
 
 	label = gtk_label_new (_("Top"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	q1_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (q1_top_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (q1_top_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), q1_top_color_button,
-			1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), q1_top_color_button, 1, 0, 1, 1);
 	set_bg_color (q1_top_color_button, fix_qw_player_color (pref_q1_top_color));
 	gtk_widget_show (q1_top_color_button);
 
 	/* Bottom (Pants) Color */
 
 	label = gtk_label_new (_("Bottom"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	q1_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (q1_bottom_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (q1_bottom_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), q1_bottom_color_button,
-			1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), q1_bottom_color_button, 1, 1, 1, 1);
 	set_bg_color (q1_bottom_color_button,
 			fix_qw_player_color (pref_q1_bottom_color));
 	gtk_widget_show (q1_bottom_color_button);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
 	gtk_widget_show (hbox);
 
@@ -1786,7 +1784,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	GtkWidget *hbox;
 	GtkWidget *alignment;
 	GtkWidget *frame;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
@@ -1812,42 +1810,41 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	/* Top and Bottom Colors */
 
-	table = gtk_table_new(2, 2, FALSE);
-	gtk_table_set_row_spacings(GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings(GTK_TABLE (table), 4);
-	gtk_box_pack_end(GTK_BOX(hbox), table, FALSE, FALSE, 2);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_box_pack_end(GTK_BOX(hbox), grid, FALSE, FALSE, 2);
 
 	/* Top (Shirt) Color */
 
 	label = gtk_label_new(_("Top"));
-	gtk_misc_set_alignment(GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show(label);
 
 	qw_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (qw_top_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (qw_top_color_button), "event",
 			G_CALLBACK (color_button_event_callback), NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), qw_top_color_button,
-			1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), qw_top_color_button, 1, 0, 1, 1);
 	set_bg_color (qw_top_color_button, fix_qw_player_color (pref_qw_top_color));
 	gtk_widget_show (qw_top_color_button);
 
 	/* Bottom (Pants) Color */
 
 	label = gtk_label_new (_("Bottom"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	qw_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (qw_bottom_color_button, 40, -1);
 	g_signal_connect (G_OBJECT (qw_bottom_color_button), "event", G_CALLBACK (color_button_event_callback), NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), qw_bottom_color_button, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), qw_bottom_color_button, 1, 1, 1, 1);
 	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
 	gtk_widget_show (qw_bottom_color_button);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
 	gtk_widget_show (hbox);
 
@@ -2636,7 +2633,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	GtkWidget *frame;
 	GtkWidget *vbox;
 	GtkWidget *page_vbox;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *notebook;
 	GtkWidget *hbox;
@@ -2687,19 +2684,19 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	}
 
 
-	table = gtk_table_new((games[type].custom_cfgs)? 3 : 2, 2, FALSE);
-	gtk_table_set_row_spacings(GTK_TABLE(table), 2);
-	gtk_table_set_col_spacings(GTK_TABLE(table), 4);
-	gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, FALSE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_box_pack_start(GTK_BOX(vbox), grid, FALSE, FALSE, 0);
 
 	label = gtk_label_new(_("Command Line"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1,
-			GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show(label);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_table_attach_defaults(GTK_TABLE(table), hbox, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 0, 1, 1);
+	gtk_widget_set_hexpand (hbox, TRUE);
 	gtk_widget_show(hbox);
 
 	genprefs[type].cmd_entry = gtk_entry_new();
@@ -2730,12 +2727,13 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 
 	label = gtk_label_new(_("Working Directory"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show(label);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_table_attach_defaults(GTK_TABLE(table), hbox, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 1, 1, 1);
+	gtk_widget_set_hexpand (hbox, TRUE);
 	gtk_widget_show(hbox);
 
 	genprefs[type].dir_entry = gtk_entry_new();
@@ -2773,13 +2771,14 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	if (games[type].custom_cfgs) {
 		label = gtk_label_new(_("Custom CFG"));
-		gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-		gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 		gtk_widget_show(label);
 
 		prefs->cfg_combo = gtk_combo_box_text_new_with_entry();
 		gtk_entry_set_max_length(combo_get_entry(prefs->cfg_combo), 256);
-		gtk_table_attach_defaults(GTK_TABLE(table), prefs->cfg_combo, 1, 2, 2, 3);
+		gtk_grid_attach (GTK_GRID (grid), prefs->cfg_combo, 1, 2, 1, 1);
+		gtk_widget_set_hexpand (prefs->cfg_combo, TRUE);
 		gtk_widget_show(prefs->cfg_combo);
 	}
 
@@ -2797,7 +2796,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 		gtk_widget_show(label);
 	}
 
-	gtk_widget_show(table);
+	gtk_widget_show(grid);
 
 	gtk_widget_show(vbox);
 
@@ -4071,7 +4070,7 @@ static GtkWidget *general_options_page (void) {
 static GtkWidget *qstat_options_page (void) {
 	GtkWidget *page_vbox;
 	GtkWidget *frame;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 	GtkAdjustment *adj;
 	GtkWidget* alignment;
@@ -4086,17 +4085,18 @@ static GtkWidget *qstat_options_page (void) {
 	frame = gtk_frame_new (_("QStat Options"));
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
-	table = gtk_table_new (2, 3, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_container_add (GTK_CONTAINER (frame), table);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_container_add (GTK_CONTAINER (frame), grid);
 
 	/* maxsimultaneous */
 
 	label = gtk_label_new (_("Number of simultaneous servers to query"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
+	gtk_widget_set_hexpand (label, TRUE);
 	gtk_widget_show (label);
 
 
@@ -4109,7 +4109,7 @@ static GtkWidget *qstat_options_page (void) {
 	alignment = gtk_alignment_new (1, 0.5, 0, 0);
 	gtk_container_add (GTK_CONTAINER (alignment), maxsimultaneous_spinner);
 
-	gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
 	gtk_widget_show (maxsimultaneous_spinner);
 	gtk_widget_show(alignment);
 
@@ -4118,8 +4118,8 @@ static GtkWidget *qstat_options_page (void) {
 	/* maxretries */
 
 	label = gtk_label_new (_("Number of retries"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (maxretries, 1.0, MAX_RETRIES, 1.0, 1.0, 0.0);
@@ -4128,7 +4128,7 @@ static GtkWidget *qstat_options_page (void) {
 
 	alignment = gtk_alignment_new (1, 0.5, 0, 0);
 	gtk_container_add (GTK_CONTAINER (alignment), maxretries_spinner);
-	gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
 	gtk_widget_show (maxretries_spinner);
 	gtk_widget_show(alignment);
 
@@ -4137,8 +4137,8 @@ static GtkWidget *qstat_options_page (void) {
 	/* srcip */
 
 	label = gtk_label_new (_("Source IP Address"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_show (label);
 
 	qstat_srcip_entry = gtk_entry_new ();
@@ -4147,7 +4147,7 @@ static GtkWidget *qstat_options_page (void) {
 
 	alignment = gtk_alignment_new (1, 0.5, 0, 0);
 	gtk_container_add (GTK_CONTAINER (alignment), qstat_srcip_entry);
-	gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+	gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
 	gtk_widget_show (qstat_srcip_entry);
 	gtk_widget_show (alignment);
 
@@ -4158,8 +4158,8 @@ static GtkWidget *qstat_options_page (void) {
 	{
 		char buf[6];
 		label = gtk_label_new (_("Source Port Range"));
-		gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-		gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, row, row+1);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 		gtk_widget_show (label);
 
 		hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
@@ -4195,7 +4195,7 @@ static GtkWidget *qstat_options_page (void) {
 
 		alignment = gtk_alignment_new (1, 0.5, 0, 0);
 		gtk_container_add (GTK_CONTAINER (alignment), hbox);
-		gtk_table_attach_defaults (GTK_TABLE (table), alignment, 1, 2, row, row+1);
+		gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
 		gtk_widget_show (qstat_srcport_entry_low);
 		gtk_widget_show (label);
 		gtk_widget_show (qstat_srcport_entry_high);
@@ -4205,7 +4205,7 @@ static GtkWidget *qstat_options_page (void) {
 		++row;
 	}
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 	gtk_widget_show (frame);
 
 	gtk_widget_show (page_vbox);
@@ -4237,7 +4237,7 @@ GtkWidget *sound_test_button_new() {
 	return button;
 }
 
-GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *table, int i) {
+GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *grid, int i) {
 	GtkWidget *label;
 	GtkWidget *clear_button;
 	GtkWidget *dialog_button;
@@ -4245,8 +4245,8 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *table, int
 
 	// Label
 	label = gtk_label_new (name);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, i, 1, 1);
 	gtk_widget_show (label);
 
 	// File selection dialog
@@ -4254,19 +4254,20 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *table, int
 	if (file != NULL && *file != '\0') {
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog_button), file);
 	}
-	gtk_table_attach_defaults (GTK_TABLE (table), dialog_button, 1, 2, i, i+1);
+	gtk_grid_attach (GTK_GRID (grid), dialog_button, 1, i, 1, 1);
+	gtk_widget_set_hexpand (dialog_button, TRUE);
 	gtk_widget_show (dialog_button);
 
 	// Clear button
 	clear_button = sound_clear_button_new ();
 	g_signal_connect_swapped (clear_button, "clicked", G_CALLBACK (pref_sound_conf_clear), dialog_button);
-	gtk_table_attach (GTK_TABLE (table), clear_button, 3, 4, i, i+1, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), clear_button, 2, i, 1, 1);
 	gtk_widget_show (clear_button);
 
 	// Test button
 	test_button = sound_test_button_new ();
 	g_signal_connect_swapped (test_button, "clicked", G_CALLBACK (pref_sound_play), dialog_button);
-	gtk_table_attach (GTK_TABLE (table), test_button, 5, 6, i, i+1, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), test_button, 3, i, 1, 1);
 	gtk_widget_show (test_button);
 
 	return dialog_button;
@@ -4275,7 +4276,7 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *table, int
 static GtkWidget *sound_options_page (void) {
 	GtkWidget *page_vbox;
 	GtkWidget *frame;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 
 	int pos = 0;
@@ -4289,27 +4290,27 @@ static GtkWidget *sound_options_page (void) {
 	frame = gtk_frame_new (_("Sound Enable / Disable"));
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
-	table = gtk_table_new (2, 3, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_container_add (GTK_CONTAINER (frame), table);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_container_add (GTK_CONTAINER (frame), grid);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
 	/* Sound Enable */
 
 	sound_enable_check_button = gtk_check_button_new_with_label (_("Enable Sound"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_enable_check_button), sound_enable);
 
-	gtk_table_attach (GTK_TABLE (table), sound_enable_check_button, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), sound_enable_check_button, 0, 0, 1, 1);
 	gtk_widget_show (sound_enable_check_button);
 
 	/* Sound Player */
 
 	label = gtk_label_new (_("Player program"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 0, 0, 0, 0);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	sound_player_file_dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
@@ -4317,7 +4318,8 @@ static GtkWidget *sound_options_page (void) {
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button), sound_player);
 	}
 
-	gtk_table_attach_defaults (GTK_TABLE (table), sound_player_file_dialog_button, 2, 4, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), sound_player_file_dialog_button, 1, 1, 2, 1);
+	gtk_widget_set_hexpand (sound_player_file_dialog_button, TRUE);
 
 	gtk_widget_show (sound_player_file_dialog_button);
 
@@ -4329,21 +4331,21 @@ static GtkWidget *sound_options_page (void) {
 	frame = gtk_frame_new (_("Sound Files"));
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
-	table = gtk_table_new (2, 3, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_container_add (GTK_CONTAINER (frame), table);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_container_add (GTK_CONTAINER (frame), grid);
 
-	sound_xqf_start_file_dialog_button = pref_sound_conf_append(sound_xqf_start, _("XQF Start"), table, pos++);
-	sound_xqf_quit_file_dialog_button = pref_sound_conf_append(sound_xqf_quit, _("XQF Quit"), table, pos++);
-	sound_update_done_file_dialog_button = pref_sound_conf_append(sound_update_done, _("Update Done"), table, pos++);
-	sound_refresh_done_file_dialog_button = pref_sound_conf_append(sound_refresh_done, _("Refresh Done"), table, pos++);
-	sound_stop_file_dialog_button = pref_sound_conf_append(sound_stop, _("Stop"), table, pos++);
-	sound_server_connect_file_dialog_button = pref_sound_conf_append(sound_server_connect, _("Server Connect"), table, pos++);
-	sound_redial_success_file_dialog_button = pref_sound_conf_append(sound_redial_success, _("Redial Success"), table, pos++);
+	sound_xqf_start_file_dialog_button = pref_sound_conf_append(sound_xqf_start, _("XQF Start"), grid, pos++);
+	sound_xqf_quit_file_dialog_button = pref_sound_conf_append(sound_xqf_quit, _("XQF Quit"), grid, pos++);
+	sound_update_done_file_dialog_button = pref_sound_conf_append(sound_update_done, _("Update Done"), grid, pos++);
+	sound_refresh_done_file_dialog_button = pref_sound_conf_append(sound_refresh_done, _("Refresh Done"), grid, pos++);
+	sound_stop_file_dialog_button = pref_sound_conf_append(sound_stop, _("Stop"), grid, pos++);
+	sound_server_connect_file_dialog_button = pref_sound_conf_append(sound_server_connect, _("Server Connect"), grid, pos++);
+	sound_redial_success_file_dialog_button = pref_sound_conf_append(sound_redial_success, _("Redial Success"), grid, pos++);
 
-	gtk_widget_show(table);
+	gtk_widget_show(grid);
 	gtk_widget_show(frame);
 
 	gtk_widget_show(page_vbox);

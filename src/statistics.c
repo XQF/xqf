@@ -341,21 +341,20 @@ static void collect_statistics (void) {
 }
 
 
-static void put_label_to_table (GtkWidget *table, const char *str,
+static void put_label_to_table (GtkWidget *grid, const char *str,
 		float justify, int col, int row) {
 	GtkWidget *label;
 
 	if (str) {
 		label = gtk_label_new (str);
-		gtk_misc_set_alignment (GTK_MISC (label), justify, 0.5);
-		gtk_table_attach_defaults (GTK_TABLE (table), label,
-				col, col + 1, row, row + 1);
+		gtk_label_set_xalign (GTK_LABEL (label), justify);
+		gtk_grid_attach (GTK_GRID (grid), label, col, row, 1, 1);
 		gtk_widget_show (label);
 	}
 }
 
 
-static void put_server_stats (GtkWidget *table, int num, int row) {
+static void put_server_stats (GtkWidget *grid, int num, int row) {
 	char buf1[16], buf2[16], buf3[16], buf4[16], buf5[16], buf6[16];
 	const char *strings[6];
 	int i;
@@ -386,14 +385,14 @@ static void put_server_stats (GtkWidget *table, int num, int row) {
 			PERCENTS (srv_stats[num].players, players_count));
 
 	for (i = 0; i < 6; i++)
-		put_label_to_table (table, strings[i], 1.0, i + 1, row);
+		put_label_to_table (grid, strings[i], 1.0, i + 1, row);
 }
 
 
 static GtkWidget *server_stats_page (void) {
 	GtkWidget *page_vbox;
 	GtkWidget *alignment;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *game_label;
 	GtkWidget *scrollwin;
 	int i;
@@ -408,21 +407,15 @@ static GtkWidget *server_stats_page (void) {
 	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
 
-	table = gtk_table_new (UNKNOWN_SERVER + 2, 7, FALSE);
-	gtk_container_add (GTK_CONTAINER (alignment), table);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+	grid = gtk_grid_new ();
+	gtk_container_add (GTK_CONTAINER (alignment), grid);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
 
-	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
-
-	gtk_table_set_col_spacing (GTK_TABLE (table), 0, 20);
-	gtk_table_set_col_spacing (GTK_TABLE (table), 1, 20);
-	gtk_table_set_col_spacing (GTK_TABLE (table), 5, 20);
-	gtk_table_set_row_spacing (GTK_TABLE (table), 0, 12);
-	gtk_table_set_row_spacing (GTK_TABLE (table), UNKNOWN_SERVER, 12);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
 
 	for (i = 0; i < 6; i++)
-		put_label_to_table (table, _(srv_headers[i]), 1.0, i + 1, 0);
+		put_label_to_table (grid, _(srv_headers[i]), 1.0, i + 1, 0);
 
 	for (i = KNOWN_SERVER_START, row = 1; i < UNKNOWN_SERVER; i++) {
 
@@ -431,11 +424,9 @@ static GtkWidget *server_stats_page (void) {
 			continue;
 
 		game_label = game_pixmap_with_label (i);
-		gtk_table_attach_defaults (GTK_TABLE (table),
-				game_label,
-				0, 1, row, row+1);
+		gtk_grid_attach (GTK_GRID (grid), game_label, 0, row, 1, 1);
 
-		put_server_stats (table, i, row);
+		put_server_stats (grid, i, row);
 
 		{
 			// HACK: position UNKNOWN_SERVER is used for total number of all games
@@ -450,11 +441,11 @@ static GtkWidget *server_stats_page (void) {
 		row++;
 	}
 
-	put_label_to_table (table, _("Total"), 0.0, 0, row + 1);
+	put_label_to_table (grid, _("Total"), 0.0, 0, row + 1);
 
-	put_server_stats (table, UNKNOWN_SERVER, row + 1);
+	put_server_stats (grid, UNKNOWN_SERVER, row + 1);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 	gtk_widget_show (scrollwin);
 
 	gtk_widget_show (alignment);
@@ -464,70 +455,64 @@ static GtkWidget *server_stats_page (void) {
 }
 
 
-static void put_arch_stats (GtkWidget *table, int val, int total,
+static void put_arch_stats (GtkWidget *grid, int val, int total,
 		int row, int col) {
 	char buf[16];
 
 	g_snprintf (buf, 16, "%d (%.2f%%)", val, PERCENTS (val, total));
-	put_label_to_table (table, buf, 1.0, row, col);
+	put_label_to_table (grid, buf, 1.0, row, col);
 }
 
 
 static void arch_notebook_page (GtkWidget *notebook,
 		enum server_type type, struct arch_stats *arch) {
-	GtkWidget *table;
+	GtkWidget *grid;
 	int i, j;
 	int cpu_total;
 
-	table = gtk_table_new (CPU_NUM + 2, OS_NUM + 3, FALSE);
+	grid = gtk_grid_new ();
 
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, NULL);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), grid, NULL);
 
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
 
-	gtk_table_set_col_spacing (GTK_TABLE (table), 0, 20);
-	gtk_table_set_row_spacing (GTK_TABLE (table), 0, 12);
-	gtk_table_set_col_spacing (GTK_TABLE (table), OS_NUM, 20);
-	gtk_table_set_row_spacing (GTK_TABLE (table), CPU_NUM, 12);
-	gtk_table_set_row_spacing (GTK_TABLE (table), CPU_NUM+1, 12);
-
-	put_label_to_table (table, _("CPU  \\  OS"), 0.5, 0, 0);
+	put_label_to_table (grid, _("CPU  \\  OS"), 0.5, 0, 0);
 
 	for (i = 0; i < OS_NUM; i++) {
-		put_label_to_table (table, _(os_names[i]), 1.0, i + 1, 0);
+		put_label_to_table (grid, _(os_names[i]), 1.0, i + 1, 0);
 	}
-	put_label_to_table (table, _("Total"), 1.0, OS_NUM + 1, 0);
+	put_label_to_table (grid, _("Total"), 1.0, OS_NUM + 1, 0);
 
 	for (i = 0; i < CPU_NUM; i++) {
-		put_label_to_table (table, _(cpu_names[i]), 0.0, 0, i + 1);
+		put_label_to_table (grid, _(cpu_names[i]), 0.0, 0, i + 1);
 	}
-	put_label_to_table (table, _("Total"), 0.0, 0, CPU_NUM + 1);
-	put_label_to_table (table, _("Players"), 0.0, 0, CPU_NUM + 2);
+	put_label_to_table (grid, _("Total"), 0.0, 0, CPU_NUM + 1);
+	put_label_to_table (grid, _("Players"), 0.0, 0, CPU_NUM + 2);
 
 	for (j = 0; j < CPU_NUM; j++) {
 		cpu_total = 0;
 		for (i = 0; i < OS_NUM; i++) {
-			put_arch_stats (table, arch->oscpu[i][j], arch->count, i + 1, j + 1);
+			put_arch_stats (grid, arch->oscpu[i][j], arch->count, i + 1, j + 1);
 
 			cpu_total += arch->oscpu[i][j];
 
 			if (j > 0)
 				arch->oscpu[i][0] += arch->oscpu[i][j];
 		}
-		put_arch_stats (table, cpu_total, arch->count, OS_NUM + 1, j + 1);
+		put_arch_stats (grid, cpu_total, arch->count, OS_NUM + 1, j + 1);
 	}
 
 	for (i = 0; i < OS_NUM; i++) {
-		put_arch_stats (table, arch->oscpu[i][0], arch->count, i + 1, CPU_NUM + 1);
-		put_arch_stats (table, players[type].on_os[i],
+		put_arch_stats (grid, arch->oscpu[i][0], arch->count, i + 1, CPU_NUM + 1);
+		put_arch_stats (grid, players[type].on_os[i],
 				players[type].total, i + 1, CPU_NUM + 2);
 	}
-	put_arch_stats (table, arch->count, arch->count, OS_NUM + 1, CPU_NUM + 1);
-	put_arch_stats (table, srv_stats[type].players, players_count, OS_NUM + 1, CPU_NUM + 2);
+	put_arch_stats (grid, arch->count, arch->count, OS_NUM + 1, CPU_NUM + 1);
+	put_arch_stats (grid, srv_stats[type].players, players_count, OS_NUM + 1, CPU_NUM + 2);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 }
 
 gboolean create_server_type_menu_filter_hasharch(enum server_type type) {
@@ -609,7 +594,7 @@ static gboolean create_server_type_menu_filter_hascountries(enum server_type typ
 
 static void country_notebook_page (GtkWidget *notebook,
 		enum server_type type, struct country_stats *stats) {
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *scrollwin;
 	GtkWidget *alignment;
 	unsigned c;
@@ -620,13 +605,13 @@ static void country_notebook_page (GtkWidget *notebook,
 	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
 
-	table = gtk_table_new (stats->nonzero+2, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 8);
+	grid = gtk_grid_new ();
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
 
-	gtk_container_add (GTK_CONTAINER (alignment), table);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+	gtk_container_add (GTK_CONTAINER (alignment), grid);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrollwin, NULL);
 
@@ -644,7 +629,7 @@ static void country_notebook_page (GtkWidget *notebook,
 		snprintf(buf, sizeof(buf), "%u (%.2f%%)",
 				stats->country[c].n,
 				PERCENTS(stats->country[c].n, numservers));
-		put_label_to_table (table, buf , 1.0, 0, c);
+		put_label_to_table (grid, buf , 1.0, 0, c);
 
 		{
 			GtkWidget* label;
@@ -661,12 +646,12 @@ static void country_notebook_page (GtkWidget *notebook,
 			gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 			gtk_widget_show (label);
 
-			gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, c, c+1);
+			gtk_grid_attach (GTK_GRID (grid), hbox, 1, c, 1, 1);
 			gtk_widget_show (hbox);
 		}
 	}
 
-	gtk_widget_show(table);
+	gtk_widget_show(grid);
 	gtk_widget_show(scrollwin);
 	gtk_widget_show(alignment);
 }

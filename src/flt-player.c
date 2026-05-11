@@ -616,7 +616,7 @@ static GtkWidget *aligned_image (struct pixmap *pix) {
 static GtkWidget *player_filter_pattern_editor (void) {
 	GtkWidget *vbox;
 	GtkWidget *hbox;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *frame;
 	GtkWidget *vscrollbar;
@@ -628,21 +628,22 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	frame = gtk_frame_new (NULL);
 	gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_container_add (GTK_CONTAINER (frame), table);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	gtk_container_add (GTK_CONTAINER (frame), grid);
 
 	/* Pattern Entry */
 
 	label = gtk_label_new (_("Pattern"));
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	pattern_entry = gtk_entry_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (pattern_entry), 256);
-	gtk_table_attach_defaults (GTK_TABLE (table), pattern_entry, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), pattern_entry, 1, 0, 1, 1);
+	gtk_widget_set_hexpand (pattern_entry, TRUE);
 	g_signal_connect (pattern_entry, "activate",
 			G_CALLBACK (sync_pattern_data), NULL);
 	gtk_widget_show (pattern_entry);
@@ -650,7 +651,8 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	/* Mode Buttons */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 1, 1, 1);
+	gtk_widget_set_hexpand (hbox, TRUE);
 
 	group = NULL;
 
@@ -666,7 +668,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
 	gtk_widget_show (hbox);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 	gtk_widget_show (frame);
 
 	/* Comment */
