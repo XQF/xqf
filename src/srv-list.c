@@ -40,6 +40,9 @@
 #include "srv-list.h"
 #include "srv-prop.h"   /* pulp */
 #include "country-filter.h"
+#include "xqf-lists.h"
+#include "xqf-server-item.h"
+#include "xqf-player-item.h"
 
 
 GSList *qw_colors_pixmap_cache = NULL;
@@ -48,55 +51,6 @@ GSList *server_pixmap_cache = NULL;
 
 static int sync_selection_blocked = FALSE;
 
-
-static void get_server_pixmap (GtkWidget *window, struct server *s, GSList **cache, struct pixmap *pix) {
-	unsigned key;
-
-	if (!s || !window || !buddy_pix[1].pixbuf) {
-		pix->pixbuf = NULL;
-#ifdef GUI_GTK2
-		pix->pix = NULL;
-		pix->mask = NULL;
-#endif
-		return;
-	}
-
-	key = ((s->flags & PLAYER_GROUP_MASK) << 8) + s->type;
-
-	if (cache) {
-		if (pixmap_cache_lookup (*cache, pix, key)) {
-			return;
-		}
-	}
-
-	create_server_pixmap (window, games[s->type].pix, s->flags & PLAYER_GROUP_MASK, pix);
-	if (cache)
-		pixmap_cache_add (cache, pix, key);
-}
-
-enum pixmap2flags
-{
-	PIX_PASSWORD = 0x001,
-	PIX_PUNKBUSTER = 0x002,
-};
-
-struct pixmap* pix2array[] = {
-	NULL,
-	&locked_pix,
-	&punkbuster_pix,
-	&locked_punkbuster_pix
-};
-
-static struct pixmap* get_server_pixmap2(struct server* s) {
-	unsigned flags = 0;
-
-	if (s->flags & SERVER_PASSWORD)
-		flags |= PIX_PASSWORD;
-	if (s->flags & SERVER_PUNKBUSTER)
-		flags |= PIX_PUNKBUSTER;
-
-	return pix2array[flags];
-}
 
 void assemble_server_address (char *buf, int size, const struct server *s) {
 	if (show_default_port || games[s->type].default_port != s->port) {
@@ -111,352 +65,128 @@ void assemble_server_address (char *buf, int size, const struct server *s) {
 }
 
 
-static int server_clist_refresh_row (struct server *s, int row) {
-	struct pixmap serverpix;
-	char *text[9];
-#ifdef USE_GEOIP
-	struct pixmap* countrypix = NULL;
-#endif
+/* ------------------------------------------------------------------ */
+/* player_list_set_server — populate player_store from s->players     */
+/* ------------------------------------------------------------------ */
 
-	char buf1[256], buf2[32], buf3[32], buf4[32];
-	char *retries;
-	struct pixmap *retries_pix = NULL;
-	int col;
-	int slots_buffer;
-	unsigned short players = 0;
-
-
-	struct server_props *p;
-
-	text[0] = NULL;
-
-	assemble_server_address (buf1, 256, s);
-	text[1] = buf1;
-
-	debug (7, "server_clist_refresh_row() -- Row %d", row);
-
-	if (s->ping >= 0) {
-		g_snprintf (buf2, 32, "%d", (s->ping > MAX_PING)? MAX_PING : s->ping);
-		text[2] = buf2;
-	}
-	else {
-		text[2] = "n/a";
-	}
-
-	retries_pix = &server_status[0];
-
-	if (s->retries >= 0) {
-		if (s->ping == MAX_PING + 1) {
-			retries = "D";  // DOWN
-			retries_pix = &server_status[2];
-		}
-		else if (s->ping == MAX_PING) {
-			retries = "T";  // TIMEOUT
-			retries_pix = &server_status[3];
-		}
-		else {
-			g_snprintf (buf3, 32, "%d", s->retries);    // UP
-			retries = buf3;
-			retries_pix = &server_status[1];
-		}
-	}
-	else {
-		retries = "?";
-		retries_pix = &server_status[0];
-	}
-
-	if (xqf_start_time > s->refreshed)
-		retries_pix = &server_status[0];
-
-	text[3] = text[4] = NULL;
-
-	players = s->curplayers;
-	if (serverlist_countbots && s->curbots <= players)
-		players-=s->curbots;
-
-	if (s->private_client)
-		g_snprintf (buf4, 32, "%d/%d(-%d)", players, s->maxplayers,s->private_client);
-	else
-		g_snprintf (buf4, 32, "%d/%d", players, s->maxplayers);
-
-	// set text only if no players are on the server. Otherwise an icon is added later together with this text
-
-	text[5] = (!players)? buf4 : NULL;
-
-	text[6] = (s->map) ?  s->map : NULL;
-	text[7] = (s->game)? s->game : NULL;
-	text[8] = (s->gametype) ? s->gametype : NULL;
-
-	if (row < 0) {
-		row = gtk_clist_append (server_clist, text);
-	}
-	else {
-		for (col = 1; col < 9; col++) {
-			gtk_clist_set_text (server_clist, row, col, text[col]);
-		}
-	}
-
-	gtk_clist_set_pixtext (server_clist, row, 3, retries, 2,
-			retries_pix->pix, retries_pix->mask);
-
-	// pulp
-
-	p = properties (s);
-
-	if (p) {
-		if (p->reserved_slots) {
-
-
-			slots_buffer=p->reserved_slots;
-		}
-
-		else {
-			slots_buffer=0;
-		}
-	}
-
-	else {
-		slots_buffer=0;
-	}
-
-	if (players >= (s->maxplayers-slots_buffer))
-		gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
-				man_red_pix.pix, man_red_pix.mask);
-
-	else if ((players + s->private_client) >= s->maxplayers)
-		gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
-				man_yellow_pix.pix, man_yellow_pix.mask);
-
-	else if (players)
-		gtk_clist_set_pixtext (server_clist, row, 5, buf4, 2,
-				man_black_pix.pix, man_black_pix.mask);
-
-
-
-	{
-		struct pixmap* pix = get_server_pixmap2(s);
-		if (pix && pix->pix)
-			gtk_clist_set_pixmap (server_clist, row, 4, pix->pix, pix->mask);
-	}
-
-	get_server_pixmap (main_window, s, &server_pixmap_cache, &serverpix);
-	gtk_clist_set_pixtext (server_clist, row, 0,
-			(s->name)? s->name : "", 2, serverpix.pix, serverpix.mask);
-
-#ifdef USE_GEOIP
-	countrypix = get_pixmap_for_country_with_fallback(s->country_id);
-	if (countrypix)
-		gtk_clist_set_pixtext (server_clist, row, 1,
-				text[1], 2, countrypix->pix, countrypix->mask);
-#endif
-
-	// if map not available
-	if (games[s->type].has_map && games[s->type].has_map(s) == FALSE) {
-		gtk_clist_set_pixtext (server_clist, row, 6, s->map, 2, rminus_pix.pix, rminus_pix.mask);
-	}
-
-	if (s->flags & SERVER_INCOMPATIBLE) {
-		GtkStyle *style;
-
-		style = gtk_widget_get_style(GTK_WIDGET(server_clist));
-		if (style) {
-			gtk_clist_set_foreground(server_clist,row,&style->fg[GTK_STATE_INSENSITIVE]);
-		}
-	}
-
-	free_pixmap (&serverpix);
-
-	return row;
-}
-
-
-static int player_clist_refresh_row (struct server *s, struct player *p,
-		int row) {
-	struct pixmap qw_colors_pixmap;
-	char *text[6];
-	char buf1[32], buf2[32], buf3[32], buf4[32];
-	char skin_buf[128];
-	int col;
-
-	if ((games[s->type].flags & GAME_QUAKE1_PLAYER_COLORS) != 0)
-		allocate_quake_player_colors (gtk_widget_get_window (main_window));
-
-	text[0] = text[1] = text[2] = text[3] = text[4] = text[5] = NULL;
-
-	if (p->name && (p->flags & PLAYER_GROUP_MASK) == 0)
-		text[0] = p->name;
-
-	g_snprintf (buf1, 32, "%d", p->frags);
-	text[1] = buf1;
-
-	if (p->model && p->skin && strlen(p->model) && strlen(p->skin)) {
-		g_snprintf (skin_buf, 128, "%s/%s", p->model, p->skin);
-		text[3] = skin_buf;
-	}
-	else {
-		if (p->model)
-			text[3] = p->model;
-		if (p->skin)
-			text[3] = p->skin;
-	}
-
-	if (p->ping >= 0) {
-		g_snprintf (buf3, 32, "%d", p->ping);
-		text[4] = buf3;
-	}
-
-	if (p->time >= 0) {
-		g_snprintf (buf4, 32, "%02d:%02d", p->time / 60 / 60, p->time / 60 % 60);
-		text[5] = buf4;
-	}
-
-	if (row < 0) {
-		row = gtk_clist_append (player_clist, text);
-	}
-	else {
-		for (col = 1; col < 6; col++) {
-			gtk_clist_set_text (player_clist, row, col, text[col]);
-		}
-	}
-
-	if ((games[s->type].flags & GAME_QUAKE1_PLAYER_COLORS) != 0) {
-		qw_colors_pixmap_create (main_window, p->shirt, p->pants, &qw_colors_pixmap_cache, &qw_colors_pixmap);
-
-		g_snprintf (buf2, 32, "%d:%d", p->shirt, p->pants);
-		gtk_clist_set_pixtext (player_clist, row, 2, buf2, 2,
-				qw_colors_pixmap.pix, qw_colors_pixmap.mask);
-
-		free_pixmap (&qw_colors_pixmap);
-	}
-
-	if ((p->flags & PLAYER_GROUP_MASK) == 0) {
-		gtk_clist_set_text (player_clist, row, 0, (p->name)? p->name : "");
-		gtk_clist_set_shift (player_clist, row, 0, 0,
-				pixmap_width (&buddy_pix[1]) + 2);
-	}
-	else {
-		ensure_buddy_pix (main_window, p->flags & PLAYER_GROUP_MASK);
-		gtk_clist_set_shift (player_clist, row, 0, 0, 0);
-		gtk_clist_set_pixtext (player_clist, row, 0,
-				(p->name)? p->name : "", 2,
-				buddy_pix[p->flags & PLAYER_GROUP_MASK].pix,
-				buddy_pix[p->flags & PLAYER_GROUP_MASK].mask);
-	}
-
-	return row;
-}
-
-
-void player_clist_set_server (struct server *s) {
+void player_list_set_server (struct server *s) {
 	GSList *plist;
-	struct player *p;
-	int row;
 
-	if (!s || !s->players) {
-		if (player_clist->rows > 0)
-			gtk_clist_clear (player_clist);
+	g_list_store_remove_all (player_store);
+
+	if (!s || !s->players)
 		return;
-	}
-
-	gtk_clist_freeze (player_clist);
-	gtk_clist_clear (player_clist);
 
 	for (plist = s->players; plist; plist = plist->next) {
-		p = (struct player *) plist->data;
-		row = player_clist_refresh_row (s, p, -1);
-		gtk_clist_set_row_data (player_clist, row, p);
+		struct player *p = (struct player *) plist->data;
+		XqfPlayerItem *item = xqf_player_item_new (p, s);
+		g_list_store_append (player_store, item);
+		g_object_unref (item);
 	}
-
-	gtk_clist_sort (player_clist);
-	gtk_clist_thaw (player_clist);
-
-	pixmap_cache_clear (&qw_colors_pixmap_cache, 10);
 }
 
 
-void player_clist_redraw (void) {
-	struct player *p;
-	int i;
+void player_list_redraw (void) {
+	if (!cur_server)
+		return;
+	/* Re-populate player store to force factory rebind. */
+	player_list_set_server (cur_server);
+}
 
-#ifdef DEBUG
-	fprintf (stderr, "player_clist_redraw()\n");
-#endif
 
-	if (!cur_server || player_clist->rows == 0)
+/* ------------------------------------------------------------------ */
+/* server_list_sync_selection — read GtkMultiSelection, update state  */
+/* ------------------------------------------------------------------ */
+
+void server_list_sync_selection (void) {
+	if (!server_selection || sync_selection_blocked)
 		return;
 
-	gtk_clist_freeze (player_clist);
+	debug (7, "server_list_sync_selection() --");
 
-	for (i = 0; i < player_clist->rows; i++) {
-		p = (struct player *) gtk_clist_get_row_data (player_clist, i);
-		player_clist_refresh_row (cur_server, p, i);
+	GtkBitset *sel = gtk_selection_model_get_selection (server_selection);
+	guint n_sel = gtk_bitset_get_size (sel);
+
+	if (cur_server) {
+		debug (7, "server_list_sync_selection() -- unref server %lx", cur_server);
+		server_unref (cur_server);
+		cur_server = NULL;
 	}
 
-	gtk_clist_thaw (player_clist);
+	if (n_sel == 1) {
+		GtkBitsetIter iter;
+		guint pos;
+		gtk_bitset_iter_init_first (&iter, sel, &pos);
+		XqfServerItem *item = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_selection), pos));
+		cur_server = xqf_server_item_get (item);
+		server_ref (cur_server);
+		g_object_unref (item);
+	}
 
-	pixmap_cache_clear (&qw_colors_pixmap_cache, 10);
+	gtk_bitset_unref (sel);
+
+	player_list_set_server (cur_server);
+	srvinf_ctree_set_server (cur_server);
+	set_widgets_sensitivity (builder);
 }
 
 
-void server_clist_sync_selection (void) {
-	GList *selection;
+/* ------------------------------------------------------------------ */
+/* server_list_refresh_server — add / update / remove one server      */
+/* ------------------------------------------------------------------ */
 
-	if (!server_clist)
-		return;
-
-	debug (7, "server_clist_sync_selection() --");
-	if (!sync_selection_blocked) {
-		selection = server_clist->selection;
-
-		if (cur_server) {
-			debug (7, "server_clist_sync_selection() -- unref server %lx", cur_server);
-			server_unref (cur_server);
-			cur_server = NULL;
-		}
-
-		if (selection && !selection->next) {
-			cur_server = (struct server *) gtk_clist_get_row_data (
-					server_clist, GPOINTER_TO_INT(selection->data));
-			server_ref (cur_server);
-		}
-
-		player_clist_set_server (cur_server);
-		srvinf_ctree_set_server (cur_server);
-
-		set_widgets_sensitivity (builder);
+/* Search server_store (unsorted) for a matching server pointer. */
+static guint
+server_store_find_in_store (struct server *s)
+{
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (server_store));
+	for (guint i = 0; i < n; i++) {
+		XqfServerItem *item = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_store), i));
+		struct server *ss = xqf_server_item_get (item);
+		g_object_unref (item);
+		if (ss == s) return i;
 	}
+	return G_MAXUINT;
 }
 
+/* Force GtkColumnView to rebind the item at position pos in server_store. */
+static void
+server_store_rebind (guint pos)
+{
+	XqfServerItem *old = XQF_SERVER_ITEM (
+		g_list_model_get_item (G_LIST_MODEL (server_store), pos));
+	struct server *s = xqf_server_item_get (old);
+	g_object_unref (old);
+	XqfServerItem *fresh = xqf_server_item_new (s);
+	gpointer add[1] = { fresh };
+	g_list_store_splice (server_store, pos, 1, add, 1);
+	g_object_unref (fresh);
+}
 
-int server_clist_refresh_server (struct server *s) {
-	int row;
-
-	debug (6, "server_clist_refresh_server() -- Server %lx", s);
+int server_list_refresh_server (struct server *s) {
+	debug (6, "server_list_refresh_server() -- Server %lx", s);
 
 	apply_filters (cur_filter | FILTER_PLAYER_MASK, s);
 
-	row = gtk_clist_find_row_from_data (server_clist, s);
+	guint pos = server_store_find_in_store (s);
 
-	if (row >= 0) {
-		debug (6, "server_clist_refresh_server() -- Server %lx is at row %d", s, row);
-
+	if (pos != G_MAXUINT) {
+		debug (6, "server_list_refresh_server() -- Server %lx is at store pos %u", s, pos);
 		if (default_refresh_sorts && (s->filters & cur_filter) != cur_filter) {
-			gtk_clist_remove (server_clist, row);
+			g_list_store_remove (server_store, pos);
 			return FALSE;
-		}
-		else {
-			server_clist_refresh_row (s, row);
+		} else {
+			server_store_rebind (pos);
 			return TRUE;
 		}
-
-	}
-	else {
+	} else {
 		if ((s->filters & cur_filter) == cur_filter) {
-			debug (6, "server_clist_refresh_server() -- Server %lx needs to be added.");
-			row = server_clist_refresh_row (s, -1);
-			gtk_clist_set_row_data_full (server_clist, row, s,
-					(GDestroyNotify) server_unref);
-			server_ref (s);
+			debug (6, "server_list_refresh_server() -- Server %lx needs to be added.", s);
+			XqfServerItem *item = xqf_server_item_new (s);
+			g_list_store_append (server_store, item);
+			g_object_unref (item);
 			return TRUE;
 		}
 	}
@@ -465,211 +195,154 @@ int server_clist_refresh_server (struct server *s) {
 }
 
 
-void server_clist_select_one (int row) {
+/* ------------------------------------------------------------------ */
+/* server_list_select_one — select item at sorted position row        */
+/* ------------------------------------------------------------------ */
 
-	debug (7, "server_clist_select_one() -- Row %d", row);
-
-	sync_selection_blocked = TRUE;
-	gtk_clist_unselect_all (server_clist);
-	sync_selection_blocked = FALSE;
-
-	gtk_clist_select_row (server_clist, row, -1);
-	server_clist_selection_visible();
+void server_list_select_one (int row) {
+	if (!server_selection || row < 0)
+		return;
+	debug (7, "server_list_select_one() -- Row %d", row);
+	gtk_selection_model_select_item (server_selection, (guint) row, TRUE);
 }
 
 
-GSList *server_clist_selected_servers (void) {
-	GList *rows = server_clist->selection;
+/* ------------------------------------------------------------------ */
+/* Enumerate selected / all servers                                     */
+/* ------------------------------------------------------------------ */
+
+GSList *server_list_selected_servers (void) {
 	GSList *list = NULL;
-	struct server *s;
+	if (!server_selection) return NULL;
 
-	debug (6, "server_clist_selected_servers() --");
-	while (rows) {
-		s = (struct server *) gtk_clist_get_row_data (
-				server_clist, GPOINTER_TO_INT(rows->data));
-		list = server_list_prepend (list, s);
-		rows = rows->next;
+	GtkBitset *sel = gtk_selection_model_get_selection (server_selection);
+	GtkBitsetIter iter;
+	guint pos;
+	gboolean has = gtk_bitset_iter_init_first (&iter, sel, &pos);
+	while (has) {
+		XqfServerItem *item = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_selection), pos));
+		list = server_list_prepend (list, xqf_server_item_get (item));
+		g_object_unref (item);
+		has = gtk_bitset_iter_next (&iter, &pos);
 	}
-
-	return list;
-}
-
-GSList *server_clist_get_n_servers (int amount) {
-	GSList *list = NULL;
-	struct server *server;
-	int row;
-
-	for (row = 0; (row < server_clist->rows && row < amount) ; row++) {
-		server = (struct server *) gtk_clist_get_row_data (server_clist, row);
-		list = server_list_prepend (list, server);
-	}
-
+	gtk_bitset_unref (sel);
 	return g_slist_reverse (list);
 }
 
-// Return all servers that are in the server clist widget. It returns a new list. Note that the prepend function adds one to the reference count.
-
-GSList *server_clist_all_servers (void) {
+GSList *server_list_get_n_servers (int amount) {
 	GSList *list = NULL;
-	struct server *server;
-	int row;
+	if (!server_store) return NULL;
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (server_store));
+	for (guint i = 0; i < n && (int) i < amount; i++) {
+		XqfServerItem *item = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_store), i));
+		list = server_list_prepend (list, xqf_server_item_get (item));
+		g_object_unref (item);
+	}
+	return g_slist_reverse (list);
+}
 
+GSList *server_list_all_servers (void) {
+	GSList *list = NULL;
+	if (!server_store) return NULL;
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (server_store));
 	debug (6, "start");
-	for (row = 0; row < server_clist->rows; row++) {
-		server = (struct server *) gtk_clist_get_row_data (server_clist, row);
-		list = server_list_prepend (list, server);
+	for (guint i = 0; i < n; i++) {
+		XqfServerItem *item = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_store), i));
+		list = server_list_prepend (list, xqf_server_item_get (item));
+		g_object_unref (item);
 	}
 	debug (6, "Return list %lx", list);
 	return g_slist_reverse (list);
 }
 
 
-void server_clist_selection_visible (void) {
-	GList *rows;
-	GList *row;
-	GtkVisibility vis;
-	int min;
+/* ------------------------------------------------------------------ */
+/* server_list_selection_visible — scroll to show selection           */
+/* ------------------------------------------------------------------ */
 
-	debug (7, "server_clist_selection_visible() -- ");
-
-	if (!server_clist)
-		return;
-
-	rows = server_clist->selection;
-
-	if (!rows)
-		return;
-
-	for (row = rows; row; row = row->next) {
-		vis = gtk_clist_row_is_visible (server_clist, GPOINTER_TO_INT(row->data));
-		if (vis == GTK_VISIBILITY_FULL)
-			return;
-	}
-
-	min = GPOINTER_TO_INT(rows->data);
-	for (row = rows->next; row; row = row->next) {
-		if (min > GPOINTER_TO_INT(row->data))
-			min = GPOINTER_TO_INT(row->data);
-	}
-
-	if (rows->next) /* if (g_list_length (rows) > 1) */
-		gtk_clist_moveto (server_clist, min, 0, 0.2, 0.0);
-	else
-		gtk_clist_moveto (server_clist, min, 0, 0.5, 0.0);
+void server_list_selection_visible (void) {
+	/* TODO: use gtk_column_view_scroll_to() (GTK 4.12+) */
 }
 
 
-void server_clist_show_hostname (struct host *h) {
-	struct server *s;
-	char buf[256];
-	int row;
+/* ------------------------------------------------------------------ */
+/* server_list_show_hostname / server_list_redraw                    */
+/* Force GtkColumnView to rebind updated rows.                         */
+/* ------------------------------------------------------------------ */
 
-	if (!h->name)
-		return;
-
-	/* Freezing and sorting should be done in upper-level function */
-
-	for (row = 0; row < server_clist->rows; row++) {
-		s = (struct server *) gtk_clist_get_row_data (server_clist, row);
-		if (s->host == h) {
-			assemble_server_address (buf, 256, s);
-			gtk_clist_set_text (server_clist, row, 1, buf);
-		}
+void server_list_show_hostname (struct host *h) {
+	if (!h->name || !server_store) return;
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (server_store));
+	for (guint i = 0; i < n; i++) {
+		XqfServerItem *item = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_store), i));
+		struct server *s = xqf_server_item_get (item);
+		gboolean match = (s->host == h);
+		g_object_unref (item);
+		if (match)
+			server_store_rebind (i);
 	}
 }
 
-
-void server_clist_redraw (void) {
-	struct server *s;
-	char buf[256];
-	int row;
-
-	debug (7, "server_clist_redraw() --");
-	gtk_clist_freeze (server_clist);
-
-	for (row = 0; row < server_clist->rows; row++) {
-		s = (struct server *) gtk_clist_get_row_data (server_clist, row);
-		assemble_server_address (buf, 256, s);
-		gtk_clist_set_text (server_clist, row, 1, buf);
-	}
-
-	if (server_clist->sort_column == SORT_SERVER_ADDRESS)
-		gtk_clist_sort (server_clist);
-
-	gtk_clist_thaw (server_clist);
+void server_list_redraw (void) {
+	if (!server_store) return;
+	debug (7, "server_list_redraw() --");
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (server_store));
+	for (guint i = 0; i < n; i++)
+		server_store_rebind (i);
 }
 
 
-void server_clist_set_list (GSList *servers) {
-	GSList *list;
-	struct server *server;
-	int row;
+/* ------------------------------------------------------------------ */
+/* server_list_set_list — clear and repopulate from filtered list     */
+/* ------------------------------------------------------------------ */
+
+void server_list_set_list (GSList *servers) {
 	GSList *filtered;
 
-	debug (7, "server_clist_set_list() -- list %lx", servers);
+	debug (7, "server_list_set_list() -- list %lx", servers);
 
 	filtered = build_filtered_list (cur_filter, servers);
 
-	gtk_clist_freeze (server_clist);
-	gtk_clist_clear (server_clist);
+	g_list_store_remove_all (server_store);
 
-	if (filtered) {
-
-		for (list = filtered; list; list = list->next) {
-			server = (struct server *) list->data;
-			row = server_clist_refresh_row (server, -1);
-			gtk_clist_set_row_data_full (server_clist, row, server,
-					(GDestroyNotify) server_unref);
-			/*
-			   Because the a destroy event on the server_clist will
-			   call server_unref, we want to add a reference to
-			   count to the server. Note if we comment out both
-			   the ref line and the list_free line we have a net sum
-			   of zero.  But just for clarity...
-			*/
-			server_ref (server);
-		}
-
-		server_list_free (filtered);
-
-		gtk_clist_sort (server_clist);
+	for (GSList *l = filtered; l; l = l->next) {
+		struct server *s = (struct server *) l->data;
+		XqfServerItem *item = xqf_server_item_new (s);
+		g_list_store_append (server_store, item);
+		g_object_unref (item);
 	}
 
-	gtk_clist_thaw (server_clist);
-
+	server_list_free (filtered);
 	pixmap_cache_clear (&server_pixmap_cache, 8);
 
-	server_clist_sync_selection ();
-	debug (7, "server_clist_set_list() -- Done.");
+	server_list_sync_selection ();
+	debug (7, "server_list_set_list() -- Done.");
 }
 
 
-// Filter server_list through server filter and display result in clist
+/* ------------------------------------------------------------------ */
+/* server_list_build_filtered — rebuild list, restore selection       */
+/* ------------------------------------------------------------------ */
 
-void server_clist_build_filtered (GSList *server_list, int update) {
+void server_list_build_filtered (GSList *server_list, int update) {
+	(void) update;
+	debug (3, "server_list_build_filtered()");
 
-	int row;
+	struct server *saved = cur_server;
+	if (saved) server_ref (saved);
 
-	debug(3, "update: %d", update);
+	server_list_set_list (server_list);
 
-	{
-
-		struct server* saved_cur_server = cur_server;
-		server_ref(saved_cur_server);
-
-		server_clist_set_list(server_list);
-
-		row = gtk_clist_find_row_from_data (server_clist, saved_cur_server);
-		server_unref(saved_cur_server);
-		saved_cur_server = NULL;
-
-		if (row >= 0)
-			server_clist_select_one (row);
-
+	if (saved) {
+		guint pos = server_store_find (saved);
+		server_unref (saved);
+		if (pos != G_MAXUINT)
+			server_list_select_one ((int) pos);
 	}
 
-
-	server_clist_selection_visible ();
-
-	gtk_clist_thaw (server_clist);
+	server_list_selection_visible ();
 }
