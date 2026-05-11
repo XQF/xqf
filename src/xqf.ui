@@ -26,46 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <!-- interface-description Game Server Browser -->
   <!-- interface-copyright \302\251 XQF Team 1998-2015 -->
   <object class="GtkListStore" id="player_list_store"/>
-  <object class="GtkMenu" id="player_menu">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkMenuItem" id="player_filter_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child type="submenu">
-          <object class="GtkMenu" id="player_filter_menu">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkMenuItem" id="player_filter_red_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Mark as Red</property>
-                <signal name="activate" handler="add_to_player_filter_red_callback" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="player_filter_green_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Mark as Green</property>
-                <signal name="activate" handler="add_to_player_filter_green_callback" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="player_filter_blue_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Mark as Blue</property>
-                <signal name="activate" handler="add_to_player_filter_blue_callback" swapped="no"/>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkListStore" id="server_list_store">
     <columns>
       <!-- column-name SERVER_NAME -->
@@ -88,47 +48,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkMenu" id="source_tree_popup_menu">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkMenuItem" id="source_add_master_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Add _Master</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="add_master_callback" swapped="no"/>
-        <accelerator key="m" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="source_edit_master_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Rename Master</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="edit_master_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="source_delete_master_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">D_elete Master</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="del_master_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="source_clear_master_servers_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Clear Servers</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="clear_master_servers_callback" swapped="no"/>
-      </object>
-    </child>
-  </object>
   <object class="GtkTreeStore" id="source_tree_store">
     <columns>
       <!-- column-name Game -->
@@ -148,605 +67,86 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <property name="title" translatable="yes">XQF</property>
     <property name="icon_name">xqf</property>
     <child>
-      <object class="GtkGrid" id="main-grid">
+      <object class="GtkBox" id="main-vbox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkMenuBar" id="menubar1">
+          <object class="GtkPopoverMenuBar" id="menubar1">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkMenuItem" id="file_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_File</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="file_menu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="file_statistics_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Statistics</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="statistics_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="file_separator1_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="file_quit_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Exit</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="gtk_main_quit" swapped="no"/>
-                        <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="edit_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Edit</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="edit_menu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_add_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Add new Server</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_server_callback" swapped="no"/>
-                        <accelerator key="n" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_favadd_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Add to _Favorites</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_to_favorites_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_delete_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Remove</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="del_server_callback" swapped="no"/>
-                        <accelerator key="d" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_copy_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Copy</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="copy_server_callback" swapped="no"/>
-                        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_copyplus_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Copy+</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="copy_server_callback_plus" swapped="no"/>
-                        <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="edit_separator1_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_update_master_builtin_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Add Default Masters</property>
-                        <signal name="activate" handler="update_master_builtin_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_update_master_gslist_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Add Gslist Masters</property>
-                        <signal name="activate" handler="update_master_gslist_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_add_master_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Add _Master</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_master_callback" swapped="no"/>
-                        <accelerator key="m" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_edit_master_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Rename Master</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="edit_master_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_delete_master_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">D_elete Master</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="del_master_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_clear_master_servers_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Clear Servers</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="clear_master_servers_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="edit_separator2_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_find_player_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Find Player</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="find_player_callback" swapped="no"/>
-                        <accelerator key="f" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_find_again_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Find A_gain</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="find_player_callback" swapped="no"/>
-                        <accelerator key="g" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="edit_separator3_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_properties_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Properties</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="properties_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="edit_separator4_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="edit_preferences_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Preferences</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="start_preferences_dialog" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="view_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_View</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="view_menu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="view_refresh_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Refresh</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="refresh_callback" swapped="no"/>
-                        <accelerator key="r" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="view_refrsel_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Refresh _Selected</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="refresh_selected_callback" swapped="no"/>
-                        <accelerator key="s" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="view_update_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Update From Master</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="update_source_callback" swapped="no"/>
-                        <accelerator key="u" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="view_separator1_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkCheckMenuItem" id="view_hostnames_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show _Host Names</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="show_hostnames_callback" swapped="no"/>
-                        <accelerator key="h" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkCheckMenuItem" id="view_defport_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show Default _Port</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="show_default_port_callback" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="server_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Server</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="server_menu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="server_connect_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Connect</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="launch_normal_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_observe_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Observe</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="launch_spectate_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_record_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Record _Demo</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="launch_record_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="server_separator1_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_add_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Add new Server</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_server_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_favadd_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Add to _Favorites</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="add_to_favorites_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_delete_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Remove</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="del_server_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_resolve_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">DNS _Lookup</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="resolve_callback" swapped="no"/>
-                        <accelerator key="l" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="server_separator2_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_rcon_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_RCon</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="rcon_callback" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="server_properties_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_Properties</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="properties_callback" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="svfilter_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Server Filters</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="svfilter_menu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="help_menu_item">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Help</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="help_menu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="help_about_menu_item">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">_About</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="about_dialog" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
+            <property name="menu-model">main-menu</property>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkToolbar" id="main-toolbar">
+          <object class="GtkBox" id="main-toolbar">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="toolbar_style">both</property>
+            <property name="spacing">2</property>
             <child>
-              <object class="GtkToolButton" id="update-button">
+              <object class="GtkButton" id="update-button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Update from master</property>
+                <property name="tooltip-text" translatable="yes">Update from master</property>
                 <property name="label" translatable="yes">Update</property>
-                <property name="stock_id">gtk-edit</property>
                 <signal name="clicked" handler="update_source_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="refresh-button">
+              <object class="GtkButton" id="refresh-button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Refresh current list</property>
+                <property name="tooltip-text" translatable="yes">Refresh current list</property>
                 <property name="label" translatable="yes">Refresh</property>
-                <property name="stock_id">gtk-refresh</property>
                 <signal name="clicked" handler="refresh_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="refrsel-button">
+              <object class="GtkButton" id="refrsel-button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Refresh selected servers</property>
+                <property name="tooltip-text" translatable="yes">Refresh selected servers</property>
                 <property name="label" translatable="yes">Ref.Sel.</property>
-                <property name="stock_id">gtk-refresh</property>
                 <signal name="clicked" handler="refresh_selected_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="stop-button">
+              <object class="GtkButton" id="stop-button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Stop</property>
+                <property name="tooltip-text" translatable="yes">Stop</property>
                 <property name="label" translatable="yes">Stop</property>
-                <property name="stock_id">gtk-stop</property>
                 <signal name="clicked" handler="stop_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkSeparatorToolItem" id="first-separator">
+              <object class="GtkSeparator" id="first-separator">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="connect-button">
+              <object class="GtkButton" id="connect-button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Connect</property>
+                <property name="tooltip-text" translatable="yes">Connect</property>
                 <property name="label" translatable="yes">Connect</property>
-                <property name="stock_id">gtk-connect</property>
                 <signal name="clicked" handler="launch_normal_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="observe-button">
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Observe</property>
+              <object class="GtkButton" id="observe-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Observe</property>
                 <property name="label" translatable="yes">Observe</property>
-                <property name="stock_id">gtk-media-play</property>
                 <signal name="clicked" handler="launch_spectate_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="record-button">
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Record Demo</property>
+              <object class="GtkButton" id="record-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Record Demo</property>
                 <property name="label" translatable="yes">Record</property>
-                <property name="stock_id">gtk-media-record</property>
                 <signal name="clicked" handler="launch_record_callback" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="second-separator">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="record-button1">
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Record Demo</property>
-                <property name="label" translatable="yes">S Filter</property>
-                <property name="stock_id">gtk-find</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="record-button2">
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Record Demo</property>
-                <property name="label" translatable="yes">P Filter</property>
-                <property name="stock_id">gtk-find</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkGrid" id="grid1">
+          <object class="GtkBox" id="main-content-box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
@@ -756,272 +156,98 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkTreeView" id="source_tree_view">
+                  <object class="GtkScrolledWindow" id="scrollwin-sources">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="model">source_tree_store</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="source_tree_selection"/>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                   </object>
-                  <packing>
-                    <property name="resize">False</property>
-                    <property name="shrink">True</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkPaned" id="vpaned">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="orientation">vertical</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkTreeView" id="server_tree_view">
+                      <object class="GtkBox" id="server-panel-box">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="orientation">vertical</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
-                        <property name="model">server_list_store</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="server_tree_selection"/>
-                        </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="server_name_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Name</property>
+                          <object class="GtkBox" id="hbox">
+                            <property name="visible">True</property>
+                            <property name="spacing">2</property>
                             <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                              <attributes>
-                                <attribute name="cell-background-rgba">0</attribute>
-                                <attribute name="text">0</attribute>
-                              </attributes>
+                              <object class="GtkButton" id="button">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="entry">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                              </object>
                             </child>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="server_address_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Address</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext2"/>
-                              <attributes>
-                                <attribute name="text">1</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_ping_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Ping</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext3"/>
-                              <attributes>
-                                <attribute name="text">2</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_to_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">TO</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext4"/>
-                              <attributes>
-                                <attribute name="text">3</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_priv_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Priv</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext5"/>
-                              <attributes>
-                                <attribute name="text">4</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_players_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Players</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext6"/>
-                              <attributes>
-                                <attribute name="text">5</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_map_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Map</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext7"/>
-                              <attributes>
-                                <attribute name="text">6</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_game_tree_view_column">
-                            <property name="title" translatable="yes">Game</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext8"/>
-                              <attributes>
-                                <attribute name="text">7</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="server_gametype_tree_view_column">
-                            <property name="resizable">True</property>
-                            <property name="title" translatable="yes">GameType</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext9"/>
-                              <attributes>
-                                <attribute name="text">8</attribute>
-                              </attributes>
-                            </child>
+                          <object class="GtkScrolledWindow" id="scrollwin-server">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="resize">True</property>
-                        <property name="shrink">True</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkPaned" id="paned1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkTreeView" id="player_tree_view">
+                          <object class="GtkScrolledWindow" id="scrollwin-player">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <property name="model">player_list_store</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="player_tree_selection"/>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn10">
-                                <property name="title" translatable="yes">Name</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn11">
-                                <property name="title" translatable="yes">Frags</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn12">
-                                <property name="title" translatable="yes">Colors</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn13">
-                                <property name="title" translatable="yes">Skin</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn14">
-                                <property name="title" translatable="yes">Ping</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn15">
-                                <property name="title" translatable="yes">Time</property>
-                              </object>
-                            </child>
                           </object>
-                          <packing>
-                            <property name="resize">True</property>
-                            <property name="shrink">True</property>
-                          </packing>
                         </child>
                         <child>
-                          <object class="GtkTreeView" id="svinfo_tree_view">
+                          <object class="GtkScrolledWindow" id="scrollwin-server-info">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <property name="model">svinfo_list_store</property>
-                            <property name="search_column">0</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="svinfo_tree_selection"/>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="svinfo_rule_tree_view_column">
-                                <property name="title" translatable="yes">Rule</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkTreeViewColumn" id="svinfo_value_tree_view_column">
-                                <property name="title" translatable="yes">Value</property>
-                              </object>
-                            </child>
                           </object>
-                          <packing>
-                            <property name="resize">True</property>
-                            <property name="shrink">True</property>
-                          </packing>
                         </child>
                       </object>
-                      <packing>
-                        <property name="resize">True</property>
-                        <property name="shrink">True</property>
-                      </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">True</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkGrid" id="statusbar-grid">
+              <object class="GtkBox" id="statusbar-box">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="row_homogeneous">True</property>
-                <property name="column_homogeneous">True</property>
+                <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkStatusbar" id="main-status-bar">
+                  <object class="GtkLabel" id="main-status-bar">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
+                    <property name="label"></property>
+                    <property name="xalign">0</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
                 </child>
                 <child>
-                  <object class="GtkStatusbar" id="main-filter-status-bar">
+                  <object class="GtkLabel" id="main-filter-status-bar">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="halign">center</property>
                     <property name="hexpand">True</property>
+                    <property name="label"></property>
+                    <property name="xalign">0</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkProgressBar" id="main-progress-bar">
@@ -1030,171 +256,303 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="halign">end</property>
                     <property name="hexpand">True</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">0</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-          </packing>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkMenu" id="svinfo_menu">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkMenuItem" id="svinfo_copy_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Copy</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="copy_server_info_callback" swapped="no"/>
-      </object>
-    </child>
-  </object>
-  <object class="GtkMenu" id="svopt_menu">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkMenuItem" id="connect_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Connect</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="launch_normal_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="observe_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Observe</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="launch_spectate_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="record_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Record</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="launch_record_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="svopt_separator1_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="add_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Add new Server</property>
-        <signal name="activate" handler="add_server_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="favadd_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Add to Favorites</property>
-        <signal name="activate" handler="add_to_favorites_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="delete_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Remove</property>
-        <signal name="activate" handler="del_server_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="copy_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Copy</property>
-        <signal name="activate" handler="copy_server_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="copy_plus_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Copy+</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="svopt_separator2_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="refresh_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Refresh</property>
-        <signal name="activate" handler="refresh_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="refrsel_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Refresh Selected</property>
-        <signal name="activate" handler="refresh_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="svopt_separator3_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="resolve_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">DNS Lookup</property>
-        <signal name="activate" handler="resolve_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="svopt_separator4_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="rcon_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">RCon</property>
-        <signal name="activate" handler="rcon_callback" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="properties_menu_item">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Properties</property>
-        <signal name="activate" handler="properties_callback" swapped="no"/>
-      </object>
-    </child>
-  </object>
+  <!-- Main menu model -->
+  <menu id="main-menu">
+    <submenu>
+      <attribute name="label" translatable="yes">_File</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_Statistics</attribute>
+        <attribute name="action">win.statistics</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Exit</attribute>
+        <attribute name="action">win.quit</attribute>
+        <attribute name="accel">&lt;Control&gt;q</attribute>
+      </item>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Edit</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Add new Server</attribute>
+          <attribute name="action">win.add-server</attribute>
+          <attribute name="accel">&lt;Control&gt;n</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add to _Favorites</attribute>
+          <attribute name="action">win.add-to-favorites</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Remove</attribute>
+          <attribute name="action">win.remove-server</attribute>
+          <attribute name="accel">&lt;Control&gt;d</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Copy</attribute>
+          <attribute name="action">win.copy-server</attribute>
+          <attribute name="accel">&lt;Control&gt;c</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Copy+</attribute>
+          <attribute name="action">win.copy-server-plus</attribute>
+          <attribute name="accel">&lt;Control&gt;o</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Add Default Masters</attribute>
+          <attribute name="action">win.add-default-masters</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add Gslist Masters</attribute>
+          <attribute name="action">win.add-gslist-masters</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add _Master</attribute>
+          <attribute name="action">win.add-master</attribute>
+          <attribute name="accel">&lt;Control&gt;m</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Rename Master</attribute>
+          <attribute name="action">win.rename-master</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">D_elete Master</attribute>
+          <attribute name="action">win.delete-master</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Clear Servers</attribute>
+          <attribute name="action">win.clear-servers</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Find Player</attribute>
+          <attribute name="action">win.find-player</attribute>
+          <attribute name="accel">&lt;Control&gt;f</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Find A_gain</attribute>
+          <attribute name="action">win.find-again</attribute>
+          <attribute name="accel">&lt;Control&gt;g</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Properties</attribute>
+          <attribute name="action">win.properties</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Preferences</attribute>
+          <attribute name="action">win.preferences</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_View</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Refresh</attribute>
+          <attribute name="action">win.refresh</attribute>
+          <attribute name="accel">&lt;Control&gt;r</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Refresh _Selected</attribute>
+          <attribute name="action">win.refresh-selected</attribute>
+          <attribute name="accel">&lt;Control&gt;s</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Update From Master</attribute>
+          <attribute name="action">win.update-from-master</attribute>
+          <attribute name="accel">&lt;Control&gt;u</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Show _Host Names</attribute>
+          <attribute name="action">win.show-hostnames</attribute>
+          <attribute name="accel">&lt;Control&gt;h</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Show Default _Port</attribute>
+          <attribute name="action">win.show-default-port</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Server</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Connect</attribute>
+          <attribute name="action">win.connect</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Observe</attribute>
+          <attribute name="action">win.observe</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Record _Demo</attribute>
+          <attribute name="action">win.record-demo</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Add new Server</attribute>
+          <attribute name="action">win.add-server</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add to _Favorites</attribute>
+          <attribute name="action">win.add-to-favorites</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Remove</attribute>
+          <attribute name="action">win.remove-server</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">DNS _Lookup</attribute>
+          <attribute name="action">win.dns-lookup</attribute>
+          <attribute name="accel">&lt;Control&gt;l</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_RCon</attribute>
+          <attribute name="action">win.rcon</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Properties</attribute>
+          <attribute name="action">win.properties</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Server Filters</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Configure...</attribute>
+        <attribute name="action">win.configure-filters</attribute>
+      </item>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Help</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </submenu>
+  </menu>
+  <!-- Server right-click context menu model -->
+  <menu id="svopt-context-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Connect</attribute>
+        <attribute name="action">win.connect</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Observe</attribute>
+        <attribute name="action">win.observe</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Record</attribute>
+        <attribute name="action">win.record-demo</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Add new Server</attribute>
+        <attribute name="action">win.add-server</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Add to Favorites</attribute>
+        <attribute name="action">win.add-to-favorites</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Remove</attribute>
+        <attribute name="action">win.remove-server</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Copy</attribute>
+        <attribute name="action">win.copy-server</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Refresh</attribute>
+        <attribute name="action">win.refresh</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Refresh Selected</attribute>
+        <attribute name="action">win.refresh-selected</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">DNS Lookup</attribute>
+        <attribute name="action">win.dns-lookup</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">RCon</attribute>
+        <attribute name="action">win.rcon</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Properties</attribute>
+        <attribute name="action">win.properties</attribute>
+      </item>
+    </section>
+  </menu>
+  <!-- Server info right-click context menu model -->
+  <menu id="svinfo-context-menu">
+    <item>
+      <attribute name="label" translatable="yes">_Copy</attribute>
+      <attribute name="action">win.copy-server-info</attribute>
+    </item>
+  </menu>
+  <!-- Source tree right-click context menu model -->
+  <menu id="source-context-menu">
+    <item>
+      <attribute name="label" translatable="yes">Add _Master</attribute>
+      <attribute name="action">win.add-master</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">_Rename Master</attribute>
+      <attribute name="action">win.rename-master</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">D_elete Master</attribute>
+      <attribute name="action">win.delete-master</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">_Clear Servers</attribute>
+      <attribute name="action">win.clear-servers</attribute>
+    </item>
+  </menu>
+  <!-- Player right-click context menu model -->
+  <menu id="player-context-menu">
+    <submenu>
+      <attribute name="label" translatable="yes">Player Filter</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Mark as Red</attribute>
+        <attribute name="action">win.player-filter-red</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Mark as Green</attribute>
+        <attribute name="action">win.player-filter-green</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Mark as Blue</attribute>
+        <attribute name="action">win.player-filter-blue</attribute>
+      </item>
+    </submenu>
+  </menu>
 </interface>
