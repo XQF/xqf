@@ -31,14 +31,41 @@
 #include "dialogs.h"
 #include "loadpixmap.h"
 
-static int destroy_on_escape (GtkWidget *widget, GdkEventKey *event) {
-
-	if (event->keyval == GDK_KEY_Escape) {
-		gtk_widget_destroy (widget);
+static gboolean
+destroy_on_escape (GtkEventControllerKey *controller,
+                   guint                  keyval,
+                   guint                  keycode,
+                   GdkModifierType        state,
+                   gpointer               data)
+{
+	(void)keycode; (void)state; (void)data;
+	if (keyval == GDK_KEY_Escape) {
+		GtkWidget *widget = gtk_event_controller_get_widget (
+				GTK_EVENT_CONTROLLER (controller));
+		gtk_window_destroy (GTK_WINDOW (widget));
 		return TRUE;
 	}
-
 	return FALSE;
+}
+
+static void
+modal_loop_quit_cb (GtkWidget *widget, gpointer data)
+{
+	GMainLoop *loop = (GMainLoop *)data;
+	if (g_main_loop_is_running (loop))
+		g_main_loop_quit (loop);
+}
+
+/* Run a modal window using a nested GMainLoop.  Returns when the
+ * window is destroyed.  Call this instead of gtk_main(). */
+static void
+dialog_run_modal (GtkWidget *window)
+{
+	GMainLoop *loop = g_main_loop_new (NULL, FALSE);
+	g_signal_connect (G_OBJECT (window), "destroy",
+	                  G_CALLBACK (modal_loop_quit_cb), loop);
+	g_main_loop_run (loop);
+	g_main_loop_unref (loop);
 }
 
 GtkWidget *dialog_create_modal_transient_window (const char *title,
@@ -48,35 +75,29 @@ GtkWidget *dialog_create_modal_transient_window (const char *title,
 	GtkWidget *window;
 	GtkWidget *parent;
 
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	window = gtk_window_new ();
 
-	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-	g_signal_connect (G_OBJECT (window), "delete_event",
+	g_signal_connect (G_OBJECT (window), "close-request",
 			G_CALLBACK (window_delete_event_callback), NULL);
 	if (on_destroy) {
 		g_signal_connect (G_OBJECT (window), "destroy",
 				G_CALLBACK (on_destroy), NULL);
 	}
-	g_signal_connect (G_OBJECT (window), "destroy",
-			G_CALLBACK (gtk_main_quit), NULL);
 
 	if (close_on_esc) {
-		g_signal_connect (G_OBJECT (window), "key_press_event",
+		GtkEventControllerKey *key_ctrl =
+			(GtkEventControllerKey *)gtk_event_controller_key_new ();
+		g_signal_connect (key_ctrl, "key-pressed",
 				G_CALLBACK (destroy_on_escape), NULL);
+		gtk_widget_add_controller (window,
+				GTK_EVENT_CONTROLLER (key_ctrl));
 	}
 
 	if (title)
 		gtk_window_set_title (GTK_WINDOW (window), title);
 
-	gtk_widget_realize (window);
-
-	gdk_window_set_decorations (gtk_widget_get_window (window), (allow_resize)?
-			GDK_DECOR_BORDER | GDK_DECOR_TITLE | GDK_DECOR_RESIZEH :
-			GDK_DECOR_BORDER | GDK_DECOR_TITLE);
-
-	gdk_window_set_functions (gtk_widget_get_window (window), (allow_resize)?
-			GDK_FUNC_MOVE | GDK_FUNC_CLOSE | GDK_FUNC_RESIZE :
-			GDK_FUNC_MOVE | GDK_FUNC_CLOSE);
+	if (!allow_resize)
+		gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 
 	gtk_window_set_modal (GTK_WINDOW (window), TRUE);
 
@@ -148,7 +169,7 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 }
@@ -236,7 +257,7 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 
@@ -328,7 +349,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 
@@ -439,7 +460,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	gtk_widget_show (main_vbox);
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 

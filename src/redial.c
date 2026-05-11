@@ -147,7 +147,7 @@ static void stat_redial_close_handler (struct stat_job *job, int killed) {
 		launchnow = FALSE;
 		gtk_widget_destroy(redial_window);
 	}
-	server_clist_refresh_server (con->s);
+	server_list_refresh_server (con->s);
 	condef_free (con);
 	return;
 }

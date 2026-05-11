@@ -45,7 +45,7 @@
 static GSList *players = NULL;  /* GSList <struct player_pattern *> */
 static GSList *curplrs = NULL;  /* GSList <struct player_pattern *> */
 
-static GtkWidget *pattern_clist;
+static GtkWidget *pattern_list;
 static GtkWidget *pattern_entry;
 static GtkWidget *comment_text;
 static GtkWidget *mode_buttons[3];
@@ -221,7 +221,7 @@ static struct player_pattern *player_pattern_new (struct player_pattern *src) {
 }
 
 
-static void pattern_clist_sync_selection (void) {
+static void pattern_list_sync_selection (void) {
 	GSList *list;
 	struct player_pattern *pp = NULL;
 
@@ -273,7 +273,7 @@ static void pattern_clist_sync_selection (void) {
 }
 
 
-static void pattern_clist_update_groups (int row, unsigned newstate,
+static void pattern_list_update_groups (int row, unsigned newstate,
 		unsigned oldstate) {
 	int i;
 	unsigned mask;
@@ -281,32 +281,32 @@ static void pattern_clist_update_groups (int row, unsigned newstate,
 	for (i = 0, mask = 1; i < 3; i++, mask <<= 1) {
 		if ((newstate & mask) != 0) {
 			if ((oldstate & mask) == 0) {
-				gtk_clist_set_pixmap (GTK_CLIST (pattern_clist), row, i,
+				gtk_clist_set_pixmap (GTK_CLIST (pattern_list), row, i,
 						group_pix[i].pix, group_pix[i].mask);
 			}
 		}
 		else {
 			if ((oldstate & mask) != 0)
-				gtk_clist_set_text (GTK_CLIST (pattern_clist), row, i, "");
+				gtk_clist_set_text (GTK_CLIST (pattern_list), row, i, "");
 		}
 	}
 }
 
 
-static void pattern_clist_update_row (struct player_pattern *pp, int row) {
+static void pattern_list_update_row (struct player_pattern *pp, int row) {
 
-	pattern_clist_update_groups (row, pp->groups, ~pp->groups); /* update all */
+	pattern_list_update_groups (row, pp->groups, ~pp->groups); /* update all */
 
 	if (pp->error) {
-		gtk_clist_set_pixtext (GTK_CLIST (pattern_clist), row, 3,
+		gtk_clist_set_pixtext (GTK_CLIST (pattern_list), row, 3,
 				mode_symbols[pp->mode], 2, error_pix.pix, error_pix.mask);
 	}
 	else {
-		gtk_clist_set_text (GTK_CLIST (pattern_clist), row, 3,
+		gtk_clist_set_text (GTK_CLIST (pattern_list), row, 3,
 				mode_symbols[pp->mode]);
 	}
 
-	gtk_clist_set_text (GTK_CLIST (pattern_clist), row, 4, pp->pattern);
+	gtk_clist_set_text (GTK_CLIST (pattern_list), row, 4, pp->pattern);
 }
 
 
@@ -371,7 +371,7 @@ static void sync_pattern_data (void) {
 			player_pattern_compile (pp);
 		}
 
-		pattern_clist_update_row (pp, current_row);
+		pattern_list_update_row (pp, current_row);
 
 	}
 
@@ -383,17 +383,17 @@ static void sync_pattern_data (void) {
 }
 
 
-static int pattern_clist_insert_row (struct player_pattern *pp, int row) {
+static int pattern_list_insert_row (struct player_pattern *pp, int row) {
 	char *text[6];
 
 	text[0] = text[1] = text[2] = text[3] = text[4] = text[5] = NULL;
 
 	if (row < 0)
-		row = gtk_clist_append (GTK_CLIST (pattern_clist), text);
+		row = gtk_clist_append (GTK_CLIST (pattern_list), text);
 	else
-		gtk_clist_insert (GTK_CLIST (pattern_clist), row, text);
+		gtk_clist_insert (GTK_CLIST (pattern_list), row, text);
 
-	pattern_clist_update_row (pp, row);
+	pattern_list_update_row (pp, row);
 	return row;
 }
 
@@ -425,7 +425,7 @@ static void pattern_set_groups (int row, int column, int add) {
 			player_pattern_compile (pp);
 		}
 		pp->groups = newstate;
-		pattern_clist_update_groups (row, newstate, oldstate);
+		pattern_list_update_groups (row, newstate, oldstate);
 	}
 }
 
@@ -444,57 +444,15 @@ static void show_pattern_error (int row) {
 }
 
 
-static int pattern_clist_event_callback (GtkWidget *widget, GdkEvent *event) {
-	GdkEventButton *bevent = (GdkEventButton *) event;
-	int row, column;
-	int add;
-
-	if ((event->type == GDK_BUTTON_PRESS ||
-				event->type == GDK_2BUTTON_PRESS ||
-				event->type == GDK_3BUTTON_PRESS) &&
-			bevent->window == GTK_CLIST (pattern_clist)->clist_window) {
-
-		if (gtk_clist_get_selection_info (GTK_CLIST (pattern_clist),
-					bevent->x, bevent->y, &row, &column)) {
-			if (event->type == GDK_BUTTON_PRESS) {
-
-				if (column >= 0) {
-					switch (column) {
-
-						case 0:
-						case 1:
-						case 2:
-							sync_pattern_data ();
-							add = (bevent->button == 3) ||
-								(bevent->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) != 0;
-							pattern_set_groups (row, column, add);
-							return TRUE;
-
-						case 3:
-							/* sync_pattern_data () is called by "select_row" callback */
-
-							gtk_clist_select_row (GTK_CLIST (pattern_clist), row, 0);
-
-							show_pattern_error (row);
-							return TRUE;
-
-						default:
-							break;
-
-					}
-				}
-
-			}
-
-			if (event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS)
-				return TRUE;
-		}
-	}
+static int pattern_list_event_callback (GtkWidget *widget, GdkEvent *event) {
+	/* TODO: re-implement with GtkGestureClick when pattern_list is
+	 * replaced by a GtkColumnView-based widget (Phase 1). */
+	(void)widget; (void)event;
 	return FALSE;
 }
 
 
-static void pattern_clist_select_row_callback (GtkWidget *widget,
+static void pattern_list_select_row_callback (GtkWidget *widget,
 		int row, int column, GdkEventButton *event) {
 	sync_pattern_data ();
 
@@ -504,7 +462,7 @@ static void pattern_clist_select_row_callback (GtkWidget *widget,
 
 	current_row = row;
 
-	pattern_clist_sync_selection ();
+	pattern_list_sync_selection ();
 }
 
 
@@ -523,10 +481,10 @@ static void new_pattern_callback (GtkWidget *widget, gpointer data) {
 	}
 
 	curplrs = g_slist_insert (curplrs, pp, row);
-	pattern_clist_insert_row (pp, row);
+	pattern_list_insert_row (pp, row);
 
 	if (curplrs && curplrs->next)
-		gtk_clist_select_row (GTK_CLIST (pattern_clist), row, 0);
+		gtk_clist_select_row (GTK_CLIST (pattern_list), row, 0);
 
 	gtk_widget_grab_focus (pattern_entry);
 }
@@ -551,21 +509,21 @@ static void delete_pattern_callback (GtkWidget *widget, gpointer data) {
 
 	row = current_row;
 	current_row = -1;
-	gtk_clist_remove (GTK_CLIST (pattern_clist), row);
+	gtk_clist_remove (GTK_CLIST (pattern_list), row);
 
 	if (current_row < 0)
-		pattern_clist_sync_selection ();
+		pattern_list_sync_selection ();
 }
 
 
-static void pattern_clist_adjust_visibility (int row, int direction) {
+static void pattern_list_adjust_visibility (int row, int direction) {
 	GtkVisibility vis;
 
-	debug(5,"pattern_clist_adjust_visibility(row=%d,direction=%d)",row,direction);
+	debug(5,"pattern_list_adjust_visibility(row=%d,direction=%d)",row,direction);
 
-	vis = gtk_clist_row_is_visible (GTK_CLIST (pattern_clist), row);
+	vis = gtk_clist_row_is_visible (GTK_CLIST (pattern_list), row);
 	if (vis != GTK_VISIBILITY_FULL) {
-		gtk_clist_moveto (GTK_CLIST (pattern_clist), row, 0,
+		gtk_clist_moveto (GTK_CLIST (pattern_list), row, 0,
 				(direction == 0)? 0.5 : ((direction > 0)? 1.0 : 0.0), 0.0);
 	}
 }
@@ -587,26 +545,26 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
 	   curplrs = g_slist_insert (curplrs, pp, row);
 	*/
 	debug(5,"gtk_clist_swap_rows(..., %d,%d)",row,row+dir);
-	gtk_clist_swap_rows (GTK_CLIST (pattern_clist), row, row + dir);
+	gtk_clist_swap_rows (GTK_CLIST (pattern_list), row, row + dir);
 
-	// adjust current_row because pattern_clist_row_move_callback
+	// adjust current_row because pattern_list_row_move_callback
 	// does not know about the direction
 	current_row = row+dir;
 
-	pattern_clist_adjust_visibility (current_row, dir);
+	pattern_list_adjust_visibility (current_row, dir);
 }
 
 
-static void pattern_clist_row_move_callback (GtkWidget *widget,
+static void pattern_list_row_move_callback (GtkWidget *widget,
 		int source, int dest, gpointer data) {
 	GtkCList *clist = GTK_CLIST (widget);
 	GSList *link;
 	struct player_pattern *pp;
 
-	debug(5,"pattern_clist_row_move_callback(widget=%d,source=%d,dest=%d)",widget,source,dest);
+	debug(5,"pattern_list_row_move_callback(widget=%d,source=%d,dest=%d)",widget,source,dest);
 
 	if (source < 0 || dest < 0 || source == dest ||
-			source > clist->rows || dest > clist->rows) {
+			source > gtk_clist_get_rows (clist) || dest > gtk_clist_get_rows (clist)) {
 		return;
 	}
 
@@ -728,11 +686,11 @@ static void player_filter_page_init (void) {
 	for (list = players; list; list = list->next) {
 		pp = (struct player_pattern *) list->data;
 		pp->dirty = FALSE;
-		pattern_clist_insert_row (pp, -1);
+		pattern_list_insert_row (pp, -1);
 	}
 
 	if (!curplrs)
-		pattern_clist_sync_selection ();
+		pattern_list_sync_selection ();
 }
 
 
@@ -765,36 +723,36 @@ void player_filter_page (GtkWidget *notebook) {
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	pattern_clist = gtk_clist_new_with_titles (5, titles);
-	gtk_widget_set_size_request (pattern_clist, 260, 200);
-	gtk_clist_set_selection_mode (GTK_CLIST (pattern_clist),
+	pattern_list = gtk_clist_new_with_titles (5, titles);
+	gtk_widget_set_size_request (pattern_list, 260, 200);
+	gtk_clist_set_selection_mode (GTK_CLIST (pattern_list),
 			GTK_SELECTION_BROWSE);
-	gtk_clist_set_reorderable (GTK_CLIST (pattern_clist), TRUE);
+	gtk_clist_set_reorderable (GTK_CLIST (pattern_list), TRUE);
 
-	g_signal_connect (pattern_clist, "event", G_CALLBACK (pattern_clist_event_callback), NULL);
-	g_signal_connect (pattern_clist, "select_row", G_CALLBACK (pattern_clist_select_row_callback), NULL);
-	g_signal_connect (pattern_clist, "row_move", G_CALLBACK (pattern_clist_row_move_callback), NULL);
+	g_signal_connect (pattern_list, "event", G_CALLBACK (pattern_list_event_callback), NULL);
+	g_signal_connect (pattern_list, "select_row", G_CALLBACK (pattern_list_select_row_callback), NULL);
+	g_signal_connect (pattern_list, "row_move", G_CALLBACK (pattern_list_row_move_callback), NULL);
 
 	for (i = 0; i < 3; i++) {
 		image = aligned_image (&group_pix[i]);
-		gtk_clist_set_column_width (GTK_CLIST (pattern_clist), i,
+		gtk_clist_set_column_width (GTK_CLIST (pattern_list), i,
 				pixmap_width (&group_pix[i]));
-		gtk_clist_set_column_widget (GTK_CLIST (pattern_clist), i, image);
+		gtk_clist_set_column_widget (GTK_CLIST (pattern_list), i, image);
 		gtk_widget_show (image);
 
-		gtk_clist_set_column_resizeable (GTK_CLIST (pattern_clist), i, FALSE);
+		gtk_clist_set_column_resizeable (GTK_CLIST (pattern_list), i, FALSE);
 	}
 
-	gtk_clist_set_column_width (GTK_CLIST (pattern_clist), 3, 45);
+	gtk_clist_set_column_width (GTK_CLIST (pattern_list), 3, 45);
 
-	gtk_container_add (GTK_CONTAINER (scrollwin), pattern_clist);
-	gtk_clist_column_titles_passive (GTK_CLIST (pattern_clist));
+	gtk_container_add (GTK_CONTAINER (scrollwin), pattern_list);
+	gtk_clist_column_titles_passive (GTK_CLIST (pattern_list));
 
-	gtk_widget_show (pattern_clist);
+	gtk_widget_show (pattern_list);
 
 	gtk_widget_show (scrollwin);
 
-	gtk_widget_ensure_style (pattern_clist);
+	gtk_widget_ensure_style (pattern_list);
 
 	/* Buttons */
 

@@ -25,7 +25,7 @@
 #include "callbacks.h"
 #include "filter.h"
 
-struct clist_column {
+struct list_column {
 	const char *name;
 	int width;
 	GtkJustification justify;
@@ -36,17 +36,17 @@ struct clist_column {
 };
 
 
-enum cwidget_type {
-	CWIDGET_CLIST = 0,
-	CWIDGET_CTREE
+enum cview_type {
+	CVIEW_LIST = 0,
+	CVIEW_TREE
 };
 
 
-struct clist_def {
-	enum cwidget_type type;
+struct list_def {
+	enum cview_type type;
 	char *name;
 
-	struct clist_column *cols;
+	struct list_column *cols;
 
 	int columns;
 	GtkSelectionMode mode;
@@ -58,9 +58,9 @@ struct clist_def {
 	GtkSortType sort_type;
 };
 
-extern struct clist_def server_clist_def;
-extern struct clist_def player_clist_def;
-extern struct clist_def srvinf_clist_def;
+extern struct list_def server_list_def;
+extern struct list_def player_list_def;
+extern struct list_def srvinf_list_def;
 
 extern GtkWidget *pane1_widget;
 extern GtkWidget *pane2_widget;
@@ -69,8 +69,8 @@ extern GtkWidget *pane3_widget;
 
 extern GtkWidget *main_window;
 extern GtkWidget *source_ctree;
-extern GtkCList  *server_clist;
-extern GtkCList  *player_clist;
+extern GtkWidget *server_view;   /* GtkColumnView */
+extern GtkWidget *player_view;   /* GtkColumnView */
 extern GtkCTree  *srvinf_ctree;
 
 extern GtkWidget *view_hostnames_menu_item;
@@ -85,11 +85,11 @@ extern GtkWidget *server_filter_widget[];
 
 extern void print_status (GtkWidget *sbar, char *fmt, ...);
 
-extern GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef);
+extern GtkWidget *create_ctree_widget (GtkWidget *scrollwin, struct list_def *cldef);
 
-extern int clist_change_sort_mode (struct clist_def *cldef, int col);
+extern int list_change_sort_mode (struct list_def *cldef, int col);
 
-extern void clist_set_sort_column (GtkCList *clist, int column, struct clist_def *cldef);
+extern void list_sort_column (GtkWidget *widget, int column, struct list_def *cldef);
 
 extern void source_ctree_show_node_status (GtkWidget *ctree, struct master *m);
 
@@ -99,7 +99,7 @@ extern void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m
 extern GtkWidget *create_source_ctree (GtkWidget *scrollwin);
 extern void source_ctree_select_source (struct master *m);
 
-extern int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix);
+extern int calculate_row_height (GtkWidget *widget, struct pixmap *pix);
 
 extern void set_toolbar_appearance (GtkToolbar *toolbar);
 

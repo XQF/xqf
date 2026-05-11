@@ -305,8 +305,8 @@ void apply_filters (unsigned mask, struct server *s) {
 
 /*
    build_filtered_list -- Return a list of servers that pass the filter
-   requirements. Called from server_clist_setlist() and
-   server_clist_build_filtered().
+   requirements. Called from server_list_set_list() and
+   server_list_build_filtered().
    */
 
 GSList *build_filtered_list (unsigned mask, GSList *server_list) {
@@ -955,11 +955,7 @@ static void set_filter_menu (GtkWidget *option_menu) {
 	guint i;
 	struct server_filter_vars* filter;
 
-#ifdef GUI_GTK3
 	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (option_menu));
-#else
-	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (option_menu))));
-#endif
 
 	for (i = 0;i<server_filters->len;i++) {
 		filter = g_array_index(server_filters, struct server_filter_vars*, i);
@@ -1449,9 +1445,6 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_table_attach_defaults (GTK_TABLE (table), vbuttonbox1, 1, 2, 7, 8);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
 	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 1);
-#if defined(GUI_GTK2) && !defined(GTK_DISABLE_DEPRECATED)
-	gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (vbuttonbox1), 5, -1);
-#endif
 
 	country_selection_button = gtk_button_new_with_label(_("select..."));
 	gtk_widget_set_sensitive (country_selection_button, FALSE);
@@ -1711,10 +1704,8 @@ static void country_delete_button(GtkWidget * widget, gpointer data) {
 gint country_mouse_click_left_list(GtkWidget * widget,
 		GdkEventButton * event,
 		gpointer func_data) {
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1)) {
-		country_add_selection_to_right_list();
-	}
-
+	/* TODO: replace with GtkGestureClick (Phase 1); GdkEvent is opaque in GTK4 */
+	(void)widget; (void)event; (void)func_data;
 	return FALSE;
 }
 
@@ -1722,11 +1713,8 @@ gint country_mouse_click_left_list(GtkWidget * widget,
 gint country_mouse_click_right_list(GtkWidget * widget,
 		GdkEventButton * event,
 		gpointer func_data) {
-
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1)) {
-		country_delete_button(NULL,NULL);
-	}
-
+	/* TODO: replace with GtkGestureClick (Phase 1); GdkEvent is opaque in GTK4 */
+	(void)widget; (void)event; (void)func_data;
 	return FALSE;
 }
 
@@ -1766,22 +1754,22 @@ static void country_selection_on_cancel(void) {
 	selected_row_right_list=-1;
 }
 
-/** populate a clist with country names&flags
- * @param clist the clist
+/** populate a list with country names&flags
+ * @param list the list
  * @param all if false only show countries that have a flag
  */
-static void populate_country_clist(GtkWidget* clist, gboolean all) {
+static void populate_country_list(GtkWidget* list, gboolean all) {
 	struct pixmap* countrypix = NULL;
 	int row_number = -1;
 	unsigned i;
 	gchar buf[64] = {0};
 	gchar *text[1] = {buf};
 
-	g_return_if_fail(GTK_IS_CLIST(clist));
+	g_return_if_fail(GTK_IS_CLIST(list));
 
-	gtk_clist_freeze(GTK_CLIST(clist));
+	gtk_clist_freeze(GTK_CLIST(list));
 
-	gtk_clist_clear(GTK_CLIST(clist));
+	gtk_clist_clear(GTK_CLIST(list));
 
 	for (i = 0; i <= geoip_num_countries(); ++i) {
 		if (all)
@@ -1796,24 +1784,24 @@ static void populate_country_clist(GtkWidget* clist, gboolean all) {
 
 		// gtk_clist_insert third parameter is not const!
 		strncpy(buf,geoip_name_by_id(i),sizeof(buf) - 1);
-		gtk_clist_insert(GTK_CLIST(clist), row_number, text);
+		gtk_clist_insert(GTK_CLIST(list), row_number, text);
 		if (countrypix) {
-			gtk_clist_set_pixtext(GTK_CLIST(clist), row_number, 0,
+			gtk_clist_set_pixtext(GTK_CLIST(list), row_number, 0,
 					geoip_name_by_id(i), 4,
 					countrypix->pix,
 					countrypix->mask);
 		}
 
 		/* save the flag number */
-		gtk_clist_set_row_data(GTK_CLIST(clist),
+		gtk_clist_set_row_data(GTK_CLIST(list),
 				row_number, GINT_TO_POINTER(i));
 	}
 
-	gtk_clist_thaw(GTK_CLIST(clist));
+	gtk_clist_thaw(GTK_CLIST(list));
 }
 
-static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *clist) {
-	populate_country_clist(clist, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
+static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *list) {
+	populate_country_list(list, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
 }
 
 /* country selection window */
@@ -1882,7 +1870,7 @@ static void country_create_popup_window(void) {
 
 	// fill the list with all countries if the flag is available
 
-	populate_country_clist (country_left_list, FALSE);
+	populate_country_list (country_left_list, FALSE);
 
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_WIDGET (country_left_list));
 	gtk_box_pack_start (GTK_BOX (hbox1), scrolledwindow1, TRUE, TRUE, 0);

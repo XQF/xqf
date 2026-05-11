@@ -20,26 +20,17 @@
 #define __PIXMAPS_H__
 
 #include <gtk/gtk.h>
-
-#ifdef GUI_GTK3
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#endif
+#include "gtk4-compat.h"
 
 struct pixmap {
 	GdkPixbuf *pixbuf;
-#ifdef GUI_GTK2
-	GdkPixmap *pix;
-	GdkBitmap *mask;
-#endif
+	GdkPixmap *pix;   /* unused: was GdkPixmap* in GTK2, always NULL */
+	GdkBitmap *mask;  /* unused: was GdkBitmap* in GTK2, always NULL */
 };
 
 struct cached_pixmap {
 	unsigned key;
 	GdkPixbuf *pixbuf;
-#ifdef GUI_GTK2
-	GdkPixmap *pix;
-	GdkBitmap *mask;
-#endif
 	int weight;
 };
 
@@ -86,7 +77,7 @@ extern void init_pixmaps (GtkWidget *window);
 
 extern void ensure_buddy_pix (GtkWidget *window, int n);
 
-extern void two_colors_pixmap (GdkWindow *window, int width, int height, GdkColor *top, GdkColor *bottom, struct pixmap *pix);
+extern void two_colors_pixmap (int width, int height, GdkRGBA *top, GdkRGBA *bottom, struct pixmap *pix);
 
 extern void create_server_pixmap (GtkWidget *window, struct pixmap *stype, int n, struct pixmap *pix);
 

@@ -46,7 +46,7 @@ static guchar quake2_pallete[768] = {
 };
 
 
-static GdkColor pcolors[14];
+static GdkRGBA pcolors[14];
 static int pcolors_allocated = FALSE;
 
 static guchar gamma_lookup[256];
@@ -399,29 +399,16 @@ static gushort convert_color (unsigned c) {
 }
 
 
-void allocate_quake_player_colors (GdkWindow *window) {
-#ifdef GUI_GTK2
-	GdkColormap *colormap;
-#endif
+void allocate_quake_player_colors (void) {
 	int i, j;
 
 	if (!pcolors_allocated) {
-#ifdef GUI_GTK2
-		colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (window));
-#endif
-
 		for (i = 0; i < 14; i++) {
 			j = (i<8)? 11 : 15 - 11;
-			pcolors[i].pixel = 0;
-			pcolors[i].red   = convert_color (quake_pallete [(i*16 + j)*3 + 0]);
-			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]);
-			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]);
-#ifdef GUI_GTK2
-			if (!gdk_colormap_alloc_color (colormap, &pcolors[i], FALSE, TRUE)) {
-				g_warning ("unable to allocate color: ( %d %d %d )",
-						pcolors[i].red, pcolors[i].green, pcolors[i].blue);
-			}
-#endif
+			pcolors[i].red   = convert_color (quake_pallete [(i*16 + j)*3 + 0]) / 65535.0;
+			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]) / 65535.0;
+			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]) / 65535.0;
+			pcolors[i].alpha = 1.0;
 		}
 		pcolors_allocated = TRUE;
 	}
@@ -429,16 +416,8 @@ void allocate_quake_player_colors (GdkWindow *window) {
 
 
 void set_bg_color (GtkWidget *widget, int color) {
-	GtkStyle *style;
-
-	style = gtk_style_copy (gtk_widget_get_style (widget));
-	style->bg [GTK_STATE_NORMAL]   = pcolors [color];
-	style->bg [GTK_STATE_ACTIVE]   = pcolors [color];
-	style->bg [GTK_STATE_PRELIGHT] = pcolors [color];
-	style->bg [GTK_STATE_SELECTED] = pcolors [color];
-	style->bg [GTK_STATE_INSENSITIVE] = pcolors [color];
-
-	gtk_widget_set_style (widget, style);
+	/* TODO Phase 3: replace with GtkCssProvider-based coloring */
+	(void)widget; (void)color;
 }
 
 
@@ -489,10 +468,10 @@ void qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned cha
 	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
-	h = player_clist->row_height - 2;
+	h = gtk_clist_get_row_height (player_view) - 2;
 	w = h * 3 / 2;
 
-	two_colors_pixmap (gtk_widget_get_window (window), w, h, &pcolors[top], &pcolors[bottom], pix);
+	two_colors_pixmap (w, h, &pcolors[top], &pcolors[bottom], pix);
 	if (cache)
 		pixmap_cache_add (cache, pix, key);
 }

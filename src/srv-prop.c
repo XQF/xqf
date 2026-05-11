@@ -872,11 +872,7 @@ void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
 
 	g_return_if_fail(GTK_IS_COMBO_BOX_TEXT(combo));
 
-#ifdef GUI_GTK3
 	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (combo));
-#else
-	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (combo))));
-#endif
 
 	for (s = strlist; s; s = s->next) {
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), (char *) s->data);

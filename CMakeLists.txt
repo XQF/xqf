@@ -49,7 +49,6 @@ set(DOMAIN "${PROJECT_NAME}")
 set(LINGUAS ca da de es fi fr pl ru)
 
 set(DEFAULT_QSTAT "qstat")
-set(DEFAULT_GTK_TARGET 2)
 
 # Macros
 macro(set_c_flag FLAG)
@@ -235,6 +234,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/utils.c
 	 ${CMAKE_SOURCE_DIR}/src/xqf.c
 	 ${CMAKE_SOURCE_DIR}/src/xqf-ui.c
+	 ${CMAKE_SOURCE_DIR}/src/xqf-server-item.c
+	 ${CMAKE_SOURCE_DIR}/src/xqf-player-item.c
+	 ${CMAKE_SOURCE_DIR}/src/xqf-lists.c
 	 ${CMAKE_SOURCE_DIR}/src/zipped.c
 	 ${CMAKE_SOURCE_DIR}/src/redial.c
 	 ${CMAKE_SOURCE_DIR}/src/q3maps.c
@@ -280,6 +282,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/system.h
 	 ${CMAKE_SOURCE_DIR}/src/utils.h
 	 ${CMAKE_SOURCE_DIR}/src/xqf-ui.h
+	 ${CMAKE_SOURCE_DIR}/src/xqf-server-item.h
+	 ${CMAKE_SOURCE_DIR}/src/xqf-player-item.h
+	 ${CMAKE_SOURCE_DIR}/src/xqf-lists.h
 	 ${CMAKE_SOURCE_DIR}/src/xqf.h
 	 ${CMAKE_SOURCE_DIR}/src/zipped.h
 	 ${CMAKE_SOURCE_DIR}/src/redial.h
@@ -600,18 +605,6 @@ if (BUILD_XQF OR BUILD_RCON)
 endif()
 
 if (BUILD_XQF)
-	set(GTK_TARGET_HELP "GTK target (2 or 3)")
-	set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}")
-
-	# Default GTK_TARGET setting
-	if (NOT (GTK_TARGET STREQUAL "2" OR GTK_TARGET STREQUAL "3"))
-		set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}" FORCE)
-	endif()
-
-	# GUI definitions
-	if (GTK_TARGET STREQUAL "2")
-		set_c_cxx_flag("-Wno-deprecated-declarations")
-	endif()
 
 	# Other definitions
 	if (USE_GEOIP)
@@ -628,7 +621,7 @@ if (BUILD_XQF)
 if(NOT UNZIP_FOUND)
   pkg_check_modules(UNZIP REQUIRED minizip)
 endif()
-	pkg_check_modules(GTK REQUIRED gtk+-${GTK_TARGET}.0)
+	pkg_check_modules(GTK REQUIRED gtk4)
 
 	include_directories(${GTK_INCLUDE_DIRS})
 	link_directories(${GTK_LIBRARY_DIRS})
@@ -658,7 +651,7 @@ endif()
 	# Compile and link
 	add_executable(xqf ${xqf_SOURCES})
 	target_compile_definitions(xqf PUBLIC BUILD_XQF)
-	target_compile_definitions(xqf PUBLIC GUI_GTK${GTK_TARGET})
+	target_compile_definitions(xqf PUBLIC GUI_GTK4)
 	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} dl m)
 
 	if (USE_GEOIP)
@@ -708,7 +701,7 @@ endif()
 		DESTINATION "${CMAKE_INSTALL_PREFIX}${XQF_BIN_DIR}")
 
 	# UI
-	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk${GTK_TARGET}.ui
+	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf.ui
 	DESTINATION ${PACKAGE_DATA_DIR}/ui)
 
 	# Icons

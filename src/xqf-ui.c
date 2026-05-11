@@ -48,7 +48,7 @@ GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
    list, you need to also add an entry in sort.h and sort.c
 */
 
-static struct clist_column server_columns[] =
+static struct list_column server_columns[] =
 {
 	{
 		.name =      N_("Name"),
@@ -113,8 +113,8 @@ static struct clist_column server_columns[] =
 };
 
 
-struct clist_def server_clist_def = {
-	CWIDGET_CLIST,
+struct list_def server_list_def = {
+	CVIEW_LIST,
 	"Server List",
 	server_columns,
 	9,
@@ -123,7 +123,7 @@ struct clist_def server_clist_def = {
 	SORT_SERVER_PING, GTK_SORT_ASCENDING
 };
 
-static struct clist_column player_columns[] =
+static struct list_column player_columns[] =
 {
 	{
 		.name =      N_("Name"),
@@ -163,8 +163,8 @@ static struct clist_column player_columns[] =
 	}
 };
 
-struct clist_def player_clist_def = {
-	CWIDGET_CLIST,
+struct list_def player_list_def = {
+	CVIEW_LIST,
 	"Player List",
 	player_columns,
 	6,
@@ -173,7 +173,7 @@ struct clist_def player_clist_def = {
 	SORT_PLAYER_FRAGS, GTK_SORT_DESCENDING
 };
 
-static struct clist_column srvinf_columns[] =
+static struct list_column srvinf_columns[] =
 {
 	{
 		.name =      N_("Rule"),
@@ -189,8 +189,8 @@ static struct clist_column srvinf_columns[] =
 	}
 };
 
-struct clist_def srvinf_clist_def = {
-	CWIDGET_CTREE,
+struct list_def srvinf_list_def = {
+	CVIEW_TREE,
 	"Rule List",
 	srvinf_columns,
 	2,
@@ -263,28 +263,33 @@ GtkWidget *top_window (void) {
 		return NULL;
 }
 
-#ifdef GUI_GTK2
-static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef, int set_mark) {
+static void column_header_set_title (GtkCList *clist, struct list_def *cldef, int set_mark) {
 	char buf[256];
+	int sc = gtk_clist_get_sort_column (clist);
+
+	/* Stub clists have no tracked sort column; nothing to update */
+	if (sc < 0 || sc >= cldef->columns) {
+		(void)set_mark;
+		return;
+	}
 
 	if (set_mark) {
-		const char* name = cldef->cols[clist->sort_column].sort_name[cldef->cols[clist->sort_column].current_sort_mode];
-		g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name),
-				(clist->sort_type == GTK_SORT_DESCENDING)? '>' : '<');
+		const char* name = cldef->cols[sc].sort_name[cldef->cols[sc].current_sort_mode];
+		g_snprintf (buf, 128, "%s %c", _(cldef->cols[sc].name),
+				(gtk_clist_get_sort_type (clist) == GTK_SORT_DESCENDING)? '>' : '<');
 
 		if (name) {
 			snprintf (buf+strlen(buf), sizeof(buf)-strlen(buf), " (%s)", _(name));
 		}
-		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), buf);
+		gtk_label_set_text (GTK_LABEL (cldef->cols[sc].widget), buf);
 	}
 	else {
-		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget),
-				_(cldef->cols[clist->sort_column].name));
+		gtk_label_set_text (GTK_LABEL (cldef->cols[sc].widget), _(cldef->cols[sc].name));
 	}
 }
 
 
-GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
+GtkWidget *create_ctree_widget (GtkWidget *scrollwin, struct list_def *cldef) {
 	GtkWidget *alignment;
 	GtkWidget *label;
 	GtkWidget *clist;
@@ -292,11 +297,11 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 	int i;
 
 	switch (cldef->type) {
-		case CWIDGET_CLIST:
+		case CVIEW_LIST:
 			clist = gtk_clist_new (cldef->columns);
 			break;
 
-		case CWIDGET_CTREE:
+		case CVIEW_TREE:
 			clist = gtk_ctree_new (cldef->columns, 0);
 			gtk_ctree_set_line_style (GTK_CTREE (clist), GTK_CTREE_LINES_NONE);
 			gtk_ctree_set_expander_style (GTK_CTREE (clist), GTK_CTREE_EXPANDER_TRIANGLE);
@@ -338,36 +343,36 @@ GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
 	gtk_clist_set_sort_column (GTK_CLIST (clist), cldef->sort_column);
 	gtk_clist_set_sort_type (GTK_CLIST (clist), cldef->sort_type);
 
-	clist_column_set_title (GTK_CLIST (clist), cldef, TRUE);
+	column_header_set_title (GTK_CLIST (clist), cldef, TRUE);
 
 	return clist;
 }
 
 #define DIMOF(arr) (sizeof(arr)/sizeof(arr[0]))
 
-void clist_set_sort_column (GtkCList *clist, int column, struct clist_def *cldef) {
-	if (column == clist->sort_column) {
-		if (clist->sort_type == GTK_SORT_DESCENDING) {
+void list_sort_column (GtkWidget *widget, int column, struct list_def *cldef) {
+	if (column == gtk_clist_get_sort_column (widget)) {
+		if (gtk_clist_get_sort_type (widget) == GTK_SORT_DESCENDING) {
 			cldef->cols[column].current_sort_mode = (cldef->cols[column].current_sort_mode+1)%DIMOF(cldef->cols[column].sort_mode);
 			if (cldef->cols[column].sort_mode[cldef->cols[column].current_sort_mode] == -1)
 				cldef->cols[column].current_sort_mode = 0;
 		}
 
-		gtk_clist_set_sort_type (clist, GTK_SORT_DESCENDING + GTK_SORT_ASCENDING - clist->sort_type);
+		gtk_clist_set_sort_type (widget, GTK_SORT_DESCENDING + GTK_SORT_ASCENDING - gtk_clist_get_sort_type (widget));
 	}
 	else {
 		cldef->cols[column].current_sort_mode = 0;
-		clist_column_set_title (clist, cldef, FALSE);
-		gtk_clist_set_sort_column (clist, column);
+		column_header_set_title (widget, cldef, FALSE);
+		gtk_clist_set_sort_column (widget, column);
 	}
 
 	debug (3, "%d %hhd", column, cldef->cols[column].current_sort_mode);
 
-	clist_column_set_title (clist, cldef, TRUE);
-	gtk_clist_sort (clist);
+	column_header_set_title (widget, cldef, TRUE);
+	gtk_clist_sort (widget);
 
-	if (clist == server_clist) {
-		server_clist_selection_visible ();
+	if (widget == server_view) {
+		server_list_selection_visible ();
 	}
 }
 
@@ -577,7 +582,7 @@ void source_ctree_select_source (struct master *m) {
 }
 
 
-int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix) {
+int calculate_row_height (GtkWidget *widget G_GNUC_UNUSED, struct pixmap *pix) {
 	int pix_h;
 	int height;
 
@@ -587,7 +592,6 @@ int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix) {
 
 	return height;
 }
-#endif
 
 void set_toolbar_appearance (GtkToolbar *toolbar) {
 	gtk_toolbar_set_style(toolbar, GTK_TOOLBAR_BOTH);
@@ -639,7 +643,7 @@ void progress_bar_start (GtkWidget *pbar, int pulse_switch) {
 	}
 }
 
-void save_cwidget_geometry (GtkWidget *clist, struct clist_def *cldef) {
+void save_view_geometry (GtkWidget *widget, struct list_def *cldef) {
 	char buf[256];
 	int i;
 
@@ -647,7 +651,7 @@ void save_cwidget_geometry (GtkWidget *clist, struct clist_def *cldef) {
 	config_push_prefix (buf);
 
 	for (i = 0; i < cldef->columns; i++)
-		config_set_int (cldef->cols[i].name, GTK_CLIST (clist)->column[i].width);
+		config_set_int (cldef->cols[i].name, gtk_clist_get_column_width (GTK_CLIST (widget), i));
 
 	config_pop_prefix ();
 }
@@ -661,9 +665,9 @@ void ui_done (void) {
 	GSList *list;
 	struct master *m;
 
-	save_cwidget_geometry (GTK_WIDGET (server_clist), &server_clist_def);
-	save_cwidget_geometry (GTK_WIDGET (player_clist), &player_clist_def);
-	save_cwidget_geometry (GTK_WIDGET (srvinf_ctree), &srvinf_clist_def);
+	save_view_geometry (GTK_WIDGET (server_view), &server_list_def);
+	save_view_geometry (GTK_WIDGET (player_view), &player_list_def);
+	save_view_geometry (GTK_WIDGET (srvinf_ctree), &srvinf_list_def);
 
 	config_push_prefix ("/" CONFIG_FILE "/Main Window Geometry/");
 
@@ -721,8 +725,8 @@ void restore_main_window_geometry (void) {
 	}
 
 	gtk_paned_set_position (GTK_PANED (pane1_widget), (pane1)? pane1 : 120);
-	gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 : server_clist_def.height +4);
-	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_clist_def.height + 4);
+	gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 : server_list_def.height +4);
+	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_list_def.height + 4);
 }
 
 GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {

@@ -1693,20 +1693,9 @@ static void set_player_color (GtkWidget *widget, int i) {
 
 
 static int color_button_event_callback (GtkWidget *widget, GdkEvent *event) {
-	GdkEventButton *bevent;
-
-	if (event->type == GDK_BUTTON_PRESS) {
-		bevent = (GdkEventButton *) event;
-		color_button_event_widget = widget;
-
-		if (color_menu == NULL) {
-			color_menu = create_color_menu (set_player_color);
-		}
-
-		gtk_menu_popup (GTK_MENU (color_menu), NULL, NULL, NULL, NULL,
-				bevent->button, bevent->time);
-		return TRUE;
-	}
+	/* TODO: replace with GtkGestureClick and GtkPopoverMenu (Phase 1).
+	 * GdkEvent is opaque in GTK4; gtk_menu_popup is gone. */
+	(void)widget; (void)event;
 	return FALSE;
 }
 
@@ -2600,7 +2589,7 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
 	gtk_entry_set_text(GTK_ENTRY(custom_args_entry_args[type]), "");
 }
 
-static void custom_args_clist_select_row_callback (GtkWidget *widget, int row, int column, GdkEventButton *event, GtkCList *clist) {
+static void custom_args_list_select_row_callback (GtkWidget *widget, int row, int column, GdkEventButton *event, GtkCList *clist) {
 	enum server_type type;
 	GSList* item;
 	char* argstr;
@@ -2813,7 +2802,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	GtkWidget *hbox1;
 	GtkWidget *vbox1;
 	GtkWidget *scrolledwindow1;
-	GtkWidget *arguments_clist;
+	GtkWidget *arguments_list;
 	GtkWidget *game_label;
 	GtkWidget *arguments_label;
 	GtkWidget *frame1;
@@ -2855,28 +2844,28 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 2);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	arguments_clist = gtk_clist_new(2);
-	g_object_ref(G_OBJECT(arguments_clist));
-	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_clist", arguments_clist, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(arguments_clist);
-	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_clist);
-	gtk_clist_column_titles_show(GTK_CLIST(arguments_clist));
-	g_signal_connect(G_OBJECT(arguments_clist), "select_row", G_CALLBACK(custom_args_clist_select_row_callback), arguments_clist);
-	g_object_set_data(G_OBJECT(arguments_clist), "user_data", (gpointer) type);
+	arguments_list = gtk_clist_new(2);
+	g_object_ref(G_OBJECT(arguments_list));
+	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_list", arguments_list, (GDestroyNotify) g_object_unref);
+	gtk_widget_show(arguments_list);
+	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_list);
+	gtk_clist_column_titles_show(GTK_CLIST(arguments_list));
+	g_signal_connect(G_OBJECT(arguments_list), "select_row", G_CALLBACK(custom_args_list_select_row_callback), arguments_list);
+	g_object_set_data(G_OBJECT(arguments_list), "user_data", (gpointer) type);
 
 	game_label = gtk_label_new(_("Game"));
 	g_object_ref(G_OBJECT(game_label));
 	g_object_set_data_full(G_OBJECT(page_vbox), "game_label", game_label, (GDestroyNotify) g_object_unref);
 	gtk_label_set_justify(GTK_LABEL(game_label), GTK_JUSTIFY_LEFT);
 	gtk_widget_show(game_label);
-	gtk_clist_set_column_widget(GTK_CLIST(arguments_clist), 0, game_label);
+	gtk_clist_set_column_widget(GTK_CLIST(arguments_list), 0, game_label);
 
 	arguments_label = gtk_label_new(_("Arguments"));
 	g_object_ref(G_OBJECT(arguments_label));
 	g_object_set_data_full(G_OBJECT(page_vbox), "arguments_label", arguments_label, (GDestroyNotify) g_object_unref);
 	gtk_label_set_justify(GTK_LABEL(arguments_label), GTK_JUSTIFY_LEFT);
 	gtk_widget_show(arguments_label);
-	gtk_clist_set_column_widget(GTK_CLIST(arguments_clist), 1, arguments_label);
+	gtk_clist_set_column_widget(GTK_CLIST(arguments_list), 1, arguments_label);
 
 	frame1 = gtk_frame_new(_("Game and Arguments"));
 	g_object_ref(G_OBJECT(frame1));
@@ -2951,22 +2940,22 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	g_object_set_data(G_OBJECT(new_button), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(new_button), "clicked",
 		G_CALLBACK(new_custom_args_callback),
-		(gpointer) arguments_clist);
+		(gpointer) arguments_list);
 
 	g_object_set_data(G_OBJECT(delete_button), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(delete_button), "clicked",
 		G_CALLBACK(delete_custom_args_callback),
-		(gpointer) arguments_clist);
+		(gpointer) arguments_list);
 
 	g_object_set_data(G_OBJECT(defaults_button), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(defaults_button), "clicked",
 		G_CALLBACK(add_custom_args_defaults),
-		(gpointer) arguments_clist);
+		(gpointer) arguments_list);
 
 	g_object_set_data(G_OBJECT(custom_args_add_button[type]), "user_data", (gpointer) type);
 	g_signal_connect(G_OBJECT(custom_args_add_button[type]), "clicked",
 		G_CALLBACK(add_custom_args_callback),
-		(gpointer) arguments_clist);
+		(gpointer) arguments_list);
 
 	// Populate clist with custom_args from g_slist
 	{
@@ -2977,16 +2966,16 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		while (list) {
 			char* tmp = g_strdup((char *)list->data);
 			tokenize(tmp, token, 2, ",");
-			gtk_clist_append(GTK_CLIST(arguments_clist), token);
+			gtk_clist_append(GTK_CLIST(arguments_list), token);
 			g_free(tmp);
 
 			list = g_slist_next(list);
 		}
 	}
 
-	width = gtk_clist_optimal_column_width(GTK_CLIST(arguments_clist), 0);
-	gtk_clist_set_column_width(GTK_CLIST(arguments_clist), 0, width?width:60);
-	gtk_clist_set_column_width(GTK_CLIST(arguments_clist), 1, gtk_clist_optimal_column_width(GTK_CLIST(arguments_clist), 1));
+	width = gtk_clist_optimal_column_width(GTK_CLIST(arguments_list), 0);
+	gtk_clist_set_column_width(GTK_CLIST(arguments_list), 0, width?width:60);
+	gtk_clist_set_column_width(GTK_CLIST(arguments_list), 1, gtk_clist_optimal_column_width(GTK_CLIST(arguments_list), 1));
 
 
 	gtk_widget_show(page_vbox);
@@ -3777,7 +3766,7 @@ static void scan_maps_callback (GtkWidget *widget, gpointer data) {
 		scan_maps_for(i);
 	}
 
-	server_clist_set_list (cur_server_list);
+	server_list_set_list (cur_server_list);
 }
 
 
@@ -3894,7 +3883,6 @@ static GtkWidget *appearance_options_page (void) {
 	return page_vbox;
 }
 
-#ifdef GUI_GTK2
 static GtkWidget *general_options_page (void) {
 	GtkWidget *page_vbox;
 	GtkWidget *frame;
@@ -4071,7 +4059,6 @@ static GtkWidget *general_options_page (void) {
 
 	return page_vbox;
 }
-#endif
 
 static GtkWidget *qstat_options_page (void) {
 	GtkWidget *page_vbox;
@@ -4463,7 +4450,7 @@ void preferences_dialog (int page_num) {
 		gtk_widget_realize (window);
 	}
 
-	allocate_quake_player_colors (gtk_widget_get_window (window));
+	allocate_quake_player_colors ();
 
 	vbox = gtk_vbox_new (FALSE, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);

@@ -121,16 +121,6 @@ void free_pixmap (struct pixmap *pixmap) {
 		g_object_unref (G_OBJECT (pixmap->pixbuf));
 		pixmap->pixbuf = NULL;
 	}
-#ifdef GUI_GTK2
-	if (pixmap->pix) {
-		gdk_pixmap_unref (pixmap->pix);
-		pixmap->pix = NULL;
-	}
-	if (pixmap->mask) {
-		gdk_bitmap_unref (pixmap->mask);
-		pixmap->mask = NULL;
-	}
-#endif
 }
 
 
@@ -139,15 +129,7 @@ static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *p
 
 	if (!pix->pixbuf) {
 		pix->pixbuf = error_pix.pixbuf;
-#ifdef GUI_GTK2
-		pix->pix = error_pix.pix;
-		pix->mask = error_pix.mask;
-#endif
 		g_object_ref (G_OBJECT (pix->pixbuf));
-#ifdef GUI_GTK2
-		gdk_pixmap_ref(pix->pix);
-		gdk_bitmap_ref(pix->mask);
-#endif
 	}
 }
 
@@ -223,10 +205,6 @@ struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixma
 
 	gdk_pixbuf_copy_area (s1->pixbuf, 0, 0, w1, h1, dest->pixbuf, 0, 0);
 	gdk_pixbuf_copy_area (s2->pixbuf, 0, 0, w2, h2, dest->pixbuf, w1, 0);
-
-#ifdef GUI_GTK2
-	gdk_pixbuf_render_pixmap_and_mask (dest->pixbuf, &dest->pix, &dest->mask, 255);
-#endif
 
 	return dest;
 }
@@ -323,42 +301,34 @@ void ensure_buddy_pix (GtkWidget *window, int n) {
 	if (n & 4) {
 		gdk_pixbuf_composite (buddy_pix[4].pixbuf, dest->pixbuf, 0, 0, width, height, 0, 0, 1.0, 1.0, GDK_INTERP_NEAREST, 255);
 	}
-
-#ifdef GUI_GTK2
-	gdk_pixbuf_render_pixmap_and_mask (dest->pixbuf, &dest->pix, &dest->mask, 255);
-#endif
 }
 
 
-static guint GdkColorToColor32 (GdkColor *color) {
-	guint r = color->red >> 8;
-	guint g = color->green >> 8;
-	guint b = color->blue >> 8;
+static guint GdkRGBAToColor32 (GdkRGBA *color) {
+	guint r = (guint)(color->red   * 255);
+	guint g = (guint)(color->green * 255);
+	guint b = (guint)(color->blue  * 255);
 	guint a = 255;
 
 	return ( r << 24 ) | ( g << 16 ) | ( b << 8 ) | a;
 }
 
-void two_colors_pixmap (GdkWindow *window, int width, int height, GdkColor *top, GdkColor *bottom, struct pixmap *dest) {
+void two_colors_pixmap (int width, int height, GdkRGBA *top, GdkRGBA *bottom, struct pixmap *dest) {
 	GdkPixbuf *half_pixbuf;
 	guint color32;
 
 	dest->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height);
 	half_pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, height/2);
 
-	color32 = GdkColorToColor32 (top);
+	color32 = GdkRGBAToColor32 (top);
 	gdk_pixbuf_fill (half_pixbuf, color32);
 	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest->pixbuf, 0, 0);
 
-	color32 = GdkColorToColor32 (bottom);
+	color32 = GdkRGBAToColor32 (bottom);
 	gdk_pixbuf_fill (half_pixbuf, color32);
 	gdk_pixbuf_copy_area (half_pixbuf, 0, 0, width, height/2, dest->pixbuf, 0, height/2);
 
 	g_object_unref (G_OBJECT (half_pixbuf));
-
-#ifdef GUI_GTK2
-	gdk_pixbuf_render_pixmap_and_mask (dest->pixbuf, &dest->pix, &dest->mask, 255);
-#endif
 }
 
 
@@ -372,10 +342,6 @@ void create_server_pixmap (GtkWidget *window, struct pixmap *stype, int n, struc
 gboolean pixmap_cache_lookup (GSList *cache, struct pixmap *pix, unsigned key) {
 	struct cached_pixmap *cp;
 	GdkPixbuf *res_pixbuf = NULL;
-#ifdef GUI_GTK2
-	GdkPixmap *res_pix = NULL;
-	GdkBitmap *res_mask = NULL;
-#endif
 
 	if (!pix)
 		return FALSE;
@@ -385,10 +351,6 @@ gboolean pixmap_cache_lookup (GSList *cache, struct pixmap *pix, unsigned key) {
 		if (cp->key == key) {
 			cp->weight += 2;
 			res_pixbuf = cp->pixbuf;
-#ifdef GUI_GTK2
-			res_pix = cp->pix;
-			res_mask = cp->mask;
-#endif
 			break;
 		}
 		cache = cache->next;
@@ -397,16 +359,6 @@ gboolean pixmap_cache_lookup (GSList *cache, struct pixmap *pix, unsigned key) {
 	pix->pixbuf = res_pixbuf;
 	if (res_pixbuf)
 		g_object_ref (G_OBJECT (res_pixbuf));
-
-#ifdef GUI_GTK2
-	pix->pix = res_pix;
-	if (res_pix)
-		gdk_pixmap_ref (res_pix);
-
-	pix->mask = res_mask;
-	if (res_mask)
-		gdk_bitmap_ref (res_mask);
-#endif
 
 	return (pix->pixbuf != NULL);
 }
@@ -420,15 +372,6 @@ void pixmap_cache_add (GSList **cache, struct pixmap *pix, unsigned key) {
 
 		cp->pixbuf = pix->pixbuf;
 		g_object_ref (G_OBJECT (cp->pixbuf));
-
-#ifdef GUI_GTK2
-		cp->pix = pix->pix;
-		gdk_pixmap_ref (cp->pix);
-
-		cp->mask = pix->mask;
-		if (cp->mask)
-			gdk_bitmap_ref (cp->mask);
-#endif
 
 		cp->key = key;
 		cp->weight = 10;
@@ -445,15 +388,7 @@ static int cached_pixmap_cmp (const struct cached_pixmap *a,
 
 
 static void free_cached_pixmap (struct cached_pixmap *cp) {
-
 	g_object_unref (G_OBJECT (cp->pixbuf));
-#ifdef GUI_GTK2
-	gdk_pixmap_unref (cp->pix);
-
-	if (cp->mask)
-		gdk_bitmap_unref (cp->mask);
-#endif
-
 	g_free (cp);
 }
 

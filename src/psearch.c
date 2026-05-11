@@ -331,15 +331,15 @@ static int psearch_next_player (int player) {
 	struct player *p;
 	GtkVisibility vis;
 
-	while (player < player_clist->rows) {
-		p = (struct player *) gtk_clist_get_row_data (player_clist, player);
+	while (player < gtk_clist_get_rows (player_view)) {
+		p = (struct player *) gtk_clist_get_row_data (player_view, player);
 
 		if (psearch_test_player (p)) {
-			gtk_clist_select_row (player_clist, player, 0);
+			gtk_clist_select_row (player_view, player, 0);
 
-			vis = gtk_clist_row_is_visible (player_clist, player);
+			vis = gtk_clist_row_is_visible (player_view, player);
 			if (vis != GTK_VISIBILITY_FULL)
-				gtk_clist_moveto (player_clist, player, 0, 0.5, 0.0);
+				gtk_clist_moveto (player_view, player, 0, 0.5, 0.0);
 
 			return TRUE;
 		}
@@ -356,13 +356,16 @@ void find_player (int find_next) {
 	int player = 0;
 	int server = 0;
 
-	if (find_next && server_clist->selection != NULL) { /* selected one */
+	GList *srv_sel = gtk_clist_get_selection (server_view);
 
-		if (server_clist->selection->next == NULL) {
-			server = GPOINTER_TO_INT(server_clist->selection->data);
+	if (find_next && srv_sel != NULL) { /* selected one */
 
-			if (player_clist->selection)
-				player = GPOINTER_TO_INT(player_clist->selection->data + 1);
+		if (srv_sel->next == NULL) {
+			server = GPOINTER_TO_INT(srv_sel->data);
+
+			GList *pl_sel = gtk_clist_get_selection (player_view);
+			if (pl_sel)
+				player = GPOINTER_TO_INT(pl_sel->data + 1);
 
 			if (psearch_next_player (player))
 				return;
@@ -370,16 +373,16 @@ void find_player (int find_next) {
 			server++;
 		}
 		else {  /* selected many */
-			server = integer_list_find_minimum (server_clist->selection);
+			server = integer_list_find_minimum (srv_sel);
 		}
 
 	}
 
-	while (server < server_clist->rows) {
-		s = (struct server *) gtk_clist_get_row_data (server_clist, server);
+	while (server < gtk_clist_get_rows (server_view)) {
+		s = (struct server *) gtk_clist_get_row_data (server_view, server);
 
 		if (server_has_player (s)) {
-			server_clist_select_one (server);
+			server_list_select_one (server);
 			psearch_next_player (0);
 			return;
 		}
@@ -387,7 +390,7 @@ void find_player (int find_next) {
 		server++;
 	}
 
-	if (!find_next || server_clist->selection == NULL) {
+	if (!find_next || gtk_clist_get_selection (server_view) == NULL) {
 		dialog_ok (NULL, _("Player not found."));
 		reset_main_status_bar(builder);
 	}

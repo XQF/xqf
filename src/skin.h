@@ -35,7 +35,7 @@ extern void draw_q2_skin (GtkWidget *image, guchar *data, int scale);
 extern guchar *get_qw_skin (char *filename, char *path);
 extern guchar *get_q2_skin (char *skin, char *path);
 
-extern void allocate_quake_player_colors (GdkWindow *window);
+extern void allocate_quake_player_colors (void);
 
 extern void set_bg_color (GtkWidget *widget, int color);
 
