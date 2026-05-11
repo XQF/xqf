@@ -410,7 +410,7 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 		case SCRIPT_OPTION_TYPE_STRING:
 		case SCRIPT_OPTION_TYPE_INT:
 			{
-				GtkWidget* hbox = ret = gtk_hbox_new(FALSE, 0);
+				GtkWidget* hbox = ret = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 				GtkWidget* label = gtk_label_new(opt->name);
 				GtkWidget* entry = opt->widget = gtk_entry_new();
 
@@ -439,7 +439,7 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 			break;
 		case SCRIPT_OPTION_TYPE_LIST:
 			{
-				GtkWidget* hbox = ret = gtk_hbox_new(FALSE, 0);
+				GtkWidget* hbox = ret = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 				GtkWidget* label = gtk_label_new(opt->name);
 				GtkWidget* combo = gtk_combo_box_text_new_with_entry ();
 				GList* list = NULL;
@@ -492,7 +492,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	ScriptOption* opt;
 	GSList* optlist;
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_OUT);
@@ -531,7 +531,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 	frame = gtk_frame_new (_("Options"));
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_add (GTK_CONTAINER (frame), vbox);
 
 	for (; optlist; optlist = g_slist_next(optlist)) {
@@ -694,14 +694,14 @@ GtkWidget *scripts_config_page () {
 	unsigned i;
 	GList* s;
 
-	page_vbox = gtk_vbox_new (FALSE, 0);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
-	games_hbox = gtk_hbox_new (FALSE, 0);
+	games_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);

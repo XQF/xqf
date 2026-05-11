@@ -172,7 +172,7 @@ static GtkWidget* create_redialwindow (void) {
 	gtk_window_set_modal (GTK_WINDOW (redialwindow), TRUE);
 #endif
 
-	vbox1 = gtk_vbox_new (FALSE, 5);
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	g_object_ref (G_OBJECT(vbox1));
 	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (vbox1);

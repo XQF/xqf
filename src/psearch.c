@@ -175,11 +175,11 @@ int find_player_dialog (void) {
 
 	window = dialog_create_modal_transient_window (_("Find Player"),
 			TRUE, FALSE, NULL);
-	main_vbox = gtk_vbox_new (FALSE, 8);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 16);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	/* Pattern Entry */
@@ -231,7 +231,7 @@ int find_player_dialog (void) {
 
 	/* Mode Buttons */
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	group = NULL;

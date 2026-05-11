@@ -302,7 +302,7 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 	GtkWidget *label;
 	GtkWidget *image;
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 
 	if (games[type].pix) {
 		image = gtk_image_new_from_pixbuf (games[type].pix->pixbuf);

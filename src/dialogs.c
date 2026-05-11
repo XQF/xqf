@@ -132,13 +132,13 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 			(title)? title : _("XQF: Warning!"),
 			TRUE, FALSE, NULL);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
 	/* Message */
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 32);
 	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
@@ -150,7 +150,7 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 
 	/* Buttons */
 
-	hbox = gtk_hbox_new (TRUE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
 
@@ -207,13 +207,13 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 			(title)? title : _("XQF: Warning!"),
 			TRUE, TRUE, NULL);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
 	/* Message */
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 32);
 	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
@@ -225,7 +225,7 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 
 	/* Buttons */
 
-	hbox = gtk_hbox_new (TRUE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
 
@@ -287,13 +287,13 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 			(title)? title : _("XQF: Warning!"),
 			TRUE, TRUE, NULL);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
 	/* Message */
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 32);
 	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
@@ -305,7 +305,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 
 	/* Buttons */
 
-	hbox = gtk_hbox_new (TRUE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
 
@@ -386,11 +386,11 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 
 	window = dialog_create_modal_transient_window (buf, TRUE, FALSE, NULL);
 
-	main_vbox = gtk_vbox_new (FALSE, 8);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 16);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	/* Message */
@@ -437,7 +437,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	/* Option */
 
 	if (optstr) {
-		hbox = gtk_hbox_new (FALSE, 8);
+		hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 		gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 		enter_string_opt_button = gtk_check_button_new_with_label (optstr);

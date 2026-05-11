@@ -623,7 +623,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	GSList *group;
 	int i;
 
-	vbox = gtk_vbox_new (FALSE, 8);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 
 	frame = gtk_frame_new (NULL);
 	gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
@@ -649,7 +649,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
 	/* Mode Buttons */
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 1, 2);
 
 	group = NULL;
@@ -674,7 +674,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	frame = gtk_frame_new (_("Pattern Comment"));
 	gtk_box_pack_end (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_container_add (GTK_CONTAINER (frame), hbox);
 
@@ -728,7 +728,7 @@ void player_filter_page (GtkWidget *notebook) {
 	GtkWidget *peditor;
 	int i;
 
-	page_hbox = gtk_hbox_new (FALSE, 8);
+	page_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
 
 	label = gtk_label_new (_("Player Filter"));
@@ -798,7 +798,7 @@ void player_filter_page (GtkWidget *notebook) {
 
 	/* Buttons */
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_box_pack_start (GTK_BOX (page_hbox), vbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("New"));
@@ -814,7 +814,7 @@ void player_filter_page (GtkWidget *notebook) {
 	alignment = gtk_alignment_new (0, 0.5, 1, 0);
 	gtk_box_pack_end (GTK_BOX (vbox), alignment, TRUE, TRUE, 0);
 
-	vbox2 = gtk_vbox_new (FALSE, 4);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_add (GTK_CONTAINER (alignment), vbox2);
 
 	up_button = gtk_button_new_with_label (_("Up"));

@@ -88,10 +88,10 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	server_type = type;
 
 	window = dialog_create_modal_transient_window (_("Add Server"), TRUE, FALSE, NULL);
-	main_vbox = gtk_vbox_new (FALSE, 0);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 16);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
@@ -136,7 +136,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 
 	/* Buttons */
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 

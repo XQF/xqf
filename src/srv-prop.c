@@ -407,7 +407,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
 	props = properties (s);
 
-	page_vbox = gtk_vbox_new (FALSE, 8);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	/* Address */
@@ -464,7 +464,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
 #ifdef USE_GEOIP
 	if (geoip_name_by_id(s->country_id)) {
-		GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
+		GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 		struct pixmap* pix = get_pixmap_for_country(s->country_id);
 		if (pix) {
 			GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
@@ -581,7 +581,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 	gtk_container_add (GTK_CONTAINER (frame), vbox);
 
@@ -602,7 +602,7 @@ static GtkWidget *server_info_page (struct server *s) {
 
 	/* Custom CFG */
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
 
 	customcfg_combo = gtk_combo_box_text_new_with_entry ();
@@ -670,7 +670,7 @@ static GtkWidget *server_passwords_page (struct server *s) {
 
 	props = properties (s);
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	table = gtk_table_new (3, 2, FALSE);
@@ -718,7 +718,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 		comment = props->comment;
 	}
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	sucks_check_button = gtk_check_button_new_with_label (_("This server sucks"));
@@ -761,7 +761,7 @@ void properties_dialog (struct server *s) {
 
 	window = dialog_create_modal_transient_window (_("Properties"),
 			TRUE, FALSE, NULL);
-	main_vbox = gtk_vbox_new (FALSE, 8);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
@@ -769,10 +769,10 @@ void properties_dialog (struct server *s) {
 	 *  Server Name
 	 */
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 8);
 
-	hbox2 = gtk_hbox_new (FALSE, 4);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (hbox), hbox2, TRUE, FALSE, 0);
 
 	if (games[s->type].pix) {
@@ -825,7 +825,7 @@ void properties_dialog (struct server *s) {
 	 *  Buttons at the bottom
 	 */
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Cancel"));

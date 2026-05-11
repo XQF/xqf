@@ -548,19 +548,19 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
 	rcon_restore_geometry (window);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
-	vbox = gtk_vbox_new (FALSE, 8);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
 	/* Dialog Title */
 
-	hbox = gtk_hbox_new (TRUE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-	hbox2 = gtk_hbox_new (FALSE, 4);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
 
 	if (games[s->type].pix) {
@@ -578,7 +578,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	/* Text */
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
 	rcon_text_buffer = gtk_text_buffer_new (NULL);
@@ -596,7 +596,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	gtk_widget_show (hbox);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	/* Message */
@@ -618,7 +618,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	if (rcon_history->items)
 		combo_set_vals (rcon_combo, rcon_history->items, "");
 
-	hbox2 = gtk_hbox_new (FALSE, 2);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 	gtk_box_pack_end (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
 
 	/* Send Button */
@@ -659,7 +659,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	/* Close Button */
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 

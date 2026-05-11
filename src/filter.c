@@ -1196,7 +1196,7 @@ static void server_filter_page (GtkWidget *notebook) {
 		}
 	}
 
-	page_vbox = gtk_vbox_new (FALSE, 8);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	label = gtk_label_new (_("Server Filter"));
@@ -1204,7 +1204,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_vbox, label);
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX(page_vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show(hbox);
 
@@ -1512,7 +1512,7 @@ int filters_cfg_dialog (int page_num) {
 #endif
 
 	window = dialog_create_modal_transient_window (_("XQF: Filters"), TRUE, TRUE, filters_on_cancel);
-	vbox = gtk_vbox_new (FALSE, 8);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 
@@ -1537,7 +1537,7 @@ int filters_cfg_dialog (int page_num) {
 	// Buttons at the bottom
 
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Cancel"));
@@ -1819,7 +1819,7 @@ static void country_create_popup_window(void) {
 	country_popup_window = dialog_create_modal_transient_window (_("Configure Country Filter"), TRUE, TRUE, country_selection_on_cancel);
 	gtk_widget_set_size_request (GTK_WIDGET (country_popup_window), 480, 320);
 
-	vbox1 = gtk_vbox_new (FALSE, 0);
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_show (vbox1);
 	gtk_container_add (GTK_CONTAINER (country_popup_window), vbox1);
 
@@ -1828,13 +1828,13 @@ static void country_create_popup_window(void) {
 	gtk_box_pack_start (GTK_BOX (vbox1), frame1, TRUE, TRUE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER(frame1), 4);
 
-	vbox2 = gtk_vbox_new (FALSE, 0);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_show (vbox2);
 	gtk_container_add (GTK_CONTAINER (frame1), vbox2);
 	gtk_container_set_border_width (GTK_CONTAINER (frame1), 4);
 
 
-	hbox1 = gtk_hbox_new (FALSE, 0);
+	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_widget_show (hbox1);
 	gtk_box_pack_start (GTK_BOX (vbox2), hbox1, TRUE, TRUE, 0);
 

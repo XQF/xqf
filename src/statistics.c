@@ -399,7 +399,7 @@ static GtkWidget *server_stats_page (void) {
 	int i;
 	int row = 0;
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
@@ -553,7 +553,7 @@ static GtkWidget *archs_stats_page (void) {
 	enum server_type type = Q2_SERVER;
 	enum server_type to_activate = UNKNOWN_SERVER;
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 
@@ -580,7 +580,7 @@ static GtkWidget *archs_stats_page (void) {
 	}
 
 	// the notebook must exist to allow activate events of the menu
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
 
 	option_menu = create_server_type_menu (to_activate,
@@ -648,7 +648,7 @@ static void country_notebook_page (GtkWidget *notebook,
 
 		{
 			GtkWidget* label;
-			GtkWidget* hbox = gtk_hbox_new (FALSE, 4);
+			GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 			struct pixmap* pix = get_pixmap_for_country_with_fallback(id);
 			if (pix) {
 				GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
@@ -685,7 +685,7 @@ static GtkWidget *country_stats_page (void) {
 	enum server_type type = Q2_SERVER;
 	enum server_type to_activate = UNKNOWN_SERVER;
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	country_notebook = gtk_notebook_new ();
@@ -709,7 +709,7 @@ static GtkWidget *country_stats_page (void) {
 	}
 
 	// the notebook must exist to allow activate events of the menu
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
 
 	option_menu = create_server_type_menu (to_activate == UNKNOWN_SERVER?-1:to_activate,
@@ -798,7 +798,7 @@ void statistics_dialog (void) {
 
 	statistics_restore_geometry(window);
 
-	main_vbox = gtk_vbox_new (FALSE, 8);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
@@ -838,7 +838,7 @@ void statistics_dialog (void) {
 
 	/* Close Button */
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Close"));

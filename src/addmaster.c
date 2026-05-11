@@ -226,7 +226,7 @@ struct master *add_master_dialog (struct master *m) {
 		windowtitle=_("Add Master");
 	}
 	window = dialog_create_modal_transient_window(windowtitle, TRUE, FALSE, NULL);
-	main_vbox = gtk_vbox_new (FALSE, 0);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (window), main_vbox);
 
 	table = gtk_table_new (2, 2, FALSE);
@@ -243,7 +243,7 @@ struct master *add_master_dialog (struct master *m) {
 			GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
 
 	master_name_combo = gtk_combo_box_text_new_with_entry ();
@@ -319,7 +319,7 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_widget_show (table);
 
 	/* query type */
-	hbox = gtk_hbox_new (TRUE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++) {
 		master_query_type_radios[i] =
 			gtk_radio_button_new_with_label_from_widget(
@@ -357,7 +357,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	/* Buttons */
 
-	hbox = gtk_hbox_new (FALSE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
