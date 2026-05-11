@@ -252,7 +252,7 @@ int find_player_dialog (void) {
 	gtk_widget_show (main_vbox);
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 

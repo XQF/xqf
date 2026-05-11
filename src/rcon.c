@@ -682,7 +682,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	                          G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
 	                          rcon_input_callback, NULL);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	// FIXME GError
 	g_io_channel_shutdown (rcon_chan, TRUE, NULL);

@@ -169,7 +169,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_widget_show (main_vbox);
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 

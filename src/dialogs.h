@@ -29,6 +29,7 @@ static inline GtkWidget* topmost_parent(GtkWidget* widget) {
 }
 
 extern GtkWidget *dialog_create_modal_transient_window (const char *title, int close_on_esc, int allow_resize, GCallback on_destroy);
+extern void       dialog_run_modal (GtkWidget *window);
 
 extern void dialog_ok (const char *title, const char *fmt, ...) G_GNUC_PRINTF(2, 3);
 extern int dialog_yesno (const char *title, int defbutton, char *yes, char *no, char *fmt, ...) G_GNUC_PRINTF(5, 6);

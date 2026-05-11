@@ -1557,7 +1557,7 @@ int filters_cfg_dialog (int page_num) {
 
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page_num);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 
@@ -1964,7 +1964,7 @@ static void country_create_popup_window(void) {
 
 	gtk_widget_show (country_popup_window);
 
-	gtk_main ();
+	dialog_run_modal (country_popup_window);
 
 	unregister_window (country_popup_window);
 

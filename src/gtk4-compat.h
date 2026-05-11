@@ -877,37 +877,4 @@ gtk_file_chooser_set_filename (GtkFileChooser *chooser, const char *filename)
 typedef GtkWidget GtkMenuBar;
 #define GTK_MENU_BAR(x) ((GtkMenuBar *)(x))
 
-/* ------------------------------------------------------------------ */
-/* gtk_main / gtk_main_quit replacement                                  */
-/*                                                                        */
-/* gtk_main() was removed in GTK4.  Each translation unit that includes  */
-/* this header gets a per-TU static loop pointer.  Since a dialog is     */
-/* opened and waited for within the same TU, the per-TU variable is      */
-/* sufficient.                                                            */
-/* ------------------------------------------------------------------ */
-
-static GMainLoop *_xqf_modal_loop;
-
-/* Direct call (no args) — used by utils.c and similar */
-static inline void gtk_main_quit (void)
-{
-  if (_xqf_modal_loop && g_main_loop_is_running (_xqf_modal_loop))
-    g_main_loop_quit (_xqf_modal_loop);
-}
-
-/* Signal handler shim (GtkWidget*, gpointer) — use with g_signal_connect */
-static void _xqf_signal_main_quit (GtkWidget *w, gpointer d)
-{
-  (void)w; (void)d;
-  gtk_main_quit ();
-}
-
-static inline void gtk_main (void)
-{
-  _xqf_modal_loop = g_main_loop_new (NULL, FALSE);
-  g_main_loop_run (_xqf_modal_loop);
-  g_main_loop_unref (_xqf_modal_loop);
-  _xqf_modal_loop = NULL;
-}
-
 #endif /* GTK4_COMPAT_H */

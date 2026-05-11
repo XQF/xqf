@@ -121,7 +121,6 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 		return;
 
 	master_type = type;
-	gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
 	if (!games[type].default_master_port) {
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
@@ -273,7 +272,6 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
 
 	if (master_to_edit) {
-		gtk_widget_set_state (option_menu, GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (GTK_WIDGET(option_menu),FALSE);
 	}
 
@@ -311,7 +309,6 @@ struct master *add_master_dialog (struct master *m) {
 	if (master_to_edit) {
 		char* url = master_to_url(master_to_edit);
 		gtk_entry_set_text(combo_get_entry (master_addr_combo), url);
-		gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);
 		g_free(url);
 	}
@@ -339,7 +336,6 @@ struct master *add_master_dialog (struct master *m) {
 	}
 	else if (!games[master_type].default_master_port &&
 			current_master_query_type == MASTER_NATIVE) {
-		gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
 		gtk_toggle_button_set_active
@@ -385,7 +381,7 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_widget_show (main_vbox);
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 

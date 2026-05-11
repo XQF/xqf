@@ -58,7 +58,7 @@ modal_loop_quit_cb (GtkWidget *widget, gpointer data)
 
 /* Run a modal window using a nested GMainLoop.  Returns when the
  * window is destroyed.  Call this instead of gtk_main(). */
-static void
+void
 dialog_run_modal (GtkWidget *window)
 {
 	GMainLoop *loop = g_main_loop_new (NULL, FALSE);

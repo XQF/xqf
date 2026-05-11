@@ -242,7 +242,7 @@ gboolean redial_dialog (struct server* s, struct server_props* props) {
 
 	timeoutid = g_timeout_add (1000, (GSourceFunc)redial_countdown, (gpointer)s);
 
-	gtk_main ();
+	dialog_run_modal (redial_window);
 
 	unregister_window (redial_window);
 

@@ -852,7 +852,7 @@ void properties_dialog (struct server *s) {
 
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 }
