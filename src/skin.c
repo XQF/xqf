@@ -468,7 +468,7 @@ void qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned cha
 	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
-	h = gtk_clist_get_row_height (player_view) - 2;
+	h = 16;
 	w = h * 3 / 2;
 
 	two_colors_pixmap (w, h, &pcolors[top], &pcolors[bottom], pix);

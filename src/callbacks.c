@@ -31,15 +31,16 @@
 #include "srv-list.h"
 #include "stat.h"
 #include "xqf-ui.h"
+#include "xqf-lists.h"
 
 void reset_main_status_bar (GtkBuilder *builder) {
 	// Reset bottom left status bar to show number of servers
-	int nrows = gtk_clist_get_rows (server_view);
+	int nrows = server_store ? (int) g_list_model_get_n_items (G_LIST_MODEL (server_store)) : 0;
 	print_status (GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar")), ngettext("%d server", "%d servers", nrows), nrows);
 }
 
 void set_widgets_sensitivity (GtkBuilder *builder) {
-	GList *selected = gtk_clist_get_selection (server_view);
+	gboolean selected = (cur_server != NULL);
 	int sens;
 	int i;
 	int source_is_favorites;
@@ -137,7 +138,7 @@ void set_widgets_sensitivity (GtkBuilder *builder) {
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_edit_master_menu_item")), sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_edit_master_menu_item")), sens);
 
-	sens = (!stat_process && (gtk_clist_get_rows (server_view) > 0));
+	sens = (!stat_process && server_store && g_list_model_get_n_items (G_LIST_MODEL (server_store)) > 0);
 
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh_menu_item")), sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refresh_menu_item")), sens);

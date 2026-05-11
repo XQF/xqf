@@ -27,6 +27,7 @@
 
 #include "xqf.h"
 #include "xqf-ui.h"
+#include "xqf-lists.h"
 #include "srv-list.h"
 #include "source.h"
 #include "game.h"
@@ -575,8 +576,14 @@ void save_view_geometry (GtkWidget *widget, struct list_def *cldef) {
 	g_snprintf (buf, 256, "/" CONFIG_FILE "/%s Geometry/", cldef->name);
 	config_push_prefix (buf);
 
-	for (i = 0; i < cldef->columns; i++)
-		config_set_int (cldef->cols[i].name, gtk_clist_get_column_width (GTK_CLIST (widget), i));
+	GListModel *cols = gtk_column_view_get_columns (GTK_COLUMN_VIEW (widget));
+	for (i = 0; i < cldef->columns; i++) {
+		GtkColumnViewColumn *col = GTK_COLUMN_VIEW_COLUMN (g_list_model_get_item (cols, (guint) i));
+		if (col) {
+			config_set_int (cldef->cols[i].name, gtk_column_view_column_get_fixed_width (col));
+			g_object_unref (col);
+		}
+	}
 
 	config_pop_prefix ();
 }

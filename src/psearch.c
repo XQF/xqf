@@ -26,6 +26,9 @@
 
 #include "xqf.h"
 #include "xqf-ui.h"
+#include "xqf-lists.h"
+#include "xqf-player-item.h"
+#include "xqf-server-item.h"
 #include "srv-list.h"
 #include "srv-prop.h"
 #include "dialogs.h"
@@ -295,24 +298,6 @@ char *psearch_lookup_pattern (void) {
 }
 
 
-static int integer_list_find_minimum (GList *list) {
-	int res = 0;
-
-	if (list) {
-		res = GPOINTER_TO_INT(list->data);
-		list = list->next;
-
-		while (list) {
-			if (res > GPOINTER_TO_INT(list->data)) {
-				res = GPOINTER_TO_INT(list->data);
-			}
-			list = list->next;
-		}
-	}
-
-	return res;
-}
-
 
 static int server_has_player (struct server *s) {
 	GSList *plist;
@@ -327,24 +312,22 @@ static int server_has_player (struct server *s) {
 }
 
 
-static int psearch_next_player (int player) {
-	struct player *p;
-	GtkVisibility vis;
+static int psearch_next_player (guint start) {
+	if (!player_selection) return FALSE;
 
-	while (player < gtk_clist_get_rows (player_view)) {
-		p = (struct player *) gtk_clist_get_row_data (player_view, player);
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (player_selection));
+	for (guint i = start; i < n; i++) {
+		XqfPlayerItem *pi = XQF_PLAYER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (player_selection), i));
+		struct player *p = xqf_player_item_get (pi);
+		gboolean match = psearch_test_player (p);
+		g_object_unref (pi);
 
-		if (psearch_test_player (p)) {
-			gtk_clist_select_row (player_view, player, 0);
-
-			vis = gtk_clist_row_is_visible (player_view, player);
-			if (vis != GTK_VISIBILITY_FULL)
-				gtk_clist_moveto (player_view, player, 0, 0.5, 0.0);
-
+		if (match) {
+			gtk_selection_model_select_item (player_selection, i, TRUE);
+			gtk_widget_activate_action (player_view, "list.scroll-to-item", "u", i);
 			return TRUE;
 		}
-
-		player++;
 	}
 
 	return FALSE;
@@ -352,45 +335,50 @@ static int psearch_next_player (int player) {
 
 
 void find_player (int find_next) {
-	struct server *s;
-	int player = 0;
-	int server = 0;
+	if (!server_selection) return;
 
-	GList *srv_sel = gtk_clist_get_selection (server_view);
+	guint srv_n = g_list_model_get_n_items (G_LIST_MODEL (server_selection));
+	guint srv_start = 0;
 
-	if (find_next && srv_sel != NULL) { /* selected one */
-
-		if (srv_sel->next == NULL) {
-			server = GPOINTER_TO_INT(srv_sel->data);
-
-			GList *pl_sel = gtk_clist_get_selection (player_view);
-			if (pl_sel)
-				player = GPOINTER_TO_INT(pl_sel->data + 1);
-
-			if (psearch_next_player (player))
-				return;
-
-			server++;
+	if (find_next && cur_server) {
+		/* Find the position of cur_server in the sorted view */
+		for (guint i = 0; i < srv_n; i++) {
+			XqfServerItem *si = XQF_SERVER_ITEM (
+				g_list_model_get_item (G_LIST_MODEL (server_selection), i));
+			struct server *s = xqf_server_item_get (si);
+			g_object_unref (si);
+			if (s == cur_server) {
+				/* Try to continue from the next player in this server first */
+				guint pl_start = 0;
+				if (player_selection) {
+					GtkBitset *pl_sel = gtk_selection_model_get_selection (player_selection);
+					guint pl_min = gtk_bitset_get_minimum (pl_sel);
+					if (pl_min != G_MAXUINT)
+						pl_start = pl_min + 1;
+					gtk_bitset_unref (pl_sel);
+				}
+				if (psearch_next_player (pl_start))
+					return;
+				srv_start = i + 1;
+				break;
+			}
 		}
-		else {  /* selected many */
-			server = integer_list_find_minimum (srv_sel);
-		}
-
 	}
 
-	while (server < gtk_clist_get_rows (server_view)) {
-		s = (struct server *) gtk_clist_get_row_data (server_view, server);
+	for (guint i = srv_start; i < srv_n; i++) {
+		XqfServerItem *si = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_selection), i));
+		struct server *s = xqf_server_item_get (si);
+		g_object_unref (si);
 
 		if (server_has_player (s)) {
-			server_list_select_one (server);
+			server_list_select_one ((int) i);
 			psearch_next_player (0);
 			return;
 		}
-
-		server++;
 	}
 
-	if (!find_next || gtk_clist_get_selection (server_view) == NULL) {
+	if (!find_next || !cur_server) {
 		dialog_ok (NULL, _("Player not found."));
 		reset_main_status_bar(builder);
 	}

@@ -439,7 +439,6 @@ void update_server_lists_from_selected_source (void) {
 
 int stat_lists_refresh (struct stat_job *job) {
 	int items;
-	int freeze;
 
 	items = g_slist_length (job->delayed.queued_servers) +
 		g_slist_length (job->delayed.queued_hosts);
@@ -453,12 +452,6 @@ int stat_lists_refresh (struct stat_job *job) {
 		job->delayed.queued_hosts = NULL;
 	}
 	else if (items) {
-		freeze = (items > 1) || default_refresh_sorts;
-
-		if (freeze) {
-			gtk_clist_freeze (server_view);
-		}
-
 		g_slist_foreach (job->delayed.queued_servers, (GFunc) server_list_refresh_server, NULL);
 		server_list_free (job->delayed.queued_servers);
 		job->delayed.queued_servers = NULL;
@@ -466,14 +459,6 @@ int stat_lists_refresh (struct stat_job *job) {
 		g_slist_foreach (job->delayed.queued_hosts, (GFunc) server_list_show_hostname, NULL);
 		host_list_free (job->delayed.queued_hosts);
 		job->delayed.queued_hosts = NULL;
-
-		if (default_refresh_sorts) {
-			gtk_clist_sort (server_view);
-		}
-
-		if (freeze) {
-			gtk_clist_thaw (server_view);
-		}
 	}
 
 	if (job->progress.tasks > 0) {
