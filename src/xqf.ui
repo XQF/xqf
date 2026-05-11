@@ -27,7 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <!-- interface-copyright \302\251 XQF Team 1998-2015 -->
   <object class="GtkAboutDialog" id="about-dialog">
     <property name="can_focus">False</property>
-    <property name="type_hint">dialog</property>
     <property name="program_name">XQF</property>
     <property name="version">1.0.6.2</property>
     <property name="copyright" translatable="yes">© XQF Team 1998-2015</property>
@@ -117,7 +116,6 @@ Artem Vorotnikov</property>
   </object>
   <object class="GtkDialog" id="pref-window">
     <property name="can_focus">False</property>
-    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
