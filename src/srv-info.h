@@ -31,7 +31,7 @@ enum srvinf_col {
 
 extern GtkWidget *srvinf_treeview_new (GtkWidget *scrollwin);
 extern void srvinf_treeview_set_server (struct server *s);
-extern void srvinf_copy_selected_values (GtkEditable *dest);
+extern void srvinf_copy_server_info (void);
 
 #endif /* __SRV_INFO_H__ */
 

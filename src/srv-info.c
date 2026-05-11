@@ -559,32 +559,29 @@ srvinf_treeview_new (GtkWidget *scrollwin)
 }
 
 void
-srvinf_copy_selected_values (GtkEditable *dest)
+srvinf_copy_server_info (void)
 {
 	GtkTreeView      *tv  = GTK_TREE_VIEW (srvinf_treeview);
 	GtkTreeSelection *sel = gtk_tree_view_get_selection (tv);
 	GtkTreeModel     *model;
 	GList *rows = gtk_tree_selection_get_selected_rows (sel, &model);
-	int pos = 0;
+	if (!rows) return;
 
-	gtk_editable_delete_text (dest, 0, -1);
-
-	if (!rows) {
-		gtk_editable_select_region (dest, 0, 0);
-	} else {
-		for (GList *l = rows; l; l = l->next) {
-			GtkTreeIter iter;
-			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) l->data);
-			gchar *val = NULL;
-			gtk_tree_model_get (model, &iter, SRVINF_COL_VALUE, &val, -1);
-			if (val && *val)
-				gtk_editable_insert_text (dest, val, strlen (val), &pos);
-			g_free (val);
+	GString *str = g_string_new ("");
+	for (GList *l = rows; l; l = l->next) {
+		GtkTreeIter iter;
+		gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) l->data);
+		gchar *val = NULL;
+		gtk_tree_model_get (model, &iter, SRVINF_COL_VALUE, &val, -1);
+		if (val && *val) {
+			if (str->len > 0) g_string_append_c (str, '\n');
+			g_string_append (str, val);
 		}
-		g_list_free_full (rows, (GDestroyNotify) gtk_tree_path_free);
-		gtk_editable_select_region (dest, 0, -1);
+		g_free (val);
 	}
-	gtk_editable_copy_clipboard (dest);
+	g_list_free_full (rows, (GDestroyNotify) gtk_tree_path_free);
+	gdk_clipboard_set_text (gdk_display_get_clipboard (gdk_display_get_default ()), str->str);
+	g_string_free (str, TRUE);
 }
 
 // TODO: get rid of switch, put game specific functions into game struct

@@ -211,7 +211,6 @@ struct list_def player_list_def = {
 
 
 void print_status (GtkWidget *sbar, char *fmt, ...) {
-	unsigned context_id;
 	char buf[1024];
 	va_list ap;
 
@@ -229,10 +228,7 @@ void print_status (GtkWidget *sbar, char *fmt, ...) {
 		fprintf (stderr, "Status: %s\n", buf);
 #endif
 
-		context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (sbar), "XQF");
-
-		gtk_statusbar_pop (GTK_STATUSBAR (sbar), context_id);
-		gtk_statusbar_push (GTK_STATUSBAR (sbar), context_id, buf);
+		gtk_label_set_text (GTK_LABEL (sbar), buf);
 	}
 }
 
@@ -519,8 +515,8 @@ int calculate_row_height (GtkWidget *widget G_GNUC_UNUSED, struct pixmap *pix) {
 	return height;
 }
 
-void set_toolbar_appearance (GtkToolbar *toolbar) {
-	gtk_toolbar_set_style(toolbar, GTK_TOOLBAR_BOTH);
+void set_toolbar_appearance (GtkWidget *toolbar) {
+	(void)toolbar;
 }
 
 /*******************************  Progress Bar  *****************************/
