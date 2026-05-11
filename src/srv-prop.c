@@ -859,11 +859,12 @@ void properties_dialog (struct server *s) {
 
 
 GtkEntry *combo_get_entry (GtkWidget *widget) {
-	if ( !GTK_IS_COMBO_BOX( widget ) ) {
+	if (!GTK_IS_COMBO_BOX (widget))
 		return NULL;
-	}
-
-	return GTK_ENTRY (gtk_bin_get_child (GTK_BIN (widget)));
+	GtkWidget *child = gtk_combo_box_get_child (GTK_COMBO_BOX (widget));
+	if (!GTK_IS_ENTRY (child))
+		return NULL;
+	return GTK_ENTRY (child);
 }
 
 void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {

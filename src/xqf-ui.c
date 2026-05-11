@@ -409,7 +409,6 @@ static void fill_source_treeview (void) {
 	GSList *list, *list2;
 	GtkTreeIter parent_iter, iter;
 	struct master *group, *m;
-	char cfgkey[128];
 
 	source_treeview_add_master (favorites);
 
@@ -435,8 +434,22 @@ static void fill_source_treeview (void) {
 				-1);
 			source_treeview_show_node_status (m);
 		}
+	}
+}
 
-		/* Restore expand/collapse state from config */
+/* Restore expand/collapse state for each group; call after source_treeview is set. */
+void source_treeview_restore_expand_state (void) {
+	GSList *list;
+	GtkTreeIter parent_iter;
+	struct master *group;
+	char cfgkey[128];
+
+	for (list = master_groups; list; list = list->next) {
+		group = (struct master *) list->data;
+		if (!group->masters)
+			continue;
+		if (!source_find_master (group, &parent_iter))
+			continue;
 		g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", group->name);
 		if (!config_get_bool (cfgkey)) {
 			GtkTreePath *path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &parent_iter);

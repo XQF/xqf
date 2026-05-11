@@ -91,6 +91,7 @@ extern void source_treeview_delete_master (struct master *m);
 extern void source_treeview_remove_master_group (struct master *m);
 extern gboolean source_treeview_has_master (struct master *m);
 extern GtkWidget *create_source_treeview (GtkWidget *scrollwin);
+extern void source_treeview_restore_expand_state (void);
 extern void source_treeview_select_source (struct master *m);
 
 extern int calculate_row_height (GtkWidget *widget, struct pixmap *pix);

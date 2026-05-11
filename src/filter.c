@@ -1488,7 +1488,6 @@ static void filters_on_cancel (void) {
 }
 
 int filters_cfg_dialog (int page_num) {
-	GValue hborder = G_VALUE_INIT;
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 	GtkWidget *notebook;
@@ -1512,9 +1511,6 @@ int filters_cfg_dialog (int page_num) {
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
-	g_value_init (&hborder, G_TYPE_INT);
-	g_value_set_int (&hborder, 4);
-	g_object_set_property (G_OBJECT (notebook), "tab-hborder", &hborder);
 	gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
 
 	server_filter_page (notebook);

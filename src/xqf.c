@@ -1961,6 +1961,10 @@ void populate_main_window (void) {
 
 	gtk_widget_show (source_treeview);
 
+	/* Restore per-group expand/collapse state from config; fill_source_treeview()
+	 * couldn't do this because source_treeview was NULL when it ran. */
+	source_treeview_restore_expand_state ();
+
 	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (source_treeview)),
 	                  "changed", G_CALLBACK (source_selection_changed_callback), NULL);
 
