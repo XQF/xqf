@@ -76,17 +76,19 @@ Legend: ✅ done · 🔲 pending
    - Implemented in `src/xqf-lists.[ch]`; GObject wrappers in
      `src/xqf-server-item.[ch]`, `src/xqf-player-item.[ch]`.
 
-2. ✅ **Replace `GtkCTree` (server info tree panel)** — stubs in
-   `src/gtk4-compat.h`; no `gtk_ctree_new` / `GTK_CTREE` calls remain in
-   production source.
+2. ✅ **Replace `GtkCTree` (server info tree panel)** — implemented in
+   `src/srv-info.c` using `GtkTreeView` + `GtkTreeStore` (the pragmatic GTK4
+   option; see note below). No `gtk_ctree_new` / `GTK_CTREE` calls remain.
+   > **Option not taken**: `GtkTreeListModel` + `GtkColumnView` would keep
+   > everything in the new list API but is significantly more complex for a
+   > small read-only panel with a few dozen rows. `GtkTreeView` still compiles
+   > cleanly in GTK4 and is the correct fit here.
 
 3. ✅ **Replace `GtkVBox` / `GtkHBox`** — no `gtk_vbox_new` / `gtk_hbox_new`
-   calls remain in production source; compat shims in `gtk4-compat.h` map
-   them to `gtk_box_new()`.
+   calls remain in production source.
 
 4. ✅ **Replace `GtkTable`** — no `gtk_table_new` / `gtk_table_attach` calls
-   remain in production source; compat shims in `gtk4-compat.h` map them to
-   `GtkGrid`.
+   remain in production source.
 
 5. ✅ **Remove `gdk_window_set_decorations()` / `gdk_window_set_functions()`**
    — no such calls exist in `src/dialogs.c`.
@@ -95,22 +97,28 @@ Legend: ✅ done · 🔲 pending
    blocks remain in source; only `GUI_GTK4` is defined (in `CMakeLists.txt`).
 
 7. ✅ **Drop `xqf-gtk2.ui`**, rename `xqf-gtk3.ui` to `xqf.ui`, update it for
-   GTK4 widget/property names. Main window rewritten to use `GtkBox` layout,
-   `GtkPopoverMenuBar` + `GMenuModel`, and GTK4 pane/scroll structure.
+   GTK4 widget/property names. Old `xqf-gtk2.ui` and `xqf-gtk3.ui` deleted.
+   Main window rewritten to use `GtkBox` layout, `GtkPopoverMenuBar` +
+   `GMenuModel`, and GTK4 pane/scroll structure.
 
 8. ✅ **Update `CMakeLists.txt`**: single `pkg_check_modules(GTK REQUIRED gtk4)`;
    no `GTK_TARGET` variable or dual-target logic remains.
 
-9. ✅ **Replace `gtk_builder_connect_signals()`** — stubbed out as a no-op in
-   `gtk4-compat.h`; all signal connections are explicit `g_signal_connect`
-   calls.
+9. ✅ **Replace `gtk_builder_connect_signals()`** — dead call removed from
+   `src/xqf.c`; all signal connections are explicit `g_signal_connect` calls.
 
-10. 🔲 **Replace `gtk_dialog_run()`** (removed in GTK4) with async `response`
-    signal handling throughout `src/dialogs.c` and callers.
+10. ✅ **Replace `gtk_dialog_run()`** — no `gtk_dialog_run()` calls existed;
+    the codebase used `gtk_main()`/`gtk_main_quit()` compat shims for modal
+    loops. All 10 dialog call sites replaced with `dialog_run_modal(window)`
+    (proper nested `GMainLoop` that auto-quits on window destroy). `utils.c`
+    external-program loop given its own `GMainLoop *loop` field. `xqf.c` main
+    app loop replaced with an explicit `GMainLoop`. `gtk_main`/`gtk_main_quit`
+    removed from `gtk4-compat.h`.
 
 11. ✅ **Replace `GtkContainer` API** — `gtk_container_add()` and
-    `gtk_container_set_border_width()` shimmed in `gtk4-compat.h` to dispatch
-    to the correct GTK4 child-setter per container type.
+    `gtk_container_set_border_width()` shimmed in `gtk4-compat.h`; calls
+    remain in source but dispatch correctly to GTK4 child-setters. Native
+    GTK4 call sites can be adopted incrementally alongside other dialog work.
 
 ---
 
