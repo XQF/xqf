@@ -60,7 +60,6 @@ struct list_def {
 
 extern struct list_def server_list_def;
 extern struct list_def player_list_def;
-extern struct list_def srvinf_list_def;
 
 extern GtkWidget *pane1_widget;
 extern GtkWidget *pane2_widget;
@@ -71,7 +70,7 @@ extern GtkWidget *main_window;
 extern GtkWidget *source_ctree;
 extern GtkWidget *server_view;   /* GtkColumnView */
 extern GtkWidget *player_view;   /* GtkColumnView */
-extern GtkCTree  *srvinf_ctree;
+extern GtkWidget *srvinf_treeview;
 
 extern GtkWidget *view_hostnames_menu_item;
 extern GtkWidget *view_defport_menu_item;
@@ -84,12 +83,6 @@ extern GtkWidget *top_window (void);
 extern GtkWidget *server_filter_widget[];
 
 extern void print_status (GtkWidget *sbar, char *fmt, ...);
-
-extern GtkWidget *create_ctree_widget (GtkWidget *scrollwin, struct list_def *cldef);
-
-extern int list_change_sort_mode (struct list_def *cldef, int col);
-
-extern void list_sort_column (GtkWidget *widget, int column, struct list_def *cldef);
 
 extern void source_ctree_show_node_status (GtkWidget *ctree, struct master *m);
 

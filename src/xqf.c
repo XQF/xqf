@@ -101,7 +101,7 @@ GtkWidget  *main_window = NULL;
 GtkWidget  *source_ctree = NULL;
 GtkWidget  *server_view = NULL;
 GtkWidget  *player_view = NULL;
-GtkCTree   *srvinf_ctree = NULL;
+GtkWidget  *srvinf_treeview = NULL;
 
 GtkEditable *selection_manager = NULL;
 
@@ -544,7 +544,7 @@ void stat_lists_server_handler (struct stat_job *job, struct server *s) {
 			(*job->delayed.refresh_handler) (job);
 		}
 		player_list_set_server (s);
-		srvinf_ctree_set_server (s);
+		srvinf_treeview_set_server (s);
 	}
 }
 
@@ -842,7 +842,7 @@ void launch_server_handler (struct stat_job *job, struct server *s) {
 
 	if (s == cur_server) {
 		player_list_set_server (s);
-		srvinf_ctree_set_server (s);
+		srvinf_treeview_set_server (s);
 	}
 
 	// no connection defined, maybe because of a hostname instead of ip specified
@@ -1000,15 +1000,6 @@ int player_list_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer
 	return compare_players (p1, p2, gtk_clist_get_sort_column (clist));
 }
 
-
-int srvinf_list_compare_func (GtkCList *clist, gconstpointer ptr1, gconstpointer ptr2) {
-	GtkCListRow *row1 = (GtkCListRow *) ptr1;
-	GtkCListRow *row2 = (GtkCListRow *) ptr2;
-	const char **i1 = (const char **) row1->data;
-	const char **i2 = (const char **) row2->data;
-
-	return compare_srvinfo (i1, i2, gtk_clist_get_sort_column (clist));
-}
 
 
 void update_source_callback (GtkWidget *widget, gpointer data) {
@@ -1346,25 +1337,7 @@ void copy_server_callback (GtkWidget *widget, gpointer data) {
 }
 
 void copy_server_info_callback (GtkWidget *widget, gpointer data) {
-	GList *selection = gtk_clist_get_selection (GTK_CLIST (srvinf_ctree));
-	int pos = 0;
-
-	gtk_editable_delete_text (selection_manager, 0, -1);
-
-	if (!g_list_length (selection)) {
-		gtk_editable_select_region (selection_manager, 0, 0);
-	}
-	else {
-		for (; selection; selection = selection->next) {
-			GtkCTreeNode* node = GTK_CTREE_NODE (selection->data);
-			char* txt = NULL;
-
-			gtk_ctree_node_get_text (GTK_CTREE (srvinf_ctree), node, 1, &txt);
-			gtk_editable_insert_text (selection_manager, txt, strlen (txt), &pos);
-		}
-		gtk_editable_select_region (selection_manager, 0, -1);
-	}
-	gtk_editable_copy_clipboard (selection_manager);
+	srvinf_copy_selected_values (selection_manager);
 }
 
 void copy_text_to_clipboard (const char* text) {
@@ -1680,12 +1653,6 @@ void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, in
 
 /* TODO: re-implement with GtkGestureClick + GtkPopoverMenu (Phase 1) */
 int server_view_event_cb (GtkWidget *widget, GdkEvent *event) {
-	(void)widget; (void)event;
-	return FALSE;
-}
-
-/* TODO: re-implement with GtkGestureClick + GtkPopoverMenu (Phase 1) */
-int server_info_event_cb (GtkWidget *widget, GdkEvent *event) {
 	(void)widget; (void)event;
 	return FALSE;
 }
@@ -2034,19 +2001,13 @@ void populate_main_window (void) {
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player")));
 	gtk_widget_show (player_view);
 
-	// Server Info CList
+	// Server Info TreeView
 
-	srvinf_ctree = GTK_CTREE (create_ctree_widget (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")), &srvinf_list_def));
-
-	g_signal_connect (srvinf_ctree, "click_column", G_CALLBACK (list_sort_column), &srvinf_list_def);
-	g_signal_connect (srvinf_ctree, "event", G_CALLBACK (server_info_event_cb), NULL);
-
-	gtk_clist_set_compare_func (GTK_CLIST (srvinf_ctree), (GtkCListCompareFunc) srvinf_list_compare_func);
-
-	gtk_widget_show (GTK_WIDGET (srvinf_ctree));
+	srvinf_treeview = srvinf_treeview_new (
+		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")));
+	gtk_widget_show (srvinf_treeview);
 
 	i = calculate_row_height (GTK_WIDGET (server_view), games[Q1_SERVER].pix);
-	gtk_clist_set_row_height (GTK_CLIST (srvinf_ctree), i);
 	gtk_clist_set_row_height (GTK_CLIST (source_ctree), i);
 
 	// Status Bar & Progress Bar

@@ -19,12 +19,19 @@
 #ifndef __SRV_INFO_H__
 #define __SRV_INFO_H__
 
-
+#include <gtk/gtk.h>
 #include "xqf.h"
 
+enum srvinf_col {
+	SRVINF_COL_RULE     = 0,
+	SRVINF_COL_VALUE    = 1,
+	SRVINF_COL_INFO_PTR = 2,
+	SRVINF_COL_COUNT
+};
 
-extern void srvinf_ctree_set_server (struct server *s);
-
+extern GtkWidget *srvinf_treeview_new (GtkWidget *scrollwin);
+extern void srvinf_treeview_set_server (struct server *s);
+extern void srvinf_copy_selected_values (GtkEditable *dest);
 
 #endif /* __SRV_INFO_H__ */
 

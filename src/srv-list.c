@@ -127,7 +127,7 @@ void server_list_sync_selection (void) {
 	gtk_bitset_unref (sel);
 
 	player_list_set_server (cur_server);
-	srvinf_ctree_set_server (cur_server);
+	srvinf_treeview_set_server (cur_server);
 	set_widgets_sensitivity (builder);
 }
 

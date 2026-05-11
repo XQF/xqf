@@ -20,10 +20,13 @@
 #include <stdlib.h>     /* strtoul */
 #include <string.h>     /* strcmp */
 
+#include <glib/gi18n.h>
 #include "xqf-ui.h"
 #include "sort.h"
 #include "pixmaps.h"
 #include "srv-info.h"
+
+static GtkTreeStore *srvinf_store = NULL;
 
 // TODO: put into external file
 
@@ -449,85 +452,160 @@ static char *woet_voteflags[WOET_VOTEFLAGS] = {
 	"No Muting",                /*  65536 */
 };
 
-static void show_extended_flags (const char *str, char *names[], int size,
-		int showall, GtkCTreeNode *parent) {
-	unsigned long flags;
-	unsigned long mask;
-	char *text[2];
+static void
+show_extended_flags (const char *str, char *names[], int size,
+                     int showall, GtkTreeIter *parent)
+{
+	unsigned long flags, mask;
 	char buf[32];
 	int i;
 
 	if (!str || !*str)
 		return;
-
 	flags = strtoul (str, NULL, 10);
 	if (flags == 0 || flags == ULONG_MAX)
 		return;
 
 	mask = 1;
-
 	for (i = 0; flags || (showall && i < size); i++) {
 		if ((showall && names[i]) || (flags & mask) != 0) {
-			g_snprintf (buf, 32, "%lu", mask);
-
-			text[0] = buf;
-			text[1] = (i < size && names[i])? names[i] : "?????";
-
-			gtk_ctree_insert_node (srvinf_ctree, parent, NULL, text, 4,
-					((flags & mask) != 0)? gplus_pix.pix : rminus_pix.pix,
-					((flags & mask) != 0)? gplus_pix.mask : rminus_pix.mask,
-					((flags & mask) != 0)? gplus_pix.pix : rminus_pix.pix,
-					((flags & mask) != 0)? gplus_pix.mask : rminus_pix.mask,
-					TRUE, FALSE);
+			GtkTreeIter child;
+			g_snprintf (buf, sizeof buf, "%lu", mask);
+			gtk_tree_store_append (srvinf_store, &child, parent);
+			gtk_tree_store_set (srvinf_store, &child,
+				SRVINF_COL_RULE,     buf,
+				SRVINF_COL_VALUE,    (i < size && names[i]) ? names[i] : "?????",
+				SRVINF_COL_INFO_PTR, NULL,
+				-1);
 		}
-
 		flags &= ~mask;
 		mask <<= 1;
 	}
 }
 
-static void show_split_value (const char *str, const char* separator, GtkCTreeNode *parent) {
-	char** values;
-	char* text[2];
-	unsigned i;
-
-	values = g_strsplit(str, separator, 0);
-
-	for (i=0; values && values[i]; ++i) {
-		text[0] = values[i];
-		text[1] = NULL;
-		gtk_ctree_insert_node (srvinf_ctree, parent, NULL, text, 4,
-				NULL, NULL,
-				NULL, NULL,
-				TRUE, FALSE);
+static void
+show_split_value (const char *str, const char *separator, GtkTreeIter *parent)
+{
+	char **values = g_strsplit (str, separator, 0);
+	for (unsigned i = 0; values && values[i]; i++) {
+		GtkTreeIter child;
+		gtk_tree_store_append (srvinf_store, &child, parent);
+		gtk_tree_store_set (srvinf_store, &child,
+			SRVINF_COL_RULE,     values[i],
+			SRVINF_COL_VALUE,    NULL,
+			SRVINF_COL_INFO_PTR, NULL,
+			-1);
 	}
+	g_strfreev (values);
+}
 
-	g_strfreev(values);
+/* Sort function: compare top-level rows via compare_srvinfo; child rows
+ * (INFO_PTR == NULL) always compare equal so they stay in insertion order. */
+static gint
+srvinf_sort_func (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b,
+                  gpointer user_data)
+{
+	gpointer p_a = NULL, p_b = NULL;
+	gtk_tree_model_get (model, a, SRVINF_COL_INFO_PTR, &p_a, -1);
+	gtk_tree_model_get (model, b, SRVINF_COL_INFO_PTR, &p_b, -1);
+	if (!p_a || !p_b)
+		return 0;
+	return compare_srvinfo ((const char **)p_a, (const char **)p_b,
+	                        (enum isort_mode) GPOINTER_TO_INT (user_data));
+}
+
+GtkWidget *
+srvinf_treeview_new (GtkWidget *scrollwin)
+{
+	srvinf_store = gtk_tree_store_new (SRVINF_COL_COUNT,
+	                                   G_TYPE_STRING,   /* RULE */
+	                                   G_TYPE_STRING,   /* VALUE */
+	                                   G_TYPE_POINTER); /* INFO_PTR */
+
+	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (srvinf_store),
+		SRVINF_COL_RULE, srvinf_sort_func,
+		GINT_TO_POINTER (SORT_INFO_RULE), NULL);
+	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (srvinf_store),
+		SRVINF_COL_VALUE, srvinf_sort_func,
+		GINT_TO_POINTER (SORT_INFO_VALUE), NULL);
+
+	GtkWidget *tv = gtk_tree_view_new_with_model (GTK_TREE_MODEL (srvinf_store));
+	g_object_unref (srvinf_store);
+
+	GtkCellRenderer *cr;
+	GtkTreeViewColumn *col;
+
+	cr = gtk_cell_renderer_text_new ();
+	col = gtk_tree_view_column_new_with_attributes (
+		_("Rule"), cr, "text", SRVINF_COL_RULE, NULL);
+	gtk_tree_view_column_set_resizable (col, TRUE);
+	gtk_tree_view_column_set_fixed_width (col, 90);
+	gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_view_column_set_sort_column_id (col, SRVINF_COL_RULE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), col);
+
+	cr = gtk_cell_renderer_text_new ();
+	col = gtk_tree_view_column_new_with_attributes (
+		_("Value"), cr, "text", SRVINF_COL_VALUE, NULL);
+	gtk_tree_view_column_set_resizable (col, TRUE);
+	gtk_tree_view_column_set_sort_column_id (col, SRVINF_COL_VALUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), col);
+
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), tv);
+
+	return tv;
+}
+
+void
+srvinf_copy_selected_values (GtkEditable *dest)
+{
+	GtkTreeView      *tv  = GTK_TREE_VIEW (srvinf_treeview);
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (tv);
+	GtkTreeModel     *model;
+	GList *rows = gtk_tree_selection_get_selected_rows (sel, &model);
+	int pos = 0;
+
+	gtk_editable_delete_text (dest, 0, -1);
+
+	if (!rows) {
+		gtk_editable_select_region (dest, 0, 0);
+	} else {
+		for (GList *l = rows; l; l = l->next) {
+			GtkTreeIter iter;
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) l->data);
+			gchar *val = NULL;
+			gtk_tree_model_get (model, &iter, SRVINF_COL_VALUE, &val, -1);
+			if (val && *val)
+				gtk_editable_insert_text (dest, val, strlen (val), &pos);
+			g_free (val);
+		}
+		g_list_free_full (rows, (GDestroyNotify) gtk_tree_path_free);
+		gtk_editable_select_region (dest, 0, -1);
+	}
+	gtk_editable_copy_clipboard (dest);
 }
 
 // TODO: get rid of switch, put game specific functions into game struct
-void srvinf_ctree_set_server (struct server *s) {
-	char *text[2];
+void srvinf_treeview_set_server (struct server *s) {
 	char **info;
-	GtkCTreeNode *node;
 
-	if (!s || s->info == NULL) {
-		gtk_clist_clear (GTK_CLIST (srvinf_ctree));
+	gtk_tree_store_clear (srvinf_store);
+
+	if (!s || s->info == NULL)
 		return;
-	}
 
 	info = s->info;
 
-	gtk_clist_freeze (GTK_CLIST (srvinf_ctree));
-	gtk_clist_clear (GTK_CLIST (srvinf_ctree));
-
 	while (info[0]) {
-		text[0] = (info[0])? info[0] : NULL;
-		text[1] = (info[1])? info[1] : NULL;
-
-		node = gtk_ctree_insert_node (srvinf_ctree, NULL, NULL, text, 4,
-				NULL, NULL, NULL, NULL, FALSE, TRUE);
-		gtk_ctree_node_set_row_data (srvinf_ctree, node, info);
+		GtkTreeIter node;
+		gtk_tree_store_append (srvinf_store, &node, NULL);
+		gtk_tree_store_set (srvinf_store, &node,
+			SRVINF_COL_RULE,     info[0] ? info[0] : "",
+			SRVINF_COL_VALUE,    info[1] ? info[1] : "",
+			SRVINF_COL_INFO_PTR, info,
+			-1);
 
 		switch (s->type) {
 
@@ -536,11 +614,11 @@ void srvinf_ctree_set_server (struct server *s) {
 					if (s->game && (!g_ascii_strcasecmp (s->game, "ctf") ||
 								!g_ascii_strcasecmp (s->game, "starwars"))) {
 						show_extended_flags (info[1], qw_teamplay_ctf, QW_TEAMPLAY_CTF,
-								FALSE, node);
+								FALSE, &node);
 					}
 					else if (s->game && !g_ascii_strcasecmp (s->game, "fortress")) {
 						show_extended_flags (info[1], qw_teamplay_fortress, QW_TEAMPLAY_TF,
-								FALSE, node);
+								FALSE, &node);
 					}
 				}
 				break;
@@ -549,55 +627,55 @@ void srvinf_ctree_set_server (struct server *s) {
 				if (info[0] && !strcmp (info[0], "dmflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "gxmod", 5)) {
 						show_extended_flags (info[1], q2_gxmod_dmflags, Q2_GXMOD_DMFLAGS,
-								FALSE, node);
+								FALSE, &node);
 					}
 					else if (s->game && !g_ascii_strncasecmp (s->game, "xatrix", 6)) {
 						show_extended_flags (info[1], q2_xatrix_dmflags, Q2_XATRIX_DMFLAGS,
-								FALSE, node);
+								FALSE, &node);
 					}
 					else if (s->game && !g_ascii_strncasecmp (s->game, "rogue", 5)) {
 						show_extended_flags (info[1], q2_rogue_dmflags, Q2_ROGUE_DMFLAGS,
-								FALSE, node);
+								FALSE, &node);
 					}
 					else {
-						show_extended_flags (info[1], q2_dmflags, Q2_DMFLAGS, FALSE, node);
+						show_extended_flags (info[1], q2_dmflags, Q2_DMFLAGS, FALSE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "ctfflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "lmctf", 5)) {
 						show_extended_flags (info[1], q2_lmctf_ctfflags, Q2_LMCTF_CTFFLAGS,
-								FALSE, node);
+								FALSE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "runes")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "lmctf", 5)) {
 						show_extended_flags (info[1], q2_lmctf_runes, Q2_LMCTF_RUNES,
-								TRUE, node);
+								TRUE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "expflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "expert", 6)) {
 						show_extended_flags (info[1], q2_expert_expflags,
-								Q2_EXPERT_EXPFLAGS, FALSE, node);
+								Q2_EXPERT_EXPFLAGS, FALSE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "weapflags")) {
 					if (s->game && (!g_ascii_strncasecmp (s->game, "gxmod", 5) ||
 								!g_ascii_strcasecmp (s->game, "gx"))) {
 						show_extended_flags (info[1], q2_gxmod_weapflags,
-								Q2_GXMOD_WEAPFLAGS, TRUE, node);
+								Q2_GXMOD_WEAPFLAGS, TRUE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "powerupflags")) {
 					if (s->game && !g_ascii_strncasecmp (s->game, "gxmod", 5)) {
 						show_extended_flags (info[1], q2_gxmod_powerupflags,
-								Q2_GXMOD_POWERUPFLAGS, TRUE, node);
+								Q2_GXMOD_POWERUPFLAGS, TRUE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "wfflags")) {
 					if (s->game && !g_ascii_strcasecmp (s->game, "wf")) {
 						show_extended_flags (info[1], q2_wf_wfflags, Q2_WF_WFFLAGS,
-								FALSE, node);
+								FALSE, &node);
 					}
 				}
 				break;
@@ -605,48 +683,48 @@ void srvinf_ctree_set_server (struct server *s) {
 			case Q3_SERVER:
 				if (info[0] && !strcmp (info[0], "dmflags")) {
 					if (s->game && !g_ascii_strcasecmp (s->game, "generations")) {
-						show_extended_flags (info[1], q3_generations_dmflags, Q3_GENERATIONS_DMFLAGS, FALSE, node);
+						show_extended_flags (info[1], q3_generations_dmflags, Q3_GENERATIONS_DMFLAGS, FALSE, &node);
 					}
 					else if (s->game && !g_ascii_strcasecmp (s->game, "freeze")) {
-						show_extended_flags (info[1], q3_freeze_dmflags, Q3_FREEZE_DMFLAGS, FALSE, node);
+						show_extended_flags (info[1], q3_freeze_dmflags, Q3_FREEZE_DMFLAGS, FALSE, &node);
 					}
 					else {
-						show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, node);
+						show_extended_flags (info[1], q3_dmflags, Q3_DMFLAGS, FALSE, &node);
 					}
 				}
 				else if (info[0] && !g_ascii_strcasecmp (info[0], "g_allowvote")) {
 					if (s->game && !g_ascii_strcasecmp (s->game, "q3ut3")) {
-						show_extended_flags (info[1], q3_q3ut3_voteflags, Q3_Q3UT3_VOTEFLAGS, FALSE, node);
+						show_extended_flags (info[1], q3_q3ut3_voteflags, Q3_Q3UT3_VOTEFLAGS, FALSE, &node);
 					}
 				}
 				else if (info[0] && !g_ascii_strcasecmp (info[0], "g_gear")) {
 					if (s->game && !g_ascii_strcasecmp (s->game, "q3ut3")) {
-						show_extended_flags (info[1], q3_q3ut3_gearflags, Q3_Q3UT3_GEARFLAGS, FALSE, node);
+						show_extended_flags (info[1], q3_q3ut3_gearflags, Q3_Q3UT3_GEARFLAGS, FALSE, &node);
 					}
 				}
 				else if (info[0] && !strcmp (info[0], "genflags")) {
 					if (s->game && !g_ascii_strcasecmp (s->game, "generations")) {
-						show_extended_flags (info[1], q3_generations_genflags, Q3_GENERATIONS_GENFLAGS, FALSE, node);
+						show_extended_flags (info[1], q3_generations_genflags, Q3_GENERATIONS_GENFLAGS, FALSE, &node);
 					}
 				}
 				break;
 
 			case WO_SERVER:
 				if (info[0] && !g_ascii_strcasecmp (info[0], "g_voteFlags")) {
-					show_extended_flags (info[1], rtcw_voteflags, RTCW_VOTEFLAGS, FALSE, node);
+					show_extended_flags (info[1], rtcw_voteflags, RTCW_VOTEFLAGS, FALSE, &node);
 				}
 				break;
 
 			case WOET_SERVER:
 				if (info[0] && !g_ascii_strcasecmp (info[0], "voteflags")) {
-					show_extended_flags (info[1], woet_voteflags, WOET_VOTEFLAGS, FALSE, node);
+					show_extended_flags (info[1], woet_voteflags, WOET_VOTEFLAGS, FALSE, &node);
 				}
 				break;
 
 			case UT2_SERVER:
 			case UT2004_SERVER:
 				if (info[0] && !g_ascii_strcasecmp (info[0], "mutator")) {
-					show_split_value(info[1], "|", node);
+					show_split_value(info[1], "|", &node);
 				}
 				break;
 
@@ -657,7 +735,7 @@ void srvinf_ctree_set_server (struct server *s) {
 		info += 2;
 	}
 
-	gtk_ctree_sort_node (srvinf_ctree, NULL);
-	gtk_clist_thaw (GTK_CLIST (srvinf_ctree));
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (srvinf_store),
+	                                      SRVINF_COL_RULE, GTK_SORT_ASCENDING);
 }
 
