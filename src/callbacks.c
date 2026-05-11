@@ -39,6 +39,16 @@ void reset_main_status_bar (GtkBuilder *builder) {
 	print_status (GTK_WIDGET (gtk_builder_get_object (builder, "main-status-bar")), ngettext("%d server", "%d servers", nrows), nrows);
 }
 
+extern GActionGroup *win_action_group (void);
+
+static void set_action_enabled (const char *name, gboolean enabled) {
+	GActionGroup *grp = win_action_group ();
+	if (!grp) return;
+	GAction *action = g_action_map_lookup_action (G_ACTION_MAP (grp), name);
+	if (action)
+		g_simple_action_set_enabled (G_SIMPLE_ACTION (action), enabled);
+}
+
 void set_widgets_sensitivity (GtkBuilder *builder) {
 	gboolean selected = (cur_server != NULL);
 	int sens;
@@ -46,10 +56,6 @@ void set_widgets_sensitivity (GtkBuilder *builder) {
 	int source_is_favorites;
 	int masters_to_update;
 	int masters_to_delete;
-
-	// Every button with callback that can modify its sensitivity
-	// should be explicitly put to GTK_STATE_NORMAL state before
-	// changing its insensitivity
 
 	source_is_favorites = (cur_source != NULL && cur_source->next == NULL && (struct master *) cur_source->data == favorites);
 
@@ -63,102 +69,72 @@ void set_widgets_sensitivity (GtkBuilder *builder) {
 
 	sens = (!stat_process && cur_server);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_properties_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_properties_menu_item")), sens);
+	set_action_enabled ("properties", sens);
 
 	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_CONNECT) != 0);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "connect_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_connect_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), GTK_STATE_NORMAL);
+	set_action_enabled ("connect", sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), sens);
 
 	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_SPECTATE) != 0 && (cur_server->flags & SERVER_SPECTATE) != 0);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "observe_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_observe_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), GTK_STATE_NORMAL);
+	set_action_enabled ("observe", sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), sens);
 
 	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_RECORD) != 0);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "record_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_record_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")), GTK_STATE_NORMAL);
+	set_action_enabled ("record-demo", sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")), sens);
 
 	sens = (!stat_process && cur_server && (games[cur_server->type].flags & GAME_RCON) != 0);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "rcon_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_rcon_menu_item")), sens);
+	set_action_enabled ("rcon", sens);
 
 	sens = (!stat_process && selected);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refrsel_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), GTK_STATE_NORMAL);
+	set_action_enabled ("refresh-selected", sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), sens);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "resolve_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_resolve_menu_item")), sens);
+	set_action_enabled ("dns-lookup", sens);
 
 	sens = (!stat_process);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "file_statistics_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "add_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_add_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_update_master_builtin_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_update_master_gslist_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_add_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_player_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_find_again_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "player_filter_menu_item")), sens);
+	set_action_enabled ("statistics", sens);
+	set_action_enabled ("add-server", sens);
+	set_action_enabled ("add-default-masters", sens);
+	set_action_enabled ("add-gslist-masters", sens);
+	set_action_enabled ("add-master", sens);
+	set_action_enabled ("find-player", sens);
+	set_action_enabled ("find-again", sens);
 	gtk_widget_set_sensitive (source_treeview, sens);
 
 	sens = (!stat_process && selected && !source_is_favorites);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "favadd_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_favadd_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "server_favadd_menu_item")), sens);
+	set_action_enabled ("add-to-favorites", sens);
 
 	sens = (!stat_process && masters_to_delete);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_delete_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_clear_master_servers_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_delete_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_clear_master_servers_menu_item")), sens);
+	set_action_enabled ("delete-master", sens);
+	set_action_enabled ("clear-servers", sens);
 
 	// you can only edit one server a time, no groups and no favorites
 	sens = (cur_source && cur_source->next == NULL && ! ((struct master *) cur_source->data)->isgroup && ! source_is_favorites);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "source_edit_master_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "edit_edit_master_menu_item")), sens);
+	set_action_enabled ("rename-master", sens);
 
 	sens = (!stat_process && server_store && g_list_model_get_n_items (G_LIST_MODEL (server_store)) > 0);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_refresh_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), GTK_STATE_NORMAL);
+	set_action_enabled ("refresh", sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), sens);
-
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_hostnames_menu_item")), sens);
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_defport_menu_item")), sens);
+	set_action_enabled ("show-hostnames", sens);
+	set_action_enabled ("show-default-port", sens);
 
 	sens = (!stat_process && masters_to_update);
 
-	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "view_update_menu_item")), sens);
-
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")), GTK_STATE_NORMAL);
+	set_action_enabled ("update-from-master", sens);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")), sens);
 
 	sens = (stat_process != NULL);
 
-	gtk_widget_set_state     (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")), GTK_STATE_NORMAL);
 	gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")), sens);
 
 	sens = (stat_process == NULL);
@@ -167,10 +143,6 @@ void set_widgets_sensitivity (GtkBuilder *builder) {
 		if (!filter_buttons[i]) {
 			continue;
 		}
-		gtk_widget_set_state (filter_buttons[i], GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (filter_buttons[i], sens);
-		if (GTK_IS_TOGGLE_BUTTON (filter_buttons[i]) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_buttons[i]))) {
-			gtk_widget_set_state (filter_buttons[i], GTK_STATE_ACTIVE);
-		}
 	}
 }

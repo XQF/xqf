@@ -1353,15 +1353,20 @@ static void get_new_defaults (void) {
 
 	config_pop_prefix();
 
-	/* These are set from chained calls to "activate" callbacks */
-
-	gtk_check_menu_item_set_active (
-			GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_hostnames_menu_item")),
-			gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_hostnames_check_button)));
-
-	gtk_check_menu_item_set_active (
-			GTK_CHECK_MENU_ITEM (gtk_builder_get_object (builder, "view_defport_menu_item")),
-			gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_defport_check_button)));
+	/* Sync toggle action states from the preferences check buttons */
+	{
+		extern GActionGroup *win_action_group (void);
+		GActionGroup *grp = win_action_group ();
+		if (grp) {
+			GAction *a;
+			a = g_action_map_lookup_action (G_ACTION_MAP (grp), "show-hostnames");
+			if (a) g_simple_action_set_state (G_SIMPLE_ACTION (a),
+				g_variant_new_boolean (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_hostnames_check_button))));
+			a = g_action_map_lookup_action (G_ACTION_MAP (grp), "show-default-port");
+			if (a) g_simple_action_set_state (G_SIMPLE_ACTION (a),
+				g_variant_new_boolean (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_defport_check_button))));
+		}
+	}
 
 	//  i = gtk_notebook_get_current_page (GTK_NOTEBOOK (profile_notebook));
 	//  config_set_string ("/" CONFIG_FILE "/Player Profile/game", type2id (i));
@@ -4561,7 +4566,7 @@ void preferences_dialog (int page_num) {
 
 	gtk_widget_show (window);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 
