@@ -1560,12 +1560,10 @@ void rcon_callback (GtkWidget *widget, gpointer data) {
 
 void server_view_select_cb (GtkWidget *widget, int row,
 		int column, GdkEvent *event, GtkWidget *button) {
-	/* TODO: re-implement double-click launch with GtkGestureClick (Phase 1) */
 	(void)event; (void)column; (void)button;
 	debug (7, "server_view_select_cb() -- Row %d", row);
 	server_list_sync_selection ();
 }
-
 
 void server_view_unselect_cb (GtkWidget *widget, int row,
 		int column, GdkEvent *event, GtkWidget *button) {
@@ -1573,23 +1571,92 @@ void server_view_unselect_cb (GtkWidget *widget, int row,
 	server_list_sync_selection ();
 }
 
+/* Double-click on server row → connect */
+static void server_view_double_click_cb (GtkGestureClick *gesture G_GNUC_UNUSED,
+                                          int n_press, double x G_GNUC_UNUSED,
+                                          double y G_GNUC_UNUSED, gpointer data G_GNUC_UNUSED) {
+	if (n_press == 2)
+		launch_normal_callback (NULL);
+}
 
-/* Deal with key-presses in the server pane */
-/* TODO: re-implement with GtkEventControllerKey (Phase 1) */
-gboolean server_view_keypress_cb (GtkWidget *widget, GdkEventKey *event) {
-	(void)widget; (void)event;
+/* Key-press on server list: Enter=connect, Space=refresh-selected */
+static gboolean server_view_key_cb (GtkEventControllerKey *ctrl G_GNUC_UNUSED,
+                                     guint keyval, guint keycode G_GNUC_UNUSED,
+                                     GdkModifierType state G_GNUC_UNUSED,
+                                     gpointer data G_GNUC_UNUSED) {
+	switch (keyval) {
+	case GDK_KEY_Return:
+	case GDK_KEY_KP_Enter:
+		launch_normal_callback (NULL);
+		return TRUE;
+	case GDK_KEY_space:
+		refresh_selected_callback (NULL, NULL);
+		return TRUE;
+	}
 	return FALSE;
+}
+
+/* Right-click on server list → popover context menu */
+static GtkWidget *server_context_popover = NULL;
+
+static void server_view_right_click_cb (GtkGestureClick *gesture,
+                                         int n_press G_GNUC_UNUSED,
+                                         double x, double y,
+                                         gpointer data G_GNUC_UNUSED) {
+	if (!cur_server) return;
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+
+	if (!server_context_popover) {
+		GMenu *menu = g_menu_new ();
+		g_menu_append (menu, _("Connect"),           "win.connect");
+		g_menu_append (menu, _("Observe"),           "win.observe");
+		g_menu_append (menu, _("Record Demo"),       "win.record-demo");
+		g_menu_append (menu, _("Refresh Selected"),  "win.refresh-selected");
+		g_menu_append (menu, _("Server Properties"), "win.properties");
+		g_menu_append (menu, _("Add to Favorites"),  "win.add-to-favorites");
+		g_menu_append (menu, _("DNS Lookup"),        "win.dns-lookup");
+		g_menu_append (menu, _("RCON"),              "win.rcon");
+		server_context_popover = gtk_popover_menu_new_from_model (G_MENU_MODEL (menu));
+		g_object_unref (menu);
+		gtk_widget_set_parent (server_context_popover, widget);
+	}
+
+	GdkRectangle rect = { (int)x, (int)y, 1, 1 };
+	gtk_popover_set_pointing_to (GTK_POPOVER (server_context_popover), &rect);
+	gtk_popover_popup (GTK_POPOVER (server_context_popover));
+}
+
+/* Right-click on player list → popover context menu */
+static GtkWidget *player_context_popover = NULL;
+
+static void player_view_right_click_cb (GtkGestureClick *gesture,
+                                         int n_press G_GNUC_UNUSED,
+                                         double x, double y,
+                                         gpointer data G_GNUC_UNUSED) {
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+
+	if (!player_context_popover) {
+		GMenu *menu = g_menu_new ();
+		g_menu_append (menu, _("Add to Red filter"),   "win.player-filter-red");
+		g_menu_append (menu, _("Add to Green filter"), "win.player-filter-green");
+		g_menu_append (menu, _("Add to Blue filter"),  "win.player-filter-blue");
+		player_context_popover = gtk_popover_menu_new_from_model (G_MENU_MODEL (menu));
+		g_object_unref (menu);
+		gtk_widget_set_parent (player_context_popover, widget);
+	}
+
+	GdkRectangle rect = { (int)x, (int)y, 1, 1 };
+	gtk_popover_set_pointing_to (GTK_POPOVER (player_context_popover), &rect);
+	gtk_popover_popup (GTK_POPOVER (player_context_popover));
 }
 
 GtkWidget *server_mapshot_popup = NULL;
 GtkWidget *server_mapshot_popup_image = NULL;
 
-/* TODO: re-implement with GTK4 GtkPopover (Phase 1) */
 void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y, gushort overBrightBits) {
 	(void)imagedata; (void)len; (void)x; (void)y; (void)overBrightBits;
 }
 
-/* TODO: re-implement with GtkGestureClick + GtkPopoverMenu (Phase 1) */
 int server_view_event_cb (GtkWidget *widget, GdkEvent *event) {
 	(void)widget; (void)event;
 	return FALSE;
@@ -1695,13 +1762,6 @@ void add_to_player_filter (unsigned mask) {
 /* TODO: re-implement with GTK4 GtkPopover (Phase 1) */
 void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, int y) {
 	(void)skin; (void)top; (void)bottom; (void)x; (void)y;
-}
-
-
-/* TODO: re-implement with GtkGestureClick + GtkPopoverMenu (Phase 1) */
-int player_view_event_cb (GtkWidget *widget, GdkEvent *event) {
-	(void)widget; (void)event;
-	return FALSE;
 }
 
 
@@ -1926,6 +1986,22 @@ void populate_main_window (void) {
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server")));
 	gtk_widget_show (server_view);
 
+	{
+		GtkGestureClick *dbl = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
+		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (dbl), 1);
+		g_signal_connect (dbl, "pressed", G_CALLBACK (server_view_double_click_cb), NULL);
+		gtk_widget_add_controller (server_view, GTK_EVENT_CONTROLLER (dbl));
+
+		GtkGestureClick *rclick = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
+		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (rclick), 3);
+		g_signal_connect (rclick, "pressed", G_CALLBACK (server_view_right_click_cb), NULL);
+		gtk_widget_add_controller (server_view, GTK_EVENT_CONTROLLER (rclick));
+
+		GtkEventControllerKey *key = GTK_EVENT_CONTROLLER_KEY (gtk_event_controller_key_new ());
+		g_signal_connect (key, "key-pressed", G_CALLBACK (server_view_key_cb), NULL);
+		gtk_widget_add_controller (server_view, GTK_EVENT_CONTROLLER (key));
+	}
+
 	pane3_widget = GTK_WIDGET (gtk_builder_get_object (builder, "paned1"));
 
 	// Player ColumnView
@@ -1933,6 +2009,13 @@ void populate_main_window (void) {
 	player_view = create_player_column_view (
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player")));
 	gtk_widget_show (player_view);
+
+	{
+		GtkGestureClick *rclick = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
+		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (rclick), 3);
+		g_signal_connect (rclick, "pressed", G_CALLBACK (player_view_right_click_cb), NULL);
+		gtk_widget_add_controller (player_view, GTK_EVENT_CONTROLLER (rclick));
+	}
 
 	// Server Info TreeView
 

@@ -67,14 +67,16 @@ targeting `GtkColumnView` is modest, and the benefits are real:
 
 Legend: ✅ done · 🔲 pending
 
-1. ✅ **Replace `GtkCList` (server list, player list)** with `GtkColumnView` +
-   `GtkColumnViewColumn` backed by `GListStore` of `XqfServerItem` /
-   `XqfPlayerItem` objects. Full implementation in `src/xqf-lists.c` (415 lines):
-   - Server list: `GtkMultiSelection`, columns with `GtkCustomSorter` per column
-   - Player list: `GtkSingleSelection`, with same factory/sorter pattern
-   - Both use `GtkSortListModel` to compose sorting with the base store.
-   - Implemented in `src/xqf-lists.[ch]`; GObject wrappers in
-     `src/xqf-server-item.[ch]`, `src/xqf-player-item.[ch]`.
+1. 🔲 **Replace `GtkCList` (server list, player list)** with `GtkColumnView`.
+   Data model and display are done (`src/xqf-lists.c`, GObject wrappers).
+   Interaction layer still needed — GtkCList provided these for free; GtkColumnView does not:
+   - 🔲 **1a** Double-click server to connect (`GtkGestureClick`)
+   - 🔲 **1b** Keyboard handling — Space=refresh, Enter=connect, Delete=remove
+     (`GtkEventControllerKey`)
+   - 🔲 **1c** Right-click context menu on server list
+     (`GtkGestureClick` + `GtkPopoverMenu`)
+   - 🔲 **1d** Right-click context menu on player list
+   - 🔲 **1e** Game-type filter buttons (were in toolbar; removed during migration)
 
 2. ✅ **Replace `GtkCTree` (server info tree panel)** — implemented in
    `src/srv-info.c` using `GtkTreeView` + `GtkTreeStore` (the pragmatic GTK4
