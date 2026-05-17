@@ -1910,16 +1910,6 @@ static void register_window_actions (GtkWindow *win) {
 	g_object_unref (_win_ag);
 }
 
-static void main_window_surface_resized (GdkSurface *surface G_GNUC_UNUSED,
-                                          GParamSpec *pspec G_GNUC_UNUSED,
-                                          gpointer user_data)
-{
-	/* GTK4 snapshot caching can leave newly-revealed pixels undrawn when
-	 * the window is enlarged.  Force a full repaint so list/tree views
-	 * regenerate their render nodes for the larger area. */
-	gtk_widget_queue_draw (GTK_WIDGET (user_data));
-}
-
 static gboolean create_main_window (void) {
 	GError *error = NULL;
 
@@ -1940,17 +1930,6 @@ static gboolean create_main_window (void) {
 	register_window (main_window);
 
 	gtk_widget_realize (main_window);
-
-	/* GtkWindow is realized above, so its GdkSurface now exists.
-	 * Connect here rather than earlier so the surface pointer is valid. */
-	{
-		GdkSurface *surface = gtk_native_get_surface (GTK_NATIVE (main_window));
-		g_signal_connect (surface, "notify::width",
-		                  G_CALLBACK (main_window_surface_resized), main_window);
-		g_signal_connect (surface, "notify::height",
-		                  G_CALLBACK (main_window_surface_resized), main_window);
-	}
-
 	return TRUE;
 }
 

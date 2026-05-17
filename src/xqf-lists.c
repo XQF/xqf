@@ -292,6 +292,8 @@ create_server_column_view (GtkWidget *scrollwin)
             gtk_column_view_column_new (_(server_list_def.cols[i].name), factory);
         gtk_column_view_column_set_resizable (col, TRUE);
         gtk_column_view_column_set_fixed_width (col, server_list_def.cols[i].width);
+        if (i == 0)
+            gtk_column_view_column_set_expand (col, TRUE);
 
         GtkSorter *sorter = GTK_SORTER (
             gtk_custom_sorter_new (server_col_cmp, GINT_TO_POINTER (i), NULL));
@@ -357,6 +359,8 @@ create_player_column_view (GtkWidget *scrollwin)
             gtk_column_view_column_new (_(player_list_def.cols[i].name), factory);
         gtk_column_view_column_set_resizable (col, TRUE);
         gtk_column_view_column_set_fixed_width (col, player_list_def.cols[i].width);
+        if (i == 0)
+            gtk_column_view_column_set_expand (col, TRUE);
 
         GtkSorter *sorter = GTK_SORTER (
             gtk_custom_sorter_new (player_col_cmp, GINT_TO_POINTER (i), NULL));
