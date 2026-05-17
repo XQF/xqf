@@ -374,7 +374,7 @@ msgstr ""
 #: src/game.c:2304 src/game.c:2346
 #, c-format
 msgid "%s command line is empty."
-msgstr ""
+msgstr "la línia d'ordres de %s està buida."
 
 #: src/game.c:2311 src/game.c:2353
 #, c-format
@@ -1559,11 +1559,11 @@ msgstr ""
 
 #: src/xqf.c:619
 msgid "unreachable"
-msgstr ""
+msgstr "inaccessible"
 
 #: src/xqf.c:619
 msgid "down"
-msgstr ""
+msgstr "aturat"
 
 #: src/xqf.c:628
 #, c-format
