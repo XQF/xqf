@@ -2900,6 +2900,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 	enable_console      = str2bool(game_get_attribute(g->type, "enable_console"));
 	pass_memory_options = str2bool(game_get_attribute(g->type, "pass_memory_options"));
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmdtokens = g_strsplit(g->cmd, " ", 0);
 
 	if (cmdtokens && *cmdtokens[cmdi])
@@ -3912,7 +3913,7 @@ char **get_custom_arguments(enum server_type type, const char *gamestring) {
 	char *arg = NULL;
 	int j;
 	char conf[15];
-	char *token[2];
+	char *token[2] = {NULL, NULL};
 	// int n;
 	char ** ret = NULL;
 	GSList *temp;
@@ -3926,10 +3927,11 @@ char **get_custom_arguments(enum server_type type, const char *gamestring) {
 		g_snprintf (conf, 15, "custom_arg%d", j);
 		arg = g_strdup((char *) temp->data);
 
+		token[0] = token[1] = NULL;
 		// n = tokenize (arg, token, 2, ",");
 		tokenize (arg, token, 2, ",");
 
-		if (!(strcasecmp(token[0], gamestring))) {
+		if (token[0] && !(strcasecmp(token[0], gamestring)) && token[1]) {
 			ret = g_strsplit(token[1], " ", 0);
 			debug(1, "found entry for:%s.  Returning argument:%s\n", gamestring, token[1]);
 			g_free(arg);
