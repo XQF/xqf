@@ -517,7 +517,6 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	GtkWidget *label;
 	GtkWidget *image;
 	GtkWidget *button;
-	GtkWidget *vscrollbar;
 	GtkWidget *hseparator;
 	char srv[256];
 	char buf[256];
@@ -549,10 +548,10 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	rcon_restore_geometry (window);
 
 	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
+	gtk_widget_set_margin_all (vbox, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
 	/* Dialog Title */
@@ -578,22 +577,16 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	/* Text */
 
-	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
 	rcon_text_buffer = gtk_text_buffer_new (NULL);
 	rcon_text = gtk_text_view_new_with_buffer (rcon_text_buffer);
-
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (rcon_text), FALSE);
 	gtk_widget_set_can_focus (rcon_text, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox), rcon_text, TRUE, TRUE, 0);
+
+	hbox = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (hbox), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (hbox), rcon_text);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (rcon_text);
-
-	vscrollbar = gtk_vscrollbar_new (gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text)));
-	gtk_widget_set_can_focus (vscrollbar, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
-	gtk_widget_show (vscrollbar);
-
 	gtk_widget_show (hbox);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
@@ -660,7 +653,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	/* Close Button */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
+	gtk_widget_set_margin_all (hbox, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Close"));

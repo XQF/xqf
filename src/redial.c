@@ -176,8 +176,8 @@ static GtkWidget* create_redialwindow (void) {
 	g_object_ref (G_OBJECT(vbox1));
 	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (vbox1);
-	gtk_container_add (GTK_CONTAINER (redialwindow), vbox1);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 14);
+	gtk_window_set_child (GTK_WINDOW (redialwindow), vbox1);
+	gtk_widget_set_margin_all (vbox1, 14);
 
 	label = gtk_label_new (_("***\n***"));
 	g_object_ref (G_OBJECT(label));
@@ -202,14 +202,14 @@ static GtkWidget* create_redialwindow (void) {
 	g_object_ref (G_OBJECT(launchbutton));
 	g_object_set_data_full (G_OBJECT (redialwindow), "launchbutton", launchbutton, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (launchbutton);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), launchbutton);
+	gtk_box_append (GTK_BOX (hbuttonbox1), launchbutton);
 	gtk_widget_set_can_default (launchbutton, TRUE);
 
 	cancelbutton = gtk_button_new_with_label (_("Cancel"));
 	g_object_ref (G_OBJECT(cancelbutton));
 	g_object_set_data_full (G_OBJECT (redialwindow), "cancelbutton", cancelbutton, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (cancelbutton);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), cancelbutton);
+	gtk_box_append (GTK_BOX (hbuttonbox1), cancelbutton);
 	gtk_widget_set_can_default (cancelbutton, TRUE);
 
 	g_signal_connect (G_OBJECT (launchbutton), "clicked", G_CALLBACK (on_launchbutton_clicked), NULL);
