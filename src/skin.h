@@ -37,9 +37,9 @@ extern guchar *get_q2_skin (char *skin, char *path);
 
 extern void allocate_quake_player_colors (void);
 
-extern void set_bg_color (GtkWidget *widget, int color);
-
-extern GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int));
+extern GtkWidget *make_color_button (int color_idx);
+extern void set_bg_color (GtkWidget *button, int color_idx);
+extern GtkWidget *create_color_popover (void (*callback) (GtkWidget*, int));
 
 extern void qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned char bottom, GSList **cache, struct pixmap *pix);
 

@@ -347,32 +347,6 @@ void set_server_filter_menu_list_text (void){
 }
 
 
-void server_filter_select_callback (GtkWidget *widget, int number) {
-
-	if (!GTK_IS_CHECK_MENU_ITEM (widget)) {
-		g_warning ("no check menu item");
-		return;
-	}
-
-	if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)) == 0) {
-		// signal was triggered for deactivation
-		return;
-	}
-
-	current_server_filter = number;
-
-	filters[FILTER_SERVER].changed = FILTER_CHANGED;
-	filters[FILTER_SERVER].last_changed = filter_time_inc ();
-
-	server_list_build_filtered (cur_server_list, FALSE); // in srv-list.c
-	set_server_filter_menu_list_text ();
-
-	config_push_prefix ("/" CONFIG_FILE "/Server Filter");
-	config_set_int ("current_server_filter", current_server_filter);
-	config_pop_prefix ();
-
-	return;
-}
 
 void start_preferences_dialog (GtkWidget *widget, int page_num) {
 	preferences_dialog (page_num);

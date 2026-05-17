@@ -205,7 +205,6 @@ static int qw_skin_is_valid = TRUE;
 static guchar *q2_skin_data = NULL;
 static int q2_skin_is_valid = TRUE;
 
-static GtkWidget *color_menu = NULL;
 
 static GtkWidget *custom_args_add_button[UNKNOWN_SERVER];
 static GtkWidget *custom_args_entry_game[UNKNOWN_SERVER];
@@ -1644,7 +1643,7 @@ static void qw_skin_combo_changed_callback (GtkWidget *widget, gpointer data) {
 static GtkWidget *color_button_event_widget = NULL;
 
 
-static void set_player_color (GtkWidget *widget, int i) {
+static void set_player_color (GtkWidget *widget G_GNUC_UNUSED, int i) {
 
 	if (color_button_event_widget == qw_top_color_button) {
 		if (pref_qw_top_color != i) {
@@ -1655,10 +1654,7 @@ static void set_player_color (GtkWidget *widget, int i) {
 						pref_qw_top_color, pref_qw_bottom_color);
 			}
 		}
-		return;
-	}
-
-	if (color_button_event_widget == qw_bottom_color_button) {
+	} else if (color_button_event_widget == qw_bottom_color_button) {
 		if (pref_qw_bottom_color != i) {
 			pref_qw_bottom_color = i;
 			set_bg_color (qw_bottom_color_button, pref_qw_bottom_color);
@@ -1667,10 +1663,7 @@ static void set_player_color (GtkWidget *widget, int i) {
 						pref_qw_top_color, pref_qw_bottom_color);
 			}
 		}
-		return;
-	}
-
-	if (color_button_event_widget == q1_top_color_button) {
+	} else if (color_button_event_widget == q1_top_color_button) {
 		if (pref_q1_top_color != i) {
 			pref_q1_top_color = i;
 			set_bg_color (q1_top_color_button, pref_q1_top_color);
@@ -1679,10 +1672,7 @@ static void set_player_color (GtkWidget *widget, int i) {
 						pref_q1_top_color, pref_q1_bottom_color);
 			}
 		}
-		return;
-	}
-
-	if (color_button_event_widget == q1_bottom_color_button) {
+	} else if (color_button_event_widget == q1_bottom_color_button) {
 		if (pref_q1_bottom_color != i) {
 			pref_q1_bottom_color = i;
 			set_bg_color (q1_bottom_color_button, pref_q1_bottom_color);
@@ -1691,16 +1681,28 @@ static void set_player_color (GtkWidget *widget, int i) {
 						pref_q1_top_color, pref_q1_bottom_color);
 			}
 		}
-		return;
+	}
+
+	/* Dismiss the popover regardless of which button was active */
+	if (color_button_event_widget) {
+		GtkWidget *p = g_object_get_data (G_OBJECT (color_button_event_widget),
+		                                  "xqf-color-popover");
+		if (p)
+			gtk_popover_popdown (GTK_POPOVER (p));
 	}
 }
 
 
-static int color_button_event_callback (GtkWidget *widget, GdkEvent *event) {
-	/* TODO: replace with GtkGestureClick and GtkPopoverMenu (Phase 1).
-	 * GdkEvent is opaque in GTK4; gtk_menu_popup is gone. */
-	(void)widget; (void)event;
-	return FALSE;
+static void color_button_clicked_cb (GtkButton *button,
+                                     gpointer   data G_GNUC_UNUSED) {
+	color_button_event_widget = GTK_WIDGET (button);
+	GtkWidget *popover = g_object_get_data (G_OBJECT (button), "xqf-color-popover");
+	if (!popover) {
+		popover = create_color_popover (set_player_color);
+		gtk_widget_set_parent (popover, GTK_WIDGET (button));
+		g_object_set_data (G_OBJECT (button), "xqf-color-popover", popover);
+	}
+	gtk_popover_popup (GTK_POPOVER (popover));
 }
 
 
@@ -1731,10 +1733,10 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	q1_top_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_size_request (q1_top_color_button, 40, -1);
+	q1_top_color_button = make_color_button (fix_qw_player_color (pref_q1_top_color));
 	gtk_grid_attach (GTK_GRID (grid), q1_top_color_button, 1, 0, 1, 1);
-	set_bg_color (q1_top_color_button, fix_qw_player_color (pref_q1_top_color));
+	g_signal_connect (q1_top_color_button, "clicked",
+	                  G_CALLBACK (color_button_clicked_cb), NULL);
 	gtk_widget_set_visible (q1_top_color_button, TRUE);
 
 	/* Bottom (Pants) Color */
@@ -1744,11 +1746,10 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	q1_bottom_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_size_request (q1_bottom_color_button, 40, -1);
+	q1_bottom_color_button = make_color_button (fix_qw_player_color (pref_q1_bottom_color));
 	gtk_grid_attach (GTK_GRID (grid), q1_bottom_color_button, 1, 1, 1, 1);
-	set_bg_color (q1_bottom_color_button,
-			fix_qw_player_color (pref_q1_bottom_color));
+	g_signal_connect (q1_bottom_color_button, "clicked",
+	                  G_CALLBACK (color_button_clicked_cb), NULL);
 	gtk_widget_set_visible (q1_bottom_color_button, TRUE);
 
 	gtk_widget_set_visible (grid, TRUE);
@@ -1814,10 +1815,10 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	qw_top_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_size_request (qw_top_color_button, 40, -1);
+	qw_top_color_button = make_color_button (fix_qw_player_color (pref_qw_top_color));
 	gtk_grid_attach (GTK_GRID (grid), qw_top_color_button, 1, 0, 1, 1);
-	set_bg_color (qw_top_color_button, fix_qw_player_color (pref_qw_top_color));
+	g_signal_connect (qw_top_color_button, "clicked",
+	                  G_CALLBACK (color_button_clicked_cb), NULL);
 	gtk_widget_set_visible (qw_top_color_button, TRUE);
 
 	/* Bottom (Pants) Color */
@@ -1827,10 +1828,10 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	qw_bottom_color_button = gtk_button_new_with_label (" ");
-	gtk_widget_set_size_request (qw_bottom_color_button, 40, -1);
+	qw_bottom_color_button = make_color_button (fix_qw_player_color (pref_qw_bottom_color));
 	gtk_grid_attach (GTK_GRID (grid), qw_bottom_color_button, 1, 1, 1, 1);
-	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
+	g_signal_connect (qw_bottom_color_button, "clicked",
+	                  G_CALLBACK (color_button_clicked_cb), NULL);
 	gtk_widget_set_visible (qw_bottom_color_button, TRUE);
 
 	gtk_widget_set_visible (grid, TRUE);
@@ -4509,11 +4510,6 @@ void preferences_dialog (int page_num) {
 
 	generic_prefs_free(genprefs);
 	genprefs=NULL;
-
-	if (color_menu) {
-		gtk_widget_destroy (color_menu);
-		color_menu = NULL;
-	}
 
 	qw_skin_preview = NULL;
 	q2_skin_preview = NULL;

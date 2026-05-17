@@ -348,23 +348,6 @@ static inline void
 gtk_scrolled_window_add_with_viewport (GtkScrolledWindow *sw, GtkWidget *child)
 { gtk_scrolled_window_set_child (sw, child); }
 
-/* ------------------------------------------------------------------ */
-/* GtkMenu popup (GtkMenu removed in GTK4)                              */
-/* ------------------------------------------------------------------ */
-
-typedef void (*GtkMenuPositionFunc)(GtkWidget *menu_widget, gint *x, gint *y,
-                                    gboolean *push_in, gpointer user_data);
-
-/* GtkMenu is typedef'd as GtkWidget* later in this header */
-static inline void gtk_menu_popup (GtkWidget *menu,
-                                    GtkWidget *parent_shell,
-                                    GtkWidget *parent_item,
-                                    GtkMenuPositionFunc func,
-                                    gpointer data,
-                                    guint button,
-                                    guint32 activate_time)
-{ (void)menu; (void)parent_shell; (void)parent_item; (void)func;
-  (void)data; (void)button; (void)activate_time; }
 
 /* ------------------------------------------------------------------ */
 /* GtkScrollbar                                                          */
@@ -435,47 +418,6 @@ static inline void gtk_accel_group_connect (GtkAccelGroup *ag, guint key,
                                              GClosure *closure)
 { (void)ag; (void)key; (void)mods; (void)flags; (void)closure; }
 
-/* ------------------------------------------------------------------ */
-/* GtkMenu / GtkMenuItem / GtkCheckMenuItem (removed in GTK4)           */
-/* Use stubs so existing code that retrieves these from GtkBuilder       */
-/* continues to compile.  Functional replacement is GMenu + GMenuModel. */
-/* ------------------------------------------------------------------ */
-
-typedef GtkWidget GtkMenu;
-typedef GtkWidget GtkMenuItem;
-typedef GtkWidget GtkCheckMenuItem;
-typedef GtkWidget GtkImageMenuItem;
-typedef GtkWidget GtkSeparatorMenuItem;
-
-#define GTK_MENU(x)              ((GtkMenu *)(x))
-#define GTK_IS_MENU(x)           (FALSE)
-static inline GtkWidget *gtk_menu_get_attach_widget (GtkMenu *m) { (void)m; return NULL; }
-#define GTK_MENU_ITEM(x)         ((GtkMenuItem *)(x))
-#define GTK_CHECK_MENU_ITEM(x)   ((GtkCheckMenuItem *)(x))
-#define GTK_IMAGE_MENU_ITEM(x)   ((GtkImageMenuItem *)(x))
-
-static inline GtkWidget *gtk_menu_new (void) { return NULL; }
-static inline GtkWidget *gtk_menu_item_new (void) { return NULL; }
-static inline GtkWidget *gtk_menu_item_new_with_label (const char *lbl)
-{ (void)lbl; return NULL; }
-static inline GtkWidget *gtk_separator_menu_item_new (void) { return NULL; }
-
-typedef GtkWidget GtkMenuShell;
-#define GTK_MENU_SHELL(x) ((GtkMenuShell *)(x))
-static inline void gtk_menu_shell_append (GtkMenuShell *shell, GtkWidget *child)
-{ (void)shell; (void)child; }
-
-#define GTK_IS_CHECK_MENU_ITEM(x) (FALSE)
-
-static inline gboolean gtk_check_menu_item_get_active (GtkCheckMenuItem *mi)
-{ (void)mi; return FALSE; }
-static inline void gtk_check_menu_item_set_active (GtkCheckMenuItem *mi,
-                                                    gboolean active)
-{ (void)mi; (void)active; }
-static inline void gtk_menu_item_set_label (GtkMenuItem *mi, const char *lbl)
-{ (void)mi; (void)lbl; }
-static inline void gtk_menu_item_set_submenu (GtkMenuItem *mi, GtkWidget *sub)
-{ (void)mi; (void)sub; }
 
 /* GtkButton relief (GTK4 uses has-frame; stub the GTK2/3 API) */
 #define GTK_RELIEF_NORMAL 0
@@ -870,11 +812,5 @@ gtk_file_chooser_set_filename (GtkFileChooser *chooser, const char *filename)
   g_object_unref (file);
 }
 
-/* ------------------------------------------------------------------ */
-/* GtkMenuBar stub (removed in GTK4; menus live in GtkPopoverMenuBar)   */
-/* ------------------------------------------------------------------ */
-
-typedef GtkWidget GtkMenuBar;
-#define GTK_MENU_BAR(x) ((GtkMenuBar *)(x))
 
 #endif /* GTK4_COMPAT_H */

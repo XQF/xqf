@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 
 #include "xqf-ui.h"
+#include "xqf-utils.h"
 #include "pref.h"
 #include "utils.h"
 #include "pixmaps.h"
@@ -415,41 +416,56 @@ void allocate_quake_player_colors (void) {
 }
 
 
-void set_bg_color (GtkWidget *widget, int color) {
-	/* TODO Phase 3: replace with GtkCssProvider-based coloring */
-	(void)widget; (void)color;
+static void color_swatch_draw_func (GtkDrawingArea *da, cairo_t *cr,
+                                    int width G_GNUC_UNUSED, int height G_GNUC_UNUSED,
+                                    gpointer user_data G_GNUC_UNUSED) {
+	int idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (da), "xqf-color"));
+	allocate_quake_player_colors ();
+	cairo_set_source_rgba (cr, pcolors[idx].red, pcolors[idx].green,
+	                        pcolors[idx].blue, 1.0);
+	cairo_paint (cr);
 }
 
+static GtkWidget *make_color_swatch (int color_idx) {
+	GtkWidget *da = gtk_drawing_area_new ();
+	gtk_widget_set_size_request (da, 30, 18);
+	g_object_set_data (G_OBJECT (da), "xqf-color", GINT_TO_POINTER (color_idx));
+	gtk_drawing_area_set_draw_func (GTK_DRAWING_AREA (da),
+	                                color_swatch_draw_func, NULL, NULL);
+	return da;
+}
 
-GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
-	GtkWidget *menu;
-	GtkWidget *menu_item;
-	GtkWidget *button;
-	int i;
+GtkWidget *make_color_button (int color_idx) {
+	GtkWidget *btn = gtk_button_new ();
+	gtk_widget_set_size_request (btn, 40, -1);
+	gtk_button_set_child (GTK_BUTTON (btn), make_color_swatch (color_idx));
+	return btn;
+}
 
-	menu = gtk_menu_new ();
+void set_bg_color (GtkWidget *button, int color_idx) {
+	GtkWidget *swatch = gtk_button_get_child (GTK_BUTTON (button));
+	g_object_set_data (G_OBJECT (swatch), "xqf-color", GINT_TO_POINTER (color_idx));
+	gtk_widget_queue_draw (swatch);
+}
 
-	for (i = 0; i < 14; i++) {
+GtkWidget *create_color_popover (void (*callback) (GtkWidget*, int)) {
+	GtkWidget *popover = gtk_popover_new ();
+	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+	xqf_widget_set_margin_all (box, 4);
 
-		/* ugly, ugly, ugly... */
-
-		button = gtk_button_new_with_label (" ");
-		gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button, FALSE);
-		gtk_widget_set_size_request (button, 40, -1);
-		gtk_widget_set_visible (button, TRUE);
-
-		menu_item = gtk_menu_item_new ();
-		gtk_container_add (GTK_CONTAINER (menu_item), button);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-		g_signal_connect (menu_item, "activate", G_CALLBACK (callback), GINT_TO_POINTER(i));
-		gtk_widget_set_visible (menu_item, TRUE);
-
-		set_bg_color (menu_item, i);
-		set_bg_color (button, i);
+	for (int i = 0; i < 14; i++) {
+		GtkWidget *btn = gtk_button_new ();
+		GtkWidget *swatch = make_color_swatch (i);
+		gtk_widget_set_size_request (swatch, 80, 20);
+		gtk_button_set_child (GTK_BUTTON (btn), swatch);
+		gtk_widget_set_visible (btn, TRUE);
+		g_signal_connect (btn, "clicked", G_CALLBACK (callback), GINT_TO_POINTER (i));
+		gtk_box_append (GTK_BOX (box), btn);
 	}
 
-	return menu;
+	gtk_widget_set_visible (box, TRUE);
+	gtk_popover_set_child (GTK_POPOVER (popover), box);
+	return popover;
 }
 
 

@@ -667,24 +667,6 @@ void restore_main_window_geometry (void) {
 	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_list_def.height + 4);
 }
 
-GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {
-	GtkWidget *parent, *found_widget;
-
-	for (;;) {
-		if (GTK_IS_MENU (widget))
-			parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
-		else
-			parent = gtk_widget_get_parent (widget);
-		if (parent == NULL)
-			break;
-		widget = parent;
-	}
-
-	found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget), widget_name);
-	if (!found_widget)
-		g_warning ("Widget not found: %s", widget_name);
-	return found_widget;
-}
 
 // Skip a game if it's not configured and show only configured is enabled
 gboolean create_server_type_menu_filter_configured (enum server_type type) {
