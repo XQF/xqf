@@ -1979,7 +1979,7 @@ void populate_main_window (void) {
 	button = GTK_WIDGET (gtk_builder_get_object (builder, "button"));
 	image = gtk_image_new_from_pixbuf (delete_pix.pixbuf);
 	gtk_button_set_child (GTK_BUTTON (button), image);
-	gtk_widget_show_all (button);
+	gtk_widget_show (button);
 
 	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
 	g_signal_connect (entry, "changed", G_CALLBACK (quick_filter_entry_changed), NULL);

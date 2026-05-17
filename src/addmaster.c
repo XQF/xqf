@@ -226,12 +226,12 @@ struct master *add_master_dialog (struct master *m) {
 	}
 	window = dialog_create_modal_transient_window(windowtitle, TRUE, FALSE, NULL);
 	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 16);
+	xqf_widget_set_margin_all (grid, 16);
 	gtk_box_pack_start (GTK_BOX (main_vbox), grid, FALSE, FALSE, 0);
 
 	/* Master Name (Description) */
@@ -354,7 +354,7 @@ struct master *add_master_dialog (struct master *m) {
 	/* Buttons */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
+	xqf_widget_set_margin_all (hbox, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	/* Cancel Button */
