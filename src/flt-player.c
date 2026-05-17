@@ -269,6 +269,8 @@ static void pattern_list_sync_selection (void) {
 		gtk_widget_set_sensitive (down_button, TRUE);
 	}
 	else {
+		gtk_text_view_set_editable (GTK_TEXT_VIEW (comment_text), FALSE);
+
 		gtk_entry_set_text (GTK_ENTRY (pattern_entry), "");
 		gtk_editable_set_editable (GTK_EDITABLE (pattern_entry), FALSE);
 
@@ -530,7 +532,7 @@ static void new_pattern_callback (GtkWidget *widget, gpointer data) {
 	curplrs = g_slist_insert (curplrs, pp, row);
 	pattern_list_insert_row (pp, row);
 
-	if (curplrs && curplrs->next) {
+	{
 		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list));
 		GtkTreeIter iter;
 		GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
