@@ -621,7 +621,7 @@ if (BUILD_XQF)
 if(NOT UNZIP_FOUND)
   pkg_check_modules(UNZIP REQUIRED minizip)
 endif()
-	pkg_check_modules(GTK REQUIRED gtk4>=4.0)
+	pkg_check_modules(GTK REQUIRED gtk4>=4.10)
 
 	include_directories(${GTK_INCLUDE_DIRS})
 	link_directories(${GTK_LIBRARY_DIRS})
