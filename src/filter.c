@@ -1170,8 +1170,8 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	cleaned_up = FALSE;
 
-	/* One cannot edit the "None" filter */
-	if (current_server_filter == 0) {
+	/* One cannot edit the "None" filter; but only bump if filters exist */
+	if (current_server_filter == 0 && server_filters->len > 0) {
 		current_server_filter = 1;
 	}
 
