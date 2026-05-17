@@ -218,7 +218,6 @@ struct generic_prefs {
 	GtkWidget *dir_entry;
 	GtkWidget *cmd_entry;
 	GtkWidget *cfg_combo;
-	GtkWidget *game_button;
 	GtkTreePath *tree_path;
 	// function for adding game specific tabs to notebook
 	void (*add_options_to_notebook) (GtkWidget *notebook, enum server_type type);
@@ -2995,7 +2994,6 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 }
 
 
-#if 1 // GTK2 and GTK3
 enum {
 	GAMESLIST_ATTR_TYPE,
 	GAMESLIST_ATTR_ICON,
@@ -3092,35 +3090,6 @@ static void games_list_select (enum server_type type) {
 
 	gtk_tree_selection_select_path (select, genprefs[type].tree_path);
 }
-#else // GTK1 (deprecated)
-// If this code is removed, remove genprefs[].game_button as well.
-
-static void game_listitem_selected_callback (GtkItem *item, enum server_type type) {
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (games_notebook), type);
-}
-
-static GtkWidget *create_games_list (void) {
-	GtkWidget *gtklist = gtk_list_new ();
-
-	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
-		genprefs[i].game_button = gtk_list_item_new();
-
-		gtk_container_add (GTK_CONTAINER (genprefs[i].game_button), game_pixmap_with_label (i));
-
-		g_signal_connect (G_OBJECT (genprefs[i].game_button), "select",
-			G_CALLBACK (game_listitem_selected_callback), GINT_TO_POINTER(i));
-
-		gtk_widget_show(genprefs[i].game_button);
-		gtk_container_add (GTK_CONTAINER (gtklist), genprefs[i].game_button);
-	}
-
-	return gtklist;
-}
-
-static void games_list_select (enum server_type type) {
-	gtk_list_item_select(GTK_LIST_ITEM(genprefs[type].game_button));
-}
-#endif
 
 #define GAMES_COLS 3
 #define GAMES_ROWS ((UNKNOWN_SERVER - KNOWN_SERVER_START + GAMES_COLS - 1) / GAMES_COLS)

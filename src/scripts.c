@@ -554,7 +554,6 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	return page_vbox;
 }
 
-#if 1 // GTK2 and GTK3
 enum {
 	SCRIPTSLIST_ATTR_INDEX,
 	SCRIPTSLIST_ATTR_NAME,
@@ -643,47 +642,6 @@ static void scripts_list_select (int index) {
 
 	gtk_tree_path_free(path);
 }
-#else // GTK1 (deprecated)
-static void scripts_page_select_callback(GtkItem *item, gpointer d) {
-	unsigned i = GPOINTER_TO_INT(d);
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), i);
-}
-
-static GtkWidget *create_scripts_list (void) {
-	GtkWidget *gtklist;
-	unsigned i;
-	GList* s;
-
-	gtklist = gtk_list_new ();
-
-	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
-		const char* filename = s->data;
-		GtkWidget* item;
-
-		item = gtk_list_item_new();
-
-		gtk_container_add (GTK_CONTAINER (item), gtk_label_new(filename));
-
-		g_signal_connect (G_OBJECT (item), "select",
-				G_CALLBACK(scripts_page_select_callback), GINT_TO_POINTER(i));
-
-		gtk_widget_show_all(item);
-		gtk_container_add (GTK_CONTAINER (gtklist), item);
-	}
-
-	scripts_list = gtklist;
-
-	return gtklist;
-}
-
-static void scripts_list_select (int index) {
-	GList *node = g_list_nth (gtk_container_get_children( GTK_CONTAINER (scripts_list)), index);
-
-	if (node) {
-		gtk_list_item_select (GTK_LIST_ITEM (node->data));
-	}
-}
-#endif
 
 GtkWidget *scripts_config_page () {
 	GtkWidget *page_vbox;
