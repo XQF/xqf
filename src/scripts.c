@@ -504,7 +504,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 		g_string_append_printf(s, "\nLicense: %s", script->license);
 
 		label = gtk_label_new (s->str);
-		gtk_container_add (GTK_CONTAINER (frame), label);
+		gtk_frame_set_child (GTK_FRAME (frame), label);
 		gtk_widget_show (label);
 
 		g_string_free(s, TRUE);
@@ -532,7 +532,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	frame = gtk_frame_new (_("Options"));
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	for (; optlist; optlist = g_slist_next(optlist)) {
 		GtkWidget* widget;
@@ -698,10 +698,9 @@ GtkWidget *scripts_config_page () {
 	GList* s;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	games_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -721,7 +720,7 @@ GtkWidget *scripts_config_page () {
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
-	gtk_container_add (GTK_CONTAINER (frame), scrollwin);
+	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
 	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
 	button = gtk_button_new_with_label(_("Install..."));
@@ -768,7 +767,7 @@ GtkWidget *scripts_config_page () {
 
 	scripts_list_select (0);
 
-	gtk_widget_show_all (page_vbox);
+	gtk_widget_show (page_vbox);
 
 	return page_vbox;
 }

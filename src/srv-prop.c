@@ -408,7 +408,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	props = properties (s);
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	/* Address */
 
@@ -581,8 +581,8 @@ static GtkWidget *server_info_page (struct server *s) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	xqf_widget_set_margin_all (vbox, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	sources = references_to_server (s);
 
@@ -670,7 +670,7 @@ static GtkWidget *server_passwords_page (struct server *s) {
 	props = properties (s);
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
@@ -718,7 +718,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	}
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	sucks_check_button = gtk_check_button_new_with_label (_("This server sucks"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (sucks_check_button), sucks);
@@ -736,7 +736,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 		gtk_text_buffer_set_text (comment_text_buffer, comment, strlen (comment));
 	}
 	//  gtk_widget_set_size_request (comment_text, -1, 80);
-	gtk_container_add (GTK_CONTAINER (scrollwin), comment_text);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), comment_text);
 	gtk_widget_show (comment_text);
 
 	gtk_widget_show (scrollwin);
@@ -761,8 +761,8 @@ void properties_dialog (struct server *s) {
 	window = dialog_create_modal_transient_window (_("Properties"),
 			TRUE, FALSE, NULL);
 	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	xqf_widget_set_margin_all (main_vbox, 8);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	/*
 	 *  Server Name
