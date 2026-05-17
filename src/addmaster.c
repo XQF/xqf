@@ -125,7 +125,7 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
 		if (current_master_query_type == MASTER_NATIVE) {
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+			gtk_check_button_set_active(GTK_CHECK_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 		}
 	}
 	else {
@@ -139,7 +139,7 @@ static void master_type_radio_callback(GtkWidget *widget, enum master_query_type
 
 	// This gets called when a button is made inactive AND when it's made active
 	// so only do this if it's set to active
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (master_query_type_radios[type]))) {
+	if (gtk_check_button_get_active(GTK_CHECK_BUTTON (master_query_type_radios[type]))) {
 		current_master_query_type = type;
 		master_check_master_addr_prefix();
 
@@ -156,7 +156,7 @@ static void master_activate_radio_for_type(enum master_query_type type) {
 		type=MASTER_NATIVE;
 
 	if (master_query_type_radios[type]) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(master_query_type_radios[type]),TRUE);
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(master_query_type_radios[type]),TRUE);
 	}
 }
 
@@ -318,10 +318,10 @@ struct master *add_master_dialog (struct master *m) {
 	/* query type */
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++) {
-		master_query_type_radios[i] =
-			gtk_radio_button_new_with_label_from_widget(
-					i == MASTER_NATIVE?NULL:GTK_RADIO_BUTTON(master_query_type_radios[MASTER_NATIVE]),
-					_(master_designation[i]));
+		master_query_type_radios[i] = gtk_check_button_new_with_label (_(master_designation[i]));
+		if (i != MASTER_NATIVE)
+			gtk_check_button_set_group (GTK_CHECK_BUTTON (master_query_type_radios[i]),
+			                            GTK_CHECK_BUTTON (master_query_type_radios[MASTER_NATIVE]));
 		if (master_to_edit) {
 			gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);
 		}
@@ -338,8 +338,8 @@ struct master *add_master_dialog (struct master *m) {
 			current_master_query_type == MASTER_NATIVE) {
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
-		gtk_toggle_button_set_active
-			(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+		gtk_check_button_set_active
+			(GTK_CHECK_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 	}
 
 	gtk_widget_show (hbox);

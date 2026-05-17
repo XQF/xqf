@@ -335,7 +335,7 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
 	spectpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (spectator_entry)));
 	rconpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (rcon_entry)));
 	reserved = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
-	sucks = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (sucks_check_button));
+	sucks = gtk_check_button_get_active(GTK_CHECK_BUTTON (sucks_check_button));
 
 	gtk_text_buffer_get_iter_at_offset (comment_text_buffer, &start, 0);
 	gtk_text_buffer_get_iter_at_offset (comment_text_buffer, &end, 12);
@@ -721,7 +721,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	sucks_check_button = gtk_check_button_new_with_label (_("This server sucks"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sucks_check_button), sucks);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (sucks_check_button), sucks);
 	gtk_box_pack_start (GTK_BOX (page_vbox), sucks_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (sucks_check_button);
 

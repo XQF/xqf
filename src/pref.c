@@ -898,12 +898,12 @@ void qw_update_prefs (struct game* g) {
 		config_set_int ("rate", default_qw_rate = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (cl_nodelta_check_button[0]));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (cl_nodelta_check_button[0]));
 	if (i != default_qw_cl_nodelta) {
 		config_set_int ("cl_nodelta", default_qw_cl_nodelta = i);
 	}
 
-	i = 1 - gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (cl_predict_check_button[0]));
+	i = 1 - gtk_check_button_get_active (GTK_CHECK_BUTTON (cl_predict_check_button[0]));
 	if (i != default_qw_cl_predict) {
 		config_set_int ("cl_predict", default_qw_cl_predict = i);
 	}
@@ -912,13 +912,13 @@ void qw_update_prefs (struct game* g) {
 		config_set_int ("noskins", default_qw_noskins = pref_qw_noskins);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (noaim_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (noaim_check_button));
 	if (i != default_noaim) {
 		config_set_int ("noaim", default_noaim = i);
 	}
 
 	for (i = 0; i < 3; i++) {
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (pushlatency_mode_radio_buttons[i]))) {
+		if (gtk_check_button_get_active (GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[i]))) {
 			if (i != pushlatency_mode) {
 				config_set_int  ("pushlatency mode", pushlatency_mode = i);
 			}
@@ -967,12 +967,12 @@ void q2_update_prefs (struct game* g) {
 		config_set_int ("rate", default_q2_rate = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (cl_nodelta_check_button[1]));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (cl_nodelta_check_button[1]));
 	if (i != default_q2_cl_nodelta) {
 		config_set_int ("cl_nodelta", default_q2_cl_nodelta = i);
 	}
 
-	i = 1 - gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (cl_predict_check_button[1]));
+	i = 1 - gtk_check_button_get_active (GTK_CHECK_BUTTON (cl_predict_check_button[1]));
 	if (i != default_q2_cl_predict) {
 		config_set_int ("cl_predict", default_q2_cl_predict = i);
 	}
@@ -1010,7 +1010,7 @@ void q3_update_prefs_common (struct game* g) {
 
 	if (w->setfs_gamebutton) {
 		int o;
-		i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w->setfs_gamebutton));
+		i = gtk_check_button_get_active (GTK_CHECK_BUTTON (w->setfs_gamebutton));
 		o = str2bool(game_get_attribute(type,"setfs_game"));
 		if (i != o) {
 			config_set_bool ("setfs_game", i);
@@ -1020,7 +1020,7 @@ void q3_update_prefs_common (struct game* g) {
 
 	if (w->set_punkbusterbutton) {
 		int o;
-		i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w->set_punkbusterbutton));
+		i = gtk_check_button_get_active (GTK_CHECK_BUTTON (w->set_punkbusterbutton));
 		o = str2bool(game_get_attribute(type,"set_punkbuster"));
 		if (i != o) {
 			config_set_bool ("set_punkbuster", i);
@@ -1030,7 +1030,7 @@ void q3_update_prefs_common (struct game* g) {
 
 	if (w->console_button) {
 		int o;
-		i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w->console_button));
+		i = gtk_check_button_get_active (GTK_CHECK_BUTTON (w->console_button));
 		o = str2bool(game_get_attribute(type,"enable_console"));
 		if (i != o) {
 			config_set_bool ("enable_console", i);
@@ -1050,7 +1050,7 @@ void q3_update_prefs (struct game* g) {
 	q3_update_prefs_common(g);
 
 	if ( type == Q3_SERVER ) {
-		i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (pass_memory_options_button));
+		i = gtk_check_button_get_active (GTK_CHECK_BUTTON (pass_memory_options_button));
 		config_set_bool ("pass_memory_options", i);
 		game_set_attribute(type,"pass_memory_options",g_strdup(bool2str(i)));
 
@@ -1191,12 +1191,12 @@ static void get_new_defaults (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/Games Config");
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nosound_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (nosound_check_button));
 	if (i != default_nosound) {
 		config_set_bool ("nosound", default_nosound = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (nocdaudio_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (nocdaudio_check_button));
 	if (i != default_nocdaudio) {
 		config_set_bool ("nocdaudio", default_nocdaudio = i);
 	}
@@ -1211,27 +1211,27 @@ static void get_new_defaults (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/Appearance");
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (countbots_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (countbots_check_button));
 	if (i != serverlist_countbots) {
 		config_set_bool ("count bots", serverlist_countbots = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (refresh_sorts_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (refresh_sorts_check_button));
 	if (i != default_refresh_sorts) {
 		config_set_bool ("sort on refresh", default_refresh_sorts = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (refresh_on_update_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (refresh_on_update_check_button));
 	if (i != default_refresh_on_update) {
 		config_set_bool ("refresh on update", default_refresh_on_update = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (resolve_on_update_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (resolve_on_update_check_button));
 	if (i != default_resolve_on_update) {
 		config_set_bool ("resolve on update", default_resolve_on_update = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_only_configured_games_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (show_only_configured_games_check_button));
 	if (i != default_show_only_configured_games) {
 		config_set_bool ("show only configured games", default_show_only_configured_games = i);
 	}
@@ -1242,42 +1242,42 @@ static void get_new_defaults (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/General");
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (terminate_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (terminate_check_button));
 	if (i != default_terminate) {
 		config_set_bool ("terminate", default_terminate = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (launchinfo_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (launchinfo_check_button));
 	if (i != default_launchinfo) {
 		config_set_bool ("launchinfo", default_launchinfo = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (prelaunchexec_check_button));
 	if (i != default_prelaunchexec) {
 		config_set_bool ("prelaunchexec", default_prelaunchexec = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (save_lists_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (save_lists_check_button));
 	if (i != default_save_lists) {
 		config_set_bool ("save lists", default_save_lists = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (save_srvinfo_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (save_srvinfo_check_button));
 	if (i != default_save_srvinfo) {
 		config_set_bool ("save srvinfo", default_save_srvinfo = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (save_plrinfo_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (save_plrinfo_check_button));
 	if (i != default_save_plrinfo) {
 		config_set_bool ("save players", default_save_plrinfo = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auto_favorites_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (auto_favorites_check_button));
 	if (i != default_auto_favorites) {
 		config_set_bool ("refresh favorites", default_auto_favorites = i);
 	}
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (auto_maps_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (auto_maps_check_button));
 	if (i != default_auto_maps) {
 		config_set_bool ("search maps", default_auto_maps = i);
 	}
@@ -1326,7 +1326,7 @@ static void get_new_defaults (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/Sounds");
 
-	i = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (sound_enable_check_button));
+	i = gtk_check_button_get_active (GTK_CHECK_BUTTON (sound_enable_check_button));
 	if (i != sound_enable) {
 		config_set_bool ("sound_enable", sound_enable = i);
 	}
@@ -1361,10 +1361,10 @@ static void get_new_defaults (void) {
 			GAction *a;
 			a = g_action_map_lookup_action (G_ACTION_MAP (grp), "show-hostnames");
 			if (a) g_simple_action_set_state (G_SIMPLE_ACTION (a),
-				g_variant_new_boolean (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_hostnames_check_button))));
+				g_variant_new_boolean (gtk_check_button_get_active (GTK_CHECK_BUTTON (show_hostnames_check_button))));
 			a = g_action_map_lookup_action (G_ACTION_MAP (grp), "show-default-port");
 			if (a) g_simple_action_set_state (G_SIMPLE_ACTION (a),
-				g_variant_new_boolean (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_defport_check_button))));
+				g_variant_new_boolean (gtk_check_button_get_active (GTK_CHECK_BUTTON (show_defport_check_button))));
 		}
 	}
 
@@ -3210,14 +3210,14 @@ static GtkWidget *games_config_page (int defgame) {
 	/* Disable CD Audio */
 
 	nocdaudio_check_button = gtk_check_button_new_with_label (_("Disable CD Audio"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (nocdaudio_check_button), default_nocdaudio);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (nocdaudio_check_button), default_nocdaudio);
 	gtk_box_pack_end (GTK_BOX (hbox), nocdaudio_check_button, TRUE, FALSE, 0);
 	gtk_widget_show (nocdaudio_check_button);
 
 	/* Disable Sound */
 
 	nosound_check_button = gtk_check_button_new_with_label (_("Disable Sound"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (nosound_check_button), default_nosound);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (nosound_check_button), default_nosound);
 	gtk_box_pack_end (GTK_BOX (hbox), nosound_check_button, TRUE, FALSE, 0);
 	gtk_widget_show (nosound_check_button);
 
@@ -3235,7 +3235,6 @@ static GtkWidget *games_config_page (int defgame) {
 static void add_pushlatency_options (GtkWidget *vbox) {
 	GtkWidget *hbox;
 	GtkAdjustment *adj;
-	GSList *group = NULL;
 	int i;
 
 	static const char *pushlatency_modes[] = {
@@ -3248,15 +3247,17 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 		hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-		pushlatency_mode_radio_buttons[i] = gtk_radio_button_new_with_label (group, _(pushlatency_modes[i]));
-		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (pushlatency_mode_radio_buttons[i]));
+		pushlatency_mode_radio_buttons[i] = gtk_check_button_new_with_label (_(pushlatency_modes[i]));
+		if (i > 0)
+			gtk_check_button_set_group (GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[i]),
+			                            GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[0]));
 		gtk_box_pack_start (GTK_BOX (hbox), pushlatency_mode_radio_buttons[i], FALSE, FALSE, 0);
 		gtk_widget_show (pushlatency_mode_radio_buttons[i]);
 
 		gtk_widget_show (hbox);
 	}
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pushlatency_mode_radio_buttons[pushlatency_mode]), TRUE);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[pushlatency_mode]), TRUE);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (pushlatency_value, -1000.0, -10.0, 10.0, 50.0, 0.0);
 
@@ -3344,21 +3345,21 @@ static GtkWidget *q3_options_page (enum server_type type) {
 
 	if (w->flags & Q3_PREF_SETFS_GAME) {
 		w->setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w->setfs_gamebutton), str2bool(game_get_attribute(type,"setfs_game")));
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (w->setfs_gamebutton), str2bool(game_get_attribute(type,"setfs_game")));
 		gtk_box_pack_start (GTK_BOX (page_vbox), w->setfs_gamebutton, FALSE, FALSE, 0);
 		gtk_widget_show (w->setfs_gamebutton);
 	}
 
 	if (w->flags & Q3_PREF_PB) {
 		w->set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w->set_punkbusterbutton), str2bool(game_get_attribute(type,"set_punkbuster")));
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (w->set_punkbusterbutton), str2bool(game_get_attribute(type,"set_punkbuster")));
 		gtk_box_pack_start (GTK_BOX (page_vbox), w->set_punkbusterbutton, FALSE, FALSE, 0);
 		gtk_widget_show (w->set_punkbusterbutton);
 	}
 
 	if (w->flags & Q3_PREF_CONSOLE) {
 		w->console_button = gtk_check_button_new_with_label (_("enable console"));
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w->console_button), str2bool(game_get_attribute(type,"enable_console")));
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (w->console_button), str2bool(game_get_attribute(type,"enable_console")));
 		gtk_box_pack_start (GTK_BOX (page_vbox), w->console_button, FALSE, FALSE, 0);
 		gtk_widget_show (w->console_button);
 	}
@@ -3407,7 +3408,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
 
 	pass_memory_options_button = gtk_check_button_new_with_label (_("Pass memory settings on command line"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pass_memory_options_button), pass_memory_options);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (pass_memory_options_button), pass_memory_options);
 	gtk_box_pack_start (GTK_BOX (page_vbox), pass_memory_options_button, FALSE, FALSE, 0);
 	gtk_widget_show (pass_memory_options_button);
 
@@ -3596,7 +3597,7 @@ static GtkWidget *qw_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 10);
 
 	noaim_check_button = gtk_check_button_new_with_label (_("Disable auto-aiming"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (noaim_check_button), default_noaim);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (noaim_check_button), default_noaim);
 	gtk_box_pack_start (GTK_BOX (hbox), noaim_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (noaim_check_button);
 
@@ -3704,7 +3705,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 
 	cl_nodelta_check_button[qworq2] = gtk_check_button_new_with_label (
 		_("Disable delta-compression (cl_nodelta)"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cl_nodelta_check_button[qworq2]),
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (cl_nodelta_check_button[qworq2]),
 		qworq2?default_q2_cl_nodelta:default_qw_cl_nodelta);
 	gtk_box_pack_start (GTK_BOX (hbox), cl_nodelta_check_button[qworq2], FALSE, FALSE, 0);
 	gtk_widget_show (cl_nodelta_check_button[qworq2]);
@@ -3718,7 +3719,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 
 	cl_predict_check_button[qworq2] = gtk_check_button_new_with_label (
 		_("Disable player/entity prediction (cl_predict_players)"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cl_predict_check_button[qworq2]),
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (cl_predict_check_button[qworq2]),
 		1 - (qworq2?default_q2_cl_predict:default_qw_cl_predict));
 	gtk_box_pack_start (GTK_BOX (hbox), cl_predict_check_button[qworq2], FALSE, FALSE, 0);
 	gtk_widget_show (cl_predict_check_button[qworq2]);
@@ -3753,21 +3754,21 @@ void add_t2_options_to_notebook(GtkWidget *notebook, enum server_type type) {
 }
 
 static void terminate_toggled_callback (GtkWidget *widget, gpointer data) {
-	//gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (terminate_check_button));
+	//gtk_check_button_get_active (GTK_CHECK_BUTTON (terminate_check_button));
 }
 
 static void launchinfo_toggled_callback (GtkWidget *widget, gpointer data) {
-	//gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (launchinfo_check_button));
+	//gtk_check_button_get_active (GTK_CHECK_BUTTON (launchinfo_check_button));
 }
 
 static void prelaunchexec_toggled_callback (GtkWidget *widget, gpointer data) {
-	//gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button));
+	//gtk_check_button_get_active (GTK_CHECK_BUTTON (prelaunchexec_check_button));
 }
 
 static void save_srvinfo_toggled_callback (GtkWidget *widget, gpointer data) {
 	int val;
 
-	val = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (save_srvinfo_check_button));
+	val = gtk_check_button_get_active (GTK_CHECK_BUTTON (save_srvinfo_check_button));
 	gtk_widget_set_sensitive (save_plrinfo_check_button, val);
 }
 
@@ -3804,7 +3805,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	show_hostnames_check_button = gtk_check_button_new_with_label (_("Show host names"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_hostnames_check_button), show_hostnames);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (show_hostnames_check_button), show_hostnames);
 	gtk_box_pack_start (GTK_BOX (hbox), show_hostnames_check_button, FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text (show_hostnames_check_button, _("Show hostnames instead of IP addresses if possible"));
 	gtk_widget_show (show_hostnames_check_button);
@@ -3817,7 +3818,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	show_defport_check_button = gtk_check_button_new_with_label (_("Show default port"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_defport_check_button), show_default_port);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (show_defport_check_button), show_default_port);
 	gtk_box_pack_start (GTK_BOX (hbox), show_defport_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (show_defport_check_button);
 
@@ -3829,7 +3830,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	countbots_check_button = gtk_check_button_new_with_label (_("Do not count bots as players"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (countbots_check_button), serverlist_countbots);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (countbots_check_button), serverlist_countbots);
 	gtk_box_pack_start (GTK_BOX (hbox), countbots_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (countbots_check_button);
 
@@ -3842,7 +3843,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	refresh_sorts_check_button = gtk_check_button_new_with_label (_("Sort servers real-time during refresh"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (refresh_sorts_check_button), default_refresh_sorts);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (refresh_sorts_check_button), default_refresh_sorts);
 	gtk_box_pack_start (GTK_BOX (hbox), refresh_sorts_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (refresh_sorts_check_button);
 
@@ -3854,7 +3855,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	refresh_on_update_check_button = gtk_check_button_new_with_label (_("Refresh on update"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (refresh_on_update_check_button), default_refresh_on_update);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (refresh_on_update_check_button), default_refresh_on_update);
 	gtk_box_pack_start (GTK_BOX (hbox), refresh_on_update_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (refresh_on_update_check_button);
 
@@ -3866,7 +3867,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	resolve_on_update_check_button = gtk_check_button_new_with_label (_("Resolve hostnames on update"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (resolve_on_update_check_button), default_resolve_on_update);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (resolve_on_update_check_button), default_resolve_on_update);
 	gtk_widget_set_tooltip_text (resolve_on_update_check_button, _("Enable or disable DNS resolution of IP addresses"));
 	gtk_box_pack_start (GTK_BOX (hbox), resolve_on_update_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (resolve_on_update_check_button);
@@ -3880,7 +3881,7 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	show_only_configured_games_check_button = gtk_check_button_new_with_label (_("Show only configured games"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_only_configured_games_check_button), default_show_only_configured_games);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (show_only_configured_games_check_button), default_show_only_configured_games);
 	gtk_box_pack_start (GTK_BOX (hbox), show_only_configured_games_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (show_only_configured_games_check_button);
 
@@ -3919,7 +3920,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	auto_favorites_check_button = gtk_check_button_new_with_label (_("Refresh Favorites"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_favorites_check_button), default_auto_favorites);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (auto_favorites_check_button), default_auto_favorites);
 	gtk_box_pack_start (GTK_BOX (hbox), auto_favorites_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (auto_favorites_check_button);
 
@@ -3935,7 +3936,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	auto_maps_check_button = gtk_check_button_new_with_label (_("Scan for maps"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (auto_maps_check_button), default_auto_maps);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (auto_maps_check_button), default_auto_maps);
 
 	gtk_widget_set_tooltip_text (auto_maps_check_button,
 		_("Scan game directories for installed maps. xqf will"
@@ -3971,7 +3972,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	terminate_check_button = gtk_check_button_new_with_label (_("Terminate XQF"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (terminate_check_button), default_terminate);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (terminate_check_button), default_terminate);
 	g_signal_connect (G_OBJECT (terminate_check_button), "toggled", G_CALLBACK (terminate_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (terminate_check_button);
@@ -3984,7 +3985,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	launchinfo_check_button = gtk_check_button_new_with_label (_("Create LaunchInfo.txt"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (launchinfo_check_button), default_launchinfo);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (launchinfo_check_button), default_launchinfo);
 	g_signal_connect (G_OBJECT (launchinfo_check_button), "toggled", G_CALLBACK (launchinfo_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text (launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"));
@@ -3998,7 +3999,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	prelaunchexec_check_button = gtk_check_button_new_with_label (_("Execute prelaunch"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (prelaunchexec_check_button), default_prelaunchexec);
 	g_signal_connect (G_OBJECT (prelaunchexec_check_button), "toggled", G_CALLBACK (prelaunchexec_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text (prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"));
@@ -4024,7 +4025,7 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	save_lists_check_button = gtk_check_button_new_with_label (_("Save server lists"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (save_lists_check_button), default_save_lists);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (save_lists_check_button), default_save_lists);
 	gtk_box_pack_start (GTK_BOX (hbox), save_lists_check_button, FALSE, FALSE, 0);
 	gtk_widget_show (save_lists_check_button);
 
@@ -4037,7 +4038,7 @@ static GtkWidget *general_options_page (void) {
 
 	save_srvinfo_check_button = gtk_check_button_new_with_label (_("Save server information"));
 	gtk_box_pack_start (GTK_BOX (hbox), save_srvinfo_check_button, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (save_srvinfo_check_button), default_save_srvinfo);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (save_srvinfo_check_button), default_save_srvinfo);
 	g_signal_connect (G_OBJECT (save_srvinfo_check_button), "toggled", G_CALLBACK (save_srvinfo_toggled_callback), NULL);
 	gtk_widget_show (save_srvinfo_check_button);
 
@@ -4050,7 +4051,7 @@ static GtkWidget *general_options_page (void) {
 
 	save_plrinfo_check_button = gtk_check_button_new_with_label (_("Save player information"));
 	gtk_box_pack_start (GTK_BOX (hbox), save_plrinfo_check_button, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (save_plrinfo_check_button), default_save_plrinfo);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (save_plrinfo_check_button), default_save_plrinfo);
 
 	if (!default_save_srvinfo) {
 		gtk_widget_set_sensitive (save_plrinfo_check_button, FALSE);
@@ -4306,7 +4307,7 @@ static GtkWidget *sound_options_page (void) {
 	/* Sound Enable */
 
 	sound_enable_check_button = gtk_check_button_new_with_label (_("Enable Sound"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sound_enable_check_button), sound_enable);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (sound_enable_check_button), sound_enable);
 
 	gtk_grid_attach (GTK_GRID (grid), sound_enable_check_button, 0, 0, 1, 1);
 	gtk_widget_show (sound_enable_check_button);

@@ -366,7 +366,7 @@ static int *enter_string_optval;
 static void enter_string_activate_callback (GtkWidget *widget, gpointer data) {
 	enter_string_res = strdup_strip (gtk_entry_get_text (GTK_ENTRY (widget)));
 	if (enter_string_optval) {
-		*enter_string_optval = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enter_string_opt_button));
+		*enter_string_optval = gtk_check_button_get_active (GTK_CHECK_BUTTON (enter_string_opt_button));
 	}
 }
 
@@ -443,8 +443,8 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 		enter_string_opt_button = gtk_check_button_new_with_label (optstr);
 
 		if (optval) {
-			gtk_toggle_button_set_active (
-					GTK_TOGGLE_BUTTON (enter_string_opt_button), *optval);
+			gtk_check_button_set_active (
+					GTK_CHECK_BUTTON (enter_string_opt_button), *optval);
 		}
 		else {
 			gtk_widget_set_sensitive (enter_string_opt_button, FALSE);

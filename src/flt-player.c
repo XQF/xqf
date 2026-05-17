@@ -261,8 +261,8 @@ static void pattern_list_sync_selection (void) {
 		gtk_widget_set_sensitive (mode_buttons[PATTERN_MODE_SUBSTR], TRUE);
 		gtk_widget_set_sensitive (mode_buttons[PATTERN_MODE_REGEXP], TRUE);
 
-		gtk_toggle_button_set_active (
-				GTK_TOGGLE_BUTTON (mode_buttons[pp->mode]), TRUE);
+		gtk_check_button_set_active (
+				GTK_CHECK_BUTTON (mode_buttons[pp->mode]), TRUE);
 
 		gtk_widget_set_sensitive (delete_button, TRUE);
 		gtk_widget_set_sensitive (up_button, TRUE);
@@ -343,9 +343,9 @@ static void sync_pattern_data (void) {
 	list = g_slist_nth (curplrs, current_row);
 	pp = (struct player_pattern *) list->data;
 
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PATTERN_MODE_STRING])))
+	if (gtk_check_button_get_active (GTK_CHECK_BUTTON (mode_buttons[PATTERN_MODE_STRING])))
 		mode = PATTERN_MODE_STRING;
-	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PATTERN_MODE_SUBSTR])))
+	else if (gtk_check_button_get_active (GTK_CHECK_BUTTON (mode_buttons[PATTERN_MODE_SUBSTR])))
 		mode = PATTERN_MODE_SUBSTR;
 	else
 		mode = PATTERN_MODE_REGEXP;
@@ -620,7 +620,6 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	GtkWidget *label;
 	GtkWidget *frame;
 	GtkWidget *vscrollbar;
-	GSList *group;
 	int i;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
@@ -654,11 +653,10 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 1, 1, 1);
 	gtk_widget_set_hexpand (hbox, TRUE);
 
-	group = NULL;
-
 	for (i = 0; i < 3; i++) {
-		mode_buttons[i] = gtk_radio_button_new_with_label (group, _(mode_names[i]));
-		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (mode_buttons[i]));
+		mode_buttons[i] = gtk_check_button_new_with_label (_(mode_names[i]));
+		if (i > 0)
+			gtk_check_button_set_group (GTK_CHECK_BUTTON (mode_buttons[i]), GTK_CHECK_BUTTON (mode_buttons[0]));
 
 		g_signal_connect (mode_buttons[i], "clicked", G_CALLBACK (sync_pattern_data), NULL);
 

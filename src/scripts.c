@@ -432,7 +432,7 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 			{
 				GtkWidget* button = ret = opt->widget = gtk_check_button_new_with_label(opt->name);
 
-				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(button), opt->enable);
+				gtk_check_button_set_active (GTK_CHECK_BUTTON(button), opt->enable);
 
 				gtk_widget_show(button);
 			}
@@ -822,7 +822,7 @@ void save_script_prefs() {
 					}
 					break;
 				case SCRIPT_OPTION_TYPE_BOOL:
-					enable = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(opt->widget));
+					enable = gtk_check_button_get_active (GTK_CHECK_BUTTON(opt->widget));
 					if (enable != opt->enable) {
 						config_set_bool(opt->section, enable);
 						debug(4, "set %s/%s=%d", s->data, opt->section, enable);

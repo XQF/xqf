@@ -143,9 +143,9 @@ static void psearch_combo_activate_callback (GtkWidget *widget,
 		gpointer data) {
 	psearch_free_pattern ();
 
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_STRING])))
+	if (gtk_check_button_get_active (GTK_CHECK_BUTTON (mode_buttons[PSEARCH_MODE_STRING])))
 		psearch.mode = PSEARCH_MODE_STRING;
-	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_SUBSTR])))
+	else if (gtk_check_button_get_active (GTK_CHECK_BUTTON (mode_buttons[PSEARCH_MODE_SUBSTR])))
 		psearch.mode = PSEARCH_MODE_SUBSTR;
 	else
 		psearch.mode = PSEARCH_MODE_REGEXP;
@@ -168,7 +168,6 @@ int find_player_dialog (void) {
 	GtkWidget *hbox;
 	GtkWidget *button;
 	GtkWidget *label;
-	GSList *group;
 	int i;
 
 	psearch_new_pattern = FALSE;
@@ -234,18 +233,16 @@ int find_player_dialog (void) {
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
-	group = NULL;
-
 	for (i = 0; i < 3; i++) {
-		mode_buttons[i] = gtk_radio_button_new_with_label (group,
-				_(mode_names[i]));
-		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (mode_buttons[i]));
+		mode_buttons[i] = gtk_check_button_new_with_label (_(mode_names[i]));
+		if (i > 0)
+			gtk_check_button_set_group (GTK_CHECK_BUTTON (mode_buttons[i]), GTK_CHECK_BUTTON (mode_buttons[0]));
 		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
 		gtk_widget_show (mode_buttons[i]);
 	}
 
-	gtk_toggle_button_set_active (
-			GTK_TOGGLE_BUTTON (mode_buttons[psearch.mode]), TRUE);
+	gtk_check_button_set_active (
+			GTK_CHECK_BUTTON (mode_buttons[psearch.mode]), TRUE);
 
 	gtk_widget_show (hbox);
 
