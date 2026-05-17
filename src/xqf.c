@@ -1910,6 +1910,17 @@ static void register_window_actions (GtkWindow *win) {
 	g_object_unref (_win_ag);
 }
 
+static void main_window_size_allocate_cb (GtkWidget *widget,
+                                           int width G_GNUC_UNUSED,
+                                           int height G_GNUC_UNUSED,
+                                           int baseline G_GNUC_UNUSED)
+{
+	/* GTK4 snapshot caching can leave newly-revealed pixels undrawn when
+	 * the window is enlarged.  Force a full repaint on every resize so the
+	 * list/tree views regenerate their render nodes for the larger area. */
+	gtk_widget_queue_draw (widget);
+}
+
 static gboolean create_main_window (void) {
 	GError *error = NULL;
 
@@ -1925,6 +1936,7 @@ static gboolean create_main_window (void) {
 	register_window_actions (GTK_WINDOW (main_window));
 	g_signal_connect (main_window, "close-request", G_CALLBACK (main_window_close_cb), NULL);
 	g_signal_connect (main_window, "destroy", G_CALLBACK (ui_done), NULL);
+	g_signal_connect (main_window, "size-allocate", G_CALLBACK (main_window_size_allocate_cb), NULL);
 	gtk_window_set_title (GTK_WINDOW (main_window), "XQF");
 
 	register_window (main_window);
