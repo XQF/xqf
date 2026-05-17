@@ -1197,7 +1197,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	}
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	label = gtk_label_new (_("Server Filter"));
 	gtk_widget_show (label);
@@ -1237,12 +1237,12 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
 	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_container_add (GTK_CONTAINER (frame), alignment);
+	gtk_frame_set_child (GTK_FRAME (frame), alignment);
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	xqf_widget_set_margin_all (grid, 6);
 	gtk_container_add (GTK_CONTAINER (alignment), grid);
 
 	/* row=0..1 */
@@ -1442,7 +1442,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	country_selection_button = gtk_button_new_with_label(_("select..."));
 	gtk_widget_set_sensitive (country_selection_button, FALSE);
 	gtk_widget_show (country_selection_button);
-	gtk_container_add (GTK_CONTAINER (vbuttonbox1), country_selection_button);
+	gtk_box_append (GTK_BOX (vbuttonbox1), country_selection_button);
 	gtk_widget_set_size_request (country_selection_button, 80, -1);
 	g_signal_connect (country_selection_button, "clicked", G_CALLBACK (country_select_button_pressed), NULL);
 
@@ -1457,7 +1457,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
 
 	gtk_widget_show(country_clear_button);
-	gtk_container_add(GTK_CONTAINER(vbuttonbox1), country_clear_button);
+	gtk_box_append (GTK_BOX (vbuttonbox1), country_clear_button);
 	gtk_widget_set_size_request(country_clear_button, 80, -1);
 #endif
 
@@ -1502,8 +1502,8 @@ int filters_cfg_dialog (int page_num) {
 
 	window = dialog_create_modal_transient_window (_("XQF: Filters"), TRUE, TRUE, filters_on_cancel);
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
-	gtk_container_add (GTK_CONTAINER (window), vbox);
+	xqf_widget_set_margin_all (vbox, 8);
+	gtk_window_set_child (GTK_WINDOW (window), vbox);
 
 
 	// Notebook
@@ -1807,17 +1807,16 @@ static void country_create_popup_window(void) {
 
 	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_show (vbox1);
-	gtk_container_add (GTK_CONTAINER (country_popup_window), vbox1);
+	gtk_window_set_child (GTK_WINDOW (country_popup_window), vbox1);
 
 	frame1 = gtk_frame_new (_("Country filter:"));
 	gtk_widget_show (frame1);
 	gtk_box_pack_start (GTK_BOX (vbox1), frame1, TRUE, TRUE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER(frame1), 4);
+	xqf_widget_set_margin_all (frame1, 4);
 
 	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_show (vbox2);
-	gtk_container_add (GTK_CONTAINER (frame1), vbox2);
-	gtk_container_set_border_width (GTK_CONTAINER (frame1), 4);
+	gtk_frame_set_child (GTK_FRAME (frame1), vbox2);
 
 
 	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -1826,7 +1825,7 @@ static void country_create_popup_window(void) {
 
 	// left list
 	scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 8);
+	xqf_widget_set_margin_all (scrolledwindow1, 8);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 	{
 		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
@@ -1866,7 +1865,7 @@ static void country_create_popup_window(void) {
 	button3 = gtk_button_new_with_label (">>");
 	g_signal_connect (button3, "clicked", G_CALLBACK (country_add_button), NULL);
 	gtk_widget_show (button3);
-	gtk_container_add (GTK_CONTAINER (vbuttonbox1), button3);
+	gtk_box_append (GTK_BOX (vbuttonbox1), button3);
 	gtk_widget_set_can_default (button3, TRUE);
 
 
@@ -1874,13 +1873,13 @@ static void country_create_popup_window(void) {
 	button4 = gtk_button_new_with_label ("<<");
 	g_signal_connect (button4, "clicked", G_CALLBACK (country_delete_button), NULL);
 	gtk_widget_show (button4);
-	gtk_container_add (GTK_CONTAINER (vbuttonbox1), button4);
+	gtk_box_append (GTK_BOX (vbuttonbox1), button4);
 	gtk_widget_set_can_default (button4, TRUE);
 
 
 	// right list
 	scrolledwindow2 = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow2), 8);
+	xqf_widget_set_margin_all (scrolledwindow2, 8);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	{
 		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
@@ -1931,7 +1930,7 @@ static void country_create_popup_window(void) {
 	g_signal_connect (country_show_all_check_button, "toggled", G_CALLBACK (country_show_all_changed_callback), (gpointer) country_left_list);
 	gtk_widget_show (country_show_all_check_button);
 	gtk_box_pack_start (GTK_BOX (vbox2), country_show_all_check_button, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (country_show_all_check_button), 4);
+	xqf_widget_set_margin_all (country_show_all_check_button, 4);
 
 	/* OK and Cancel buttons */
 	hbuttonbox1 = gtk_hbutton_box_new();
@@ -1939,7 +1938,7 @@ static void country_create_popup_window(void) {
 
 	gtk_widget_show (hbuttonbox1);
 	gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, TRUE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox1), 4);
+	xqf_widget_set_margin_all (hbuttonbox1, 4);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_END);
 	gtk_box_set_spacing (GTK_BOX (hbuttonbox1), 1);
 
@@ -1948,14 +1947,14 @@ static void country_create_popup_window(void) {
 	g_signal_connect_swapped (button1, "clicked", G_CALLBACK (gtk_widget_destroy), country_popup_window);
 
 	gtk_widget_show (button1);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), button1);
+	gtk_box_append (GTK_BOX (hbuttonbox1), button1);
 	gtk_widget_set_can_default (button1, TRUE);
 
 	button2 = gtk_button_new_with_label (_("Cancel"));
 	g_signal_connect_swapped (button2, "clicked", G_CALLBACK (gtk_widget_destroy), country_popup_window);
 
 	gtk_widget_show(button2);
-	gtk_container_add(GTK_CONTAINER(hbuttonbox1), button2);
+	gtk_box_append (GTK_BOX (hbuttonbox1), button2);
 	gtk_widget_set_can_default(button2, TRUE);
 
 	gtk_widget_show (country_popup_window);

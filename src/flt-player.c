@@ -639,8 +639,8 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
-	gtk_container_add (GTK_CONTAINER (frame), grid);
+	xqf_widget_set_margin_all (grid, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
 	/* Pattern Entry */
 
@@ -740,7 +740,7 @@ void player_filter_page (GtkWidget *notebook) {
 	int i;
 
 	page_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (page_hbox), 8);
+	xqf_widget_set_margin_all (page_hbox, 8);
 
 	label = gtk_label_new (_("Player Filter"));
 	gtk_widget_show (label);
@@ -803,7 +803,7 @@ void player_filter_page (GtkWidget *notebook) {
 		gtk_widget_add_controller (pattern_list, GTK_EVENT_CONTROLLER (click));
 	}
 
-	gtk_container_add (GTK_CONTAINER (scrollwin), pattern_list);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), pattern_list);
 	gtk_widget_show (pattern_list);
 	gtk_widget_show (scrollwin);
 

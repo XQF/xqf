@@ -399,7 +399,7 @@ static GtkWidget *server_stats_page (void) {
 	int row = 0;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
@@ -409,7 +409,7 @@ static GtkWidget *server_stats_page (void) {
 
 	grid = gtk_grid_new ();
 	gtk_container_add (GTK_CONTAINER (alignment), grid);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	xqf_widget_set_margin_all (grid, 6);
 
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
@@ -474,7 +474,7 @@ static void arch_notebook_page (GtkWidget *notebook,
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), grid, NULL);
 
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	xqf_widget_set_margin_all (grid, 6);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
 
@@ -538,7 +538,7 @@ static GtkWidget *archs_stats_page (void) {
 	enum server_type to_activate = UNKNOWN_SERVER;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 
 	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
@@ -602,12 +602,11 @@ static void country_notebook_page (GtkWidget *notebook,
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
 
 	grid = gtk_grid_new ();
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+	xqf_widget_set_margin_all (grid, 6);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
 
 	gtk_container_add (GTK_CONTAINER (alignment), grid);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrollwin, NULL);
 
@@ -666,7 +665,7 @@ static GtkWidget *country_stats_page (void) {
 	enum server_type to_activate = UNKNOWN_SERVER;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	country_notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (country_notebook), FALSE);
@@ -775,8 +774,8 @@ void statistics_dialog (void) {
 	statistics_restore_geometry(window);
 
 	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 8);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	xqf_widget_set_margin_all (main_vbox, 8);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	label = gtk_label_new (_("Statistics"));
 	gtk_box_pack_start (GTK_BOX (main_vbox), label, FALSE, FALSE, 8);
