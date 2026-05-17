@@ -1282,7 +1282,9 @@ void init_masters (int update) {
 
 	load_master_list ();
 
-	if (update) {
+	/* Auto-populate if no masters were loaded (fresh config or first run). */
+	if (update || all_masters == NULL ||
+	    (all_masters->next == NULL && all_masters->data == favorites)) {
 		update_master_list_builtin ();
 		if (have_gslist_masters())
 			update_master_gslist_builtin();
