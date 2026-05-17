@@ -291,7 +291,7 @@ create_server_column_view (GtkWidget *scrollwin)
         GtkColumnViewColumn *col =
             gtk_column_view_column_new (_(server_list_def.cols[i].name), factory);
         gtk_column_view_column_set_resizable (col, TRUE);
-        if (i == 0)
+        if (i == server_list_def.columns - 1)
             gtk_column_view_column_set_expand (col, TRUE);
         else
             gtk_column_view_column_set_fixed_width (col, server_list_def.cols[i].width);
@@ -359,7 +359,7 @@ create_player_column_view (GtkWidget *scrollwin)
         GtkColumnViewColumn *col =
             gtk_column_view_column_new (_(player_list_def.cols[i].name), factory);
         gtk_column_view_column_set_resizable (col, TRUE);
-        if (i == 0)
+        if (i == player_list_def.columns - 1)
             gtk_column_view_column_set_expand (col, TRUE);
         else
             gtk_column_view_column_set_fixed_width (col, player_list_def.cols[i].width);
