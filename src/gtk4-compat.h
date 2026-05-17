@@ -149,7 +149,7 @@ gtk_widget_grab_default (GtkWidget *w)
 /* GtkEntry text helpers                                                 */
 /* ------------------------------------------------------------------ */
 
-#define gtk_entry_get_text(e)    gtk_editable_get_text (GTK_EDITABLE (e))
+#define gtk_entry_get_text(e)    ((e) && GTK_IS_EDITABLE (e) ? gtk_editable_get_text (GTK_EDITABLE (e)) : "")
 #define gtk_entry_set_text(e, t) gtk_editable_set_text (GTK_EDITABLE (e), (t))
 
 /* ------------------------------------------------------------------ */
@@ -794,6 +794,8 @@ static inline void gtk_ctree_set_row_data (GtkCTree *t, GtkCTreeNode *n, gpointe
 static inline char *
 gtk_file_chooser_get_filename (GtkFileChooser *chooser)
 {
+  if (!GTK_IS_FILE_CHOOSER (chooser))
+    return NULL;
   GFile *file = gtk_file_chooser_get_file (chooser);
   if (!file)
     return NULL;
@@ -805,7 +807,7 @@ gtk_file_chooser_get_filename (GtkFileChooser *chooser)
 static inline void
 gtk_file_chooser_set_filename (GtkFileChooser *chooser, const char *filename)
 {
-  if (!filename)
+  if (!GTK_IS_FILE_CHOOSER (chooser) || !filename)
     return;
   GFile *file = g_file_new_for_path (filename);
   gtk_file_chooser_set_file (chooser, file, NULL);

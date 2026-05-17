@@ -1700,7 +1700,9 @@ static void color_button_clicked_cb (GtkButton *button,
 	if (!popover) {
 		popover = create_color_popover (set_player_color);
 		gtk_widget_set_parent (popover, GTK_WIDGET (button));
-		g_object_set_data (G_OBJECT (button), "xqf-color-popover", popover);
+		/* unparent before button finalizes to suppress GTK warning */
+		g_object_set_data_full (G_OBJECT (button), "xqf-color-popover", popover,
+		                        (GDestroyNotify) gtk_widget_unparent);
 	}
 	gtk_popover_popup (GTK_POPOVER (popover));
 }
