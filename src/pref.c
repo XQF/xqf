@@ -1714,7 +1714,7 @@ static GtkWidget *q1_skin_box_create (void) {
 	GtkWidget *label;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+	xqf_widget_set_margin_all (vbox, 6);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -1767,7 +1767,7 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_container_add (GTK_CONTAINER (alignment), frame);
 
 	q1_skin_preview = gtk_image_new ();
-	gtk_container_add (GTK_CONTAINER (frame), q1_skin_preview);
+	gtk_frame_set_child (GTK_FRAME (frame), q1_skin_preview);
 	gtk_widget_show (q1_skin_preview);
 
 	gtk_widget_show (frame);
@@ -1789,7 +1789,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	GtkWidget *label;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+	xqf_widget_set_margin_all (vbox, 6);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -1856,7 +1856,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_container_add (GTK_CONTAINER (alignment), frame);
 
 	qw_skin_preview = gtk_image_new ();
-	gtk_container_add (GTK_CONTAINER (frame), qw_skin_preview);
+	gtk_frame_set_child (GTK_FRAME (frame), qw_skin_preview);
 	gtk_widget_show (qw_skin_preview);
 
 	gtk_widget_show (frame);
@@ -1905,7 +1905,7 @@ static GtkWidget *q2_skin_box_create (void) {
 	GtkWidget *frame;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+	xqf_widget_set_margin_all (vbox, 6);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
@@ -1920,7 +1920,7 @@ static GtkWidget *q2_skin_box_create (void) {
 	gtk_container_add(GTK_CONTAINER(alignment), frame);
 
 	q2_skin_preview = gtk_image_new();
-	gtk_container_add(GTK_CONTAINER(frame), q2_skin_preview);
+	gtk_frame_set_child (GTK_FRAME (frame), q2_skin_preview);
 	gtk_widget_show(q2_skin_preview);
 
 	gtk_widget_show(frame);
@@ -1958,7 +1958,7 @@ static GtkWidget *player_profile_q1_page (void) {
 	GtkWidget *label;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 6);
+	xqf_widget_set_margin_all (page_vbox, 6);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start(GTK_BOX(page_vbox), hbox, FALSE, FALSE, 0);
@@ -1995,7 +1995,7 @@ static GtkWidget *player_profile_q1_page (void) {
 	gtk_container_add(GTK_CONTAINER(alignment), frame);
 
 	q1_skin = q1_skin_box_create();
-	gtk_container_add(GTK_CONTAINER(frame), q1_skin);
+	gtk_frame_set_child (GTK_FRAME (frame), q1_skin);
 
 	gtk_widget_show(frame);
 	gtk_widget_show(alignment);
@@ -2013,7 +2013,7 @@ static GtkWidget *player_profile_t2_page (void) {
 	GtkWidget *label;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 6);
+	xqf_widget_set_margin_all (page_vbox, 6);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start(GTK_BOX(page_vbox), hbox, FALSE, FALSE, 0);
@@ -2056,7 +2056,7 @@ static GtkWidget *player_profile_qw_page (void) {
 	GtkWidget *label;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 6);
+	xqf_widget_set_margin_all (page_vbox, 6);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start(GTK_BOX(page_vbox), hbox, FALSE, FALSE, 0);
@@ -2071,7 +2071,7 @@ static GtkWidget *player_profile_qw_page (void) {
 	gtk_container_add(GTK_CONTAINER(alignment), frame);
 
 	qw_skin = qw_skin_box_create();
-	gtk_container_add(GTK_CONTAINER(frame), qw_skin);
+	gtk_frame_set_child (GTK_FRAME (frame), qw_skin);
 
 	gtk_widget_show(frame);
 	gtk_widget_show(alignment);
@@ -2136,7 +2136,7 @@ static GtkWidget *player_profile_q2_page (void) {
 	GtkWidget *hbox;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	// Player Name
 
@@ -2168,7 +2168,7 @@ static GtkWidget *player_profile_q2_page (void) {
 	gtk_container_add(GTK_CONTAINER(alignment), frame);
 
 	q2_skin = q2_skin_box_create();
-	gtk_container_add(GTK_CONTAINER(frame), q2_skin);
+	gtk_frame_set_child (GTK_FRAME (frame), q2_skin);
 
 	gtk_widget_show(frame);
 	gtk_widget_show(alignment);
@@ -2190,7 +2190,7 @@ static GtkWidget *player_profile_page(void) {
 	enum server_type type = QW_SERVER;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start(GTK_BOX(page_vbox), hbox, FALSE, FALSE, 8);
@@ -2647,7 +2647,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	frame = gtk_frame_new(NULL);
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_OUT);
 	label = gtk_label_new(_(games[type].name));
-	gtk_container_add(GTK_CONTAINER(frame), label);
+	gtk_frame_set_child (GTK_FRAME (frame), label);
 	gtk_widget_show(label);
 
 	gtk_box_pack_start(GTK_BOX(page_vbox), frame, FALSE, FALSE, 0);
@@ -2656,7 +2656,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	notebook = gtk_notebook_new();
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+	xqf_widget_set_margin_all (vbox, 6);
 
 	label = gtk_label_new(_("Invoking"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
@@ -2834,28 +2834,28 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	genprefs[type].custom_args = g_slist_copy(g->custom_args);
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width(GTK_CONTAINER(page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	g_object_ref(G_OBJECT(hbox1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "hbox1", hbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(hbox1);
-	gtk_container_add(GTK_CONTAINER(page_vbox), hbox1);
-	gtk_container_set_border_width(GTK_CONTAINER(hbox1), 3);
+	gtk_box_append (GTK_BOX (page_vbox), hbox1);
+	xqf_widget_set_margin_all (hbox1, 3);
 
 	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	g_object_ref(G_OBJECT(vbox1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(vbox1);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbox1, TRUE, TRUE, 0);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox1), 2);
+	xqf_widget_set_margin_all (vbox1, 2);
 
 	scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
 	g_object_ref(G_OBJECT(scrolledwindow1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "scrolledwindow1", scrolledwindow1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(scrolledwindow1);
 	gtk_box_pack_start(GTK_BOX(vbox1), scrolledwindow1, TRUE, TRUE, 0);
-	gtk_container_set_border_width(GTK_CONTAINER(scrolledwindow1), 2);
+	xqf_widget_set_margin_all (scrolledwindow1, 2);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	{
@@ -2878,7 +2878,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		gtk_tree_view_append_column(GTK_TREE_VIEW(arguments_list), col);
 	}
 	gtk_widget_show(arguments_list);
-	gtk_container_add(GTK_CONTAINER(scrolledwindow1), arguments_list);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolledwindow1), arguments_list);
 	g_object_set_data(G_OBJECT(arguments_list), "user_data", GINT_TO_POINTER(type));
 	g_signal_connect(arguments_list, "cursor-changed", G_CALLBACK(custom_args_list_select_row_callback), NULL);
 
@@ -2887,14 +2887,14 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	g_object_set_data_full(G_OBJECT(page_vbox), "frame1", frame1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(frame1);
 	gtk_box_pack_start(GTK_BOX(vbox1), frame1, FALSE, FALSE, 0);
-	gtk_container_set_border_width(GTK_CONTAINER(frame1), 3);
+	xqf_widget_set_margin_all (frame1, 3);
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	g_object_ref(G_OBJECT(hbox2));
 	g_object_set_data_full(G_OBJECT(page_vbox), "hbox2", hbox2, (GDestroyNotify) g_object_unref);
 	gtk_widget_show(hbox2);
-	gtk_container_add(GTK_CONTAINER(frame1), hbox2);
-	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 4);
+	gtk_frame_set_child (GTK_FRAME (frame1), hbox2);
+	xqf_widget_set_margin_all (hbox2, 4);
 
 	custom_args_entry_game[type] = gtk_entry_new();
 	g_object_ref(G_OBJECT(custom_args_entry_game[type]));
@@ -3139,10 +3139,9 @@ static GtkWidget *games_config_page (int defgame) {
 	int i;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	games_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
 
 	frame = gtk_frame_new (NULL);
@@ -3160,7 +3159,7 @@ static GtkWidget *games_config_page (int defgame) {
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
 	gtk_widget_show(gtklist);
-	gtk_container_add (GTK_CONTAINER (frame), scrollwin);
+	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
 	gtk_widget_show(scrollwin);
 	gtk_box_pack_start (GTK_BOX (games_hbox), frame, FALSE, FALSE, 0);
 	gtk_widget_show (frame);
@@ -3206,8 +3205,8 @@ static GtkWidget *games_config_page (int defgame) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 15);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
+	xqf_widget_set_margin_all (hbox, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), hbox);
 
 	/* Disable CD Audio */
 
@@ -3318,7 +3317,7 @@ static GtkWidget *q3_options_page (enum server_type type) {
 	struct q3_common_prefs_s* w = get_pref_widgets_for_game(type);
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	if (w->protocols) {
 		GList *list;
@@ -3407,7 +3406,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	int com_soundmegs       = atoi(game_get_attribute(Q3_SERVER,"com_soundmegs"));
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	pass_memory_options_button = gtk_check_button_new_with_label (_("Pass memory settings on command line"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (pass_memory_options_button), pass_memory_options);
@@ -3487,8 +3486,8 @@ static GtkWidget *q3_mem_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_container_set_border_width(GTK_CONTAINER(hbox2),8);
-	gtk_container_add (GTK_CONTAINER (frame), hbox2);
+	xqf_widget_set_margin_all (hbox2, 8);
+	gtk_frame_set_child (GTK_FRAME (frame), hbox2);
 
 	button = gtk_button_new_with_label(_("Default"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
@@ -3541,7 +3540,7 @@ static GtkWidget *qw_options_page (void) {
 	debug (5, "qw_options_page()");
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	/* QW Specific Features */
 
@@ -3552,8 +3551,8 @@ static GtkWidget *qw_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame2, FALSE, FALSE, 0);
 
 	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
-	gtk_container_add (GTK_CONTAINER (frame2), vbox2);
+	xqf_widget_set_margin_all (vbox2, 6);
+	gtk_frame_set_child (GTK_FRAME (frame2), vbox2);
 
 	/* 'w_switch' */
 
@@ -3625,7 +3624,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	debug (5, "qw_q2_options_page(%d)",qworq2);
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 16);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
@@ -3682,8 +3681,8 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 		gtk_box_pack_start (GTK_BOX (page_vbox), frame2, FALSE, FALSE, 10);
 
 		vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-		gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
-		gtk_container_add (GTK_CONTAINER (frame2), vbox2);
+		xqf_widget_set_margin_all (vbox2, 6);
+		gtk_frame_set_child (GTK_FRAME (frame2), vbox2);
 
 		add_pushlatency_options (vbox2);
 
@@ -3697,8 +3696,8 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame2, FALSE, FALSE, 10);
 
 	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox2), 6);
-	gtk_container_add (GTK_CONTAINER (frame2), vbox2);
+	xqf_widget_set_margin_all (vbox2, 6);
+	gtk_frame_set_child (GTK_FRAME (frame2), vbox2);
 
 	/* 'cl_nodelta' */
 
@@ -3792,14 +3791,14 @@ static GtkWidget *appearance_options_page (void) {
 	GtkWidget *vbox;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	frame = gtk_frame_new (_("Server List"));
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	xqf_widget_set_margin_all (vbox, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	/* Lookup host names */
 
@@ -3905,7 +3904,7 @@ static GtkWidget *general_options_page (void) {
 	GtkWidget *vbox;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	/* On Startup */
 
@@ -3915,8 +3914,8 @@ static GtkWidget *general_options_page (void) {
 	/* Refresh Favorites */
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	xqf_widget_set_margin_all (vbox, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -3965,8 +3964,8 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	xqf_widget_set_margin_all (vbox, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	/* Terminate */
 
@@ -4018,8 +4017,8 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	xqf_widget_set_margin_all (vbox, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	/* Save master lists */
 
@@ -4086,7 +4085,7 @@ static GtkWidget *qstat_options_page (void) {
 	unsigned row = 0;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	/* QStat preferences -- maxsimultaneous & maxretries */
 
@@ -4096,8 +4095,8 @@ static GtkWidget *qstat_options_page (void) {
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
-	gtk_container_add (GTK_CONTAINER (frame), grid);
+	xqf_widget_set_margin_all (grid, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
 	/* maxsimultaneous */
 
@@ -4290,7 +4289,7 @@ static GtkWidget *sound_options_page (void) {
 	int pos = 0;
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	/* Sound Enable / Disable frame */
 	/* Sounds Enable / Disable */
@@ -4301,8 +4300,8 @@ static GtkWidget *sound_options_page (void) {
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
-	gtk_container_add (GTK_CONTAINER (frame), grid);
+	xqf_widget_set_margin_all (grid, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
 	gtk_widget_show (grid);
 
@@ -4342,8 +4341,8 @@ static GtkWidget *sound_options_page (void) {
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
-	gtk_container_add (GTK_CONTAINER (frame), grid);
+	xqf_widget_set_margin_all (grid, 6);
+	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
 	sound_xqf_start_file_dialog_button = pref_sound_conf_append(sound_xqf_start, _("XQF Start"), grid, pos++);
 	sound_xqf_quit_file_dialog_button = pref_sound_conf_append(sound_xqf_quit, _("XQF Quit"), grid, pos++);
@@ -4470,8 +4469,8 @@ void preferences_dialog (int page_num) {
 	allocate_quake_player_colors ();
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
-	gtk_container_add (GTK_CONTAINER (window), vbox);
+	xqf_widget_set_margin_all (vbox, 8);
+	gtk_window_set_child (GTK_WINDOW (window), vbox);
 
 	/*
 	 *  Notebook
