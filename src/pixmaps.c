@@ -117,10 +117,8 @@ void free_pixmap (struct pixmap *pixmap) {
 	if (!pixmap)
 		return;
 
-	if (pixmap->pixbuf) {
-		g_object_unref (G_OBJECT (pixmap->pixbuf));
-		pixmap->pixbuf = NULL;
-	}
+	g_clear_object (&pixmap->pixbuf);
+	g_clear_object (&pixmap->texture);
 }
 
 
@@ -130,6 +128,7 @@ static void create_pixmap (GtkWidget *widget, const char* file, struct pixmap *p
 	if (!pix->pixbuf) {
 		pix->pixbuf = error_pix.pixbuf;
 		g_object_ref (G_OBJECT (pix->pixbuf));
+		pix->texture = error_pix.texture ? g_object_ref (error_pix.texture) : NULL;
 	}
 }
 
@@ -205,6 +204,8 @@ struct pixmap* cat_pixmaps (GtkWidget *window, struct pixmap *dest, struct pixma
 
 	gdk_pixbuf_copy_area (s1->pixbuf, 0, 0, w1, h1, dest->pixbuf, 0, 0);
 	gdk_pixbuf_copy_area (s2->pixbuf, 0, 0, w2, h2, dest->pixbuf, w1, 0);
+
+	dest->texture = gdk_texture_new_for_pixbuf (dest->pixbuf);
 
 	return dest;
 }

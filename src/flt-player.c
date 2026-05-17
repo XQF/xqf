@@ -297,7 +297,7 @@ static void pattern_list_update_groups (int row, unsigned newstate,
 		unsigned mask = 1u << i;
 		int col = PLT_COL_GRP0 + i;
 		if ((newstate & mask) != 0)
-			gtk_list_store_set (pattern_store, &iter, col, group_pix[i].pixbuf, -1);
+			gtk_list_store_set (pattern_store, &iter, col, group_pix[i].texture, -1);
 		else if ((oldstate & mask) != 0)
 			gtk_list_store_set (pattern_store, &iter, col, NULL, -1);
 	}
@@ -746,7 +746,7 @@ void player_filter_page (GtkWidget *notebook) {
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	pattern_store = gtk_list_store_new (PLT_COL_COUNT,
-			GDK_TYPE_PIXBUF, GDK_TYPE_PIXBUF, GDK_TYPE_PIXBUF,
+			GDK_TYPE_TEXTURE, GDK_TYPE_TEXTURE, GDK_TYPE_TEXTURE,
 			G_TYPE_STRING, G_TYPE_STRING);
 	pattern_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (pattern_store));
 	g_object_unref (pattern_store);
@@ -755,7 +755,7 @@ void player_filter_page (GtkWidget *notebook) {
 	for (i = 0; i < 3; i++) {
 		GtkCellRenderer *pbr = gtk_cell_renderer_pixbuf_new ();
 		GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes (
-				"", pbr, "pixbuf", PLT_COL_GRP0 + i, NULL);
+				"", pbr, "texture", PLT_COL_GRP0 + i, NULL);
 		gtk_tree_view_column_set_resizable (col, FALSE);
 		gtk_tree_view_column_set_fixed_width (col, pixmap_width (&group_pix[i]) + 8);
 		gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);

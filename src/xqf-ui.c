@@ -283,7 +283,7 @@ void source_treeview_show_node_status (struct master *m) {
 		pix = &server_status[m->state];
 
 	gtk_tree_store_set (source_store, &iter,
-		SOURCE_COL_PIXBUF, pix ? pix->pixbuf : NULL,
+		SOURCE_COL_PIXBUF, pix ? pix->texture : NULL,
 		SOURCE_COL_NAME,   _(m->name),
 		-1);
 }
@@ -416,9 +416,6 @@ static void fill_source_treeview (void) {
 		group = (struct master *) list->data;
 		if (!group->masters)
 			continue;
-		if (!games[group->type].cmd && default_show_only_configured_games)
-			continue;
-
 		source_treeview_enable_master_group (group);
 
 		if (!source_find_master (group, &parent_iter))
@@ -466,9 +463,9 @@ GtkWidget *create_source_treeview (GtkWidget *scrollwin) {
 	GtkTreeSelection *sel;
 
 	source_store = gtk_tree_store_new (SOURCE_COL_COUNT,
-	                                   G_TYPE_POINTER,  /* MASTER */
-	                                   GDK_TYPE_PIXBUF, /* PIXBUF */
-	                                   G_TYPE_STRING);  /* NAME   */
+	                                   G_TYPE_POINTER,    /* MASTER */
+	                                   GDK_TYPE_TEXTURE,  /* PIXBUF */
+	                                   G_TYPE_STRING);    /* NAME   */
 
 	tv = gtk_tree_view_new_with_model (GTK_TREE_MODEL (source_store));
 	g_object_unref (source_store);
@@ -478,7 +475,7 @@ GtkWidget *create_source_treeview (GtkWidget *scrollwin) {
 
 	cr = gtk_cell_renderer_pixbuf_new ();
 	gtk_tree_view_column_pack_start (col, cr, FALSE);
-	gtk_tree_view_column_set_attributes (col, cr, "pixbuf", SOURCE_COL_PIXBUF, NULL);
+	gtk_tree_view_column_set_attributes (col, cr, "texture", SOURCE_COL_PIXBUF, NULL);
 
 	cr = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (col, cr, TRUE);
@@ -721,13 +718,13 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 
 	store = gtk_list_store_new (SERVERTYPE_ATTR_COUNT,
 	                            G_TYPE_INT,
-	                            GDK_TYPE_PIXBUF,
+	                            GDK_TYPE_TEXTURE,
 	                            G_TYPE_STRING
 	                            );
 
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; ++i) {
 		GtkTreeIter iter;
-		GdkPixbuf *pixbuf = games[i].pix->pixbuf;
+		GdkTexture *texture = games[i].pix->texture;
 		char *name = _(games[i].name);
 
 		if (filterfunc && !filterfunc (i))
@@ -737,7 +734,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 
 		gtk_list_store_set (store, &iter,
 		                    SERVERTYPE_ATTR_TYPE, i,
-		                    SERVERTYPE_ATTR_ICON, pixbuf,
+		                    SERVERTYPE_ATTR_ICON, texture,
 		                    SERVERTYPE_ATTR_NAME, name,
 		                    -1);
 
@@ -758,8 +755,8 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
 	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
 	                                renderer,
-	                                "pixbuf", SERVERTYPE_ATTR_ICON,
-	                                 NULL);
+	                                "texture", SERVERTYPE_ATTR_ICON,
+	                                NULL);
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);

@@ -130,7 +130,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 
 enum {
 	SERVERTYPE_ATTR_TYPE, // G_TYPE_INT -- enum server_type
-	SERVERTYPE_ATTR_ICON, // GDK_TYPE_PIXBUF
+	SERVERTYPE_ATTR_ICON, // GDK_TYPE_TEXTURE
 	SERVERTYPE_ATTR_NAME, // G_TYPE_STRING
 	SERVERTYPE_ATTR_COUNT
 };

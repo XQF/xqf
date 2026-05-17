@@ -154,12 +154,16 @@ struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, 
 			xpm = dlsym(NULL, found_filename);
 			if (xpm) {
 				pix->pixbuf = gdk_pixbuf_new_from_xpm_data (xpm);
+				if (pix->pixbuf)
+					pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
 			}
 		}
 	}
 	else {
 		pix->pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
 		debug(4, "loading gdk_pixbuf from file: %s", found_filename);
+		if (pix->pixbuf)
+			pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
 	}
 
 	if (pix->pixbuf == NULL) {

@@ -3026,20 +3026,20 @@ static GtkWidget *create_games_list (void) {
 
 	store = gtk_tree_store_new (GAMESLIST_ATTR_COUNT,
 	                            G_TYPE_INT,
-	                            GDK_TYPE_PIXBUF,
+	                            GDK_TYPE_TEXTURE,
 	                            G_TYPE_STRING
 	                            );
 
 	for (i = LAN_SERVER, row = 0; i < UNKNOWN_SERVER; i++, row++) {
 		GtkTreeIter iter;
-		GdkPixbuf *pixbuf = games[i].pix->pixbuf;
+		GdkTexture *texture = games[i].pix->texture;
 		char *name = _(games[i].name);
 
 		gtk_tree_store_append (store, &iter, NULL);
 
 		gtk_tree_store_set (store, &iter,
 		                    GAMESLIST_ATTR_TYPE, i,
-		                    GAMESLIST_ATTR_ICON, pixbuf,
+		                    GAMESLIST_ATTR_ICON, texture,
 		                    GAMESLIST_ATTR_NAME, name,
 		                    -1);
 
@@ -3060,7 +3060,7 @@ static GtkWidget *create_games_list (void) {
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,
 	                                     renderer,
-	                                     "pixbuf", GAMESLIST_ATTR_ICON,
+	                                     "texture", GAMESLIST_ATTR_ICON,
 	                                     NULL);
 
 	renderer = gtk_cell_renderer_text_new ();

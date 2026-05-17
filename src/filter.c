@@ -48,7 +48,7 @@ static void country_create_popup_window (void);
 
 enum {
 	COUNTRY_COL_ID = 0,   /* G_TYPE_INT  — geoip country id */
-	COUNTRY_COL_FLAG,     /* GDK_TYPE_PIXBUF — flag (may be NULL) */
+	COUNTRY_COL_FLAG,     /* GDK_TYPE_TEXTURE — flag (may be NULL) */
 	COUNTRY_COL_NAME,     /* G_TYPE_STRING */
 	COUNTRY_COL_COUNT
 };
@@ -1121,7 +1121,7 @@ static void server_filter_fill_widgets(guint num) {
 				gtk_list_store_append (store, &iter);
 				gtk_list_store_set (store, &iter,
 						COUNTRY_COL_ID,   f_number,
-						COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+						COUNTRY_COL_FLAG, countrypix ? countrypix->texture : NULL,
 						COUNTRY_COL_NAME, geoip_name_by_id (f_number),
 						-1);
 			}
@@ -1410,7 +1410,7 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	{
 		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
-				G_TYPE_INT, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+				G_TYPE_INT, GDK_TYPE_TEXTURE, G_TYPE_STRING);
 		country_filter_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 		g_object_unref (store);
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (country_filter_list), FALSE);
@@ -1418,7 +1418,7 @@ static void server_filter_page (GtkWidget *notebook) {
 		GtkCellRenderer *tr  = gtk_cell_renderer_text_new ();
 		GtkTreeViewColumn *col = gtk_tree_view_column_new ();
 		gtk_tree_view_column_pack_start (col, pbr, FALSE);
-		gtk_tree_view_column_add_attribute (col, pbr, "pixbuf", COUNTRY_COL_FLAG);
+		gtk_tree_view_column_add_attribute (col, pbr, "texture", COUNTRY_COL_FLAG);
 		gtk_tree_view_column_pack_start (col, tr, TRUE);
 		gtk_tree_view_column_add_attribute (col, tr, "text", COUNTRY_COL_NAME);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (country_filter_list), col);
@@ -1676,7 +1676,7 @@ static void country_add_selection_to_right_list() {
 	gtk_list_store_append (right_store, &riter);
 	gtk_list_store_set (right_store, &riter,
 			COUNTRY_COL_ID,   flag_id,
-			COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+			COUNTRY_COL_FLAG, countrypix ? countrypix->texture : NULL,
 			COUNTRY_COL_NAME, geoip_name_by_id (flag_id),
 			-1);
 }
@@ -1737,7 +1737,7 @@ static void country_selection_on_ok(void) {
 			gtk_list_store_append (filter_store, &fiter);
 			gtk_list_store_set (filter_store, &fiter,
 					COUNTRY_COL_ID,   country_nr,
-					COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+					COUNTRY_COL_FLAG, countrypix ? countrypix->texture : NULL,
 					COUNTRY_COL_NAME, geoip_name_by_id (country_nr),
 					-1);
 		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (right_store), &riter));
@@ -1770,7 +1770,7 @@ static void populate_country_list(GtkWidget* list, gboolean all) {
 		gtk_list_store_append (store, &iter);
 		gtk_list_store_set (store, &iter,
 				COUNTRY_COL_ID,   (gint) i,
-				COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+				COUNTRY_COL_FLAG, countrypix ? countrypix->texture : NULL,
 				COUNTRY_COL_NAME, geoip_name_by_id (i),
 				-1);
 	}
@@ -1830,7 +1830,7 @@ static void country_create_popup_window(void) {
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 	{
 		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
-				G_TYPE_INT, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+				G_TYPE_INT, GDK_TYPE_TEXTURE, G_TYPE_STRING);
 		country_left_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 		g_object_unref (store);
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (country_left_list), FALSE);
@@ -1838,7 +1838,7 @@ static void country_create_popup_window(void) {
 		GtkCellRenderer *tr  = gtk_cell_renderer_text_new ();
 		GtkTreeViewColumn *col = gtk_tree_view_column_new ();
 		gtk_tree_view_column_pack_start (col, pbr, FALSE);
-		gtk_tree_view_column_add_attribute (col, pbr, "pixbuf", COUNTRY_COL_FLAG);
+		gtk_tree_view_column_add_attribute (col, pbr, "texture", COUNTRY_COL_FLAG);
 		gtk_tree_view_column_pack_start (col, tr, TRUE);
 		gtk_tree_view_column_add_attribute (col, tr, "text", COUNTRY_COL_NAME);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (country_left_list), col);
@@ -1884,7 +1884,7 @@ static void country_create_popup_window(void) {
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	{
 		GtkListStore *store = gtk_list_store_new (COUNTRY_COL_COUNT,
-				G_TYPE_INT, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+				G_TYPE_INT, GDK_TYPE_TEXTURE, G_TYPE_STRING);
 		country_right_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 		g_object_unref (store);
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (country_right_list), FALSE);
@@ -1892,7 +1892,7 @@ static void country_create_popup_window(void) {
 		GtkCellRenderer *tr  = gtk_cell_renderer_text_new ();
 		GtkTreeViewColumn *col = gtk_tree_view_column_new ();
 		gtk_tree_view_column_pack_start (col, pbr, FALSE);
-		gtk_tree_view_column_add_attribute (col, pbr, "pixbuf", COUNTRY_COL_FLAG);
+		gtk_tree_view_column_add_attribute (col, pbr, "texture", COUNTRY_COL_FLAG);
 		gtk_tree_view_column_pack_start (col, tr, TRUE);
 		gtk_tree_view_column_add_attribute (col, tr, "text", COUNTRY_COL_NAME);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (country_right_list), col);
@@ -1915,7 +1915,7 @@ static void country_create_popup_window(void) {
 				gtk_list_store_append (rstore, &riter);
 				gtk_list_store_set (rstore, &riter,
 						COUNTRY_COL_ID,   flag_nr,
-						COUNTRY_COL_FLAG, countrypix ? countrypix->pixbuf : NULL,
+						COUNTRY_COL_FLAG, countrypix ? countrypix->texture : NULL,
 						COUNTRY_COL_NAME, geoip_name_by_id (flag_nr),
 						-1);
 			} while (gtk_tree_model_iter_next (fmodel, &fiter));

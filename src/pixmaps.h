@@ -23,9 +23,10 @@
 #include "gtk4-compat.h"
 
 struct pixmap {
-	GdkPixbuf *pixbuf;
-	GdkPixmap *pix;   /* unused: was GdkPixmap* in GTK2, always NULL */
-	GdkBitmap *mask;  /* unused: was GdkBitmap* in GTK2, always NULL */
+	GdkPixbuf  *pixbuf;
+	GdkTexture *texture; /* GdkTexture wrapper for use with GtkCellRendererPixbuf "texture" property */
+	GdkPixmap  *pix;   /* unused: was GdkPixmap* in GTK2, always NULL */
+	GdkBitmap  *mask;  /* unused: was GdkBitmap* in GTK2, always NULL */
 };
 
 struct cached_pixmap {
