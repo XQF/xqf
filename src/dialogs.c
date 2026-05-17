@@ -144,9 +144,9 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 
 	label = gtk_label_new (buf);
 	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	/* Buttons */
 
@@ -161,13 +161,13 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
+	gtk_widget_set_visible (main_vbox, TRUE);
 
-	gtk_widget_show (window);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 
@@ -219,9 +219,9 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 
 	label = gtk_label_new (buf);
 	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	/* Buttons */
 
@@ -239,7 +239,7 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 0)
 		gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label ((no)? no : _("No"));
 	gtk_widget_set_size_request (button, 96, -1);
@@ -249,13 +249,13 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 1)
 		gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
+	gtk_widget_set_visible (main_vbox, TRUE);
 
-	gtk_widget_show (window);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 
@@ -299,9 +299,9 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 
 	label = gtk_label_new (buf);
 	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	/* Buttons */
 
@@ -319,7 +319,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 0)
 		gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label ((no)? no : _("No"));
 	gtk_widget_set_size_request (button, 96, -1);
@@ -329,7 +329,7 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 1)
 		gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label ((redial)? redial : _("Redial"));
 	gtk_widget_set_size_request (button, 96, -1);
@@ -341,13 +341,13 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 	gtk_widget_set_can_default (button, TRUE);
 	if (defbutton == 2)
 		gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
+	gtk_widget_set_visible (main_vbox, TRUE);
 
-	gtk_widget_show (window);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 
@@ -397,7 +397,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 
 	label = gtk_label_new (buf);
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	/* Entry */
 
@@ -411,7 +411,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	g_signal_connect_swapped (G_OBJECT (enter_string_entry), "activate",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_grab_focus (enter_string_entry);
-	gtk_widget_show (enter_string_entry);
+	gtk_widget_set_visible (enter_string_entry, TRUE);
 
 	/* OK Button */
 
@@ -422,7 +422,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* Cancel Button */
 
@@ -430,9 +430,9 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Option */
 
@@ -452,13 +452,13 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 
 		gtk_box_pack_start (GTK_BOX (hbox), enter_string_opt_button,
 				FALSE, FALSE, 8);
-		gtk_widget_show (enter_string_opt_button);
+		gtk_widget_set_visible (enter_string_opt_button, TRUE);
 
-		gtk_widget_show (hbox);
+		gtk_widget_set_visible (hbox, TRUE);
 	}
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 
@@ -573,7 +573,7 @@ GtkWidget* file_dialog(const char *title, GCallback response_callback, gpointer 
 
 	gtk_window_set_modal (GTK_WINDOW(dialog),TRUE);
 
-	gtk_widget_show(GTK_WIDGET(dialog));
+	gtk_widget_set_visible (GTK_WIDGET(dialog), TRUE);
 
 	g_signal_connect (dialog, "response", G_CALLBACK (response_callback), data);
 

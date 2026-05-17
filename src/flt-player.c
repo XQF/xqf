@@ -614,7 +614,7 @@ static GtkWidget *aligned_image (struct pixmap *pix) {
 	image = gtk_image_new_from_pixbuf (pix->pixbuf);
 	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
-	gtk_widget_show (image);
+	gtk_widget_set_visible (image, TRUE);
 
 	return image;
 }
@@ -644,7 +644,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
 	label = gtk_label_new (_("Pattern"));
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	pattern_entry = gtk_entry_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (pattern_entry), 256);
@@ -654,7 +654,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 			G_CALLBACK (sync_pattern_data), NULL);
 	g_signal_connect (pattern_entry, "changed",
 			G_CALLBACK (sync_pattern_data), NULL);
-	gtk_widget_show (pattern_entry);
+	gtk_widget_set_visible (pattern_entry, TRUE);
 
 	/* Mode Buttons */
 
@@ -670,27 +670,27 @@ static GtkWidget *player_filter_pattern_editor (void) {
 		g_signal_connect (mode_buttons[i], "toggled", G_CALLBACK (sync_pattern_data), NULL);
 
 		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
-		gtk_widget_show (mode_buttons[i]);
+		gtk_widget_set_visible (mode_buttons[i], TRUE);
 	}
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (grid);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (grid, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
 	/* Comment */
 
 	label = gtk_label_new (_("Pattern Comment"));
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_end (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	comment_text_buffer = gtk_text_buffer_new (NULL);
 	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (comment_text), GTK_WRAP_WORD_CHAR);
 	g_signal_connect (comment_text_buffer, "changed",
 			G_CALLBACK (sync_pattern_data), NULL);
-	gtk_widget_show (comment_text);
+	gtk_widget_set_visible (comment_text, TRUE);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
@@ -699,9 +699,9 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	gtk_widget_set_size_request (scrollwin, -1, 80);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), comment_text);
 	gtk_box_pack_end (GTK_BOX (vbox), scrollwin, TRUE, TRUE, 0);
-	gtk_widget_show (scrollwin);
+	gtk_widget_set_visible (scrollwin, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	return vbox;
 }
@@ -740,7 +740,7 @@ void player_filter_page (GtkWidget *notebook) {
 	xqf_widget_set_margin_all (page_hbox, 8);
 
 	label = gtk_label_new (_("Player Filter"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_hbox, label);
 
@@ -766,7 +766,7 @@ void player_filter_page (GtkWidget *notebook) {
 		gtk_tree_view_column_set_fixed_width (col, pixmap_width (&group_pix[i]) + 8);
 		gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
 		image = gtk_image_new_from_pixbuf (group_pix[i].pixbuf);
-		gtk_widget_show (image);
+		gtk_widget_set_visible (image, TRUE);
 		gtk_tree_view_column_set_widget (col, image);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
 	}
@@ -801,8 +801,8 @@ void player_filter_page (GtkWidget *notebook) {
 	}
 
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), pattern_list);
-	gtk_widget_show (pattern_list);
-	gtk_widget_show (scrollwin);
+	gtk_widget_set_visible (pattern_list, TRUE);
+	gtk_widget_set_visible (scrollwin, TRUE);
 
 	/* Buttons */
 
@@ -812,12 +812,12 @@ void player_filter_page (GtkWidget *notebook) {
 	button = gtk_button_new_with_label (_("New"));
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked", G_CALLBACK (new_pattern_callback), NULL);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	delete_button = gtk_button_new_with_label (_("Delete"));
 	gtk_box_pack_start (GTK_BOX (vbox), delete_button, FALSE, FALSE, 0);
 	g_signal_connect (delete_button, "clicked", G_CALLBACK (delete_pattern_callback), NULL);
-	gtk_widget_show (delete_button);
+	gtk_widget_set_visible (delete_button, TRUE);
 
 	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	gtk_widget_set_halign (vbox2, GTK_ALIGN_FILL);
@@ -827,22 +827,22 @@ void player_filter_page (GtkWidget *notebook) {
 	up_button = gtk_button_new_with_label (_("Up"));
 	gtk_box_pack_start (GTK_BOX (vbox2), up_button, FALSE, FALSE, 0);
 	g_signal_connect (up_button, "clicked", G_CALLBACK (move_up_down_pattern_callback), (void *) -1);
-	gtk_widget_show (up_button);
+	gtk_widget_set_visible (up_button, TRUE);
 
 	down_button = gtk_button_new_with_label (_("Down"));
 	gtk_box_pack_start (GTK_BOX (vbox2), down_button, FALSE, FALSE, 0);
 	g_signal_connect (down_button, "clicked", G_CALLBACK (move_up_down_pattern_callback), (void *) 1);
-	gtk_widget_show (down_button);
+	gtk_widget_set_visible (down_button, TRUE);
 
-	gtk_widget_show (vbox2);
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox2, TRUE);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	/* Pattern Editor */
 
 	peditor = player_filter_pattern_editor ();
 	gtk_box_pack_end (GTK_BOX (page_hbox), peditor, TRUE, TRUE, 0);
 
-	gtk_widget_show (page_hbox);
+	gtk_widget_set_visible (page_hbox, TRUE);
 
 	player_filter_page_init ();
 }

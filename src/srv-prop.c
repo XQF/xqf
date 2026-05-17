@@ -420,38 +420,38 @@ static GtkWidget *server_info_page (struct server *s) {
 	label = gtk_label_new (_("IP Address:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	label = gtk_label_new (inet_ntoa (s->host->ip));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_widget_set_margin_start (label, 8);
 	gtk_grid_attach (GTK_GRID (grid), label, 1, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	label = gtk_label_new (_("Port:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 2, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	g_snprintf (buf, 32, "%d", s->port);
 
 	label = gtk_label_new (buf);
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	row++;
 
 	label = gtk_label_new (_("Host Name:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	if (s->host->name) {
 		label = gtk_label_new (s->host->name);
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_grid_attach (GTK_GRID (grid), label, 1, row, 3, 1);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 	}
 
 	row++;
@@ -459,7 +459,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	label = gtk_label_new (_("Country:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 #ifdef USE_GEOIP
 	if (geoip_name_by_id(s->country_id)) {
@@ -468,16 +468,16 @@ static GtkWidget *server_info_page (struct server *s) {
 		if (pix) {
 			GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
 			gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-			gtk_widget_show (image);
+			gtk_widget_set_visible (image, TRUE);
 		}
 
 		label = gtk_label_new (geoip_name_by_id(s->country_id));
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 
 		gtk_grid_attach (GTK_GRID (grid), hbox, 1, row, 3, 1);
-		gtk_widget_show (hbox);
+		gtk_widget_set_visible (hbox, TRUE);
 	}
 #endif
 
@@ -486,7 +486,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	label = gtk_label_new (_("Refreshed:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	if (s->refreshed) {
 		char* str = timet2string(&s->refreshed);
@@ -495,7 +495,7 @@ static GtkWidget *server_info_page (struct server *s) {
 		g_free(str);
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_grid_attach (GTK_GRID (grid), label, 1, row, 3, 1);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 	}
 
 	row++;
@@ -504,7 +504,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	label = gtk_label_new (_("Last answer:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	if (s->last_answer) {
 		GtkStyle *style;
@@ -531,7 +531,7 @@ static GtkWidget *server_info_page (struct server *s) {
 			gtk_widget_set_style (label, style);
 		}
 
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 	}
 
 	row++;
@@ -560,7 +560,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	label = gtk_label_new (_("Reserved Slots:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (slots_buffer, 0, 9, 1, 2,0);
@@ -568,11 +568,11 @@ static GtkWidget *server_info_page (struct server *s) {
 	gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinner), TRUE);
 	gtk_spin_button_set_update_policy(GTK_SPIN_BUTTON (spinner), GTK_UPDATE_IF_VALID);
 	gtk_grid_attach (GTK_GRID (grid), spinner, 1, row, 1, 1);
-	gtk_widget_show (spinner);
+	gtk_widget_set_visible (spinner, TRUE);
 
 
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 
 	/* Sources */
 
@@ -591,13 +591,13 @@ static GtkWidget *server_info_page (struct server *s) {
 
 		label = gtk_label_new (_(m->name));
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 	}
 
 	g_slist_free (sources);
 
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (vbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
 	/* Custom CFG */
 
@@ -625,15 +625,15 @@ static GtkWidget *server_info_page (struct server *s) {
 	}
 
 	gtk_box_pack_end (GTK_BOX (hbox), customcfg_combo, FALSE, FALSE, 0);
-	gtk_widget_show (customcfg_combo);
+	gtk_widget_set_visible (customcfg_combo, TRUE);
 
 	label = gtk_label_new (_("Custom CFG:"));
 	gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -647,7 +647,7 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 	label = gtk_label_new (str);
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, pos, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	entry = gtk_entry_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (entry), 32);
@@ -656,7 +656,7 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 		gtk_entry_set_text (GTK_ENTRY (entry), passwd);
 	}
 	gtk_grid_attach (GTK_GRID (grid), entry, 1, pos, 1, 1);
-	gtk_widget_show (entry);
+	gtk_widget_set_visible (entry, TRUE);
 
 	return entry;
 }
@@ -697,9 +697,9 @@ static GtkWidget *server_passwords_page (struct server *s) {
 	if ((games[s->type].flags & GAME_RCON) == 0 && (games[s->type].flags & GAME_ADMIN) == 0)
 		gtk_widget_set_sensitive (rcon_entry, FALSE);
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -723,7 +723,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	sucks_check_button = gtk_check_button_new_with_label (_("This server sucks"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (sucks_check_button), sucks);
 	gtk_box_pack_start (GTK_BOX (page_vbox), sucks_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (sucks_check_button);
+	gtk_widget_set_visible (sucks_check_button, TRUE);
 
 	scrollwin = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -737,11 +737,11 @@ static GtkWidget *server_comment_page (struct server *s) {
 	}
 	//  gtk_widget_set_size_request (comment_text, -1, 80);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), comment_text);
-	gtk_widget_show (comment_text);
+	gtk_widget_set_visible (comment_text, TRUE);
 
-	gtk_widget_show (scrollwin);
+	gtk_widget_set_visible (scrollwin, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -777,7 +777,7 @@ void properties_dialog (struct server *s) {
 	if (games[s->type].pix) {
 		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
 		gtk_box_pack_start (GTK_BOX (hbox2), image, FALSE, FALSE, 0);
-		gtk_widget_show (image);
+		gtk_widget_set_visible (image, TRUE);
 	}
 
 	if (s->name) {
@@ -788,10 +788,10 @@ void properties_dialog (struct server *s) {
 		label = gtk_label_new (buf);
 	}
 	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox2);
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox2, TRUE);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/*
 	 *  Notebook
@@ -803,22 +803,22 @@ void properties_dialog (struct server *s) {
 
 	page = server_info_page (s);
 	label = gtk_label_new (_("Info"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
 	page = server_passwords_page (s);
 	label = gtk_label_new (_("Passwords"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
 	page = server_comment_page(s);
 	label = gtk_label_new (_("Comment"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
 
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
 
-	gtk_widget_show (notebook);
+	gtk_widget_set_visible (notebook, TRUE);
 
 	/*
 	 *  Buttons at the bottom
@@ -833,7 +833,7 @@ void properties_dialog (struct server *s) {
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_size_request (button, 80, -1);
@@ -844,13 +844,13 @@ void properties_dialog (struct server *s) {
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
+	gtk_widget_set_visible (main_vbox, TRUE);
 
-	gtk_widget_show (window);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 

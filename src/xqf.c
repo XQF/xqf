@@ -1794,7 +1794,7 @@ void populate_main_toolbar (void) {
 		g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
 		gtk_widget_set_tooltip_text (filter_buttons[i], buf);
 
-		gtk_widget_show (filter_buttons[i]);
+		gtk_widget_set_visible (filter_buttons[i], TRUE);
 		gtk_box_append (GTK_BOX (toolbar), filter_buttons[i]);
 
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_buttons[i]),
@@ -1959,7 +1959,7 @@ void populate_main_window (void) {
 
 	source_treeview = create_source_treeview (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
 
-	gtk_widget_show (source_treeview);
+	gtk_widget_set_visible (source_treeview, TRUE);
 
 	/* Restore per-group expand/collapse state from config; fill_source_treeview()
 	 * couldn't do this because source_treeview was NULL when it ran. */
@@ -1968,7 +1968,7 @@ void populate_main_window (void) {
 	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (source_treeview)),
 	                  "changed", G_CALLBACK (source_selection_changed_callback), NULL);
 
-	gtk_widget_show (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")));
+	gtk_widget_set_visible (GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-sources")), TRUE);
 
 	pane2_widget = GTK_WIDGET (gtk_builder_get_object (builder, "vpaned"));
 
@@ -1979,7 +1979,7 @@ void populate_main_window (void) {
 	button = GTK_WIDGET (gtk_builder_get_object (builder, "button"));
 	image = gtk_image_new_from_pixbuf (delete_pix.pixbuf);
 	gtk_button_set_child (GTK_BUTTON (button), image);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	entry = GTK_WIDGET (gtk_builder_get_object (builder, "entry"));
 	g_signal_connect (entry, "changed", G_CALLBACK (quick_filter_entry_changed), NULL);
@@ -1988,7 +1988,7 @@ void populate_main_window (void) {
 
 	server_view = create_server_column_view (
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server")));
-	gtk_widget_show (server_view);
+	gtk_widget_set_visible (server_view, TRUE);
 
 	{
 		GtkGestureClick *dbl = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
@@ -2012,7 +2012,7 @@ void populate_main_window (void) {
 
 	player_view = create_player_column_view (
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-player")));
-	gtk_widget_show (player_view);
+	gtk_widget_set_visible (player_view, TRUE);
 
 	{
 		GtkGestureClick *rclick = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
@@ -2025,7 +2025,7 @@ void populate_main_window (void) {
 
 	srvinf_treeview = srvinf_treeview_new (
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")));
-	gtk_widget_show (srvinf_treeview);
+	gtk_widget_set_visible (srvinf_treeview, TRUE);
 
 	(void) calculate_row_height (GTK_WIDGET (server_view), games[Q1_SERVER].pix);
 
@@ -2039,7 +2039,7 @@ void populate_main_window (void) {
 	main_progress_bar = GTK_WIDGET (gtk_builder_get_object (builder, "main-progress-bar"));
 	if (!main_progress_bar) {
 		main_progress_bar = create_progress_bar ();
-		gtk_widget_show (main_progress_bar);
+		gtk_widget_set_visible (main_progress_bar, TRUE);
 	}
 	gtk_widget_set_size_request (main_progress_bar, 200, -1);
 
@@ -2369,7 +2369,7 @@ int main (int argc, char *argv[]) {
 
 	populate_main_window ();
 
-	gtk_widget_show (main_window);
+	gtk_widget_set_visible (main_window, TRUE);
 
 	source_treeview_select_source (favorites);
 	filter_menu_activate_current ();

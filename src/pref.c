@@ -1729,31 +1729,31 @@ static GtkWidget *q1_skin_box_create (void) {
 	label = gtk_label_new (_("Top"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	q1_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (q1_top_color_button, 40, -1);
 	gtk_grid_attach (GTK_GRID (grid), q1_top_color_button, 1, 0, 1, 1);
 	set_bg_color (q1_top_color_button, fix_qw_player_color (pref_q1_top_color));
-	gtk_widget_show (q1_top_color_button);
+	gtk_widget_set_visible (q1_top_color_button, TRUE);
 
 	/* Bottom (Pants) Color */
 
 	label = gtk_label_new (_("Bottom"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	q1_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (q1_bottom_color_button, 40, -1);
 	gtk_grid_attach (GTK_GRID (grid), q1_bottom_color_button, 1, 1, 1, 1);
 	set_bg_color (q1_bottom_color_button,
 			fix_qw_player_color (pref_q1_bottom_color));
-	gtk_widget_show (q1_bottom_color_button);
+	gtk_widget_set_visible (q1_bottom_color_button, TRUE);
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Skin Preview  */
 
@@ -1765,11 +1765,11 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_skin_preview = gtk_image_new ();
 	gtk_frame_set_child (GTK_FRAME (frame), q1_skin_preview);
-	gtk_widget_show (q1_skin_preview);
+	gtk_widget_set_visible (q1_skin_preview, TRUE);
 
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	return vbox;
 }
@@ -1798,7 +1798,7 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_widget_set_halign (qw_skin_combo, GTK_ALIGN_START);
 	gtk_widget_set_valign (qw_skin_combo, GTK_ALIGN_START);
 	gtk_box_pack_start(GTK_BOX (hbox), qw_skin_combo, FALSE, FALSE, 0);
-	gtk_widget_show(qw_skin_combo);
+	gtk_widget_set_visible (qw_skin_combo, TRUE);
 
 	/* Top and Bottom Colors */
 
@@ -1812,30 +1812,30 @@ static GtkWidget *qw_skin_box_create (void) {
 	label = gtk_label_new(_("Top"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	qw_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (qw_top_color_button, 40, -1);
 	gtk_grid_attach (GTK_GRID (grid), qw_top_color_button, 1, 0, 1, 1);
 	set_bg_color (qw_top_color_button, fix_qw_player_color (pref_qw_top_color));
-	gtk_widget_show (qw_top_color_button);
+	gtk_widget_set_visible (qw_top_color_button, TRUE);
 
 	/* Bottom (Pants) Color */
 
 	label = gtk_label_new (_("Bottom"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	qw_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (qw_bottom_color_button, 40, -1);
 	gtk_grid_attach (GTK_GRID (grid), qw_bottom_color_button, 1, 1, 1, 1);
 	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
-	gtk_widget_show (qw_bottom_color_button);
+	gtk_widget_set_visible (qw_bottom_color_button, TRUE);
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Skin Preview  */
 
@@ -1847,11 +1847,11 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_skin_preview = gtk_image_new ();
 	gtk_frame_set_child (GTK_FRAME (frame), qw_skin_preview);
-	gtk_widget_show (qw_skin_preview);
+	gtk_widget_set_visible (qw_skin_preview, TRUE);
 
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	return vbox;
 }
@@ -1907,9 +1907,9 @@ static GtkWidget *q2_skin_box_create (void) {
 
 	q2_skin_preview = gtk_image_new();
 	gtk_frame_set_child (GTK_FRAME (frame), q2_skin_preview);
-	gtk_widget_show(q2_skin_preview);
+	gtk_widget_set_visible (q2_skin_preview, TRUE);
 
-	gtk_widget_show(frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 	/* Q2 Skin ComboBox */
 
@@ -1920,11 +1920,11 @@ static GtkWidget *q2_skin_box_create (void) {
 	gtk_widget_set_halign (q2_skin_combo, GTK_ALIGN_END);
 	gtk_widget_set_valign (q2_skin_combo, GTK_ALIGN_START);
 	gtk_box_pack_end(GTK_BOX(hbox), q2_skin_combo, FALSE, FALSE, 0);
-	gtk_widget_show(q2_skin_combo);
+	gtk_widget_set_visible (q2_skin_combo, TRUE);
 
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show(vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	return vbox;
 }
@@ -1951,7 +1951,7 @@ static GtkWidget *player_profile_q1_page (void) {
 
 	label = gtk_label_new(_("Name"));
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	name_q1_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (name_q1_entry), 32);
@@ -1961,8 +1961,8 @@ static GtkWidget *player_profile_q1_page (void) {
 		gtk_editable_set_position(GTK_EDITABLE(name_q1_entry), 0);
 	}
 	gtk_box_pack_start(GTK_BOX(hbox2), name_q1_entry, FALSE, FALSE, 0);
-	gtk_widget_show(name_q1_entry);
-	gtk_widget_show(hbox2);
+	gtk_widget_set_visible (name_q1_entry, TRUE);
+	gtk_widget_set_visible (hbox2, TRUE);
 
 	// /Player Name
 
@@ -1977,10 +1977,10 @@ static GtkWidget *player_profile_q1_page (void) {
 	q1_skin = q1_skin_box_create();
 	gtk_frame_set_child (GTK_FRAME (frame), q1_skin);
 
-	gtk_widget_show(frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show(hbox);
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -2004,7 +2004,7 @@ static GtkWidget *player_profile_t2_page (void) {
 
 	label = gtk_label_new(_("Login name"));
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	name_t2_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (name_t2_entry), 32);
@@ -2014,13 +2014,13 @@ static GtkWidget *player_profile_t2_page (void) {
 		gtk_editable_set_position(GTK_EDITABLE(name_t2_entry), 0);
 	}
 	gtk_box_pack_start(GTK_BOX(hbox2), name_t2_entry, FALSE, FALSE, 0);
-	gtk_widget_show(name_t2_entry);
-	gtk_widget_show(hbox2);
+	gtk_widget_set_visible (name_t2_entry, TRUE);
+	gtk_widget_set_visible (hbox2, TRUE);
 
 	// /Player Name
 
-	gtk_widget_show(hbox);
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -2050,7 +2050,7 @@ static GtkWidget *player_profile_qw_page (void) {
 	qw_skin = qw_skin_box_create();
 	gtk_frame_set_child (GTK_FRAME (frame), qw_skin);
 
-	gtk_widget_show(frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 	// Player Name
 
@@ -2059,7 +2059,7 @@ static GtkWidget *player_profile_qw_page (void) {
 
 	label = gtk_label_new(_("Name"));
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	name_qw_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (name_qw_entry), 32);
@@ -2069,8 +2069,8 @@ static GtkWidget *player_profile_qw_page (void) {
 		gtk_editable_set_position(GTK_EDITABLE(name_qw_entry), 0);
 	}
 	gtk_box_pack_start(GTK_BOX(hbox2), name_qw_entry, FALSE, FALSE, 0);
-	gtk_widget_show(name_qw_entry);
-	gtk_widget_show(hbox2);
+	gtk_widget_set_visible (name_qw_entry, TRUE);
+	gtk_widget_set_visible (hbox2, TRUE);
 
 	// /Player Name
 
@@ -2081,7 +2081,7 @@ static GtkWidget *player_profile_qw_page (void) {
 
 	label = gtk_label_new(_("Team"));
 	gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	team_qw_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (team_qw_entry), 32);
@@ -2091,13 +2091,13 @@ static GtkWidget *player_profile_qw_page (void) {
 		gtk_editable_set_position(GTK_EDITABLE(team_qw_entry), 0);
 	}
 	gtk_box_pack_start(GTK_BOX(hbox2), team_qw_entry, FALSE, FALSE, 0);
-	gtk_widget_show(team_qw_entry);
+	gtk_widget_set_visible (team_qw_entry, TRUE);
 
-	gtk_widget_show(hbox2);
+	gtk_widget_set_visible (hbox2, TRUE);
 
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -2120,7 +2120,7 @@ static GtkWidget *player_profile_q2_page (void) {
 
 	label = gtk_label_new(_("Name"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	name_q2_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (name_q2_entry), 32);
@@ -2130,8 +2130,8 @@ static GtkWidget *player_profile_q2_page (void) {
 		gtk_editable_set_position(GTK_EDITABLE(name_q2_entry), 0);
 	}
 	gtk_box_pack_start(GTK_BOX(hbox), name_q2_entry, FALSE, FALSE, 0);
-	gtk_widget_show(name_q2_entry);
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (name_q2_entry, TRUE);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	// /Player Name
 
@@ -2144,9 +2144,9 @@ static GtkWidget *player_profile_q2_page (void) {
 	q2_skin = q2_skin_box_create();
 	gtk_frame_set_child (GTK_FRAME (frame), q2_skin);
 
-	gtk_widget_show(frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -2172,7 +2172,7 @@ static GtkWidget *player_profile_page(void) {
 
 	label = gtk_label_new(_("Name"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	name_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (name_entry), 32);
@@ -2182,9 +2182,9 @@ static GtkWidget *player_profile_page(void) {
 		gtk_editable_set_position(GTK_EDITABLE(name_entry), 0);
 	}
 	gtk_box_pack_start(GTK_BOX(hbox), name_entry, FALSE, FALSE, 0);
-	gtk_widget_show(name_entry);
+	gtk_widget_set_visible (name_entry, TRUE);
 
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	profile_notebook = gtk_notebook_new();
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(profile_notebook), GTK_POS_TOP);
@@ -2217,9 +2217,9 @@ static GtkWidget *player_profile_page(void) {
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(profile_notebook),
 			(type == Q2_SERVER)? 2 :(type == Q1_SERVER)? 0 : 1);
 
-	gtk_widget_show(profile_notebook);
+	gtk_widget_set_visible (profile_notebook, TRUE);
 
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -2621,10 +2621,10 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_OUT);
 	label = gtk_label_new(_(games[type].name));
 	gtk_frame_set_child (GTK_FRAME (frame), label);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	gtk_box_pack_start(GTK_BOX(page_vbox), frame, FALSE, FALSE, 0);
-	gtk_widget_show(frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 	notebook = gtk_notebook_new();
 
@@ -2633,7 +2633,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	label = gtk_label_new(_("Invoking"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, label);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	gtk_box_pack_start(GTK_BOX(page_vbox), notebook, TRUE, TRUE, 0);
 
@@ -2642,11 +2642,11 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 		label = gtk_label_new(message);
 		gtk_misc_set_alignment(GTK_MISC(label), 0.5, 0.5);
 		gtk_box_pack_start(GTK_BOX(vbox), label, TRUE, TRUE, 0);
-		gtk_widget_show(label);
+		gtk_widget_set_visible (label, TRUE);
 
-		gtk_widget_show(vbox);
-		gtk_widget_show(notebook);
-		gtk_widget_show(page_vbox);
+		gtk_widget_set_visible (vbox, TRUE);
+		gtk_widget_set_visible (notebook, TRUE);
+		gtk_widget_set_visible (page_vbox, TRUE);
 		return page_vbox;
 	}
 
@@ -2666,12 +2666,12 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	label = gtk_label_new(_("Command Line"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 0, 1, 1);
 	gtk_widget_set_hexpand (hbox, TRUE);
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	genprefs[type].cmd_entry = gtk_entry_new();
 	if (games[type].cmd) {
@@ -2680,12 +2680,12 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	}
 	g_signal_connect_swapped(G_OBJECT(genprefs[type].cmd_entry), "activate", G_CALLBACK(game_file_activate_callback), GINT_TO_POINTER(type));
 	gtk_box_pack_start(GTK_BOX(hbox),genprefs[type].cmd_entry , TRUE, TRUE, 0);
-	gtk_widget_show(genprefs[type].cmd_entry);
+	gtk_widget_set_visible (genprefs[type].cmd_entry, TRUE);
 
 	button = gtk_button_new_with_label("...");
 	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(game_file_dialog), GINT_TO_POINTER(type));
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 3);
-	gtk_widget_show(button);
+	gtk_widget_set_visible (button, TRUE);
 
 	// translator: button for command suggestion
 	button = gtk_button_new_with_label(_("Suggest"));
@@ -2694,7 +2694,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text(button, _("Searches the path for the game executable"));
-	gtk_widget_show(button);
+	gtk_widget_set_visible (button, TRUE);
 
 
 	/////
@@ -2703,12 +2703,12 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	label = gtk_label_new(_("Working Directory"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-	gtk_widget_show(label);
+	gtk_widget_set_visible (label, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 1, 1, 1);
 	gtk_widget_set_hexpand (hbox, TRUE);
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	genprefs[type].dir_entry = gtk_entry_new();
 	if (genprefs[type].pref_dir) {
@@ -2720,7 +2720,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 	button = gtk_button_new_with_label("...");
 	g_signal_connect_swapped(G_OBJECT(button), "clicked", G_CALLBACK(game_dir_dialog), (gpointer)type);
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 3);
-	gtk_widget_show(button);
+	gtk_widget_set_visible (button, TRUE);
 
 	// translator: button for directory guess
 	button = gtk_button_new_with_label(_("Suggest"));
@@ -2728,7 +2728,7 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 	gtk_box_pack_start(GTK_BOX(hbox),button , FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text(button, _("Tries to guess the working directory based on the command line"));
-	gtk_widget_show(button);
+	gtk_widget_set_visible (button, TRUE);
 
 	if (games[type].custom_cfgs) {
 		g_object_set_data(G_OBJECT(genprefs[type].dir_entry), "user_data", (gpointer) type);
@@ -2744,19 +2744,19 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 			gtk_widget_add_controller (genprefs[type].dir_entry, fc);
 		}
 	}
-	gtk_widget_show(genprefs[type].dir_entry);
+	gtk_widget_set_visible (genprefs[type].dir_entry, TRUE);
 
 	if (games[type].custom_cfgs) {
 		label = gtk_label_new(_("Custom CFG"));
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
-		gtk_widget_show(label);
+		gtk_widget_set_visible (label, TRUE);
 
 		prefs->cfg_combo = gtk_combo_box_text_new_with_entry();
 		gtk_entry_set_max_length(combo_get_entry(prefs->cfg_combo), 256);
 		gtk_grid_attach (GTK_GRID (grid), prefs->cfg_combo, 1, 2, 1, 1);
 		gtk_widget_set_hexpand (prefs->cfg_combo, TRUE);
-		gtk_widget_show(prefs->cfg_combo);
+		gtk_widget_set_visible (prefs->cfg_combo, TRUE);
 	}
 
 	// Game specific notes
@@ -2764,23 +2764,23 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 
 		hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_box_pack_end(GTK_BOX(vbox), hbox2, FALSE, FALSE, 0);
-		gtk_widget_show(hbox2);
+		gtk_widget_set_visible (hbox2, TRUE);
 
 		label = gtk_label_new(game_get_attribute(type,"game_notes"));
 
 		gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
 		gtk_box_pack_start(GTK_BOX(hbox2), label, FALSE, FALSE, 0);
-		gtk_widget_show(label);
+		gtk_widget_set_visible (label, TRUE);
 	}
 
-	gtk_widget_show(grid);
+	gtk_widget_set_visible (grid, TRUE);
 
-	gtk_widget_show(vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
 
-	gtk_widget_show(notebook);
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (notebook, TRUE);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -2812,21 +2812,21 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	g_object_ref(G_OBJECT(hbox1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "hbox1", hbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(hbox1);
+	gtk_widget_set_visible (hbox1, TRUE);
 	gtk_box_append (GTK_BOX (page_vbox), hbox1);
 	xqf_widget_set_margin_all (hbox1, 3);
 
 	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	g_object_ref(G_OBJECT(vbox1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(vbox1);
+	gtk_widget_set_visible (vbox1, TRUE);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbox1, TRUE, TRUE, 0);
 	xqf_widget_set_margin_all (vbox1, 2);
 
 	scrolledwindow1 = gtk_scrolled_window_new(NULL, NULL);
 	g_object_ref(G_OBJECT(scrolledwindow1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "scrolledwindow1", scrolledwindow1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(scrolledwindow1);
+	gtk_widget_set_visible (scrolledwindow1, TRUE);
 	gtk_box_pack_start(GTK_BOX(vbox1), scrolledwindow1, TRUE, TRUE, 0);
 	xqf_widget_set_margin_all (scrolledwindow1, 2);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -2850,7 +2850,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		gtk_tree_view_column_set_resizable(col, TRUE);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(arguments_list), col);
 	}
-	gtk_widget_show(arguments_list);
+	gtk_widget_set_visible (arguments_list, TRUE);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolledwindow1), arguments_list);
 	g_object_set_data(G_OBJECT(arguments_list), "user_data", GINT_TO_POINTER(type));
 	g_signal_connect(arguments_list, "cursor-changed", G_CALLBACK(custom_args_list_select_row_callback), NULL);
@@ -2858,14 +2858,14 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	frame1 = gtk_frame_new(_("Game and Arguments"));
 	g_object_ref(G_OBJECT(frame1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "frame1", frame1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(frame1);
+	gtk_widget_set_visible (frame1, TRUE);
 	gtk_box_pack_start(GTK_BOX(vbox1), frame1, FALSE, FALSE, 0);
 	xqf_widget_set_margin_all (frame1, 3);
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	g_object_ref(G_OBJECT(hbox2));
 	g_object_set_data_full(G_OBJECT(page_vbox), "hbox2", hbox2, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(hbox2);
+	gtk_widget_set_visible (hbox2, TRUE);
 	gtk_frame_set_child (GTK_FRAME (frame1), hbox2);
 	xqf_widget_set_margin_all (hbox2, 4);
 
@@ -2875,7 +2875,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_game[type]",
 		custom_args_entry_game[type],
 		(GDestroyNotify) g_object_unref);
-	gtk_widget_show(custom_args_entry_game[type]);
+	gtk_widget_set_visible (custom_args_entry_game[type], TRUE);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_game[type], FALSE, TRUE, 0);
 	gtk_widget_set_tooltip_text(custom_args_entry_game[type], _("Enter the game name from the game column"));
 	gtk_widget_set_sensitive(custom_args_entry_game[type], FALSE);
@@ -2885,7 +2885,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_args[type]",
 		custom_args_entry_args[type],
 		(GDestroyNotify) g_object_unref);
-	gtk_widget_show(custom_args_entry_args[type]);
+	gtk_widget_set_visible (custom_args_entry_args[type], TRUE);
 	gtk_box_pack_start(GTK_BOX(hbox2), custom_args_entry_args[type], TRUE, TRUE, 0);
 	gtk_widget_set_tooltip_text(custom_args_entry_args[type], _("Enter the arguments separated by spaces"));
 	gtk_widget_set_sensitive(custom_args_entry_args[type], FALSE);
@@ -2893,34 +2893,34 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	vbuttonbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	g_object_ref(G_OBJECT(vbuttonbox1));
 	g_object_set_data_full(G_OBJECT(page_vbox), "vbuttonbox1", vbuttonbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(vbuttonbox1);
+	gtk_widget_set_visible (vbuttonbox1, TRUE);
 	gtk_box_pack_start(GTK_BOX(hbox1), vbuttonbox1, FALSE, TRUE, 0);
 
 	new_button = gtk_button_new_with_label(_("New"));
 	g_object_ref(G_OBJECT(new_button));
 	g_object_set_data_full(G_OBJECT(page_vbox), "new_button", new_button, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(new_button);
+	gtk_widget_set_visible (new_button, TRUE);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), new_button, FALSE, FALSE, 5);
 	gtk_widget_set_can_default(new_button, TRUE);
 
 	delete_button = gtk_button_new_with_label(_("Delete"));
 	g_object_ref(G_OBJECT(delete_button));
 	g_object_set_data_full(G_OBJECT(page_vbox), "delete_button", delete_button, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(delete_button);
+	gtk_widget_set_visible (delete_button, TRUE);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), delete_button, FALSE, FALSE, 5);
 	gtk_widget_set_can_default(delete_button, TRUE);
 
 	defaults_button = gtk_button_new_with_label(_("Add Defaults"));
 	g_object_ref(G_OBJECT(defaults_button));
 	g_object_set_data_full(G_OBJECT(page_vbox), "defaults_button", defaults_button, (GDestroyNotify) g_object_unref);
-	gtk_widget_show(defaults_button);
+	gtk_widget_set_visible (defaults_button, TRUE);
 	gtk_box_pack_start(GTK_BOX(vbuttonbox1), defaults_button, FALSE, FALSE, 5);
 	gtk_widget_set_can_default(defaults_button, TRUE);
 
 	custom_args_add_button[type] = gtk_button_new_with_label(_("Add/Update"));
 	g_object_ref(G_OBJECT(custom_args_add_button[type]));
 	g_object_set_data_full(G_OBJECT(page_vbox), "add_button", custom_args_add_button[type], (GDestroyNotify) g_object_unref);
-	gtk_widget_show(custom_args_add_button[type]);
+	gtk_widget_set_visible (custom_args_add_button[type], TRUE);
 	gtk_box_pack_end(GTK_BOX(vbuttonbox1), custom_args_add_button[type], FALSE, FALSE, 7);
 	gtk_widget_set_sensitive(custom_args_add_button[type], FALSE);
 	gtk_widget_set_can_default(custom_args_add_button[type], TRUE);
@@ -2962,7 +2962,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 	}
 
 
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -3101,11 +3101,11 @@ static GtkWidget *games_config_page (int defgame) {
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
-	gtk_widget_show(gtklist);
+	gtk_widget_set_visible (gtklist, TRUE);
 	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
-	gtk_widget_show(scrollwin);
+	gtk_widget_set_visible (scrollwin, TRUE);
 	gtk_box_pack_start (GTK_BOX (games_hbox), frame, FALSE, FALSE, 0);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 	games_notebook = gtk_notebook_new ();
 	// the tabs are hidden, so nobody will notice its a notebook
@@ -3117,7 +3117,7 @@ static GtkWidget *games_config_page (int defgame) {
 		page = generic_game_frame (i);
 
 		label = gtk_label_new (games[i].name);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 
 		gtk_notebook_append_page (GTK_NOTEBOOK (games_notebook), page, label);
 	}
@@ -3139,7 +3139,7 @@ static GtkWidget *games_config_page (int defgame) {
 
 	games_list_select (defgame);
 
-	gtk_widget_show (games_notebook);
+	gtk_widget_set_visible (games_notebook, TRUE);
 
 	/* Common Options */
 
@@ -3156,21 +3156,21 @@ static GtkWidget *games_config_page (int defgame) {
 	nocdaudio_check_button = gtk_check_button_new_with_label (_("Disable CD Audio"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (nocdaudio_check_button), default_nocdaudio);
 	gtk_box_pack_end (GTK_BOX (hbox), nocdaudio_check_button, TRUE, FALSE, 0);
-	gtk_widget_show (nocdaudio_check_button);
+	gtk_widget_set_visible (nocdaudio_check_button, TRUE);
 
 	/* Disable Sound */
 
 	nosound_check_button = gtk_check_button_new_with_label (_("Disable Sound"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (nosound_check_button), default_nosound);
 	gtk_box_pack_end (GTK_BOX (hbox), nosound_check_button, TRUE, FALSE, 0);
-	gtk_widget_show (nosound_check_button);
+	gtk_widget_set_visible (nosound_check_button, TRUE);
 
-	gtk_widget_show (hbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
-	gtk_widget_show (games_hbox);
+	gtk_widget_set_visible (games_hbox, TRUE);
 
 	return page_vbox;
 }
@@ -3196,9 +3196,9 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 			gtk_check_button_set_group (GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[i]),
 			                            GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[0]));
 		gtk_box_pack_start (GTK_BOX (hbox), pushlatency_mode_radio_buttons[i], FALSE, FALSE, 0);
-		gtk_widget_show (pushlatency_mode_radio_buttons[i]);
+		gtk_widget_set_visible (pushlatency_mode_radio_buttons[i], TRUE);
 
-		gtk_widget_show (hbox);
+		gtk_widget_set_visible (hbox, TRUE);
 	}
 
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (pushlatency_mode_radio_buttons[pushlatency_mode]), TRUE);
@@ -3209,7 +3209,7 @@ static void add_pushlatency_options (GtkWidget *vbox) {
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (pushlatency_value_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (pushlatency_value_spinner, 64, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), pushlatency_value_spinner, FALSE, FALSE, 0);
-	gtk_widget_show (pushlatency_value_spinner);
+	gtk_widget_set_visible (pushlatency_value_spinner, TRUE);
 }
 
 static struct q3_common_prefs_s* get_pref_widgets_for_game(enum server_type type) {
@@ -3270,7 +3270,7 @@ static GtkWidget *q3_options_page (enum server_type type) {
 
 		label = gtk_label_new (_("Masterserver Protocol Version"));
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 
 		w->proto_entry = gtk_combo_box_text_new_with_entry ();
 
@@ -3281,9 +3281,9 @@ static GtkWidget *q3_options_page (enum server_type type) {
 		g_list_free (list);
 
 		gtk_box_pack_start (GTK_BOX (hbox), w->proto_entry, FALSE, FALSE, 0);
-		gtk_widget_show (w->proto_entry);
+		gtk_widget_set_visible (w->proto_entry, TRUE);
 
-		gtk_widget_show (hbox);
+		gtk_widget_set_visible (hbox, TRUE);
 
 	}
 
@@ -3291,24 +3291,24 @@ static GtkWidget *q3_options_page (enum server_type type) {
 		w->setfs_gamebutton = gtk_check_button_new_with_label (_("set fs_game on connect"));
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (w->setfs_gamebutton), str2bool(game_get_attribute(type,"setfs_game")));
 		gtk_box_pack_start (GTK_BOX (page_vbox), w->setfs_gamebutton, FALSE, FALSE, 0);
-		gtk_widget_show (w->setfs_gamebutton);
+		gtk_widget_set_visible (w->setfs_gamebutton, TRUE);
 	}
 
 	if (w->flags & Q3_PREF_PB) {
 		w->set_punkbusterbutton = gtk_check_button_new_with_label (_("set cl_punkbuster on connect"));
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (w->set_punkbusterbutton), str2bool(game_get_attribute(type,"set_punkbuster")));
 		gtk_box_pack_start (GTK_BOX (page_vbox), w->set_punkbusterbutton, FALSE, FALSE, 0);
-		gtk_widget_show (w->set_punkbusterbutton);
+		gtk_widget_set_visible (w->set_punkbusterbutton, TRUE);
 	}
 
 	if (w->flags & Q3_PREF_CONSOLE) {
 		w->console_button = gtk_check_button_new_with_label (_("enable console"));
 		gtk_check_button_set_active (GTK_CHECK_BUTTON (w->console_button), str2bool(game_get_attribute(type,"enable_console")));
 		gtk_box_pack_start (GTK_BOX (page_vbox), w->console_button, FALSE, FALSE, 0);
-		gtk_widget_show (w->console_button);
+		gtk_widget_set_visible (w->console_button, TRUE);
 	}
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -3354,7 +3354,7 @@ static GtkWidget *q3_mem_options_page (void) {
 	pass_memory_options_button = gtk_check_button_new_with_label (_("Pass memory settings on command line"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (pass_memory_options_button), pass_memory_options);
 	gtk_box_pack_start (GTK_BOX (page_vbox), pass_memory_options_button, FALSE, FALSE, 0);
-	gtk_widget_show (pass_memory_options_button);
+	gtk_widget_set_visible (pass_memory_options_button, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
@@ -3365,18 +3365,18 @@ static GtkWidget *q3_mem_options_page (void) {
 	gtk_widget_set_size_request (com_hunkmegs_spinner, 64, -1);
 
 	gtk_box_pack_start (GTK_BOX (hbox), com_hunkmegs_spinner, FALSE, FALSE, 0);
-	gtk_widget_show (com_hunkmegs_spinner);
+	gtk_widget_set_visible (com_hunkmegs_spinner, TRUE);
 
 	// Mega Byte
 	label = gtk_label_new (_("MB"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	label = gtk_label_new (_("com_hunkmegs"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
@@ -3387,18 +3387,18 @@ static GtkWidget *q3_mem_options_page (void) {
 	gtk_widget_set_size_request (com_zonemegs_spinner, 64, -1);
 
 	gtk_box_pack_start (GTK_BOX (hbox), com_zonemegs_spinner, FALSE, FALSE, 0);
-	gtk_widget_show (com_zonemegs_spinner);
+	gtk_widget_set_visible (com_zonemegs_spinner, TRUE);
 
 	// Mega Byte
 	label = gtk_label_new (_("MB"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	label = gtk_label_new (_("com_zonemegs"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
@@ -3409,18 +3409,18 @@ static GtkWidget *q3_mem_options_page (void) {
 	gtk_widget_set_size_request (com_soundmegs_spinner, 64, -1);
 
 	gtk_box_pack_start (GTK_BOX (hbox), com_soundmegs_spinner, FALSE, FALSE, 0);
-	gtk_widget_show (com_soundmegs_spinner);
+	gtk_widget_set_visible (com_soundmegs_spinner, TRUE);
 
 	// Mega Byte
 	label = gtk_label_new (_("MB"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	label = gtk_label_new (_("com_soundmegs"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 8);
@@ -3435,25 +3435,25 @@ static GtkWidget *q3_mem_options_page (void) {
 	button = gtk_button_new_with_label(_("Default"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 0);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label(_("128MB"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 1);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label(_(">256MB"));
 	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (q3_set_memory_callback), (gpointer) 2);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox2);
+	gtk_widget_set_visible (hbox2, TRUE);
 
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -3504,16 +3504,16 @@ static GtkWidget *qw_options_page (void) {
 
 	label = gtk_label_new (_("upon a weapon pickup"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	option_menu = gtk_combo_box_text_new ();
 	set_wb_switch_menu (option_menu);
 	g_signal_connect(option_menu, "changed", G_CALLBACK (set_w_switch_callback), NULL);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), pref_w_switch);
 	gtk_box_pack_end (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* 'b_switch' */
 
@@ -3522,18 +3522,18 @@ static GtkWidget *qw_options_page (void) {
 
 	label = gtk_label_new (_("upon a backpack pickup"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	option_menu = gtk_combo_box_text_new ();
 	set_wb_switch_menu (option_menu);
 	g_signal_connect(option_menu, "changed", G_CALLBACK (set_b_switch_callback), NULL);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), pref_b_switch);
 	gtk_box_pack_end (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show (hbox);
-	gtk_widget_show (vbox2);
-	gtk_widget_show (frame2);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_widget_set_visible (vbox2, TRUE);
+	gtk_widget_set_visible (frame2, TRUE);
 
 	/* 'noaim' */
 
@@ -3543,11 +3543,11 @@ static GtkWidget *qw_options_page (void) {
 	noaim_check_button = gtk_check_button_new_with_label (_("Disable auto-aiming"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (noaim_check_button), default_noaim);
 	gtk_box_pack_start (GTK_BOX (hbox), noaim_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (noaim_check_button);
+	gtk_widget_set_visible (noaim_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 
@@ -3580,7 +3580,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	label = gtk_label_new (_("Skins"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	option_menu = gtk_combo_box_text_new ();
 	g_signal_connect(option_menu, "changed", G_CALLBACK
@@ -3588,9 +3588,9 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	set_noskins_menu (option_menu);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), qworq2?pref_q2_noskins:pref_qw_noskins);
 	gtk_box_pack_end (GTK_BOX (hbox2), option_menu, FALSE, FALSE, 0);
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show (hbox2);
+	gtk_widget_set_visible (hbox2, TRUE);
 
 	/* Network Options */
 
@@ -3602,7 +3602,7 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	label = gtk_label_new (_("Rate"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (qworq2?default_q2_rate:default_qw_rate, 0.0, 25000.0, 500.0, 1000.0, 0.0);
 
@@ -3610,11 +3610,11 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (rate_spinner[qworq2]), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (rate_spinner[qworq2], 64, -1);
 	gtk_box_pack_end (GTK_BOX (hbox2), rate_spinner[qworq2], FALSE, FALSE, 0);
-	gtk_widget_show (rate_spinner[qworq2]);
+	gtk_widget_set_visible (rate_spinner[qworq2], TRUE);
 
-	gtk_widget_show (hbox2);
+	gtk_widget_set_visible (hbox2, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* QW Specific Features */
 	if (qworq2 == 0) {
@@ -3629,8 +3629,8 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 
 		add_pushlatency_options (vbox2);
 
-		gtk_widget_show (vbox2);
-		gtk_widget_show (frame2);
+		gtk_widget_set_visible (vbox2, TRUE);
+		gtk_widget_set_visible (frame2, TRUE);
 	}
 
 	/* Troubleshooting */
@@ -3652,9 +3652,9 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (cl_nodelta_check_button[qworq2]),
 		qworq2?default_q2_cl_nodelta:default_qw_cl_nodelta);
 	gtk_box_pack_start (GTK_BOX (hbox), cl_nodelta_check_button[qworq2], FALSE, FALSE, 0);
-	gtk_widget_show (cl_nodelta_check_button[qworq2]);
+	gtk_widget_set_visible (cl_nodelta_check_button[qworq2], TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* 'cl_predict_players' ('cl_predict' in Q2) */
 
@@ -3666,14 +3666,14 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (cl_predict_check_button[qworq2]),
 		1 - (qworq2?default_q2_cl_predict:default_qw_cl_predict));
 	gtk_box_pack_start (GTK_BOX (hbox), cl_predict_check_button[qworq2], FALSE, FALSE, 0);
-	gtk_widget_show (cl_predict_check_button[qworq2]);
+	gtk_widget_set_visible (cl_predict_check_button[qworq2], TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox2);
-	gtk_widget_show (frame2);
+	gtk_widget_set_visible (vbox2, TRUE);
+	gtk_widget_set_visible (frame2, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -3752,9 +3752,9 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (show_hostnames_check_button), show_hostnames);
 	gtk_box_pack_start (GTK_BOX (hbox), show_hostnames_check_button, FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text (show_hostnames_check_button, _("Show hostnames instead of IP addresses if possible"));
-	gtk_widget_show (show_hostnames_check_button);
+	gtk_widget_set_visible (show_hostnames_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Show default port */
 
@@ -3764,9 +3764,9 @@ static GtkWidget *appearance_options_page (void) {
 	show_defport_check_button = gtk_check_button_new_with_label (_("Show default port"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (show_defport_check_button), show_default_port);
 	gtk_box_pack_start (GTK_BOX (hbox), show_defport_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (show_defport_check_button);
+	gtk_widget_set_visible (show_defport_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* show bots */
 
@@ -3776,9 +3776,9 @@ static GtkWidget *appearance_options_page (void) {
 	countbots_check_button = gtk_check_button_new_with_label (_("Do not count bots as players"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (countbots_check_button), serverlist_countbots);
 	gtk_box_pack_start (GTK_BOX (hbox), countbots_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (countbots_check_button);
+	gtk_widget_set_visible (countbots_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 
 	/* Sort servers real-time during refresh */
@@ -3789,9 +3789,9 @@ static GtkWidget *appearance_options_page (void) {
 	refresh_sorts_check_button = gtk_check_button_new_with_label (_("Sort servers real-time during refresh"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (refresh_sorts_check_button), default_refresh_sorts);
 	gtk_box_pack_start (GTK_BOX (hbox), refresh_sorts_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (refresh_sorts_check_button);
+	gtk_widget_set_visible (refresh_sorts_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Refresh on update */
 
@@ -3801,9 +3801,9 @@ static GtkWidget *appearance_options_page (void) {
 	refresh_on_update_check_button = gtk_check_button_new_with_label (_("Refresh on update"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (refresh_on_update_check_button), default_refresh_on_update);
 	gtk_box_pack_start (GTK_BOX (hbox), refresh_on_update_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (refresh_on_update_check_button);
+	gtk_widget_set_visible (refresh_on_update_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Resolve on update */
 
@@ -3814,9 +3814,9 @@ static GtkWidget *appearance_options_page (void) {
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (resolve_on_update_check_button), default_resolve_on_update);
 	gtk_widget_set_tooltip_text (resolve_on_update_check_button, _("Enable or disable DNS resolution of IP addresses"));
 	gtk_box_pack_start (GTK_BOX (hbox), resolve_on_update_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (resolve_on_update_check_button);
+	gtk_widget_set_visible (resolve_on_update_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 
 	/* Show only configured games */
@@ -3827,15 +3827,15 @@ static GtkWidget *appearance_options_page (void) {
 	show_only_configured_games_check_button = gtk_check_button_new_with_label (_("Show only configured games"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (show_only_configured_games_check_button), default_show_only_configured_games);
 	gtk_box_pack_start (GTK_BOX (hbox), show_only_configured_games_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (show_only_configured_games_check_button);
+	gtk_widget_set_visible (show_only_configured_games_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (vbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -3866,14 +3866,14 @@ static GtkWidget *general_options_page (void) {
 	auto_favorites_check_button = gtk_check_button_new_with_label (_("Refresh Favorites"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (auto_favorites_check_button), default_auto_favorites);
 	gtk_box_pack_start (GTK_BOX (hbox), auto_favorites_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (auto_favorites_check_button);
+	gtk_widget_set_visible (auto_favorites_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
@@ -3886,20 +3886,20 @@ static GtkWidget *general_options_page (void) {
 		_("Scan game directories for installed maps. xqf will"
 		" take longer to start up when enabled."));
 	gtk_box_pack_start (GTK_BOX (hbox), auto_maps_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (auto_maps_check_button);
+	gtk_widget_set_visible (auto_maps_check_button, TRUE);
 
 	{
 		GtkWidget* button = gtk_button_new_with_label(_("scan now"));
 		gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 		gtk_misc_set_padding(GTK_MISC(gtk_bin_get_child(GTK_BIN(button))),4,0);
 		g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (scan_maps_callback), NULL);
-		gtk_widget_show (button);
+		gtk_widget_set_visible (button, TRUE);
 	}
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (vbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
 	/* When launching a Game */
 
@@ -3919,9 +3919,9 @@ static GtkWidget *general_options_page (void) {
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (terminate_check_button), default_terminate);
 	g_signal_connect (G_OBJECT (terminate_check_button), "toggled", G_CALLBACK (terminate_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), terminate_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (terminate_check_button);
+	gtk_widget_set_visible (terminate_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Launchinfo */
 
@@ -3933,9 +3933,9 @@ static GtkWidget *general_options_page (void) {
 	g_signal_connect (G_OBJECT (launchinfo_check_button), "toggled", G_CALLBACK (launchinfo_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), launchinfo_check_button, FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text (launchinfo_check_button, _("Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map curplayers maxplayers"));
-	gtk_widget_show (launchinfo_check_button);
+	gtk_widget_set_visible (launchinfo_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Prelaunchinfo */
 
@@ -3947,12 +3947,12 @@ static GtkWidget *general_options_page (void) {
 	g_signal_connect (G_OBJECT (prelaunchexec_check_button), "toggled", G_CALLBACK (prelaunchexec_toggled_callback), NULL);
 	gtk_box_pack_start (GTK_BOX (hbox), prelaunchexec_check_button, FALSE, FALSE, 0);
 	gtk_widget_set_tooltip_text (prelaunchexec_check_button, _("Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"));
-	gtk_widget_show (prelaunchexec_check_button);
+	gtk_widget_set_visible (prelaunchexec_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (vbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
 	/* On Exit */
 
@@ -3971,9 +3971,9 @@ static GtkWidget *general_options_page (void) {
 	save_lists_check_button = gtk_check_button_new_with_label (_("Save server lists"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (save_lists_check_button), default_save_lists);
 	gtk_box_pack_start (GTK_BOX (hbox), save_lists_check_button, FALSE, FALSE, 0);
-	gtk_widget_show (save_lists_check_button);
+	gtk_widget_set_visible (save_lists_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Save server information */
 
@@ -3984,9 +3984,9 @@ static GtkWidget *general_options_page (void) {
 	gtk_box_pack_start (GTK_BOX (hbox), save_srvinfo_check_button, FALSE, FALSE, 0);
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (save_srvinfo_check_button), default_save_srvinfo);
 	g_signal_connect (G_OBJECT (save_srvinfo_check_button), "toggled", G_CALLBACK (save_srvinfo_toggled_callback), NULL);
-	gtk_widget_show (save_srvinfo_check_button);
+	gtk_widget_set_visible (save_srvinfo_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Save player information */
 
@@ -4001,18 +4001,18 @@ static GtkWidget *general_options_page (void) {
 		gtk_widget_set_sensitive (save_plrinfo_check_button, FALSE);
 	}
 
-	gtk_widget_show (save_plrinfo_check_button);
+	gtk_widget_set_visible (save_plrinfo_check_button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (vbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (hbox);
-	gtk_widget_show (vbox);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_widget_set_visible (vbox, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -4046,7 +4046,7 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
 	gtk_widget_set_hexpand (label, TRUE);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (maxsimultaneous, 1.0, FD_SETSIZE, 1.0, 5.0, 0.0);
@@ -4058,7 +4058,7 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_widget_set_halign (maxsimultaneous_spinner, GTK_ALIGN_END);
 	gtk_widget_set_valign (maxsimultaneous_spinner, GTK_ALIGN_CENTER);
 	gtk_grid_attach (GTK_GRID (grid), maxsimultaneous_spinner, 1, row, 1, 1);
-	gtk_widget_show (maxsimultaneous_spinner);
+	gtk_widget_set_visible (maxsimultaneous_spinner, TRUE);
 
 	++row;
 
@@ -4067,7 +4067,7 @@ static GtkWidget *qstat_options_page (void) {
 	label = gtk_label_new (_("Number of retries"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (maxretries, 1.0, MAX_RETRIES, 1.0, 1.0, 0.0);
 	maxretries_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
@@ -4076,7 +4076,7 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_widget_set_halign (maxretries_spinner, GTK_ALIGN_END);
 	gtk_widget_set_valign (maxretries_spinner, GTK_ALIGN_CENTER);
 	gtk_grid_attach (GTK_GRID (grid), maxretries_spinner, 1, row, 1, 1);
-	gtk_widget_show (maxretries_spinner);
+	gtk_widget_set_visible (maxretries_spinner, TRUE);
 
 	++row;
 
@@ -4085,7 +4085,7 @@ static GtkWidget *qstat_options_page (void) {
 	label = gtk_label_new (_("Source IP Address"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	qstat_srcip_entry = gtk_entry_new ();
 	gtk_entry_set_max_length(GTK_ENTRY(qstat_srcip_entry), 15);
@@ -4094,7 +4094,7 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_widget_set_halign (qstat_srcip_entry, GTK_ALIGN_END);
 	gtk_widget_set_valign (qstat_srcip_entry, GTK_ALIGN_CENTER);
 	gtk_grid_attach (GTK_GRID (grid), qstat_srcip_entry, 1, row, 1, 1);
-	gtk_widget_show (qstat_srcip_entry);
+	gtk_widget_set_visible (qstat_srcip_entry, TRUE);
 
 	++row;
 
@@ -4105,7 +4105,7 @@ static GtkWidget *qstat_options_page (void) {
 		label = gtk_label_new (_("Source Port Range"));
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 
 		hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 
@@ -4141,18 +4141,18 @@ static GtkWidget *qstat_options_page (void) {
 		gtk_widget_set_halign (hbox, GTK_ALIGN_END);
 		gtk_widget_set_valign (hbox, GTK_ALIGN_CENTER);
 		gtk_grid_attach (GTK_GRID (grid), hbox, 1, row, 1, 1);
-		gtk_widget_show (qstat_srcport_entry_low);
-		gtk_widget_show (label);
-		gtk_widget_show (qstat_srcport_entry_high);
-		gtk_widget_show (hbox);
+		gtk_widget_set_visible (qstat_srcport_entry_low, TRUE);
+		gtk_widget_set_visible (label, TRUE);
+		gtk_widget_set_visible (qstat_srcport_entry_high, TRUE);
+		gtk_widget_set_visible (hbox, TRUE);
 
 		++row;
 	}
 
-	gtk_widget_show (grid);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (grid, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -4191,7 +4191,7 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *grid, int 
 	label = gtk_label_new (name);
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, i, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	// File selection dialog
 	dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
@@ -4200,19 +4200,19 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *grid, int 
 	}
 	gtk_grid_attach (GTK_GRID (grid), dialog_button, 1, i, 1, 1);
 	gtk_widget_set_hexpand (dialog_button, TRUE);
-	gtk_widget_show (dialog_button);
+	gtk_widget_set_visible (dialog_button, TRUE);
 
 	// Clear button
 	clear_button = sound_clear_button_new ();
 	g_signal_connect_swapped (clear_button, "clicked", G_CALLBACK (pref_sound_conf_clear), dialog_button);
 	gtk_grid_attach (GTK_GRID (grid), clear_button, 2, i, 1, 1);
-	gtk_widget_show (clear_button);
+	gtk_widget_set_visible (clear_button, TRUE);
 
 	// Test button
 	test_button = sound_test_button_new ();
 	g_signal_connect_swapped (test_button, "clicked", G_CALLBACK (pref_sound_play), dialog_button);
 	gtk_grid_attach (GTK_GRID (grid), test_button, 3, i, 1, 1);
-	gtk_widget_show (test_button);
+	gtk_widget_set_visible (test_button, TRUE);
 
 	return dialog_button;
 }
@@ -4240,7 +4240,7 @@ static GtkWidget *sound_options_page (void) {
 	xqf_widget_set_margin_all (grid, 6);
 	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 
 	/* Sound Enable */
 
@@ -4248,14 +4248,14 @@ static GtkWidget *sound_options_page (void) {
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (sound_enable_check_button), sound_enable);
 
 	gtk_grid_attach (GTK_GRID (grid), sound_enable_check_button, 0, 0, 1, 1);
-	gtk_widget_show (sound_enable_check_button);
+	gtk_widget_set_visible (sound_enable_check_button, TRUE);
 
 	/* Sound Player */
 
 	label = gtk_label_new (_("Player program"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	sound_player_file_dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
 	if (sound_player != NULL && *sound_player != '\0') {
@@ -4265,9 +4265,9 @@ static GtkWidget *sound_options_page (void) {
 	gtk_grid_attach (GTK_GRID (grid), sound_player_file_dialog_button, 1, 1, 2, 1);
 	gtk_widget_set_hexpand (sound_player_file_dialog_button, TRUE);
 
-	gtk_widget_show (sound_player_file_dialog_button);
+	gtk_widget_set_visible (sound_player_file_dialog_button, TRUE);
 
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 	/* Sound Files frame */
 	/* Sounds preferences -- player and various sounds */
@@ -4289,10 +4289,10 @@ static GtkWidget *sound_options_page (void) {
 	sound_server_connect_file_dialog_button = pref_sound_conf_append(sound_server_connect, _("Server Connect"), grid, pos++);
 	sound_redial_success_file_dialog_button = pref_sound_conf_append(sound_redial_success, _("Redial Success"), grid, pos++);
 
-	gtk_widget_show(grid);
-	gtk_widget_show(frame);
+	gtk_widget_set_visible (grid, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -4419,39 +4419,39 @@ void preferences_dialog (int page_num) {
 
 	page = general_options_page ();
 	label = gtk_label_new (_("General"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 	/*
 	   page = player_profile_page ();
 	   label = gtk_label_new (_("Player Profile"));
-	   gtk_widget_show (label);
+	   gtk_widget_set_visible (label, TRUE);
 	   gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 	   */
 
 	page = games_config_page (game_num);
 	label = gtk_label_new (_("Games"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 	page = appearance_options_page ();
 	label = gtk_label_new (_("Appearance"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 	page = qstat_options_page ();
 	label = gtk_label_new (_("QStat"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 	page = sound_options_page ();
 	label = gtk_label_new (_("Sounds"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 	page = scripts_config_page ();
 	label = gtk_label_new (_("Scripts"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref_notebook), page, label);
 
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (pref_notebook), page_num);
@@ -4471,7 +4471,7 @@ void preferences_dialog (int page_num) {
 		update_cfgs (i, genprefs[i].real_dir, games[i].game_cfg);
 	}
 
-	gtk_widget_show (pref_notebook);
+	gtk_widget_set_visible (pref_notebook, TRUE);
 
 	/*
 	 *  Buttons at the bottom
@@ -4485,7 +4485,7 @@ void preferences_dialog (int page_num) {
 	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_size_request (button, 80, -1);
@@ -4493,13 +4493,13 @@ void preferences_dialog (int page_num) {
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
-	gtk_widget_show (window);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 

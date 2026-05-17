@@ -349,7 +349,7 @@ static void put_label_to_table (GtkWidget *grid, const char *str,
 		label = gtk_label_new (str);
 		gtk_label_set_xalign (GTK_LABEL (label), justify);
 		gtk_grid_attach (GTK_GRID (grid), label, col, row, 1, 1);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 	}
 }
 
@@ -443,10 +443,10 @@ static GtkWidget *server_stats_page (void) {
 
 	put_server_stats (grid, UNKNOWN_SERVER, row + 1);
 
-	gtk_widget_show (grid);
-	gtk_widget_show (scrollwin);
+	gtk_widget_set_visible (grid, TRUE);
+	gtk_widget_set_visible (scrollwin, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -509,7 +509,7 @@ static void arch_notebook_page (GtkWidget *notebook,
 	put_arch_stats (grid, arch->count, arch->count, OS_NUM + 1, CPU_NUM + 1);
 	put_arch_stats (grid, srv_stats[type].players, players_count, OS_NUM + 1, CPU_NUM + 2);
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 }
 
 gboolean create_server_type_menu_filter_hasharch(enum server_type type) {
@@ -565,14 +565,14 @@ static GtkWidget *archs_stats_page (void) {
 
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	gtk_box_pack_start (GTK_BOX (page_vbox), arch_notebook, TRUE, TRUE, 0);
 
-	gtk_widget_show (arch_notebook);
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (arch_notebook, TRUE);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -624,21 +624,21 @@ static void country_notebook_page (GtkWidget *notebook,
 			if (pix) {
 				GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
 				gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-				gtk_widget_show (image);
+				gtk_widget_set_visible (image, TRUE);
 			}
 
 			label = gtk_label_new (geoip_name_by_id(id));
 			gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 			gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-			gtk_widget_show (label);
+			gtk_widget_set_visible (label, TRUE);
 
 			gtk_grid_attach (GTK_GRID (grid), hbox, 1, c, 1, 1);
-			gtk_widget_show (hbox);
+			gtk_widget_set_visible (hbox, TRUE);
 		}
 	}
 
-	gtk_widget_show(grid);
-	gtk_widget_show(scrollwin);
+	gtk_widget_set_visible (grid, TRUE);
+	gtk_widget_set_visible (scrollwin, TRUE);
 }
 
 static void select_country_server_type_callback(GtkWidget *widget, enum server_type type) {
@@ -699,14 +699,14 @@ static GtkWidget *country_stats_page (void) {
 	}
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show(hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	gtk_box_pack_start (GTK_BOX (page_vbox), country_notebook, TRUE, TRUE, 0);
 
-	gtk_widget_show (country_notebook);
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (country_notebook, TRUE);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -769,7 +769,7 @@ void statistics_dialog (void) {
 
 	label = gtk_label_new (_("Statistics"));
 	gtk_box_pack_start (GTK_BOX (main_vbox), label, FALSE, FALSE, 8);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	stat_notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (stat_notebook), GTK_POS_TOP);
@@ -777,18 +777,18 @@ void statistics_dialog (void) {
 
 	page = server_stats_page ();
 	label = gtk_label_new (_(srv_label));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
 
 	page = archs_stats_page ();
 	label = gtk_label_new (_(arch_label));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
 
 #ifdef USE_GEOIP
 	page = country_stats_page ();
 	label = gtk_label_new (_(country_label));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (stat_notebook), page, label);
 #endif
 
@@ -796,7 +796,7 @@ void statistics_dialog (void) {
 
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (stat_notebook), page_num);
 
-	gtk_widget_show (stat_notebook);
+	gtk_widget_set_visible (stat_notebook, TRUE);
 
 	/* Close Button */
 
@@ -810,11 +810,11 @@ void statistics_dialog (void) {
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 

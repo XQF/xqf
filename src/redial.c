@@ -175,40 +175,40 @@ static GtkWidget* create_redialwindow (void) {
 	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	g_object_ref (G_OBJECT(vbox1));
 	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (vbox1);
+	gtk_widget_set_visible (vbox1, TRUE);
 	gtk_window_set_child (GTK_WINDOW (redialwindow), vbox1);
 	xqf_widget_set_margin_all (vbox1, 14);
 
 	label = gtk_label_new (_("***\n***"));
 	g_object_ref (G_OBJECT(label));
 	g_object_set_data_full (G_OBJECT (redialwindow), "label", label, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox1), label, FALSE, FALSE, 0);
 
 	secondsprogress = gtk_progress_bar_new ();
 	g_object_ref (G_OBJECT(secondsprogress));
 	g_object_set_data_full (G_OBJECT (redialwindow), "secondsprogress", secondsprogress, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (secondsprogress);
+	gtk_widget_set_visible (secondsprogress, TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox1), secondsprogress, FALSE, FALSE, 10);
 
 	hbuttonbox1 = gtk_hbutton_box_new ();
 	g_object_ref (G_OBJECT(hbuttonbox1));
 	g_object_set_data_full (G_OBJECT (redialwindow), "hbuttonbox1", hbuttonbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (hbuttonbox1);
+	gtk_widget_set_visible (hbuttonbox1, TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, TRUE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_SPREAD);
 
 	launchbutton = gtk_button_new_with_label (_("Launch now"));
 	g_object_ref (G_OBJECT(launchbutton));
 	g_object_set_data_full (G_OBJECT (redialwindow), "launchbutton", launchbutton, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (launchbutton);
+	gtk_widget_set_visible (launchbutton, TRUE);
 	gtk_box_append (GTK_BOX (hbuttonbox1), launchbutton);
 	gtk_widget_set_can_default (launchbutton, TRUE);
 
 	cancelbutton = gtk_button_new_with_label (_("Cancel"));
 	g_object_ref (G_OBJECT(cancelbutton));
 	g_object_set_data_full (G_OBJECT (redialwindow), "cancelbutton", cancelbutton, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (cancelbutton);
+	gtk_widget_set_visible (cancelbutton, TRUE);
 	gtk_box_append (GTK_BOX (hbuttonbox1), cancelbutton);
 	gtk_widget_set_can_default (cancelbutton, TRUE);
 
@@ -238,7 +238,7 @@ gboolean redial_dialog (struct server* s, struct server_props* props) {
 
 	set_redial_label(s->name, TRUE);
 
-	gtk_widget_show(redial_window);
+	gtk_widget_set_visible (redial_window, TRUE);
 
 	timeoutid = g_timeout_add (1000, (GSourceFunc)redial_countdown, (gpointer)s);
 

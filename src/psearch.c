@@ -185,7 +185,7 @@ int find_player_dialog (void) {
 
 	label = gtk_label_new (_("Find Player:"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	/* ComboBox */
 
@@ -198,7 +198,7 @@ int find_player_dialog (void) {
 			"activate", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), psearch_combo, TRUE, TRUE, 0);
 	gtk_widget_grab_focus (GTK_WIDGET (combo_get_entry (psearch_combo)));
-	gtk_widget_show (psearch_combo);
+	gtk_widget_set_visible (psearch_combo, TRUE);
 
 	if (psearch_history->items) {
 		combo_set_vals (psearch_combo, psearch_history->items, "");
@@ -216,7 +216,7 @@ int find_player_dialog (void) {
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* Cancel Button */
 
@@ -224,9 +224,9 @@ int find_player_dialog (void) {
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Mode Buttons */
 
@@ -238,16 +238,16 @@ int find_player_dialog (void) {
 		if (i > 0)
 			gtk_check_button_set_group (GTK_CHECK_BUTTON (mode_buttons[i]), GTK_CHECK_BUTTON (mode_buttons[0]));
 		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
-		gtk_widget_show (mode_buttons[i]);
+		gtk_widget_set_visible (mode_buttons[i], TRUE);
 	}
 
 	gtk_check_button_set_active (
 			GTK_CHECK_BUTTON (mode_buttons[psearch.mode]), TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 

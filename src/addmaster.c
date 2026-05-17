@@ -239,7 +239,7 @@ struct master *add_master_dialog (struct master *m) {
 	label = gtk_label_new (_("Master Name"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 0, 1, 1);
@@ -255,7 +255,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	gtk_widget_grab_focus (GTK_WIDGET (master_name_combo));
 
-	gtk_widget_show (master_name_combo);
+	gtk_widget_set_visible (master_name_combo, TRUE);
 
 	if (master_history_name->items)
 		combo_set_vals (master_name_combo, master_history_name->items, "");
@@ -275,16 +275,16 @@ struct master *add_master_dialog (struct master *m) {
 		gtk_widget_set_sensitive (GTK_WIDGET(option_menu),FALSE);
 	}
 
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Master Address */
 
 	label = gtk_label_new (_("Master Address"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	master_addr_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_grid_attach (GTK_GRID (grid), master_addr_combo, 1, 1, 1, 1);
@@ -301,7 +301,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	// gtk_widget_grab_focus (GTK_WIDGET (master_addr_combo));
 
-	gtk_widget_show (master_addr_combo);
+	gtk_widget_set_visible (master_addr_combo, TRUE);
 
 	if (master_history_addr->items)
 		combo_set_vals (master_addr_combo, master_history_addr->items, "");
@@ -313,7 +313,7 @@ struct master *add_master_dialog (struct master *m) {
 		g_free(url);
 	}
 
-	gtk_widget_show (grid);
+	gtk_widget_set_visible (grid, TRUE);
 
 	/* query type */
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
@@ -328,7 +328,7 @@ struct master *add_master_dialog (struct master *m) {
 		g_signal_connect(G_OBJECT (master_query_type_radios[i]), "toggled",
 				G_CALLBACK (master_type_radio_callback), (gpointer)i);
 
-		gtk_widget_show (master_query_type_radios[i]);
+		gtk_widget_set_visible (master_query_type_radios[i], TRUE);
 		gtk_box_pack_start (GTK_BOX (hbox),master_query_type_radios[i], FALSE, FALSE, 0);
 	}
 	if (master_to_edit) {
@@ -342,14 +342,14 @@ struct master *add_master_dialog (struct master *m) {
 			(GTK_CHECK_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 	}
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	/* Separator */
 
 	hseparator = gtk_hseparator_new ();
 	gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
-	gtk_widget_show (hseparator);
+	gtk_widget_set_visible (hseparator, TRUE);
 
 	/* Buttons */
 
@@ -364,7 +364,7 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
 	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* OK Button */
 
@@ -374,12 +374,12 @@ struct master *add_master_dialog (struct master *m) {
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 

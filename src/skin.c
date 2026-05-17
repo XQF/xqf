@@ -437,13 +437,13 @@ GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
 		gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_HALF);
 		gtk_widget_set_sensitive (button, FALSE);
 		gtk_widget_set_size_request (button, 40, -1);
-		gtk_widget_show (button);
+		gtk_widget_set_visible (button, TRUE);
 
 		menu_item = gtk_menu_item_new ();
 		gtk_container_add (GTK_CONTAINER (menu_item), button);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 		g_signal_connect (menu_item, "activate", G_CALLBACK (callback), GINT_TO_POINTER(i));
-		gtk_widget_show (menu_item);
+		gtk_widget_set_visible (menu_item, TRUE);
 
 		set_bg_color (menu_item, i);
 		set_bg_color (button, i);

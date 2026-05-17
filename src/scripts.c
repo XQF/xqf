@@ -423,9 +423,9 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 					gtk_entry_set_text(GTK_ENTRY(entry), opt->defval);
 				}
 
-				gtk_widget_show(hbox);
-				gtk_widget_show(label);
-				gtk_widget_show(entry);
+				gtk_widget_set_visible (hbox, TRUE);
+				gtk_widget_set_visible (label, TRUE);
+				gtk_widget_set_visible (entry, TRUE);
 			}
 			break;
 		case SCRIPT_OPTION_TYPE_BOOL:
@@ -434,7 +434,7 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 
 				gtk_check_button_set_active (GTK_CHECK_BUTTON(button), opt->enable);
 
-				gtk_widget_show(button);
+				gtk_widget_set_visible (button, TRUE);
 			}
 			break;
 		case SCRIPT_OPTION_TYPE_LIST:
@@ -458,9 +458,9 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 				gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
 				gtk_box_pack_start(GTK_BOX(hbox), combo, FALSE, FALSE, 4);
 
-				gtk_widget_show(combo);
-				gtk_widget_show(label);
-				gtk_widget_show(hbox);
+				gtk_widget_set_visible (combo, TRUE);
+				gtk_widget_set_visible (label, TRUE);
+				gtk_widget_set_visible (hbox, TRUE);
 			}
 			break;
 
@@ -505,13 +505,13 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 		label = gtk_label_new (s->str);
 		gtk_frame_set_child (GTK_FRAME (frame), label);
-		gtk_widget_show (label);
+		gtk_widget_set_visible (label, TRUE);
 
 		g_string_free(s, TRUE);
 	}
 
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 
 	optlist = script->options;
@@ -544,12 +544,12 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 		gtk_box_pack_start(GTK_BOX(vbox), widget, FALSE, FALSE, 4);
 	}
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-	gtk_widget_show (frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -717,7 +717,7 @@ GtkWidget *scripts_config_page () {
 		}
 		else {
 			page = gtk_label_new(_("Invalid script"));
-			gtk_widget_show(page);
+			gtk_widget_set_visible (page, TRUE);
 		}
 
 		gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
@@ -725,7 +725,7 @@ GtkWidget *scripts_config_page () {
 
 	scripts_list_select (0);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }

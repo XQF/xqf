@@ -99,7 +99,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 
 	label = gtk_label_new (_("Server:"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	server_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_widget_set_size_request (server_combo, 200, -1);
@@ -113,7 +113,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 
 	gtk_widget_grab_focus (GTK_WIDGET (server_combo));
-	gtk_widget_show (server_combo);
+	gtk_widget_set_visible (server_combo, TRUE);
 
 	combo_set_vals (server_combo, server_history->items, addr);
 
@@ -124,15 +124,15 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 			G_CALLBACK(select_server_type_callback));
 
 	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Separator */
 
 	hseparator = gtk_hseparator_new ();
 	gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
-	gtk_widget_show (hseparator);
+	gtk_widget_set_visible (hseparator, TRUE);
 
 	/* Buttons */
 
@@ -148,7 +148,7 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* OK Button */
 
@@ -162,12 +162,12 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
 	dialog_run_modal (window);
 
