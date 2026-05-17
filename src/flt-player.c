@@ -485,6 +485,9 @@ static void on_pattern_list_click (GtkGestureClick *gesture, int n_press,
 
 static void pattern_list_selection_changed (GtkTreeSelection *sel, gpointer data) {
 	(void) data;
+	if (!GTK_IS_TREE_SELECTION (sel))
+		return;
+
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 

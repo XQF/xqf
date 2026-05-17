@@ -566,6 +566,9 @@ static void script_selection_changed_callback (GtkTreeSelection *selection, gpoi
 	GtkTreeModel *model;
 	gint index;
 
+	if (!GTK_IS_TREE_SELECTION (selection))
+		return;
+
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		gtk_tree_model_get (model, &iter, SCRIPTSLIST_ATTR_INDEX, &index, -1);
 

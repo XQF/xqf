@@ -2590,12 +2590,12 @@ static void delete_custom_args_callback (GtkWidget *widget, gpointer data) {
 
 static void custom_args_list_select_row_callback (GtkTreeView *tv, gpointer data) {
 	(void) data;
-	if (gtk_widget_in_destruction (GTK_WIDGET (tv)))
-		return;
-
 	enum server_type type = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(tv), "user_data"));
 
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tv);
+	if (!GTK_IS_TREE_SELECTION (sel))
+		return;
+
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 
