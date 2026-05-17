@@ -300,7 +300,7 @@ create_server_column_view (GtkWidget *scrollwin)
 
         gtk_column_view_append_column (GTK_COLUMN_VIEW (cv), col);
         g_object_unref (col);
-        g_object_unref (factory);
+        /* factory ownership transferred to col via gtk_column_view_column_new */
     }
 
     /* Connect GtkColumnView's combined sorter to the sort model. */
@@ -365,7 +365,7 @@ create_player_column_view (GtkWidget *scrollwin)
 
         gtk_column_view_append_column (GTK_COLUMN_VIEW (cv), col);
         g_object_unref (col);
-        g_object_unref (factory);
+        /* factory ownership transferred to col via gtk_column_view_column_new */
     }
 
     player_sort_model = GTK_SORT_LIST_MODEL (
