@@ -610,15 +610,13 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
 
 static GtkWidget *aligned_image (struct pixmap *pix) {
 	GtkWidget *image;
-	GtkWidget *alignment;
-
-	alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
 
 	image = gtk_image_new_from_pixbuf (pix->pixbuf);
-	gtk_container_add (GTK_CONTAINER (alignment), image);
+	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
 	gtk_widget_show (image);
 
-	return alignment;
+	return image;
 }
 
 
@@ -733,7 +731,6 @@ void player_filter_page (GtkWidget *notebook) {
 	GtkWidget *label;
 	GtkWidget *vbox;
 	GtkWidget *vbox2;
-	GtkWidget *alignment;
 	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *peditor;
@@ -822,11 +819,10 @@ void player_filter_page (GtkWidget *notebook) {
 	g_signal_connect (delete_button, "clicked", G_CALLBACK (delete_pattern_callback), NULL);
 	gtk_widget_show (delete_button);
 
-	alignment = gtk_alignment_new (0, 0.5, 1, 0);
-	gtk_box_pack_end (GTK_BOX (vbox), alignment, TRUE, TRUE, 0);
-
 	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_add (GTK_CONTAINER (alignment), vbox2);
+	gtk_widget_set_halign (vbox2, GTK_ALIGN_FILL);
+	gtk_widget_set_valign (vbox2, GTK_ALIGN_CENTER);
+	gtk_box_pack_end (GTK_BOX (vbox), vbox2, TRUE, TRUE, 0);
 
 	up_button = gtk_button_new_with_label (_("Up"));
 	gtk_box_pack_start (GTK_BOX (vbox2), up_button, FALSE, FALSE, 0);
@@ -839,7 +835,6 @@ void player_filter_page (GtkWidget *notebook) {
 	gtk_widget_show (down_button);
 
 	gtk_widget_show (vbox2);
-	gtk_widget_show (alignment);
 	gtk_widget_show (vbox);
 
 	/* Pattern Editor */

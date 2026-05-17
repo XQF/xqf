@@ -1707,7 +1707,6 @@ static int color_button_event_callback (GtkWidget *widget, GdkEvent *event) {
 static GtkWidget *q1_skin_box_create (void) {
 	GtkWidget *vbox;
 	GtkWidget *hbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *grid;
 	GtkWidget *label;
@@ -1758,20 +1757,17 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	/* Skin Preview  */
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), alignment, FALSE, FALSE, 0);
-
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_container_add (GTK_CONTAINER (alignment), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
 
 	q1_skin_preview = gtk_image_new ();
 	gtk_frame_set_child (GTK_FRAME (frame), q1_skin_preview);
 	gtk_widget_show (q1_skin_preview);
 
 	gtk_widget_show (frame);
-
-	gtk_widget_show (alignment);
 
 	gtk_widget_show (vbox);
 
@@ -1782,7 +1778,6 @@ static GtkWidget *q1_skin_box_create (void) {
 static GtkWidget *qw_skin_box_create (void) {
 	GtkWidget *vbox;
 	GtkWidget *hbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *grid;
 	GtkWidget *label;
@@ -1795,18 +1790,15 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	/* QW Skin ComboBox */
 
-	alignment = gtk_alignment_new (0, 0, 0, 0);
-	gtk_box_pack_start(GTK_BOX (hbox), alignment, FALSE, FALSE, 0);
-
 	qw_skin_combo = gtk_combo_box_text_new_with_entry();
 	gtk_entry_set_max_length(combo_get_entry(qw_skin_combo), 256);
 	gtk_widget_set_size_request(GTK_WIDGET(combo_get_entry(qw_skin_combo)), 112, -1);
 	g_signal_connect (G_OBJECT(combo_get_entry(qw_skin_combo)),
 			"changed", G_CALLBACK(qw_skin_combo_changed_callback), NULL);
-	gtk_container_add(GTK_CONTAINER(alignment), qw_skin_combo);
+	gtk_widget_set_halign (qw_skin_combo, GTK_ALIGN_START);
+	gtk_widget_set_valign (qw_skin_combo, GTK_ALIGN_START);
+	gtk_box_pack_start(GTK_BOX (hbox), qw_skin_combo, FALSE, FALSE, 0);
 	gtk_widget_show(qw_skin_combo);
-
-	gtk_widget_show(alignment);
 
 	/* Top and Bottom Colors */
 
@@ -1847,20 +1839,17 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	/* Skin Preview  */
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), alignment, FALSE, FALSE, 0);
-
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_container_add (GTK_CONTAINER (alignment), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
 
 	qw_skin_preview = gtk_image_new ();
 	gtk_frame_set_child (GTK_FRAME (frame), qw_skin_preview);
 	gtk_widget_show (qw_skin_preview);
 
 	gtk_widget_show (frame);
-
-	gtk_widget_show (alignment);
 
 	gtk_widget_show (vbox);
 
@@ -1900,7 +1889,6 @@ static void q2_skin_combo_changed_callback (GtkWidget *widget, gpointer data) {
 static GtkWidget *q2_skin_box_create (void) {
 	GtkWidget *vbox;
 	GtkWidget *hbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
@@ -1911,33 +1899,28 @@ static GtkWidget *q2_skin_box_create (void) {
 
 	/* Skin Preview  */
 
-	alignment = gtk_alignment_new(0, 0.5, 0, 0);
-	gtk_box_pack_start(GTK_BOX(hbox), alignment, FALSE, FALSE, 0);
-
 	frame = gtk_frame_new(NULL);
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_IN);
-	gtk_container_add(GTK_CONTAINER(alignment), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_START);
+	gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
+	gtk_box_pack_start(GTK_BOX(hbox), frame, FALSE, FALSE, 0);
 
 	q2_skin_preview = gtk_image_new();
 	gtk_frame_set_child (GTK_FRAME (frame), q2_skin_preview);
 	gtk_widget_show(q2_skin_preview);
 
 	gtk_widget_show(frame);
-	gtk_widget_show(alignment);
 
 	/* Q2 Skin ComboBox */
-
-	alignment = gtk_alignment_new(1.0, 0, 0, 0);
-	gtk_box_pack_end(GTK_BOX(hbox), alignment, FALSE, FALSE, 0);
 
 	q2_skin_combo = gtk_combo_box_text_new_with_entry();
 	gtk_entry_set_max_length(GTK_ENTRY(combo_get_entry(q2_skin_combo)), 256);
 	gtk_widget_set_size_request(GTK_WIDGET(combo_get_entry(q2_skin_combo)), 144, -1);
 	g_signal_connect(G_OBJECT(combo_get_entry(q2_skin_combo)), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
-	gtk_container_add(GTK_CONTAINER(alignment), q2_skin_combo);
+	gtk_widget_set_halign (q2_skin_combo, GTK_ALIGN_END);
+	gtk_widget_set_valign (q2_skin_combo, GTK_ALIGN_START);
+	gtk_box_pack_end(GTK_BOX(hbox), q2_skin_combo, FALSE, FALSE, 0);
 	gtk_widget_show(q2_skin_combo);
-
-	gtk_widget_show(alignment);
 
 	gtk_widget_show(hbox);
 
@@ -1949,7 +1932,6 @@ static GtkWidget *q2_skin_box_create (void) {
 
 static GtkWidget *player_profile_q1_page (void) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *q1_skin;
 	GtkWidget *hbox;
@@ -1986,18 +1968,16 @@ static GtkWidget *player_profile_q1_page (void) {
 
 	/* Q1 Colors */
 
-	alignment = gtk_alignment_new(0.5, 0.5, 0, 0);
-	gtk_box_pack_start(GTK_BOX(page_vbox), alignment, FALSE, FALSE, 0);
-
 	frame = gtk_frame_new(_("Colors"));
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add(GTK_CONTAINER(alignment), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
+	gtk_box_pack_start(GTK_BOX(page_vbox), frame, FALSE, FALSE, 0);
 
 	q1_skin = q1_skin_box_create();
 	gtk_frame_set_child (GTK_FRAME (frame), q1_skin);
 
 	gtk_widget_show(frame);
-	gtk_widget_show(alignment);
 
 	gtk_widget_show(hbox);
 	gtk_widget_show(page_vbox);
@@ -2047,7 +2027,6 @@ static GtkWidget *player_profile_t2_page (void) {
 
 static GtkWidget *player_profile_qw_page (void) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *qw_skin;
 	GtkWidget *hbox;
@@ -2062,18 +2041,16 @@ static GtkWidget *player_profile_qw_page (void) {
 
 	/* QW Skin */
 
-	alignment = gtk_alignment_new(0.5, 0.5, 0, 0);
-	gtk_box_pack_start(GTK_BOX(page_vbox), alignment, FALSE, FALSE, 0);
-
 	frame = gtk_frame_new(_("Skin/Colors"));
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add(GTK_CONTAINER(alignment), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
+	gtk_box_pack_start(GTK_BOX(page_vbox), frame, FALSE, FALSE, 0);
 
 	qw_skin = qw_skin_box_create();
 	gtk_frame_set_child (GTK_FRAME (frame), qw_skin);
 
 	gtk_widget_show(frame);
-	gtk_widget_show(alignment);
 
 	// Player Name
 
@@ -2128,7 +2105,6 @@ static GtkWidget *player_profile_qw_page (void) {
 
 static GtkWidget *player_profile_q2_page (void) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *q2_skin;
 	GtkWidget *label;
@@ -2159,18 +2135,16 @@ static GtkWidget *player_profile_q2_page (void) {
 
 	// /Player Name
 
-	alignment = gtk_alignment_new(0.5, 0.5, 0, 0);
-	gtk_box_pack_start(GTK_BOX(page_vbox), alignment, FALSE, FALSE, 0);
-
 	frame = gtk_frame_new(_("Model/Skin"));
 	gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add(GTK_CONTAINER(alignment), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
+	gtk_box_pack_start(GTK_BOX(page_vbox), frame, FALSE, FALSE, 0);
 
 	q2_skin = q2_skin_box_create();
 	gtk_frame_set_child (GTK_FRAME (frame), q2_skin);
 
 	gtk_widget_show(frame);
-	gtk_widget_show(alignment);
 
 	gtk_widget_show(page_vbox);
 
@@ -4049,7 +4023,6 @@ static GtkWidget *qstat_options_page (void) {
 	GtkWidget *grid;
 	GtkWidget *label;
 	GtkAdjustment *adj;
-	GtkWidget* alignment;
 	GtkWidget* hbox;
 	unsigned row = 0;
 
@@ -4082,12 +4055,10 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (maxsimultaneous_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (maxsimultaneous_spinner, 48, -1);
 
-	alignment = gtk_alignment_new (1, 0.5, 0, 0);
-	gtk_container_add (GTK_CONTAINER (alignment), maxsimultaneous_spinner);
-
-	gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
+	gtk_widget_set_halign (maxsimultaneous_spinner, GTK_ALIGN_END);
+	gtk_widget_set_valign (maxsimultaneous_spinner, GTK_ALIGN_CENTER);
+	gtk_grid_attach (GTK_GRID (grid), maxsimultaneous_spinner, 1, row, 1, 1);
 	gtk_widget_show (maxsimultaneous_spinner);
-	gtk_widget_show(alignment);
 
 	++row;
 
@@ -4102,11 +4073,10 @@ static GtkWidget *qstat_options_page (void) {
 	maxretries_spinner = gtk_spin_button_new (GTK_ADJUSTMENT (adj), 0, 0);
 	gtk_widget_set_size_request (maxretries_spinner, 48, -1);
 
-	alignment = gtk_alignment_new (1, 0.5, 0, 0);
-	gtk_container_add (GTK_CONTAINER (alignment), maxretries_spinner);
-	gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
+	gtk_widget_set_halign (maxretries_spinner, GTK_ALIGN_END);
+	gtk_widget_set_valign (maxretries_spinner, GTK_ALIGN_CENTER);
+	gtk_grid_attach (GTK_GRID (grid), maxretries_spinner, 1, row, 1, 1);
 	gtk_widget_show (maxretries_spinner);
-	gtk_widget_show(alignment);
 
 	++row;
 
@@ -4121,11 +4091,10 @@ static GtkWidget *qstat_options_page (void) {
 	gtk_entry_set_max_length(GTK_ENTRY(qstat_srcip_entry), 15);
 	gtk_entry_set_text (GTK_ENTRY (qstat_srcip_entry), qstat_srcip?qstat_srcip:"");
 
-	alignment = gtk_alignment_new (1, 0.5, 0, 0);
-	gtk_container_add (GTK_CONTAINER (alignment), qstat_srcip_entry);
-	gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
+	gtk_widget_set_halign (qstat_srcip_entry, GTK_ALIGN_END);
+	gtk_widget_set_valign (qstat_srcip_entry, GTK_ALIGN_CENTER);
+	gtk_grid_attach (GTK_GRID (grid), qstat_srcip_entry, 1, row, 1, 1);
 	gtk_widget_show (qstat_srcip_entry);
-	gtk_widget_show (alignment);
 
 	++row;
 
@@ -4169,13 +4138,12 @@ static GtkWidget *qstat_options_page (void) {
 		gtk_box_pack_start(GTK_BOX(hbox), qstat_srcport_entry_high, FALSE, FALSE, 0);
 		gtk_widget_set_size_request (qstat_srcport_entry_high, 70, -1);
 
-		alignment = gtk_alignment_new (1, 0.5, 0, 0);
-		gtk_container_add (GTK_CONTAINER (alignment), hbox);
-		gtk_grid_attach (GTK_GRID (grid), alignment, 1, row, 1, 1);
+		gtk_widget_set_halign (hbox, GTK_ALIGN_END);
+		gtk_widget_set_valign (hbox, GTK_ALIGN_CENTER);
+		gtk_grid_attach (GTK_GRID (grid), hbox, 1, row, 1, 1);
 		gtk_widget_show (qstat_srcport_entry_low);
 		gtk_widget_show (label);
 		gtk_widget_show (qstat_srcport_entry_high);
-		gtk_widget_show (alignment);
 		gtk_widget_show (hbox);
 
 		++row;

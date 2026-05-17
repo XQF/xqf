@@ -1152,7 +1152,6 @@ static void server_filter_set_changed_callback(int status) {
 
 static void server_filter_page (GtkWidget *notebook) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *grid;
 	GtkWidget *label;
@@ -1236,14 +1235,13 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
 	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_frame_set_child (GTK_FRAME (frame), alignment);
-
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
 	xqf_widget_set_margin_all (grid, 6);
-	gtk_container_add (GTK_CONTAINER (alignment), grid);
+	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (grid, GTK_ALIGN_CENTER);
+	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
 	/* row=0..1 */
 
@@ -1462,7 +1460,6 @@ static void server_filter_page (GtkWidget *notebook) {
 #endif
 
 	gtk_widget_show(grid);
-	gtk_widget_show(alignment);
 	gtk_widget_show(frame);
 	gtk_widget_show(page_vbox);
 

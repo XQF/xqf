@@ -391,7 +391,6 @@ static void put_server_stats (GtkWidget *grid, int num, int row) {
 
 static GtkWidget *server_stats_page (void) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *grid;
 	GtkWidget *game_label;
 	GtkWidget *scrollwin;
@@ -404,12 +403,11 @@ static GtkWidget *server_stats_page (void) {
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
-
 	grid = gtk_grid_new ();
-	gtk_container_add (GTK_CONTAINER (alignment), grid);
 	xqf_widget_set_margin_all (grid, 6);
+	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (grid, GTK_ALIGN_CENTER);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), grid);
 
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
@@ -448,7 +446,6 @@ static GtkWidget *server_stats_page (void) {
 	gtk_widget_show (grid);
 	gtk_widget_show (scrollwin);
 
-	gtk_widget_show (alignment);
 	gtk_widget_show (page_vbox);
 
 	return page_vbox;
@@ -530,7 +527,6 @@ static void select_server_type_callback(GtkWidget *widget, enum server_type type
 
 static GtkWidget *archs_stats_page (void) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *option_menu;
 	GtkWidget *hbox;
 	int pagenum = 0;
@@ -541,13 +537,12 @@ static GtkWidget *archs_stats_page (void) {
 	xqf_widget_set_margin_all (page_vbox, 8);
 
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-
 	arch_notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (arch_notebook), FALSE);
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (arch_notebook), GTK_POS_TOP);
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(arch_notebook), FALSE);
-	gtk_container_add (GTK_CONTAINER (alignment), arch_notebook);
+	gtk_widget_set_halign (arch_notebook, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (arch_notebook, GTK_ALIGN_CENTER);
 
 	to_activate = config_get_int("/" CONFIG_FILE "/Statistics/game");
 
@@ -574,10 +569,9 @@ static GtkWidget *archs_stats_page (void) {
 
 	gtk_widget_show(hbox);
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), alignment, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (page_vbox), arch_notebook, TRUE, TRUE, 0);
 
 	gtk_widget_show (arch_notebook);
-	gtk_widget_show (alignment);
 	gtk_widget_show (page_vbox);
 
 	return page_vbox;
@@ -592,21 +586,18 @@ static void country_notebook_page (GtkWidget *notebook,
 		enum server_type type, struct country_stats *stats) {
 	GtkWidget *grid;
 	GtkWidget *scrollwin;
-	GtkWidget *alignment;
 	unsigned c;
 	char buf[16] = {0};
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), alignment);
-
 	grid = gtk_grid_new ();
 	xqf_widget_set_margin_all (grid, 6);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
-
-	gtk_container_add (GTK_CONTAINER (alignment), grid);
+	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (grid, GTK_ALIGN_CENTER);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), grid);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrollwin, NULL);
 
@@ -648,7 +639,6 @@ static void country_notebook_page (GtkWidget *notebook,
 
 	gtk_widget_show(grid);
 	gtk_widget_show(scrollwin);
-	gtk_widget_show(alignment);
 }
 
 static void select_country_server_type_callback(GtkWidget *widget, enum server_type type) {
