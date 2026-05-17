@@ -1571,24 +1571,19 @@ void server_view_unselect_cb (GtkWidget *widget, int row,
 	server_list_sync_selection ();
 }
 
-/* Double-click on server row → connect */
-static void server_view_double_click_cb (GtkGestureClick *gesture G_GNUC_UNUSED,
-                                          int n_press, double x G_GNUC_UNUSED,
-                                          double y G_GNUC_UNUSED, gpointer data G_GNUC_UNUSED) {
-	if (n_press == 2)
-		launch_normal_callback (NULL);
+/* Double-click or Enter on server row → connect */
+static void server_view_activate_cb (GtkColumnView *view G_GNUC_UNUSED,
+                                      guint position G_GNUC_UNUSED,
+                                      gpointer data G_GNUC_UNUSED) {
+	launch_normal_callback (NULL);
 }
 
-/* Key-press on server list: Enter=connect, Space=refresh-selected */
+/* Key-press on server list: Space=refresh-selected */
 static gboolean server_view_key_cb (GtkEventControllerKey *ctrl G_GNUC_UNUSED,
                                      guint keyval, guint keycode G_GNUC_UNUSED,
                                      GdkModifierType state G_GNUC_UNUSED,
                                      gpointer data G_GNUC_UNUSED) {
 	switch (keyval) {
-	case GDK_KEY_Return:
-	case GDK_KEY_KP_Enter:
-		launch_normal_callback (NULL);
-		return TRUE;
 	case GDK_KEY_space:
 		refresh_selected_callback (NULL, NULL);
 		return TRUE;
@@ -1990,12 +1985,9 @@ void populate_main_window (void) {
 		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server")));
 	gtk_widget_set_visible (server_view, TRUE);
 
-	{
-		GtkGestureClick *dbl = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
-		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (dbl), 1);
-		g_signal_connect (dbl, "pressed", G_CALLBACK (server_view_double_click_cb), NULL);
-		gtk_widget_add_controller (server_view, GTK_EVENT_CONTROLLER (dbl));
+	g_signal_connect (server_view, "activate", G_CALLBACK (server_view_activate_cb), NULL);
 
+	{
 		GtkGestureClick *rclick = GTK_GESTURE_CLICK (gtk_gesture_click_new ());
 		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (rclick), 3);
 		g_signal_connect (rclick, "pressed", G_CALLBACK (server_view_right_click_cb), NULL);
