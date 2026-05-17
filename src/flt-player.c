@@ -680,22 +680,23 @@ static GtkWidget *player_filter_pattern_editor (void) {
 
 	/* Comment */
 
-	frame = gtk_frame_new (_("Pattern Comment"));
-	gtk_box_pack_end (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+	label = gtk_label_new (_("Pattern Comment"));
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_box_pack_end (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+	gtk_widget_show (label);
 
 	comment_text_buffer = gtk_text_buffer_new (NULL);
 	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
-	gtk_widget_set_size_request (comment_text, -1, 80);
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (comment_text), GTK_WRAP_WORD_CHAR);
 	gtk_widget_show (comment_text);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_widget_set_size_request (scrollwin, -1, 80);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), comment_text);
-	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
+	gtk_box_pack_end (GTK_BOX (vbox), scrollwin, TRUE, TRUE, 0);
 	gtk_widget_show (scrollwin);
-
-	gtk_widget_show (frame);
 
 	gtk_widget_show (vbox);
 
