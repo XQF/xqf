@@ -177,7 +177,7 @@ static GtkWidget* create_redialwindow (void) {
 	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
 	gtk_widget_show (vbox1);
 	gtk_window_set_child (GTK_WINDOW (redialwindow), vbox1);
-	gtk_widget_set_margin_all (vbox1, 14);
+	xqf_widget_set_margin_all (vbox1, 14);
 
 	label = gtk_label_new (_("***\n***"));
 	g_object_ref (G_OBJECT(label));

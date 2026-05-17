@@ -551,7 +551,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
-	gtk_widget_set_margin_all (vbox, 8);
+	xqf_widget_set_margin_all (vbox, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
 
 	/* Dialog Title */
@@ -653,7 +653,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	/* Close Button */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_widget_set_margin_all (hbox, 8);
+	xqf_widget_set_margin_all (hbox, 8);
 	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_label (_("Close"));
