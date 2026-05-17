@@ -616,7 +616,7 @@ gboolean check_launch (struct condef* con) {
 				_("Server %s:%d is %s.\n\nLaunch client anyway?"),
 				(s->host->name)? s->host->name : inet_ntoa (s->host->ip),
 				s->port,
-				(s->ping == MAX_PING)? "unreachable" : "down");
+				(s->ping == MAX_PING)? _("unreachable") : _("down"));
 		if (!launch) {
 			condef_free (con);
 			return FALSE;

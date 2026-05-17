@@ -264,7 +264,7 @@ enum server_type id2type (const char *id) {
 	}
 
 	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
-		if (g_ascii_strcasecmp (id, games[i].qstat_str) == 0)
+		if (games[i].qstat_str && g_ascii_strcasecmp (id, games[i].qstat_str) == 0)
 			return games[i].type;
 	}
 
@@ -2343,7 +2343,7 @@ static int config_is_valid_generic (struct server *s) {
 	struct game *g = &games[s->type];
 
 	if (g->cmd == NULL || g->cmd[0] == '\0') {
-		dialog_ok (NULL, "%s command line is empty.", g->name);
+		dialog_ok (NULL, _("%s command line is empty."), g->name);
 		return FALSE;
 	}
 
