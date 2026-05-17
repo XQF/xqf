@@ -658,7 +658,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 		if (i > 0)
 			gtk_check_button_set_group (GTK_CHECK_BUTTON (mode_buttons[i]), GTK_CHECK_BUTTON (mode_buttons[0]));
 
-		g_signal_connect (mode_buttons[i], "clicked", G_CALLBACK (sync_pattern_data), NULL);
+		g_signal_connect (mode_buttons[i], "toggled", G_CALLBACK (sync_pattern_data), NULL);
 
 		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
 		gtk_widget_show (mode_buttons[i]);
