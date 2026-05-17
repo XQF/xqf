@@ -1700,9 +1700,7 @@ static void color_button_clicked_cb (GtkButton *button,
 	if (!popover) {
 		popover = create_color_popover (set_player_color);
 		gtk_widget_set_parent (popover, GTK_WIDGET (button));
-		/* unparent before button finalizes to suppress GTK warning */
-		g_object_set_data_full (G_OBJECT (button), "xqf-color-popover", popover,
-		                        (GDestroyNotify) gtk_widget_unparent);
+		g_object_set_data (G_OBJECT (button), "xqf-color-popover", popover);
 	}
 	gtk_popover_popup (GTK_POPOVER (popover));
 }
@@ -4509,6 +4507,22 @@ void preferences_dialog (int page_num) {
 	unregister_window (window);
 
 	/* clean up */
+
+	/* Unparent color popovers before the buttons are finalized.
+	 * gtk_widget_set_parent links them as children; GTK warns if they
+	 * are still attached when the parent button is freed. */
+	{
+		GtkWidget *btns[] = { q1_top_color_button, q1_bottom_color_button,
+		                      qw_top_color_button,  qw_bottom_color_button };
+		for (int i = 0; i < 4; i++) {
+			if (!btns[i]) continue;
+			GtkWidget *p = g_object_get_data (G_OBJECT (btns[i]), "xqf-color-popover");
+			if (p) {
+				gtk_widget_unparent (p);
+				g_object_set_data (G_OBJECT (btns[i]), "xqf-color-popover", NULL);
+			}
+		}
+	}
 
 	generic_prefs_free(genprefs);
 	genprefs=NULL;
