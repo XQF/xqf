@@ -61,21 +61,10 @@ reviewable on its own. Verify a fix builds and runs before committing it.
 
 ---
 
-## Current Known Bugs (as of 2026-05-17)
+## Current Known Bugs
 
-The app builds and runs, but has one remaining startup issue:
-
-### 1. Source pane shows only "Favorites"
-
-No game groups visible. `default_show_only_configured_games` is confirmed OFF.
-The remaining filter in `fill_source_treeview` is `if (!group->masters) continue`.
-
-**Hypothesis**: `master_groups` entries all have empty `masters` lists. Root cause
-unknown — needs investigation of `init_masters()` in `src/source.c`.
-
-**Minor fix applied**: Removed the `default_show_only_configured_games` group
-filter from `fill_source_treeview` (was harmless-but-wrong diagnosis). This is
-still the correct behavior to keep.
+No known startup blockers. The app builds, runs, and shows the source pane
+correctly on both fresh and existing configs.
 
 ---
 
