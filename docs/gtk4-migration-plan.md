@@ -61,34 +61,11 @@ reviewable on its own. Verify a fix builds and runs before committing it.
 
 ---
 
-## Current Known Bugs (as of 2026-05-11)
+## Current Known Bugs (as of 2026-05-17)
 
-The app builds and runs, but has two startup issues:
+The app builds and runs, but has one remaining startup issue:
 
-### 1. 18× CRITICALs at startup
-
-Three GLib/GTK criticals, each ×18, all at the same millisecond:
-```
-g_value_type_compatible: assertion 'src_type' failed
-g_object_new_valist: invalid object type ''
-gtk_widget_measure: assertion 'GTK_IS_WIDGET(widget)' failed
-```
-**Likely cause**: `GtkCellRendererPixbuf`'s "pixbuf" property is broken in
-GTK 4.18 (deprecated since 4.10). `GDK_TYPE_PIXBUF` model columns with
-"pixbuf" attribute bindings cause type errors.
-
-**Fix applied** (needs rebuild to verify): Changed all tree/list stores from
-`GDK_TYPE_PIXBUF` to `GDK_TYPE_PAINTABLE`, and all "pixbuf" attribute bindings
-to "paintable". `GdkPixbuf` implements `GdkPaintable` so existing code that
-stores `pix->pixbuf` pointers is unchanged.
-Files changed: `src/xqf-ui.c`, `src/xqf-ui.h`, `src/pref.c`, `src/filter.c`,
-`src/flt-player.c`.
-
-The ×18 count is still unexplained — source treeview only has 1 visible row.
-Possible sources: column view header widgets (9+6+3=18?), or something in
-`init_pixmaps`. Will know after rebuild.
-
-### 2. Source pane shows only "Favorites"
+### 1. Source pane shows only "Favorites"
 
 No game groups visible. `default_show_only_configured_games` is confirmed OFF.
 The remaining filter in `fill_source_treeview` is `if (!group->masters) continue`.
