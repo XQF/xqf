@@ -695,11 +695,14 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_has_frame (GTK_SCROLLED_WINDOW (scrollwin), TRUE);
 	gtk_widget_set_size_request (scrollwin, -1, 80);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), comment_text);
-	gtk_box_pack_end (GTK_BOX (vbox), scrollwin, TRUE, TRUE, 0);
 	gtk_widget_set_visible (scrollwin, TRUE);
+
+	GtkWidget *comment_frame = gtk_frame_new (NULL);
+	gtk_frame_set_child (GTK_FRAME (comment_frame), scrollwin);
+	gtk_box_pack_end (GTK_BOX (vbox), comment_frame, TRUE, TRUE, 0);
+	gtk_widget_set_visible (comment_frame, TRUE);
 
 	gtk_widget_set_visible (vbox, TRUE);
 
