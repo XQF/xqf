@@ -351,7 +351,11 @@ static void sync_pattern_data (void) {
 		mode = PATTERN_MODE_REGEXP;
 
 	pattern = strdup_strip (gtk_entry_get_text (GTK_ENTRY (pattern_entry)));
-	comment = gtk_editable_get_chars (GTK_EDITABLE (comment_text_buffer), 0, -1);
+	{
+		GtkTextIter start, end;
+		gtk_text_buffer_get_bounds (comment_text_buffer, &start, &end);
+		comment = gtk_text_buffer_get_text (comment_text_buffer, &start, &end, FALSE);
+	}
 
 	update_pattern = (pp->pattern && pp->pattern[0])?
 		!pattern || !pattern[0] || strcmp (pp->pattern, pattern) :
@@ -622,7 +626,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *frame;
-	GtkWidget *vscrollbar;
+	GtkWidget *scrollwin;
 	int i;
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
@@ -677,22 +681,18 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	frame = gtk_frame_new (_("Pattern Comment"));
 	gtk_box_pack_end (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 
-	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-
 	comment_text_buffer = gtk_text_buffer_new (NULL);
 	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
-
 	gtk_widget_set_size_request (comment_text, -1, 80);
-	gtk_box_pack_start (GTK_BOX (hbox), comment_text, TRUE, TRUE, 0);
 	gtk_widget_show (comment_text);
 
-	vscrollbar = gtk_vscrollbar_new (gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (comment_text)));
-	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
-	gtk_widget_show (vscrollbar);
+	scrollwin = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
+	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), comment_text);
+	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
+	gtk_widget_show (scrollwin);
 
-	gtk_widget_show (hbox);
 	gtk_widget_show (frame);
 
 	gtk_widget_show (vbox);
