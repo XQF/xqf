@@ -654,6 +654,8 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	gtk_widget_set_hexpand (pattern_entry, TRUE);
 	g_signal_connect (pattern_entry, "activate",
 			G_CALLBACK (sync_pattern_data), NULL);
+	g_signal_connect (pattern_entry, "changed",
+			G_CALLBACK (sync_pattern_data), NULL);
 	gtk_widget_show (pattern_entry);
 
 	/* Mode Buttons */
@@ -688,6 +690,8 @@ static GtkWidget *player_filter_pattern_editor (void) {
 	comment_text_buffer = gtk_text_buffer_new (NULL);
 	comment_text = gtk_text_view_new_with_buffer (comment_text_buffer);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (comment_text), GTK_WRAP_WORD_CHAR);
+	g_signal_connect (comment_text_buffer, "changed",
+			G_CALLBACK (sync_pattern_data), NULL);
 	gtk_widget_show (comment_text);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
