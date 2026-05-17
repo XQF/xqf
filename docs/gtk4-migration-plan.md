@@ -79,6 +79,25 @@ still the correct behavior to keep.
 
 ---
 
+## Deprecated API in active use
+
+Several GTK APIs we still rely on were deprecated in GTK 4.10. They work
+fine today but will eventually be removed. No urgency — GTK rarely removes
+deprecated API quickly — but track them here so they don't get forgotten.
+
+| API | Deprecated since | Where used in XQF |
+|-----|-----------------|-------------------|
+| `GtkCellRendererPixbuf`, `GtkCellRendererText` | 4.10 | source treeview, games list, country filter, player filter |
+| `GtkTreeView`, `GtkTreeStore`, `GtkListStore`, `GtkTreeViewColumn` | 4.10 | source treeview (`src/xqf-ui.c`), server info tree (`src/srv-info.c`), scripts list (`src/scripts.c`), games pref list (`src/pref.c`), country/player filter lists (`src/filter.c`, `src/flt-player.c`) |
+| `gdk_texture_new_for_pixbuf` | 4.20 | `src/loadpixmap.c`, `src/pixmaps.c` — bridges XPM-loaded `GdkPixbuf` data into `GdkTexture` for cell renderers; resolves naturally when XPM icons are replaced with PNGs (Phase 2) |
+
+The tree-view widgets will be replaced incrementally as part of Phase 1
+(server/player lists already done via `GtkColumnView`; source treeview,
+server info tree, and filter lists are still pending). Once all
+`GtkTreeView` usage is gone, the `GtkCellRenderer*` usage goes with it.
+
+---
+
 ## Phase 1 — Drop GTK2/GTK3, target GTK4 directly
 
 **Goal**: Single build target (GTK4), no conditional compilation for GTK
