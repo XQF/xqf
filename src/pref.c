@@ -1735,8 +1735,6 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (q1_top_color_button, 40, -1);
-	g_signal_connect (G_OBJECT (q1_top_color_button), "event",
-			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_grid_attach (GTK_GRID (grid), q1_top_color_button, 1, 0, 1, 1);
 	set_bg_color (q1_top_color_button, fix_qw_player_color (pref_q1_top_color));
 	gtk_widget_show (q1_top_color_button);
@@ -1750,8 +1748,6 @@ static GtkWidget *q1_skin_box_create (void) {
 
 	q1_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (q1_bottom_color_button, 40, -1);
-	g_signal_connect (G_OBJECT (q1_bottom_color_button), "event",
-			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_grid_attach (GTK_GRID (grid), q1_bottom_color_button, 1, 1, 1, 1);
 	set_bg_color (q1_bottom_color_button,
 			fix_qw_player_color (pref_q1_bottom_color));
@@ -1829,8 +1825,6 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_top_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (qw_top_color_button, 40, -1);
-	g_signal_connect (G_OBJECT (qw_top_color_button), "event",
-			G_CALLBACK (color_button_event_callback), NULL);
 	gtk_grid_attach (GTK_GRID (grid), qw_top_color_button, 1, 0, 1, 1);
 	set_bg_color (qw_top_color_button, fix_qw_player_color (pref_qw_top_color));
 	gtk_widget_show (qw_top_color_button);
@@ -1844,7 +1838,6 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	qw_bottom_color_button = gtk_button_new_with_label (" ");
 	gtk_widget_set_size_request (qw_bottom_color_button, 40, -1);
-	g_signal_connect (G_OBJECT (qw_bottom_color_button), "event", G_CALLBACK (color_button_event_callback), NULL);
 	gtk_grid_attach (GTK_GRID (grid), qw_bottom_color_button, 1, 1, 1, 1);
 	set_bg_color (qw_bottom_color_button, fix_qw_player_color (pref_qw_bottom_color));
 	gtk_widget_show (qw_bottom_color_button);
@@ -2767,10 +2760,13 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 				"activate",
 				G_CALLBACK(dir_entry_activate_callback),
 				NULL);
-		g_signal_connect(G_OBJECT(genprefs[type].dir_entry),
-				"focus_out_event",
-				G_CALLBACK(dir_entry_activate_callback),
-				NULL);
+		{
+			GtkEventController *fc = gtk_event_controller_focus_new ();
+			g_signal_connect_swapped (fc, "leave",
+					G_CALLBACK (dir_entry_activate_callback),
+					genprefs[type].dir_entry);
+			gtk_widget_add_controller (genprefs[type].dir_entry, fc);
+		}
 	}
 	gtk_widget_show(genprefs[type].dir_entry);
 
@@ -2899,7 +2895,7 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 
 	custom_args_entry_game[type] = gtk_entry_new();
 	g_object_ref(G_OBJECT(custom_args_entry_game[type]));
-	gtk_widget_set_size_request(custom_args_entry_game[type], 90, -2);
+	gtk_widget_set_size_request(custom_args_entry_game[type], 90, -1);
 	g_object_set_data_full(G_OBJECT(page_vbox), "custom_args_entry_game[type]",
 		custom_args_entry_game[type],
 		(GDestroyNotify) g_object_unref);
