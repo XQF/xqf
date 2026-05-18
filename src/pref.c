@@ -186,7 +186,9 @@ static GtkWidget *qstat_srcport_entry_high;
 
 static GtkWidget *sound_enable_check_button;
 
-static GtkWidget *sound_player_file_dialog_button;
+static GtkWidget *sound_player_entry;
+
+static char *sound_file_btn_get_path (GtkWidget *btn);
 
 static GtkWidget *sound_xqf_start_file_dialog_button;
 static GtkWidget *sound_xqf_quit_file_dialog_button;
@@ -1330,15 +1332,16 @@ static void get_new_defaults (void) {
 	}
 
 
-	sound_player = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button));
+	g_free (sound_player);
+	sound_player = g_strdup (gtk_entry_get_text (GTK_ENTRY (sound_player_entry)));
 
-	sound_xqf_start = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_xqf_start_file_dialog_button));
-	sound_xqf_quit = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_xqf_quit_file_dialog_button));
-	sound_update_done = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_update_done_file_dialog_button));
-	sound_refresh_done = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_refresh_done_file_dialog_button));
-	sound_stop = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_stop_file_dialog_button));
-	sound_server_connect = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_server_connect_file_dialog_button));
-	sound_redial_success = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(sound_redial_success_file_dialog_button));
+	g_free (sound_xqf_start);     sound_xqf_start     = sound_file_btn_get_path (sound_xqf_start_file_dialog_button);
+	g_free (sound_xqf_quit);      sound_xqf_quit      = sound_file_btn_get_path (sound_xqf_quit_file_dialog_button);
+	g_free (sound_update_done);   sound_update_done   = sound_file_btn_get_path (sound_update_done_file_dialog_button);
+	g_free (sound_refresh_done);  sound_refresh_done  = sound_file_btn_get_path (sound_refresh_done_file_dialog_button);
+	g_free (sound_stop);          sound_stop          = sound_file_btn_get_path (sound_stop_file_dialog_button);
+	g_free (sound_server_connect);sound_server_connect= sound_file_btn_get_path (sound_server_connect_file_dialog_button);
+	g_free (sound_redial_success);sound_redial_success= sound_file_btn_get_path (sound_redial_success_file_dialog_button);
 
 	config_set_string ("sound_player", (sound_player)? sound_player : "");
 	config_set_string ("sound_xqf_start", (sound_xqf_start)? sound_xqf_start : "");
@@ -1693,6 +1696,14 @@ static void set_player_color (GtkWidget *widget G_GNUC_UNUSED, int i) {
 }
 
 
+static void color_button_destroy_cb (GtkWidget *button,
+                                     gpointer   data G_GNUC_UNUSED) {
+	GtkWidget *p = g_object_get_data (G_OBJECT (button), "xqf-color-popover");
+	if (p)
+		gtk_widget_unparent (p);
+}
+
+
 static void color_button_clicked_cb (GtkButton *button,
                                      gpointer   data G_GNUC_UNUSED) {
 	color_button_event_widget = GTK_WIDGET (button);
@@ -1737,6 +1748,8 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), q1_top_color_button, 1, 0, 1, 1);
 	g_signal_connect (q1_top_color_button, "clicked",
 	                  G_CALLBACK (color_button_clicked_cb), NULL);
+	g_signal_connect (q1_top_color_button, "destroy",
+	                  G_CALLBACK (color_button_destroy_cb), NULL);
 	gtk_widget_set_visible (q1_top_color_button, TRUE);
 
 	/* Bottom (Pants) Color */
@@ -1750,6 +1763,8 @@ static GtkWidget *q1_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), q1_bottom_color_button, 1, 1, 1, 1);
 	g_signal_connect (q1_bottom_color_button, "clicked",
 	                  G_CALLBACK (color_button_clicked_cb), NULL);
+	g_signal_connect (q1_bottom_color_button, "destroy",
+	                  G_CALLBACK (color_button_destroy_cb), NULL);
 	gtk_widget_set_visible (q1_bottom_color_button, TRUE);
 
 	gtk_widget_set_visible (grid, TRUE);
@@ -1819,6 +1834,8 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), qw_top_color_button, 1, 0, 1, 1);
 	g_signal_connect (qw_top_color_button, "clicked",
 	                  G_CALLBACK (color_button_clicked_cb), NULL);
+	g_signal_connect (qw_top_color_button, "destroy",
+	                  G_CALLBACK (color_button_destroy_cb), NULL);
 	gtk_widget_set_visible (qw_top_color_button, TRUE);
 
 	/* Bottom (Pants) Color */
@@ -1832,6 +1849,8 @@ static GtkWidget *qw_skin_box_create (void) {
 	gtk_grid_attach (GTK_GRID (grid), qw_bottom_color_button, 1, 1, 1, 1);
 	g_signal_connect (qw_bottom_color_button, "clicked",
 	                  G_CALLBACK (color_button_clicked_cb), NULL);
+	g_signal_connect (qw_bottom_color_button, "destroy",
+	                  G_CALLBACK (color_button_destroy_cb), NULL);
 	gtk_widget_set_visible (qw_bottom_color_button, TRUE);
 
 	gtk_widget_set_visible (grid, TRUE);
@@ -4158,18 +4177,95 @@ static GtkWidget *qstat_options_page (void) {
 	return page_vbox;
 }
 
+/* ------------------------------------------------------------------ */
+/* Sound-file chooser button                                            */
+/* A plain GtkButton that shows the filename and opens a               */
+/* GtkFileChooserDialog with an audio/* filter when clicked.           */
+/* ------------------------------------------------------------------ */
+
+#define SOUND_FILE_BTN_PATH "snd-path"
+
+static void
+sound_file_btn_update (GtkWidget *btn, const char *path)
+{
+	const char *label = (path && *path) ? path : _("(none)");
+	gtk_button_set_label (GTK_BUTTON (btn), label);
+	g_object_set_data_full (G_OBJECT (btn), SOUND_FILE_BTN_PATH,
+	                        path ? g_strdup (path) : NULL, g_free);
+}
+
+static char *
+sound_file_btn_get_path (GtkWidget *btn)
+{
+	const char *p = g_object_get_data (G_OBJECT (btn), SOUND_FILE_BTN_PATH);
+	return p ? g_strdup (p) : NULL;
+}
+
+static void
+sound_file_btn_response (GtkWidget *dialog, int response, gpointer btn)
+{
+	if (response == GTK_RESPONSE_ACCEPT) {
+		char *path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		sound_file_btn_update (GTK_WIDGET (btn), path);
+		g_free (path);
+	}
+	gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+static void
+sound_file_btn_clicked (GtkButton *btn, gpointer data G_GNUC_UNUSED)
+{
+	GtkWidget *parent = GTK_WIDGET (gtk_widget_get_root (GTK_WIDGET (btn)));
+	GtkWidget *dialog = gtk_file_chooser_dialog_new (
+	    _("Select a sound file"),
+	    GTK_IS_WINDOW (parent) ? GTK_WINDOW (parent) : GTK_WINDOW (main_window),
+	    GTK_FILE_CHOOSER_ACTION_OPEN,
+	    _("_Cancel"), GTK_RESPONSE_CANCEL,
+	    _("_Open"),   GTK_RESPONSE_ACCEPT,
+	    NULL);
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+
+	GtkFileFilter *af = gtk_file_filter_new ();
+	gtk_file_filter_set_name (af, _("Audio files"));
+	gtk_file_filter_add_mime_type (af, "audio/*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), af);
+
+	GtkFileFilter *all = gtk_file_filter_new ();
+	gtk_file_filter_set_name (all, _("All files"));
+	gtk_file_filter_add_pattern (all, "*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), all);
+
+	const char *current = g_object_get_data (G_OBJECT (btn), SOUND_FILE_BTN_PATH);
+	if (current && *current)
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), current);
+
+	g_signal_connect (dialog, "response", G_CALLBACK (sound_file_btn_response), btn);
+	gtk_widget_set_visible (dialog, TRUE);
+}
+
+static GtkWidget *
+sound_file_button_new (const char *path)
+{
+	GtkWidget *btn = gtk_button_new ();
+	sound_file_btn_update (btn, path);
+	gtk_widget_set_hexpand (btn, TRUE);
+	g_signal_connect (btn, "clicked", G_CALLBACK (sound_file_btn_clicked), NULL);
+	return btn;
+}
+
+/* ------------------------------------------------------------------ */
+
 void pref_sound_play (GtkWidget *dialog_button) {
-	char *file   = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog_button));
-	char *player = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button));
+	char *file   = sound_file_btn_get_path (dialog_button);
+	const char *player = gtk_entry_get_text (GTK_ENTRY (sound_player_entry));
 
 	play_sound_with (player, file, 1);
 
 	g_free (file);
-	g_free (player);
 }
 
 void pref_sound_conf_clear(GtkWidget *dialog_button) {
-	gtk_file_chooser_unselect_all (GTK_FILE_CHOOSER (dialog_button));
+	sound_file_btn_update (dialog_button, NULL);
 }
 
 GtkWidget *sound_clear_button_new() {
@@ -4188,28 +4284,20 @@ GtkWidget *pref_sound_conf_append (char *file, char *name, GtkWidget *grid, int 
 	GtkWidget *dialog_button;
 	GtkWidget *test_button;
 
-	// Label
 	label = gtk_label_new (name);
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, i, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	// File selection dialog
-	dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
-	if (file != NULL && *file != '\0') {
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog_button), file);
-	}
+	dialog_button = sound_file_button_new (file);
 	gtk_grid_attach (GTK_GRID (grid), dialog_button, 1, i, 1, 1);
-	gtk_widget_set_hexpand (dialog_button, TRUE);
 	gtk_widget_set_visible (dialog_button, TRUE);
 
-	// Clear button
 	clear_button = sound_clear_button_new ();
 	g_signal_connect_swapped (clear_button, "clicked", G_CALLBACK (pref_sound_conf_clear), dialog_button);
 	gtk_grid_attach (GTK_GRID (grid), clear_button, 2, i, 1, 1);
 	gtk_widget_set_visible (clear_button, TRUE);
 
-	// Test button
 	test_button = sound_test_button_new ();
 	g_signal_connect_swapped (test_button, "clicked", G_CALLBACK (pref_sound_play), dialog_button);
 	gtk_grid_attach (GTK_GRID (grid), test_button, 3, i, 1, 1);
@@ -4258,15 +4346,15 @@ static GtkWidget *sound_options_page (void) {
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	sound_player_file_dialog_button = gtk_file_chooser_button_new (_("Select a File"), GTK_FILE_CHOOSER_ACTION_OPEN);
-	if (sound_player != NULL && *sound_player != '\0') {
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (sound_player_file_dialog_button), sound_player);
-	}
+	sound_player_entry = gtk_entry_new ();
+	if (sound_player != NULL)
+		gtk_entry_set_text (GTK_ENTRY (sound_player_entry), sound_player);
+	gtk_widget_set_tooltip_text (sound_player_entry,
+	                             _("Command to play a sound file (e.g. mpv, paplay, aplay)"));
 
-	gtk_grid_attach (GTK_GRID (grid), sound_player_file_dialog_button, 1, 1, 2, 1);
-	gtk_widget_set_hexpand (sound_player_file_dialog_button, TRUE);
-
-	gtk_widget_set_visible (sound_player_file_dialog_button, TRUE);
+	gtk_grid_attach (GTK_GRID (grid), sound_player_entry, 1, 1, 2, 1);
+	gtk_widget_set_hexpand (sound_player_entry, TRUE);
+	gtk_widget_set_visible (sound_player_entry, TRUE);
 
 	gtk_widget_set_visible (frame, TRUE);
 
@@ -4382,19 +4470,6 @@ static void generic_prefs_free(struct generic_prefs* prefs) {
 	g_free(prefs);
 }
 
-static void prefs_color_popovers_cleanup (GtkWidget *window G_GNUC_UNUSED,
-                                           gpointer   data   G_GNUC_UNUSED) {
-	GtkWidget *btns[] = { q1_top_color_button, q1_bottom_color_button,
-	                      qw_top_color_button,  qw_bottom_color_button };
-	for (int i = 0; i < 4; i++) {
-		if (!btns[i] || !GTK_IS_WIDGET (btns[i])) continue;
-		GtkWidget *p = g_object_get_data (G_OBJECT (btns[i]), "xqf-color-popover");
-		if (p) {
-			gtk_widget_unparent (p);
-			g_object_set_data (G_OBJECT (btns[i]), "xqf-color-popover", NULL);
-		}
-	}
-}
 
 void preferences_dialog (int page_num) {
 	GtkWidget *vbox;
@@ -4417,12 +4492,6 @@ void preferences_dialog (int page_num) {
 	if (!gtk_widget_get_realized (window)) {
 		gtk_widget_realize (window);
 	}
-
-	/* Unparent color popovers when the window is destroyed (which happens
-	 * inside window_delete_event_callback, before dialog_run_modal returns,
-	 * so the post-modal cleanup block would be too late). */
-	g_signal_connect (window, "destroy",
-	                  G_CALLBACK (prefs_color_popovers_cleanup), NULL);
 
 	allocate_quake_player_colors ();
 
