@@ -4382,11 +4382,12 @@ static void generic_prefs_free(struct generic_prefs* prefs) {
 	g_free(prefs);
 }
 
-static void prefs_color_popovers_cleanup (void) {
+static void prefs_color_popovers_cleanup (GtkWidget *window G_GNUC_UNUSED,
+                                           gpointer   data   G_GNUC_UNUSED) {
 	GtkWidget *btns[] = { q1_top_color_button, q1_bottom_color_button,
 	                      qw_top_color_button,  qw_bottom_color_button };
 	for (int i = 0; i < 4; i++) {
-		if (!btns[i]) continue;
+		if (!btns[i] || !GTK_IS_WIDGET (btns[i])) continue;
 		GtkWidget *p = g_object_get_data (G_OBJECT (btns[i]), "xqf-color-popover");
 		if (p) {
 			gtk_widget_unparent (p);
@@ -4420,8 +4421,8 @@ void preferences_dialog (int page_num) {
 	/* Unparent color popovers when the window is destroyed (which happens
 	 * inside window_delete_event_callback, before dialog_run_modal returns,
 	 * so the post-modal cleanup block would be too late). */
-	g_signal_connect_swapped (window, "destroy",
-	                          G_CALLBACK (prefs_color_popovers_cleanup), NULL);
+	g_signal_connect (window, "destroy",
+	                  G_CALLBACK (prefs_color_popovers_cleanup), NULL);
 
 	allocate_quake_player_colors ();
 
