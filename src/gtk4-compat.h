@@ -369,16 +369,7 @@ static inline GtkAdjustment *gtk_text_view_get_vadjustment (GtkTextView *view)
 static inline GtkAdjustment *gtk_text_view_get_hadjustment (GtkTextView *view)
 { return gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (view)); }
 
-/* ------------------------------------------------------------------ */
-/* GtkFileChooserButton (removed in GTK4)                               */
-/* Returns a plain button stub; replace with proper file-chooser later. */
-/* ------------------------------------------------------------------ */
-
-static inline GtkWidget *gtk_file_chooser_button_new (const char *title, int action)
-{ (void)title; (void)action; return gtk_button_new_with_label ("..."); }
-
-static inline void gtk_file_chooser_unselect_all (GtkFileChooser *chooser)
-{ (void)chooser; }
+/* GtkFileChooserButton was removed in GTK4; pref.c uses its own helpers. */
 
 /* ------------------------------------------------------------------ */
 /* GtkButtonBox (removed in GTK4)                                       */
@@ -767,7 +758,8 @@ gtk_ctree_get_node_info (GtkCTree *t, GtkCTreeNode *n,
                          gboolean *is_leaf, gboolean *expanded)
 { (void)t; (void)n; (void)text; (void)sp; (void)px; (void)mask;
   (void)xpx; (void)xmask;
-  if (is_leaf) *is_leaf = TRUE; if (expanded) *expanded = FALSE;
+  if (is_leaf) *is_leaf = TRUE;
+  if (expanded) *expanded = FALSE;
   return FALSE; }
 
 static inline gboolean
@@ -794,11 +786,8 @@ static inline void gtk_ctree_set_row_data (GtkCTree *t, GtkCTreeNode *n, gpointe
 static inline char *
 gtk_file_chooser_get_filename (GtkFileChooser *chooser)
 {
-  if (!GTK_IS_FILE_CHOOSER (chooser))
-    return NULL;
   GFile *file = gtk_file_chooser_get_file (chooser);
-  if (!file)
-    return NULL;
+  if (!file) return NULL;
   char *path = g_file_get_path (file);
   g_object_unref (file);
   return path;
@@ -807,8 +796,7 @@ gtk_file_chooser_get_filename (GtkFileChooser *chooser)
 static inline void
 gtk_file_chooser_set_filename (GtkFileChooser *chooser, const char *filename)
 {
-  if (!GTK_IS_FILE_CHOOSER (chooser) || !filename)
-    return;
+  if (!filename) return;
   GFile *file = g_file_new_for_path (filename);
   gtk_file_chooser_set_file (chooser, file, NULL);
   g_object_unref (file);

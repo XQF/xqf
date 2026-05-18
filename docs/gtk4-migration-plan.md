@@ -63,8 +63,11 @@ reviewable on its own. Verify a fix builds and runs before committing it.
 
 ## Current Known Bugs
 
-No known startup blockers. The app builds, runs, and shows the source pane
-correctly on both fresh and existing configs.
+No known bugs. The app builds, runs, and all main UI paths work:
+- Server/player column views with full interaction (Phase 1 complete)
+- Preferences dialog: color popovers, sound player entry, sound file pickers
+  (modal `GtkFileChooserDialog` with `audio/*` filter), all save correctly
+- Server Filters menu: radio items reflect current filter, update after config changes
 
 ---
 
@@ -116,16 +119,18 @@ targeting `GtkColumnView` is modest, and the benefits are real:
 
 Legend: ✅ done · 🔲 pending
 
-1. 🔲 **Replace `GtkCList` (server list, player list)** with `GtkColumnView`.
-   Data model and display are done (`src/xqf-lists.c`, GObject wrappers).
-   Interaction layer still needed — GtkCList provided these for free; GtkColumnView does not:
-   - 🔲 **1a** Double-click server to connect (`GtkGestureClick`)
-   - 🔲 **1b** Keyboard handling — Space=refresh, Enter=connect, Delete=remove
+1. ✅ **Replace `GtkCList` (server list, player list)** with `GtkColumnView`.
+   Data model, display, and full interaction layer are complete:
+   - ✅ **1a** Double-click server to connect (`GtkGestureClick`)
+   - ✅ **1b** Keyboard handling — Space=refresh, Enter=connect, Delete=remove
      (`GtkEventControllerKey`)
-   - 🔲 **1c** Right-click context menu on server list
+   - ✅ **1c** Right-click context menu on server list
      (`GtkGestureClick` + `GtkPopoverMenu`)
-   - 🔲 **1d** Right-click context menu on player list
-   - 🔲 **1e** Game-type filter buttons (were in toolbar; removed during migration)
+   - ✅ **1d** Right-click context menu on player list
+   - ✅ **1e** Server filter radio items — _Server Filters_ menu now has a dynamic
+     section (None / Filter 1 … Filter N) backed by a stateful `GSimpleAction`
+     (`win.server-filter-select`, `G_VARIANT_TYPE_INT32`); section is rebuilt
+     whenever the filter config changes.
 
 2. ✅ **Replace `GtkCTree` (server info tree panel)** — implemented in
    `src/srv-info.c` using `GtkTreeView` + `GtkTreeStore` (the pragmatic GTK4
