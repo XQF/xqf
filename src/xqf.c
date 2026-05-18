@@ -1781,6 +1781,15 @@ void populate_main_toolbar (void) {
 	int i;
 	GtkWidget *toolbar = GTK_WIDGET (gtk_builder_get_object (builder, "main-toolbar"));
 
+	/* Toolbar button signals (formerly wired via GtkBuilder auto-connect). */
+	g_signal_connect (gtk_builder_get_object (builder, "update-button"),  "clicked", G_CALLBACK (update_source_callback),    NULL);
+	g_signal_connect (gtk_builder_get_object (builder, "refresh-button"), "clicked", G_CALLBACK (refresh_callback),          NULL);
+	g_signal_connect (gtk_builder_get_object (builder, "refrsel-button"), "clicked", G_CALLBACK (refresh_selected_callback), NULL);
+	g_signal_connect (gtk_builder_get_object (builder, "stop-button"),    "clicked", G_CALLBACK (stop_callback),             NULL);
+	g_signal_connect (gtk_builder_get_object (builder, "connect-button"), "clicked", G_CALLBACK (launch_normal_callback),    NULL);
+	g_signal_connect (gtk_builder_get_object (builder, "observe-button"), "clicked", G_CALLBACK (launch_spectate_callback),  NULL);
+	g_signal_connect (gtk_builder_get_object (builder, "record-button"),  "clicked", G_CALLBACK (launch_record_callback),    NULL);
+
 	// Filter toggle buttons (added dynamically after toolbar buttons)
 	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
 		if (!filters[i].pix) {
