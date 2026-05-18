@@ -2086,6 +2086,14 @@ void populate_main_window (void) {
 
 	restore_main_window_geometry ();
 
+	/* Register the install-relative icons directory so "xqf" resolves even
+	 * when the prefix is not a standard XDG data dir (e.g. source-tree runs). */
+	{
+		GtkIconTheme *theme = gtk_icon_theme_get_for_display (gdk_display_get_default ());
+		char *icons_dir = g_build_filename (xqf_PACKAGE_DATA_DIR, "..", "icons", NULL);
+		gtk_icon_theme_add_search_path (theme, icons_dir);
+		g_free (icons_dir);
+	}
 	gtk_window_set_default_icon_name ("xqf");
 
 	gtk_widget_grab_focus (entry);
