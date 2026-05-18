@@ -17,14 +17,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-// modified version of what glade generates
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
-
-#include <dlfcn.h>
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -36,145 +32,89 @@
 #include "debug.h"
 #include "utils.h"
 
-/* This is an internally used function to check if a pixmap file exists. */
 static char* check_file_exists (const char *directory, const char *filename);
-
-
-/* This is a dummy pixmap we use when a pixmap can't be found. */
-static char *dummy_pixmap_xpm[] = {
-	/* columns rows colors chars-per-pixel */
-	"1 1 1 1",
-	"  c None",
-	/* pixels */
-	" "
-};
-
-/* This is an internally used function to create pixmaps. */
-static GdkPixbuf* create_dummy_pixmap (GtkWidget *widget) {
-	GdkPixbuf *pixbuf;
-
-	pixbuf = gdk_pixbuf_new_from_xpm_data ( (const char**)dummy_pixmap_xpm);
-	if (pixbuf == NULL)
-		xqf_error ("Couldn't create replacement pixmap.");
-
-	return pixbuf;
-}
 
 static GList *pixmaps_directories = NULL;
 
-/* Use this function to set the directory containing installed pixmaps. */
-	void add_pixmap_directory (const gchar *directory) {
+void add_pixmap_directory (const gchar *directory) {
 	pixmaps_directories = g_list_prepend (pixmaps_directories, g_strdup (directory));
 }
 
 gchar* find_pixmap_directory(const gchar* filename) {
-	gchar* found_filename = NULL;
-	GList *elem;
-
-	elem = pixmaps_directories;
+	GList *elem = pixmaps_directories;
 	while (elem) {
-		found_filename = check_file_exists ((gchar*)elem->data, filename);
-		if (found_filename)
-			break;
+		gchar *found = check_file_exists ((gchar*)elem->data, filename);
+		if (found)
+			return found;
 		elem = elem->next;
 	}
-	return found_filename;
+	return NULL;
+}
+
+/** Find a pixmap file by absolute path or in the registered search directories.
+ *  If the filename has a .xpm extension, looks for the .png equivalent instead.
+ *  Returns an allocated path string on success, NULL if not found. Caller must g_free().
+ */
+static char* find_pixmap_file(const char* filename) {
+	char *candidate;
+
+	g_return_val_if_fail(filename != NULL, NULL);
+	if (!filename[0])
+		return NULL;
+
+	/* Remap .xpm → .png: all game/UI icons are installed as PNGs. */
+	if (stri_has_ext(filename, ".xpm")) {
+		size_t len = strlen(filename);
+		char *png_name = g_strdup(filename);
+		strcpy(png_name + len - 3, "png");   /* ".xpm"[-3:] = "xpm" → "png" */
+		if (filename[0] == '/')
+			candidate = check_file_exists(NULL, png_name);
+		else
+			candidate = find_pixmap_directory(png_name);
+		g_free(png_name);
+		return candidate;
+	}
+
+	if (filename[0] == '/')
+		return check_file_exists(NULL, filename);
+	return find_pixmap_directory(filename);
 }
 
 GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename) {
-	GtkWidget *image;
 	struct pixmap pix = { 0, 0, 0 };
 	if (!load_pixmap_as_pixmap(widget, filename, &pix)) {
-		pix.pixbuf = create_dummy_pixmap(widget);
+		/* 1×1 transparent placeholder */
+		pix.pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);
+		if (pix.pixbuf) {
+			gdk_pixbuf_fill (pix.pixbuf, 0x00000000);
+			pix.texture = gdk_texture_new_for_pixbuf (pix.pixbuf);
+		}
 	}
-
-	image = gtk_image_new_from_pixbuf (pix.pixbuf);
+	GtkWidget *image = gtk_image_new_from_pixbuf (pix.pixbuf);
 	free_pixmap (&pix);
 	return image;
 }
 
-/** find a pixmap file either absolute or in the pixmap search path.
- * @returns filename if file exists, NULL otherwise. must be freed
- */
-static char* find_pixmap_file(const char* filename) {
-	char *found_filename = NULL;
-
-	g_return_val_if_fail(filename!=NULL, NULL);
-
-	if (!filename[0])
-		return NULL;
-
-	// load absolute paths directly
-	if (filename[0] == '/')
-		found_filename = check_file_exists(NULL, filename);
-	else
-		found_filename = find_pixmap_directory(filename);
-
-	return found_filename;
-}
-
 struct pixmap* load_pixmap_as_pixmap (GtkWidget* widget, const gchar* filename, struct pixmap* pix) {
-	gchar *found_filename = NULL;
+	g_return_val_if_fail(widget != NULL, NULL);
+	g_return_val_if_fail(pix != NULL, NULL);
 
-	g_return_val_if_fail(widget!=NULL, NULL);
-	g_return_val_if_fail(pix!=NULL, NULL);
-
-	found_filename = find_pixmap_file(filename);
-	if (stri_has_ext(filename, ".xpm")) // try png instead
-	{
-		char* tmp = g_strdup(filename);
-		strcpy(tmp+strlen(tmp)-3, "png");
-		found_filename = find_pixmap_file(tmp);
-		g_free(tmp);
-	}
-
-	if (!found_filename) {
-		// not file on disk maybe xpm compiled into binary
-		if (stri_has_ext(filename, ".xpm")) {
-			void* xpm;
-			char* p;
-			p = found_filename = g_strdup(filename);
-
-			if ((*p >= 'a' && *p <= 'z')
-					|| (*p >= 'A' && *p <= 'Z'))
-				++p;
-			else
-				*p++ = '_';
-
-			while (*p) {
-				if ((*p >= 'a' && *p <= 'z')
-						|| (*p >= 'A' && *p <= 'Z')
-						|| (*p >= '0' && *p <= '9')) {
-					++p;
-				}
-				else
-					*p++ = '_';
-			}
-
-			xpm = dlsym(NULL, found_filename);
-			if (xpm) {
-				pix->pixbuf = gdk_pixbuf_new_from_xpm_data (xpm);
-				if (pix->pixbuf)
-					pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
-			}
-		}
-	}
-	else {
-		pix->pixbuf = gdk_pixbuf_new_from_file(found_filename, NULL);
-		debug(4, "loading gdk_pixbuf from file: %s", found_filename);
-		if (pix->pixbuf)
-			pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
-	}
-
-	if (pix->pixbuf == NULL) {
-		// translator: %s = file name
-		xqf_warning (_("Error loading pixmap file: %s"), found_filename?found_filename:filename);
-		g_free (found_filename);
-		free_pixmap (pix);
+	char *found = find_pixmap_file(filename);
+	if (!found) {
+		xqf_warning (_("Error loading pixmap file: %s"), filename);
 		return NULL;
 	}
-	g_free (found_filename);
 
+	debug(4, "loading gdk_pixbuf from file: %s", found);
+	pix->pixbuf = gdk_pixbuf_new_from_file(found, NULL);
+	g_free(found);
+
+	if (!pix->pixbuf) {
+		xqf_warning (_("Error loading pixmap file: %s"), filename);
+		return NULL;
+	}
+
+	pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
 	return pix;
 }
 

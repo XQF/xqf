@@ -1,23 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
 
-# Required since CMake 3.4 otherwise symbols are not exported and
-# XQF can't find some internal resources like compiled XPM images.
-#
-# See:
-# - https://cmake.org/cmake/help/latest/release/3.4.html
-# - https://cmake.org/cmake/help/v3.4/variable/CMAKE_ENABLE_EXPORTS.html
-# - https://cmake.org/cmake/help/v3.27/variable/CMAKE_ENABLE_EXPORTS.html
-# - https://cmake.org/cmake/help/v3.27/variable/CMAKE_EXECUTABLE_ENABLE_EXPORTS.html
-# - https://cmake.org/cmake/help/v3.27/prop_tgt/ENABLE_EXPORTS.html
-#
-# > Normally an executable does not export any symbols because it is the final program.
-# > It is possible for an executable to export symbols to be used by loadable modules.
-# > When this property is set to true CMake will allow other targets to "link" to the executable.
-#
-# For some reasons we need that for the executable to find embedded
-# data at run time.
-set(CMAKE_EXECUTABLE_ENABLE_EXPORTS ON)
-
 include(CheckCXXCompilerFlag)
 
 # Project information
@@ -560,19 +542,7 @@ set(flag_DATA
 	${CMAKE_SOURCE_DIR}/pixmaps/flags/country/zw.png
 )
 
-set(xpm_MAIN ${CMAKE_SOURCE_DIR}/pixmaps/xqf.xpm)
-
-set(xpm_DATA
-	 ${CMAKE_SOURCE_DIR}/src/xpm/update.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/refresh.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/refrsel.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/stop.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/connect.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/observe.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/record.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/sfilter.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/pfilter.xpm
- )
+file(GLOB png_DEFAULT_DATA ${CMAKE_SOURCE_DIR}/pixmaps/default/*.png)
 
 set(icon_SIZE 22 32 48 128)
 
@@ -591,9 +561,9 @@ if (BUILD_XQF OR BUILD_RCON)
 	add_executable(gamesxml2c ${CMAKE_SOURCE_DIR}/src/gamesxml2c.c)
 	target_link_libraries(gamesxml2c xml2)
 
-	# Custom build rule for converting games.xml to games.c
+	# Custom build rule for converting games.xml to games.c/games.h
 	add_custom_command(
-		OUTPUT ${CMAKE_BINARY_DIR}/games.c
+		OUTPUT ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h
 		COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h ${CMAKE_BINARY_DIR}/icons.c
 		MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
 		DEPENDS gamesxml2c)
@@ -601,7 +571,6 @@ if (BUILD_XQF OR BUILD_RCON)
 	# Define games.c filename for including in src/game.c
 	add_definitions(-DGAMES_C_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
 	add_definitions(-DGAMES_H_INCLUDE="${CMAKE_BINARY_DIR}/games.h")
-	add_definitions(-DICONS_C_INCLUDE="${CMAKE_BINARY_DIR}/icons.c")
 endif()
 
 if (BUILD_XQF)
@@ -652,7 +621,7 @@ endif()
 	add_executable(xqf ${xqf_SOURCES})
 	target_compile_definitions(xqf PUBLIC BUILD_XQF)
 	target_compile_definitions(xqf PUBLIC GUI_GTK4)
-	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} dl m)
+	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} m)
 
 	if (USE_GEOIP)
 		target_link_libraries(xqf GeoIP)
@@ -705,11 +674,8 @@ endif()
 	DESTINATION ${PACKAGE_DATA_DIR}/ui)
 
 	# Icons
-	install(FILES ${xpm_DATA}
-		DESTINATION ${PACKAGE_DATA_DIR}/xpm)
-
-	install(FILES ${xpm_MAIN}
-		DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+	install(FILES ${png_DEFAULT_DATA}
+		DESTINATION ${PACKAGE_DATA_DIR}/default)
 
 	install(FILES ${flag_DATA}
 		DESTINATION ${PACKAGE_DATA_DIR}/default/flags)

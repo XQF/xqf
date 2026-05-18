@@ -23,54 +23,6 @@
 #include "game.h"
 #include "loadpixmap.h"
 
-
-// hack to make dlsym work
-#define static
-
-#include ICONS_C_INCLUDE
-
-#include "xpm/update.xpm"
-#include "xpm/refresh.xpm"
-#include "xpm/refrsel.xpm"
-#include "xpm/stop.xpm"
-
-#include "xpm/connect.xpm"
-#include "xpm/observe.xpm"
-#include "xpm/record.xpm"
-
-#include "xpm/sfilter.xpm"
-#include "xpm/sfilter-cfg.xpm"
-#include "xpm/pfilter.xpm"
-#include "xpm/pfilter-cfg.xpm"
-
-#include "xpm/green-plus.xpm"
-#include "xpm/red-minus.xpm"
-
-#include "xpm/man-black.xpm"
-#include "xpm/man-red.xpm"
-#include "xpm/man-yellow.xpm"
-
-#include "xpm/group-red.xpm"
-#include "xpm/group-green.xpm"
-#include "xpm/group-blue.xpm"
-
-#include "xpm/buddy-red.xpm"
-#include "xpm/buddy-green.xpm"
-#include "xpm/buddy-blue.xpm"
-
-#include "xpm/error.xpm"
-#include "xpm/delete.xpm"
-
-#include "xpm/server-na.xpm"
-#include "xpm/server-up.xpm"
-#include "xpm/server-down.xpm"
-#include "xpm/server-to.xpm"
-#include "xpm/server-error.xpm"
-#include "xpm/locked.xpm"
-#include "xpm/punkbuster.xpm"
-#include "xpm/locked_punkbuster.xpm"
-#undef static
-
 struct pixmap update_pix;
 struct pixmap refresh_pix;
 struct pixmap refrsel_pix;
