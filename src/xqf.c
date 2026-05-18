@@ -314,8 +314,40 @@ void filter_toggle_callback (GtkWidget *widget, unsigned char mask) {
 	}
 }
 
-void filter_menu_activate_current () {
-	/* Filter menu radio buttons removed in GTK4 migration; no-op. */
+static GSimpleActionGroup *_win_ag;
+static GMenu *filter_select_section = NULL;
+
+void rebuild_server_filter_section (void) {
+	unsigned int i;
+	GMenuItem *item;
+
+	if (!filter_select_section)
+		return;
+
+	g_menu_remove_all (filter_select_section);
+
+	item = g_menu_item_new (_("No Filter"), "win.server-filter-select");
+	g_menu_item_set_attribute (item, "target", "i", (gint32)0);
+	g_menu_append_item (filter_select_section, item);
+	g_object_unref (item);
+
+	for (i = 0; i < server_filters->len; i++) {
+		struct server_filter_vars *f =
+			g_array_index (server_filters, struct server_filter_vars*, i);
+		const char *name = (f->filter_name && *f->filter_name) ?
+			f->filter_name : _("Filter");
+		item = g_menu_item_new (name, "win.server-filter-select");
+		g_menu_item_set_attribute (item, "target", "i", (gint32)(i + 1));
+		g_menu_append_item (filter_select_section, item);
+		g_object_unref (item);
+	}
+}
+
+void filter_menu_activate_current (void) {
+	GAction *a = g_action_map_lookup_action (G_ACTION_MAP (_win_ag), "server-filter-select");
+	if (a)
+		g_simple_action_set_state (G_SIMPLE_ACTION (a),
+		                           g_variant_new_int32 ((gint32)current_server_filter));
 }
 
 
@@ -357,6 +389,7 @@ void start_filters_cfg_dialog (GtkWidget *widget, int page_num) {
 	if (filters_cfg_dialog (page_num)) {
 		config_sync ();
 		rc_save ();
+		rebuild_server_filter_section ();
 		filter_menu_activate_current ();
 
 		/* refresh filter status*/
@@ -1428,7 +1461,6 @@ void show_default_port_callback (GSimpleAction *action, GVariant *parameter, gpo
 }
 
 
-static GSimpleActionGroup *_win_ag;
 static GMainLoop *_xqf_app_loop;
 
 /* GAction "activate" callback — quit from menu/keyboard */
@@ -1836,6 +1868,20 @@ static GSimpleAction *add_win_toggle (GtkWindow *win, const char *name, GCallbac
 
 extern void about_dialog (GtkWidget *widget, gpointer data);
 
+static void server_filter_select_action_cb (GSimpleAction *action,
+                                             GVariant      *parameter,
+                                             gpointer       data G_GNUC_UNUSED) {
+	gint32 n = g_variant_get_int32 (parameter);
+	if (n < 0 || (guint)n > server_filters->len)
+		return;
+	current_server_filter = (unsigned int) n;
+	g_simple_action_set_state (action, parameter);
+	config_set_int ("current_server_filter", current_server_filter);
+	server_list_build_filtered (cur_server_list, FALSE);
+	set_server_filter_menu_list_text ();
+	reset_main_status_bar (builder);
+}
+
 static void register_window_actions (GtkWindow *win) {
 	_win_ag = g_simple_action_group_new ();
 	/* Regular actions using old-style callback adaptor */
@@ -1874,6 +1920,18 @@ static void register_window_actions (GtkWindow *win) {
 	/* Stateful toggle actions */
 	add_win_toggle (win, "show-hostnames",    G_CALLBACK (show_hostnames_callback),    NULL);
 	add_win_toggle (win, "show-default-port", G_CALLBACK (show_default_port_callback), NULL);
+
+	/* Stateful server-filter-select action (int32: 0=none, 1..N=named filter) */
+	{
+		GSimpleAction *a = g_simple_action_new_stateful (
+			"server-filter-select",
+			G_VARIANT_TYPE_INT32,
+			g_variant_new_int32 ((gint32)current_server_filter));
+		g_signal_connect (a, "activate",
+		                  G_CALLBACK (server_filter_select_action_cb), NULL);
+		g_action_map_add_action (G_ACTION_MAP (_win_ag), G_ACTION (a));
+		g_object_unref (a);
+	}
 
 	gtk_widget_insert_action_group (GTK_WIDGET (win), "win", G_ACTION_GROUP (_win_ag));
 	g_object_unref (_win_ag);
@@ -1919,6 +1977,11 @@ void populate_main_window (void) {
 	}
 
 	server_filter_menu_items = g_array_new (FALSE, FALSE, sizeof (GtkWidget*));
+
+	/* Wire up dynamic server-filter radio section in the _Server Filters menu */
+	filter_select_section = G_MENU (gtk_builder_get_object (builder, "filter-select-section"));
+	rebuild_server_filter_section ();
+	filter_menu_activate_current ();
 
 	populate_main_toolbar ();
 
