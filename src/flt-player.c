@@ -519,8 +519,10 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
 	pattern_list_update_row ((struct player_pattern *) link_b->data, row + dir);
 
 	current_row = row + dir;
+#if GTK_CHECK_VERSION(4, 12, 0)
 	gtk_column_view_scroll_to (GTK_COLUMN_VIEW (pattern_list),
 			(guint) current_row, NULL, GTK_LIST_SCROLL_NONE, NULL);
+#endif
 	gtk_single_selection_set_selected (pattern_sel_model, (guint) current_row);
 }
 
