@@ -1461,21 +1461,28 @@ void show_default_port_callback (GSimpleAction *action, GVariant *parameter, gpo
 }
 
 
-static GMainLoop *_xqf_app_loop;
+static GtkApplication *xqf_app;
 
 /* GAction "activate" callback — quit from menu/keyboard */
 static void app_quit_cb (GSimpleAction *a, GVariant *p, gpointer d) {
 	(void)a; (void)p; (void)d;
-	if (_xqf_app_loop) g_main_loop_quit (_xqf_app_loop);
+	g_application_release (G_APPLICATION (xqf_app));
 }
 
-/* close-request handler for the main window.
- * Returns FALSE so GTK4 proceeds to destroy the window normally,
- * which fires "destroy" → ui_done saves geometry, then we quit. */
-static gboolean main_window_close_cb (GtkWidget *w, gpointer d) {
+/* close-request handler for the main window — releases the app hold so
+ * g_application_run() exits, then returns FALSE so GTK destroys the window. */
+static gboolean main_window_close_cb (GtkWindow *w, gpointer d) {
 	(void)w; (void)d;
-	if (_xqf_app_loop) g_main_loop_quit (_xqf_app_loop);
+	g_application_release (G_APPLICATION (xqf_app));
 	return FALSE;
+}
+
+/* destroy handler — runs after GTK tears down the window; clears main_window
+ * so cleanup code in main() does not see a dangling pointer. */
+static void main_window_destroy_cb (GtkWidget *w, gpointer d) {
+	(void)w; (void)d;
+	unregister_window (main_window);
+	main_window = NULL;
 }
 
 void resolve_callback (GtkWidget *widget, gpointer data) {
@@ -1961,8 +1968,10 @@ static gboolean create_main_window (void) {
 	register_window_actions (GTK_WINDOW (main_window));
 	g_signal_connect (main_window, "close-request", G_CALLBACK (main_window_close_cb), NULL);
 	g_signal_connect (main_window, "destroy", G_CALLBACK (ui_done), NULL);
+	g_signal_connect (main_window, "destroy", G_CALLBACK (main_window_destroy_cb), NULL);
 	gtk_window_set_title (GTK_WINDOW (main_window), "XQF");
 
+	gtk_application_add_window (xqf_app, GTK_WINDOW (main_window));
 	register_window (main_window);
 
 	gtk_widget_realize (main_window);
@@ -2315,47 +2324,11 @@ void init_scripts_path () {
 	scripts_add_dir (dir);
 }
 
-int main (int argc, char *argv[]) {
-	char* var = NULL;
-	int newversion = FALSE;
+static void xqf_activate (GtkApplication *app, gpointer data) {
+	int newversion;
+	(void)data;
 
-	xqf_start_time = time (NULL);
-
-	redialserver = 0;
-
-#if defined(USE_RELATIVE_PREFIX)
-	setDefaultDirs();
-#endif
-
-	setlocale (LC_ALL, "");
-	bindtextdomain (PACKAGE, xqf_LOCALEDIR);
-	bind_textdomain_codeset (PACKAGE, "UTF-8");
-	textdomain (PACKAGE);
-
-	set_debug_level (DEFAULT_DEBUG_LEVEL);
-	debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);
-
-	// migrate config directory to follow XDG  Base Directory Specification
-	// http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-	// https://developer.gnome.org/basedir-spec/
-	// https://developer.gnome.org/glib/2.37/glib-Miscellaneous-Utility-Functions.html#g-get-user-config-dir
-
-	if (!rc_migrate_dir ()) {
-		return 1;
-	}
-
-	if (!init_user_info ()) {
-		return 1;
-	}
-
-	gtk_init (&argc, &argv);
-
-	parse_commandline (argc, argv);
-
-	if (dns_spawn_helper () < 0) {
-		xqf_error ("Unable to start DNS helper");
-		return 1;
-	}
+	g_application_hold (G_APPLICATION (app));
 
 	add_pixmap_path_for_theme ("default");
 	add_pixmap_directory (xqf_PACKAGE_DATA_DIR);
@@ -2419,8 +2392,10 @@ int main (int argc, char *argv[]) {
 		dialog_ok (NULL, _("You need at least qstat version %s for xqf to function properly"), required_qstat_version);
 	}
 
-	if (!create_main_window ())
-		return 1;
+	if (!create_main_window ()) {
+		g_application_release (G_APPLICATION (app));
+		return;
+	}
 
 	init_pixmaps (main_window);
 
@@ -2444,17 +2419,53 @@ int main (int argc, char *argv[]) {
 	g_timeout_add (0, check_cmdline_launch, NULL);
 
 	debug (1, "startup time %ds", time (NULL) - xqf_start_time);
+}
 
-	_xqf_app_loop = g_main_loop_new (NULL, FALSE);
-	g_main_loop_run (_xqf_app_loop);
-	g_main_loop_unref (_xqf_app_loop);
-	_xqf_app_loop = NULL;
+int main (int argc, char *argv[]) {
+	int status;
+
+	xqf_start_time = time (NULL);
+
+	redialserver = 0;
+
+#if defined(USE_RELATIVE_PREFIX)
+	setDefaultDirs();
+#endif
+
+	setlocale (LC_ALL, "");
+	bindtextdomain (PACKAGE, xqf_LOCALEDIR);
+	bind_textdomain_codeset (PACKAGE, "UTF-8");
+	textdomain (PACKAGE);
+
+	set_debug_level (DEFAULT_DEBUG_LEVEL);
+	debug (5, "main() -- Debug Level Default Set at %d", DEFAULT_DEBUG_LEVEL);
+
+	if (!rc_migrate_dir ()) {
+		return 1;
+	}
+
+	if (!init_user_info ()) {
+		return 1;
+	}
+
+	parse_commandline (argc, argv);
+
+	if (dns_spawn_helper () < 0) {
+		xqf_error ("Unable to start DNS helper");
+		return 1;
+	}
+
+	xqf_app = gtk_application_new ("net.sourceforge.xqf", G_APPLICATION_NON_UNIQUE);
+	g_signal_connect (xqf_app, "activate", G_CALLBACK (xqf_activate), NULL);
+
+	/* Pass 0/NULL: we already parsed our own args above; GApplication need
+	 * not see them (avoids conflicts with our short -h/-v options). */
+	status = g_application_run (G_APPLICATION (xqf_app), 0, NULL);
+	g_object_unref (xqf_app);
+	xqf_app = NULL;
 
 	play_sound (sound_xqf_quit, 0);
 	script_action_quit ();
-
-	unregister_window (main_window);
-	main_window = NULL;
 
 	if (stat_process) {
 		stop_callback (NULL, NULL);
@@ -2518,5 +2529,5 @@ int main (int argc, char *argv[]) {
 
 	debug (6, "EXIT: Done.");
 
-	return 0;
+	return status;
 }
