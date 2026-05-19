@@ -45,16 +45,8 @@
 static GSList *players = NULL;  /* GSList <struct player_pattern *> */
 static GSList *curplrs = NULL;  /* GSList <struct player_pattern *> */
 
-enum {
-	PLT_COL_GRP0 = 0,
-	PLT_COL_GRP1,
-	PLT_COL_GRP2,
-	PLT_COL_MODE,
-	PLT_COL_PATTERN,
-	PLT_COL_COUNT
-};
-
-static GtkListStore *pattern_store = NULL;
+static GListStore *pattern_store = NULL;
+static GtkSingleSelection *pattern_sel_model = NULL;
 static GtkWidget *pattern_list;
 static GtkWidget *pattern_entry;
 static GtkWidget *comment_text;
@@ -69,6 +61,7 @@ static int current_row = -1;
 
 static void player_filter_save_patterns (void);
 static void player_filter_load_patterns (void);
+static void pattern_list_update_row (struct player_pattern *pp, int row);
 
 
 enum {
@@ -231,6 +224,29 @@ static struct player_pattern *player_pattern_new (struct player_pattern *src) {
 }
 
 
+static GObject *make_pattern_item (struct player_pattern *pp) {
+	GObject *obj = g_object_new (G_TYPE_OBJECT, NULL);
+	for (int i = 0; i < 3; i++) {
+		char key[8];
+		g_snprintf (key, sizeof (key), "grp%d", i);
+		GdkTexture *t = (pp->groups & (1u << i)) ? group_pix[i].texture : NULL;
+		g_object_set_data_full (obj, key,
+				t ? g_object_ref (t) : NULL,
+				t ? (GDestroyNotify) g_object_unref : NULL);
+	}
+	char mode_buf[64];
+	const char *mode_str = _(mode_symbols[pp->mode]);
+	if (pp->error) {
+		g_snprintf (mode_buf, sizeof (mode_buf), "(!) %s", mode_str);
+		mode_str = mode_buf;
+	}
+	g_object_set_data_full (obj, "mode", g_strdup (mode_str), g_free);
+	g_object_set_data_full (obj, "pattern",
+			g_strdup (pp->pattern ? pp->pattern : ""), g_free);
+	return obj;
+}
+
+
 static void pattern_list_sync_selection (void) {
 	GSList *list;
 	struct player_pattern *pp = NULL;
@@ -285,48 +301,12 @@ static void pattern_list_sync_selection (void) {
 }
 
 
-static void pattern_list_update_groups (int row, unsigned newstate,
-		unsigned oldstate) {
-	GtkTreeIter iter;
-	GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
-	if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path)) {
-		gtk_tree_path_free (path);
-		return;
-	}
-	gtk_tree_path_free (path);
-
-	for (int i = 0; i < 3; i++) {
-		unsigned mask = 1u << i;
-		int col = PLT_COL_GRP0 + i;
-		if ((newstate & mask) != 0)
-			gtk_list_store_set (pattern_store, &iter, col, group_pix[i].texture, -1);
-		else if ((oldstate & mask) != 0)
-			gtk_list_store_set (pattern_store, &iter, col, NULL, -1);
-	}
-}
-
-
 static void pattern_list_update_row (struct player_pattern *pp, int row) {
-	GtkTreeIter iter;
-	GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
-	if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path)) {
-		gtk_tree_path_free (path);
-		return;
-	}
-	gtk_tree_path_free (path);
-
-	pattern_list_update_groups (row, pp->groups, ~pp->groups);
-
-	char mode_buf[64];
-	const char *mode_str = _(mode_symbols[pp->mode]);
-	if (pp->error) {
-		g_snprintf (mode_buf, sizeof (mode_buf), "(!) %s", mode_str);
-		mode_str = mode_buf;
-	}
-	gtk_list_store_set (pattern_store, &iter,
-			PLT_COL_MODE, mode_str,
-			PLT_COL_PATTERN, pp->pattern ? pp->pattern : "",
-			-1);
+	if (row < 0 || !pattern_store) return;
+	GObject *obj = make_pattern_item (pp);
+	gpointer arr[1] = { obj };
+	g_list_store_splice (pattern_store, (guint) row, 1, arr, 1);
+	g_object_unref (obj);
 }
 
 
@@ -408,15 +388,14 @@ static void sync_pattern_data (void) {
 
 
 static int pattern_list_insert_row (struct player_pattern *pp, int row) {
-	GtkTreeIter iter;
+	GObject *obj = make_pattern_item (pp);
 	if (row < 0) {
-		gtk_list_store_append (pattern_store, &iter);
-		int n = gtk_tree_model_iter_n_children (GTK_TREE_MODEL (pattern_store), NULL);
-		row = n - 1;
+		g_list_store_append (pattern_store, obj);
+		row = (int) g_list_model_get_n_items (G_LIST_MODEL (pattern_store)) - 1;
 	} else {
-		gtk_list_store_insert (pattern_store, &iter, row);
+		g_list_store_insert (pattern_store, (guint) row, obj);
 	}
-	pattern_list_update_row (pp, row);
+	g_object_unref (obj);
 	return row;
 }
 
@@ -448,129 +427,75 @@ static void pattern_set_groups (int row, int column, int add) {
 			player_pattern_compile (pp);
 		}
 		pp->groups = newstate;
-		pattern_list_update_groups (row, newstate, oldstate);
+		pattern_list_update_row (pp, row);
 	}
 }
 
 
-static void show_pattern_error (int row) {
-	GSList *list;
-	struct player_pattern *pp;
 
-	list = g_slist_nth (curplrs, row);
-	pp = (struct player_pattern *) list->data;
-
-	if (pp->error) {
-		dialog_ok (_("XQF: Error"), _("Regular Expression Error!\n\n%s\n\n%s."),
-				pp->pattern, pp->error);
-	}
-}
-
-
-static void on_pattern_list_click (GtkGestureClick *gesture, int n_press,
+static void on_grp_cell_click (GtkGestureClick *gesture, int n_press,
 		double x, double y, gpointer data) {
-	(void) n_press; (void) data;
-	GtkTreePath *path;
-	GtkTreeViewColumn *col;
-
-	if (!gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (pattern_list),
-				(int) x, (int) y, &path, &col, NULL, NULL))
-		return;
-
-	int row = gtk_tree_path_get_indices (path)[0];
-	gtk_tree_path_free (path);
-
-	GList *cols = gtk_tree_view_get_columns (GTK_TREE_VIEW (pattern_list));
-	int col_idx = g_list_index (cols, col);
-	g_list_free (cols);
-
-	if (col_idx >= 0 && col_idx < 3)
-		pattern_set_groups (row, col_idx, TRUE);
+	(void) n_press; (void) x; (void) y; (void) data;
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+	GtkListItem *li = g_object_get_data (G_OBJECT (widget), "list-item");
+	int col_idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (widget), "col-idx"));
+	if (!li) return;
+	guint row = gtk_list_item_get_position (li);
+	if (row == GTK_INVALID_LIST_POSITION) return;
+	pattern_set_groups ((int) row, col_idx, TRUE);
 }
 
 
-static void pattern_list_selection_changed (GtkTreeSelection *sel, gpointer data) {
-	(void) data;
-	if (!GTK_IS_TREE_SELECTION (sel))
-		return;
-
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-
+static void pattern_list_selection_changed (GtkSingleSelection *sel,
+		GParamSpec *pspec, gpointer data) {
+	(void) pspec; (void) data;
 	sync_pattern_data ();
-
-	if (!gtk_tree_selection_get_selected (sel, &model, &iter)) {
+	guint pos = gtk_single_selection_get_selected (sel);
+	if (pos == GTK_INVALID_LIST_POSITION || pos >= (guint) g_slist_length (curplrs))
 		current_row = -1;
-	} else {
-		GtkTreePath *path = gtk_tree_model_get_path (model, &iter);
-		int row = gtk_tree_path_get_indices (path)[0];
-		gtk_tree_path_free (path);
-		if (row >= (int) g_slist_length (curplrs))
-			current_row = -1;
-		else
-			current_row = row;
-	}
-
+	else
+		current_row = (int) pos;
 	pattern_list_sync_selection ();
 }
 
 
 static void new_pattern_callback (GtkWidget *widget, gpointer data) {
-	struct player_pattern *pp;
+	(void) widget; (void) data;
+	struct player_pattern *pp = player_pattern_new (NULL);
 	int row;
-
-	pp = player_pattern_new (NULL);
 
 	if (current_row >= 0) {
 		row = current_row;
 		current_row++;
-	}
-	else {
+	} else {
 		row = 0;
 	}
 
 	curplrs = g_slist_insert (curplrs, pp, row);
 	pattern_list_insert_row (pp, row);
-
-	{
-		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list));
-		GtkTreeIter iter;
-		GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
-		if (gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path))
-			gtk_tree_selection_select_iter (sel, &iter);
-		gtk_tree_path_free (path);
-	}
-
+	gtk_single_selection_set_selected (pattern_sel_model, (guint) row);
 	gtk_widget_grab_focus (pattern_entry);
 }
 
 
 static void delete_pattern_callback (GtkWidget *widget, gpointer data) {
-	GSList *link;
-	struct player_pattern *pp;
-	int row;
-
+	(void) widget; (void) data;
 	debug(5,"delete_pattern_callback(widget=%x,data=%x)",widget,data);
 
 	if (current_row < 0)
 		return;
 
-	link = g_slist_nth (curplrs, current_row);
-	pp = (struct player_pattern *) link->data;
+	GSList *link = g_slist_nth (curplrs, current_row);
+	struct player_pattern *pp = (struct player_pattern *) link->data;
 
 	curplrs = g_slist_remove_link (curplrs, link);
 	if (pp->dirty)
 		free_player_pattern (pp);
 
-	row = current_row;
+	int row = current_row;
 	current_row = -1;
 
-	GtkTreeIter iter;
-	GtkTreePath *path = gtk_tree_path_new_from_indices (row, -1);
-	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path))
-		gtk_list_store_remove (pattern_store, &iter);
-	gtk_tree_path_free (path);
-
+	g_list_store_remove (pattern_store, (guint) row);
 	pattern_list_sync_selection ();
 }
 
@@ -581,42 +506,72 @@ static void move_up_down_pattern_callback (GtkWidget *widget, int dir) {
 	debug(5,"move_up_down_pattern_callback(widget=%x, dir=%d) row=%d",widget,dir,row);
 
 	if ((dir != -1 || row <= 0) &&
-			(dir != 1  || row < 0 || row == (int) g_slist_length (curplrs) - 1)) {
+			(dir != 1  || row < 0 || row == (int) g_slist_length (curplrs) - 1))
 		return;
-	}
 
-	/* Swap data in the GSList */
 	GSList *link_a = g_slist_nth (curplrs, row);
 	GSList *link_b = g_slist_nth (curplrs, row + dir);
 	gpointer tmp = link_a->data;
 	link_a->data = link_b->data;
 	link_b->data = tmp;
 
-	/* Refresh both rows in the store */
 	pattern_list_update_row ((struct player_pattern *) link_a->data, row);
 	pattern_list_update_row ((struct player_pattern *) link_b->data, row + dir);
 
 	current_row = row + dir;
-
-	/* Scroll to the moved row */
-	GtkTreePath *path = gtk_tree_path_new_from_indices (current_row, -1);
-	gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (pattern_list), path, NULL, FALSE, 0.0f, 0.0f);
-	GtkTreeIter iter;
-	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (pattern_store), &iter, path))
-		gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list)), &iter);
-	gtk_tree_path_free (path);
+	gtk_column_view_scroll_to (GTK_COLUMN_VIEW (pattern_list),
+			(guint) current_row, NULL, GTK_LIST_SCROLL_NONE, NULL);
+	gtk_single_selection_set_selected (pattern_sel_model, (guint) current_row);
 }
 
 
-static GtkWidget *aligned_image (struct pixmap *pix) {
-	GtkWidget *image;
-
-	image = gtk_image_new_from_pixbuf (pix->pixbuf);
+static void grp_col_setup_cb (GtkListItemFactory *factory, GtkListItem *list_item,
+		gpointer col_idx_ptr) {
+	(void) factory;
+	GtkWidget *image = gtk_image_new ();
 	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
 	gtk_widget_set_visible (image, TRUE);
 
-	return image;
+	GtkGesture *click = gtk_gesture_click_new ();
+	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 1);
+	g_object_set_data (G_OBJECT (image), "list-item", list_item);
+	g_object_set_data (G_OBJECT (image), "col-idx", col_idx_ptr);
+	g_signal_connect (click, "pressed", G_CALLBACK (on_grp_cell_click), NULL);
+	gtk_widget_add_controller (image, GTK_EVENT_CONTROLLER (click));
+
+	gtk_list_item_set_child (list_item, image);
+}
+
+static void grp_col_bind_cb (GtkListItemFactory *factory, GtkListItem *list_item,
+		gpointer col_idx_ptr) {
+	(void) factory;
+	int col_idx = GPOINTER_TO_INT (col_idx_ptr);
+	char key[8];
+	g_snprintf (key, sizeof (key), "grp%d", col_idx);
+	GtkWidget *image = gtk_list_item_get_child (list_item);
+	GObject *obj = gtk_list_item_get_item (list_item);
+	GdkTexture *texture = g_object_get_data (obj, key);
+	gtk_image_set_from_paintable (GTK_IMAGE (image),
+			texture ? GDK_PAINTABLE (texture) : NULL);
+}
+
+static void text_col_setup_cb (GtkListItemFactory *factory, GtkListItem *list_item,
+		gpointer data) {
+	(void) factory; (void) data;
+	GtkWidget *label = gtk_label_new (NULL);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0f);
+	gtk_widget_set_visible (label, TRUE);
+	gtk_list_item_set_child (list_item, label);
+}
+
+static void text_col_bind_cb (GtkListItemFactory *factory, GtkListItem *list_item,
+		gpointer key) {
+	(void) factory;
+	GtkWidget *label = gtk_list_item_get_child (list_item);
+	GObject *obj = gtk_list_item_get_item (list_item);
+	const char *text = g_object_get_data (obj, (const char *) key);
+	gtk_label_set_text (GTK_LABEL (label), text ? text : "");
 }
 
 
@@ -734,7 +689,6 @@ void player_filter_page (GtkWidget *notebook) {
 	GtkWidget *label;
 	GtkWidget *vbox;
 	GtkWidget *vbox2;
-	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *peditor;
 	int i;
@@ -747,61 +701,60 @@ void player_filter_page (GtkWidget *notebook) {
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_hbox, label);
 
-	/* Pattern list (GtkTreeView) */
+	/* Pattern list (GtkColumnView) */
 
 	scrollwin = gtk_scrolled_window_new();
 	gtk_box_append (GTK_BOX (page_hbox), scrollwin);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	pattern_store = gtk_list_store_new (PLT_COL_COUNT,
-			GDK_TYPE_TEXTURE, GDK_TYPE_TEXTURE, GDK_TYPE_TEXTURE,
-			G_TYPE_STRING, G_TYPE_STRING);
-	pattern_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (pattern_store));
-	g_object_unref (pattern_store);
+	pattern_store = g_list_store_new (G_TYPE_OBJECT);
+	pattern_sel_model = GTK_SINGLE_SELECTION (
+			gtk_single_selection_new (G_LIST_MODEL (pattern_store)));
+	gtk_single_selection_set_autoselect (pattern_sel_model, FALSE);
+	gtk_single_selection_set_can_unselect (pattern_sel_model, TRUE);
+
+	pattern_list = gtk_column_view_new (GTK_SELECTION_MODEL (pattern_sel_model));
 	gtk_widget_set_size_request (pattern_list, 260, 200);
+	gtk_column_view_set_reorderable (GTK_COLUMN_VIEW (pattern_list), FALSE);
+	gtk_column_view_set_show_column_separators (GTK_COLUMN_VIEW (pattern_list), TRUE);
 
 	for (i = 0; i < 3; i++) {
-		GtkCellRenderer *pbr = gtk_cell_renderer_pixbuf_new ();
-		GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes (
-				"", pbr, "texture", PLT_COL_GRP0 + i, NULL);
-		gtk_tree_view_column_set_resizable (col, FALSE);
-		gtk_tree_view_column_set_fixed_width (col, pixmap_width (&group_pix[i]) + 8);
-		gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-		image = gtk_image_new_from_pixbuf (group_pix[i].pixbuf);
-		gtk_widget_set_visible (image, TRUE);
-		gtk_tree_view_column_set_widget (col, image);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
+		GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+		g_signal_connect (factory, "setup", G_CALLBACK (grp_col_setup_cb), GINT_TO_POINTER (i));
+		g_signal_connect (factory, "bind",  G_CALLBACK (grp_col_bind_cb),  GINT_TO_POINTER (i));
+
+		GtkColumnViewColumn *col = gtk_column_view_column_new ("", factory);
+		gtk_column_view_column_set_resizable (col, FALSE);
+		gtk_column_view_column_set_fixed_width (col, pixmap_width (&group_pix[i]) + 8);
+		gtk_column_view_append_column (GTK_COLUMN_VIEW (pattern_list), col);
+		g_object_unref (col);
+		g_object_unref (factory);
 	}
 
 	{
-		GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
-		GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes (
-				_("Mode"), renderer, "text", PLT_COL_MODE, NULL);
-		gtk_tree_view_column_set_resizable (col, TRUE);
-		gtk_tree_view_column_set_fixed_width (col, 55);
-		gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
+		GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+		g_signal_connect (factory, "setup", G_CALLBACK (text_col_setup_cb), NULL);
+		g_signal_connect (factory, "bind",  G_CALLBACK (text_col_bind_cb),  (gpointer) "mode");
+		GtkColumnViewColumn *col = gtk_column_view_column_new (_("Mode"), factory);
+		gtk_column_view_column_set_resizable (col, TRUE);
+		gtk_column_view_column_set_fixed_width (col, 55);
+		gtk_column_view_append_column (GTK_COLUMN_VIEW (pattern_list), col);
+		g_object_unref (col);
+		g_object_unref (factory);
 
-		renderer = gtk_cell_renderer_text_new ();
-		col = gtk_tree_view_column_new_with_attributes (
-				_("Pattern"), renderer, "text", PLT_COL_PATTERN, NULL);
-		gtk_tree_view_column_set_resizable (col, TRUE);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pattern_list), col);
+		factory = gtk_signal_list_item_factory_new ();
+		g_signal_connect (factory, "setup", G_CALLBACK (text_col_setup_cb), NULL);
+		g_signal_connect (factory, "bind",  G_CALLBACK (text_col_bind_cb),  (gpointer) "pattern");
+		col = gtk_column_view_column_new (_("Pattern"), factory);
+		gtk_column_view_column_set_resizable (col, TRUE);
+		gtk_column_view_append_column (GTK_COLUMN_VIEW (pattern_list), col);
+		g_object_unref (col);
+		g_object_unref (factory);
 	}
 
-	{
-		GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (pattern_list));
-		gtk_tree_selection_set_mode (sel, GTK_SELECTION_BROWSE);
-		g_signal_connect (sel, "changed", G_CALLBACK (pattern_list_selection_changed), NULL);
-	}
-
-	{
-		GtkGesture *click = gtk_gesture_click_new ();
-		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 0);
-		g_signal_connect (click, "pressed", G_CALLBACK (on_pattern_list_click), NULL);
-		gtk_widget_add_controller (pattern_list, GTK_EVENT_CONTROLLER (click));
-	}
+	g_signal_connect (pattern_sel_model, "notify::selected",
+			G_CALLBACK (pattern_list_selection_changed), NULL);
 
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), pattern_list);
 	gtk_widget_set_visible (pattern_list, TRUE);
