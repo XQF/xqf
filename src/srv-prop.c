@@ -762,7 +762,7 @@ void properties_dialog (struct server *s) {
 
 	if (games[s->type].pix) {
 		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
-		gtk_box_pack_start (GTK_BOX (hbox2), image, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (hbox2), image);
 		gtk_widget_set_visible (image, TRUE);
 	}
 

@@ -18,27 +18,6 @@
 #include <gtk/gtk.h>
 
 /* ------------------------------------------------------------------ */
-/* GtkBox / packing                                                     */
-/* ------------------------------------------------------------------ */
-
-/* expand/fill/padding semantics are dropped; child is appended */
-static inline void
-gtk_box_pack_start (GtkBox *box, GtkWidget *child,
-                    gboolean expand, gboolean fill, guint padding)
-{
-  (void)expand; (void)fill; (void)padding;
-  gtk_box_append (box, child);
-}
-
-static inline void
-gtk_box_pack_end (GtkBox *box, GtkWidget *child,
-                  gboolean expand, gboolean fill, guint padding)
-{
-  (void)expand; (void)fill; (void)padding;
-  gtk_box_append (box, child);
-}
-
-/* ------------------------------------------------------------------ */
 /* GtkContainer (removed in GTK4)                                       */
 /* ------------------------------------------------------------------ */
 
@@ -71,63 +50,10 @@ static inline GtkWidget *_xqf_window_new (void) { return gtk_window_new (); }
 #define gtk_window_new(type) _xqf_window_new ()
 
 /* ------------------------------------------------------------------ */
-/* Widget destroy                                                        */
-/* ------------------------------------------------------------------ */
-
-static inline void
-gtk_widget_destroy (GtkWidget *widget)
-{
-  if (GTK_IS_WINDOW (widget))
-    gtk_window_destroy (GTK_WINDOW (widget));
-}
-
-/* ------------------------------------------------------------------ */
-/* gtk_widget_show_all (removed in GTK4; children visible by default)   */
-/* ------------------------------------------------------------------ */
-
-#define gtk_widget_show_all(w) gtk_widget_show (w)
-
-/* ------------------------------------------------------------------ */
-/* Widget default (API removed in GTK4; use gtk_window_set_default_widget) */
-/* ------------------------------------------------------------------ */
-
-static inline void
-gtk_widget_set_can_default (GtkWidget *w, gboolean can)
-{ (void)w; (void)can; }
-
-static inline void
-gtk_widget_grab_default (GtkWidget *w)
-{ (void)w; }
-
-/* ------------------------------------------------------------------ */
-/* GtkEntry text helpers                                                 */
-/* ------------------------------------------------------------------ */
-
-#define gtk_entry_get_text(e)    ((e) && GTK_IS_EDITABLE (e) ? gtk_editable_get_text (GTK_EDITABLE (e)) : "")
-#define gtk_entry_set_text(e, t) gtk_editable_set_text (GTK_EDITABLE (e), (t))
-
-/* ------------------------------------------------------------------ */
-/* Separators                                                            */
-/* ------------------------------------------------------------------ */
-
-static inline GtkWidget *gtk_hseparator_new (void)
-{ return gtk_separator_new (GTK_ORIENTATION_HORIZONTAL); }
-
-/* ------------------------------------------------------------------ */
-/* GtkMisc / label alignment (GtkMisc removed in GTK4)                  */
+/* GtkMisc (removed in GTK4)                                            */
 /* ------------------------------------------------------------------ */
 
 #define GTK_MISC(x) ((GtkWidget *)(x))
-
-static inline void
-gtk_misc_set_alignment (GtkWidget *misc, gfloat xalign, gfloat yalign)
-{
-  if (GTK_IS_LABEL (misc))
-    {
-      gtk_label_set_xalign (GTK_LABEL (misc), (float)xalign);
-      gtk_label_set_yalign (GTK_LABEL (misc), (float)yalign);
-    }
-}
 
 /* ------------------------------------------------------------------ */
 /* GtkScrolledWindow                                                     */
@@ -137,28 +63,6 @@ gtk_misc_set_alignment (GtkWidget *misc, gfloat xalign, gfloat yalign)
 static inline GtkWidget *_xqf_scrolled_window_new (void)
 { return gtk_scrolled_window_new (); }
 #define gtk_scrolled_window_new(h, v) _xqf_scrolled_window_new ()
-
-/* Shadow types removed from most GTK4 widgets */
-#define GTK_SHADOW_NONE       0
-#define GTK_SHADOW_IN         1
-#define GTK_SHADOW_OUT        2
-#define GTK_SHADOW_ETCHED_IN  3
-#define GTK_SHADOW_ETCHED_OUT 4
-
-/* ------------------------------------------------------------------ */
-/* GtkFrame shadow (CSS-only in GTK4)                                   */
-/* ------------------------------------------------------------------ */
-
-static inline void gtk_frame_set_shadow_type (GtkFrame *frame, int type)
-{ (void)frame; (void)type; }
-
-/* ------------------------------------------------------------------ */
-/* gtk_scrolled_window_add_with_viewport (removed in GTK4)              */
-/* ------------------------------------------------------------------ */
-
-static inline void
-gtk_scrolled_window_add_with_viewport (GtkScrolledWindow *sw, GtkWidget *child)
-{ gtk_scrolled_window_set_child (sw, child); }
 
 /* ------------------------------------------------------------------ */
 /* GtkMisc padding (removed; use margins)                               */
@@ -181,26 +85,6 @@ typedef GtkWidget GtkBin;
 
 static inline GtkWidget *gtk_bin_get_child (GtkWidget *bin)
 { return gtk_widget_get_first_child (bin); }
-
-/* ------------------------------------------------------------------ */
-/* GtkButtonBox (removed in GTK4)                                       */
-/* ------------------------------------------------------------------ */
-
-typedef GtkBox GtkButtonBox;
-#define GTK_BUTTON_BOX(x)      ((GtkWidget *)GTK_BOX (x))
-#define gtk_button_box_new(o)  gtk_box_new ((o), 0)
-static inline void gtk_button_box_set_layout (GtkWidget *bbox, int layout)
-{ (void)bbox; (void)layout; }
-#define GTK_BUTTONBOX_SPREAD  1
-#define GTK_BUTTONBOX_EDGE    2
-#define GTK_BUTTONBOX_START   3
-#define GTK_BUTTONBOX_END     4
-#define GTK_BUTTONBOX_CENTER  5
-
-static inline GtkWidget *gtk_vbutton_box_new (void)
-{ return gtk_box_new (GTK_ORIENTATION_VERTICAL, 0); }
-static inline GtkWidget *gtk_hbutton_box_new (void)
-{ return gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); }
 
 /* ------------------------------------------------------------------ */
 /* GtkTextView adjustment (removed; use GtkScrollable interface)        */

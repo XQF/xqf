@@ -802,7 +802,7 @@ void launch_close_handler_part2 (struct condef *con) {
 	}
 
 	if (main_window && default_terminate) {
-		gtk_widget_destroy (main_window);
+		gtk_window_destroy (GTK_WINDOW (main_window));
 	}
 }
 
@@ -1823,7 +1823,7 @@ void populate_main_toolbar (void) {
 
 
 void quick_filter_entry_changed (GtkWidget* entry, gpointer data) {
-	const char* text = gtk_entry_get_text (GTK_ENTRY (entry));
+	const char* text = gtk_editable_get_text (GTK_EDITABLE (entry));
 	int mask = 0;
 
 	debug (3, "%d <%s>", strlen (text), text);
@@ -2479,11 +2479,11 @@ int main (int argc, char *argv[]) {
 
 
 	if (player_skin_popup) {
-		gtk_widget_destroy (player_skin_popup);
+		gtk_window_destroy (GTK_WINDOW (player_skin_popup));
 	}
 
 	if (server_mapshot_popup) {
-		gtk_widget_destroy (server_mapshot_popup);
+		gtk_window_destroy (GTK_WINDOW (server_mapshot_popup));
 	}
 
 	pixmap_cache_clear (&qw_colors_pixmap_cache, 0);

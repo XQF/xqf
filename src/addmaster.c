@@ -260,7 +260,7 @@ struct master *add_master_dialog (struct master *m) {
 		combo_set_vals (master_name_combo, master_history_name->items, "");
 
 	if (master_to_edit) {
-		gtk_entry_set_text(combo_get_entry (master_name_combo), master_to_edit->name);
+		gtk_editable_set_text(GTK_EDITABLE (combo_get_entry (master_name_combo)), master_to_edit->name);
 	}
 
 
@@ -307,7 +307,7 @@ struct master *add_master_dialog (struct master *m) {
 
 	if (master_to_edit) {
 		char* url = master_to_url(master_to_edit);
-		gtk_entry_set_text(combo_get_entry (master_addr_combo), url);
+		gtk_editable_set_text(GTK_EDITABLE (combo_get_entry (master_addr_combo)), url);
 		gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);
 		g_free(url);
 	}
