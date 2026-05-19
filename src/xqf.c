@@ -2455,7 +2455,7 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
-	xqf_app = gtk_application_new ("io.github.xqf.xqf", G_APPLICATION_NON_UNIQUE);
+	xqf_app = gtk_application_new ("io.github.xqf", G_APPLICATION_NON_UNIQUE);
 	g_signal_connect (xqf_app, "activate", G_CALLBACK (xqf_activate), NULL);
 
 	/* Pass 0/NULL: we already parsed our own args above; GApplication need
