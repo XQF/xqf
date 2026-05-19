@@ -2330,6 +2330,8 @@ static void xqf_activate (GtkApplication *app, gpointer data) {
 
 	g_application_hold (G_APPLICATION (app));
 
+	g_set_application_name ("XQF");
+
 	add_pixmap_path_for_theme ("default");
 	add_pixmap_directory (xqf_PACKAGE_DATA_DIR);
 
