@@ -11,30 +11,23 @@ HIG conventions should be avoided.
 
 ## Current State Summary
 
-- **Build system**: CMake, dual GTK2/GTK3 support via `GTK_TARGET` variable
-  (default: 2).
-- **Removed-in-GTK3 widgets still in use**: `GtkCList`, `GtkCTree` — core UI
-  panels (server list, player list, server info tree).
-- **Deprecated container API**: `GtkVBox`, `GtkHBox`, `GtkTable` throughout
-  dialogs (50+ locations).
-- **Styling**: Direct `GtkStyle` struct access (`style->bg[]`, `style->fg[]`).
-  Incompatible with GTK3+.
-- **Icons**: 101 XPM files in `src/xpm/`, included into C source as
-  `static char*` arrays and loaded via `gdk_pixbuf_new_from_xpm_data()`.
-- **Two `.ui` files**: `xqf-gtk2.ui` and `xqf-gtk3.ui` maintained in parallel.
-- **CSS**: None. All styling is programmatic.
-- **Signal API**: Already modern (`g_signal_connect`), no `gtk_signal_connect`
-  legacy calls.
-- **GtkBuilder**: Already in use for the main window.
+Phases 1–3 are complete. The app builds and runs on GTK4 with no known
+crashes or regressions. What remains:
 
-## Non-Goals
-
-- **libadwaita**: GNOME-specific widget set on top of GTK4. Not required, not
-  used.
-- **Meson**: Build system churn with no functional benefit. Stay on CMake.
-- **GSettings**: Preference storage migration is a separate, unrelated concern.
-- **GNOME HIG compliance**: XQF has its own UI conventions shaped by its
-  gaming audience.
+- **`gtk4-compat.h`** (265 lines, down from 780): all dead stubs removed.
+  What stays are shims for APIs still actively called from un-migrated files
+  (see Phase 6).
+- **Deprecated tree widgets** (`GtkTreeView`, `GtkListStore`, `GtkTreeStore`,
+  `GtkCellRenderer*`): still in use in filter.c, flt-player.c, srv-info.c,
+  xqf-ui.c, scripts.c, pref.c (see Phase 5).
+- **Compat shims still called** (~500 active call sites across 13 source
+  files): `gtk_box_pack_start` (300), `gtk_entry_get/set_text` (86),
+  `gtk_widget_destroy` (40), `gtk_frame_set_shadow_type` (13),
+  `gtk_scrolled_window_new(h,v)` (12), and others (see Phase 6).
+- **No `GtkApplication`**: WM shows "GTK application" instead of "XQF";
+  no single-instance handling (see Phase 4).
+- **Custom INI parser** (`src/config.c`, ~850 lines): duplicates `GKeyFile`
+  functionality (see Phase 7).
 
 ---
 
@@ -71,49 +64,43 @@ No known bugs. The app builds, runs, and all main UI paths work:
 
 ---
 
-## Deprecated API in active use
+## Deprecated API still in use
 
-Several GTK APIs we still rely on were deprecated in GTK 4.10. They work
-fine today but will eventually be removed. No urgency — GTK rarely removes
-deprecated API quickly — but track them here so they don't get forgotten.
+Several GTK APIs were deprecated in GTK 4.10. They work today but will
+eventually be removed. Phase 5 covers the tree-widget subset.
 
 | API | Deprecated since | Where used in XQF |
 |-----|-----------------|-------------------|
 | `GtkCellRendererPixbuf`, `GtkCellRendererText` | 4.10 | source treeview, games list, country filter, player filter |
 | `GtkTreeView`, `GtkTreeStore`, `GtkListStore`, `GtkTreeViewColumn` | 4.10 | source treeview (`src/xqf-ui.c`), server info tree (`src/srv-info.c`), scripts list (`src/scripts.c`), games pref list (`src/pref.c`), country/player filter lists (`src/filter.c`, `src/flt-player.c`) |
-| `gdk_texture_new_for_pixbuf` | 4.20 | `src/loadpixmap.c`, `src/pixmaps.c` — bridges XPM-loaded `GdkPixbuf` data into `GdkTexture` for cell renderers; resolves naturally when XPM icons are replaced with PNGs (Phase 2) |
+| `gdk_texture_new_for_pixbuf` | 4.20 | `src/loadpixmap.c`, `src/pixmaps.c` — bridges PNG-loaded `GdkPixbuf` into `GdkTexture` for cell renderers; resolves when `GtkTreeView` usage is gone (Phase 5) |
 
-The tree-view widgets will be replaced incrementally as part of Phase 1
-(server/player lists already done via `GtkColumnView`; source treeview,
-server info tree, and filter lists are still pending). Once all
-`GtkTreeView` usage is gone, the `GtkCellRenderer*` usage goes with it.
+## Removed API still shimmed in `gtk4-compat.h`
+
+These APIs were fully removed in GTK4. They currently work through `gtk4-compat.h`
+shims but should be replaced at the call site (Phase 6).
+
+| Shim | Replacement | Active call sites |
+|------|-------------|-------------------|
+| `gtk_box_pack_start/end` | `gtk_box_append` | ~300 in 13 files |
+| `gtk_entry_get/set_text` | `gtk_editable_get/set_text` | ~86 |
+| `gtk_widget_destroy` | `gtk_window_destroy` (for windows), unreffing otherwise | ~40 |
+| `gtk_frame_set_shadow_type` | CSS / `gtk_frame_set_child` | ~13 |
+| `gtk_scrolled_window_new(h,v)` | `gtk_scrolled_window_new()` | ~12 |
+| `gtk_scrolled_window_add_with_viewport` | `gtk_scrolled_window_set_child` | ~5 |
+| `gtk_widget_set_can_default` / `gtk_widget_grab_default` | `gtk_window_set_default_widget` | ~20 |
+| `GtkButtonBox` / `gtk_h/vbutton_box_new` | `GtkBox` directly | ~8 |
+| `gtk_hseparator_new` | `gtk_separator_new(GTK_ORIENTATION_HORIZONTAL)` | ~3 |
+| `gtk_misc_set_alignment` | `gtk_label_set_xalign/yalign` | ~4 |
+| `GdkEventButton` | `GtkGestureClick` | ~2 |
+| `gtk_file_chooser_get/set_filename` | `gtk_file_chooser_get/set_file` | ~6 |
 
 ---
 
-## Phase 1 — Drop GTK2/GTK3, target GTK4 directly
+## Phase 1 — Drop GTK2/GTK3, target GTK4 directly ✅
 
 **Goal**: Single build target (GTK4), no conditional compilation for GTK
 version, all `GtkCList`/`GtkCTree` usage replaced with the GTK4 list API.
-
-**Why skip GTK3 as a deployment target**: GTK3 is in maintenance mode; writing
-GTK3-compatible code (e.g. `gtk_box_pack_start`, `GtkContainer`,
-`gtk_dialog_run`) would mean writing code that needs changing *again* for GTK4.
-Since `GtkCList`/`GtkCTree` are being torn out entirely regardless of target
-version, and the replacement work is the same either way, there is no
-meaningful benefit to an intermediate GTK3 shipping target.
-
-GTK3 can still serve as a *compile-time sanity check* during development (the
-`GtkTreeView`-based fallback for the server info tree, described below, works
-on both), but it is not a deployment goal.
-
-**Why the new GTK4 list API, not `GtkTreeView`**: `GtkTreeView` is explicitly
-legacy in GTK4. Choosing it now would invite a third migration later. Since the
-`GtkCList` code is a complete rewrite regardless, the incremental cost of
-targeting `GtkColumnView` is modest, and the benefits are real:
-- Virtual rendering (only widgets for visible rows) — meaningful for large
-  server lists.
-- First-class `GtkSortListModel` and `GtkFilterListModel` — XQF does
-  significant server filtering, so this composes well.
 
 ### Tasks
 
@@ -134,136 +121,203 @@ Legend: ✅ done · 🔲 pending
 
 2. ✅ **Replace `GtkCTree` (server info tree panel)** — implemented in
    `src/srv-info.c` using `GtkTreeView` + `GtkTreeStore` (the pragmatic GTK4
-   option; see note below). No `gtk_ctree_new` / `GTK_CTREE` calls remain.
-   > **Option not taken**: `GtkTreeListModel` + `GtkColumnView` would keep
-   > everything in the new list API but is significantly more complex for a
-   > small read-only panel with a few dozen rows. `GtkTreeView` still compiles
-   > cleanly in GTK4 and is the correct fit here.
+   option; see Phase 5 note).
 
 3. ✅ **Replace `GtkVBox` / `GtkHBox`** — no `gtk_vbox_new` / `gtk_hbox_new`
-   calls remain in production source.
+   calls remain; code uses `gtk_box_new(GTK_ORIENTATION_*)` directly.
 
 4. ✅ **Replace `GtkTable`** — no `gtk_table_new` / `gtk_table_attach` calls
    remain in production source.
 
 5. ✅ **Remove `gdk_window_set_decorations()` / `gdk_window_set_functions()`**
-   — no such calls exist in `src/dialogs.c`.
+   — no such calls exist.
 
 6. ✅ **Remove `#ifdef GUI_GTK2` / `#ifdef GUI_GTK3` blocks** — zero such
-   blocks remain in source; only `GUI_GTK4` is defined (in `CMakeLists.txt`).
+   blocks remain in source; only `GUI_GTK4` is defined.
 
 7. ✅ **Drop `xqf-gtk2.ui`**, rename `xqf-gtk3.ui` to `xqf.ui`, update it for
-   GTK4 widget/property names. Old `xqf-gtk2.ui` and `xqf-gtk3.ui` deleted.
-   Main window rewritten to use `GtkBox` layout, `GtkPopoverMenuBar` +
-   `GMenuModel`, and GTK4 pane/scroll structure.
+   GTK4 widget/property names.
 
-8. ✅ **Update `CMakeLists.txt`**: single `pkg_check_modules(GTK REQUIRED gtk4)`;
-   no `GTK_TARGET` variable or dual-target logic remains.
+8. ✅ **Update `CMakeLists.txt`**: single `pkg_check_modules(GTK REQUIRED gtk4)`.
 
-9. ✅ **Replace `gtk_builder_connect_signals()`** — dead call removed from
-   `src/xqf.c`; all signal connections are explicit `g_signal_connect` calls.
+9. ✅ **Replace `gtk_builder_connect_signals()`** — all signal connections are
+   explicit `g_signal_connect` calls.
 
-10. ✅ **Replace `gtk_dialog_run()`** — no `gtk_dialog_run()` calls existed;
-    the codebase used `gtk_main()`/`gtk_main_quit()` compat shims for modal
-    loops. All 10 dialog call sites replaced with `dialog_run_modal(window)`
-    (proper nested `GMainLoop` that auto-quits on window destroy). `utils.c`
-    external-program loop given its own `GMainLoop *loop` field. `xqf.c` main
-    app loop replaced with an explicit `GMainLoop`. `gtk_main`/`gtk_main_quit`
-    removed from `gtk4-compat.h`.
+10. ✅ **Replace `gtk_dialog_run()`** — replaced with `dialog_run_modal(window)`
+    (proper nested `GMainLoop`). App loop replaced with explicit `GMainLoop`.
 
-11. ✅ **Replace `GtkContainer` API** — `gtk_container_add()` and
-    `gtk_container_set_border_width()` shimmed in `gtk4-compat.h`; calls
-    remain in source but dispatch correctly to GTK4 child-setters. Native
-    GTK4 call sites can be adopted incrementally alongside other dialog work.
+11. ✅ **Replace `GtkContainer` API** — `gtk_container_add()` shimmed; remaining
+    call sites use GTK4 child-setters directly or via the shim.
 
 ---
 
-## Phase 2 — Replace XPM icons with PNGs
+## Phase 2 — Replace XPM icons with PNGs ✅
 
 **Goal**: No XPM files in the source tree; icons are PNG files installed to
 a data directory and loaded at runtime.
 
-**Why**: XPM is a 1990s format that requires recompiling to change an icon,
-makes the binary larger, and is invisible to icon themes. `loadpixmap.c`
-already has a PNG fallback code path.
-
 ### Tasks
 
-1. **Convert all 101 files** in `src/xpm/` from XPM to PNG. This is a batch
-   operation (`convert *.xpm` via ImageMagick).
+1. ✅ **Convert all 101 files** in `src/xpm/` from XPM to PNG (ImageMagick
+   batch conversion). PNG files placed in `pixmaps/default/`.
 
-2. **Install PNGs** to `${datadir}/xqf/pixmaps/` (added to `CMakeLists.txt`).
+2. ✅ **Install PNGs** to `${PACKAGE_DATA_DIR}/default/` via CMakeLists.txt.
 
-3. **Update `src/loadpixmap.c`**: remove `gdk_pixbuf_new_from_xpm_data()`
-   path; load from the installed data directory only.
+3. ✅ **Update `src/loadpixmap.c`**: removed `gdk_pixbuf_new_from_xpm_data()`
+   path and `dlsym` fallback; loads only from installed data directory.
 
-4. **Remove the `dlsym()` hack** in `src/pixmaps.c` that exists because XPM
-   data is exported from the executable as symbols. With external files, this
-   mechanism is no longer needed. (See the `CMAKE_EXECUTABLE_ENABLE_EXPORTS`
-   note in `CMakeLists.txt` — that flag can be removed too.)
+4. ✅ **Remove the `dlsym()` hack** in `src/pixmaps.c` and
+   `CMAKE_EXECUTABLE_ENABLE_EXPORTS` from CMakeLists.txt.
 
-5. **Replace `pixmaps/xqf.xpm`** (the application icon) with an SVG. This one
-   file is worth the artistic effort since it is used at multiple sizes and
-   matters on HiDPI displays.
-
-6. **Update `CMakeLists.txt`**: remove XPM install rules, add PNG install
-   rules, remove `CMAKE_EXECUTABLE_ENABLE_EXPORTS`.
+5. ✅ **Replace application icon** with SVG (`pixmaps/scalable/xqf.svg`);
+   PNG sizes generated at 22×22, 32×32, 48×48, 128×128 from the SVG.
+   Icon theme search path registered at startup so the About dialog icon works.
 
 ---
 
 ## Phase 3 — Replace direct `GtkStyle` manipulation with CSS ✅
 
-**Goal**: No direct access to `GtkStyle` struct fields; colors are set via
-CSS or list model item properties.
-
-**Why**: `GtkStyle` struct access was removed in GTK3 and does not exist in
-GTK4.
+**Goal**: No direct access to `GtkStyle` struct fields; colors set via CSS.
 
 ### Tasks
 
-1. ✅ **`src/gtk4-compat.h`**: Removed `GdkColor` / `GtkStyle` shims — all
-   call sites now use CSS; the compat header retains only removed-API stubs.
+1. ✅ **`src/gtk4-compat.h`**: Removed `GdkColor` / `GtkStyle` shims.
 
-2. ✅ **`src/srv-prop.c`**: Replaced dead `GtkStyle`/`GdkColor` block (stale
-   timestamp coloring) with `gtk_widget_add_css_class(label, "xqf-stale")`.
-   `skin.c` was found to use game skin pixel rendering, not widget styling —
-   no changes needed there.
+2. ✅ **`src/srv-prop.c`**: Stale timestamp coloring replaced with
+   `gtk_widget_add_css_class(label, "xqf-stale")`.
 
-3. ✅ **`src/xqf-lists.c`**: Restored `SERVER_INCOMPATIBLE` greyed-out
-   display (lost in CList migration) via `gtk_widget_add_css_class(label,
-   "xqf-incompatible")` / `gtk_widget_remove_css_class()` in
-   `server_col_bind()`.
+3. ✅ **`src/xqf-lists.c`**: `SERVER_INCOMPATIBLE` greyed-out display restored
+   via `"xqf-incompatible"` CSS class in `server_col_bind()`.
 
-4. ✅ **`src/xqf.c`**: Added `GtkCssProvider` at startup with rules:
+4. ✅ **`src/xqf.c`**: `GtkCssProvider` at startup with
    `.xqf-incompatible { color: alpha(currentColor, 0.45); }` and
-   `.xqf-stale { color: red; }` registered at `GTK_STYLE_PROVIDER_PRIORITY_APPLICATION`.
+   `.xqf-stale { color: red; }`.
 
 ---
 
 ## Phase 4 — Adopt `GtkApplication`
 
-**Goal**: Startup is managed by `GtkApplication`; `main()` calls
-`g_application_run()`.
+**Goal**: Startup managed by `GtkApplication`; `main()` calls
+`g_application_run()`. Fixes WM showing "GTK application" instead of "XQF".
 
-**Why**: `GtkApplication` is standard GTK infrastructure (not GNOME-specific).
-It handles `SIGTERM`/`SIGHUP`, integrates with the platform session manager,
-and is required by GTK4's recommended startup pattern.
+**Why**: `GtkApplication` sets `WM_CLASS` correctly, handles
+`SIGTERM`/`SIGHUP`, integrates with the session manager, and is the
+recommended GTK4 startup pattern.
 
 ### Tasks
 
-1. Create a `GtkApplication` instance in `src/xqf.c` (or `src/main.c` if
-   that exists).
+1. Create a `GtkApplication` instance in `src/xqf.c`.
 
 2. Move window creation into the `activate` signal handler.
 
-3. Keep the existing `getopt` argument parsing in a `handle-local-options`
-   or `command-line` signal handler, or as a pre-`activate` step.
+3. Keep the existing `getopt` argument parsing as a pre-`activate` step or
+   in a `handle-local-options` handler.
 
-4. Verify single-instance behaviour if XQF has any existing logic for that.
+4. Verify single-instance behaviour (check whether XQF has any existing
+   logic for that).
 
 ---
 
-## Phase 5 — Replace custom config parser with `GKeyFile`
+## Phase 5 — Replace deprecated `GtkTreeView` / `GtkListStore`
+
+**Goal**: No use of `GtkTreeView`, `GtkTreeStore`, `GtkListStore`,
+`GtkTreeViewColumn`, or `GtkCellRenderer*`. These were deprecated in GTK 4.10.
+
+**Why now, not earlier**: The server/player lists (the hard case) were done
+in Phase 1. What remains is all the filter, game-list, source-tree, scripts,
+and server-info panels — each a self-contained migration that can be done
+independently.
+
+### Call sites
+
+| File | Widget | Replacement |
+|------|--------|-------------|
+| `src/filter.c` | `GtkTreeView` + `GtkListStore` (country filter left/right lists) | `GtkColumnView` + `GListStore` |
+| `src/flt-player.c` | `GtkTreeView` + `GtkListStore` (player filter list) | `GtkColumnView` + `GListStore` |
+| `src/srv-info.c` | `GtkTreeView` + `GtkTreeStore` (server info panel) | Keep `GtkTreeView` — it is the correct fit for a small read-only tree; revisit only if GTK actually removes it |
+| `src/xqf-ui.c` | `GtkTreeView` + `GtkTreeStore` (source/group tree) | `GtkTreeListModel` + `GtkColumnView`, or keep `GtkTreeView` same as srv-info |
+| `src/scripts.c` | `GtkTreeView` + `GtkListStore` (scripts list) | `GtkColumnView` + `GListStore` |
+| `src/pref.c` | `GtkTreeView` + `GtkListStore` (games list) | `GtkColumnView` + `GListStore` |
+
+Once all `GtkTreeView` / `GtkListStore` uses are gone, `GtkCellRenderer*` and
+`gdk_texture_new_for_pixbuf` disappear with them.
+
+### Notes
+
+- The filter dialogs (`filter.c`) also contain `GdkEventButton` call sites
+  (two raw event-handler signatures) that should be replaced with
+  `GtkGestureClick` at the same time.
+- `src/xqf-ui.c` source tree uses `GTK_SELECTION_EXTENDED` and
+  `gtk_paned_get_child1/2` — both shimmed; clean up when migrating that file.
+
+---
+
+## Phase 6 — Migrate remaining compat shims to native GTK4 API
+
+**Goal**: `gtk4-compat.h` shrinks to near-zero (or is deleted); all call
+sites use native GTK4 API directly.
+
+**Why**: The shims in `gtk4-compat.h` are correctness patches, not
+correctness guarantees — `gtk_box_pack_start` silently drops `expand`,
+`fill`, and `padding` semantics that some dialogs may rely on for proper
+layout. Migrating to `gtk_box_append` (and using `hexpand`/`vexpand`
+properties where needed) also lets the compiler catch new regressions.
+
+### Tasks
+
+These are largely mechanical and can be done file-by-file or function-by-function:
+
+1. **`gtk_box_pack_start` / `gtk_box_pack_end` → `gtk_box_append`**
+   (~300 call sites in `addmaster.c`, `addserver.c`, `dialogs.c`, `filter.c`,
+   `flt-player.c`, `game.c`, `pref.c`, `psearch.c`, `rcon.c`, `redial.c`,
+   `scripts.c`, `srv-prop.c`, `statistics.c`).
+   Where `expand=TRUE` / `fill=TRUE` was set, add `gtk_widget_set_hexpand`
+   or `gtk_widget_set_vexpand` as appropriate.
+
+2. **`gtk_entry_get/set_text` → `gtk_editable_get/set_text`** (~86 call sites).
+   Already working via macro shim; mechanical replacement.
+
+3. **`gtk_widget_destroy`** (~40 call sites): windows → `gtk_window_destroy`;
+   non-window widgets → just unreffing or `gtk_widget_unparent` as appropriate.
+
+4. **`gtk_widget_set_can_default` / `gtk_widget_grab_default`** (~20 call
+   sites): use `gtk_window_set_default_widget (GTK_WINDOW (window), button)`.
+
+5. **`GtkButtonBox` / `gtk_h/vbutton_box_new`** (filter.c, redial.c):
+   replace with plain `GtkBox`; remove layout hints (no GTK4 equivalent).
+
+6. **`gtk_frame_set_shadow_type`** (~13 call sites): remove the call entirely
+   (shadow type is CSS-only in GTK4; the default frame appearance is fine).
+
+7. **`gtk_scrolled_window_new(h,v)`** (~12 call sites): replace with
+   `gtk_scrolled_window_new()`.
+
+8. **`gtk_scrolled_window_add_with_viewport`** (~5 call sites): replace with
+   `gtk_scrolled_window_set_child`.
+
+9. **`gtk_hseparator_new`** (~3 call sites):
+   `gtk_separator_new(GTK_ORIENTATION_HORIZONTAL)`.
+
+10. **`gtk_misc_set_alignment`** / `GTK_MISC` (~4 call sites):
+    `gtk_label_set_xalign` / `gtk_label_set_yalign` directly.
+
+11. **`gtk_misc_set_padding` / `gtk_bin_get_child` / `GtkBin`** (1 call each
+    in `pref.c`): inline the margin-setting and `gtk_widget_get_first_child`.
+
+12. **`gtk_file_chooser_get/set_filename`** (~6 call sites): replace with
+    `gtk_file_chooser_get/set_file` + `g_file_get_path`.
+
+13. **`gtk_container_add`** (~2 call sites): use the appropriate
+    `gtk_box_append` / `gtk_window_set_child` / `gtk_frame_set_child` call.
+
+14. **`GdkEventButton`** in `filter.c`: replace the two raw `GdkEventButton *`
+    event-handler signatures with `GtkGestureClick` controllers.
+
+Once all call sites are migrated, `gtk4-compat.h` can be deleted.
+
+---
+
+## Phase 7 — Replace custom config parser with `GKeyFile`
 
 **Goal**: `src/config.c` (~850 lines of custom INI parser) is deleted and
 replaced by GLib's `GKeyFile` API throughout.
@@ -275,7 +329,7 @@ edge cases (encoding, escaping, concurrent writes) for free. `GKeyFile` is
 pure GLib — no GNOME dependency.
 
 **Why last**: The config system has no GTK dependency and works fine through
-Phases 1–4. Deferring it keeps the earlier phases focused and avoids mixing
+Phases 1–6. Deferring it keeps the earlier phases focused and avoids mixing
 a risky data-layer change with UI changes.
 
 ### Tasks
@@ -283,8 +337,7 @@ a risky data-layer change with UI changes.
 1. **Audit format differences** between `src/config.c` and `GKeyFile`:
    - Verify that all existing `~/.config/xqf/config` files parse correctly
      under `GKeyFile` without modification.
-   - Check escape sequence handling (`\n`, `\r`, `\\` in values) — GKeyFile
-     uses the same conventions but confirm edge cases.
+   - Check escape sequence handling (`\n`, `\r`, `\\` in values).
    - The `servers` file uses server addresses (e.g. `192.168.1.1:27960`) as
      section headers; confirm `GKeyFile` accepts `:` in section names.
 
@@ -295,8 +348,7 @@ a risky data-layer change with UI changes.
 3. **Replace `config_sync()`** with `g_key_file_save_to_file()` (or
    `g_key_file_to_data()` + atomic write via `g_file_set_contents()`).
 
-4. **Delete `src/config.c` and `src/config.h`**; remove from
-   `CMakeLists.txt`.
+4. **Delete `src/config.c` and `src/config.h`**; remove from `CMakeLists.txt`.
 
 5. **Keep `src/rc.c`** for legacy `~/.qf/` migration logic and `qfrc` import
    — but the runtime read/write path moves to `GKeyFile`.
@@ -321,37 +373,23 @@ itself uses.
 
 | Module | What to cover |
 |---|---|
-| `src/config.c` → `GKeyFile` (Phase 5) | Round-trip: write keys, read back, verify values; escape sequences; `:` in section names (`servers` file) |
+| `src/config.c` → `GKeyFile` (Phase 7) | Round-trip: write keys, read back, verify values; escape sequences; `:` in section names (`servers` file) |
 | `src/server.c`, `src/stat.c` | Server response packet parsing; address/port parsing |
 | `src/filter.c`, `src/flt-player.c` | Filter rule evaluation against known server/player data |
 | `src/host.c` | Host string parsing and validation |
 | `src/rcon.c` (`BUILD_RCON`) | Packet construction and parsing for each supported protocol variant (Quake, HalfLife challenge, HexenWorld Huffman encoding) |
-| Phase 1 `GListModel` implementations | Model item count, insert/remove, sort/filter composition |
-
-**The config tests are particularly valuable for Phase 5**: write them against
-the *existing* `src/config.c` API first, then use them as a regression harness
-when switching to `GKeyFile`.
 
 **Integration tests — `rcon` CLI binary:**
 
 The `rcon` binary (`BUILD_RCON`, links only GLib + readline, no GTK) can be
-tested end-to-end against a local UDP fixture or a real game server. A minimal
-test fixture that speaks the Quake RCON protocol over UDP is straightforward
-to write in Python or C and would let CI verify the full send/receive path
-without a display.
+tested end-to-end against a local UDP fixture or a real game server.
 
 ### What not to test
 
 GTK widget construction, dialog behaviour, list rendering — validated by
-running the application. Attempting to unit-test GTK UI code requires a
-display, GApplication initialization, and produces brittle tests with low
-signal-to-noise.
+running the application.
 
 ### CMake wiring
-
-Add a `tests/` subdirectory with its own `CMakeLists.txt`. Gate it behind a
-`BUILD_TESTING` option (CMake's standard convention) so packagers can skip
-tests at build time:
 
 ```cmake
 option(BUILD_TESTING "Build test suite" ON)
@@ -368,27 +406,5 @@ endif()
 - **`.ui` file split into per-dialog files**: `pref.c` at 151 KB builds its
   UI programmatically. Moving it to GtkBuilder `.ui` files would be a large
   refactor with limited functional benefit.
-- **Icon theme integration**: Installing icons into the hicolor icon theme
-  hierarchy (`share/icons/hicolor/…`) would be a natural follow-on to Phase 2
-  but requires agreeing on icon naming conventions.
-
----
-
-## Risk Notes
-
-- **Phase 1 is the gate and the bulk of the work.** The `GtkCList` →
-  `GtkColumnView` migration is a complete rewrite of the core data display.
-  Column definitions, sorting, selection, row coloring, and model lifetime all
-  need careful attention. `pref.c` (151 KB) should be tackled incrementally
-  (task 3) rather than in one commit.
-- **`GtkColumnView` learning curve**: The factory/model pattern is more
-  verbose than `GtkTreeView`'s cell renderer approach. Budget time for
-  understanding `GtkSignalListItemFactory` bind/setup lifecycle before writing
-  production code.
-- **The `dlsym()` / `CMAKE_EXECUTABLE_ENABLE_EXPORTS` mechanism** (Phase 2,
-  task 4) is unusual and fragile. Removing it is a clear win, but requires
-  verifying no other part of the code relies on exported symbols from the
-  main executable.
-- **`gtk_dialog_run()` replacement** (Phase 1, task 10) requires async
-  refactoring of all modal dialogs. In GTK4 this is unavoidable; plan for
-  it rather than discovering it late.
+- **`src/xpm/` deletion**: The old XPM files are still in the tree (Phase 2
+  stopped short of deleting them). Remove with a single `git rm src/xpm/`.

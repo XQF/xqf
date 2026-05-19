@@ -25,8 +25,6 @@
 struct pixmap {
 	GdkPixbuf  *pixbuf;
 	GdkTexture *texture; /* GdkTexture wrapper for use with GtkCellRendererPixbuf "texture" property */
-	GdkPixmap  *pix;   /* unused: was GdkPixmap* in GTK2, always NULL */
-	GdkBitmap  *mask;  /* unused: was GdkBitmap* in GTK2, always NULL */
 };
 
 struct cached_pixmap {
