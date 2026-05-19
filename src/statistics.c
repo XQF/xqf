@@ -400,7 +400,7 @@ static GtkWidget *server_stats_page (void) {
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	xqf_widget_set_margin_all (page_vbox, 8);
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
+	scrollwin = gtk_scrolled_window_new();
 	gtk_box_append (GTK_BOX (page_vbox), scrollwin);
 
 	grid = gtk_grid_new ();
@@ -589,7 +589,7 @@ static void country_notebook_page (GtkWidget *notebook,
 	unsigned c;
 	char buf[16] = {0};
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
+	scrollwin = gtk_scrolled_window_new();
 
 	grid = gtk_grid_new ();
 	xqf_widget_set_margin_all (grid, 6);

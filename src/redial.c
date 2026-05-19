@@ -166,7 +166,7 @@ static GtkWidget* create_redialwindow (void) {
 	redialwindow = dialog_create_modal_transient_window(_("XQF: Redialing"), TRUE, FALSE, NULL);
 
 #if 0
-	redialwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	redialwindow = gtk_window_new();
 	g_object_set_data (G_OBJECT (redialwindow), "redialwindow", redialwindow);
 	gtk_window_set_title (GTK_WINDOW (redialwindow), _("XQF: Redialing"));
 	gtk_window_set_modal (GTK_WINDOW (redialwindow), TRUE);

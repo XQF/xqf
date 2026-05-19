@@ -120,7 +120,7 @@ static void rcon_print (char *fmt, ...) {
 
 		gtk_text_buffer_insert_at_cursor(rcon_text_buffer, buf, strlen(buf));
 
-		vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
+		vadjustment = gtk_scrollable_get_vadjustment(GTK_SCROLLABLE(rcon_text));
 		gtk_adjustment_set_value (vadjustment,
 				gtk_adjustment_get_upper (vadjustment) -
 				gtk_adjustment_get_page_size (vadjustment));
@@ -450,7 +450,7 @@ static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
 		g_free(msg);
 	}
 
-	vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
+	vadjustment = gtk_scrollable_get_vadjustment(GTK_SCROLLABLE(rcon_text));
 	gtk_adjustment_set_value (vadjustment,
 			gtk_adjustment_get_upper (vadjustment) -
 			gtk_adjustment_get_page_size (vadjustment));
@@ -581,7 +581,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (rcon_text), FALSE);
 	gtk_widget_set_can_focus (rcon_text, FALSE);
 
-	hbox = gtk_scrolled_window_new (NULL, NULL);
+	hbox = gtk_scrolled_window_new();
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (hbox), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (hbox), rcon_text);
 	gtk_box_append (GTK_BOX (vbox), hbox);

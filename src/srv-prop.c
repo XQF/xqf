@@ -711,7 +711,7 @@ static GtkWidget *server_comment_page (struct server *s) {
 	gtk_box_append (GTK_BOX (page_vbox), sucks_check_button);
 	gtk_widget_set_visible (sucks_check_button, TRUE);
 
-	scrollwin = gtk_scrolled_window_new(NULL, NULL);
+	scrollwin = gtk_scrolled_window_new();
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_box_append (GTK_BOX (page_vbox), scrollwin);
 

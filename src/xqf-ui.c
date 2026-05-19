@@ -154,7 +154,7 @@ struct list_def server_list_def = {
 	"Server List",
 	server_columns,
 	9,
-	GTK_SELECTION_EXTENDED,
+	GTK_SELECTION_MULTIPLE,
 	630, 270,
 	SORT_SERVER_PING, GTK_SORT_ASCENDING
 };
@@ -484,7 +484,7 @@ GtkWidget *create_source_treeview (GtkWidget *scrollwin) {
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), col);
 
 	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tv));
-	gtk_tree_selection_set_mode (sel, GTK_SELECTION_EXTENDED);
+	gtk_tree_selection_set_mode (sel, GTK_SELECTION_MULTIPLE);
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -610,13 +610,13 @@ void ui_done (void) {
 	config_set_int ("height", allocation.height);
 	config_set_int ("width", allocation.width);
 
-	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane1_widget)), &allocation);
+	gtk_widget_get_allocation (gtk_paned_get_start_child (GTK_PANED (pane1_widget)), &allocation);
 	config_set_int ("pane1", allocation.width);
 
-	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane2_widget)), &allocation);
+	gtk_widget_get_allocation (gtk_paned_get_start_child (GTK_PANED (pane2_widget)), &allocation);
 	config_set_int ("pane2", allocation.height);
 
-	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane3_widget)), &allocation);
+	gtk_widget_get_allocation (gtk_paned_get_start_child (GTK_PANED (pane3_widget)), &allocation);
 	config_set_int ("pane3", allocation.width);
 
 	config_pop_prefix ();

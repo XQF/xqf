@@ -42,27 +42,10 @@ gtk_container_add (GtkWidget *container, GtkWidget *child)
 }
 
 /* ------------------------------------------------------------------ */
-/* GtkWindow                                                            */
-/* ------------------------------------------------------------------ */
-
-/* GTK4 gtk_window_new() takes no args */
-static inline GtkWidget *_xqf_window_new (void) { return gtk_window_new (); }
-#define gtk_window_new(type) _xqf_window_new ()
-
-/* ------------------------------------------------------------------ */
 /* GtkMisc (removed in GTK4)                                            */
 /* ------------------------------------------------------------------ */
 
 #define GTK_MISC(x) ((GtkWidget *)(x))
-
-/* ------------------------------------------------------------------ */
-/* GtkScrolledWindow                                                     */
-/* ------------------------------------------------------------------ */
-
-/* GTK4 gtk_scrolled_window_new() takes no args */
-static inline GtkWidget *_xqf_scrolled_window_new (void)
-{ return gtk_scrolled_window_new (); }
-#define gtk_scrolled_window_new(h, v) _xqf_scrolled_window_new ()
 
 /* ------------------------------------------------------------------ */
 /* GtkMisc padding (removed; use margins)                               */
@@ -99,28 +82,10 @@ static inline GtkAdjustment *gtk_text_view_get_hadjustment (GtkTextView *view)
 /* GtkFileChooserButton was removed in GTK4; pref.c uses its own helpers. */
 
 /* ------------------------------------------------------------------ */
-/* GtkPaned child accessors (renamed in GTK4)                           */
-/* ------------------------------------------------------------------ */
-
-#define gtk_paned_get_child1(p) gtk_paned_get_start_child (p)
-#define gtk_paned_get_child2(p) gtk_paned_get_end_child (p)
-
-/* GTK2 selection mode alias */
-#define GTK_SELECTION_EXTENDED GTK_SELECTION_MULTIPLE
-
-/* ------------------------------------------------------------------ */
 /* GdkEventButton stub (removed as a struct in GTK4; event API changed) */
 /* ------------------------------------------------------------------ */
 
 typedef GdkEvent GdkEventButton;
-
-/* ------------------------------------------------------------------ */
-/* gtk_init: GTK4 takes no arguments                                    */
-/* ------------------------------------------------------------------ */
-
-static inline void _xqf_gtk_init (int *argc, char ***argv)
-{ (void)argc; (void)argv; gtk_init (); }
-#define gtk_init(argc, argv) _xqf_gtk_init ((argc), (argv))
 
 /* ------------------------------------------------------------------ */
 /* GtkFileChooser helpers (gtk_file_chooser_get/set_filename removed)    */

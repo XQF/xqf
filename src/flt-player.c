@@ -692,7 +692,7 @@ static GtkWidget *player_filter_pattern_editor (void) {
 			G_CALLBACK (sync_pattern_data), NULL);
 	gtk_widget_set_visible (comment_text, TRUE);
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
+	scrollwin = gtk_scrolled_window_new();
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_widget_set_size_request (scrollwin, -1, 80);
@@ -749,7 +749,7 @@ void player_filter_page (GtkWidget *notebook) {
 
 	/* Pattern list (GtkTreeView) */
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
+	scrollwin = gtk_scrolled_window_new();
 	gtk_box_append (GTK_BOX (page_hbox), scrollwin);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
