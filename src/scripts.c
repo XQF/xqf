@@ -553,93 +553,54 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	return page_vbox;
 }
 
-enum {
-	SCRIPTSLIST_ATTR_INDEX,
-	SCRIPTSLIST_ATTR_NAME,
-	SCRIPTSLIST_ATTR_COUNT
-};
+static GtkSingleSelection *scripts_selection_model = NULL;
 
-static void script_selection_changed_callback (GtkTreeSelection *selection, gpointer data) {
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	gint index;
-
-	if (!GTK_IS_TREE_SELECTION (selection))
+static void script_selection_changed_callback (GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
+	guint index = gtk_single_selection_get_selected (sel);
+	if (index == GTK_INVALID_LIST_POSITION)
 		return;
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), (gint)index);
+}
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gtk_tree_model_get (model, &iter, SCRIPTSLIST_ATTR_INDEX, &index, -1);
+static void scripts_list_item_setup (GtkListItemFactory *f, GtkListItem *item, gpointer data) {
+	(void)f; (void)data;
+	gtk_list_item_set_child (item, gtk_label_new (NULL));
+}
 
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), index);
-	}
+static void scripts_list_item_bind (GtkListItemFactory *f, GtkListItem *item, gpointer data) {
+	(void)f; (void)data;
+	GtkStringObject *obj = GTK_STRING_OBJECT (gtk_list_item_get_item (item));
+	gtk_label_set_text (GTK_LABEL (gtk_list_item_get_child (item)),
+	                    gtk_string_object_get_string (obj));
 }
 
 static GtkWidget *create_scripts_list (void) {
-	GtkTreeStore *store;
-	GtkWidget *tree;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeSelection *select;
-	int i;
+	GtkStringList *string_list = gtk_string_list_new (NULL);
 	GList *s;
 
-	store = gtk_tree_store_new (SCRIPTSLIST_ATTR_COUNT,
-	                            G_TYPE_INT,
-	                            G_TYPE_STRING
-	                            );
+	for (s = scripts; s; s = g_list_next (s))
+		gtk_string_list_append (string_list, (const char *)s->data);
 
-	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
-		const char* filename = s->data;
-		GtkTreeIter iter;
+	GtkSingleSelection *sel = gtk_single_selection_new (G_LIST_MODEL (string_list));
+	gtk_single_selection_set_autoselect (sel, FALSE);
+	scripts_selection_model = sel;
 
-		gtk_tree_store_append (store, &iter, NULL);
+	GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+	g_signal_connect (factory, "setup", G_CALLBACK (scripts_list_item_setup), NULL);
+	g_signal_connect (factory, "bind",  G_CALLBACK (scripts_list_item_bind),  NULL);
 
-		gtk_tree_store_set (store, &iter,
-		                    SCRIPTSLIST_ATTR_INDEX, i,
-		                    SCRIPTSLIST_ATTR_NAME, filename,
-		                    -1);
-	}
+	GtkWidget *list_view = gtk_list_view_new (GTK_SELECTION_MODEL (sel), factory);
+	gtk_list_view_set_single_click_activate (GTK_LIST_VIEW (list_view), FALSE);
 
-	tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+	g_signal_connect (sel, "notify::selected",
+	                  G_CALLBACK (script_selection_changed_callback), NULL);
 
-	g_object_unref (G_OBJECT (store));
-
-	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree), FALSE);
-	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (tree), FALSE);
-
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_title (column, "Script");
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,
-	                                     renderer,
-	                                     "text", SCRIPTSLIST_ATTR_NAME,
-	                                     NULL);
-
-	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
-
-	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
-	gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
-	g_signal_connect (G_OBJECT (select), "changed",
-	                  G_CALLBACK (script_selection_changed_callback),
-	                  NULL);
-
-	scripts_list = tree;
-
-	return tree;
+	scripts_list = list_view;
+	return list_view;
 }
 
 static void scripts_list_select (int index) {
-	GtkTreeSelection *select = gtk_tree_view_get_selection (GTK_TREE_VIEW (scripts_list));
-	GtkTreePath *path;
-
-	gtk_tree_selection_unselect_all (select);
-
-	path = gtk_tree_path_new_from_indices (index, -1);
-	gtk_tree_selection_select_path (select, path);
-
-	gtk_tree_path_free(path);
+	gtk_single_selection_set_selected (scripts_selection_model, (guint)index);
 }
 
 GtkWidget *scripts_config_page () {
