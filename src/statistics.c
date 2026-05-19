@@ -401,7 +401,7 @@ static GtkWidget *server_stats_page (void) {
 	xqf_widget_set_margin_all (page_vbox, 8);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
-	gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), scrollwin);
 
 	grid = gtk_grid_new ();
 	xqf_widget_set_margin_all (grid, 6);
@@ -557,19 +557,19 @@ static GtkWidget *archs_stats_page (void) {
 
 	// the notebook must exist to allow activate events of the menu
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), hbox);
 
 	option_menu = create_server_type_menu (to_activate,
 			create_server_type_menu_filter_hasharch,
 			G_CALLBACK(select_server_type_callback));
 
 
-	gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), option_menu);
 	gtk_widget_set_visible (option_menu, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), arch_notebook, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), arch_notebook);
 
 	gtk_widget_set_visible (arch_notebook, TRUE);
 	gtk_widget_set_visible (page_vbox, TRUE);
@@ -623,13 +623,13 @@ static void country_notebook_page (GtkWidget *notebook,
 			struct pixmap* pix = get_pixmap_for_country_with_fallback(id);
 			if (pix) {
 				GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
-				gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+				gtk_box_append (GTK_BOX (hbox), image);
 				gtk_widget_set_visible (image, TRUE);
 			}
 
 			label = gtk_label_new (geoip_name_by_id(id));
-			gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-			gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+			gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+			gtk_box_append (GTK_BOX (hbox), label);
 			gtk_widget_set_visible (label, TRUE);
 
 			gtk_grid_attach (GTK_GRID (grid), hbox, 1, c, 1, 1);
@@ -676,7 +676,7 @@ static GtkWidget *country_stats_page (void) {
 
 	// the notebook must exist to allow activate events of the menu
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), hbox);
 
 	option_menu = create_server_type_menu (to_activate == UNKNOWN_SERVER?-1:to_activate,
 			create_server_type_menu_filter_hascountries,
@@ -698,12 +698,12 @@ static GtkWidget *country_stats_page (void) {
 		}
 	}
 
-	gtk_box_pack_start (GTK_BOX (hbox), option_menu, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), option_menu);
 	gtk_widget_set_visible (option_menu, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), country_notebook, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), country_notebook);
 
 	gtk_widget_set_visible (country_notebook, TRUE);
 	gtk_widget_set_visible (page_vbox, TRUE);
@@ -768,12 +768,12 @@ void statistics_dialog (void) {
 	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	label = gtk_label_new (_("Statistics"));
-	gtk_box_pack_start (GTK_BOX (main_vbox), label, FALSE, FALSE, 8);
+	gtk_box_append (GTK_BOX (main_vbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	stat_notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (stat_notebook), GTK_POS_TOP);
-	gtk_box_pack_start (GTK_BOX (main_vbox), stat_notebook, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), stat_notebook);
 
 	page = server_stats_page ();
 	label = gtk_label_new (_(srv_label));
@@ -801,15 +801,13 @@ void statistics_dialog (void) {
 	/* Close Button */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label (_("Close"));
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect (button, "clicked", G_CALLBACK (grab_defaults), NULL);
-	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
+	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);

@@ -153,7 +153,7 @@ static void psearch_combo_activate_callback (GtkWidget *widget,
 	config_set_int ("/" CONFIG_FILE "/Find Player/mode", psearch.mode);
 
 	psearch.pattern = strdup_strip (
-			gtk_entry_get_text (GTK_ENTRY (combo_get_entry (psearch_combo))));
+			gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (psearch_combo))));
 
 	if (psearch.pattern && psearch.pattern[0]) {
 		history_add (psearch_history, psearch.pattern);
@@ -179,12 +179,12 @@ int find_player_dialog (void) {
 	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	/* Pattern Entry */
 
 	label = gtk_label_new (_("Find Player:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	/* ComboBox */
@@ -195,8 +195,8 @@ int find_player_dialog (void) {
 	g_signal_connect (G_OBJECT (combo_get_entry (psearch_combo)),
 			"activate", G_CALLBACK (psearch_combo_activate_callback), NULL);
 	g_signal_connect_swapped (G_OBJECT (combo_get_entry (psearch_combo)),
-			"activate", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), psearch_combo, TRUE, TRUE, 0);
+			"activate", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), psearch_combo);
 	gtk_widget_grab_focus (GTK_WIDGET (combo_get_entry (psearch_combo)));
 	gtk_widget_set_visible (psearch_combo, TRUE);
 
@@ -214,16 +214,16 @@ int find_player_dialog (void) {
 			G_CALLBACK (psearch_combo_activate_callback),
 			G_OBJECT (psearch_combo));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_visible (button, TRUE);
 
 	/* Cancel Button */
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -231,13 +231,13 @@ int find_player_dialog (void) {
 	/* Mode Buttons */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	for (i = 0; i < 3; i++) {
 		mode_buttons[i] = gtk_check_button_new_with_label (_(mode_names[i]));
 		if (i > 0)
 			gtk_check_button_set_group (GTK_CHECK_BUTTON (mode_buttons[i]), GTK_CHECK_BUTTON (mode_buttons[0]));
-		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (hbox), mode_buttons[i]);
 		gtk_widget_set_visible (mode_buttons[i], TRUE);
 	}
 
