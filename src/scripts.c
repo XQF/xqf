@@ -416,11 +416,11 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 
 				gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
 
-				gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
-				gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, FALSE, 4);
+				gtk_box_append(GTK_BOX(hbox), label);
+				gtk_box_append(GTK_BOX(hbox), entry);
 
 				if (opt->defval) {
-					gtk_entry_set_text(GTK_ENTRY(entry), opt->defval);
+					gtk_editable_set_text(GTK_EDITABLE(entry), opt->defval);
 				}
 
 				gtk_widget_set_visible (hbox, TRUE);
@@ -455,8 +455,8 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 
 				opt->widget = GTK_WIDGET (combo_get_entry (combo));
 
-				gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
-				gtk_box_pack_start(GTK_BOX(hbox), combo, FALSE, FALSE, 4);
+				gtk_box_append(GTK_BOX(hbox), label);
+				gtk_box_append(GTK_BOX(hbox), combo);
 
 				gtk_widget_set_visible (combo, TRUE);
 				gtk_widget_set_visible (label, TRUE);
@@ -495,7 +495,6 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 
 	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_OUT);
 
 	{
 		GString* s = g_string_new(script->summary);
@@ -510,7 +509,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 		g_string_free(s, TRUE);
 	}
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), frame);
 	gtk_widget_set_visible (frame, TRUE);
 
 
@@ -524,7 +523,7 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 		widget = create_script_option_widget(script, opt);
 
-		gtk_box_pack_start(GTK_BOX(page_vbox), widget, FALSE, FALSE, 4);
+		gtk_box_append(GTK_BOX(page_vbox), widget);
 
 		optlist = g_slist_next(optlist);
 	}
@@ -541,12 +540,12 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 		widget = create_script_option_widget(script, opt);
 
-		gtk_box_pack_start(GTK_BOX(vbox), widget, FALSE, FALSE, 4);
+		gtk_box_append(GTK_BOX(vbox), widget);
 	}
 
 	gtk_widget_set_visible (vbox, TRUE);
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), frame);
 	gtk_widget_set_visible (frame, TRUE);
 
 	gtk_widget_set_visible (page_vbox, TRUE);
@@ -659,12 +658,11 @@ GtkWidget *scripts_config_page () {
 	xqf_widget_set_margin_all (page_vbox, 8);
 
 	games_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), games_hbox);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
 	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
 
 	scrollwin = gtk_scrolled_window_new (NULL, NULL);
 
@@ -676,29 +674,29 @@ GtkWidget *scripts_config_page () {
 	gtk_widget_set_size_request (gtklist, 136, -1);
 
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
+	gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
 	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (vbox), frame);
 
 	button = gtk_button_new_with_label(_("Install..."));
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (vbox), button);
 
 	g_signal_connect (G_OBJECT (button),
 			"clicked", G_CALLBACK(install_button_callback), NULL);
 
 #if have_time_to_implement_that
 	button = gtk_button_new_with_label(_("Remove"));
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (vbox), button);
 #endif
 
-	gtk_box_pack_start (GTK_BOX (games_hbox), vbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (games_hbox), vbox);
 
 	notebook = gtk_notebook_new ();
 	// the tabs are hidden, so nobody will notice its a notebook
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
-	gtk_box_pack_start (GTK_BOX (games_hbox), notebook, FALSE, FALSE, 15);
+	gtk_box_append (GTK_BOX (games_hbox), notebook);
 
 	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
 		const char* filename = s->data;
@@ -761,7 +759,7 @@ void save_script_prefs() {
 				case SCRIPT_OPTION_TYPE_STRING:
 				case SCRIPT_OPTION_TYPE_INT:
 				case SCRIPT_OPTION_TYPE_LIST:
-					val = gtk_entry_get_text(GTK_ENTRY(opt->widget));
+					val = gtk_editable_get_text(GTK_EDITABLE(opt->widget));
 
 					if (!strlen(val)) {
 						val = NULL;
@@ -905,13 +903,13 @@ void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpo
 	const char* msg;
 
 	if (response != GTK_RESPONSE_ACCEPT) {
-		gtk_widget_destroy (dialog);
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		return;
 	}
 
 	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
 
-	gtk_widget_destroy (dialog);
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	mkdir((const char*)scriptdirs->data, 0777);
 

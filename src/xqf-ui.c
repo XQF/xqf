@@ -235,7 +235,7 @@ void print_status (GtkWidget *sbar, char *fmt, ...) {
 
 int window_delete_event_callback (GtkWidget *widget, gpointer data) {
 	target_window = widget;
-	gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
+	gtk_window_destroy (GTK_WINDOW ((GtkWidget *) (xqf_windows->data)));
 	return TRUE;
 }
 
@@ -254,7 +254,7 @@ void unregister_window (GtkWidget *window) {
 	g_slist_free_1 (first);
 
 	if (target_window && target_window != window)
-		gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
+		gtk_window_destroy (GTK_WINDOW ((GtkWidget *) (xqf_windows->data)));
 	else
 		target_window = NULL;
 
