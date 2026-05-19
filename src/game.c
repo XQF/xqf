@@ -306,12 +306,12 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 
 	if (games[type].pix) {
 		image = gtk_image_new_from_pixbuf (games[type].pix->pixbuf);
-		gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (hbox), image);
 		gtk_widget_set_visible (image, TRUE);
 	}
 
 	label = gtk_label_new (_(games[type].name));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);

@@ -329,11 +329,11 @@ static void set_new_properties (GtkWidget *widget, struct server *s) {
 	int   sucks;
 	char* comment = NULL;
 
-	customcfg = strdup_strip (gtk_entry_get_text (combo_get_entry (customcfg_combo)));
+	customcfg = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (customcfg_combo))));
 
-	srvpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (password_entry)));
-	spectpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (spectator_entry)));
-	rconpwd = strdup_strip (gtk_entry_get_text (GTK_ENTRY (rcon_entry)));
+	srvpwd = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (password_entry)));
+	spectpwd = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (spectator_entry)));
+	rconpwd = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (rcon_entry)));
 	reserved = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
 	sucks = gtk_check_button_get_active(GTK_CHECK_BUTTON (sucks_check_button));
 
@@ -415,7 +415,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), grid, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), grid);
 
 	label = gtk_label_new (_("IP Address:"));
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
@@ -467,13 +467,13 @@ static GtkWidget *server_info_page (struct server *s) {
 		struct pixmap* pix = get_pixmap_for_country(s->country_id);
 		if (pix) {
 			GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
-			gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+			gtk_box_append (GTK_BOX (hbox), image);
 			gtk_widget_set_visible (image, TRUE);
 		}
 
 		label = gtk_label_new (geoip_name_by_id(s->country_id));
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (hbox), label);
 		gtk_widget_set_visible (label, TRUE);
 
 		gtk_grid_attach (GTK_GRID (grid), hbox, 1, row, 3, 1);
@@ -564,8 +564,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	/* Sources */
 
 	frame = gtk_frame_new (_("Sources"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), frame);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	xqf_widget_set_margin_all (vbox, 6);
@@ -577,7 +576,7 @@ static GtkWidget *server_info_page (struct server *s) {
 		m = (struct master *) list->data;
 
 		label = gtk_label_new (_(m->name));
-		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (vbox), label);
 		gtk_widget_set_visible (label, TRUE);
 	}
 
@@ -589,7 +588,7 @@ static GtkWidget *server_info_page (struct server *s) {
 	/* Custom CFG */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), hbox);
 
 	customcfg_combo = gtk_combo_box_text_new_with_entry ();
 	gtk_entry_set_max_length (combo_get_entry (customcfg_combo), 256);
@@ -611,11 +610,11 @@ static GtkWidget *server_info_page (struct server *s) {
 		gtk_widget_set_sensitive (customcfg_combo, FALSE);
 	}
 
-	gtk_box_pack_end (GTK_BOX (hbox), customcfg_combo, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), customcfg_combo);
 	gtk_widget_set_visible (customcfg_combo, TRUE);
 
 	label = gtk_label_new (_("Custom CFG:"));
-	gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -640,7 +639,7 @@ static GtkWidget *passwd_entry (char *str, char *passwd,
 	gtk_entry_set_max_length (GTK_ENTRY (entry), 32);
 	gtk_widget_set_size_request (entry, 112, -1);
 	if (passwd) {
-		gtk_entry_set_text (GTK_ENTRY (entry), passwd);
+		gtk_editable_set_text (GTK_EDITABLE (entry), passwd);
 	}
 	gtk_grid_attach (GTK_GRID (grid), entry, 1, pos, 1, 1);
 	gtk_widget_set_visible (entry, TRUE);
@@ -662,7 +661,7 @@ static GtkWidget *server_passwords_page (struct server *s) {
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 8);
-	gtk_box_pack_start (GTK_BOX (page_vbox), grid, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), grid);
 
 	password_entry = passwd_entry (_("Server Password"), (props)? props->server_password : NULL,
 			grid, 0);
@@ -709,12 +708,12 @@ static GtkWidget *server_comment_page (struct server *s) {
 
 	sucks_check_button = gtk_check_button_new_with_label (_("This server sucks"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (sucks_check_button), sucks);
-	gtk_box_pack_start (GTK_BOX (page_vbox), sucks_check_button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), sucks_check_button);
 	gtk_widget_set_visible (sucks_check_button, TRUE);
 
 	scrollwin = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start (GTK_BOX (page_vbox), scrollwin, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), scrollwin);
 
 
 	comment_text_buffer = gtk_text_buffer_new (NULL);
@@ -756,10 +755,10 @@ void properties_dialog (struct server *s) {
 	 */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 8);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (hbox), hbox2, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	if (games[s->type].pix) {
 		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
@@ -774,7 +773,7 @@ void properties_dialog (struct server *s) {
 		g_snprintf (buf, 256, "%s:%d", inet_ntoa (s->host->ip), s->port);
 		label = gtk_label_new (buf);
 	}
-	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox2), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (hbox2, TRUE);
@@ -786,7 +785,7 @@ void properties_dialog (struct server *s) {
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
-	gtk_box_pack_start (GTK_BOX (main_vbox), notebook, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), notebook);
 
 	page = server_info_page (s);
 	label = gtk_label_new (_("Info"));
@@ -812,25 +811,22 @@ void properties_dialog (struct server *s) {
 	 */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_widget_set_size_request (button, 80, -1);
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_size_request (button, 80, -1);
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (set_new_properties), (gpointer) s);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -866,10 +862,10 @@ void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
 	}
 
 	if (str) {
-		gtk_entry_set_text (combo_get_entry (combo), str);
+		gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (combo)), str);
 		gtk_editable_set_position (GTK_EDITABLE (combo_get_entry (combo)), 0);
 	}
 	else {
-		gtk_entry_set_text (combo_get_entry (combo), "");
+		gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (combo)), "");
 	}
 }

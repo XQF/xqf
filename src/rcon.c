@@ -275,7 +275,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	int res;
 
 	cmd = strdup_strip (
-			gtk_entry_get_text (combo_get_entry (rcon_combo)));
+			gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (rcon_combo))));
 
 	if (cmd) {
 		res = rcon_send(cmd);
@@ -289,7 +289,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 		g_free (cmd);
 	}
 	else {
-		gtk_entry_set_text (combo_get_entry (rcon_combo), "");
+		gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (rcon_combo)), "");
 	}
 }
 #endif
@@ -462,7 +462,7 @@ static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
 
 #if defined(BUILD_XQF)
 static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
-	gtk_entry_set_text (combo_get_entry (rcon_combo), "status");
+	gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (rcon_combo)), "status");
 	rcon_combo_activate_callback (rcon_combo, data);
 }
 #endif
@@ -517,7 +517,6 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	GtkWidget *label;
 	GtkWidget *image;
 	GtkWidget *button;
-	GtkWidget *hseparator;
 	char srv[256];
 	char buf[256];
 	GIOChannel *rcon_chan;
@@ -552,24 +551,24 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 	xqf_widget_set_margin_all (vbox, 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), vbox);
 
 	/* Dialog Title */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (vbox), hbox);
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	if (games[s->type].pix) {
 		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
-		gtk_box_pack_start (GTK_BOX (hbox2), image, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (hbox2), image);
 		gtk_widget_set_visible (image, TRUE);
 	}
 
 	label = gtk_label_new (buf);
-	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox2), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (hbox2, TRUE);
@@ -585,17 +584,17 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	hbox = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (hbox), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (hbox), rcon_text);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (vbox), hbox);
 	gtk_widget_set_visible (rcon_text, TRUE);
 	gtk_widget_set_visible (hbox, TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (vbox), hbox);
 
 	/* Message */
 
 	label = gtk_label_new (_("Cmd:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	/* Entry */
@@ -604,7 +603,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_entry_set_max_length (combo_get_entry (rcon_combo), 256);
 	g_signal_connect (G_OBJECT (combo_get_entry (rcon_combo)), "activate",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), rcon_combo, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (hbox), rcon_combo);
 	gtk_widget_grab_focus (GTK_WIDGET (rcon_combo));
 	gtk_widget_set_visible (rcon_combo, TRUE);
 
@@ -612,7 +611,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 		combo_set_vals (rcon_combo, rcon_history->items, "");
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-	gtk_box_pack_end (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	/* Send Button */
 
@@ -620,7 +619,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
 	gtk_widget_set_can_focus (button, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox2), button);
 	gtk_widget_set_visible (button, TRUE);
 
 	/* Status Button */
@@ -629,7 +628,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_status_button_clicked_callback), NULL);
 	gtk_widget_set_can_focus (button, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox2), button);
 	gtk_widget_set_visible (button, TRUE);
 
 	/* Clear Button */
@@ -638,7 +637,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_clear_button_clicked_callback), NULL);
 	gtk_widget_set_can_focus (button, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox2), button);
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox2, TRUE);
@@ -646,23 +645,20 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	gtk_widget_set_visible (vbox, TRUE);
 
-	hseparator = gtk_hseparator_new ();
-	gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
-	gtk_widget_set_visible (hseparator, TRUE);
+	gtk_box_append (GTK_BOX (main_vbox),
+	                gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
 
 	/* Close Button */
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	xqf_widget_set_margin_all (hbox, 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label (_("Close"));
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);

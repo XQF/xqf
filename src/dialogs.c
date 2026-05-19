@@ -140,10 +140,10 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	xqf_widget_set_margin_all (vbox, 32);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), vbox);
 
 	label = gtk_label_new (buf);
-	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (vbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (vbox, TRUE);
@@ -152,15 +152,13 @@ void dialog_ok (const char *title, const char *fmt, ...) {
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	xqf_widget_set_margin_all (hbox, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_size_request (button, 96, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -215,10 +213,10 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	xqf_widget_set_margin_all (vbox, 32);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), vbox);
 
 	label = gtk_label_new (buf);
-	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (vbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (vbox, TRUE);
@@ -227,28 +225,22 @@ int dialog_yesno (const char *title, int defbutton, char *yes, char *no,
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	xqf_widget_set_margin_all (hbox, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label ((yes)? yes : _("Yes"));
 	gtk_widget_set_size_request (button, 96, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (yes_button_clicked_callback), &res);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	if (defbutton == 0)
-		gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label ((no)? no : _("No"));
 	gtk_widget_set_size_request (button, 96, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	if (defbutton == 1)
-		gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -295,10 +287,10 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	xqf_widget_set_margin_all (vbox, 32);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), vbox);
 
 	label = gtk_label_new (buf);
-	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (vbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	gtk_widget_set_visible (vbox, TRUE);
@@ -307,40 +299,31 @@ int dialog_yesnoredial (const char *title, int defbutton, char *yes, char *no, c
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 	xqf_widget_set_margin_all (hbox, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, TRUE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label ((yes)? yes : _("Yes"));
 	gtk_widget_set_size_request (button, 96, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (yes_button_clicked_callback), &res);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	if (defbutton == 0)
-		gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label ((no)? no : _("No"));
 	gtk_widget_set_size_request (button, 96, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	if (defbutton == 1)
-		gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label ((redial)? redial : _("Redial"));
 	gtk_widget_set_size_request (button, 96, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (redial_button_clicked_callback), &res);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	if (defbutton == 2)
-		gtk_widget_grab_default (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -364,7 +347,7 @@ static int *enter_string_optval;
 
 
 static void enter_string_activate_callback (GtkWidget *widget, gpointer data) {
-	enter_string_res = strdup_strip (gtk_entry_get_text (GTK_ENTRY (widget)));
+	enter_string_res = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (widget)));
 	if (enter_string_optval) {
 		*enter_string_optval = gtk_check_button_get_active (GTK_CHECK_BUTTON (enter_string_opt_button));
 	}
@@ -391,12 +374,12 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	/* Message */
 
 	label = gtk_label_new (buf);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
 	/* Entry */
@@ -405,11 +388,11 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 	gtk_entry_set_max_length (GTK_ENTRY (enter_string_entry), 128);
 	gtk_entry_set_visibility (GTK_ENTRY (enter_string_entry), visible);
 	gtk_widget_set_size_request (enter_string_entry, 128, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), enter_string_entry, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (hbox), enter_string_entry);
 	g_signal_connect (G_OBJECT (enter_string_entry), "activate",
 			G_CALLBACK (enter_string_activate_callback), NULL);
 	g_signal_connect_swapped (G_OBJECT (enter_string_entry), "activate",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_grab_focus (enter_string_entry);
 	gtk_widget_set_visible (enter_string_entry, TRUE);
 
@@ -420,16 +403,16 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 			G_CALLBACK (enter_string_activate_callback),
 			G_OBJECT (enter_string_entry));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_visible (button, TRUE);
 
 	/* Cancel Button */
 
 	button = gtk_button_new_with_label (_("Cancel"));
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_widget_set_visible (button, TRUE);
 
 	gtk_widget_set_visible (hbox, TRUE);
@@ -438,7 +421,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 
 	if (optstr) {
 		hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-		gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+		gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 		enter_string_opt_button = gtk_check_button_new_with_label (optstr);
 
@@ -450,8 +433,7 @@ static char *va_enter_string_dialog (int visible, char *optstr, int *optval, cha
 			gtk_widget_set_sensitive (enter_string_opt_button, FALSE);
 		}
 
-		gtk_box_pack_start (GTK_BOX (hbox), enter_string_opt_button,
-				FALSE, FALSE, 8);
+		gtk_box_append (GTK_BOX (hbox), enter_string_opt_button);
 		gtk_widget_set_visible (enter_string_opt_button, TRUE);
 
 		gtk_widget_set_visible (hbox, TRUE);
@@ -548,12 +530,12 @@ static void file_dialog_response_set_textentry (GtkWidget *dialog, int response,
 		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
 		char *filename = gtk_file_chooser_get_filename (chooser);
 
-		gtk_entry_set_text (GTK_ENTRY (textentry), filename);
+		gtk_editable_set_text (GTK_EDITABLE (textentry), filename);
 
 		g_free (filename);
 	}
 
-	gtk_widget_destroy (dialog);
+	gtk_window_destroy (GTK_WINDOW (dialog));
 }
 
 GtkWidget* file_dialog(const char *title, GCallback response_callback, gpointer data) {
@@ -582,7 +564,7 @@ GtkWidget* file_dialog(const char *title, GCallback response_callback, gpointer 
 
 GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry) {
 	GtkWidget *dialog = file_dialog(title, G_CALLBACK(file_dialog_response_set_textentry), entry);
-	const char* text = gtk_entry_get_text(GTK_ENTRY (entry));
+	const char* text = gtk_editable_get_text (GTK_EDITABLE (entry));
 	if (text && *text) {
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), text);
 	}
