@@ -219,7 +219,6 @@ struct generic_prefs {
 	GtkWidget *dir_entry;
 	GtkWidget *cmd_entry;
 	GtkWidget *cfg_combo;
-	GtkTreePath *tree_path;
 	// function for adding game specific tabs to notebook
 	void (*add_options_to_notebook) (GtkWidget *notebook, enum server_type type);
 
@@ -2977,101 +2976,64 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 }
 
 
-enum {
-	GAMESLIST_ATTR_TYPE,
-	GAMESLIST_ATTR_ICON,
-	GAMESLIST_ATTR_NAME,
-	GAMESLIST_ATTR_COUNT
-};
+static GtkSingleSelection *games_selection_model = NULL;
 
-static void game_selection_changed_callback (GtkTreeSelection *selection, gpointer data) {
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	gint type;
-
-	if (!GTK_IS_TREE_SELECTION (selection))
+static void game_selection_changed_callback (GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
+	guint pos = gtk_single_selection_get_selected (sel);
+	if (pos == GTK_INVALID_LIST_POSITION)
 		return;
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (games_notebook), (gint)pos);
+}
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gtk_tree_model_get (model, &iter, GAMESLIST_ATTR_TYPE, &type, -1);
+static void games_list_setup_cb (GtkListItemFactory *f, GtkListItem *item, gpointer d) {
+	(void)f; (void)d;
+	GtkWidget *hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (hbox), gtk_image_new ());
+	gtk_box_append (GTK_BOX (hbox), gtk_label_new (NULL));
+	gtk_list_item_set_child (item, hbox);
+}
 
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (games_notebook), type);
-	}
+static void games_list_bind_cb (GtkListItemFactory *f, GtkListItem *item, gpointer d) {
+	(void)f; (void)d;
+	GObject *obj = G_OBJECT (gtk_list_item_get_item (item));
+	GtkWidget *hbox = gtk_list_item_get_child (item);
+	GtkImage *img = GTK_IMAGE (gtk_widget_get_first_child (hbox));
+	GtkLabel *lbl = GTK_LABEL (gtk_widget_get_last_child (hbox));
+	gtk_image_set_from_paintable (img, GDK_PAINTABLE (g_object_get_data (obj, "texture")));
+	gtk_label_set_text (lbl, g_object_get_data (obj, "name"));
 }
 
 static GtkWidget *create_games_list (void) {
-	GtkTreeStore *store;
-	GtkWidget *tree;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeSelection *select;
-	int i, row;
+	GListStore *store = g_list_store_new (G_TYPE_OBJECT);
+	int i;
 
-	store = gtk_tree_store_new (GAMESLIST_ATTR_COUNT,
-	                            G_TYPE_INT,
-	                            GDK_TYPE_TEXTURE,
-	                            G_TYPE_STRING
-	                            );
-
-	for (i = LAN_SERVER, row = 0; i < UNKNOWN_SERVER; i++, row++) {
-		GtkTreeIter iter;
-		GdkTexture *texture = games[i].pix->texture;
-		char *name = _(games[i].name);
-
-		gtk_tree_store_append (store, &iter, NULL);
-
-		gtk_tree_store_set (store, &iter,
-		                    GAMESLIST_ATTR_TYPE, i,
-		                    GAMESLIST_ATTR_ICON, texture,
-		                    GAMESLIST_ATTR_NAME, name,
-		                    -1);
-
-		genprefs[i].tree_path = gtk_tree_path_new_from_indices(row, -1);
+	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
+		GObject *obj = g_object_new (G_TYPE_OBJECT, NULL);
+		g_object_set_data_full (obj, "texture",
+		                        g_object_ref (games[i].pix->texture), g_object_unref);
+		g_object_set_data_full (obj, "name", g_strdup (_(games[i].name)), g_free);
+		g_list_store_append (store, obj);
+		g_object_unref (obj);
 	}
 
-	tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+	GtkSingleSelection *sel = gtk_single_selection_new (G_LIST_MODEL (store));
+	gtk_single_selection_set_autoselect (sel, FALSE);
+	games_selection_model = sel;
 
-	g_object_unref (G_OBJECT (store));
+	GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+	g_signal_connect (factory, "setup", G_CALLBACK (games_list_setup_cb), NULL);
+	g_signal_connect (factory, "bind",  G_CALLBACK (games_list_bind_cb),  NULL);
 
-	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree), FALSE);
-	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (tree), FALSE);
+	GtkWidget *list_view = gtk_list_view_new (GTK_SELECTION_MODEL (sel), factory);
+	g_signal_connect (sel, "notify::selected",
+	                  G_CALLBACK (game_selection_changed_callback), NULL);
 
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_title (column, "Game");
-
-	renderer = gtk_cell_renderer_pixbuf_new ();
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column,
-	                                     renderer,
-	                                     "texture", GAMESLIST_ATTR_ICON,
-	                                     NULL);
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_end (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,
-	                                     renderer,
-	                                     "text", GAMESLIST_ATTR_NAME,
-	                                     NULL);
-
-	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
-
-	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
-	gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
-	g_signal_connect (G_OBJECT (select), "changed",
-	                  G_CALLBACK (game_selection_changed_callback),
-	                  NULL);
-
-	games_list = tree;
-
-	return tree;
+	games_list = list_view;
+	return list_view;
 }
 
 static void games_list_select (enum server_type type) {
-	GtkTreeSelection *select = gtk_tree_view_get_selection (GTK_TREE_VIEW (games_list));
-
-	gtk_tree_selection_unselect_all (select);
-
-	gtk_tree_selection_select_path (select, genprefs[type].tree_path);
+	gtk_single_selection_set_selected (games_selection_model, (guint)type);
 }
 
 #define GAMES_COLS 3
