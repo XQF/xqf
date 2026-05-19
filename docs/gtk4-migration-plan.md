@@ -192,26 +192,19 @@ a data directory and loaded at runtime.
 
 ---
 
-## Phase 4 — Adopt `GtkApplication`
+## Phase 4 — Adopt `GtkApplication` ✅
 
 **Goal**: Startup managed by `GtkApplication`; `main()` calls
 `g_application_run()`. Fixes WM showing "GTK application" instead of "XQF".
 
-**Why**: `GtkApplication` sets `WM_CLASS` correctly, handles
-`SIGTERM`/`SIGHUP`, integrates with the session manager, and is the
-recommended GTK4 startup pattern.
+### Status
 
-### Tasks
-
-1. Create a `GtkApplication` instance in `src/xqf.c`.
-
-2. Move window creation into the `activate` signal handler.
-
-3. Keep the existing `getopt` argument parsing as a pre-`activate` step or
-   in a `handle-local-options` handler.
-
-4. Verify single-instance behaviour (check whether XQF has any existing
-   logic for that).
+Complete. `src/xqf.c` creates `GtkApplication("io.github.xqf",
+G_APPLICATION_NON_UNIQUE)`, connects `xqf_activate` to the `activate`
+signal, and calls `g_application_run(app, 0, NULL)`. `getopt` argument
+parsing runs before `g_application_run` so there are no conflicts with
+GApplication's own option handling. `gtk_application_add_window` is called
+in `create_main_window`.
 
 ---
 
