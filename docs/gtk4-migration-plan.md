@@ -11,19 +11,16 @@ HIG conventions should be avoided.
 
 ## Current State Summary
 
-Phases 1–3 are complete. The app builds and runs on GTK4 with no known
-crashes or regressions. What remains:
+Phases 1–3, 5, and 6 (mostly) are complete. The app builds and runs on GTK4
+with no known crashes or regressions. What remains:
 
-- **`gtk4-compat.h`** (265 lines, down from 780): all dead stubs removed.
-  What stays are shims for APIs still actively called from un-migrated files
-  (see Phase 6).
-- **Deprecated tree widgets** (`GtkTreeView`, `GtkListStore`, `GtkTreeStore`,
-  `GtkCellRenderer*`): still in use in filter.c, flt-player.c, srv-info.c,
-  xqf-ui.c, scripts.c, pref.c (see Phase 5).
-- **Compat shims still called** (~500 active call sites across 13 source
-  files): `gtk_box_pack_start` (300), `gtk_entry_get/set_text` (86),
-  `gtk_widget_destroy` (40), `gtk_frame_set_shadow_type` (13),
-  `gtk_scrolled_window_new(h,v)` (12), and others (see Phase 6).
+- **`gtk4-compat.h`** (44 lines): only `gtk_file_chooser_get/set_filename`
+  helpers remain. These wrap the deprecated `GtkFileChooserDialog`; full
+  replacement requires switching to `GtkFileDialog` (GTK 4.10+ async API).
+- **Deprecated tree widgets** (`GtkTreeView`, `GtkTreeStore`, `GtkCellRenderer*`):
+  intentionally kept in `src/srv-info.c` (server info tree) and `src/xqf-ui.c`
+  (source/group tree) — both are genuine hierarchical trees where GtkTreeView
+  remains the best fit. Will revisit only if GTK actually removes the API.
 - **No `GtkApplication`**: WM shows "GTK application" instead of "XQF";
   no single-instance handling (see Phase 4).
 - **Custom INI parser** (`src/config.c`, ~850 lines): duplicates `GKeyFile`
@@ -218,7 +215,7 @@ recommended GTK4 startup pattern.
 
 ---
 
-## Phase 5 — Replace deprecated `GtkTreeView` / `GtkListStore`
+## Phase 5 — Replace deprecated `GtkTreeView` / `GtkListStore` ✅
 
 **Goal**: No use of `GtkTreeView`, `GtkTreeStore`, `GtkListStore`,
 `GtkTreeViewColumn`, or `GtkCellRenderer*`. These were deprecated in GTK 4.10.
@@ -230,90 +227,48 @@ independently.
 
 ### Call sites
 
-| File | Widget | Replacement |
-|------|--------|-------------|
-| `src/filter.c` | `GtkTreeView` + `GtkListStore` (country filter left/right lists) | `GtkColumnView` + `GListStore` |
-| `src/flt-player.c` | `GtkTreeView` + `GtkListStore` (player filter list) | `GtkColumnView` + `GListStore` |
-| `src/srv-info.c` | `GtkTreeView` + `GtkTreeStore` (server info panel) | Keep `GtkTreeView` — it is the correct fit for a small read-only tree; revisit only if GTK actually removes it |
-| `src/xqf-ui.c` | `GtkTreeView` + `GtkTreeStore` (source/group tree) | `GtkTreeListModel` + `GtkColumnView`, or keep `GtkTreeView` same as srv-info |
-| `src/scripts.c` | `GtkTreeView` + `GtkListStore` (scripts list) | `GtkColumnView` + `GListStore` |
-| `src/pref.c` | `GtkTreeView` + `GtkListStore` (games list) | `GtkColumnView` + `GListStore` |
+| File | Widget | Status |
+|------|--------|--------|
+| `src/filter.c` | `GtkTreeView` + `GtkListStore` (country filter lists) | ✅ Migrated to `GtkColumnView` + `GListStore` |
+| `src/flt-player.c` | `GtkTreeView` + `GtkListStore` (player filter list) | ✅ Migrated to `GtkColumnView` + `GListStore` |
+| `src/scripts.c` | `GtkTreeView` + `GtkListStore` (scripts list) | ✅ Migrated to `GtkListView` + `GtkStringList` |
+| `src/pref.c` (games) | `GtkTreeView` + `GtkListStore` (games list) | ✅ Migrated to `GtkListView` + `GListStore` |
+| `src/pref.c` (args) | `GtkTreeView` + `GtkListStore` (custom args list) | ✅ Migrated to `GtkColumnView` + `GListStore` |
+| `src/srv-info.c` | `GtkTreeView` + `GtkTreeStore` (server info panel) | Keep — correct fit for read-only tree; revisit if GTK removes it |
+| `src/xqf-ui.c` | `GtkTreeView` + `GtkTreeStore` (source/group tree) | Keep — same rationale as srv-info |
 
-Once all `GtkTreeView` / `GtkListStore` uses are gone, `GtkCellRenderer*` and
-`gdk_texture_new_for_pixbuf` disappear with them.
-
-### Notes
-
-- The filter dialogs (`filter.c`) also contain `GdkEventButton` call sites
-  (two raw event-handler signatures) that should be replaced with
-  `GtkGestureClick` at the same time.
-- `src/xqf-ui.c` source tree uses `GTK_SELECTION_EXTENDED` and
-  `gtk_paned_get_child1/2` — both shimmed; clean up when migrating that file.
+`GtkCellRenderer*` and `gdk_texture_new_for_pixbuf` are gone from all
+migrated files. They remain only in `srv-info.c` and `xqf-ui.c` (kept trees)
+and `statistics.c` (via `GtkComboBox` model — deprecated but functional).
 
 ---
 
-## Phase 6 — Migrate remaining compat shims to native GTK4 API
+## Phase 6 — Migrate remaining compat shims to native GTK4 API ✅
 
 **Goal**: `gtk4-compat.h` shrinks to near-zero (or is deleted); all call
 sites use native GTK4 API directly.
 
-**Why**: The shims in `gtk4-compat.h` are correctness patches, not
-correctness guarantees — `gtk_box_pack_start` silently drops `expand`,
-`fill`, and `padding` semantics that some dialogs may rely on for proper
-layout. Migrating to `gtk_box_append` (and using `hexpand`/`vexpand`
-properties where needed) also lets the compiler catch new regressions.
+**Status**: All shims removed except `gtk_file_chooser_get/set_filename`.
+`gtk4-compat.h` is now 44 lines containing only those two helpers.
 
 ### Tasks
 
-These are largely mechanical and can be done file-by-file or function-by-function:
-
-1. **`gtk_box_pack_start` / `gtk_box_pack_end` → `gtk_box_append`**
-   (~300 call sites in `addmaster.c`, `addserver.c`, `dialogs.c`, `filter.c`,
-   `flt-player.c`, `game.c`, `pref.c`, `psearch.c`, `rcon.c`, `redial.c`,
-   `scripts.c`, `srv-prop.c`, `statistics.c`).
-   Where `expand=TRUE` / `fill=TRUE` was set, add `gtk_widget_set_hexpand`
-   or `gtk_widget_set_vexpand` as appropriate.
-
-2. **`gtk_entry_get/set_text` → `gtk_editable_get/set_text`** (~86 call sites).
-   Already working via macro shim; mechanical replacement.
-
-3. **`gtk_widget_destroy`** (~40 call sites): windows → `gtk_window_destroy`;
-   non-window widgets → just unreffing or `gtk_widget_unparent` as appropriate.
-
-4. **`gtk_widget_set_can_default` / `gtk_widget_grab_default`** (~20 call
-   sites): use `gtk_window_set_default_widget (GTK_WINDOW (window), button)`.
-
-5. **`GtkButtonBox` / `gtk_h/vbutton_box_new`** (filter.c, redial.c):
-   replace with plain `GtkBox`; remove layout hints (no GTK4 equivalent).
-
-6. **`gtk_frame_set_shadow_type`** (~13 call sites): remove the call entirely
-   (shadow type is CSS-only in GTK4; the default frame appearance is fine).
-
-7. **`gtk_scrolled_window_new(h,v)`** (~12 call sites): replace with
-   `gtk_scrolled_window_new()`.
-
-8. **`gtk_scrolled_window_add_with_viewport`** (~5 call sites): replace with
-   `gtk_scrolled_window_set_child`.
-
-9. **`gtk_hseparator_new`** (~3 call sites):
-   `gtk_separator_new(GTK_ORIENTATION_HORIZONTAL)`.
-
-10. **`gtk_misc_set_alignment`** / `GTK_MISC` (~4 call sites):
-    `gtk_label_set_xalign` / `gtk_label_set_yalign` directly.
-
-11. **`gtk_misc_set_padding` / `gtk_bin_get_child` / `GtkBin`** (1 call each
-    in `pref.c`): inline the margin-setting and `gtk_widget_get_first_child`.
-
-12. **`gtk_file_chooser_get/set_filename`** (~6 call sites): replace with
-    `gtk_file_chooser_get/set_file` + `g_file_get_path`.
-
-13. **`gtk_container_add`** (~2 call sites): use the appropriate
-    `gtk_box_append` / `gtk_window_set_child` / `gtk_frame_set_child` call.
-
-14. **`GdkEventButton`** in `filter.c`: replace the two raw `GdkEventButton *`
-    event-handler signatures with `GtkGestureClick` controllers.
-
-Once all call sites are migrated, `gtk4-compat.h` can be deleted.
+1. ✅ **`gtk_box_pack_start` / `gtk_box_pack_end` → `gtk_box_append`**
+2. ✅ **`gtk_entry_get/set_text` → `gtk_editable_get/set_text`**
+3. ✅ **`gtk_widget_destroy` → `gtk_window_destroy`**
+4. ✅ **`gtk_widget_set_can_default` / `gtk_widget_grab_default`**
+5. ✅ **`GtkButtonBox` / `gtk_h/vbutton_box_new`**
+6. ✅ **`gtk_frame_set_shadow_type`**
+7. ✅ **`gtk_scrolled_window_new(h,v)` → `gtk_scrolled_window_new()`**
+8. ✅ **`gtk_scrolled_window_add_with_viewport`**
+9. ✅ **`gtk_hseparator_new`**
+10. ✅ **`gtk_misc_set_alignment`** / `GTK_MISC`
+11. ✅ **`gtk_misc_set_padding` / `gtk_bin_get_child` / `GtkBin`**
+12. 🔲 **`gtk_file_chooser_get/set_filename`** (~6 call sites in `pref.c`):
+    deferred — requires replacing `GtkFileChooserDialog` with the GTK4
+    `GtkFileDialog` async API (GTK 4.10+). Will be done as a separate pass.
+13. ✅ **`gtk_container_add`**
+14. ✅ **`GdkEventButton`** in `filter.c`
 
 ---
 
