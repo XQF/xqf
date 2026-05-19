@@ -1693,24 +1693,6 @@ static void country_delete_button(GtkWidget * widget, gpointer data) {
 }
 
 
-/** callback: double click on row */
-gint country_mouse_click_left_list(GtkWidget * widget,
-		GdkEventButton * event,
-		gpointer func_data) {
-	/* TODO: replace with GtkGestureClick (Phase 1); GdkEvent is opaque in GTK4 */
-	(void)widget; (void)event; (void)func_data;
-	return FALSE;
-}
-
-/** callback: double click on row*/
-gint country_mouse_click_right_list(GtkWidget * widget,
-		GdkEventButton * event,
-		gpointer func_data) {
-	/* TODO: replace with GtkGestureClick (Phase 1); GdkEvent is opaque in GTK4 */
-	(void)widget; (void)event; (void)func_data;
-	return FALSE;
-}
-
 /* callback: ready with country selection*/
 static void country_selection_on_ok(void) {
 	selected_row_right_list = -1;
