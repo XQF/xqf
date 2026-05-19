@@ -2360,6 +2360,21 @@ int main (int argc, char *argv[]) {
 	add_pixmap_path_for_theme ("default");
 	add_pixmap_directory (xqf_PACKAGE_DATA_DIR);
 
+	{
+		static const char *XQF_CSS =
+			/* Incompatible servers (wrong protocol version) greyed out */
+			".xqf-incompatible { color: alpha(currentColor, 0.45); }\n"
+			/* Stale "last answer" timestamp in server properties dialog */
+			".xqf-stale { color: red; }\n";
+		GtkCssProvider *css = gtk_css_provider_new ();
+		gtk_css_provider_load_from_string (css, XQF_CSS);
+		gtk_style_context_add_provider_for_display (
+			gdk_display_get_default (),
+			GTK_STYLE_PROVIDER (css),
+			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		g_object_unref (css);
+	}
+
 	qstat_configfile = g_build_filename (xqf_PACKAGE_DATA_DIR, "qstat.cfg", NULL);
 
 	dns_gtk_init ();

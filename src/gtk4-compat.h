@@ -540,33 +540,7 @@ typedef struct _GdkPixmapStub GdkPixmap;
 typedef struct _GdkPixmapStub GdkBitmap;
 
 /* ------------------------------------------------------------------ */
-/* GdkColor (removed in GTK4; use GdkRGBA instead)                      */
-/* ------------------------------------------------------------------ */
-
-typedef GdkRGBA GdkColor;
-
-/* Note: argument order differs from GTK3! */
-static inline gboolean gdk_color_parse (const char *spec, GdkRGBA *color)
-{ return gdk_rgba_parse (color, spec); }
-
-/* ------------------------------------------------------------------ */
-/* GtkStyle (removed in GTK4; use CSS providers instead)                 */
-/* ------------------------------------------------------------------ */
-
-typedef struct {
-  GdkRGBA fg[5];
-  GdkRGBA bg[5];
-  GdkRGBA text[5];
-  GdkRGBA base[5];
-} GtkStyle;
-
-static GtkStyle _xqf_dummy_style;
-
-static inline GtkStyle *gtk_widget_get_style (GtkWidget *w)
-{ (void)w; return &_xqf_dummy_style; }
-
-static inline void gtk_widget_set_style (GtkWidget *w, GtkStyle *s)
-{ (void)w; (void)s; }
+/* GdkColor and GtkStyle were removed in GTK4; call sites now use CSS. */
 
 /* ------------------------------------------------------------------ */
 /* GdkEventButton stub (removed as a struct in GTK4; event API changed) */

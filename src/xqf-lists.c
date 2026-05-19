@@ -143,6 +143,11 @@ server_col_bind (GtkSignalListItemFactory *f G_GNUC_UNUSED,
     default:
         gtk_label_set_text (GTK_LABEL (label), "");
     }
+
+    if (s->flags & SERVER_INCOMPATIBLE)
+        gtk_widget_add_css_class (label, "xqf-incompatible");
+    else
+        gtk_widget_remove_css_class (label, "xqf-incompatible");
 }
 
 /* ------------------------------------------------------------------ */

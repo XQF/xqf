@@ -211,7 +211,7 @@ already has a PNG fallback code path.
 
 ---
 
-## Phase 3 — Replace direct `GtkStyle` manipulation with CSS
+## Phase 3 — Replace direct `GtkStyle` manipulation with CSS ✅
 
 **Goal**: No direct access to `GtkStyle` struct fields; colors are set via
 CSS or list model item properties.
@@ -221,16 +221,22 @@ GTK4.
 
 ### Tasks
 
-1. **`src/skin.c`**: Replace `style->bg[]` and `style->fg[]` array access
-   with CSS class-based coloring via a `GtkCssProvider`.
+1. ✅ **`src/gtk4-compat.h`**: Removed `GdkColor` / `GtkStyle` shims — all
+   call sites now use CSS; the compat header retains only removed-API stubs.
 
-2. **`src/srv-prop.c`** and **`src/srv-list.c`**: Per-row server coloring —
-   wire foreground/background color as properties on the `GListModel` item
-   objects, bound to cell widget properties in the `GtkListItemFactory`.
-   (Depends on Phase 1 completing the column view migration.)
+2. ✅ **`src/srv-prop.c`**: Replaced dead `GtkStyle`/`GdkColor` block (stale
+   timestamp coloring) with `gtk_widget_add_css_class(label, "xqf-stale")`.
+   `skin.c` was found to use game skin pixel rendering, not widget styling —
+   no changes needed there.
 
-3. For any remaining programmatic styling needs, introduce `src/style.css`
-   loaded via `GtkCssProvider` at startup.
+3. ✅ **`src/xqf-lists.c`**: Restored `SERVER_INCOMPATIBLE` greyed-out
+   display (lost in CList migration) via `gtk_widget_add_css_class(label,
+   "xqf-incompatible")` / `gtk_widget_remove_css_class()` in
+   `server_col_bind()`.
+
+4. ✅ **`src/xqf.c`**: Added `GtkCssProvider` at startup with rules:
+   `.xqf-incompatible { color: alpha(currentColor, 0.45); }` and
+   `.xqf-stale { color: red; }` registered at `GTK_STYLE_PROVIDER_PRIORITY_APPLICATION`.
 
 ---
 

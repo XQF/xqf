@@ -507,8 +507,6 @@ static GtkWidget *server_info_page (struct server *s) {
 	gtk_widget_set_visible (label, TRUE);
 
 	if (s->last_answer) {
-		GtkStyle *style;
-		GdkColor color;
 		time_t max_days = 3; // XXX: hardcoded, has to be configurable some time
 		char* str = timet2string(&s->last_answer);
 
@@ -517,19 +515,8 @@ static GtkWidget *server_info_page (struct server *s) {
 		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 		gtk_grid_attach (GTK_GRID (grid), label, 1, row, 3, 1);
 
-		if (s->last_answer + max_days*24*60*60 < s->refreshed) {
-			// XXX: I don't know if that is the correct way, it's undocumented :-(
-			style = gtk_widget_get_style(label);
-			gdk_color_parse("red",&color);
-
-			style->fg [GTK_STATE_NORMAL]   = color;
-			style->fg [GTK_STATE_ACTIVE]   = color;
-			style->fg [GTK_STATE_PRELIGHT] = color;
-			style->fg [GTK_STATE_SELECTED] = color;
-			style->fg [GTK_STATE_INSENSITIVE] = color;
-
-			gtk_widget_set_style (label, style);
-		}
+		if (s->last_answer + max_days*24*60*60 < s->refreshed)
+			gtk_widget_add_css_class (label, "xqf-stale");
 
 		gtk_widget_set_visible (label, TRUE);
 	}
