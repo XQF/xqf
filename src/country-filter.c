@@ -214,6 +214,7 @@ struct pixmap* get_pixmap_for_country(int id) {
 		return NULL;
 	}
 
+	pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
 	g_free (filename);
 
 	return pix;
@@ -233,6 +234,8 @@ struct pixmap* get_pixmap_for_country_with_fallback(int id) {
 		char *fn = find_pixmap_directory ("noflag.png");
 		if (fn) {
 			flags[0].pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
+			if (flags[0].pixbuf)
+				flags[0].texture = gdk_texture_new_for_pixbuf (flags[0].pixbuf);
 			g_free (fn);
 		}
 		if (!flags[0].pixbuf)

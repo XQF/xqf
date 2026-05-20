@@ -90,7 +90,7 @@ GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename) {
 			pix.texture = gdk_texture_new_for_pixbuf (pix.pixbuf);
 		}
 	}
-	GtkWidget *image = gtk_image_new_from_pixbuf (pix.pixbuf);
+	GtkWidget *image = gtk_image_new_from_paintable (pix.texture ? GDK_PAINTABLE (pix.texture) : NULL);
 	free_pixmap (&pix);
 	return image;
 }

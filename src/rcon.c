@@ -477,13 +477,9 @@ static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
 
 #if defined(BUILD_XQF)
 static void rcon_save_geometry (GtkWidget *window, gpointer data) {
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (window, &allocation);
-
 	config_push_prefix ("/" CONFIG_FILE "/RCON Window Geometry/");
-	config_set_int ("height", allocation.height);
-	config_set_int ("width", allocation.width);
+	config_set_int ("height", gtk_widget_get_height (window));
+	config_set_int ("width", gtk_widget_get_width (window));
 	config_pop_prefix ();
 }
 #endif
@@ -562,7 +558,7 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	if (games[s->type].pix) {
-		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
+		image = gtk_image_new_from_paintable (GDK_PAINTABLE (games[s->type].pix->texture));
 		gtk_box_append (GTK_BOX (hbox2), image);
 		gtk_widget_set_visible (image, TRUE);
 	}

@@ -270,7 +270,11 @@ void draw_qw_skin (GtkWidget *image, guchar *data, int top, int bottom) {
 		}
 	}
 
-	gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
+	{
+		GdkTexture *tex = gdk_texture_new_for_pixbuf (pixbuf);
+		gtk_image_set_from_paintable (GTK_IMAGE (image), GDK_PAINTABLE (tex));
+		g_object_unref (tex);
+	}
 
 	g_object_unref (G_OBJECT (pixbuf));
 }
@@ -319,7 +323,11 @@ void draw_q2_skin (GtkWidget *image, guchar *data, int scale) {
 
 	g_free (buf);
 
-	gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
+	{
+		GdkTexture *tex = gdk_texture_new_for_pixbuf (pixbuf);
+		gtk_image_set_from_paintable (GTK_IMAGE (image), GDK_PAINTABLE (tex));
+		g_object_unref (tex);
+	}
 
 	g_object_unref (G_OBJECT (pixbuf));
 }

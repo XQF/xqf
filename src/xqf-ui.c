@@ -596,7 +596,6 @@ void save_view_geometry (GtkWidget *widget, struct list_def *cldef) {
 
 
 void ui_done (void) {
-	GtkAllocation allocation;
 	char cfgkey[128];
 	GSList *list;
 	struct master *m;
@@ -606,18 +605,14 @@ void ui_done (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/Main Window Geometry/");
 
-	gtk_widget_get_allocation (main_window, &allocation);
-	config_set_int ("height", allocation.height);
-	config_set_int ("width", allocation.width);
+	config_set_int ("height", gtk_widget_get_height (main_window));
+	config_set_int ("width", gtk_widget_get_width (main_window));
 
-	gtk_widget_get_allocation (gtk_paned_get_start_child (GTK_PANED (pane1_widget)), &allocation);
-	config_set_int ("pane1", allocation.width);
+	config_set_int ("pane1", gtk_widget_get_width (gtk_paned_get_start_child (GTK_PANED (pane1_widget))));
 
-	gtk_widget_get_allocation (gtk_paned_get_start_child (GTK_PANED (pane2_widget)), &allocation);
-	config_set_int ("pane2", allocation.height);
+	config_set_int ("pane2", gtk_widget_get_height (gtk_paned_get_start_child (GTK_PANED (pane2_widget))));
 
-	gtk_widget_get_allocation (gtk_paned_get_start_child (GTK_PANED (pane3_widget)), &allocation);
-	config_set_int ("pane3", allocation.width);
+	config_set_int ("pane3", gtk_widget_get_width (gtk_paned_get_start_child (GTK_PANED (pane3_widget))));
 
 	config_pop_prefix ();
 

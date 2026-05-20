@@ -305,7 +305,7 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 
 	if (games[type].pix) {
-		image = gtk_image_new_from_pixbuf (games[type].pix->pixbuf);
+		image = gtk_image_new_from_paintable (GDK_PAINTABLE (games[type].pix->texture));
 		gtk_box_append (GTK_BOX (hbox), image);
 		gtk_widget_set_visible (image, TRUE);
 	}

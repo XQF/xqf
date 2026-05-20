@@ -466,7 +466,7 @@ static GtkWidget *server_info_page (struct server *s) {
 		GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 		struct pixmap* pix = get_pixmap_for_country(s->country_id);
 		if (pix) {
-			GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
+			GtkWidget *image = gtk_image_new_from_paintable (pix->texture ? GDK_PAINTABLE (pix->texture) : NULL);
 			gtk_box_append (GTK_BOX (hbox), image);
 			gtk_widget_set_visible (image, TRUE);
 		}
@@ -761,7 +761,7 @@ void properties_dialog (struct server *s) {
 	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	if (games[s->type].pix) {
-		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
+		image = gtk_image_new_from_paintable (GDK_PAINTABLE (games[s->type].pix->texture));
 		gtk_box_append (GTK_BOX (hbox2), image);
 		gtk_widget_set_visible (image, TRUE);
 	}

@@ -622,7 +622,7 @@ static void country_notebook_page (GtkWidget *notebook,
 			GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 			struct pixmap* pix = get_pixmap_for_country_with_fallback(id);
 			if (pix) {
-				GtkWidget *image = gtk_image_new_from_pixbuf (pix->pixbuf);
+				GtkWidget *image = gtk_image_new_from_paintable (pix->texture ? GDK_PAINTABLE (pix->texture) : NULL);
 				gtk_box_append (GTK_BOX (hbox), image);
 				gtk_widget_set_visible (image, TRUE);
 			}
@@ -716,13 +716,9 @@ static void grab_defaults (GtkWidget *w, gpointer data) {
 }
 
 static void statistics_save_geometry (GtkWidget *window, gpointer data) {
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (window, &allocation);
-
 	config_push_prefix ("/" CONFIG_FILE "/Statistics Window Geometry/");
-	config_set_int ("height", allocation.height);
-	config_set_int ("width", allocation.width);
+	config_set_int ("height", gtk_widget_get_height (window));
+	config_set_int ("width", gtk_widget_get_width (window));
 	config_pop_prefix ();
 }
 
