@@ -100,18 +100,18 @@ char *add_server_dialog (enum server_type *type, const char* addr) {
 	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
-	server_combo = gtk_combo_box_text_new_with_entry ();
+	server_combo = gtk_entry_new ();
 	gtk_widget_set_size_request (server_combo, 200, -1);
 	gtk_box_append (GTK_BOX (hbox), server_combo);
-	gtk_entry_set_max_length (combo_get_entry (server_combo), 128);
+	gtk_entry_set_max_length (GTK_ENTRY (server_combo), 128);
 	g_signal_connect (
-			G_OBJECT (combo_get_entry (server_combo)), "activate",
+			G_OBJECT (server_combo), "activate",
 			G_CALLBACK (server_combo_activate_callback), NULL);
 	g_signal_connect_swapped (
-			G_OBJECT (combo_get_entry (server_combo)), "activate",
+			G_OBJECT (server_combo), "activate",
 			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 
-	gtk_widget_grab_focus (GTK_WIDGET (server_combo));
+	gtk_widget_grab_focus (server_combo);
 	gtk_widget_set_visible (server_combo, TRUE);
 
 	combo_set_vals (server_combo, server_history->items, addr);

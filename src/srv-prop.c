@@ -590,9 +590,9 @@ static GtkWidget *server_info_page (struct server *s) {
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	gtk_box_append (GTK_BOX (page_vbox), hbox);
 
-	customcfg_combo = gtk_combo_box_text_new_with_entry ();
+	customcfg_combo = gtk_entry_new ();
 	gtk_entry_set_max_length (combo_get_entry (customcfg_combo), 256);
-	gtk_widget_set_size_request (GTK_WIDGET (combo_get_entry (customcfg_combo)), 112, -1);
+	gtk_widget_set_size_request (customcfg_combo, 112, -1);
 
 	if ((games[s->type].flags & GAME_CONNECT) != 0 &&
 			games[s->type].custom_cfgs) {
@@ -842,30 +842,10 @@ void properties_dialog (struct server *s) {
 
 
 GtkEntry *combo_get_entry (GtkWidget *widget) {
-	if (!GTK_IS_COMBO_BOX (widget))
-		return NULL;
-	GtkWidget *child = gtk_combo_box_get_child (GTK_COMBO_BOX (widget));
-	if (!GTK_IS_ENTRY (child))
-		return NULL;
-	return GTK_ENTRY (child);
+	return GTK_ENTRY (widget);
 }
 
-void combo_set_vals (GtkWidget *combo, GList *strlist, const char *str) {
-	GList *s;
-
-	g_return_if_fail(GTK_IS_COMBO_BOX_TEXT(combo));
-
-	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (combo));
-
-	for (s = strlist; s; s = s->next) {
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), (char *) s->data);
-	}
-
-	if (str) {
-		gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (combo)), str);
-		gtk_editable_set_position (GTK_EDITABLE (combo_get_entry (combo)), 0);
-	}
-	else {
-		gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (combo)), "");
-	}
+void combo_set_vals (GtkWidget *entry, GList *strlist G_GNUC_UNUSED, const char *str) {
+	gtk_editable_set_text (GTK_EDITABLE (entry), str ? str : "");
+	gtk_editable_set_position (GTK_EDITABLE (entry), 0);
 }

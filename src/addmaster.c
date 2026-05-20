@@ -244,12 +244,12 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 0, 1, 1);
 	gtk_widget_set_hexpand (hbox, TRUE);
 
-	master_name_combo = gtk_combo_box_text_new_with_entry ();
+	master_name_combo = gtk_entry_new ();
 	gtk_widget_set_size_request (master_name_combo, 200, -1);
 	gtk_box_append (GTK_BOX (hbox), master_name_combo);
-	gtk_entry_set_max_length (combo_get_entry (master_name_combo), 256);
+	gtk_entry_set_max_length (GTK_ENTRY (master_name_combo), 256);
 	g_signal_connect(
-			G_OBJECT (combo_get_entry (master_name_combo)), "activate",
+			G_OBJECT (master_name_combo), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 
 	gtk_widget_grab_focus (GTK_WIDGET (master_name_combo));
@@ -285,18 +285,18 @@ struct master *add_master_dialog (struct master *m) {
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_set_visible (label, TRUE);
 
-	master_addr_combo = gtk_combo_box_text_new_with_entry ();
+	master_addr_combo = gtk_entry_new ();
 	gtk_grid_attach (GTK_GRID (grid), master_addr_combo, 1, 1, 1, 1);
 	gtk_widget_set_hexpand (master_addr_combo, TRUE);
-	gtk_entry_set_max_length (combo_get_entry (master_addr_combo), 4096);
+	gtk_entry_set_max_length (GTK_ENTRY (master_addr_combo), 4096);
 	g_signal_connect (
-			G_OBJECT (combo_get_entry (master_addr_combo)), "activate",
+			G_OBJECT (master_addr_combo), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 	g_signal_connect (
 			G_OBJECT (master_addr_combo),
 			"changed",
 			G_CALLBACK
-			(master_address_changed_callback),NULL);
+			(master_address_changed_callback), NULL);
 
 	// gtk_widget_grab_focus (GTK_WIDGET (master_addr_combo));
 

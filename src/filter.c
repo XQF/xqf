@@ -1017,32 +1017,33 @@ static void filter_select(guint number) {
 	return;
 }
 
-static void filter_select_callback(GtkWidget *widget, gpointer userdata) {
-	gint index = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+static void filter_select_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer userdata G_GNUC_UNUSED) {
+	guint index = gtk_drop_down_get_selected (GTK_DROP_DOWN (obj));
 
-	if (index < 0) {
+	if (index == GTK_INVALID_LIST_POSITION)
 		return;
-	}
 
-	filter_select(index + 1); // array starts from zero but filters from 1
+	filter_select ((int) index + 1); // array starts from zero but filters from 1
 }
 
 static void set_filter_menu (GtkWidget *option_menu) {
 	guint i;
-	struct server_filter_vars* filter;
+	GtkStringList *sl = GTK_STRING_LIST (gtk_drop_down_get_model (GTK_DROP_DOWN (option_menu)));
+	const char **strs = g_new (const char *, server_filters->len + 1);
 
-	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (option_menu));
-
-	for (i = 0;i<server_filters->len;i++) {
-		filter = g_array_index(server_filters, struct server_filter_vars*, i);
+	for (i = 0; i < server_filters->len; i++) {
+		struct server_filter_vars *filter = g_array_index (server_filters, struct server_filter_vars *, i);
 		if (!filter) {
-			debug(0,"Bug: filter is NULL");
-			continue;
+			debug (0, "Bug: filter is NULL");
+			strs[i] = "(null)";
+		} else {
+			strs[i] = filter->filter_name ? filter->filter_name : "(null)";
 		}
-
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu),
-		                                filter->filter_name ? filter->filter_name : "(null)");
 	}
+	strs[server_filters->len] = NULL;
+
+	gtk_string_list_splice (sl, 0, g_list_model_get_n_items (G_LIST_MODEL (sl)), strs);
+	g_free (strs);
 }
 
 // create new filter if number == 0, rename current filter number if number >0
@@ -1079,7 +1080,7 @@ static void filter_new_rename_callback (int number) {
 
 		set_filter_menu(filter_option_menu);
 
-		gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (filter_option_menu), (guint)(server_filter_dialog_current_filter - 1));
 		server_filter_fill_widgets(server_filter_dialog_current_filter);
 
 		server_filter_changed = TRUE;
@@ -1111,8 +1112,8 @@ static void filter_delete_callback (void* dummy) {
 	server_filter_dialog_current_filter = server_filters->len;
 	debug(3,"number of filters: %d",server_filter_dialog_current_filter);
 
-	set_filter_menu(filter_option_menu);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
+	set_filter_menu (filter_option_menu);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (filter_option_menu), (guint)(server_filter_dialog_current_filter - 1));
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 
 }
@@ -1270,9 +1271,9 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_box_append (GTK_BOX (page_vbox), hbox);
 	gtk_widget_set_visible (hbox, TRUE);
 
-	filter_option_menu = gtk_combo_box_text_new();
+	filter_option_menu = gtk_drop_down_new (G_LIST_MODEL (gtk_string_list_new (NULL)), NULL);
 	set_filter_menu (filter_option_menu);
-	g_signal_connect(filter_option_menu, "changed", G_CALLBACK (filter_select_callback), NULL);
+	g_signal_connect (filter_option_menu, "notify::selected", G_CALLBACK (filter_select_callback), NULL);
 	gtk_box_append (GTK_BOX (hbox), filter_option_menu);
 	gtk_widget_set_visible (filter_option_menu, TRUE);
 
@@ -1510,7 +1511,7 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_widget_set_visible (frame, TRUE);
 	gtk_widget_set_visible (page_vbox, TRUE);
 
-	gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (filter_option_menu), (guint)(server_filter_dialog_current_filter - 1));
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 }
 

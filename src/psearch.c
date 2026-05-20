@@ -189,22 +189,20 @@ int find_player_dialog (void) {
 
 	/* ComboBox */
 
-	psearch_combo = gtk_combo_box_text_new_with_entry ();
-	gtk_entry_set_max_length (GTK_ENTRY (combo_get_entry (psearch_combo)), 128);
-	gtk_widget_set_size_request (GTK_WIDGET (combo_get_entry (psearch_combo)), 160, -1);
-	g_signal_connect (G_OBJECT (combo_get_entry (psearch_combo)),
+	psearch_combo = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (psearch_combo), 128);
+	gtk_widget_set_size_request (psearch_combo, 160, -1);
+	g_signal_connect (G_OBJECT (psearch_combo),
 			"activate", G_CALLBACK (psearch_combo_activate_callback), NULL);
-	g_signal_connect_swapped (G_OBJECT (combo_get_entry (psearch_combo)),
+	g_signal_connect_swapped (G_OBJECT (psearch_combo),
 			"activate", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
 	gtk_box_append (GTK_BOX (hbox), psearch_combo);
-	gtk_widget_grab_focus (GTK_WIDGET (combo_get_entry (psearch_combo)));
+	gtk_widget_grab_focus (psearch_combo);
 	gtk_widget_set_visible (psearch_combo, TRUE);
 
 	if (psearch_history->items) {
 		combo_set_vals (psearch_combo, psearch_history->items, "");
-
-		gtk_combo_box_set_active (GTK_COMBO_BOX (psearch_combo), 0);
-		gtk_editable_select_region (GTK_EDITABLE (combo_get_entry (psearch_combo)), 0, -1);
+		gtk_editable_select_region (GTK_EDITABLE (psearch_combo), 0, -1);
 	}
 
 	/* OK Button */

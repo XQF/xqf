@@ -682,20 +682,15 @@ static GtkWidget *country_stats_page (void) {
 			create_server_type_menu_filter_hascountries,
 			G_CALLBACK(select_country_server_type_callback));
 	{
-		GtkListStore *store = GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (option_menu)));
-		GtkTreeIter iter;
+		GListStore *store = G_LIST_STORE (gtk_drop_down_get_model (GTK_DROP_DOWN (option_menu)));
+		GObject *item = g_object_new (G_TYPE_OBJECT, NULL);
+		g_object_set_data (item, "server-type", GINT_TO_POINTER (UNKNOWN_SERVER));
+		g_object_set_data (item, "name", _("All Games"));
+		g_list_store_insert (store, 0, item);
+		g_object_unref (item);
 
-		gtk_list_store_insert (store, &iter, 0);
-
-		gtk_list_store_set (store, &iter,
-		                    SERVERTYPE_ATTR_TYPE, UNKNOWN_SERVER,
-		                    SERVERTYPE_ATTR_ICON, NULL,
-		                    SERVERTYPE_ATTR_NAME, _("All Games"),
-		                    -1);
-
-		if (to_activate == UNKNOWN_SERVER) {
-			gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), 0);
-		}
+		if (to_activate == UNKNOWN_SERVER)
+			gtk_drop_down_set_selected (GTK_DROP_DOWN (option_menu), 0);
 	}
 
 	gtk_box_append (GTK_BOX (hbox), option_menu);

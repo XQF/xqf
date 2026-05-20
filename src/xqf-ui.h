@@ -125,12 +125,6 @@ extern void restore_main_window_geometry (void);
   */
 GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback);
 
-enum {
-	SERVERTYPE_ATTR_TYPE, // G_TYPE_INT -- enum server_type
-	SERVERTYPE_ATTR_ICON, // GDK_TYPE_TEXTURE
-	SERVERTYPE_ATTR_NAME, // G_TYPE_STRING
-	SERVERTYPE_ATTR_COUNT
-};
 
 /** Skip a game if it's not configured and show only configured is enabled */
 gboolean create_server_type_menu_filter_configured(enum server_type type);

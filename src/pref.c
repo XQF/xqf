@@ -1804,11 +1804,11 @@ static GtkWidget *qw_skin_box_create (void) {
 
 	/* QW Skin ComboBox */
 
-	qw_skin_combo = gtk_combo_box_text_new_with_entry();
-	gtk_entry_set_max_length(combo_get_entry(qw_skin_combo), 256);
-	gtk_widget_set_size_request(GTK_WIDGET(combo_get_entry(qw_skin_combo)), 112, -1);
-	g_signal_connect (G_OBJECT(combo_get_entry(qw_skin_combo)),
-			"changed", G_CALLBACK(qw_skin_combo_changed_callback), NULL);
+	qw_skin_combo = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (qw_skin_combo), 256);
+	gtk_widget_set_size_request (qw_skin_combo, 112, -1);
+	g_signal_connect (G_OBJECT (qw_skin_combo),
+			"changed", G_CALLBACK (qw_skin_combo_changed_callback), NULL);
 	gtk_widget_set_halign (qw_skin_combo, GTK_ALIGN_START);
 	gtk_widget_set_valign (qw_skin_combo, GTK_ALIGN_START);
 	gtk_box_append (GTK_BOX (hbox), qw_skin_combo);
@@ -1929,10 +1929,10 @@ static GtkWidget *q2_skin_box_create (void) {
 
 	/* Q2 Skin ComboBox */
 
-	q2_skin_combo = gtk_combo_box_text_new_with_entry();
-	gtk_entry_set_max_length(GTK_ENTRY(combo_get_entry(q2_skin_combo)), 256);
-	gtk_widget_set_size_request(GTK_WIDGET(combo_get_entry(q2_skin_combo)), 144, -1);
-	g_signal_connect(G_OBJECT(combo_get_entry(q2_skin_combo)), "changed", G_CALLBACK(q2_skin_combo_changed_callback), NULL);
+	q2_skin_combo = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (q2_skin_combo), 256);
+	gtk_widget_set_size_request (q2_skin_combo, 144, -1);
+	g_signal_connect (G_OBJECT (q2_skin_combo), "changed", G_CALLBACK (q2_skin_combo_changed_callback), NULL);
 	gtk_widget_set_halign (q2_skin_combo, GTK_ALIGN_END);
 	gtk_widget_set_valign (q2_skin_combo, GTK_ALIGN_START);
 	gtk_box_append (GTK_BOX (hbox), q2_skin_combo);
@@ -2251,20 +2251,19 @@ static char *wb_switch_labels[9] = {
 	N_("ThunderBolt")
 };
 
-static void set_w_switch_callback(GtkWidget *widget, gpointer userdata) {
-	pref_w_switch = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+static void set_w_switch_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer userdata G_GNUC_UNUSED) {
+	pref_w_switch = (int) gtk_drop_down_get_selected (GTK_DROP_DOWN (obj));
 }
 
-static void set_b_switch_callback(GtkWidget *widget, gpointer userdata) {
-	pref_b_switch = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+static void set_b_switch_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer userdata G_GNUC_UNUSED) {
+	pref_b_switch = (int) gtk_drop_down_get_selected (GTK_DROP_DOWN (obj));
 }
 
-static void set_wb_switch_menu(GtkWidget *option_menu) {
-	int i;
-
-	for (i = 0; i < 9; i++) {
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu), _(wb_switch_labels[i]));
-	}
+static GtkWidget *create_wb_switch_menu (void) {
+	const char *s[10];
+	for (int i = 0; i < 9; i++) s[i] = _(wb_switch_labels[i]);
+	s[9] = NULL;
+	return gtk_drop_down_new_from_strings (s);
 }
 
 
@@ -2274,20 +2273,19 @@ static char *noskins_labels[3] = {
 	N_("Don\'t download new skins")
 };
 
-static void qw_noskins_option_menu_callback (GtkWidget *widget, gpointer userdata) {
-	pref_qw_noskins = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+static void qw_noskins_option_menu_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer userdata G_GNUC_UNUSED) {
+	pref_qw_noskins = (int) gtk_drop_down_get_selected (GTK_DROP_DOWN (obj));
 }
 
-static void q2_noskins_option_menu_callback (GtkWidget *widget, gpointer userdata) {
-	pref_q2_noskins = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+static void q2_noskins_option_menu_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer userdata G_GNUC_UNUSED) {
+	pref_q2_noskins = (int) gtk_drop_down_get_selected (GTK_DROP_DOWN (obj));
 }
 
-static void set_noskins_menu (GtkWidget *option_menu) {
-	int i;
-
-	for (i = 0; i < 3; i++) {
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu), _(noskins_labels[i]));
-	}
+static GtkWidget *create_noskins_menu (void) {
+	const char *s[4];
+	for (int i = 0; i < 3; i++) s[i] = _(noskins_labels[i]);
+	s[3] = NULL;
+	return gtk_drop_down_new_from_strings (s);
 }
 
 // fill working directory with result of the directory guess function for first
@@ -2773,8 +2771,8 @@ static GtkWidget *generic_game_frame (enum server_type type) {
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 		gtk_widget_set_visible (label, TRUE);
 
-		prefs->cfg_combo = gtk_combo_box_text_new_with_entry();
-		gtk_entry_set_max_length(combo_get_entry(prefs->cfg_combo), 256);
+		prefs->cfg_combo = gtk_entry_new ();
+		gtk_entry_set_max_length (GTK_ENTRY (prefs->cfg_combo), 256);
 		gtk_grid_attach (GTK_GRID (grid), prefs->cfg_combo, 1, 2, 1, 1);
 		gtk_widget_set_hexpand (prefs->cfg_combo, TRUE);
 		gtk_widget_set_visible (prefs->cfg_combo, TRUE);
@@ -3259,7 +3257,7 @@ static GtkWidget *q3_options_page (enum server_type type) {
 		gtk_box_append (GTK_BOX (hbox), label);
 		gtk_widget_set_visible (label, TRUE);
 
-		w->proto_entry = gtk_combo_box_text_new_with_entry ();
+		w->proto_entry = gtk_entry_new ();
 
 		list = createGListfromchar ((char**)w->protocols);
 
@@ -3493,10 +3491,9 @@ static GtkWidget *qw_options_page (void) {
 	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
-	option_menu = gtk_combo_box_text_new ();
-	set_wb_switch_menu (option_menu);
-	g_signal_connect(option_menu, "changed", G_CALLBACK (set_w_switch_callback), NULL);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), pref_w_switch);
+	option_menu = create_wb_switch_menu ();
+	g_signal_connect (option_menu, "notify::selected", G_CALLBACK (set_w_switch_callback), NULL);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (option_menu), (guint) pref_w_switch);
 	gtk_box_append (GTK_BOX (hbox), option_menu);
 	gtk_widget_set_visible (option_menu, TRUE);
 
@@ -3511,10 +3508,9 @@ static GtkWidget *qw_options_page (void) {
 	gtk_box_append (GTK_BOX (hbox), label);
 	gtk_widget_set_visible (label, TRUE);
 
-	option_menu = gtk_combo_box_text_new ();
-	set_wb_switch_menu (option_menu);
-	g_signal_connect(option_menu, "changed", G_CALLBACK (set_b_switch_callback), NULL);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), pref_b_switch);
+	option_menu = create_wb_switch_menu ();
+	g_signal_connect (option_menu, "notify::selected", G_CALLBACK (set_b_switch_callback), NULL);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (option_menu), (guint) pref_b_switch);
 	gtk_box_append (GTK_BOX (hbox), option_menu);
 	gtk_widget_set_visible (option_menu, TRUE);
 
@@ -3569,11 +3565,10 @@ static GtkWidget *qw_q2_options_page (int qworq2) {
 	gtk_box_append (GTK_BOX (hbox2), label);
 	gtk_widget_set_visible (label, TRUE);
 
-	option_menu = gtk_combo_box_text_new ();
-	g_signal_connect(option_menu, "changed", G_CALLBACK
+	option_menu = create_noskins_menu ();
+	g_signal_connect (option_menu, "notify::selected", G_CALLBACK
 	    (qworq2 ? q2_noskins_option_menu_callback : qw_noskins_option_menu_callback), NULL);
-	set_noskins_menu (option_menu);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (option_menu), qworq2?pref_q2_noskins:pref_qw_noskins);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (option_menu), (guint)(qworq2 ? pref_q2_noskins : pref_qw_noskins));
 	gtk_box_append (GTK_BOX (hbox2), option_menu);
 	gtk_widget_set_visible (option_menu, TRUE);
 

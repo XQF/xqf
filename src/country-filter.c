@@ -22,7 +22,6 @@
 #include "debug.h"
 #include "pixmaps.h"
 #include "loadpixmap.h"
-#include "xpm/noflag.xpm"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -231,7 +230,11 @@ struct pixmap* get_pixmap_for_country_with_fallback(int id) {
 	}
 
 	if (!flags[0].pixbuf) {
-		flags[0].pixbuf = gdk_pixbuf_new_from_xpm_data( (const char **)noflag_xpm);
+		char *fn = find_pixmap_directory ("noflag.png");
+		if (fn) {
+			flags[0].pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
+			g_free (fn);
+		}
 		if (!flags[0].pixbuf)
 			flags[0].pixbuf = GINT_TO_POINTER(-1);
 	}

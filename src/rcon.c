@@ -599,16 +599,13 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 
 	/* Entry */
 
-	rcon_combo = gtk_combo_box_text_new_with_entry ();
-	gtk_entry_set_max_length (combo_get_entry (rcon_combo), 256);
-	g_signal_connect (G_OBJECT (combo_get_entry (rcon_combo)), "activate",
+	rcon_combo = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (rcon_combo), 256);
+	g_signal_connect (G_OBJECT (rcon_combo), "activate",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
 	gtk_box_append (GTK_BOX (hbox), rcon_combo);
-	gtk_widget_grab_focus (GTK_WIDGET (rcon_combo));
+	gtk_widget_grab_focus (rcon_combo);
 	gtk_widget_set_visible (rcon_combo, TRUE);
-
-	if (rcon_history->items)
-		combo_set_vals (rcon_combo, rcon_history->items, "");
 
 	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 	gtk_box_append (GTK_BOX (hbox), hbox2);

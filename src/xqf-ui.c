@@ -678,83 +678,79 @@ gboolean create_server_type_menu_filter_configured (enum server_type type) {
 
 typedef void (*SeverTypeSelectedFunction)(GtkWidget *widget, enum server_type type);
 
-static void create_server_type_menu_callback (GtkWidget *widget, SeverTypeSelectedFunction callback) {
-	GtkComboBox *combo = GTK_COMBO_BOX (widget);
-	GtkTreeModel *model = gtk_combo_box_get_model (combo);
-	GtkTreeIter iter;
+static void server_type_item_setup (GtkListItemFactory *f G_GNUC_UNUSED, GtkListItem *li, gpointer data G_GNUC_UNUSED) {
+	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (box), gtk_image_new ());
+	gtk_box_append (GTK_BOX (box), gtk_label_new (NULL));
+	gtk_list_item_set_child (li, box);
+}
 
-	if (gtk_combo_box_get_active_iter (combo, &iter)) {
-		gint value;
+static void server_type_item_bind (GtkListItemFactory *f G_GNUC_UNUSED, GtkListItem *li, gpointer data G_GNUC_UNUSED) {
+	GObject  *item = gtk_list_item_get_item (li);
+	GtkWidget *box = gtk_list_item_get_child (li);
+	GtkWidget *img = gtk_widget_get_first_child (box);
+	GtkWidget *lbl = gtk_widget_get_last_child (box);
+	GdkTexture *tex = g_object_get_data (item, "icon");
+	const char *name = g_object_get_data (item, "name");
+	gtk_image_set_from_paintable (GTK_IMAGE (img), tex ? GDK_PAINTABLE (tex) : NULL);
+	gtk_label_set_text (GTK_LABEL (lbl), name ? name : "");
+}
 
-		gtk_tree_model_get (model, &iter, SERVERTYPE_ATTR_TYPE, &value, -1);
+static void create_server_type_menu_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer user_data) {
+	GtkDropDown *dd = GTK_DROP_DOWN (obj);
+	SeverTypeSelectedFunction callback = (SeverTypeSelectedFunction) user_data;
+	guint pos = gtk_drop_down_get_selected (dd);
 
-		callback (widget, value);
-	}
+	if (pos == GTK_INVALID_LIST_POSITION)
+		return;
+
+	GObject *item = g_list_model_get_item (gtk_drop_down_get_model (dd), pos);
+	gint value = GPOINTER_TO_INT (g_object_get_data (item, "server-type"));
+	g_object_unref (item);
+
+	callback (GTK_WIDGET (dd), value);
 }
 
 GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback) {
-	GtkListStore *store;
-	GtkWidget *combo;
-	GtkCellRenderer *renderer;
+	GListStore *store = g_list_store_new (G_TYPE_OBJECT);
 	int i, row = 0, first_row = 0;
 
-	store = gtk_list_store_new (SERVERTYPE_ATTR_COUNT,
-	                            G_TYPE_INT,
-	                            GDK_TYPE_TEXTURE,
-	                            G_TYPE_STRING
-	                            );
-
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; ++i) {
-		GtkTreeIter iter;
-		GdkTexture *texture = games[i].pix->texture;
-		char *name = _(games[i].name);
-
 		if (filterfunc && !filterfunc (i))
 			continue;
 
-		gtk_list_store_append (store, &iter);
+		GObject *item = g_object_new (G_TYPE_OBJECT, NULL);
+		g_object_set_data (item, "server-type", GINT_TO_POINTER (i));
+		GdkTexture *tex = games[i].pix->texture;
+		if (tex)
+			g_object_set_data_full (item, "icon", g_object_ref (tex), g_object_unref);
+		g_object_set_data (item, "name", _(games[i].name));
+		g_list_store_append (store, item);
+		g_object_unref (item);
 
-		gtk_list_store_set (store, &iter,
-		                    SERVERTYPE_ATTR_TYPE, i,
-		                    SERVERTYPE_ATTR_ICON, texture,
-		                    SERVERTYPE_ATTR_NAME, name,
-		                    -1);
-
-		if (i == active_type) {
+		if (i == active_type)
 			first_row = row;
-		}
 		else if (!first_row)
 			first_row = row;
 
-		++row; // must be here in case the continue was used
+		++row;
 	}
 
-	combo = gtk_combo_box_new_with_model (GTK_TREE_MODEL (store));
+	GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+	g_signal_connect (factory, "setup", G_CALLBACK (server_type_item_setup), NULL);
+	g_signal_connect (factory, "bind",  G_CALLBACK (server_type_item_bind),  NULL);
 
-	g_object_unref (G_OBJECT (store));
+	GtkWidget *combo = gtk_drop_down_new (G_LIST_MODEL (store), NULL);
+	gtk_drop_down_set_factory (GTK_DROP_DOWN (combo), factory);
+	g_object_unref (factory);
+	g_object_unref (store);
 
-	renderer = gtk_cell_renderer_pixbuf_new ();
-	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
-	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
-	                                renderer,
-	                                "texture", SERVERTYPE_ATTR_ICON,
-	                                NULL);
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
-	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
-	                                renderer,
-	                                "text", SERVERTYPE_ATTR_NAME,
-	                                NULL);
-
-	g_signal_connect (G_OBJECT (combo), "changed",
+	g_signal_connect (combo, "notify::selected",
 	                  G_CALLBACK (create_server_type_menu_callback),
 	                  (SeverTypeSelectedFunction) callback);
 
-	// initiates callback to set servertype to first configured game
-	if (active_type != -1 && first_row) {
-		gtk_combo_box_set_active (GTK_COMBO_BOX (combo), first_row);
-	}
+	if (active_type != -1 && first_row)
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (combo), (guint) first_row);
 
 	return combo;
 }
