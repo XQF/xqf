@@ -522,51 +522,98 @@ void about_dialog (GtkWidget *widget, gpointer data) {
 	g_free(copyright);
 }
 
-/** response callback for file_dialog that sets the selected filename in the
- * textentry that was passed as user data to file_dialog()
- */
-static void file_dialog_response_set_textentry (GtkWidget *dialog, int response, gpointer textentry) {
+/* Internal closure carrying callback + user_data across async boundary. */
+typedef struct {
+	file_dialog_cb_t cb;
+	gpointer         data;
+} FileDialogClosure;
+
+#if GTK_CHECK_VERSION(4, 10, 0)
+
+static void
+file_dialog_open_done (GObject *source, GAsyncResult *res, gpointer user_data)
+{
+	FileDialogClosure *cl   = user_data;
+	GFile             *file = gtk_file_dialog_open_finish (GTK_FILE_DIALOG (source), res, NULL);
+	char              *path = file ? g_file_get_path (file) : NULL;
+
+	if (file) g_object_unref (file);
+	cl->cb (path, cl->data);
+	g_free (path);
+	g_free (cl);
+}
+
+void
+file_dialog (const char *title, GtkWindow *parent,
+             file_dialog_cb_t callback, gpointer data)
+{
+	FileDialogClosure *cl = g_new (FileDialogClosure, 1);
+	cl->cb   = callback;
+	cl->data = data;
+
+	GtkFileDialog *dlg = gtk_file_dialog_new ();
+	gtk_file_dialog_set_title (dlg, title);
+	gtk_file_dialog_open (dlg, parent, NULL, file_dialog_open_done, cl);
+	g_object_unref (dlg);
+}
+
+#else /* GTK < 4.10 — GtkFileChooserDialog deprecated but functional */
+
+static void
+file_dialog_response (GtkWidget *dialog, int response, gpointer user_data)
+{
+	FileDialogClosure *cl   = user_data;
+	char              *path = NULL;
+
 	if (response == GTK_RESPONSE_ACCEPT) {
-		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
-		char *filename = gtk_file_chooser_get_filename (chooser);
-
-		gtk_editable_set_text (GTK_EDITABLE (textentry), filename);
-
-		g_free (filename);
+		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+		GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+		G_GNUC_END_IGNORE_DEPRECATIONS
+		if (file) {
+			path = g_file_get_path (file);
+			g_object_unref (file);
+		}
 	}
-
 	gtk_window_destroy (GTK_WINDOW (dialog));
+	cl->cb (path, cl->data);
+	g_free (path);
+	g_free (cl);
 }
 
-GtkWidget* file_dialog(const char *title, GCallback response_callback, gpointer data) {
-	GtkWidget* dialog;
+void
+file_dialog (const char *title, GtkWindow *parent,
+             file_dialog_cb_t callback, gpointer data)
+{
+	FileDialogClosure *cl = g_new (FileDialogClosure, 1);
+	cl->cb   = callback;
+	cl->data = data;
 
-	dialog = gtk_file_chooser_dialog_new (title,
-			NULL,
-			GTK_FILE_CHOOSER_ACTION_OPEN,
-			_("_Cancel"),
-			GTK_RESPONSE_CANCEL,
-			_("_Open"),
-			GTK_RESPONSE_ACCEPT,
-			NULL);
+	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+	GtkWidget *dlg = gtk_file_chooser_dialog_new (title, parent,
+	    GTK_FILE_CHOOSER_ACTION_OPEN,
+	    _("_Cancel"), GTK_RESPONSE_CANCEL,
+	    _("_Open"),   GTK_RESPONSE_ACCEPT,
+	    NULL);
+	G_GNUC_END_IGNORE_DEPRECATIONS
 
-	if (!dialog)
-		return NULL;
-
-	gtk_window_set_modal (GTK_WINDOW(dialog),TRUE);
-
-	gtk_widget_set_visible (GTK_WIDGET(dialog), TRUE);
-
-	g_signal_connect (dialog, "response", G_CALLBACK (response_callback), data);
-
-	return dialog;
+	gtk_window_set_modal (GTK_WINDOW (dlg), TRUE);
+	gtk_widget_set_visible (GTK_WIDGET (dlg), TRUE);
+	g_signal_connect (dlg, "response", G_CALLBACK (file_dialog_response), cl);
 }
 
-GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry) {
-	GtkWidget *dialog = file_dialog(title, G_CALLBACK(file_dialog_response_set_textentry), entry);
-	const char* text = gtk_editable_get_text (GTK_EDITABLE (entry));
-	if (text && *text) {
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), text);
-	}
-	return dialog;
+#endif /* GTK_CHECK_VERSION(4, 10, 0) */
+
+static void
+file_dialog_set_entry_cb (const char *path, gpointer entry)
+{
+	if (path)
+		gtk_editable_set_text (GTK_EDITABLE (entry), path);
+}
+
+void
+file_dialog_textentry (const char *title, GtkWidget *entry)
+{
+	GtkWidget *root   = GTK_WIDGET (gtk_widget_get_root (entry));
+	GtkWindow *parent = GTK_IS_WINDOW (root) ? GTK_WINDOW (root) : NULL;
+	file_dialog (title, parent, file_dialog_set_entry_cb, entry);
 }

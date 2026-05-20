@@ -4169,13 +4169,71 @@ sound_file_btn_get_path (GtkWidget *btn)
 	return p ? g_strdup (p) : NULL;
 }
 
+#if GTK_CHECK_VERSION(4, 10, 0)
+
+static void
+sound_file_open_done (GObject *source, GAsyncResult *res, gpointer btn)
+{
+	GFile *file = gtk_file_dialog_open_finish (GTK_FILE_DIALOG (source), res, NULL);
+	if (file) {
+		char *path = g_file_get_path (file);
+		sound_file_btn_update (GTK_WIDGET (btn), path);
+		g_free (path);
+		g_object_unref (file);
+	}
+}
+
+static void
+sound_file_btn_clicked (GtkButton *btn, gpointer data G_GNUC_UNUSED)
+{
+	GtkWidget *root   = GTK_WIDGET (gtk_widget_get_root (GTK_WIDGET (btn)));
+	GtkWindow *parent = GTK_IS_WINDOW (root) ? GTK_WINDOW (root) : GTK_WINDOW (main_window);
+
+	GtkFileFilter *af = gtk_file_filter_new ();
+	gtk_file_filter_set_name (af, _("Audio files"));
+	gtk_file_filter_add_mime_type (af, "audio/*");
+
+	GtkFileFilter *all = gtk_file_filter_new ();
+	gtk_file_filter_set_name (all, _("All files"));
+	gtk_file_filter_add_pattern (all, "*");
+
+	GListStore *filters = g_list_store_new (GTK_TYPE_FILE_FILTER);
+	g_list_store_append (filters, af);
+	g_list_store_append (filters, all);
+	g_object_unref (af);
+	g_object_unref (all);
+
+	GtkFileDialog *dlg = gtk_file_dialog_new ();
+	gtk_file_dialog_set_title (dlg, _("Select a sound file"));
+	gtk_file_dialog_set_filters (dlg, G_LIST_MODEL (filters));
+	g_object_unref (filters);
+
+	const char *current = g_object_get_data (G_OBJECT (btn), SOUND_FILE_BTN_PATH);
+	if (current && *current) {
+		GFile *initial = g_file_new_for_path (current);
+		gtk_file_dialog_set_initial_file (dlg, initial);
+		g_object_unref (initial);
+	}
+
+	gtk_file_dialog_open (dlg, parent, NULL, sound_file_open_done, btn);
+	g_object_unref (dlg);
+}
+
+#else /* GTK < 4.10 */
+
 static void
 sound_file_btn_response (GtkWidget *dialog, int response, gpointer btn)
 {
 	if (response == GTK_RESPONSE_ACCEPT) {
-		char *path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		sound_file_btn_update (GTK_WIDGET (btn), path);
-		g_free (path);
+		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+		GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+		G_GNUC_END_IGNORE_DEPRECATIONS
+		if (file) {
+			char *path = g_file_get_path (file);
+			sound_file_btn_update (GTK_WIDGET (btn), path);
+			g_free (path);
+			g_object_unref (file);
+		}
 	}
 	gtk_window_destroy (GTK_WINDOW (dialog));
 }
@@ -4183,10 +4241,12 @@ sound_file_btn_response (GtkWidget *dialog, int response, gpointer btn)
 static void
 sound_file_btn_clicked (GtkButton *btn, gpointer data G_GNUC_UNUSED)
 {
-	GtkWidget *parent = GTK_WIDGET (gtk_widget_get_root (GTK_WIDGET (btn)));
+	GtkWidget *root   = GTK_WIDGET (gtk_widget_get_root (GTK_WIDGET (btn)));
+	GtkWindow *parent = GTK_IS_WINDOW (root) ? GTK_WINDOW (root) : GTK_WINDOW (main_window);
+
+	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	GtkWidget *dialog = gtk_file_chooser_dialog_new (
-	    _("Select a sound file"),
-	    GTK_IS_WINDOW (parent) ? GTK_WINDOW (parent) : GTK_WINDOW (main_window),
+	    _("Select a sound file"), parent,
 	    GTK_FILE_CHOOSER_ACTION_OPEN,
 	    _("_Cancel"), GTK_RESPONSE_CANCEL,
 	    _("_Open"),   GTK_RESPONSE_ACCEPT,
@@ -4204,12 +4264,18 @@ sound_file_btn_clicked (GtkButton *btn, gpointer data G_GNUC_UNUSED)
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), all);
 
 	const char *current = g_object_get_data (G_OBJECT (btn), SOUND_FILE_BTN_PATH);
-	if (current && *current)
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), current);
+	if (current && *current) {
+		GFile *initial = g_file_new_for_path (current);
+		gtk_file_chooser_set_file (GTK_FILE_CHOOSER (dialog), initial, NULL);
+		g_object_unref (initial);
+	}
+	G_GNUC_END_IGNORE_DEPRECATIONS
 
 	g_signal_connect (dialog, "response", G_CALLBACK (sound_file_btn_response), btn);
 	gtk_widget_set_visible (dialog, TRUE);
 }
+
+#endif /* GTK_CHECK_VERSION(4, 10, 0) */
 
 static GtkWidget *
 sound_file_button_new (const char *path)
@@ -4954,24 +5020,16 @@ void prefs_save (void) {
 }
 */
 
-void game_file_dialog_response_callback (GtkWidget *dialog, int response, gpointer data) {
-	enum server_type type = (enum server_type) GPOINTER_TO_INT(data);
+static void
+game_file_dialog_cb (const char *path, gpointer data)
+{
+	enum server_type type = (enum server_type) GPOINTER_TO_INT (data);
 
-	if (type >= UNKNOWN_SERVER) {
+	if (type >= UNKNOWN_SERVER || !path)
 		return;
-	}
 
-	if (response == GTK_RESPONSE_ACCEPT) {
-		GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
-		char *filename = gtk_file_chooser_get_filename (chooser);
-
-		gtk_editable_set_text (GTK_EDITABLE (genprefs[type].cmd_entry), filename);
-		pref_guess_dir (type, filename, TRUE);
-
-		g_free (filename);
-	}
-
-	gtk_window_destroy (GTK_WINDOW (dialog));
+	gtk_editable_set_text (GTK_EDITABLE (genprefs[type].cmd_entry), path);
+	pref_guess_dir (type, path, TRUE);
 }
 
 void game_file_activate_callback (enum server_type type) {
@@ -4981,7 +5039,10 @@ void game_file_activate_callback (enum server_type type) {
 }
 
 void game_file_dialog(enum server_type type) {
-	file_dialog(_("Game Command Selection"), G_CALLBACK(game_file_dialog_response_callback), GINT_TO_POINTER(type));
+	GtkWidget *root   = GTK_WIDGET (gtk_widget_get_root (genprefs[type].cmd_entry));
+	GtkWindow *parent = GTK_IS_WINDOW (root) ? GTK_WINDOW (root) : NULL;
+	file_dialog (_("Game Command Selection"), parent,
+	             game_file_dialog_cb, GINT_TO_POINTER (type));
 }
 
 void game_dir_dialog(enum server_type type) {

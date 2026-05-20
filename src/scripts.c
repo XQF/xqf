@@ -93,7 +93,7 @@ typedef struct
 static GtkWidget* scripts_list;
 static GtkWidget* notebook;
 
-static void install_file_dialog_response_callback (GtkWidget *widget, int response, gpointer data);
+static void install_file_dialog_cb (const char *path, gpointer data);
 static void install_button_callback (GtkWidget *widget, gpointer data);
 
 void scripts_add_dir(const char* dir) {
@@ -857,20 +857,13 @@ void script_action_gamequit(struct game* g, struct server* s) {
 	run_scripts(ONGAMEQUIT, g, s);
 }
 
-void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpointer data) {
-	char *filename;
+void install_file_dialog_cb (const char *filename, gpointer data G_GNUC_UNUSED) {
 	char *basename;
 	char dest[PATH_MAX];
 	const char* msg;
 
-	if (response != GTK_RESPONSE_ACCEPT) {
-		gtk_window_destroy (GTK_WINDOW (dialog));
+	if (!filename)
 		return;
-	}
-
-	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-
-	gtk_window_destroy (GTK_WINDOW (dialog));
 
 	mkdir((const char*)scriptdirs->data, 0777);
 
@@ -880,14 +873,12 @@ void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpo
 
 	if (!access(dest, F_OK)) {
 		if (!dialog_yesno(NULL, 0, NULL, NULL, _("Script %s already exists, overwrite?"), dest)) {
-			g_free (filename);
 			return;
 		}
 	}
 
 	if ((msg = copy_file(filename, dest))) {
 		dialog_ok(NULL, "%s", msg);
-		g_free (filename);
 		return;
 	}
 
@@ -897,10 +888,8 @@ void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpo
 	scripts_load();
 
 	dialog_ok(NULL, _("Script saved as\n%s\nPlease close and reopen the preferences dialog"), dest);
-
-	g_free (filename);
 }
 
 void install_button_callback (GtkWidget *widget, gpointer data) {
-	file_dialog(_("Select Script"), G_CALLBACK(install_file_dialog_response_callback), NULL);
+	file_dialog(_("Select Script"), NULL, install_file_dialog_cb, NULL);
 }

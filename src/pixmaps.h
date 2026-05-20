@@ -20,7 +20,6 @@
 #define __PIXMAPS_H__
 
 #include <gtk/gtk.h>
-#include "gtk4-compat.h"
 
 struct pixmap {
 	GdkPixbuf  *pixbuf;
