@@ -11,17 +11,10 @@ HIG conventions should be avoided.
 
 ## Current State Summary
 
-Phases 1–7 are complete. The app builds and runs on GTK4 with no known
-crashes or regressions. What remains is cleanup of deprecated-but-functional
-APIs:
+Phases 1–9 are complete. The app builds and runs on GTK4 with no known
+crashes or regressions. No deprecated APIs remain in use except the
+intentionally-kept tree widgets (see below).
 
-- **`GtkComboBox` / `GtkComboBoxText`** (deprecated 4.10, replacement since 4.0):
-  ~15 call sites across 9 files — see Phase 8.
-- **`gtk_image_new/set_from_pixbuf`** (deprecated 4.12, replacement since 4.0):
-  `src/loadpixmap.c`, `src/game.c`, `src/rcon.c`, `src/srv-prop.c`,
-  `src/statistics.c` — see Phase 9.
-- **`gtk_widget_get_allocation`** (deprecated 4.12, replacement since 4.0):
-  `src/rcon.c`, `src/xqf-ui.c` — see Phase 9.
 - **Deprecated tree widgets** (`GtkTreeView`, `GtkTreeStore`, `GtkCellRenderer*`):
   intentionally kept in `src/srv-info.c` and `src/xqf-ui.c` — both are genuine
   hierarchical trees where GtkTreeView remains the best fit. Will revisit only
@@ -69,9 +62,9 @@ eventually be removed. Phase 5 covers the tree-widget subset.
 
 | API | Deprecated since | Replacement available | Where used in XQF |
 |-----|-----------------|----------------------|-------------------|
-| `GtkComboBox` / `GtkComboBoxText` | 4.10 | 4.0 (`GtkDropDown`) | 9 files — Phase 8 |
-| `gtk_image_new/set_from_pixbuf` | 4.12 | 4.0 (`from_paintable`) | 5 files — Phase 9 |
-| `gtk_widget_get_allocation` | 4.12 | 4.0 (`compute_bounds`) | `rcon.c`, `xqf-ui.c` — Phase 9 |
+| `GtkComboBox` / `GtkComboBoxText` | 4.10 | 4.0 (`GtkDropDown`) | ✅ Phase 8 — replaced |
+| `gtk_image_new/set_from_pixbuf` | 4.12 | 4.0 (`from_paintable`) | ✅ Phase 9 — replaced |
+| `gtk_widget_get_allocation` | 4.12 | 4.0 (`get_width/height`) | ✅ Phase 9 — replaced |
 | `GtkCellRendererPixbuf`, `GtkCellRendererText` | 4.10 | 4.0 | source treeview, server info — intentionally kept |
 | `GtkTreeView`, `GtkTreeStore`, `GtkListStore`, `GtkTreeViewColumn` | 4.10 | 4.0 | `src/xqf-ui.c`, `src/srv-info.c` — intentionally kept |
 | `gdk_texture_new_for_pixbuf` | 4.20 | — | kept with the GtkTreeView code above |
@@ -281,7 +274,7 @@ format-compatible (same INI dialect, same escape sequences).
 
 ---
 
-## Phase 8 — Replace `GtkComboBox` with `GtkDropDown`
+## Phase 8 — Replace `GtkComboBox` with `GtkDropDown` ✅
 
 **Goal**: No `GtkComboBox` / `GtkComboBoxText` usage. Both were deprecated in
 GTK 4.10; `GtkDropDown` + `GtkStringList` have been available since GTK 4.0
@@ -304,20 +297,24 @@ so no version guard is needed.
 
 ---
 
-## Phase 9 — Replace remaining deprecated GTK 4.12 APIs
+## Phase 9 — Replace remaining deprecated GTK 4.12 APIs ✅
 
 **Goal**: No `gtk_image_*_from_pixbuf` or `gtk_widget_get_allocation` usage.
 Replacements available since GTK 4.0; no version guard needed.
 
+**Status**: Complete.
+
 ### Tasks
 
-1. **`gtk_image_new_from_pixbuf` / `gtk_image_set_from_pixbuf`** (deprecated 4.12)
+1. ✅ **`gtk_image_new_from_pixbuf` / `gtk_image_set_from_pixbuf`** (deprecated 4.12)
    → `gtk_image_new_from_paintable` / `gtk_image_set_from_paintable`:
    `src/loadpixmap.c`, `src/game.c`, `src/rcon.c`, `src/srv-prop.c`,
-   `src/statistics.c`
+   `src/statistics.c`, `src/skin.c`.
+   Country flag loading in `src/country-filter.c` now also creates `pix->texture`
+   so all call sites use the paintable API uniformly.
 
-2. **`gtk_widget_get_allocation`** (deprecated 4.12) → `gtk_widget_compute_bounds`:
-   `src/rcon.c`, `src/xqf-ui.c`
+2. ✅ **`gtk_widget_get_allocation`** (deprecated 4.12) → `gtk_widget_get_width/height`:
+   `src/rcon.c`, `src/xqf-ui.c`, `src/statistics.c`.
 
 ---
 
