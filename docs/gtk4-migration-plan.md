@@ -11,20 +11,21 @@ HIG conventions should be avoided.
 
 ## Current State Summary
 
-Phases 1–3, 5, and 6 (mostly) are complete. The app builds and runs on GTK4
-with no known crashes or regressions. What remains:
+Phases 1–7 are complete. The app builds and runs on GTK4 with no known
+crashes or regressions. What remains is cleanup of deprecated-but-functional
+APIs:
 
-- **`gtk4-compat.h`** (44 lines): only `gtk_file_chooser_get/set_filename`
-  helpers remain. These wrap the deprecated `GtkFileChooserDialog`; full
-  replacement requires switching to `GtkFileDialog` (GTK 4.10+ async API).
+- **`GtkComboBox` / `GtkComboBoxText`** (deprecated 4.10, replacement since 4.0):
+  ~15 call sites across 9 files — see Phase 8.
+- **`gtk_image_new/set_from_pixbuf`** (deprecated 4.12, replacement since 4.0):
+  `src/loadpixmap.c`, `src/game.c`, `src/rcon.c`, `src/srv-prop.c`,
+  `src/statistics.c` — see Phase 9.
+- **`gtk_widget_get_allocation`** (deprecated 4.12, replacement since 4.0):
+  `src/rcon.c`, `src/xqf-ui.c` — see Phase 9.
 - **Deprecated tree widgets** (`GtkTreeView`, `GtkTreeStore`, `GtkCellRenderer*`):
-  intentionally kept in `src/srv-info.c` (server info tree) and `src/xqf-ui.c`
-  (source/group tree) — both are genuine hierarchical trees where GtkTreeView
-  remains the best fit. Will revisit only if GTK actually removes the API.
-- **No `GtkApplication`**: WM shows "GTK application" instead of "XQF";
-  no single-instance handling (see Phase 4).
-- **Custom INI parser** (`src/config.c`, ~850 lines): duplicates `GKeyFile`
-  functionality (see Phase 7).
+  intentionally kept in `src/srv-info.c` and `src/xqf-ui.c` — both are genuine
+  hierarchical trees where GtkTreeView remains the best fit. Will revisit only
+  if GTK actually removes the API.
 
 ---
 
@@ -66,11 +67,14 @@ No known bugs. The app builds, runs, and all main UI paths work:
 Several GTK APIs were deprecated in GTK 4.10. They work today but will
 eventually be removed. Phase 5 covers the tree-widget subset.
 
-| API | Deprecated since | Where used in XQF |
-|-----|-----------------|-------------------|
-| `GtkCellRendererPixbuf`, `GtkCellRendererText` | 4.10 | source treeview, games list, country filter, player filter |
-| `GtkTreeView`, `GtkTreeStore`, `GtkListStore`, `GtkTreeViewColumn` | 4.10 | source treeview (`src/xqf-ui.c`), server info tree (`src/srv-info.c`), scripts list (`src/scripts.c`), games pref list (`src/pref.c`), country/player filter lists (`src/filter.c`, `src/flt-player.c`) |
-| `gdk_texture_new_for_pixbuf` | 4.20 | `src/loadpixmap.c`, `src/pixmaps.c` — bridges PNG-loaded `GdkPixbuf` into `GdkTexture` for cell renderers; resolves when `GtkTreeView` usage is gone (Phase 5) |
+| API | Deprecated since | Replacement available | Where used in XQF |
+|-----|-----------------|----------------------|-------------------|
+| `GtkComboBox` / `GtkComboBoxText` | 4.10 | 4.0 (`GtkDropDown`) | 9 files — Phase 8 |
+| `gtk_image_new/set_from_pixbuf` | 4.12 | 4.0 (`from_paintable`) | 5 files — Phase 9 |
+| `gtk_widget_get_allocation` | 4.12 | 4.0 (`compute_bounds`) | `rcon.c`, `xqf-ui.c` — Phase 9 |
+| `GtkCellRendererPixbuf`, `GtkCellRendererText` | 4.10 | 4.0 | source treeview, server info — intentionally kept |
+| `GtkTreeView`, `GtkTreeStore`, `GtkListStore`, `GtkTreeViewColumn` | 4.10 | 4.0 | `src/xqf-ui.c`, `src/srv-info.c` — intentionally kept |
+| `gdk_texture_new_for_pixbuf` | 4.20 | — | kept with the GtkTreeView code above |
 
 ## Removed API still shimmed in `gtk4-compat.h`
 
@@ -170,6 +174,9 @@ a data directory and loaded at runtime.
    PNG sizes generated at 22×22, 32×32, 48×48, 128×128 from the SVG.
    Icon theme search path registered at startup so the About dialog icon works.
 
+6. ✅ **Delete `src/xpm/`** — 101 XPM source files removed; PNGs in
+   `pixmaps/default/` are the sole icon source.
+
 ---
 
 ## Phase 3 — Replace direct `GtkStyle` manipulation with CSS ✅
@@ -241,8 +248,7 @@ and `statistics.c` (via `GtkComboBox` model — deprecated but functional).
 **Goal**: `gtk4-compat.h` shrinks to near-zero (or is deleted); all call
 sites use native GTK4 API directly.
 
-**Status**: All shims removed except `gtk_file_chooser_get/set_filename`.
-`gtk4-compat.h` is now 44 lines containing only those two helpers.
+**Status**: Complete. `gtk4-compat.h` deleted.
 
 ### Tasks
 
@@ -257,49 +263,61 @@ sites use native GTK4 API directly.
 9. ✅ **`gtk_hseparator_new`**
 10. ✅ **`gtk_misc_set_alignment`** / `GTK_MISC`
 11. ✅ **`gtk_misc_set_padding` / `gtk_bin_get_child` / `GtkBin`**
-12. 🔲 **`gtk_file_chooser_get/set_filename`** (~6 call sites in `pref.c`):
-    deferred — requires replacing `GtkFileChooserDialog` with the GTK4
-    `GtkFileDialog` async API (GTK 4.10+). Will be done as a separate pass.
+12. ✅ **`gtk_file_chooser_get/set_filename`** — replaced with `GtkFileDialog`
+    (GTK ≥ 4.10) / `GtkFileChooserDialog` fallback; `gtk4-compat.h` deleted.
 13. ✅ **`gtk_container_add`**
 14. ✅ **`GdkEventButton`** in `filter.c`
 
 ---
 
-## Phase 7 — Replace custom config parser with `GKeyFile`
+## Phase 7 — Replace custom config parser with `GKeyFile` ✅
 
 **Goal**: `src/config.c` (~850 lines of custom INI parser) is deleted and
 replaced by GLib's `GKeyFile` API throughout.
 
-**Why**: The existing format is INI-style and `GKeyFile` reads it without
-migration. Replacing the custom parser removes ~850 lines of code that
-duplicates functionality GLib already provides, and gets correct handling of
-edge cases (encoding, escaping, concurrent writes) for free. `GKeyFile` is
-pure GLib — no GNOME dependency.
+**Status**: Complete. `src/config.c` rewritten to ~340 lines backed by
+`GKeyFile`. Public API in `config.h` is unchanged. Existing config files are
+format-compatible (same INI dialect, same escape sequences).
 
-**Why last**: The config system has no GTK dependency and works fine through
-Phases 1–6. Deferring it keeps the earlier phases focused and avoids mixing
-a risky data-layer change with UI changes.
+---
+
+## Phase 8 — Replace `GtkComboBox` with `GtkDropDown`
+
+**Goal**: No `GtkComboBox` / `GtkComboBoxText` usage. Both were deprecated in
+GTK 4.10; `GtkDropDown` + `GtkStringList` have been available since GTK 4.0
+so no version guard is needed.
+
+### Call sites
+
+| File | Usage | Notes |
+|------|-------|-------|
+| `src/pref.c` | Game sound player combo, game-type combos | Several instances |
+| `src/filter.c` | Game-type filter combo | Uses model + active index |
+| `src/scripts.c` | Script event combo | `GtkComboBoxText` with entry |
+| `src/rcon.c` | Server command combo | `GtkComboBoxText` with entry |
+| `src/srv-prop.c` | Game/gamedir combos | `GtkComboBoxText` with entry |
+| `src/statistics.c` | Statistics grouping combo | Uses `GtkListStore` model |
+| `src/addserver.c` | Server type combo | `GtkComboBoxText` with entry |
+| `src/addmaster.c` | Master type combo | `GtkComboBoxText` with entry |
+| `src/psearch.c` | Player search combo | `GtkComboBoxText` with entry |
+| `src/xqf-ui.c` | Game filter combo | Uses `GtkListStore` + pixbuf column |
+
+---
+
+## Phase 9 — Replace remaining deprecated GTK 4.12 APIs
+
+**Goal**: No `gtk_image_*_from_pixbuf` or `gtk_widget_get_allocation` usage.
+Replacements available since GTK 4.0; no version guard needed.
 
 ### Tasks
 
-1. **Audit format differences** between `src/config.c` and `GKeyFile`:
-   - Verify that all existing `~/.config/xqf/config` files parse correctly
-     under `GKeyFile` without modification.
-   - Check escape sequence handling (`\n`, `\r`, `\\` in values).
-   - The `servers` file uses server addresses (e.g. `192.168.1.1:27960`) as
-     section headers; confirm `GKeyFile` accepts `:` in section names.
+1. **`gtk_image_new_from_pixbuf` / `gtk_image_set_from_pixbuf`** (deprecated 4.12)
+   → `gtk_image_new_from_paintable` / `gtk_image_set_from_paintable`:
+   `src/loadpixmap.c`, `src/game.c`, `src/rcon.c`, `src/srv-prop.c`,
+   `src/statistics.c`
 
-2. **Replace `config_get_*()` / `config_set_*()` call sites** in `src/pref.c`,
-   `src/rc.c`, `src/source.c`, `src/srv-prop.c`, and other callers with
-   `g_key_file_get_*()` / `g_key_file_set_*()` equivalents.
-
-3. **Replace `config_sync()`** with `g_key_file_save_to_file()` (or
-   `g_key_file_to_data()` + atomic write via `g_file_set_contents()`).
-
-4. **Delete `src/config.c` and `src/config.h`**; remove from `CMakeLists.txt`.
-
-5. **Keep `src/rc.c`** for legacy `~/.qf/` migration logic and `qfrc` import
-   — but the runtime read/write path moves to `GKeyFile`.
+2. **`gtk_widget_get_allocation`** (deprecated 4.12) → `gtk_widget_compute_bounds`:
+   `src/rcon.c`, `src/xqf-ui.c`
 
 ---
 
@@ -354,5 +372,3 @@ endif()
 - **`.ui` file split into per-dialog files**: `pref.c` at 151 KB builds its
   UI programmatically. Moving it to GtkBuilder `.ui` files would be a large
   refactor with limited functional benefit.
-- **`src/xpm/` deletion**: The old XPM files are still in the tree (Phase 2
-  stopped short of deleting them). Remove with a single `git rm src/xpm/`.
