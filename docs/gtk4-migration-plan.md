@@ -16,9 +16,8 @@ crashes or regressions. No deprecated APIs remain in use except the
 intentionally-kept tree widgets (see below).
 
 - **Deprecated tree widgets** (`GtkTreeView`, `GtkTreeStore`, `GtkCellRenderer*`):
-  intentionally kept in `src/srv-info.c` and `src/xqf-ui.c` — both are genuine
-  hierarchical trees where GtkTreeView remains the best fit. Will revisit only
-  if GTK actually removes the API.
+  intentionally kept in `src/srv-info.c` and `src/xqf-ui.c`. See the note in
+  Phase 5 for the rationale.
 
 ---
 
@@ -227,12 +226,31 @@ independently.
 | `src/scripts.c` | `GtkTreeView` + `GtkListStore` (scripts list) | ✅ Migrated to `GtkListView` + `GtkStringList` |
 | `src/pref.c` (games) | `GtkTreeView` + `GtkListStore` (games list) | ✅ Migrated to `GtkListView` + `GListStore` |
 | `src/pref.c` (args) | `GtkTreeView` + `GtkListStore` (custom args list) | ✅ Migrated to `GtkColumnView` + `GListStore` |
-| `src/srv-info.c` | `GtkTreeView` + `GtkTreeStore` (server info panel) | Keep — correct fit for read-only tree; revisit if GTK removes it |
-| `src/xqf-ui.c` | `GtkTreeView` + `GtkTreeStore` (source/group tree) | Keep — same rationale as srv-info |
+| `src/srv-info.c` | `GtkTreeView` + `GtkTreeStore` (server info panel) | Keep — see note below |
+| `src/xqf-ui.c` | `GtkTreeView` + `GtkTreeStore` (source/group tree) | Keep — see note below |
 
 `GtkCellRenderer*` and `gdk_texture_new_for_pixbuf` are gone from all
-migrated files. They remain only in `srv-info.c` and `xqf-ui.c` (kept trees)
-and `statistics.c` (via `GtkComboBox` model — deprecated but functional).
+migrated files. They remain only in `srv-info.c` and `xqf-ui.c` (kept trees).
+
+### Why the two tree widgets are intentionally kept
+
+Both display genuinely hierarchical data: the source panel has collapsible
+groups containing individual masters; the server info panel has nested
+key/value categories. `GtkTreeView` + `GtkTreeStore` is the natural fit for
+that shape.
+
+The GTK4 replacement for trees is `GtkTreeListModel` + `GtkColumnView` /
+`GtkListView`. It requires a `GtkTreeListModelCreateModelFunc` that returns a
+child `GListModel` for every node, a `GtkTreeListRow` wrapper in the factory
+bind callback, and manual expand/collapse handling. For flat lists (migrated
+in Phases 1 and 5) the new API is genuinely cleaner. For trees it is the
+opposite: substantially more boilerplate, same user-visible result.
+
+`GtkTreeView` is deprecated since 4.10 but not removed, and GTK has a history
+of keeping deprecated widgets around for a long time. The cost of migrating
+now (non-trivial complexity, no functional improvement) outweighs the benefit
+(suppressing deprecation warnings for something with no removal timeline).
+Revisit only if GTK schedules an actual removal.
 
 ---
 
