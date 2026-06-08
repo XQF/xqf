@@ -344,7 +344,7 @@ static char* msg_terminate (char *msg, int size) {
 }
 
 static char* rcon_receive() {
-	char *msg = "\n";
+	char *msg;
 	ssize_t t;
 	ssize_t size;
 
@@ -352,8 +352,10 @@ static char* rcon_receive() {
 		packet = g_malloc (PACKET_MAXSIZE);
 
 	if (rcon_servertype == HW_SERVER) {
-		if (huff_check () != 0) /* failure (unexpected...) */
+		if (huff_check () != 0) { /* failure (unexpected...) */
+			msg = msg_terminate (NULL, 0);
 			return msg;
+		}
 		/* receive encoded message into the huffman buffer */
 		size = recv (rcon_fd, huffbuff, PACKET_MAXSIZE, 0);
 	}
@@ -363,6 +365,7 @@ static char* rcon_receive() {
 
 	if (size < 0) {
 		if (errno != EWOULDBLOCK) failed("recv");
+		msg = msg_terminate (NULL, 0);
 	}
 	else {
 		switch (rcon_servertype) {
