@@ -108,6 +108,7 @@ static int huff_check (void) {
 
 static void rcon_print (char *fmt, ...) {
 #if defined(BUILD_XQF)
+	GtkTextIter end_iter;
 	GtkAdjustment *vadjustment;
 	char buf[2048];
 	va_list ap;
@@ -117,7 +118,8 @@ static void rcon_print (char *fmt, ...) {
 		g_vsnprintf (buf, sizeof(buf), fmt, ap);
 		va_end (ap);
 
-		gtk_text_buffer_set_text(rcon_text_buffer, buf, strlen(buf));
+		gtk_text_buffer_get_end_iter (rcon_text_buffer, &end_iter);
+		gtk_text_buffer_insert (rcon_text_buffer, &end_iter, buf, strlen(buf));
 
 		vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
 		gtk_adjustment_set_value (vadjustment,
@@ -436,10 +438,12 @@ static char* rcon_receive() {
 #if defined(BUILD_XQF)
 static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
                                      void *user_data) {
+	GtkTextIter end_iter;
 	GtkAdjustment *vadjustment;
 	char* msg = rcon_receive();
 
-	gtk_text_buffer_set_text (rcon_text_buffer, msg, strlen(msg));
+	gtk_text_buffer_get_end_iter (rcon_text_buffer, &end_iter);
+	gtk_text_buffer_insert (rcon_text_buffer, &end_iter, msg, strlen(msg));
 
 	vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
 	gtk_adjustment_set_value (vadjustment,
