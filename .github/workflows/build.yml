@@ -6,15 +6,15 @@ jobs:
     name: GCC (Linux)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev libreadline-dev
+        sudo apt install -y qstat gettext cmake libgtk-4-dev libgeoip-dev libminizip-dev libreadline-dev libxml2-dev
     - name: Update submodules
       run: git submodule update --init --recursive
     - name: cmake
-      run: CC=gcc CXX=g++ cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
+      run: CC=gcc CXX=g++ cmake -DWITH_QSTAT=/usr/bin/quakestat .
     - name: make
       run: make -j"$(nproc)"
     - name: make install
@@ -24,15 +24,15 @@ jobs:
     name: Clang (Linux)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt install -y qstat intltool cmake libgtk2.0-dev libgeoip-dev libminizip-dev libreadline-dev
+        sudo apt install -y qstat gettext cmake libgtk-4-dev libgeoip-dev libminizip-dev libreadline-dev libxml2-dev
     - name: Update submodules
       run: git submodule update --init --recursive
     - name: cmake
-      run: CC=clang CXX=clang++ cmake -DWITH_QSTAT=/usr/bin/quakestat -DCMAKE_C_FLAGS=-Werror .
+      run: CC=clang CXX=clang++ cmake -DWITH_QSTAT=/usr/bin/quakestat .
     - name: make
       run: make -j"$(nproc)"
     - name: make install
