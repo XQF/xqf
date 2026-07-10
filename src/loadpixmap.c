@@ -81,7 +81,7 @@ static char* find_pixmap_file(const char* filename) {
 }
 
 GtkWidget* load_pixmap (GtkWidget* widget, const gchar* filename) {
-	struct pixmap pix = { 0, 0, 0 };
+	struct pixmap pix = { 0, 0 };
 	if (!load_pixmap_as_pixmap(widget, filename, &pix)) {
 		/* 1×1 transparent placeholder */
 		pix.pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);

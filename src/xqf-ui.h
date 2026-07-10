@@ -108,12 +108,6 @@ extern void ui_done (void);
 extern void restore_main_window_geometry (void);
 
 /*
- * This function returns a widget in a component created by Glade.
- * Call it with the toplevel widget in the component (i.e. a window/dialog),
- * or alternatively any widget in the component, and the name of the widget
-
-
-/**
   Create a GtkComboBox that contains all game names.
   It uses a GtkListStore to include the server_type, icon, and name.
   @param active_type which game to set active by default. set to -1 for none

@@ -4143,7 +4143,7 @@ static GtkWidget *qstat_options_page (void) {
 /* ------------------------------------------------------------------ */
 /* Sound-file chooser button                                            */
 /* A plain GtkButton that shows the filename and opens a               */
-/* GtkFileChooserDialog with an audio/* filter when clicked.           */
+/* GtkFileChooserDialog with an audio/\* filter when clicked.          */
 /* ------------------------------------------------------------------ */
 
 #define SOUND_FILE_BTN_PATH "snd-path"

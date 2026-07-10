@@ -1979,11 +1979,9 @@ static gboolean create_main_window (void) {
 }
 
 void populate_main_window (void) {
-	GtkWidget *hbox;
 	GtkWidget *entry;
 	GtkWidget *button;
 	GtkWidget *image;
-	int i;
 
 	// Initialize action states for toggle menu items
 	{
@@ -2023,8 +2021,6 @@ void populate_main_window (void) {
 	pane2_widget = GTK_WIDGET (gtk_builder_get_object (builder, "vpaned"));
 
 	// Server CList
-
-	hbox = GTK_WIDGET (gtk_builder_get_object (builder, "hbox"));
 
 	button = GTK_WIDGET (gtk_builder_get_object (builder, "button"));
 	image = gtk_image_new_from_pixbuf (delete_pix.pixbuf);
