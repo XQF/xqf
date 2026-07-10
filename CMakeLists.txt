@@ -621,6 +621,10 @@ endif()
 	add_executable(xqf ${xqf_SOURCES})
 	target_compile_definitions(xqf PUBLIC BUILD_XQF)
 	target_compile_definitions(xqf PUBLIC GUI_GTK4)
+	# Suppress deprecated-declarations during the GTK4 migration: srv-info.c,
+	# xqf-ui.c and related files intentionally keep GtkTreeView/GtkTreeStore
+	# until those panels are ported to GtkListView/GtkColumnView.
+	target_compile_options(xqf PRIVATE -Wno-deprecated-declarations)
 	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} m)
 
 	if (USE_GEOIP)
