@@ -344,7 +344,7 @@ static char* msg_terminate (char *msg, int size) {
 }
 
 static char* rcon_receive() {
-	char *msg;
+	char *msg = NULL;
 	ssize_t t;
 	ssize_t size;
 
