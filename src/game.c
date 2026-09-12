@@ -264,7 +264,7 @@ enum server_type id2type (const char *id) {
 	}
 
 	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {
-		if (g_ascii_strcasecmp (id, games[i].qstat_str) == 0)
+		if (games[i].qstat_str && g_ascii_strcasecmp (id, games[i].qstat_str) == 0)
 			return games[i].type;
 	}
 
@@ -302,19 +302,19 @@ GtkWidget *game_pixmap_with_label (enum server_type type) {
 	GtkWidget *label;
 	GtkWidget *image;
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 
 	if (games[type].pix) {
-		image = gtk_image_new_from_pixbuf (games[type].pix->pixbuf);
-		gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-		gtk_widget_show (image);
+		image = gtk_image_new_from_paintable (GDK_PAINTABLE (games[type].pix->texture));
+		gtk_box_append (GTK_BOX (hbox), image);
+		gtk_widget_set_visible (image, TRUE);
 	}
 
 	label = gtk_label_new (_(games[type].name));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_box_append (GTK_BOX (hbox), label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	return hbox;
 }
@@ -2343,7 +2343,7 @@ static int config_is_valid_generic (struct server *s) {
 	struct game *g = &games[s->type];
 
 	if (g->cmd == NULL || g->cmd[0] == '\0') {
-		dialog_ok (NULL, "%s command line is empty.", g->name);
+		dialog_ok (NULL, _("%s command line is empty."), g->name);
 		return FALSE;
 	}
 
@@ -2900,6 +2900,7 @@ static int q3_exec (const struct condef *con, int forkit) {
 	enable_console      = str2bool(game_get_attribute(g->type, "enable_console"));
 	pass_memory_options = str2bool(game_get_attribute(g->type, "pass_memory_options"));
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmdtokens = g_strsplit(g->cmd, " ", 0);
 
 	if (cmdtokens && *cmdtokens[cmdi])
@@ -3912,7 +3913,7 @@ char **get_custom_arguments(enum server_type type, const char *gamestring) {
 	char *arg = NULL;
 	int j;
 	char conf[15];
-	char *token[2];
+	char *token[2] = {NULL, NULL};
 	// int n;
 	char ** ret = NULL;
 	GSList *temp;
@@ -3926,10 +3927,11 @@ char **get_custom_arguments(enum server_type type, const char *gamestring) {
 		g_snprintf (conf, 15, "custom_arg%d", j);
 		arg = g_strdup((char *) temp->data);
 
+		token[0] = token[1] = NULL;
 		// n = tokenize (arg, token, 2, ",");
 		tokenize (arg, token, 2, ",");
 
-		if (!(strcasecmp(token[0], gamestring))) {
+		if (token[0] && !(strcasecmp(token[0], gamestring)) && token[1]) {
 			ret = g_strsplit(token[1], " ", 0);
 			debug(1, "found entry for:%s.  Returning argument:%s\n", gamestring, token[1]);
 			g_free(arg);

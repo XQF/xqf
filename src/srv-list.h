@@ -27,24 +27,24 @@ extern GSList *server_pixmap_cache;
 
 extern void assemble_server_address (char *buf, int size, const struct server *s);
 
-extern void player_clist_set_server (struct server *s);
-extern void player_clist_redraw (void);
+extern void player_list_set_server (struct server *s);
+extern void player_list_redraw (void);
 
-extern void server_clist_sync_selection (void);
-extern int server_clist_refresh_server (struct server *s);
+extern void server_list_sync_selection (void);
+extern int server_list_refresh_server (struct server *s);
 
-extern void server_clist_select_one (int row);
-extern GSList *server_clist_selected_servers (void);
-extern GSList *server_clist_all_servers (void);
-extern GSList *server_clist_get_n_servers (int amount);
+extern void server_list_select_one (int row);
+extern GSList *server_list_selected_servers (void);
+extern GSList *server_list_all_servers (void);
+extern GSList *server_list_get_n_servers (int amount);
 
-extern void server_clist_selection_visible (void);
+extern void server_list_selection_visible (void);
 
-extern void server_clist_show_hostname (struct host *h);
-extern void server_clist_redraw (void);
+extern void server_list_show_hostname (struct host *h);
+extern void server_list_redraw (void);
 
-extern void server_clist_set_list (GSList *servers);
-extern void server_clist_build_filtered (GSList *servers, int update);
+extern void server_list_set_list (GSList *servers);
+extern void server_list_build_filtered (GSList *servers, int update);
 
 
 #endif /* __SRV_LIST_H__ */

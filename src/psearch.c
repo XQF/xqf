@@ -26,6 +26,9 @@
 
 #include "xqf.h"
 #include "xqf-ui.h"
+#include "xqf-lists.h"
+#include "xqf-player-item.h"
+#include "xqf-server-item.h"
 #include "srv-list.h"
 #include "srv-prop.h"
 #include "dialogs.h"
@@ -140,9 +143,9 @@ static void psearch_combo_activate_callback (GtkWidget *widget,
 		gpointer data) {
 	psearch_free_pattern ();
 
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_STRING])))
+	if (gtk_check_button_get_active (GTK_CHECK_BUTTON (mode_buttons[PSEARCH_MODE_STRING])))
 		psearch.mode = PSEARCH_MODE_STRING;
-	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mode_buttons[PSEARCH_MODE_SUBSTR])))
+	else if (gtk_check_button_get_active (GTK_CHECK_BUTTON (mode_buttons[PSEARCH_MODE_SUBSTR])))
 		psearch.mode = PSEARCH_MODE_SUBSTR;
 	else
 		psearch.mode = PSEARCH_MODE_REGEXP;
@@ -150,7 +153,7 @@ static void psearch_combo_activate_callback (GtkWidget *widget,
 	config_set_int ("/" CONFIG_FILE "/Find Player/mode", psearch.mode);
 
 	psearch.pattern = strdup_strip (
-			gtk_entry_get_text (GTK_ENTRY (combo_get_entry (psearch_combo))));
+			gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (psearch_combo))));
 
 	if (psearch.pattern && psearch.pattern[0]) {
 		history_add (psearch_history, psearch.pattern);
@@ -165,44 +168,41 @@ int find_player_dialog (void) {
 	GtkWidget *hbox;
 	GtkWidget *button;
 	GtkWidget *label;
-	GSList *group;
 	int i;
 
 	psearch_new_pattern = FALSE;
 
 	window = dialog_create_modal_transient_window (_("Find Player"),
 			TRUE, FALSE, NULL);
-	main_vbox = gtk_vbox_new (FALSE, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 16);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+	xqf_widget_set_margin_all (main_vbox, 16);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	/* Pattern Entry */
 
 	label = gtk_label_new (_("Find Player:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_box_append (GTK_BOX (hbox), label);
+	gtk_widget_set_visible (label, TRUE);
 
 	/* ComboBox */
 
-	psearch_combo = gtk_combo_box_text_new_with_entry ();
-	gtk_entry_set_max_length (GTK_ENTRY (combo_get_entry (psearch_combo)), 128);
-	gtk_widget_set_size_request (GTK_WIDGET (combo_get_entry (psearch_combo)), 160, -1);
-	g_signal_connect (G_OBJECT (combo_get_entry (psearch_combo)),
+	psearch_combo = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (psearch_combo), 128);
+	gtk_widget_set_size_request (psearch_combo, 160, -1);
+	g_signal_connect (G_OBJECT (psearch_combo),
 			"activate", G_CALLBACK (psearch_combo_activate_callback), NULL);
-	g_signal_connect_swapped (G_OBJECT (combo_get_entry (psearch_combo)),
-			"activate", G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), psearch_combo, TRUE, TRUE, 0);
-	gtk_widget_grab_focus (GTK_WIDGET (combo_get_entry (psearch_combo)));
-	gtk_widget_show (psearch_combo);
+	g_signal_connect_swapped (G_OBJECT (psearch_combo),
+			"activate", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), psearch_combo);
+	gtk_widget_grab_focus (psearch_combo);
+	gtk_widget_set_visible (psearch_combo, TRUE);
 
 	if (psearch_history->items) {
 		combo_set_vals (psearch_combo, psearch_history->items, "");
-
-		gtk_combo_box_set_active (GTK_COMBO_BOX (psearch_combo), 0);
-		gtk_editable_select_region (GTK_EDITABLE (combo_get_entry (psearch_combo)), 0, -1);
+		gtk_editable_select_region (GTK_EDITABLE (psearch_combo), 0, -1);
 	}
 
 	/* OK Button */
@@ -212,44 +212,42 @@ int find_player_dialog (void) {
 			G_CALLBACK (psearch_combo_activate_callback),
 			G_OBJECT (psearch_combo));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* Cancel Button */
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Mode Buttons */
 
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
-
-	group = NULL;
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	for (i = 0; i < 3; i++) {
-		mode_buttons[i] = gtk_radio_button_new_with_label (group,
-				_(mode_names[i]));
-		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (mode_buttons[i]));
-		gtk_box_pack_start (GTK_BOX (hbox), mode_buttons[i], FALSE, FALSE, 0);
-		gtk_widget_show (mode_buttons[i]);
+		mode_buttons[i] = gtk_check_button_new_with_label (_(mode_names[i]));
+		if (i > 0)
+			gtk_check_button_set_group (GTK_CHECK_BUTTON (mode_buttons[i]), GTK_CHECK_BUTTON (mode_buttons[0]));
+		gtk_box_append (GTK_BOX (hbox), mode_buttons[i]);
+		gtk_widget_set_visible (mode_buttons[i], TRUE);
 	}
 
-	gtk_toggle_button_set_active (
-			GTK_TOGGLE_BUTTON (mode_buttons[psearch.mode]), TRUE);
+	gtk_check_button_set_active (
+			GTK_CHECK_BUTTON (mode_buttons[psearch.mode]), TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 
@@ -295,24 +293,6 @@ char *psearch_lookup_pattern (void) {
 }
 
 
-static int integer_list_find_minimum (GList *list) {
-	int res = 0;
-
-	if (list) {
-		res = GPOINTER_TO_INT(list->data);
-		list = list->next;
-
-		while (list) {
-			if (res > GPOINTER_TO_INT(list->data)) {
-				res = GPOINTER_TO_INT(list->data);
-			}
-			list = list->next;
-		}
-	}
-
-	return res;
-}
-
 
 static int server_has_player (struct server *s) {
 	GSList *plist;
@@ -327,24 +307,22 @@ static int server_has_player (struct server *s) {
 }
 
 
-static int psearch_next_player (int player) {
-	struct player *p;
-	GtkVisibility vis;
+static int psearch_next_player (guint start) {
+	if (!player_selection) return FALSE;
 
-	while (player < player_clist->rows) {
-		p = (struct player *) gtk_clist_get_row_data (player_clist, player);
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (player_selection));
+	for (guint i = start; i < n; i++) {
+		XqfPlayerItem *pi = XQF_PLAYER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (player_selection), i));
+		struct player *p = xqf_player_item_get (pi);
+		gboolean match = psearch_test_player (p);
+		g_object_unref (pi);
 
-		if (psearch_test_player (p)) {
-			gtk_clist_select_row (player_clist, player, 0);
-
-			vis = gtk_clist_row_is_visible (player_clist, player);
-			if (vis != GTK_VISIBILITY_FULL)
-				gtk_clist_moveto (player_clist, player, 0, 0.5, 0.0);
-
+		if (match) {
+			gtk_selection_model_select_item (player_selection, i, TRUE);
+			gtk_widget_activate_action (player_view, "list.scroll-to-item", "u", i);
 			return TRUE;
 		}
-
-		player++;
 	}
 
 	return FALSE;
@@ -352,42 +330,50 @@ static int psearch_next_player (int player) {
 
 
 void find_player (int find_next) {
-	struct server *s;
-	int player = 0;
-	int server = 0;
+	if (!server_selection) return;
 
-	if (find_next && server_clist->selection != NULL) { /* selected one */
+	guint srv_n = g_list_model_get_n_items (G_LIST_MODEL (server_selection));
+	guint srv_start = 0;
 
-		if (server_clist->selection->next == NULL) {
-			server = GPOINTER_TO_INT(server_clist->selection->data);
-
-			if (player_clist->selection)
-				player = GPOINTER_TO_INT(player_clist->selection->data + 1);
-
-			if (psearch_next_player (player))
-				return;
-
-			server++;
+	if (find_next && cur_server) {
+		/* Find the position of cur_server in the sorted view */
+		for (guint i = 0; i < srv_n; i++) {
+			XqfServerItem *si = XQF_SERVER_ITEM (
+				g_list_model_get_item (G_LIST_MODEL (server_selection), i));
+			struct server *s = xqf_server_item_get (si);
+			g_object_unref (si);
+			if (s == cur_server) {
+				/* Try to continue from the next player in this server first */
+				guint pl_start = 0;
+				if (player_selection) {
+					GtkBitset *pl_sel = gtk_selection_model_get_selection (player_selection);
+					guint pl_min = gtk_bitset_get_minimum (pl_sel);
+					if (pl_min != G_MAXUINT)
+						pl_start = pl_min + 1;
+					gtk_bitset_unref (pl_sel);
+				}
+				if (psearch_next_player (pl_start))
+					return;
+				srv_start = i + 1;
+				break;
+			}
 		}
-		else {  /* selected many */
-			server = integer_list_find_minimum (server_clist->selection);
-		}
-
 	}
 
-	while (server < server_clist->rows) {
-		s = (struct server *) gtk_clist_get_row_data (server_clist, server);
+	for (guint i = srv_start; i < srv_n; i++) {
+		XqfServerItem *si = XQF_SERVER_ITEM (
+			g_list_model_get_item (G_LIST_MODEL (server_selection), i));
+		struct server *s = xqf_server_item_get (si);
+		g_object_unref (si);
 
 		if (server_has_player (s)) {
-			server_clist_select_one (server);
+			server_list_select_one ((int) i);
 			psearch_next_player (0);
 			return;
 		}
-
-		server++;
 	}
 
-	if (!find_next || server_clist->selection == NULL) {
+	if (!find_next || !cur_server) {
 		dialog_ok (NULL, _("Player not found."));
 		reset_main_status_bar(builder);
 	}

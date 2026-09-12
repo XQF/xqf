@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 
+
+XQF - Game Server Browser
+Copyright (C) © XQF Team 1998-2015
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+-->
+<interface>
+  <requires lib="gtk+" version="3.12"/>
+  <!-- interface-license-type gplv2 -->
+  <!-- interface-name XQF -->
+  <!-- interface-description Game Server Browser -->
+  <!-- interface-copyright \302\251 XQF Team 1998-2015 -->
+  <object class="GtkListStore" id="player_list_store"/>
+  <object class="GtkListStore" id="server_list_store">
+    <columns>
+      <!-- column-name SERVER_NAME -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_ADDRESS -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_PING -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_TO -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_PRIV -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_PLAYERS -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_MAP -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_GAME -->
+      <column type="gchararray"/>
+      <!-- column-name SERVER_GAMETYPE -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeStore" id="source_tree_store">
+    <columns>
+      <!-- column-name Game -->
+      <column type="gchar"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="svinfo_list_store">
+    <columns>
+      <!-- column-name SVINFO_RULE -->
+      <column type="gchararray"/>
+      <!-- column-name SVINFO_VALUE -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="main-window">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">XQF</property>
+    <property name="icon_name">xqf</property>
+    <child>
+      <object class="GtkBox" id="main-vbox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkPopoverMenuBar" id="menubar1">
+            <property name="visible">True</property>
+            <property name="menu-model">main-menu</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="main-toolbar">
+            <property name="visible">True</property>
+            <property name="spacing">2</property>
+            <child>
+              <object class="GtkButton" id="update-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Update from master</property>
+                <property name="label" translatable="yes">Update</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="refresh-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Refresh current list</property>
+                <property name="label" translatable="yes">Refresh</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="refrsel-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Refresh selected servers</property>
+                <property name="label" translatable="yes">Ref.Sel.</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="stop-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Stop</property>
+                <property name="label" translatable="yes">Stop</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSeparator" id="first-separator">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="connect-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Connect</property>
+                <property name="label" translatable="yes">Connect</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="observe-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Observe</property>
+                <property name="label" translatable="yes">Observe</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="record-button">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Record Demo</property>
+                <property name="label" translatable="yes">Record</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="main-content-box">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkPaned" id="hpaned">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="scrollwin-sources">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkPaned" id="vpaned">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <child>
+                      <object class="GtkBox" id="server-panel-box">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkBox" id="hbox">
+                            <property name="visible">True</property>
+                            <property name="spacing">2</property>
+                            <child>
+                              <object class="GtkButton" id="button">
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="entry">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="scrollwin-server">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkPaned" id="paned1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkScrolledWindow" id="scrollwin-player">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="scrollwin-server-info">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="statusbar-box">
+                <property name="visible">True</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel" id="main-status-bar">
+                    <property name="visible">True</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">True</property>
+                    <property name="label"></property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="main-filter-status-bar">
+                    <property name="visible">True</property>
+                    <property name="halign">center</property>
+                    <property name="hexpand">True</property>
+                    <property name="label"></property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkProgressBar" id="main-progress-bar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <!-- Main menu model -->
+  <menu id="main-menu">
+    <submenu>
+      <attribute name="label" translatable="yes">_File</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_Statistics</attribute>
+        <attribute name="action">win.statistics</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Exit</attribute>
+        <attribute name="action">win.quit</attribute>
+        <attribute name="accel">&lt;Control&gt;q</attribute>
+      </item>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Edit</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Add new Server</attribute>
+          <attribute name="action">win.add-server</attribute>
+          <attribute name="accel">&lt;Control&gt;n</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add to _Favorites</attribute>
+          <attribute name="action">win.add-to-favorites</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Remove</attribute>
+          <attribute name="action">win.remove-server</attribute>
+          <attribute name="accel">&lt;Control&gt;d</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Copy</attribute>
+          <attribute name="action">win.copy-server</attribute>
+          <attribute name="accel">&lt;Control&gt;c</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Copy+</attribute>
+          <attribute name="action">win.copy-server-plus</attribute>
+          <attribute name="accel">&lt;Control&gt;o</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Add Default Masters</attribute>
+          <attribute name="action">win.add-default-masters</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add Gslist Masters</attribute>
+          <attribute name="action">win.add-gslist-masters</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add _Master</attribute>
+          <attribute name="action">win.add-master</attribute>
+          <attribute name="accel">&lt;Control&gt;m</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Rename Master</attribute>
+          <attribute name="action">win.rename-master</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">D_elete Master</attribute>
+          <attribute name="action">win.delete-master</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Clear Servers</attribute>
+          <attribute name="action">win.clear-servers</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Find Player</attribute>
+          <attribute name="action">win.find-player</attribute>
+          <attribute name="accel">&lt;Control&gt;f</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Find A_gain</attribute>
+          <attribute name="action">win.find-again</attribute>
+          <attribute name="accel">&lt;Control&gt;g</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Properties</attribute>
+          <attribute name="action">win.properties</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Preferences</attribute>
+          <attribute name="action">win.preferences</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_View</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Refresh</attribute>
+          <attribute name="action">win.refresh</attribute>
+          <attribute name="accel">&lt;Control&gt;r</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Refresh _Selected</attribute>
+          <attribute name="action">win.refresh-selected</attribute>
+          <attribute name="accel">&lt;Control&gt;s</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Update From Master</attribute>
+          <attribute name="action">win.update-from-master</attribute>
+          <attribute name="accel">&lt;Control&gt;u</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Show _Host Names</attribute>
+          <attribute name="action">win.show-hostnames</attribute>
+          <attribute name="accel">&lt;Control&gt;h</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Show Default _Port</attribute>
+          <attribute name="action">win.show-default-port</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Server</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Connect</attribute>
+          <attribute name="action">win.connect</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Observe</attribute>
+          <attribute name="action">win.observe</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Record _Demo</attribute>
+          <attribute name="action">win.record-demo</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Add new Server</attribute>
+          <attribute name="action">win.add-server</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Add to _Favorites</attribute>
+          <attribute name="action">win.add-to-favorites</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Remove</attribute>
+          <attribute name="action">win.remove-server</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">DNS _Lookup</attribute>
+          <attribute name="action">win.dns-lookup</attribute>
+          <attribute name="accel">&lt;Control&gt;l</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_RCon</attribute>
+          <attribute name="action">win.rcon</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Properties</attribute>
+          <attribute name="action">win.properties</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Server Filters</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Configure...</attribute>
+          <attribute name="action">win.configure-filters</attribute>
+        </item>
+      </section>
+      <section id="filter-select-section">
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Help</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </submenu>
+  </menu>
+  <!-- Server right-click context menu model -->
+  <menu id="svopt-context-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Connect</attribute>
+        <attribute name="action">win.connect</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Observe</attribute>
+        <attribute name="action">win.observe</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Record</attribute>
+        <attribute name="action">win.record-demo</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Add new Server</attribute>
+        <attribute name="action">win.add-server</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Add to Favorites</attribute>
+        <attribute name="action">win.add-to-favorites</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Remove</attribute>
+        <attribute name="action">win.remove-server</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Copy</attribute>
+        <attribute name="action">win.copy-server</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Refresh</attribute>
+        <attribute name="action">win.refresh</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Refresh Selected</attribute>
+        <attribute name="action">win.refresh-selected</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">DNS Lookup</attribute>
+        <attribute name="action">win.dns-lookup</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">RCon</attribute>
+        <attribute name="action">win.rcon</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Properties</attribute>
+        <attribute name="action">win.properties</attribute>
+      </item>
+    </section>
+  </menu>
+  <!-- Server info right-click context menu model -->
+  <menu id="svinfo-context-menu">
+    <item>
+      <attribute name="label" translatable="yes">_Copy</attribute>
+      <attribute name="action">win.copy-server-info</attribute>
+    </item>
+  </menu>
+  <!-- Source tree right-click context menu model -->
+  <menu id="source-context-menu">
+    <item>
+      <attribute name="label" translatable="yes">Add _Master</attribute>
+      <attribute name="action">win.add-master</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">_Rename Master</attribute>
+      <attribute name="action">win.rename-master</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">D_elete Master</attribute>
+      <attribute name="action">win.delete-master</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">_Clear Servers</attribute>
+      <attribute name="action">win.clear-servers</attribute>
+    </item>
+  </menu>
+  <!-- Player right-click context menu model -->
+  <menu id="player-context-menu">
+    <submenu>
+      <attribute name="label" translatable="yes">Player Filter</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Mark as Red</attribute>
+        <attribute name="action">win.player-filter-red</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Mark as Green</attribute>
+        <attribute name="action">win.player-filter-green</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Mark as Blue</attribute>
+        <attribute name="action">win.player-filter-blue</attribute>
+      </item>
+    </submenu>
+  </menu>
+</interface>

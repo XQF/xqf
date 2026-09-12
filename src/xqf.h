@@ -28,6 +28,7 @@
 
 #if defined(BUILD_XQF)
 #include <gtk/gtk.h>
+#include "xqf-utils.h"
 #endif
 
 #include "defs.h"

@@ -25,7 +25,7 @@
 #include "callbacks.h"
 #include "filter.h"
 
-struct clist_column {
+struct list_column {
 	const char *name;
 	int width;
 	GtkJustification justify;
@@ -36,17 +36,17 @@ struct clist_column {
 };
 
 
-enum cwidget_type {
-	CWIDGET_CLIST = 0,
-	CWIDGET_CTREE
+enum cview_type {
+	CVIEW_LIST = 0,
+	CVIEW_TREE
 };
 
 
-struct clist_def {
-	enum cwidget_type type;
+struct list_def {
+	enum cview_type type;
 	char *name;
 
-	struct clist_column *cols;
+	struct list_column *cols;
 
 	int columns;
 	GtkSelectionMode mode;
@@ -58,9 +58,8 @@ struct clist_def {
 	GtkSortType sort_type;
 };
 
-extern struct clist_def server_clist_def;
-extern struct clist_def player_clist_def;
-extern struct clist_def srvinf_clist_def;
+extern struct list_def server_list_def;
+extern struct list_def player_list_def;
 
 extern GtkWidget *pane1_widget;
 extern GtkWidget *pane2_widget;
@@ -68,10 +67,10 @@ extern GtkWidget *pane3_widget;
 
 
 extern GtkWidget *main_window;
-extern GtkWidget *source_ctree;
-extern GtkCList  *server_clist;
-extern GtkCList  *player_clist;
-extern GtkCTree  *srvinf_ctree;
+extern GtkWidget *source_treeview;
+extern GtkWidget *server_view;   /* GtkColumnView */
+extern GtkWidget *player_view;   /* GtkColumnView */
+extern GtkWidget *srvinf_treeview;
 
 extern GtkWidget *view_hostnames_menu_item;
 extern GtkWidget *view_defport_menu_item;
@@ -85,23 +84,19 @@ extern GtkWidget *server_filter_widget[];
 
 extern void print_status (GtkWidget *sbar, char *fmt, ...);
 
-extern GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef);
+extern void source_treeview_show_node_status (struct master *m);
 
-extern int clist_change_sort_mode (struct clist_def *cldef, int col);
+extern void source_treeview_add_master (struct master *m);
+extern void source_treeview_delete_master (struct master *m);
+extern void source_treeview_remove_master_group (struct master *m);
+extern gboolean source_treeview_has_master (struct master *m);
+extern GtkWidget *create_source_treeview (GtkWidget *scrollwin);
+extern void source_treeview_restore_expand_state (void);
+extern void source_treeview_select_source (struct master *m);
 
-extern void clist_set_sort_column (GtkCList *clist, int column, struct clist_def *cldef);
+extern int calculate_row_height (GtkWidget *widget, struct pixmap *pix);
 
-extern void source_ctree_show_node_status (GtkWidget *ctree, struct master *m);
-
-extern void source_ctree_add_master (GtkWidget *ctree, struct master *m);
-extern void source_ctree_delete_master (GtkWidget *ctree, struct master *m);
-extern void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m);
-extern GtkWidget *create_source_ctree (GtkWidget *scrollwin);
-extern void source_ctree_select_source (struct master *m);
-
-extern int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix);
-
-extern void set_toolbar_appearance (GtkToolbar *toolbar);
+extern void set_toolbar_appearance (GtkWidget *toolbar);
 
 extern GtkWidget *create_progress_bar (void);
 extern void progress_bar_reset (GtkWidget *pbar);
@@ -113,15 +108,6 @@ extern void ui_done (void);
 extern void restore_main_window_geometry (void);
 
 /*
- * This function returns a widget in a component created by Glade.
- * Call it with the toplevel widget in the component (i.e. a window/dialog),
- * or alternatively any widget in the component, and the name of the widget
- * you want returned.
- */
-GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name);
-
-
-/**
   Create a GtkComboBox that contains all game names.
   It uses a GtkListStore to include the server_type, icon, and name.
   @param active_type which game to set active by default. set to -1 for none
@@ -133,12 +119,6 @@ GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name);
   */
 GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback);
 
-enum {
-	SERVERTYPE_ATTR_TYPE, // G_TYPE_INT -- enum server_type
-	SERVERTYPE_ATTR_ICON, // GDK_TYPE_PIXBUF
-	SERVERTYPE_ATTR_NAME, // G_TYPE_STRING
-	SERVERTYPE_ATTR_COUNT
-};
 
 /** Skip a game if it's not configured and show only configured is enabled */
 gboolean create_server_type_menu_filter_configured(enum server_type type);

@@ -120,7 +120,7 @@ static void rcon_print (char *fmt, ...) {
 
 		gtk_text_buffer_insert_at_cursor(rcon_text_buffer, buf, strlen(buf));
 
-		vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
+		vadjustment = gtk_scrollable_get_vadjustment(GTK_SCROLLABLE(rcon_text));
 		gtk_adjustment_set_value (vadjustment,
 				gtk_adjustment_get_upper (vadjustment) -
 				gtk_adjustment_get_page_size (vadjustment));
@@ -275,7 +275,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	int res;
 
 	cmd = strdup_strip (
-			gtk_entry_get_text (combo_get_entry (rcon_combo)));
+			gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (rcon_combo))));
 
 	if (cmd) {
 		res = rcon_send(cmd);
@@ -289,7 +289,7 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 		g_free (cmd);
 	}
 	else {
-		gtk_entry_set_text (combo_get_entry (rcon_combo), "");
+		gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (rcon_combo)), "");
 	}
 }
 #endif
@@ -450,7 +450,7 @@ static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
 		g_free(msg);
 	}
 
-	vadjustment = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text));
+	vadjustment = gtk_scrollable_get_vadjustment(GTK_SCROLLABLE(rcon_text));
 	gtk_adjustment_set_value (vadjustment,
 			gtk_adjustment_get_upper (vadjustment) -
 			gtk_adjustment_get_page_size (vadjustment));
@@ -462,7 +462,7 @@ static gboolean rcon_input_callback (GIOChannel *chan, GIOCondition condition,
 
 #if defined(BUILD_XQF)
 static void rcon_status_button_clicked_callback (GtkWidget *w, gpointer data) {
-	gtk_entry_set_text (combo_get_entry (rcon_combo), "status");
+	gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (rcon_combo)), "status");
 	rcon_combo_activate_callback (rcon_combo, data);
 }
 #endif
@@ -477,13 +477,9 @@ static void rcon_clear_button_clicked_callback (GtkWidget *w, gpointer data) {
 
 #if defined(BUILD_XQF)
 static void rcon_save_geometry (GtkWidget *window, gpointer data) {
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (window, &allocation);
-
 	config_push_prefix ("/" CONFIG_FILE "/RCON Window Geometry/");
-	config_set_int ("height", allocation.height);
-	config_set_int ("width", allocation.width);
+	config_set_int ("height", gtk_widget_get_height (window));
+	config_set_int ("width", gtk_widget_get_width (window));
 	config_pop_prefix ();
 }
 #endif
@@ -517,8 +513,6 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	GtkWidget *label;
 	GtkWidget *image;
 	GtkWidget *button;
-	GtkWidget *vscrollbar;
-	GtkWidget *hseparator;
 	char srv[256];
 	char buf[256];
 	GIOChannel *rcon_chan;
@@ -548,78 +542,69 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
 	rcon_restore_geometry (window);
 
-	main_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
-	vbox = gtk_vbox_new (FALSE, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, TRUE, TRUE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+	xqf_widget_set_margin_all (vbox, 8);
+	gtk_box_append (GTK_BOX (main_vbox), vbox);
 
 	/* Dialog Title */
 
-	hbox = gtk_hbox_new (TRUE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (vbox), hbox);
 
-	hbox2 = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	if (games[s->type].pix) {
-		image = gtk_image_new_from_pixbuf (games[s->type].pix->pixbuf);
-		gtk_box_pack_start (GTK_BOX (hbox2), image, FALSE, FALSE, 0);
-		gtk_widget_show (image);
+		image = gtk_image_new_from_paintable (GDK_PAINTABLE (games[s->type].pix->texture));
+		gtk_box_append (GTK_BOX (hbox2), image);
+		gtk_widget_set_visible (image, TRUE);
 	}
 
 	label = gtk_label_new (buf);
-	gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_box_append (GTK_BOX (hbox2), label);
+	gtk_widget_set_visible (label, TRUE);
 
-	gtk_widget_show (hbox2);
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox2, TRUE);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Text */
 
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
 	rcon_text_buffer = gtk_text_buffer_new (NULL);
 	rcon_text = gtk_text_view_new_with_buffer (rcon_text_buffer);
-
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (rcon_text), FALSE);
 	gtk_widget_set_can_focus (rcon_text, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox), rcon_text, TRUE, TRUE, 0);
-	gtk_widget_show (rcon_text);
 
-	vscrollbar = gtk_vscrollbar_new (gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (rcon_text)));
-	gtk_widget_set_can_focus (vscrollbar, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox), vscrollbar, FALSE, FALSE, 0);
-	gtk_widget_show (vscrollbar);
+	hbox = gtk_scrolled_window_new();
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (hbox), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (hbox), rcon_text);
+	gtk_box_append (GTK_BOX (vbox), hbox);
+	gtk_widget_set_visible (rcon_text, TRUE);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (hbox);
-
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (vbox), hbox);
 
 	/* Message */
 
 	label = gtk_label_new (_("Cmd:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
+	gtk_box_append (GTK_BOX (hbox), label);
+	gtk_widget_set_visible (label, TRUE);
 
 	/* Entry */
 
-	rcon_combo = gtk_combo_box_text_new_with_entry ();
-	gtk_entry_set_max_length (combo_get_entry (rcon_combo), 256);
-	g_signal_connect (G_OBJECT (combo_get_entry (rcon_combo)), "activate",
+	rcon_combo = gtk_entry_new ();
+	gtk_entry_set_max_length (GTK_ENTRY (rcon_combo), 256);
+	g_signal_connect (G_OBJECT (rcon_combo), "activate",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), rcon_combo, TRUE, TRUE, 0);
-	gtk_widget_grab_focus (GTK_WIDGET (rcon_combo));
-	gtk_widget_show (rcon_combo);
+	gtk_box_append (GTK_BOX (hbox), rcon_combo);
+	gtk_widget_grab_focus (rcon_combo);
+	gtk_widget_set_visible (rcon_combo, TRUE);
 
-	if (rcon_history->items)
-		combo_set_vals (rcon_combo, rcon_history->items, "");
-
-	hbox2 = gtk_hbox_new (FALSE, 2);
-	gtk_box_pack_end (GTK_BOX (hbox), hbox2, FALSE, FALSE, 0);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+	gtk_box_append (GTK_BOX (hbox), hbox2);
 
 	/* Send Button */
 
@@ -627,8 +612,8 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_combo_activate_callback), NULL);
 	gtk_widget_set_can_focus (button, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_box_append (GTK_BOX (hbox2), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* Status Button */
 
@@ -636,8 +621,8 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_status_button_clicked_callback), NULL);
 	gtk_widget_set_can_focus (button, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_box_append (GTK_BOX (hbox2), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	/* Clear Button */
 
@@ -645,44 +630,41 @@ void rcon_dialog (const struct server *s, const char *passwd) {
 	g_signal_connect (G_OBJECT (button), "clicked",
 			G_CALLBACK (rcon_clear_button_clicked_callback), NULL);
 	gtk_widget_set_can_focus (button, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_box_append (GTK_BOX (hbox2), button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox2);
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox2, TRUE);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
-	hseparator = gtk_hseparator_new ();
-	gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
-	gtk_widget_show (hseparator);
+	gtk_box_append (GTK_BOX (main_vbox),
+	                gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
 
 	/* Close Button */
 
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+	xqf_widget_set_margin_all (hbox, 8);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	button = gtk_button_new_with_label (_("Close"));
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			G_CALLBACK (gtk_widget_destroy), G_OBJECT (window));
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+			G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
 	rcon_chan = g_io_channel_unix_new (rcon_fd);
 	rcon_tag = g_io_add_watch (rcon_chan,
 	                          G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
 	                          rcon_input_callback, NULL);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	// FIXME GError
 	g_io_channel_shutdown (rcon_chan, TRUE, NULL);

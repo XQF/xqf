@@ -21,25 +21,14 @@
 
 #include <gtk/gtk.h>
 
-#ifdef GUI_GTK3
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#endif
-
 struct pixmap {
-	GdkPixbuf *pixbuf;
-#ifdef GUI_GTK2
-	GdkPixmap *pix;
-	GdkBitmap *mask;
-#endif
+	GdkPixbuf  *pixbuf;
+	GdkTexture *texture; /* GdkTexture wrapper for use with GtkCellRendererPixbuf "texture" property */
 };
 
 struct cached_pixmap {
 	unsigned key;
 	GdkPixbuf *pixbuf;
-#ifdef GUI_GTK2
-	GdkPixmap *pix;
-	GdkBitmap *mask;
-#endif
 	int weight;
 };
 
@@ -86,7 +75,7 @@ extern void init_pixmaps (GtkWidget *window);
 
 extern void ensure_buddy_pix (GtkWidget *window, int n);
 
-extern void two_colors_pixmap (GdkWindow *window, int width, int height, GdkColor *top, GdkColor *bottom, struct pixmap *pix);
+extern void two_colors_pixmap (int width, int height, GdkRGBA *top, GdkRGBA *bottom, struct pixmap *pix);
 
 extern void create_server_pixmap (GtkWidget *window, struct pixmap *stype, int n, struct pixmap *pix);
 
