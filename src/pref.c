@@ -2381,20 +2381,17 @@ static void pref_suggest_command(enum server_type type) {
 static int custom_args_compare_func (gconstpointer ptr1, gconstpointer ptr2) {
 	// ptr1 = entire string
 	// ptr2 = game
-	gchar *token[2];
+	gchar *token[2] = {NULL, NULL};
 	gchar *tmpstr;
 
 
 	tmpstr = g_strdup((gchar *)ptr1);
 	tokenize(tmpstr, token, 2, ",");
+
+	int match = token[0] && strcasecmp(token[0], ptr2) == 0;
 	g_free(tmpstr);
 
-	if (strcasecmp(token[0], ptr2) == 0) {
-		return (0);
-	}
-	else {
-		return (1);
-	}
+	return match ? 0 : 1;
 }
 
 static GObject *args_item_new (const char *game, const char *args) {
