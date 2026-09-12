@@ -177,8 +177,23 @@ server_col_cmp (gconstpointer a, gconstpointer b, gpointer user_data)
 static void
 player_col_setup (GtkSignalListItemFactory *f G_GNUC_UNUSED,
                   GtkListItem *item,
-                  gpointer col G_GNUC_UNUSED)
+                  gpointer user_data)
 {
+    int col = GPOINTER_TO_INT (user_data);
+
+    if (col == 0) {
+        /* Name column: optional group-color icon + label */
+        GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
+        GtkWidget *image = gtk_image_new ();
+        GtkWidget *label = gtk_label_new (NULL);
+        gtk_label_set_xalign (GTK_LABEL (label), 0.0f);
+        gtk_widget_set_margin_start (box, 2);
+        gtk_box_append (GTK_BOX (box), image);
+        gtk_box_append (GTK_BOX (box), label);
+        gtk_list_item_set_child (item, box);
+        return;
+    }
+
     GtkWidget *label = gtk_label_new (NULL);
     gtk_label_set_xalign (GTK_LABEL (label), 0.0f);
     gtk_widget_set_margin_start (label, 2);
@@ -202,10 +217,24 @@ player_col_bind (GtkSignalListItemFactory *f G_GNUC_UNUSED,
 
     switch (col) {
 
-    case 0: /* Name */
-        gtk_label_set_text (GTK_LABEL (label),
-            (p->name && (p->flags & PLAYER_GROUP_MASK) == 0) ? p->name : "");
+    case 0: { /* Name */
+        GtkWidget *box = label; /* item's child is the icon+label box for this column */
+        GtkWidget *image = gtk_widget_get_first_child (box);
+        GtkWidget *name_label = gtk_widget_get_last_child (box);
+        int group = p->flags & PLAYER_GROUP_MASK;
+
+        if (group != 0) {
+            ensure_buddy_pix (main_window, group);
+            GdkTexture *tex = buddy_pix[group].texture;
+            gtk_image_set_from_paintable (GTK_IMAGE (image), tex ? GDK_PAINTABLE (tex) : NULL);
+            gtk_widget_set_visible (image, TRUE);
+        } else {
+            gtk_widget_set_visible (image, FALSE);
+        }
+
+        gtk_label_set_text (GTK_LABEL (name_label), p->name ? p->name : "");
         break;
+    }
 
     case 1: /* Frags */
         g_snprintf (buf, sizeof (buf), "%d", (int) p->frags);

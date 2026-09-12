@@ -254,6 +254,8 @@ void ensure_buddy_pix (GtkWidget *window, int n) {
 	if (n & 4) {
 		gdk_pixbuf_composite (buddy_pix[4].pixbuf, dest->pixbuf, 0, 0, width, height, 0, 0, 1.0, 1.0, GDK_INTERP_NEAREST, 255);
 	}
+
+	dest->texture = gdk_texture_new_for_pixbuf (dest->pixbuf);
 }
 
 
