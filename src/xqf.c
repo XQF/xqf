@@ -1463,10 +1463,15 @@ void show_default_port_callback (GSimpleAction *action, GVariant *parameter, gpo
 
 static GtkApplication *xqf_app;
 
-/* GAction "activate" callback — quit from menu/keyboard */
+/* GAction "activate" callback — quit from menu/keyboard.
+ * Closes the window (triggering main_window_close_cb's release) instead of
+ * releasing the app hold directly: GtkApplication keeps the app running as
+ * long as it has a window, so releasing here without closing it was a
+ * no-op, and would double-release if the window was closed afterwards. */
 static void app_quit_cb (GSimpleAction *a, GVariant *p, gpointer d) {
 	(void)a; (void)p; (void)d;
-	g_application_release (G_APPLICATION (xqf_app));
+	if (main_window)
+		gtk_window_close (GTK_WINDOW (main_window));
 }
 
 /* close-request handler for the main window — releases the app hold so
