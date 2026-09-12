@@ -2867,6 +2867,8 @@ static GtkWidget *custom_args_options_page (enum server_type type) {
 		arguments_list = gtk_column_view_new(GTK_SELECTION_MODEL(args_sel));
 		gtk_column_view_append_column(GTK_COLUMN_VIEW(arguments_list), cgame);
 		gtk_column_view_append_column(GTK_COLUMN_VIEW(arguments_list), cargs);
+		g_object_unref(cgame);
+		g_object_unref(cargs);
 
 		g_object_set_data(G_OBJECT(arguments_list), "store", args_store);
 		g_object_set_data(G_OBJECT(arguments_list), "sel", args_sel);
