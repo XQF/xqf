@@ -4154,7 +4154,8 @@ sound_file_btn_update (GtkWidget *btn, const char *path)
 	const char *label = (path && *path) ? path : _("(none)");
 	gtk_button_set_label (GTK_BUTTON (btn), label);
 	g_object_set_data_full (G_OBJECT (btn), SOUND_FILE_BTN_PATH,
-	                        path ? g_strdup (path) : NULL, g_free);
+	                        path ? g_strdup (path) : NULL,
+	                        path ? (GDestroyNotify) g_free : NULL);
 }
 
 static char *
