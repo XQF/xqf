@@ -46,6 +46,11 @@ xqf_player_item_new (struct player *p, struct server *owner)
 struct player *
 xqf_player_item_get (XqfPlayerItem *self)
 {
+  /* self->owner keeps struct server alive, but not the individual
+   * struct player* -- server_free_info() can free/rebuild s->players
+   * independently. Verify it's still there before handing it out. */
+  if (!g_slist_find (self->owner->players, self->player))
+    return NULL;
   return self->player;
 }
 

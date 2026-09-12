@@ -6,8 +6,10 @@
  * holds a server_ref on the owning server, which only keeps the struct server
  * itself alive -- NOT the individual struct player* this item wraps.
  * server_free_info() (server.c) frees and rebuilds s->players on every stat
- * refresh regardless of ref_count, so a stale XqfPlayerItem can still end up
- * pointing at freed memory; see xqf-lists.c's teardown-on-refresh handling.
+ * refresh regardless of ref_count, so a stale XqfPlayerItem can outlive its
+ * player. xqf_player_item_get() defends against this by verifying the
+ * pointer is still in owner->players before returning it, and returns NULL
+ * otherwise -- callers must handle that.
  */
 
 #pragma once

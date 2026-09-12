@@ -1764,6 +1764,7 @@ void add_to_player_filter (unsigned mask) {
 	if (!item) return;
 	p = xqf_player_item_get (item);
 	g_object_unref (item);
+	if (!p) return;
 
 	if (player_filter_add_player (p->name, mask)) {
 		server_list_build_filtered (cur_server_list, TRUE);

@@ -58,6 +58,8 @@ static const char *mode_names[3] = {
 
 
 static int psearch_test_player (struct player *p) {
+	if (!p)
+		return FALSE;
 	return
 		((psearch.mode == PSEARCH_MODE_STRING &&
 		  g_ascii_strcasecmp (p->name, psearch.data) == 0) ||

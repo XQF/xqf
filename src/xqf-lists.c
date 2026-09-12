@@ -211,6 +211,7 @@ player_col_bind (GtkSignalListItemFactory *f G_GNUC_UNUSED,
 
     XqfPlayerItem *pi = XQF_PLAYER_ITEM (obj);
     struct player  *p  = xqf_player_item_get (pi);
+    if (!p) return; /* player no longer in owner->players (stat refresh race) */
     struct server  *owner = xqf_player_item_get_owner (pi);
     GtkWidget *label = gtk_list_item_get_child (item);
     char buf[256];
