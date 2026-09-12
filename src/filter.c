@@ -121,9 +121,8 @@ static GtkWidget *country_list_view_new (GtkSingleSelection **selection_model_ou
 	GtkWidget *list_view = gtk_list_view_new (sel_model, factory);
 	gtk_list_view_set_single_click_activate (GTK_LIST_VIEW (list_view), FALSE);
 
-	/* Store the GListStore on the widget for later retrieval */
-	g_object_set_data_full (G_OBJECT (list_view), "store",
-	                        store, (GDestroyNotify) g_object_unref);
+	/* borrowed pointer: sel_model/list_view already own store's only ref */
+	g_object_set_data (G_OBJECT (list_view), "store", store);
 
 	return list_view;
 }
