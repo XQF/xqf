@@ -442,7 +442,41 @@ static void on_grp_cell_click (GtkGestureClick *gesture, int n_press,
 	if (!li) return;
 	guint row = gtk_list_item_get_position (li);
 	if (row == GTK_INVALID_LIST_POSITION) return;
-	pattern_set_groups ((int) row, col_idx, TRUE);
+
+	/* Right-click or Ctrl/Shift-click adds this group to the existing set;
+	 * a plain click replaces it (matches the pre-GTK4 behavior). */
+	guint button = gtk_gesture_single_get_current_button (GTK_GESTURE_SINGLE (gesture));
+	GdkModifierType state = gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (gesture));
+	gboolean add = (button == GDK_BUTTON_SECONDARY) ||
+		(state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) != 0;
+
+	pattern_set_groups ((int) row, col_idx, add);
+}
+
+
+static void show_pattern_error (int row) {
+	GSList *list = g_slist_nth (curplrs, row);
+	struct player_pattern *pp;
+
+	if (!list) return;
+	pp = (struct player_pattern *) list->data;
+
+	if (pp->error) {
+		dialog_ok (_("XQF: Error"), _("Regular Expression Error!\n\n%s\n\n%s."),
+				pp->pattern, pp->error);
+	}
+}
+
+
+static void on_mode_cell_click (GtkGestureClick *gesture, int n_press,
+		double x, double y, gpointer data) {
+	(void) n_press; (void) x; (void) y; (void) data;
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+	GtkListItem *li = g_object_get_data (G_OBJECT (widget), "list-item");
+	if (!li) return;
+	guint row = gtk_list_item_get_position (li);
+	if (row == GTK_INVALID_LIST_POSITION) return;
+	show_pattern_error ((int) row);
 }
 
 
@@ -536,7 +570,7 @@ static void grp_col_setup_cb (GtkListItemFactory *factory, GtkListItem *list_ite
 	gtk_widget_set_visible (image, TRUE);
 
 	GtkGesture *click = gtk_gesture_click_new ();
-	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 1);
+	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 0); /* any button */
 	g_object_set_data (G_OBJECT (image), "list-item", list_item);
 	g_object_set_data (G_OBJECT (image), "col-idx", col_idx_ptr);
 	g_signal_connect (click, "pressed", G_CALLBACK (on_grp_cell_click), NULL);
@@ -559,11 +593,21 @@ static void grp_col_bind_cb (GtkListItemFactory *factory, GtkListItem *list_item
 }
 
 static void text_col_setup_cb (GtkListItemFactory *factory, GtkListItem *list_item,
-		gpointer data) {
-	(void) factory; (void) data;
+		gpointer key) {
+	(void) factory;
 	GtkWidget *label = gtk_label_new (NULL);
 	gtk_label_set_xalign (GTK_LABEL (label), 0.0f);
 	gtk_widget_set_visible (label, TRUE);
+
+	if (key && !strcmp ((const char *) key, "mode")) {
+		/* click Mode cell to see the full regex compile error, if any */
+		GtkGesture *click = gtk_gesture_click_new ();
+		gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 1);
+		g_object_set_data (G_OBJECT (label), "list-item", list_item);
+		g_signal_connect (click, "pressed", G_CALLBACK (on_mode_cell_click), NULL);
+		gtk_widget_add_controller (label, GTK_EVENT_CONTROLLER (click));
+	}
+
 	gtk_list_item_set_child (list_item, label);
 }
 
@@ -736,7 +780,7 @@ void player_filter_page (GtkWidget *notebook) {
 
 	{
 		GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
-		g_signal_connect (factory, "setup", G_CALLBACK (text_col_setup_cb), NULL);
+		g_signal_connect (factory, "setup", G_CALLBACK (text_col_setup_cb), (gpointer) "mode");
 		g_signal_connect (factory, "bind",  G_CALLBACK (text_col_bind_cb),  (gpointer) "mode");
 		GtkColumnViewColumn *col = gtk_column_view_column_new (_("Mode"), factory);
 		gtk_column_view_column_set_resizable (col, TRUE);
