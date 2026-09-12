@@ -334,9 +334,10 @@ void find_player (int find_next) {
 
 	guint srv_n = g_list_model_get_n_items (G_LIST_MODEL (server_selection));
 	guint srv_start = 0;
+	gboolean has_selection = server_list_has_selection ();
 
 	if (find_next && cur_server) {
-		/* Find the position of cur_server in the sorted view */
+		/* Single selection: find the position of cur_server in the sorted view */
 		for (guint i = 0; i < srv_n; i++) {
 			XqfServerItem *si = XQF_SERVER_ITEM (
 				g_list_model_get_item (G_LIST_MODEL (server_selection), i));
@@ -359,6 +360,12 @@ void find_player (int find_next) {
 			}
 		}
 	}
+	else if (find_next && has_selection) {
+		/* Multiple servers selected: resume from the lowest-indexed one */
+		GtkBitset *sel = gtk_selection_model_get_selection (server_selection);
+		srv_start = gtk_bitset_get_minimum (sel);
+		gtk_bitset_unref (sel);
+	}
 
 	for (guint i = srv_start; i < srv_n; i++) {
 		XqfServerItem *si = XQF_SERVER_ITEM (
@@ -373,7 +380,7 @@ void find_player (int find_next) {
 		}
 	}
 
-	if (!find_next || !cur_server) {
+	if (!find_next || !has_selection) {
 		dialog_ok (NULL, _("Player not found."));
 		reset_main_status_bar(builder);
 	}
