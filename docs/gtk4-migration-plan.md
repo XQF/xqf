@@ -52,7 +52,7 @@ The app builds, runs, and all main UI paths work:
   (modal `GtkFileChooserDialog` with `audio/*` filter), all save correctly
 - Server Filters menu: radio items reflect current filter, update after config changes
 
-One known limitation:
+Known limitations:
 - **Editable combo fields lost their value-history dropdown** (Phase 8).
   `combo_set_vals()` (`srv-prop.c`) still takes a `GList` of prior values
   from its 4 callers (`srv-prop.c`, `addserver.c`, `addmaster.c`, `rcon.c`)
@@ -62,6 +62,19 @@ One known limitation:
   Restoring it needs a custom widget (e.g. `GtkEntry` + `GtkPopover` listing
   history), which is new UI work, not a bug fix — deliberately left as-is
   for now.
+- **Server list columns lost their secondary sort criteria** (Phase 1).
+  Several `server_columns[]` entries (Name/Type, Address/Country,
+  Priv/Anticheat, Players/Max) define a second `sort_mode` that the old
+  GtkCList UI let you reach by clicking an already-descending-sorted
+  column header again, cycling `current_sort_mode`. Nothing sets
+  `current_sort_mode` anymore — `GtkColumnView`'s built-in header click
+  handling only toggles ascending/descending, so it's stuck at 0 (the
+  primary criterion) and the secondary ones are unreachable, though
+  `server_col_cmp()` still honors it if it were ever changed. Restoring
+  this needs `GtkColumnViewSorter` (GTK 4.10+, behind a version guard
+  given this project's 4.0 floor) to detect the same-column
+  descending-to-ascending transition and cycle the mode — deliberately
+  left as-is for now.
 
 ---
 
