@@ -19,6 +19,7 @@
 #include "sort.h"       /* compare_servers, compare_players */
 #include "game.h"       /* games[], GAME_QUAKE1_PLAYER_COLORS */
 #include "pref.h"       /* serverlist_countbots */
+#include "config.h"     /* config_get_int: restore saved column widths */
 
 GListStore        *server_store     = NULL;
 GListStore        *player_store     = NULL;
@@ -316,6 +317,10 @@ create_server_column_view (GtkWidget *scrollwin)
     GtkWidget *cv = gtk_column_view_new (NULL);
     gtk_column_view_set_show_row_separators (GTK_COLUMN_VIEW (cv), TRUE);
 
+    char geom_prefix[256];
+    g_snprintf (geom_prefix, sizeof (geom_prefix), "/" CONFIG_FILE "/%s Geometry/", server_list_def.name);
+    config_push_prefix (geom_prefix);
+
     for (int i = 0; i < server_list_def.columns; i++) {
         GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
         g_signal_connect (factory, "setup", G_CALLBACK (server_col_setup),
@@ -328,8 +333,12 @@ create_server_column_view (GtkWidget *scrollwin)
         gtk_column_view_column_set_resizable (col, TRUE);
         if (i == server_list_def.columns - 1)
             gtk_column_view_column_set_expand (col, TRUE);
-        else
-            gtk_column_view_column_set_fixed_width (col, server_list_def.cols[i].width);
+        else {
+            char width_key[256];
+            g_snprintf (width_key, sizeof (width_key), "%s=%d",
+                        server_list_def.cols[i].name, server_list_def.cols[i].width);
+            gtk_column_view_column_set_fixed_width (col, config_get_int (width_key));
+        }
 
         GtkSorter *sorter = GTK_SORTER (
             gtk_custom_sorter_new (server_col_cmp, GINT_TO_POINTER (i), NULL));
@@ -340,6 +349,8 @@ create_server_column_view (GtkWidget *scrollwin)
         g_object_unref (col);
         /* factory ownership transferred to col via gtk_column_view_column_new */
     }
+
+    config_pop_prefix ();
 
     /* Connect GtkColumnView's combined sorter to the sort model. */
     server_sort_model = GTK_SORT_LIST_MODEL (
@@ -384,6 +395,10 @@ create_player_column_view (GtkWidget *scrollwin)
     GtkWidget *cv = gtk_column_view_new (NULL);
     gtk_column_view_set_show_row_separators (GTK_COLUMN_VIEW (cv), TRUE);
 
+    char geom_prefix[256];
+    g_snprintf (geom_prefix, sizeof (geom_prefix), "/" CONFIG_FILE "/%s Geometry/", player_list_def.name);
+    config_push_prefix (geom_prefix);
+
     for (int i = 0; i < player_list_def.columns; i++) {
         GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
         g_signal_connect (factory, "setup", G_CALLBACK (player_col_setup),
@@ -396,8 +411,12 @@ create_player_column_view (GtkWidget *scrollwin)
         gtk_column_view_column_set_resizable (col, TRUE);
         if (i == player_list_def.columns - 1)
             gtk_column_view_column_set_expand (col, TRUE);
-        else
-            gtk_column_view_column_set_fixed_width (col, player_list_def.cols[i].width);
+        else {
+            char width_key[256];
+            g_snprintf (width_key, sizeof (width_key), "%s=%d",
+                        player_list_def.cols[i].name, player_list_def.cols[i].width);
+            gtk_column_view_column_set_fixed_width (col, config_get_int (width_key));
+        }
 
         GtkSorter *sorter = GTK_SORTER (
             gtk_custom_sorter_new (player_col_cmp, GINT_TO_POINTER (i), NULL));
@@ -408,6 +427,8 @@ create_player_column_view (GtkWidget *scrollwin)
         g_object_unref (col);
         /* factory ownership transferred to col via gtk_column_view_column_new */
     }
+
+    config_pop_prefix ();
 
     player_sort_model = GTK_SORT_LIST_MODEL (
         gtk_sort_list_model_new (G_LIST_MODEL (player_store), NULL));
