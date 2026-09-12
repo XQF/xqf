@@ -731,7 +731,7 @@ void player_filter_page (GtkWidget *notebook) {
 		gtk_column_view_column_set_fixed_width (col, pixmap_width (&group_pix[i]) + 8);
 		gtk_column_view_append_column (GTK_COLUMN_VIEW (pattern_list), col);
 		g_object_unref (col);
-		g_object_unref (factory);
+		/* factory ownership transferred to col via gtk_column_view_column_new */
 	}
 
 	{
@@ -743,7 +743,6 @@ void player_filter_page (GtkWidget *notebook) {
 		gtk_column_view_column_set_fixed_width (col, 55);
 		gtk_column_view_append_column (GTK_COLUMN_VIEW (pattern_list), col);
 		g_object_unref (col);
-		g_object_unref (factory);
 
 		factory = gtk_signal_list_item_factory_new ();
 		g_signal_connect (factory, "setup", G_CALLBACK (text_col_setup_cb), NULL);
@@ -752,7 +751,8 @@ void player_filter_page (GtkWidget *notebook) {
 		gtk_column_view_column_set_resizable (col, TRUE);
 		gtk_column_view_append_column (GTK_COLUMN_VIEW (pattern_list), col);
 		g_object_unref (col);
-		g_object_unref (factory);
+		/* factory ownership transferred to col via gtk_column_view_column_new,
+		 * for both columns above */
 	}
 
 	g_signal_connect (pattern_sel_model, "notify::selected",
