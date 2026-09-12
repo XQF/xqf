@@ -2,9 +2,12 @@
  *
  * GObject wrapper for struct player*, for use with GListStore / GtkColumnView.
  *
- * Players are owned by their parent server (s->players GSList); this wrapper
- * holds a server_ref on the owning server to keep the player list alive for
- * as long as any player item exists.
+ * Players are owned by their parent server (s->players GSList). This wrapper
+ * holds a server_ref on the owning server, which only keeps the struct server
+ * itself alive -- NOT the individual struct player* this item wraps.
+ * server_free_info() (server.c) frees and rebuilds s->players on every stat
+ * refresh regardless of ref_count, so a stale XqfPlayerItem can still end up
+ * pointing at freed memory; see xqf-lists.c's teardown-on-refresh handling.
  */
 
 #pragma once
