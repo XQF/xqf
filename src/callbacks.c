@@ -50,7 +50,7 @@ static void set_action_enabled (const char *name, gboolean enabled) {
 }
 
 void set_widgets_sensitivity (GtkBuilder *builder) {
-	gboolean selected = (cur_server != NULL);
+	gboolean selected = server_list_has_selection ();
 	int sens;
 	int i;
 	int source_is_favorites;

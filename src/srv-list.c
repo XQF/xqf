@@ -211,6 +211,15 @@ void server_list_select_one (int row) {
 /* Enumerate selected / all servers                                     */
 /* ------------------------------------------------------------------ */
 
+gboolean server_list_has_selection (void) {
+	if (!server_selection) return FALSE;
+
+	GtkBitset *sel = gtk_selection_model_get_selection (server_selection);
+	gboolean has = gtk_bitset_get_size (sel) > 0;
+	gtk_bitset_unref (sel);
+	return has;
+}
+
 GSList *server_list_selected_servers (void) {
 	GSList *list = NULL;
 	if (!server_selection) return NULL;

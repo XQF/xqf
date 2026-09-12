@@ -34,6 +34,7 @@ extern void server_list_sync_selection (void);
 extern int server_list_refresh_server (struct server *s);
 
 extern void server_list_select_one (int row);
+extern gboolean server_list_has_selection (void);
 extern GSList *server_list_selected_servers (void);
 extern GSList *server_list_all_servers (void);
 extern GSList *server_list_get_n_servers (int amount);
