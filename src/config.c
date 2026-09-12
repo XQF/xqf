@@ -305,14 +305,24 @@ cfg_parse_path (const char  *path,
 /* Getters                                                               */
 /* ------------------------------------------------------------------ */
 
+/* "path=default" hint (see file comment), used as fallback when the key
+ * doesn't exist yet. */
+static const char *
+path_default_hint (const char *path)
+{
+	const char *eq = strchr (path, '=');
+	return eq ? eq + 1 : NULL;
+}
+
 int config_get_int_with_default (const char *path, int *def)
 {
-	GKeyFile *kf;
-	char     *group, *key;
+	GKeyFile   *kf;
+	char       *group, *key;
+	const char *hint = path_default_hint (path);
 
 	if (!cfg_parse_path (path, &kf, &group, &key) || !key) {
 		if (def) *def = TRUE;
-		return 0;
+		return hint ? (int) strtol (hint, NULL, 10) : 0;
 	}
 
 	GError *err = NULL;
@@ -320,7 +330,7 @@ int config_get_int_with_default (const char *path, int *def)
 
 	if (err) {
 		if (def) *def = TRUE;
-		val = 0;
+		val = hint ? (int) strtol (hint, NULL, 10) : 0;
 		g_error_free (err);
 	} else {
 		if (def) *def = FALSE;
@@ -333,12 +343,13 @@ int config_get_int_with_default (const char *path, int *def)
 
 double config_get_float_with_default (const char *path, int *def)
 {
-	GKeyFile *kf;
-	char     *group, *key;
+	GKeyFile   *kf;
+	char       *group, *key;
+	const char *hint = path_default_hint (path);
 
 	if (!cfg_parse_path (path, &kf, &group, &key) || !key) {
 		if (def) *def = TRUE;
-		return 0.0;
+		return hint ? strtod (hint, NULL) : 0.0;
 	}
 
 	GError *err = NULL;
@@ -346,7 +357,7 @@ double config_get_float_with_default (const char *path, int *def)
 
 	if (err) {
 		if (def) *def = TRUE;
-		val = 0.0;
+		val = hint ? strtod (hint, NULL) : 0.0;
 		g_error_free (err);
 	} else {
 		if (def) *def = FALSE;
@@ -359,12 +370,13 @@ double config_get_float_with_default (const char *path, int *def)
 
 int config_get_bool_with_default (const char *path, int *def)
 {
-	GKeyFile *kf;
-	char     *group, *key;
+	GKeyFile   *kf;
+	char       *group, *key;
+	const char *hint = path_default_hint (path);
 
 	if (!cfg_parse_path (path, &kf, &group, &key) || !key) {
 		if (def) *def = TRUE;
-		return FALSE;
+		return hint && !g_ascii_strcasecmp (hint, "true");
 	}
 
 	GError   *err = NULL;
@@ -372,7 +384,7 @@ int config_get_bool_with_default (const char *path, int *def)
 
 	if (err) {
 		if (def) *def = TRUE;
-		val = FALSE;
+		val = hint && !g_ascii_strcasecmp (hint, "true");
 		g_error_free (err);
 	} else {
 		if (def) *def = FALSE;
@@ -385,12 +397,13 @@ int config_get_bool_with_default (const char *path, int *def)
 
 char *config_get_string_with_default (const char *path, int *def)
 {
-	GKeyFile *kf;
-	char     *group, *key;
+	GKeyFile   *kf;
+	char       *group, *key;
+	const char *hint = path_default_hint (path);
 
 	if (!cfg_parse_path (path, &kf, &group, &key) || !key) {
 		if (def) *def = TRUE;
-		return NULL;
+		return hint ? g_strdup (hint) : NULL;
 	}
 
 	GError *err = NULL;
@@ -399,6 +412,7 @@ char *config_get_string_with_default (const char *path, int *def)
 	if (err) {
 		if (def) *def = TRUE;
 		g_error_free (err);
+		val = hint ? g_strdup (hint) : NULL;
 	} else {
 		if (def) *def = FALSE;
 	}
