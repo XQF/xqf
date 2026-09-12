@@ -4174,6 +4174,7 @@ sound_file_open_done (GObject *source, GAsyncResult *res, gpointer btn)
 		g_free (path);
 		g_object_unref (file);
 	}
+	g_object_unref (btn);
 }
 
 static void
@@ -4208,7 +4209,7 @@ sound_file_btn_clicked (GtkButton *btn, gpointer data G_GNUC_UNUSED)
 		g_object_unref (initial);
 	}
 
-	gtk_file_dialog_open (dlg, parent, NULL, sound_file_open_done, btn);
+	gtk_file_dialog_open (dlg, parent, NULL, sound_file_open_done, g_object_ref (btn));
 	g_object_unref (dlg);
 }
 
