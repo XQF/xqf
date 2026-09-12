@@ -46,11 +46,22 @@ reviewable on its own. Verify a fix builds and runs before committing it.
 
 ## Current Known Bugs
 
-No known bugs. The app builds, runs, and all main UI paths work:
+The app builds, runs, and all main UI paths work:
 - Server/player column views with full interaction (Phase 1 complete)
 - Preferences dialog: color popovers, sound player entry, sound file pickers
   (modal `GtkFileChooserDialog` with `audio/*` filter), all save correctly
 - Server Filters menu: radio items reflect current filter, update after config changes
+
+One known limitation:
+- **Editable combo fields lost their value-history dropdown** (Phase 8).
+  `combo_set_vals()` (`srv-prop.c`) still takes a `GList` of prior values
+  from its 4 callers (`srv-prop.c`, `addserver.c`, `addmaster.c`, `rcon.c`)
+  but no longer does anything with it — GTK4 has no drop-in replacement for
+  `GtkComboBoxText`'s editable-with-dropdown mode. Users get a plain
+  `GtkEntry` pre-filled with the last value instead of a history picker.
+  Restoring it needs a custom widget (e.g. `GtkEntry` + `GtkPopover` listing
+  history), which is new UI work, not a bug fix — deliberately left as-is
+  for now.
 
 ---
 
