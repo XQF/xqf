@@ -2592,6 +2592,7 @@ static int teeworlds_exec (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -2625,6 +2626,7 @@ static int q1_exec_generic (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -2673,6 +2675,7 @@ static int qw_exec (const struct condef *con, int forkit) {
 	int retval=-1;
 
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -2745,6 +2748,8 @@ static int q2_exec (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval=-1;
 
+	if (!g->cmd || !*g->cmd) return -1;
+
 	if (g->main_mod && g->main_mod[0])
 		file = g_strjoin("/", g->real_dir, g->main_mod[0], PASSWORD_CFG, NULL);
 
@@ -2816,6 +2821,7 @@ static int q2_exec_generic (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3091,6 +3097,7 @@ static int hl_exec (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3138,6 +3145,7 @@ static int ut_exec (const struct condef *con, int forkit) {
 	char **info_ptr;
 	int i;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3234,6 +3242,7 @@ static int savage_exec(const struct condef *con, int forkit) {
 	int retval;
 	char* connect_arg = NULL;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3280,6 +3289,7 @@ static int exec_generic (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3306,6 +3316,7 @@ static int ssam_exec(const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3333,6 +3344,7 @@ static int netpanzer_exec(const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3372,6 +3384,7 @@ static int gamespy_exec (const struct condef *con, int forkit) {
 
 	g = &games[con->s->type];
 
+	if (!g->cmd || !*g->cmd) return 1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3421,6 +3434,7 @@ static int t2_exec (const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3464,6 +3478,7 @@ static int bf1942_exec (const struct condef *con, int forkit) {
 
 	g = &games[con->s->type];
 
+	if (!g->cmd || !*g->cmd) return 1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3527,6 +3542,7 @@ static int descent3_exec (const struct condef *con, int forkit) {
 
 	g = &games[con->s->type];
 
+	if (!g->cmd || !*g->cmd) return 1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
@@ -3570,6 +3586,7 @@ static int ottd_exec(const struct condef *con, int forkit) {
 	struct game *g = &games[con->s->type];
 	int retval;
 
+	if (!g->cmd || !*g->cmd) return -1;
 	cmd = strdup_strip (g->cmd);
 
 	argv[argi++] = strtok (cmd, delim);
