@@ -708,7 +708,7 @@ static void create_server_type_menu_callback (GObject *obj, GParamSpec *ps G_GNU
 
 GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback) {
 	GListStore *store = g_list_store_new (G_TYPE_OBJECT);
-	int i, row = 0, first_row = 0;
+	int i, row = 0, first_row = -1;
 
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; ++i) {
 		if (filterfunc && !filterfunc (i))
@@ -725,7 +725,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 
 		if (i == active_type)
 			first_row = row;
-		else if (!first_row)
+		else if (first_row < 0)
 			first_row = row;
 
 		++row;
@@ -743,7 +743,7 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 	                  G_CALLBACK (create_server_type_menu_callback),
 	                  (SeverTypeSelectedFunction) callback);
 
-	if (active_type != -1 && first_row)
+	if (active_type != -1 && first_row >= 0)
 		gtk_drop_down_set_selected (GTK_DROP_DOWN (combo), (guint) first_row);
 
 	return combo;
