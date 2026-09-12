@@ -738,7 +738,6 @@ GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum
 	GtkWidget *combo = gtk_drop_down_new (G_LIST_MODEL (store), NULL);
 	gtk_drop_down_set_factory (GTK_DROP_DOWN (combo), factory);
 	g_object_unref (factory);
-	g_object_unref (store);
 
 	g_signal_connect (combo, "notify::selected",
 	                  G_CALLBACK (create_server_type_menu_callback),
