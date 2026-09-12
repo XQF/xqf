@@ -399,6 +399,7 @@ char *config_get_string_with_default (const char *path, int *def)
 	if (err) {
 		if (def) *def = TRUE;
 		g_error_free (err);
+		val = NULL;
 	} else {
 		if (def) *def = FALSE;
 	}

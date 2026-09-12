@@ -4773,7 +4773,7 @@ void q3_prefs_load_common(struct game* g) {
 	g_snprintf(buf, sizeof(buf), "protocol=%s", w->defproto);
 
 	tmp = config_get_string(buf);
-	if (strlen(tmp) == 0) {
+	if (tmp && strlen(tmp) == 0) {
 		g_free(tmp);
 		tmp = NULL;
 	}
