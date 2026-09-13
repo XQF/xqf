@@ -657,7 +657,7 @@ void restore_main_window_geometry (void) {
 		gtk_window_set_default_size (GTK_WINDOW (main_window), width, height);
 	}
 
-	gtk_paned_set_position (GTK_PANED (pane1_widget), (pane1)? pane1 : 120);
+	gtk_paned_set_position (GTK_PANED (pane1_widget), (pane1)? pane1 : 260);
 	gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 : server_list_def.height +4);
 	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_list_def.height + 4);
 }
