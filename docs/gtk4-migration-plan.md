@@ -75,6 +75,18 @@ Known limitations:
   given this project's 4.0 floor) to detect the same-column
   descending-to-ascending transition and cycle the mode — deliberately
   left as-is for now.
+- **Help menu shows extra empty space below "About"**, unlike every
+  other menu bar entry. Confirmed via live testing (X11 window capture
+  of the actual popover) that this is not caused by xqf's menu markup:
+  `xqf.ui`'s Help submenu is now structured identically to every other
+  menu (single `<section>` wrapping its `<item>`), and a CSS override
+  (`popover.menu { min-height: 0; }`) had zero effect on the popover's
+  measured size. The popover is a fixed 168x128px regardless of content
+  — "About" only needs the top ~45px. Every other menu's real content
+  already exceeds that floor (confirmed: `Edit`'s 14-item, 1040px-tall
+  popover has no trailing gap), so it's only visible on this app's one
+  single-item menu. Looks like a GTK4/Adwaita popover minimum-size
+  behavior outside the app's control; not pursued further.
 
 ---
 
