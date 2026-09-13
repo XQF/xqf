@@ -399,8 +399,12 @@ static GtkWidget *server_stats_page (void) {
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	xqf_widget_set_margin_all (page_vbox, 8);
+	gtk_widget_set_hexpand (page_vbox, TRUE);
+	gtk_widget_set_vexpand (page_vbox, TRUE);
 
 	scrollwin = gtk_scrolled_window_new();
+	gtk_widget_set_hexpand (scrollwin, TRUE);
+	gtk_widget_set_vexpand (scrollwin, TRUE);
 	gtk_box_append (GTK_BOX (page_vbox), scrollwin);
 
 	grid = gtk_grid_new ();
@@ -590,6 +594,8 @@ static void country_notebook_page (GtkWidget *notebook,
 	char buf[16] = {0};
 
 	scrollwin = gtk_scrolled_window_new();
+	gtk_widget_set_hexpand (scrollwin, TRUE);
+	gtk_widget_set_vexpand (scrollwin, TRUE);
 
 	grid = gtk_grid_new ();
 	xqf_widget_set_margin_all (grid, 6);
@@ -656,11 +662,15 @@ static GtkWidget *country_stats_page (void) {
 
 	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 	xqf_widget_set_margin_all (page_vbox, 8);
+	gtk_widget_set_hexpand (page_vbox, TRUE);
+	gtk_widget_set_vexpand (page_vbox, TRUE);
 
 	country_notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (country_notebook), FALSE);
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (country_notebook), GTK_POS_TOP);
 	gtk_notebook_set_show_border(GTK_NOTEBOOK(country_notebook), FALSE);
+	gtk_widget_set_hexpand (country_notebook, TRUE);
+	gtk_widget_set_vexpand (country_notebook, TRUE);
 
 	selected_country = to_activate = config_get_int("/" CONFIG_FILE "/Statistics/country");
 
@@ -764,6 +774,8 @@ void statistics_dialog (void) {
 
 	stat_notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (stat_notebook), GTK_POS_TOP);
+	gtk_widget_set_hexpand (stat_notebook, TRUE);
+	gtk_widget_set_vexpand (stat_notebook, TRUE);
 	gtk_box_append (GTK_BOX (main_vbox), stat_notebook);
 
 	page = server_stats_page ();
