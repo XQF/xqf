@@ -46,11 +46,86 @@ static void country_delete_button (GtkWidget * widget, gpointer data);
 static void country_clear_list (GtkWidget * widget, gpointer data);
 static void country_create_popup_window (void);
 
-// TODO: get rid of global variables
 static gint selected_row_left_list=-1;
 static gint selected_row_right_list=-1;
-static int last_row_right_list = 0;
-static int last_row_country_list = 0;
+
+/* Helper: get the GListStore associated with a country GtkListView widget */
+static GListStore *get_country_store (GtkWidget *list_view) {
+	return G_LIST_STORE (g_object_get_data (G_OBJECT (list_view), "store"));
+}
+
+/* Helper: append one country row to a GListStore */
+static void country_store_append (GListStore *store, gint code, GdkTexture *texture, const char *name) {
+	GObject *item = g_object_new (G_TYPE_OBJECT, NULL);
+	g_object_set_data (G_OBJECT (item), "code",    GINT_TO_POINTER (code));
+	g_object_set_data_full (G_OBJECT (item), "texture",
+	                        texture ? g_object_ref (texture) : NULL,
+	                        texture ? (GDestroyNotify) g_object_unref : NULL);
+	/* name is from a static table — no need to copy/free */
+	g_object_set_data (G_OBJECT (item), "name", (gpointer) name);
+	g_list_store_append (store, item);
+	g_object_unref (item);
+}
+
+/* Factory bind callback — shared by all three country lists */
+static void country_list_item_bind (GtkSignalListItemFactory *factory, GtkListItem *item, gpointer data) {
+	(void) factory; (void) data;
+	GtkWidget *hbox  = gtk_list_item_get_child (item);
+	GtkWidget *image = gtk_widget_get_first_child (hbox);
+	GtkWidget *label = gtk_widget_get_last_child  (hbox);
+
+	GObject *obj = gtk_list_item_get_item (item);
+	GdkTexture *texture = g_object_get_data (obj, "texture");
+	const char *name    = g_object_get_data (obj, "name");
+
+	if (texture)
+		gtk_image_set_from_paintable (GTK_IMAGE (image), GDK_PAINTABLE (texture));
+	else
+		gtk_image_clear (GTK_IMAGE (image));
+
+	gtk_label_set_text (GTK_LABEL (label), name ? name : "");
+}
+
+static void country_list_item_setup (GtkSignalListItemFactory *factory, GtkListItem *item, gpointer data) {
+	(void) factory; (void) data;
+	GtkWidget *hbox  = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+	GtkWidget *image = gtk_image_new ();
+	GtkWidget *label = gtk_label_new (NULL);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0f);
+	gtk_box_append (GTK_BOX (hbox), image);
+	gtk_box_append (GTK_BOX (hbox), label);
+	gtk_list_item_set_child (item, hbox);
+}
+
+/* Create a GtkListView for country display and store GListStore on it.
+ * selection_model_out (if non-NULL) receives the GtkSingleSelection so the
+ * caller can connect notify::selected. */
+static GtkWidget *country_list_view_new (GtkSingleSelection **selection_model_out) {
+	GListStore *store = g_list_store_new (G_TYPE_OBJECT);
+
+	GtkSelectionModel *sel_model;
+	if (selection_model_out) {
+		GtkSingleSelection *ss = gtk_single_selection_new (G_LIST_MODEL (store));
+		gtk_single_selection_set_autoselect (ss, FALSE);
+		gtk_single_selection_set_can_unselect (ss, TRUE);
+		sel_model = GTK_SELECTION_MODEL (ss);
+		*selection_model_out = ss;
+	} else {
+		sel_model = GTK_SELECTION_MODEL (gtk_no_selection_new (G_LIST_MODEL (store)));
+	}
+
+	GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+	g_signal_connect (factory, "setup", G_CALLBACK (country_list_item_setup), NULL);
+	g_signal_connect (factory, "bind",  G_CALLBACK (country_list_item_bind),  NULL);
+
+	GtkWidget *list_view = gtk_list_view_new (sel_model, factory);
+	gtk_list_view_set_single_click_activate (GTK_LIST_VIEW (list_view), FALSE);
+
+	/* borrowed pointer: sel_model/list_view already own store's only ref */
+	g_object_set_data (G_OBJECT (list_view), "store", store);
+
+	return list_view;
+}
 #endif
 
 static void server_filter_vars_free (struct server_filter_vars* v);
@@ -305,8 +380,8 @@ void apply_filters (unsigned mask, struct server *s) {
 
 /*
    build_filtered_list -- Return a list of servers that pass the filter
-   requirements. Called from server_clist_setlist() and
-   server_clist_build_filtered().
+   requirements. Called from server_list_set_list() and
+   server_list_build_filtered().
    */
 
 GSList *build_filtered_list (unsigned mask, GSList *server_list) {
@@ -550,20 +625,16 @@ static void server_filter_on_cancel() {
 
 // query widgets and put values in a new struct
 static struct server_filter_vars* server_filter_new_from_widgets() {
-#ifdef USE_GEOIP
-	int country_nr;
-	int i;
-#endif
 
 	struct server_filter_vars* filter = server_filter_vars_new();
 	if (!filter) return NULL;
 
 	filter->filter_retries = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_retries_spinner));
 	filter->filter_ping    = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (filter_ping_spinner));
-	filter->filter_not_full    = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(filter_not_full_check_button));
-	filter->filter_not_empty   = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_not_empty_check_button));
-	filter->filter_no_password = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_no_password_check_button));
-	filter->filter_no_cheats   = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (filter_no_cheats_check_button));
+	filter->filter_not_full    = gtk_check_button_get_active (GTK_CHECK_BUTTON(filter_not_full_check_button));
+	filter->filter_not_empty   = gtk_check_button_get_active (GTK_CHECK_BUTTON (filter_not_empty_check_button));
+	filter->filter_no_password = gtk_check_button_get_active (GTK_CHECK_BUTTON (filter_no_password_check_button));
+	filter->filter_no_cheats   = gtk_check_button_get_active (GTK_CHECK_BUTTON (filter_no_cheats_check_button));
 	filter->game_type            = gtk_editable_get_chars (GTK_EDITABLE (filter_game_type_entry), 0, -1);
 	filter->version_contains     = gtk_editable_get_chars (GTK_EDITABLE (version_contains_entry), 0, -1);
 	filter->game_contains        = gtk_editable_get_chars (GTK_EDITABLE (game_contains_entry), 0, -1);
@@ -571,12 +642,16 @@ static struct server_filter_vars* server_filter_new_from_widgets() {
 	filter->server_name_contains = gtk_editable_get_chars (GTK_EDITABLE (server_name_contains_entry), 0, -1);
 
 #ifdef USE_GEOIP
-
-	for (i = 0; i < last_row_country_list; ++i) {
-		country_nr=GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_filter_list), i));
-		g_array_append_val(filter->countries,country_nr);
+	if (country_filter_list) {
+		GListStore *store = get_country_store (country_filter_list);
+		guint n = g_list_model_get_n_items (G_LIST_MODEL (store));
+		for (guint ci = 0; ci < n; ++ci) {
+			GObject *item = g_list_model_get_item (G_LIST_MODEL (store), ci);
+			gint country_nr_val = GPOINTER_TO_INT (g_object_get_data (item, "code"));
+			g_array_append_val (filter->countries, country_nr_val);
+			g_object_unref (item);
+		}
 	}
-
 #endif
 
 	return filter;
@@ -941,36 +1016,33 @@ static void filter_select(guint number) {
 	return;
 }
 
-static void filter_select_callback(GtkWidget *widget, gpointer userdata) {
-	gint index = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+static void filter_select_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer userdata G_GNUC_UNUSED) {
+	guint index = gtk_drop_down_get_selected (GTK_DROP_DOWN (obj));
 
-	if (index < 0) {
+	if (index == GTK_INVALID_LIST_POSITION)
 		return;
-	}
 
-	filter_select(index + 1); // array starts from zero but filters from 1
+	filter_select ((int) index + 1); // array starts from zero but filters from 1
 }
 
 static void set_filter_menu (GtkWidget *option_menu) {
 	guint i;
-	struct server_filter_vars* filter;
+	GtkStringList *sl = GTK_STRING_LIST (gtk_drop_down_get_model (GTK_DROP_DOWN (option_menu)));
+	const char **strs = g_new (const char *, server_filters->len + 1);
 
-#ifdef GUI_GTK3
-	gtk_combo_box_text_remove_all (GTK_COMBO_BOX_TEXT (option_menu));
-#else
-	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (option_menu))));
-#endif
-
-	for (i = 0;i<server_filters->len;i++) {
-		filter = g_array_index(server_filters, struct server_filter_vars*, i);
+	for (i = 0; i < server_filters->len; i++) {
+		struct server_filter_vars *filter = g_array_index (server_filters, struct server_filter_vars *, i);
 		if (!filter) {
-			debug(0,"Bug: filter is NULL");
-			continue;
+			debug (0, "Bug: filter is NULL");
+			strs[i] = "(null)";
+		} else {
+			strs[i] = filter->filter_name ? filter->filter_name : "(null)";
 		}
-
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (option_menu),
-		                                filter->filter_name ? filter->filter_name : "(null)");
 	}
+	strs[server_filters->len] = NULL;
+
+	gtk_string_list_splice (sl, 0, g_list_model_get_n_items (G_LIST_MODEL (sl)), strs);
+	g_free (strs);
 }
 
 // create new filter if number == 0, rename current filter number if number >0
@@ -1007,7 +1079,7 @@ static void filter_new_rename_callback (int number) {
 
 		set_filter_menu(filter_option_menu);
 
-		gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (filter_option_menu), (guint)(server_filter_dialog_current_filter - 1));
 		server_filter_fill_widgets(server_filter_dialog_current_filter);
 
 		server_filter_changed = TRUE;
@@ -1039,8 +1111,8 @@ static void filter_delete_callback (void* dummy) {
 	server_filter_dialog_current_filter = server_filters->len;
 	debug(3,"number of filters: %d",server_filter_dialog_current_filter);
 
-	set_filter_menu(filter_option_menu);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
+	set_filter_menu (filter_option_menu);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (filter_option_menu), (guint)(server_filter_dialog_current_filter - 1));
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 
 }
@@ -1067,7 +1139,7 @@ static void server_filter_set_widgets_sensitive(gboolean sensitive) {
 		gtk_widget_set_sensitive(country_selection_button, sensitive);
 		gtk_widget_set_sensitive(country_clear_button, sensitive);
 		if (!sensitive) {
-			gtk_clist_clear(GTK_CLIST(country_filter_list));
+			g_list_store_remove_all (get_country_store (country_filter_list));
 		}
 	}
 #endif
@@ -1079,9 +1151,8 @@ static void server_filter_fill_widgets(guint num) {
 	gboolean dofree = FALSE;
 #ifdef USE_GEOIP
 	int f_number;
-	int rw = 0;
-
 	struct pixmap* countrypix = NULL;
+	unsigned i;
 #endif
 
 	if (num > 0) {
@@ -1099,44 +1170,26 @@ static void server_filter_fill_widgets(guint num) {
 		dofree = TRUE;
 	}
 
-	gtk_entry_set_text(GTK_ENTRY(filter_game_type_entry), filter->game_type?filter->game_type:"");
-	gtk_entry_set_text(GTK_ENTRY(version_contains_entry), filter->version_contains?filter->version_contains:"");
-	gtk_entry_set_text(GTK_ENTRY(game_contains_entry), filter->game_contains?filter->game_contains:"");
-	gtk_entry_set_text(GTK_ENTRY(map_contains_entry), filter->map_contains?filter->map_contains:"");
-	gtk_entry_set_text(GTK_ENTRY(server_name_contains_entry), filter->server_name_contains?filter->server_name_contains:"");
+	gtk_editable_set_text (GTK_EDITABLE (filter_game_type_entry), filter->game_type?filter->game_type:"");
+	gtk_editable_set_text (GTK_EDITABLE (version_contains_entry), filter->version_contains?filter->version_contains:"");
+	gtk_editable_set_text (GTK_EDITABLE (game_contains_entry), filter->game_contains?filter->game_contains:"");
+	gtk_editable_set_text (GTK_EDITABLE (map_contains_entry), filter->map_contains?filter->map_contains:"");
+	gtk_editable_set_text (GTK_EDITABLE (server_name_contains_entry), filter->server_name_contains?filter->server_name_contains:"");
 #ifdef USE_GEOIP
-	gtk_clist_clear(GTK_CLIST(country_filter_list));
+	if (country_filter_list) {
+		GListStore *store = get_country_store (country_filter_list);
+		g_list_store_remove_all (store);
 
-	last_row_country_list=0;
-
-	// fill the country_filter_list from filter->countries
-	if (geoip_is_working()) {
-		unsigned i;
-		gchar buf[64] = {0};
-		gchar *text[1] = {buf};
-
-		if (filter->countries != NULL) {
-
+		if (geoip_is_working() && filter->countries != NULL) {
 			for (i = 0; i < filter->countries->len; ++i) {
-
-				f_number=g_array_index(filter->countries,int,i);
-
-				// gtk_clist_insert third parameter is not const!
-				strncpy(buf,geoip_name_by_id(f_number),sizeof(buf) - 1);
-				gtk_clist_insert(GTK_CLIST(country_filter_list), rw, text);
-				countrypix = get_pixmap_for_country_with_fallback(f_number);
-				if (countrypix) {
-					gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), rw, 0,geoip_name_by_id(f_number), 4,
-							countrypix->pix, countrypix->mask);
-				}
-				gtk_clist_set_row_data(GTK_CLIST(country_filter_list),rw,GINT_TO_POINTER(f_number));
-
-				last_row_country_list++;
-				++rw;
+				f_number = g_array_index (filter->countries, int, i);
+				countrypix = get_pixmap_for_country_with_fallback (f_number);
+				country_store_append (store, f_number,
+				                      countrypix ? countrypix->texture : NULL,
+				                      geoip_name_by_id (f_number));
 			}
 		}
 	}
-
 #endif
 
 	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
@@ -1144,10 +1197,10 @@ static void server_filter_fill_widgets(guint num) {
 	gtk_adjustment_set_value(gtk_spin_button_get_adjustment(
 				GTK_SPIN_BUTTON(filter_retries_spinner)),filter->filter_retries);
 
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(filter_not_full_check_button), filter->filter_not_full);
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(filter_not_empty_check_button), filter->filter_not_empty);
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(filter_no_cheats_check_button), filter->filter_no_cheats);
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(filter_no_password_check_button), filter->filter_no_password);
+	gtk_check_button_set_active(GTK_CHECK_BUTTON(filter_not_full_check_button), filter->filter_not_full);
+	gtk_check_button_set_active(GTK_CHECK_BUTTON(filter_not_empty_check_button), filter->filter_not_empty);
+	gtk_check_button_set_active(GTK_CHECK_BUTTON(filter_no_cheats_check_button), filter->filter_no_cheats);
+	gtk_check_button_set_active(GTK_CHECK_BUTTON(filter_no_password_check_button), filter->filter_no_password);
 
 	server_filter_changed = FALSE;
 
@@ -1162,9 +1215,8 @@ static void server_filter_set_changed_callback(int status) {
 
 static void server_filter_page (GtkWidget *notebook) {
 	GtkWidget *page_vbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *hbox;
 	GtkWidget *button;
@@ -1180,8 +1232,8 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	cleaned_up = FALSE;
 
-	/* One cannot edit the "None" filter */
-	if (current_server_filter == 0) {
+	/* One cannot edit the "None" filter; but only bump if filters exist */
+	if (current_server_filter == 0 && server_filters->len > 0) {
 		current_server_filter = 1;
 	}
 
@@ -1206,67 +1258,60 @@ static void server_filter_page (GtkWidget *notebook) {
 		}
 	}
 
-	page_vbox = gtk_vbox_new (FALSE, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
 	label = gtk_label_new (_("Server Filter"));
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page_vbox, label);
 
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX(page_vbox), hbox, FALSE, FALSE, 0);
-	gtk_widget_show(hbox);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+	gtk_box_append (GTK_BOX (page_vbox), hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	filter_option_menu = gtk_combo_box_text_new();
+	filter_option_menu = gtk_drop_down_new (G_LIST_MODEL (gtk_string_list_new (NULL)), NULL);
 	set_filter_menu (filter_option_menu);
-	g_signal_connect(filter_option_menu, "changed", G_CALLBACK (filter_select_callback), NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), filter_option_menu, FALSE, FALSE, 0);
-	gtk_widget_show (filter_option_menu);
+	g_signal_connect (filter_option_menu, "notify::selected", G_CALLBACK (filter_select_callback), NULL);
+	gtk_box_append (GTK_BOX (hbox), filter_option_menu);
+	gtk_widget_set_visible (filter_option_menu, TRUE);
 
 	button = gtk_button_new_with_label (_("New"));
 	gtk_widget_set_size_request(button, 80, -1);
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (filter_new_rename_callback), (gpointer) 0);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show(button);
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label(_("Rename"));
 	gtk_widget_set_size_request(button, 80, -1);
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (filter_new_rename_callback), (gpointer) 1);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show(button);
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label (_("Delete"));
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect_swapped (button, "clicked", G_CALLBACK (filter_delete_callback), NULL);
-	gtk_box_pack_start(GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_show (button);
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	frame = gtk_frame_new (_("Server would pass filter if"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (page_vbox), frame);
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_container_add (GTK_CONTAINER (frame), alignment);
-
-#ifdef USE_GEOIP
-	table = gtk_table_new(8, 5, FALSE);
-#else
-	table = gtk_table_new(6, 5, FALSE);
-#endif
-
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-	gtk_container_add (GTK_CONTAINER (alignment), table);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	xqf_widget_set_margin_all (grid, 6);
+	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (grid, GTK_ALIGN_CENTER);
+	gtk_frame_set_child (GTK_FRAME (frame), grid);
 
 	/* row=0..1 */
 
 	/* max ping */
 	label = gtk_label_new(_("ping is less than"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new (MAX_PING, 0.0, MAX_PING, 100.0, 1000.0, 0.0);
 
@@ -1274,25 +1319,24 @@ static void server_filter_page (GtkWidget *notebook) {
 	gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (filter_ping_spinner), GTK_UPDATE_ALWAYS);
 	gtk_widget_set_size_request (filter_ping_spinner, 64, -1);
 	g_signal_connect_swapped (filter_ping_spinner, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_ping_spinner, 1, 2, row, row+1);
-	gtk_widget_show(filter_ping_spinner);
+	gtk_grid_attach (GTK_GRID (grid), filter_ping_spinner, 1, row, 1, 1);
+	gtk_widget_set_visible (filter_ping_spinner, TRUE);
 
 
-	/* GAMECONTAINS Filter -- baa */
-	/* http://developer.gnome.org/doc/API/gtk/gtktable.html */
+	/* GAMECONTAINS Filter */
 
 	label = gtk_label_new (_("the game contains the string"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE(table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 	game_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (game_contains_entry), 32);
 	gtk_widget_set_size_request(game_contains_entry, 64, -1);
 	gtk_editable_set_editable (GTK_EDITABLE(game_contains_entry), TRUE);
 	g_signal_connect_swapped (game_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table), game_contains_entry, 4, 5, row, row+1);
-	gtk_widget_show(game_contains_entry);
+	gtk_grid_attach (GTK_GRID (grid), game_contains_entry, 4, row, 1, 1);
+	gtk_widget_set_visible (game_contains_entry, TRUE);
 	row++;
 
 
@@ -1300,35 +1344,32 @@ static void server_filter_page (GtkWidget *notebook) {
 
 	/* max timeouts */
 	label = gtk_label_new(_("the number of retries is fewer than"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL,
-			0, 0);
-	gtk_widget_show(label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 
 	adj = (GtkAdjustment *) gtk_adjustment_new(2, 0.0, MAX_RETRIES, 1.0, 1.0, 0.0);
 
 	filter_retries_spinner = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0, 0);
 	gtk_widget_set_size_request(filter_retries_spinner, 64, -1);
 	g_signal_connect_swapped (filter_retries_spinner, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_retries_spinner,
-			1, 2, row, row+1);
-	gtk_widget_show(filter_retries_spinner);
+	gtk_grid_attach (GTK_GRID (grid), filter_retries_spinner, 1, row, 1, 1);
+	gtk_widget_set_visible (filter_retries_spinner, TRUE);
 
-	/* GAMETYPE Filter -- baa */
-	/* http://developer.gnome.org/doc/API/gtk/gtktable.html */
+	/* GAMETYPE Filter */
 
 	label = gtk_label_new (_("the game type contains the string"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 	filter_game_type_entry = gtk_entry_new ();
 	gtk_entry_set_max_length (GTK_ENTRY (filter_game_type_entry), 32);
 	gtk_widget_set_size_request (filter_game_type_entry, 64, -1);
 	gtk_editable_set_editable (GTK_EDITABLE (filter_game_type_entry), TRUE);
 	g_signal_connect_swapped (filter_game_type_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults (GTK_TABLE (table), filter_game_type_entry, 4, 5, row, row+1);
-	gtk_widget_show (filter_game_type_entry);
+	gtk_grid_attach (GTK_GRID (grid), filter_game_type_entry, 4, row, 1, 1);
+	gtk_widget_set_visible (filter_game_type_entry, TRUE);
 	row++;
 
 	/*row=2..3*/
@@ -1336,23 +1377,22 @@ static void server_filter_page (GtkWidget *notebook) {
 	/*not full */
 	filter_not_full_check_button =gtk_check_button_new_with_label(_("it is not full"));
 	g_signal_connect_swapped (filter_not_full_check_button,"toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table),filter_not_full_check_button, 0, 2, row, row+1);
-	gtk_widget_show(filter_not_full_check_button);
+	gtk_grid_attach (GTK_GRID (grid), filter_not_full_check_button, 0, row, 2, 1);
+	gtk_widget_set_visible (filter_not_full_check_button, TRUE);
 
-	/* Version Filter -- baa */
+	/* Version Filter */
 	label = gtk_label_new(_("the version contains the string"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_table_attach(GTK_TABLE(table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL,
-			0, 0);
-	gtk_widget_show(label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 	version_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (version_contains_entry), 32);
 	gtk_widget_set_size_request(version_contains_entry, 64, -1);
 	gtk_editable_set_editable(GTK_EDITABLE(version_contains_entry), TRUE);
 	g_signal_connect_swapped (version_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table), version_contains_entry, 4, 5, row, row+1);
-	gtk_widget_show(version_contains_entry);
+	gtk_grid_attach (GTK_GRID (grid), version_contains_entry, 4, row, 1, 1);
+	gtk_widget_set_visible (version_contains_entry, TRUE);
 	row++;
 
 	/*row=3..4*/
@@ -1361,24 +1401,23 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_not_empty_check_button =
 		gtk_check_button_new_with_label(_("it is not empty"));
 	g_signal_connect_swapped (filter_not_empty_check_button, "toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_not_empty_check_button,
-			0, 2, row, row+1);
-	gtk_widget_show(filter_not_empty_check_button);
+	gtk_grid_attach (GTK_GRID (grid), filter_not_empty_check_button, 0, row, 2, 1);
+	gtk_widget_set_visible (filter_not_empty_check_button, TRUE);
 
 
 	/* Map filter*/
 	label = gtk_label_new (_("the map contains the string"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 	map_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (map_contains_entry), 32);
 	gtk_widget_set_size_request (map_contains_entry, 64, -1);
 	gtk_editable_set_editable (GTK_EDITABLE (map_contains_entry), TRUE);
 	g_signal_connect_swapped (map_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table), map_contains_entry, 4, 5, row, row+1);
-	gtk_widget_show(map_contains_entry);
+	gtk_grid_attach (GTK_GRID (grid), map_contains_entry, 4, row, 1, 1);
+	gtk_widget_set_visible (map_contains_entry, TRUE);
 	row++;
 
 	/*row=4..5*/
@@ -1387,23 +1426,23 @@ static void server_filter_page (GtkWidget *notebook) {
 	filter_no_cheats_check_button =
 		gtk_check_button_new_with_label(_("cheats are not allowed"));
 	g_signal_connect_swapped (filter_no_cheats_check_button, "toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE(table), filter_no_cheats_check_button, 0, 2, row, row+1);
-	gtk_widget_show(filter_no_cheats_check_button);
+	gtk_grid_attach (GTK_GRID (grid), filter_no_cheats_check_button, 0, row, 2, 1);
+	gtk_widget_set_visible (filter_no_cheats_check_button, TRUE);
 
 
 	/* Server name filter*/
 	label = gtk_label_new (_("the server name contains the string"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 3, 4, row, row+1, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 3, row, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 	server_name_contains_entry = gtk_entry_new();
 	gtk_entry_set_max_length(GTK_ENTRY (server_name_contains_entry), 32);
 	gtk_widget_set_size_request (server_name_contains_entry, 64, -1);
 	gtk_editable_set_editable (GTK_EDITABLE (server_name_contains_entry), TRUE);
 	g_signal_connect_swapped (server_name_contains_entry, "changed", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
-	gtk_table_attach_defaults(GTK_TABLE(table),server_name_contains_entry , 4, 5, row, row+1);
-	gtk_widget_show(server_name_contains_entry);
+	gtk_grid_attach (GTK_GRID (grid), server_name_contains_entry, 4, row, 1, 1);
+	gtk_widget_set_visible (server_name_contains_entry, TRUE);
 	row++;
 
 	/*row=5..6*/
@@ -1411,52 +1450,44 @@ static void server_filter_page (GtkWidget *notebook) {
 	/* no password */
 	filter_no_password_check_button = gtk_check_button_new_with_label (_("no password required"));
 	g_signal_connect_swapped (filter_no_password_check_button, "toggled", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
-	gtk_table_attach_defaults(GTK_TABLE (table), filter_no_password_check_button, 0, 2, row, row+1);
-	gtk_widget_show (filter_no_password_check_button);
+	gtk_grid_attach (GTK_GRID (grid), filter_no_password_check_button, 0, row, 2, 1);
+	gtk_widget_set_visible (filter_no_password_check_button, TRUE);
 
 	row++;
 
 	/*country list */
 #ifdef USE_GEOIP
 	label = gtk_label_new (_("Country filter:"));
-	gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 6, 7);
-	gtk_misc_set_padding (GTK_MISC (label), 0, 15);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_widget_show (label);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 6, 1, 1);
+	gtk_widget_set_margin_top (label, 15);
+	gtk_widget_set_margin_bottom (label, 15);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_widget_set_visible (label, TRUE);
 
-	scrolledwindow_fcountry = gtk_scrolled_window_new (NULL, NULL);
+	scrolledwindow_fcountry = gtk_scrolled_window_new();
 	gtk_widget_set_sensitive (scrolledwindow_fcountry, FALSE);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow_fcountry), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-	country_filter_list = gtk_clist_new(1);
-	gtk_clist_set_shadow_type (GTK_CLIST (country_filter_list), GTK_SHADOW_NONE);
+	country_filter_list = country_list_view_new (NULL);
 	gtk_widget_set_sensitive (country_filter_list, FALSE);
-
-
-	gtk_clist_set_column_justification (GTK_CLIST (country_filter_list), 0, GTK_JUSTIFY_LEFT);
-	gtk_clist_set_column_width (GTK_CLIST (country_filter_list), 0, 100);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (scrolledwindow_fcountry), country_filter_list);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolledwindow_fcountry), country_filter_list);
 
 	gtk_widget_set_size_request (scrolledwindow_fcountry, 100, 100);
 
-	gtk_table_attach_defaults (GTK_TABLE (table), scrolledwindow_fcountry, 0, 1, 7, 8);
-	gtk_widget_show (scrolledwindow_fcountry);
-	gtk_widget_show (country_filter_list);
+	gtk_grid_attach (GTK_GRID (grid), scrolledwindow_fcountry, 0, 7, 1, 1);
+	gtk_widget_set_visible (scrolledwindow_fcountry, TRUE);
+	gtk_widget_set_visible (country_filter_list, TRUE);
 
 	/*select and clear buttons */
-	vbuttonbox1 = gtk_vbutton_box_new ();
-	gtk_widget_show (vbuttonbox1);
-	gtk_table_attach_defaults (GTK_TABLE (table), vbuttonbox1, 1, 2, 7, 8);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_START);
+	vbuttonbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_visible (vbuttonbox1, TRUE);
+	gtk_grid_attach (GTK_GRID (grid), vbuttonbox1, 1, 7, 1, 1);
 	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 1);
-#if defined(GUI_GTK2) && !defined(GTK_DISABLE_DEPRECATED)
-	gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (vbuttonbox1), 5, -1);
-#endif
 
 	country_selection_button = gtk_button_new_with_label(_("select..."));
 	gtk_widget_set_sensitive (country_selection_button, FALSE);
-	gtk_widget_show (country_selection_button);
-	gtk_container_add (GTK_CONTAINER (vbuttonbox1), country_selection_button);
+	gtk_widget_set_visible (country_selection_button, TRUE);
+	gtk_box_append (GTK_BOX (vbuttonbox1), country_selection_button);
 	gtk_widget_set_size_request (country_selection_button, 80, -1);
 	g_signal_connect (country_selection_button, "clicked", G_CALLBACK (country_select_button_pressed), NULL);
 
@@ -1470,17 +1501,16 @@ static void server_filter_page (GtkWidget *notebook) {
 	g_signal_connect_swapped(country_clear_button, "clicked", G_CALLBACK (server_filter_set_changed_callback), (gpointer) TRUE);
 
 
-	gtk_widget_show(country_clear_button);
-	gtk_container_add(GTK_CONTAINER(vbuttonbox1), country_clear_button);
+	gtk_widget_set_visible (country_clear_button, TRUE);
+	gtk_box_append (GTK_BOX (vbuttonbox1), country_clear_button);
 	gtk_widget_set_size_request(country_clear_button, 80, -1);
 #endif
 
-	gtk_widget_show(table);
-	gtk_widget_show(alignment);
-	gtk_widget_show(frame);
-	gtk_widget_show(page_vbox);
+	gtk_widget_set_visible (grid, TRUE);
+	gtk_widget_set_visible (frame, TRUE);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
-	gtk_combo_box_set_active(GTK_COMBO_BOX(filter_option_menu), server_filter_dialog_current_filter-1);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (filter_option_menu), (guint)(server_filter_dialog_current_filter - 1));
 	server_filter_fill_widgets(server_filter_dialog_current_filter);
 }
 
@@ -1502,7 +1532,6 @@ static void filters_on_cancel (void) {
 }
 
 int filters_cfg_dialog (int page_num) {
-	GValue hborder = G_VALUE_INIT;
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 	GtkWidget *notebook;
@@ -1516,9 +1545,9 @@ int filters_cfg_dialog (int page_num) {
 #endif
 
 	window = dialog_create_modal_transient_window (_("XQF: Filters"), TRUE, TRUE, filters_on_cancel);
-	vbox = gtk_vbox_new (FALSE, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
-	gtk_container_add (GTK_CONTAINER (window), vbox);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+	xqf_widget_set_margin_all (vbox, 8);
+	gtk_window_set_child (GTK_WINDOW (window), vbox);
 
 
 	// Notebook
@@ -1526,52 +1555,46 @@ int filters_cfg_dialog (int page_num) {
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
-	g_value_init (&hborder, G_TYPE_INT);
-	g_value_set_int (&hborder, 4);
-	g_object_set_property (G_OBJECT (notebook), "tab-hborder", &hborder);
-	gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
+	gtk_box_append (GTK_BOX (vbox), notebook);
 
 	server_filter_page (notebook);
 
 	player_filter_page (notebook);
 
-	gtk_widget_show (notebook);
+	gtk_widget_set_visible (notebook, TRUE);
 
 
 	// Buttons at the bottom
 
 
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_box_pack_start (GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+	gtk_box_append (GTK_BOX (vbox), hbox);
 
 	button = gtk_button_new_with_label (_("Cancel"));
 	gtk_widget_set_size_request (button, 80, -1);
-	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
-	gtk_box_pack_end (GTK_BOX(hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
+	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
 	button = gtk_button_new_with_label (_("OK"));
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect(button, "clicked",	G_CALLBACK (filters_on_ok), NULL);
-	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_box_append (GTK_BOX (hbox), button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
-	gtk_widget_show (window);
+	gtk_widget_set_visible (window, TRUE);
 
 	for (i = 0; i < FILTERS_TOTAL; i++)
 		filters[i].changed = FILTER_NOT_CHANGED;
 
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page_num);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 
@@ -1621,31 +1644,18 @@ void filters_done (void) {
  *
  */
 
-/* callback: row selection left list*/
-void country_selection_left_list(GtkWidget * list,
-		gint row_select,
-		gint column,
-		GdkEventButton * event, gpointer data) {
-	selected_row_left_list = row_select;
-	return;
+/* callback: selection changed in left list */
+static void country_selection_left_list (GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
+	(void) pspec; (void) data;
+	guint pos = gtk_single_selection_get_selected (sel);
+	selected_row_left_list = (pos == GTK_INVALID_LIST_POSITION) ? -1 : (gint) pos;
 }
 
-/* callback: row selection right list*/
-void country_selection_right_list(GtkWidget * list,
-		gint row_select,
-		gint column,
-		GdkEventButton * event, gpointer data) {
-	selected_row_right_list = row_select;
-	return;
-}
-
-/* callback: no row is selected*/
-void country_unselection_right_list(GtkWidget * list,
-		gint row_select,
-		gint column,
-		GdkEventButton * event, gpointer data) {
-	selected_row_right_list = -1;
-	return;
+/* callback: selection changed in right list */
+static void country_selection_right_list (GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
+	(void) pspec; (void) data;
+	guint pos = gtk_single_selection_get_selected (sel);
+	selected_row_right_list = (pos == GTK_INVALID_LIST_POSITION) ? -1 : (gint) pos;
 }
 
 /* show the country selection popup window*/
@@ -1655,41 +1665,37 @@ static void country_select_button_pressed(GtkWidget * widget, gpointer data) {
 
 /* callback: clear button*/
 static void country_clear_list(GtkWidget * widget, gpointer data) {
-	gtk_clist_clear(GTK_CLIST(country_filter_list));
-	last_row_country_list=0;
+	(void) widget; (void) data;
+	g_list_store_remove_all (get_country_store (country_filter_list));
 }
 
 /** add the country selected in the left list to the right list */
 static void country_add_selection_to_right_list() {
-	gint i;
-	gint flag_id;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
-	struct pixmap* countrypix = NULL;
-
 	if (selected_row_left_list < 0)
 		return;
 
-	flag_id = GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_left_list),
-				selected_row_left_list));
+	GListStore *left_store = get_country_store (country_left_list);
+	GObject *left_item = g_list_model_get_item (G_LIST_MODEL (left_store), (guint) selected_row_left_list);
+	if (!left_item)
+		return;
+	gint flag_id = GPOINTER_TO_INT (g_object_get_data (left_item, "code"));
+	g_object_unref (left_item);
 
 	/* do nothing if country is already in right list */
-	for (i = 0; i < last_row_right_list; i++)
-		if (flag_id == GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_right_list), i)))
+	GListStore *right_store = get_country_store (country_right_list);
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (right_store));
+	for (guint ri = 0; ri < n; ++ri) {
+		GObject *item = g_list_model_get_item (G_LIST_MODEL (right_store), ri);
+		gint existing_id = GPOINTER_TO_INT (g_object_get_data (item, "code"));
+		g_object_unref (item);
+		if (existing_id == flag_id)
 			return;
-
-	countrypix = get_pixmap_for_country(flag_id);
-
-	// gtk_clist_insert third parameter is not const!
-	strncpy (buf,geoip_name_by_id (flag_id), sizeof (buf) - 1);
-	gtk_clist_append (GTK_CLIST (country_right_list), text);
-	if (countrypix) {
-		gtk_clist_set_pixtext (GTK_CLIST (country_right_list), last_row_right_list, 0, geoip_name_by_id (flag_id), 4, countrypix->pix, countrypix->mask);
 	}
 
-	gtk_clist_set_row_data (GTK_CLIST (country_right_list), last_row_right_list, GINT_TO_POINTER (flag_id));
-
-	++last_row_right_list;
+	struct pixmap *countrypix = get_pixmap_for_country (flag_id);
+	country_store_append (right_store, flag_id,
+	                      countrypix ? countrypix->texture : NULL,
+	                      geoip_name_by_id (flag_id));
 }
 
 /* callback: >> button*/
@@ -1699,121 +1705,65 @@ static void country_add_button(GtkWidget * widget, gpointer data) {
 
 /* callback: << button*/
 static void country_delete_button(GtkWidget * widget, gpointer data) {
-
-	if ((selected_row_right_list != -1) && (last_row_right_list > 0)) {
-		gtk_clist_remove(GTK_CLIST(country_right_list), selected_row_right_list);
-		last_row_right_list--;
-	}
+	(void) widget; (void) data;
+	if (selected_row_right_list < 0)
+		return;
+	GListStore *store = get_country_store (country_right_list);
+	g_list_store_remove (store, (guint) selected_row_right_list);
+	selected_row_right_list = -1;
 }
 
-
-/** callback: double click on row */
-gint country_mouse_click_left_list(GtkWidget * widget,
-		GdkEventButton * event,
-		gpointer func_data) {
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1)) {
-		country_add_selection_to_right_list();
-	}
-
-	return FALSE;
-}
-
-/** callback: double click on row*/
-gint country_mouse_click_right_list(GtkWidget * widget,
-		GdkEventButton * event,
-		gpointer func_data) {
-
-	if ((event->type == GDK_2BUTTON_PRESS) && (event->button==1)) {
-		country_delete_button(NULL,NULL);
-	}
-
-	return FALSE;
-}
 
 /* callback: ready with country selection*/
 static void country_selection_on_ok(void) {
-	int i;
-	gint country_nr;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
+	selected_row_right_list = -1;
 
-	struct pixmap* countrypix = NULL;
+	GListStore *filter_store = get_country_store (country_filter_list);
+	GListStore *right_store  = get_country_store (country_right_list);
+	g_list_store_remove_all (filter_store);
 
-	selected_row_right_list=-1;
-	gtk_clist_freeze(GTK_CLIST(country_filter_list));
-	gtk_clist_clear(GTK_CLIST(country_filter_list));
-
-	for (i = 0; i < last_row_right_list; ++i) {
-		country_nr = GPOINTER_TO_INT(gtk_clist_get_row_data(GTK_CLIST(country_right_list), i));
-
-		countrypix = get_pixmap_for_country(country_nr);
-
-		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id(country_nr),sizeof(buf) - 1);
-		gtk_clist_insert(GTK_CLIST(country_filter_list), i, text);
-		if (countrypix) {
-			gtk_clist_set_pixtext(GTK_CLIST(country_filter_list), i, 0,
-					text[0], 4,countrypix->pix,countrypix->mask);
-		}
-		gtk_clist_set_row_data(GTK_CLIST(country_filter_list),i,GINT_TO_POINTER(country_nr));
-
+	guint n = g_list_model_get_n_items (G_LIST_MODEL (right_store));
+	for (guint ri = 0; ri < n; ++ri) {
+		GObject *item = g_list_model_get_item (G_LIST_MODEL (right_store), ri);
+		gint country_nr = GPOINTER_TO_INT (g_object_get_data (item, "code"));
+		g_object_unref (item);
+		struct pixmap *countrypix = get_pixmap_for_country (country_nr);
+		country_store_append (filter_store, country_nr,
+		                      countrypix ? countrypix->texture : NULL,
+		                      geoip_name_by_id (country_nr));
 	}
-	gtk_clist_thaw(GTK_CLIST(country_filter_list));
-	last_row_country_list=last_row_right_list;
 }
 
 static void country_selection_on_cancel(void) {
 	selected_row_right_list=-1;
 }
 
-/** populate a clist with country names&flags
- * @param clist the clist
+/** populate a list with country names&flags
+ * @param list the GtkListView widget
  * @param all if false only show countries that have a flag
  */
-static void populate_country_clist(GtkWidget* clist, gboolean all) {
-	struct pixmap* countrypix = NULL;
-	int row_number = -1;
+static void populate_country_list(GtkWidget* list, gboolean all) {
+	GListStore *store = get_country_store (list);
 	unsigned i;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
 
-	g_return_if_fail(GTK_IS_CLIST(clist));
-
-	gtk_clist_freeze(GTK_CLIST(clist));
-
-	gtk_clist_clear(GTK_CLIST(clist));
+	g_list_store_remove_all (store);
 
 	for (i = 0; i <= geoip_num_countries(); ++i) {
-		if (all)
-			countrypix = get_pixmap_for_country_with_fallback(i);
-		else
-			countrypix = get_pixmap_for_country(i);
+		struct pixmap *countrypix = all
+			? get_pixmap_for_country_with_fallback (i)
+			: get_pixmap_for_country (i);
 
 		if (!all && !countrypix)
 			continue;
 
-		++row_number;
-
-		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id(i),sizeof(buf) - 1);
-		gtk_clist_insert(GTK_CLIST(clist), row_number, text);
-		if (countrypix) {
-			gtk_clist_set_pixtext(GTK_CLIST(clist), row_number, 0,
-					geoip_name_by_id(i), 4,
-					countrypix->pix,
-					countrypix->mask);
-		}
-
-		/* save the flag number */
-		gtk_clist_set_row_data(GTK_CLIST(clist),
-				row_number, GINT_TO_POINTER(i));
+		country_store_append (store, (gint) i,
+		                      countrypix ? countrypix->texture : NULL,
+		                      geoip_name_by_id (i));
 	}
-
-	gtk_clist_thaw(GTK_CLIST(clist));
 }
 
-static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *clist) {
-	populate_country_clist(clist, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget)));
+static void country_show_all_changed_callback (GtkWidget *widget, GtkWidget *list) {
+	populate_country_list(list, gtk_check_button_get_active (GTK_CHECK_BUTTON(widget)));
 }
 
 /* country selection window */
@@ -1836,164 +1786,131 @@ static void country_create_popup_window(void) {
 	GtkWidget *button1;
 	GtkWidget *button2;
 
-	int i;
-	int flag_nr;
-	gchar buf[64] = {0};
-	gchar *text[1] = {buf};
-
-	struct pixmap* countrypix = NULL;
 
 	// window caption for country filter
 	country_popup_window = dialog_create_modal_transient_window (_("Configure Country Filter"), TRUE, TRUE, country_selection_on_cancel);
 	gtk_widget_set_size_request (GTK_WIDGET (country_popup_window), 480, 320);
 
-	vbox1 = gtk_vbox_new (FALSE, 0);
-	gtk_widget_show (vbox1);
-	gtk_container_add (GTK_CONTAINER (country_popup_window), vbox1);
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_visible (vbox1, TRUE);
+	gtk_window_set_child (GTK_WINDOW (country_popup_window), vbox1);
 
 	frame1 = gtk_frame_new (_("Country filter:"));
-	gtk_widget_show (frame1);
-	gtk_box_pack_start (GTK_BOX (vbox1), frame1, TRUE, TRUE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER(frame1), 4);
+	gtk_widget_set_visible (frame1, TRUE);
+	gtk_box_append (GTK_BOX (vbox1), frame1);
+	xqf_widget_set_margin_all (frame1, 4);
 
-	vbox2 = gtk_vbox_new (FALSE, 0);
-	gtk_widget_show (vbox2);
-	gtk_container_add (GTK_CONTAINER (frame1), vbox2);
-	gtk_container_set_border_width (GTK_CONTAINER (frame1), 4);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_visible (vbox2, TRUE);
+	gtk_frame_set_child (GTK_FRAME (frame1), vbox2);
 
 
-	hbox1 = gtk_hbox_new (FALSE, 0);
-	gtk_widget_show (hbox1);
-	gtk_box_pack_start (GTK_BOX (vbox2), hbox1, TRUE, TRUE, 0);
+	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_widget_set_visible (hbox1, TRUE);
+	gtk_box_append (GTK_BOX (vbox2), hbox1);
 
-	// left clist
-	scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 8);
+	// left list
+	scrolledwindow1 = gtk_scrolled_window_new();
+	xqf_widget_set_margin_all (scrolledwindow1, 8);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-	country_left_list = gtk_clist_new (1);
-	gtk_clist_set_shadow_type (GTK_CLIST(country_left_list), GTK_SHADOW_NONE);
-	gtk_clist_set_selection_mode (GTK_CLIST(country_left_list), GTK_SELECTION_SINGLE);
-	gtk_clist_set_column_justification (GTK_CLIST (country_left_list), 0, GTK_JUSTIFY_LEFT);
-	gtk_clist_set_column_width(GTK_CLIST (country_left_list), 0, 100);
-	
-	g_signal_connect (country_left_list, "select_row", G_CALLBACK (country_selection_left_list), NULL);
-	
-	g_signal_connect (country_left_list, "button_press_event", G_CALLBACK (country_mouse_click_left_list), NULL);
+	{
+		GtkSingleSelection *left_sel = NULL;
+		country_left_list = country_list_view_new (&left_sel);
+		g_signal_connect (left_sel, "notify::selected",
+		                  G_CALLBACK (country_selection_left_list), NULL);
+	}
 
-	// fill the list with all countries if the flag is available
+	populate_country_list (country_left_list, FALSE);
 
-	populate_country_clist (country_left_list, FALSE);
-
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_WIDGET (country_left_list));
-	gtk_box_pack_start (GTK_BOX (hbox1), scrolledwindow1, TRUE, TRUE, 0);
-	gtk_widget_show (scrolledwindow1);
-	gtk_widget_show (country_left_list);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_WIDGET (country_left_list));
+	gtk_box_append (GTK_BOX (hbox1), scrolledwindow1);
+	gtk_widget_set_visible (scrolledwindow1, TRUE);
+	gtk_widget_set_visible (country_left_list, TRUE);
 
 	// >> and << buttons
 
 	// >>
-	vbuttonbox1 = gtk_vbutton_box_new ();
-	gtk_widget_show (vbuttonbox1);
-	gtk_box_pack_start (GTK_BOX (hbox1), vbuttonbox1, FALSE, TRUE, 0);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (vbuttonbox1), GTK_BUTTONBOX_SPREAD);
+	vbuttonbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_visible (vbuttonbox1, TRUE);
+	gtk_box_append (GTK_BOX (hbox1), vbuttonbox1);
 	gtk_box_set_spacing (GTK_BOX (vbuttonbox1), 0);
 
 	button3 = gtk_button_new_with_label (">>");
 	g_signal_connect (button3, "clicked", G_CALLBACK (country_add_button), NULL);
-	gtk_widget_show (button3);
-	gtk_container_add (GTK_CONTAINER (vbuttonbox1), button3);
-	gtk_widget_set_can_default (button3, TRUE);
+	gtk_widget_set_visible (button3, TRUE);
+	gtk_box_append (GTK_BOX (vbuttonbox1), button3);
 
 
 	// <<
 	button4 = gtk_button_new_with_label ("<<");
 	g_signal_connect (button4, "clicked", G_CALLBACK (country_delete_button), NULL);
-	gtk_widget_show (button4);
-	gtk_container_add (GTK_CONTAINER (vbuttonbox1), button4);
-	gtk_widget_set_can_default (button4, TRUE);
+	gtk_widget_set_visible (button4, TRUE);
+	gtk_box_append (GTK_BOX (vbuttonbox1), button4);
 
 
-	// right clist
-	scrolledwindow2 = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow2), 8);
+	// right list
+	scrolledwindow2 = gtk_scrolled_window_new();
+	xqf_widget_set_margin_all (scrolledwindow2, 8);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	country_right_list = gtk_clist_new(1);
-	gtk_clist_set_shadow_type (GTK_CLIST (country_right_list),GTK_SHADOW_NONE);
-	gtk_clist_set_selection_mode (GTK_CLIST (country_right_list), GTK_SELECTION_SINGLE);
-
-	gtk_clist_set_column_justification (GTK_CLIST(country_right_list), 0, GTK_JUSTIFY_LEFT);
-	gtk_clist_set_column_width (GTK_CLIST (country_right_list), 0, 100);
-
-
-	g_signal_connect (country_right_list, "select_row", G_CALLBACK (country_selection_right_list), NULL);
-
-	g_signal_connect (country_right_list, "unselect_row", G_CALLBACK (country_unselection_right_list), NULL);
-
-	g_signal_connect (country_right_list, "button_press_event", G_CALLBACK (country_mouse_click_right_list), NULL);
-
-
-	// fill the clist with the same countries as in country_filter_list
-
-	for (i = 0; i < last_row_country_list; i++) {
-
-		flag_nr = GPOINTER_TO_INT (gtk_clist_get_row_data (GTK_CLIST (country_filter_list), i));
-
-		countrypix = get_pixmap_for_country_with_fallback (flag_nr);
-
-		// gtk_clist_insert third parameter is not const!
-		strncpy(buf,geoip_name_by_id (flag_nr), sizeof (buf) - 1);
-		gtk_clist_insert (GTK_CLIST (country_right_list), i, text);
-
-		if (countrypix) {
-			gtk_clist_set_pixtext (GTK_CLIST (country_right_list),i, 0, geoip_name_by_id (flag_nr), 4, countrypix->pix, countrypix->mask);
-		}
-
-		gtk_clist_set_row_data (GTK_CLIST (country_right_list), i, GINT_TO_POINTER (flag_nr));
-
+	{
+		GtkSingleSelection *right_sel = NULL;
+		country_right_list = country_list_view_new (&right_sel);
+		g_signal_connect (right_sel, "notify::selected",
+		                  G_CALLBACK (country_selection_right_list), NULL);
 	}
 
-	last_row_right_list=last_row_country_list;
+	// fill right list with same countries as in country_filter_list
+	{
+		GListStore *fstore = get_country_store (country_filter_list);
+		GListStore *rstore = get_country_store (country_right_list);
+		guint fn = g_list_model_get_n_items (G_LIST_MODEL (fstore));
+		for (guint fi = 0; fi < fn; ++fi) {
+			GObject *fitem = g_list_model_get_item (G_LIST_MODEL (fstore), fi);
+			gint flag_nr = GPOINTER_TO_INT (g_object_get_data (fitem, "code"));
+			g_object_unref (fitem);
+			struct pixmap *countrypix = get_pixmap_for_country_with_fallback (flag_nr);
+			country_store_append (rstore, flag_nr,
+			                      countrypix ? countrypix->texture : NULL,
+			                      geoip_name_by_id (flag_nr));
+		}
+	}
 
-
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow2), country_right_list);
-	gtk_box_pack_start (GTK_BOX (hbox1), scrolledwindow2, TRUE, TRUE, 0);
-	gtk_widget_show (scrolledwindow2);
-	gtk_widget_show (country_right_list);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolledwindow2), country_right_list);
+	gtk_box_append (GTK_BOX (hbox1), scrolledwindow2);
+	gtk_widget_set_visible (scrolledwindow2, TRUE);
+	gtk_widget_set_visible (country_right_list, TRUE);
 
 	country_show_all_check_button = gtk_check_button_new_with_label (_("Show all countries"));
 	g_signal_connect (country_show_all_check_button, "toggled", G_CALLBACK (country_show_all_changed_callback), (gpointer) country_left_list);
-	gtk_widget_show (country_show_all_check_button);
-	gtk_box_pack_start (GTK_BOX (vbox2), country_show_all_check_button, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (country_show_all_check_button), 4);
+	gtk_widget_set_visible (country_show_all_check_button, TRUE);
+	gtk_box_append (GTK_BOX (vbox2), country_show_all_check_button);
+	xqf_widget_set_margin_all (country_show_all_check_button, 4);
 
 	/* OK and Cancel buttons */
-	hbuttonbox1 = gtk_hbutton_box_new();
+	hbuttonbox1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 
-	gtk_widget_show (hbuttonbox1);
-	gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, TRUE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox1), 4);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_END);
+	gtk_widget_set_visible (hbuttonbox1, TRUE);
+	gtk_box_append (GTK_BOX (vbox1), hbuttonbox1);
+	xqf_widget_set_margin_all (hbuttonbox1, 4);
 	gtk_box_set_spacing (GTK_BOX (hbuttonbox1), 1);
 
 	button1 = gtk_button_new_with_label (_("OK"));
 	g_signal_connect (button1, "clicked", G_CALLBACK (country_selection_on_ok), NULL);
-	g_signal_connect_swapped (button1, "clicked", G_CALLBACK (gtk_widget_destroy), country_popup_window);
+	g_signal_connect_swapped (button1, "clicked", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (country_popup_window));
 
-	gtk_widget_show (button1);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), button1);
-	gtk_widget_set_can_default (button1, TRUE);
+	gtk_widget_set_visible (button1, TRUE);
+	gtk_box_append (GTK_BOX (hbuttonbox1), button1);
 
 	button2 = gtk_button_new_with_label (_("Cancel"));
-	g_signal_connect_swapped (button2, "clicked", G_CALLBACK (gtk_widget_destroy), country_popup_window);
+	g_signal_connect_swapped (button2, "clicked", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (country_popup_window));
 
-	gtk_widget_show(button2);
-	gtk_container_add(GTK_CONTAINER(hbuttonbox1), button2);
-	gtk_widget_set_can_default(button2, TRUE);
+	gtk_widget_set_visible (button2, TRUE);
+	gtk_box_append (GTK_BOX (hbuttonbox1), button2);
 
-	gtk_widget_show (country_popup_window);
+	gtk_widget_set_visible (country_popup_window, TRUE);
 
-	gtk_main ();
+	dialog_run_modal (country_popup_window);
 
 	unregister_window (country_popup_window);
 

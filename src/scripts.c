@@ -93,7 +93,7 @@ typedef struct
 static GtkWidget* scripts_list;
 static GtkWidget* notebook;
 
-static void install_file_dialog_response_callback (GtkWidget *widget, int response, gpointer data);
+static void install_file_dialog_cb (const char *path, gpointer data);
 static void install_button_callback (GtkWidget *widget, gpointer data);
 
 void scripts_add_dir(const char* dir) {
@@ -410,36 +410,36 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 		case SCRIPT_OPTION_TYPE_STRING:
 		case SCRIPT_OPTION_TYPE_INT:
 			{
-				GtkWidget* hbox = ret = gtk_hbox_new(FALSE, 0);
+				GtkWidget* hbox = ret = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 				GtkWidget* label = gtk_label_new(opt->name);
 				GtkWidget* entry = opt->widget = gtk_entry_new();
 
 				gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
 
-				gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
-				gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, FALSE, 4);
+				gtk_box_append(GTK_BOX(hbox), label);
+				gtk_box_append(GTK_BOX(hbox), entry);
 
 				if (opt->defval) {
-					gtk_entry_set_text(GTK_ENTRY(entry), opt->defval);
+					gtk_editable_set_text(GTK_EDITABLE(entry), opt->defval);
 				}
 
-				gtk_widget_show(hbox);
-				gtk_widget_show(label);
-				gtk_widget_show(entry);
+				gtk_widget_set_visible (hbox, TRUE);
+				gtk_widget_set_visible (label, TRUE);
+				gtk_widget_set_visible (entry, TRUE);
 			}
 			break;
 		case SCRIPT_OPTION_TYPE_BOOL:
 			{
 				GtkWidget* button = ret = opt->widget = gtk_check_button_new_with_label(opt->name);
 
-				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(button), opt->enable);
+				gtk_check_button_set_active (GTK_CHECK_BUTTON(button), opt->enable);
 
-				gtk_widget_show(button);
+				gtk_widget_set_visible (button, TRUE);
 			}
 			break;
 		case SCRIPT_OPTION_TYPE_LIST:
 			{
-				GtkWidget* hbox = ret = gtk_hbox_new(FALSE, 0);
+				GtkWidget* hbox = ret = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 				GtkWidget* label = gtk_label_new(opt->name);
 				GtkWidget* combo = gtk_combo_box_text_new_with_entry ();
 				GList* list = NULL;
@@ -455,12 +455,12 @@ static GtkWidget* create_script_option_widget(Script* script, ScriptOption* opt)
 
 				opt->widget = GTK_WIDGET (combo_get_entry (combo));
 
-				gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 4);
-				gtk_box_pack_start(GTK_BOX(hbox), combo, FALSE, FALSE, 4);
+				gtk_box_append(GTK_BOX(hbox), label);
+				gtk_box_append(GTK_BOX(hbox), combo);
 
-				gtk_widget_show(combo);
-				gtk_widget_show(label);
-				gtk_widget_show(hbox);
+				gtk_widget_set_visible (combo, TRUE);
+				gtk_widget_set_visible (label, TRUE);
+				gtk_widget_set_visible (hbox, TRUE);
 			}
 			break;
 
@@ -492,10 +492,9 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 	ScriptOption* opt;
 	GSList* optlist;
 
-	page_vbox = gtk_vbox_new (FALSE, 4);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 
 	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_OUT);
 
 	{
 		GString* s = g_string_new(script->summary);
@@ -504,14 +503,14 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 		g_string_append_printf(s, "\nLicense: %s", script->license);
 
 		label = gtk_label_new (s->str);
-		gtk_container_add (GTK_CONTAINER (frame), label);
-		gtk_widget_show (label);
+		gtk_frame_set_child (GTK_FRAME (frame), label);
+		gtk_widget_set_visible (label, TRUE);
 
 		g_string_free(s, TRUE);
 	}
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-	gtk_widget_show (frame);
+	gtk_box_append (GTK_BOX (page_vbox), frame);
+	gtk_widget_set_visible (frame, TRUE);
 
 
 	optlist = script->options;
@@ -524,15 +523,15 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 		widget = create_script_option_widget(script, opt);
 
-		gtk_box_pack_start(GTK_BOX(page_vbox), widget, FALSE, FALSE, 4);
+		gtk_box_append(GTK_BOX(page_vbox), widget);
 
 		optlist = g_slist_next(optlist);
 	}
 
 	frame = gtk_frame_new (_("Options"));
 
-	vbox = gtk_vbox_new (FALSE, 4);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+	gtk_frame_set_child (GTK_FRAME (frame), vbox);
 
 	for (; optlist; optlist = g_slist_next(optlist)) {
 		GtkWidget* widget;
@@ -541,146 +540,68 @@ static GtkWidget *generic_script_frame(const char* filename, Script* script) {
 
 		widget = create_script_option_widget(script, opt);
 
-		gtk_box_pack_start(GTK_BOX(vbox), widget, FALSE, FALSE, 4);
+		gtk_box_append(GTK_BOX(vbox), widget);
 	}
 
-	gtk_widget_show (vbox);
+	gtk_widget_set_visible (vbox, TRUE);
 
-	gtk_box_pack_start (GTK_BOX (page_vbox), frame, FALSE, FALSE, 0);
-	gtk_widget_show (frame);
+	gtk_box_append (GTK_BOX (page_vbox), frame);
+	gtk_widget_set_visible (frame, TRUE);
 
-	gtk_widget_show (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
 
-#if 1 // GTK2 and GTK3
-enum {
-	SCRIPTSLIST_ATTR_INDEX,
-	SCRIPTSLIST_ATTR_NAME,
-	SCRIPTSLIST_ATTR_COUNT
-};
+static GtkSingleSelection *scripts_selection_model = NULL;
 
-static void script_selection_changed_callback (GtkTreeSelection *selection, gpointer data) {
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	gint index;
+static void script_selection_changed_callback (GtkSingleSelection *sel, GParamSpec *pspec, gpointer data) {
+	guint index = gtk_single_selection_get_selected (sel);
+	if (index == GTK_INVALID_LIST_POSITION)
+		return;
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), (gint)index);
+}
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		gtk_tree_model_get (model, &iter, SCRIPTSLIST_ATTR_INDEX, &index, -1);
+static void scripts_list_item_setup (GtkListItemFactory *f, GtkListItem *item, gpointer data) {
+	(void)f; (void)data;
+	gtk_list_item_set_child (item, gtk_label_new (NULL));
+}
 
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), index);
-	}
+static void scripts_list_item_bind (GtkListItemFactory *f, GtkListItem *item, gpointer data) {
+	(void)f; (void)data;
+	GtkStringObject *obj = GTK_STRING_OBJECT (gtk_list_item_get_item (item));
+	gtk_label_set_text (GTK_LABEL (gtk_list_item_get_child (item)),
+	                    gtk_string_object_get_string (obj));
 }
 
 static GtkWidget *create_scripts_list (void) {
-	GtkTreeStore *store;
-	GtkWidget *tree;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeSelection *select;
-	int i;
+	GtkStringList *string_list = gtk_string_list_new (NULL);
 	GList *s;
 
-	store = gtk_tree_store_new (SCRIPTSLIST_ATTR_COUNT,
-	                            G_TYPE_INT,
-	                            G_TYPE_STRING
-	                            );
+	for (s = scripts; s; s = g_list_next (s))
+		gtk_string_list_append (string_list, (const char *)s->data);
 
-	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
-		const char* filename = s->data;
-		GtkTreeIter iter;
+	GtkSingleSelection *sel = gtk_single_selection_new (G_LIST_MODEL (string_list));
+	gtk_single_selection_set_autoselect (sel, FALSE);
+	scripts_selection_model = sel;
 
-		gtk_tree_store_append (store, &iter, NULL);
+	GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+	g_signal_connect (factory, "setup", G_CALLBACK (scripts_list_item_setup), NULL);
+	g_signal_connect (factory, "bind",  G_CALLBACK (scripts_list_item_bind),  NULL);
 
-		gtk_tree_store_set (store, &iter,
-		                    SCRIPTSLIST_ATTR_INDEX, i,
-		                    SCRIPTSLIST_ATTR_NAME, filename,
-		                    -1);
-	}
+	GtkWidget *list_view = gtk_list_view_new (GTK_SELECTION_MODEL (sel), factory);
+	gtk_list_view_set_single_click_activate (GTK_LIST_VIEW (list_view), FALSE);
 
-	tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+	g_signal_connect (sel, "notify::selected",
+	                  G_CALLBACK (script_selection_changed_callback), NULL);
 
-	g_object_unref (G_OBJECT (store));
-
-	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree), FALSE);
-	gtk_tree_view_set_show_expanders (GTK_TREE_VIEW (tree), FALSE);
-
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_title (column, "Script");
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,
-	                                     renderer,
-	                                     "text", SCRIPTSLIST_ATTR_NAME,
-	                                     NULL);
-
-	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
-
-	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
-	gtk_tree_selection_set_mode (select, GTK_SELECTION_BROWSE);
-	g_signal_connect (G_OBJECT (select), "changed",
-	                  G_CALLBACK (script_selection_changed_callback),
-	                  NULL);
-
-	scripts_list = tree;
-
-	return tree;
+	scripts_list = list_view;
+	return list_view;
 }
 
 static void scripts_list_select (int index) {
-	GtkTreeSelection *select = gtk_tree_view_get_selection (GTK_TREE_VIEW (scripts_list));
-	GtkTreePath *path;
-
-	gtk_tree_selection_unselect_all (select);
-
-	path = gtk_tree_path_new_from_indices (index, -1);
-	gtk_tree_selection_select_path (select, path);
-
-	gtk_tree_path_free(path);
+	gtk_single_selection_set_selected (scripts_selection_model, (guint)index);
 }
-#else // GTK1 (deprecated)
-static void scripts_page_select_callback(GtkItem *item, gpointer d) {
-	unsigned i = GPOINTER_TO_INT(d);
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), i);
-}
-
-static GtkWidget *create_scripts_list (void) {
-	GtkWidget *gtklist;
-	unsigned i;
-	GList* s;
-
-	gtklist = gtk_list_new ();
-
-	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
-		const char* filename = s->data;
-		GtkWidget* item;
-
-		item = gtk_list_item_new();
-
-		gtk_container_add (GTK_CONTAINER (item), gtk_label_new(filename));
-
-		g_signal_connect (G_OBJECT (item), "select",
-				G_CALLBACK(scripts_page_select_callback), GINT_TO_POINTER(i));
-
-		gtk_widget_show_all(item);
-		gtk_container_add (GTK_CONTAINER (gtklist), item);
-	}
-
-	scripts_list = gtklist;
-
-	return gtklist;
-}
-
-static void scripts_list_select (int index) {
-	GList *node = g_list_nth (gtk_container_get_children( GTK_CONTAINER (scripts_list)), index);
-
-	if (node) {
-		gtk_list_item_select (GTK_LIST_ITEM (node->data));
-	}
-}
-#endif
 
 GtkWidget *scripts_config_page () {
 	GtkWidget *page_vbox;
@@ -694,19 +615,17 @@ GtkWidget *scripts_config_page () {
 	unsigned i;
 	GList* s;
 
-	page_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (page_vbox), 8);
+	page_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	xqf_widget_set_margin_all (page_vbox, 8);
 
-	games_hbox = gtk_hbox_new (FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (games_hbox), 0);
-	gtk_box_pack_start (GTK_BOX (page_vbox), games_hbox, TRUE, TRUE, 0);
+	games_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_box_append (GTK_BOX (page_vbox), games_hbox);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
 	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
 
-	scrollwin = gtk_scrolled_window_new (NULL, NULL);
+	scrollwin = gtk_scrolled_window_new();
 
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollwin),
 			GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -716,29 +635,29 @@ GtkWidget *scripts_config_page () {
 	gtk_widget_set_size_request (gtklist, 136, -1);
 
 	//  gtk_container_add (GTK_CONTAINER (scrollwin), gtklist);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
+	gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrollwin), gtklist);
 
-	gtk_container_add (GTK_CONTAINER (frame), scrollwin);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+	gtk_frame_set_child (GTK_FRAME (frame), scrollwin);
+	gtk_box_append (GTK_BOX (vbox), frame);
 
 	button = gtk_button_new_with_label(_("Install..."));
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (vbox), button);
 
 	g_signal_connect (G_OBJECT (button),
 			"clicked", G_CALLBACK(install_button_callback), NULL);
 
 #if have_time_to_implement_that
 	button = gtk_button_new_with_label(_("Remove"));
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (vbox), button);
 #endif
 
-	gtk_box_pack_start (GTK_BOX (games_hbox), vbox, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (games_hbox), vbox);
 
 	notebook = gtk_notebook_new ();
 	// the tabs are hidden, so nobody will notice its a notebook
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
-	gtk_box_pack_start (GTK_BOX (games_hbox), notebook, FALSE, FALSE, 15);
+	gtk_box_append (GTK_BOX (games_hbox), notebook);
 
 	for (s = scripts, i = 0; s; s = g_list_next(s), ++i) {
 		const char* filename = s->data;
@@ -757,7 +676,7 @@ GtkWidget *scripts_config_page () {
 		}
 		else {
 			page = gtk_label_new(_("Invalid script"));
-			gtk_widget_show(page);
+			gtk_widget_set_visible (page, TRUE);
 		}
 
 		gtk_notebook_append_page (GTK_NOTEBOOK (notebook), page, label);
@@ -765,7 +684,7 @@ GtkWidget *scripts_config_page () {
 
 	scripts_list_select (0);
 
-	gtk_widget_show_all (page_vbox);
+	gtk_widget_set_visible (page_vbox, TRUE);
 
 	return page_vbox;
 }
@@ -801,7 +720,7 @@ void save_script_prefs() {
 				case SCRIPT_OPTION_TYPE_STRING:
 				case SCRIPT_OPTION_TYPE_INT:
 				case SCRIPT_OPTION_TYPE_LIST:
-					val = gtk_entry_get_text(GTK_ENTRY(opt->widget));
+					val = gtk_editable_get_text(GTK_EDITABLE(opt->widget));
 
 					if (!strlen(val)) {
 						val = NULL;
@@ -822,7 +741,7 @@ void save_script_prefs() {
 					}
 					break;
 				case SCRIPT_OPTION_TYPE_BOOL:
-					enable = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(opt->widget));
+					enable = gtk_check_button_get_active (GTK_CHECK_BUTTON(opt->widget));
 					if (enable != opt->enable) {
 						config_set_bool(opt->section, enable);
 						debug(4, "set %s/%s=%d", s->data, opt->section, enable);
@@ -938,20 +857,13 @@ void script_action_gamequit(struct game* g, struct server* s) {
 	run_scripts(ONGAMEQUIT, g, s);
 }
 
-void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpointer data) {
-	char *filename;
+void install_file_dialog_cb (const char *filename, gpointer data G_GNUC_UNUSED) {
 	char *basename;
 	char dest[PATH_MAX];
 	const char* msg;
 
-	if (response != GTK_RESPONSE_ACCEPT) {
-		gtk_widget_destroy (dialog);
+	if (!filename)
 		return;
-	}
-
-	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-
-	gtk_widget_destroy (dialog);
 
 	mkdir((const char*)scriptdirs->data, 0777);
 
@@ -961,14 +873,12 @@ void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpo
 
 	if (!access(dest, F_OK)) {
 		if (!dialog_yesno(NULL, 0, NULL, NULL, _("Script %s already exists, overwrite?"), dest)) {
-			g_free (filename);
 			return;
 		}
 	}
 
 	if ((msg = copy_file(filename, dest))) {
 		dialog_ok(NULL, "%s", msg);
-		g_free (filename);
 		return;
 	}
 
@@ -978,10 +888,8 @@ void install_file_dialog_response_callback (GtkWidget *dialog, int response, gpo
 	scripts_load();
 
 	dialog_ok(NULL, _("Script saved as\n%s\nPlease close and reopen the preferences dialog"), dest);
-
-	g_free (filename);
 }
 
 void install_button_callback (GtkWidget *widget, gpointer data) {
-	file_dialog(_("Select Script"), G_CALLBACK(install_file_dialog_response_callback), NULL);
+	file_dialog(_("Select Script"), NULL, install_file_dialog_cb, NULL);
 }

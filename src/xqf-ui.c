@@ -27,6 +27,7 @@
 
 #include "xqf.h"
 #include "xqf-ui.h"
+#include "xqf-lists.h"
 #include "srv-list.h"
 #include "source.h"
 #include "game.h"
@@ -37,6 +38,41 @@
 
 static GSList *xqf_windows = NULL;
 static GtkWidget *target_window = NULL;
+static GtkTreeStore *source_store = NULL;
+
+enum source_col {
+	SOURCE_COL_MASTER = 0,
+	SOURCE_COL_PIXBUF,
+	SOURCE_COL_NAME,
+	SOURCE_COL_COUNT
+};
+
+struct _source_find_ctx { struct master *target; GtkTreeIter result; gboolean found; };
+
+static gboolean
+_source_find_cb (GtkTreeModel *model, GtkTreePath *path G_GNUC_UNUSED,
+                 GtkTreeIter *iter, gpointer data)
+{
+	struct _source_find_ctx *ctx = data;
+	gpointer mp = NULL;
+	gtk_tree_model_get (model, iter, SOURCE_COL_MASTER, &mp, -1);
+	if (mp == ctx->target) {
+		ctx->result = *iter;
+		ctx->found  = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static gboolean
+source_find_master (struct master *m, GtkTreeIter *out)
+{
+	struct _source_find_ctx ctx = { m, { 0 }, FALSE };
+	gtk_tree_model_foreach (GTK_TREE_MODEL (source_store), _source_find_cb, &ctx);
+	if (ctx.found && out)
+		*out = ctx.result;
+	return ctx.found;
+}
 
 GtkWidget *pane1_widget;
 GtkWidget *pane2_widget;
@@ -48,7 +84,7 @@ GtkWidget *filter_buttons[FILTERS_TOTAL] = {0};
    list, you need to also add an entry in sort.h and sort.c
 */
 
-static struct clist_column server_columns[] =
+static struct list_column server_columns[] =
 {
 	{
 		.name =      N_("Name"),
@@ -113,17 +149,17 @@ static struct clist_column server_columns[] =
 };
 
 
-struct clist_def server_clist_def = {
-	CWIDGET_CLIST,
+struct list_def server_list_def = {
+	CVIEW_LIST,
 	"Server List",
 	server_columns,
 	9,
-	GTK_SELECTION_EXTENDED,
+	GTK_SELECTION_MULTIPLE,
 	630, 270,
 	SORT_SERVER_PING, GTK_SORT_ASCENDING
 };
 
-static struct clist_column player_columns[] =
+static struct list_column player_columns[] =
 {
 	{
 		.name =      N_("Name"),
@@ -163,8 +199,8 @@ static struct clist_column player_columns[] =
 	}
 };
 
-struct clist_def player_clist_def = {
-	CWIDGET_CLIST,
+struct list_def player_list_def = {
+	CVIEW_LIST,
 	"Player List",
 	player_columns,
 	6,
@@ -173,35 +209,8 @@ struct clist_def player_clist_def = {
 	SORT_PLAYER_FRAGS, GTK_SORT_DESCENDING
 };
 
-static struct clist_column srvinf_columns[] =
-{
-	{
-		.name =      N_("Rule"),
-		.width =     90,
-		.justify =   GTK_JUSTIFY_LEFT,
-		.sort_mode = { SORT_INFO_RULE, -1 },
-	},
-	{
-		.name =      N_("Value"),
-		.width =     80,
-		.justify =   GTK_JUSTIFY_LEFT,
-		.sort_mode = { SORT_INFO_VALUE, -1 },
-	}
-};
-
-struct clist_def srvinf_clist_def = {
-	CWIDGET_CTREE,
-	"Rule List",
-	srvinf_columns,
-	2,
-	GTK_SELECTION_SINGLE,
-	210, 180,
-	SORT_INFO_RULE, GTK_SORT_ASCENDING
-};
-
 
 void print_status (GtkWidget *sbar, char *fmt, ...) {
-	unsigned context_id;
 	char buf[1024];
 	va_list ap;
 
@@ -219,17 +228,14 @@ void print_status (GtkWidget *sbar, char *fmt, ...) {
 		fprintf (stderr, "Status: %s\n", buf);
 #endif
 
-		context_id = gtk_statusbar_get_context_id (GTK_STATUSBAR (sbar), "XQF");
-
-		gtk_statusbar_pop (GTK_STATUSBAR (sbar), context_id);
-		gtk_statusbar_push (GTK_STATUSBAR (sbar), context_id, buf);
+		gtk_label_set_text (GTK_LABEL (sbar), buf);
 	}
 }
 
 
 int window_delete_event_callback (GtkWidget *widget, gpointer data) {
 	target_window = widget;
-	gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
+	gtk_window_destroy (GTK_WINDOW ((GtkWidget *) (xqf_windows->data)));
 	return TRUE;
 }
 
@@ -248,7 +254,7 @@ void unregister_window (GtkWidget *window) {
 	g_slist_free_1 (first);
 
 	if (target_window && target_window != window)
-		gtk_widget_destroy ((GtkWidget *) (xqf_windows->data));
+		gtk_window_destroy (GTK_WINDOW ((GtkWidget *) (xqf_windows->data)));
 	else
 		target_window = NULL;
 
@@ -263,321 +269,252 @@ GtkWidget *top_window (void) {
 		return NULL;
 }
 
-#ifdef GUI_GTK2
-static void clist_column_set_title (GtkCList *clist, struct clist_def *cldef, int set_mark) {
-	char buf[256];
 
-	if (set_mark) {
-		const char* name = cldef->cols[clist->sort_column].sort_name[cldef->cols[clist->sort_column].current_sort_mode];
-		g_snprintf (buf, 128, "%s %c", _(cldef->cols[clist->sort_column].name),
-				(clist->sort_type == GTK_SORT_DESCENDING)? '>' : '<');
-
-		if (name) {
-			snprintf (buf+strlen(buf), sizeof(buf)-strlen(buf), " (%s)", _(name));
-		}
-		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget), buf);
-	}
-	else {
-		gtk_label_set (GTK_LABEL (cldef->cols[clist->sort_column].widget),
-				_(cldef->cols[clist->sort_column].name));
-	}
-}
-
-
-GtkWidget *create_cwidget (GtkWidget *scrollwin, struct clist_def *cldef) {
-	GtkWidget *alignment;
-	GtkWidget *label;
-	GtkWidget *clist;
-	char buf[256];
-	int i;
-
-	switch (cldef->type) {
-		case CWIDGET_CLIST:
-			clist = gtk_clist_new (cldef->columns);
-			break;
-
-		case CWIDGET_CTREE:
-			clist = gtk_ctree_new (cldef->columns, 0);
-			gtk_ctree_set_line_style (GTK_CTREE (clist), GTK_CTREE_LINES_NONE);
-			gtk_ctree_set_expander_style (GTK_CTREE (clist), GTK_CTREE_EXPANDER_TRIANGLE);
-			gtk_ctree_set_indent (GTK_CTREE (clist), 10);
-			break;
-
-		default:
-			return NULL;
-	}
-
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-	GTK_CLIST_SET_FLAG (GTK_CLIST (clist), CLIST_SHOW_TITLES);
-	gtk_container_add (GTK_CONTAINER (scrollwin), clist);
-
-	gtk_clist_set_selection_mode (GTK_CLIST (clist), cldef->mode);
-
-	for (i = 0; i < cldef->columns; i++) {
-		g_snprintf (buf, 256, "/" CONFIG_FILE "/%s Geometry/%s=%d",
-				cldef->name, cldef->cols[i].name, cldef->cols[i].width);
-		gtk_clist_set_column_width (GTK_CLIST (clist), i, config_get_int (buf));
-		if (cldef->cols[i].justify != GTK_JUSTIFY_LEFT) {
-			gtk_clist_set_column_justification (GTK_CLIST (clist), i, cldef->cols[i].justify);
-		}
-
-		alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
-
-		label = gtk_label_new (_(cldef->cols[i].name));
-		gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-		gtk_container_add (GTK_CONTAINER (alignment), label);
-		gtk_widget_show (label);
-
-		cldef->cols[i].widget = label;
-
-		gtk_clist_set_column_widget (GTK_CLIST (clist), i, alignment);
-		gtk_widget_show (alignment);
-	}
-
-	gtk_clist_set_sort_column (GTK_CLIST (clist), cldef->sort_column);
-	gtk_clist_set_sort_type (GTK_CLIST (clist), cldef->sort_type);
-
-	clist_column_set_title (GTK_CLIST (clist), cldef, TRUE);
-
-	return clist;
-}
-
-#define DIMOF(arr) (sizeof(arr)/sizeof(arr[0]))
-
-void clist_set_sort_column (GtkCList *clist, int column, struct clist_def *cldef) {
-	if (column == clist->sort_column) {
-		if (clist->sort_type == GTK_SORT_DESCENDING) {
-			cldef->cols[column].current_sort_mode = (cldef->cols[column].current_sort_mode+1)%DIMOF(cldef->cols[column].sort_mode);
-			if (cldef->cols[column].sort_mode[cldef->cols[column].current_sort_mode] == -1)
-				cldef->cols[column].current_sort_mode = 0;
-		}
-
-		gtk_clist_set_sort_type (clist, GTK_SORT_DESCENDING + GTK_SORT_ASCENDING - clist->sort_type);
-	}
-	else {
-		cldef->cols[column].current_sort_mode = 0;
-		clist_column_set_title (clist, cldef, FALSE);
-		gtk_clist_set_sort_column (clist, column);
-	}
-
-	debug (3, "%d %hhd", column, cldef->cols[column].current_sort_mode);
-
-	clist_column_set_title (clist, cldef, TRUE);
-	gtk_clist_sort (clist);
-
-	if (clist == server_clist) {
-		server_clist_selection_visible ();
-	}
-}
-
-
-void source_ctree_show_node_status (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
+void source_treeview_show_node_status (struct master *m) {
+	GtkTreeIter iter;
 	struct pixmap *pix = NULL;
-	int is_leaf;
-	int expanded;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
+	if (!source_find_master (m, &iter))
+		return;
 
-	if (m->isgroup || m == favorites) {
+	if (m->isgroup || m == favorites)
 		pix = games[m->type].pix;
-	}
-	else {
+	else
 		pix = &server_status[m->state];
-	}
 
-	gtk_ctree_get_node_info (GTK_CTREE (ctree), node, NULL, NULL, NULL, NULL, NULL, NULL, &is_leaf, &expanded);
-
-	gtk_ctree_set_node_info (GTK_CTREE (ctree), node, _(m->name), 4,
-			(pix)? pix->pix : NULL, (pix)? pix->mask : NULL,
-			(pix)? pix->pix : NULL, (pix)? pix->mask : NULL,
-			is_leaf, expanded);
+	gtk_tree_store_set (source_store, &iter,
+		SOURCE_COL_PIXBUF, pix ? pix->texture : NULL,
+		SOURCE_COL_NAME,   _(m->name),
+		-1);
 }
 
 
-static void source_ctree_enable_master_group (GtkWidget *ctree, struct master *m, int expand) {
-	GtkCTreeNode *node;
-	GtkCTreeNode *sibling = NULL;
-	char cfgkey[128];
+static void source_treeview_enable_master_group (struct master *m) {
+	GtkTreeIter iter, sibling_iter;
+	gboolean has_sibling = FALSE;
 	GSList *list;
-	int expanded;
 
 	if (!m->isgroup)
 		return;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
+	if (source_find_master (m, NULL))
+		return; /* already exists */
 
-	if (node != NULL) {
-		if (expand)
-			gtk_ctree_expand (GTK_CTREE (ctree), node);
-		return;
-	}
-
-	g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", m->name);
-
-	if (expand)
-		config_set_bool (cfgkey, expanded = TRUE);
-	else
-		expanded = TRUE - config_get_bool (cfgkey);
-
-	/* Find the place to insert new master group */
-
+	/* Find where to insert: before the first already-present later group */
 	list = g_slist_nth (master_groups, m->type);
 	if (list)
 		list = list->next;
-
-	while (!sibling && list) {
-		sibling = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, (struct master *) list->data);
+	while (!has_sibling && list) {
+		has_sibling = source_find_master ((struct master *) list->data, &sibling_iter);
 		list = list->next;
 	}
 
-	node = gtk_ctree_insert_node (GTK_CTREE (ctree), NULL, sibling, NULL, 4, NULL, NULL, NULL, NULL, FALSE, expanded);
-	gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
-	source_ctree_show_node_status (ctree, m);
+	if (has_sibling)
+		gtk_tree_store_insert_before (source_store, &iter, NULL, &sibling_iter);
+	else
+		gtk_tree_store_append (source_store, &iter, NULL);
+
+	gtk_tree_store_set (source_store, &iter,
+		SOURCE_COL_MASTER, m,
+		SOURCE_COL_PIXBUF, NULL,
+		SOURCE_COL_NAME,   "",
+		-1);
+	source_treeview_show_node_status (m);
 }
 
 
 /*
- *  Add master or update master's name if master is already in tree
- *  This function works only on non-group masters
+ *  Add master or update master's name/icon if master is already in tree.
+ *  This function works only on non-group masters.
  */
-
-void source_ctree_add_master (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
-	GtkCTreeNode *parent = NULL;
+void source_treeview_add_master (struct master *m) {
+	GtkTreeIter parent_iter, iter;
+	gboolean has_parent = FALSE;
 	struct master *group = NULL;
 
 	if (m->isgroup)
 		return;
 
-	// If set to display only configured games, and game is not configured,
-	// and it's not the 'Favorites' master, just return so the display
-	// isn't updated with the game type and masters.
+	/* If showing only configured games, skip unconfigured non-favorites */
 	if (!(games[m->type].cmd) && default_show_only_configured_games && m != favorites)
 		return;
 
 	if (m->type != UNKNOWN_SERVER) {
-		enum server_type type = m->master_type == MASTER_LAN? LAN_SERVER : m->type;
+		enum server_type type = m->master_type == MASTER_LAN ? LAN_SERVER : m->type;
 		group = (struct master *) g_slist_nth_data (master_groups, type);
-		source_ctree_enable_master_group (ctree, group, TRUE);
+		source_treeview_enable_master_group (group);
 	}
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
-
-	if (!node) {
-		if (group) {
-			parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
-		}
-		node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL, NULL, 4, NULL, NULL, NULL, NULL, TRUE, FALSE);
-		gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
+	if (source_find_master (m, &iter)) {
+		source_treeview_show_node_status (m);
+		return;
 	}
-	source_ctree_show_node_status (ctree, m);
+
+	if (group)
+		has_parent = source_find_master (group, &parent_iter);
+
+	gtk_tree_store_append (source_store, &iter, has_parent ? &parent_iter : NULL);
+	gtk_tree_store_set (source_store, &iter,
+		SOURCE_COL_MASTER, m,
+		SOURCE_COL_PIXBUF, NULL,
+		SOURCE_COL_NAME,   "",
+		-1);
+	source_treeview_show_node_status (m);
+
+	/* Expand parent so the new child is visible */
+	if (has_parent) {
+		GtkTreePath *path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &parent_iter);
+		gtk_tree_view_expand_row (GTK_TREE_VIEW (source_treeview), path, FALSE);
+		gtk_tree_path_free (path);
+	}
 }
 
 
-//static void source_ctree_remove_master_group (GtkWidget *ctree,
-void source_ctree_remove_master_group (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
+void source_treeview_remove_master_group (struct master *m) {
+	GtkTreeIter iter;
 
 	if (!m->isgroup)
 		return;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
-	if (node) {
-		gtk_ctree_remove_node (GTK_CTREE (ctree), node);
-	}
+	if (source_find_master (m, &iter))
+		gtk_tree_store_remove (source_store, &iter);
 }
 
 
-void source_ctree_delete_master (GtkWidget *ctree, struct master *m) {
-	GtkCTreeNode *node;
+void source_treeview_delete_master (struct master *m) {
+	GtkTreeIter iter;
 	struct master *group;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, m);
-	if (!node)
+	if (!source_find_master (m, &iter))
 		return;
 
-	gtk_ctree_remove_node (GTK_CTREE (ctree), node);
+	gtk_tree_store_remove (source_store, &iter);
 
-	/* Remove empty master group from the tree */
-
+	/* Remove parent group if it is now empty */
 	if (m->type != UNKNOWN_SERVER) {
 		group = (struct master *) g_slist_nth_data (master_groups, m->type);
-		if (group && (group->masters == NULL || (g_slist_length (group->masters) == 1 && group->masters->data == m))) {
-			source_ctree_remove_master_group (ctree, group);
-		}
+		if (group && (group->masters == NULL ||
+		              (g_slist_length (group->masters) == 1 && group->masters->data == m)))
+			source_treeview_remove_master_group (group);
 	}
 }
 
 
-static void fill_source_ctree (GtkWidget *ctree) {
-	GSList *list;
-	GSList *list2;
-	GtkCTreeNode *node;
-	GtkCTreeNode *parent;
-	struct master *group;
-	struct master *m;
+gboolean source_treeview_has_master (struct master *m) {
+	return source_find_master (m, NULL);
+}
 
-	source_ctree_add_master (ctree, favorites);
+
+static void fill_source_treeview (void) {
+	GSList *list, *list2;
+	GtkTreeIter parent_iter, iter;
+	struct master *group, *m;
+
+	source_treeview_add_master (favorites);
 
 	for (list = master_groups; list; list = list->next) {
 		group = (struct master *) list->data;
-		if (group->masters) {
-			// If set to display only configured games, and game is not configured,
-			// don't update the display with the master.
-			if (games[group->type].cmd || !default_show_only_configured_games) {
-				source_ctree_enable_master_group (ctree, group, FALSE);
-				parent = gtk_ctree_find_by_row_data (GTK_CTREE (ctree), NULL, group);
+		if (!group->masters)
+			continue;
+		source_treeview_enable_master_group (group);
 
-				for (list2 = group->masters; list2; list2 = list2->next) {
-					m = (struct master *) list2->data;
-					node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL, NULL, 4, NULL, NULL, NULL, NULL, TRUE, FALSE);
-					gtk_ctree_node_set_row_data (GTK_CTREE (ctree), node, m);
-					source_ctree_show_node_status (ctree, m);
-				}
-			}
+		if (!source_find_master (group, &parent_iter))
+			continue;
+
+		for (list2 = group->masters; list2; list2 = list2->next) {
+			m = (struct master *) list2->data;
+			gtk_tree_store_append (source_store, &iter, &parent_iter);
+			gtk_tree_store_set (source_store, &iter,
+				SOURCE_COL_MASTER, m,
+				SOURCE_COL_PIXBUF, NULL,
+				SOURCE_COL_NAME,   "",
+				-1);
+			source_treeview_show_node_status (m);
 		}
 	}
 }
 
-GtkWidget *create_source_ctree (GtkWidget *scrollwin) {
-	char *titles[1] = { _("Source") };
-	GtkWidget *ctree;
+/* Restore expand/collapse state for each group; call after source_treeview is set. */
+void source_treeview_restore_expand_state (void) {
+	GSList *list;
+	GtkTreeIter parent_iter;
+	struct master *group;
+	char cfgkey[128];
 
-/*	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-*/
-	ctree = gtk_ctree_new_with_titles (1, 0, titles);
-	gtk_container_add (GTK_CONTAINER (scrollwin), ctree);
+	for (list = master_groups; list; list = list->next) {
+		group = (struct master *) list->data;
+		if (!group->masters)
+			continue;
+		if (!source_find_master (group, &parent_iter))
+			continue;
+		g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", group->name);
+		if (!config_get_bool (cfgkey)) {
+			GtkTreePath *path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &parent_iter);
+			gtk_tree_view_expand_row (GTK_TREE_VIEW (source_treeview), path, FALSE);
+			gtk_tree_path_free (path);
+		}
+	}
+}
 
-	gtk_clist_set_selection_mode (GTK_CLIST (ctree), GTK_SELECTION_EXTENDED);
+GtkWidget *create_source_treeview (GtkWidget *scrollwin) {
+	GtkWidget *tv;
+	GtkCellRenderer *cr;
+	GtkTreeViewColumn *col;
+	GtkTreeSelection *sel;
 
-	gtk_ctree_set_line_style (GTK_CTREE (ctree), GTK_CTREE_LINES_NONE);
-	gtk_ctree_set_expander_style (GTK_CTREE (ctree), GTK_CTREE_EXPANDER_TRIANGLE);
-	gtk_ctree_set_indent (GTK_CTREE (ctree), 10);
+	source_store = gtk_tree_store_new (SOURCE_COL_COUNT,
+	                                   G_TYPE_POINTER,    /* MASTER */
+	                                   GDK_TYPE_TEXTURE,  /* PIXBUF */
+	                                   G_TYPE_STRING);    /* NAME   */
 
-	fill_source_ctree (ctree);
+	tv = gtk_tree_view_new_with_model (GTK_TREE_MODEL (source_store));
+	g_object_unref (source_store);
 
-	return ctree;
+	col = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title (col, _("Source"));
+
+	cr = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (col, cr, FALSE);
+	gtk_tree_view_column_set_attributes (col, cr, "texture", SOURCE_COL_PIXBUF, NULL);
+
+	cr = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (col, cr, TRUE);
+	gtk_tree_view_column_set_attributes (col, cr, "text", SOURCE_COL_NAME, NULL);
+
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tv), col);
+
+	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tv));
+	gtk_tree_selection_set_mode (sel, GTK_SELECTION_MULTIPLE);
+
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrollwin),
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrollwin), tv);
+
+	fill_source_treeview ();
+
+	return tv;
 }
 
 
-void source_ctree_select_source (struct master *m) {
-	GtkCTreeNode *node;
-	GtkVisibility vis;
+void source_treeview_select_source (struct master *m) {
+	GtkTreeView      *tv  = GTK_TREE_VIEW (source_treeview);
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (tv);
+	GtkTreeIter       iter;
+	GtkTreePath      *path;
 
-	node = gtk_ctree_find_by_row_data (GTK_CTREE (source_ctree), NULL, m);
-	gtk_ctree_unselect_recursive (GTK_CTREE (source_ctree), NULL);
-	gtk_ctree_select (GTK_CTREE (source_ctree), node);
+	if (!source_find_master (m, &iter))
+		return;
 
-	vis = gtk_ctree_node_is_visible (GTK_CTREE (source_ctree), node);
+	gtk_tree_selection_unselect_all (sel);
+	gtk_tree_selection_select_iter (sel, &iter);
 
-	if (vis != GTK_VISIBILITY_FULL)
-		gtk_ctree_node_moveto (GTK_CTREE (source_ctree), node, 0, 0.2, 0.0);
+	path = gtk_tree_model_get_path (GTK_TREE_MODEL (source_store), &iter);
+	gtk_tree_view_scroll_to_cell (tv, path, NULL, FALSE, 0.2f, 0.0f);
+	gtk_tree_path_free (path);
 }
 
 
-int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix) {
+int calculate_row_height (GtkWidget *widget G_GNUC_UNUSED, struct pixmap *pix) {
 	int pix_h;
 	int height;
 
@@ -587,10 +524,9 @@ int calculate_clist_row_height (GtkWidget *clist, struct pixmap *pix) {
 
 	return height;
 }
-#endif
 
-void set_toolbar_appearance (GtkToolbar *toolbar) {
-	gtk_toolbar_set_style(toolbar, GTK_TOOLBAR_BOTH);
+void set_toolbar_appearance (GtkWidget *toolbar) {
+	(void)toolbar;
 }
 
 /*******************************  Progress Bar  *****************************/
@@ -639,46 +575,44 @@ void progress_bar_start (GtkWidget *pbar, int pulse_switch) {
 	}
 }
 
-void save_cwidget_geometry (GtkWidget *clist, struct clist_def *cldef) {
+void save_view_geometry (GtkWidget *widget, struct list_def *cldef) {
 	char buf[256];
 	int i;
 
 	g_snprintf (buf, 256, "/" CONFIG_FILE "/%s Geometry/", cldef->name);
 	config_push_prefix (buf);
 
-	for (i = 0; i < cldef->columns; i++)
-		config_set_int (cldef->cols[i].name, GTK_CLIST (clist)->column[i].width);
+	GListModel *cols = gtk_column_view_get_columns (GTK_COLUMN_VIEW (widget));
+	for (i = 0; i < cldef->columns; i++) {
+		GtkColumnViewColumn *col = GTK_COLUMN_VIEW_COLUMN (g_list_model_get_item (cols, (guint) i));
+		if (col) {
+			config_set_int (cldef->cols[i].name, gtk_column_view_column_get_fixed_width (col));
+			g_object_unref (col);
+		}
+	}
 
 	config_pop_prefix ();
 }
 
 
 void ui_done (void) {
-	GtkAllocation allocation;
-	GtkCTreeNode *node;
 	char cfgkey[128];
-	int expanded;
 	GSList *list;
 	struct master *m;
 
-	save_cwidget_geometry (GTK_WIDGET (server_clist), &server_clist_def);
-	save_cwidget_geometry (GTK_WIDGET (player_clist), &player_clist_def);
-	save_cwidget_geometry (GTK_WIDGET (srvinf_ctree), &srvinf_clist_def);
+	save_view_geometry (GTK_WIDGET (server_view), &server_list_def);
+	save_view_geometry (GTK_WIDGET (player_view), &player_list_def);
 
 	config_push_prefix ("/" CONFIG_FILE "/Main Window Geometry/");
 
-	gtk_widget_get_allocation (main_window, &allocation);
-	config_set_int ("height", allocation.height);
-	config_set_int ("width", allocation.width);
+	config_set_int ("height", gtk_widget_get_height (main_window));
+	config_set_int ("width", gtk_widget_get_width (main_window));
 
-	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane1_widget)), &allocation);
-	config_set_int ("pane1", allocation.width);
+	config_set_int ("pane1", gtk_widget_get_width (gtk_paned_get_start_child (GTK_PANED (pane1_widget))));
 
-	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane2_widget)), &allocation);
-	config_set_int ("pane2", allocation.height);
+	config_set_int ("pane2", gtk_widget_get_height (gtk_paned_get_start_child (GTK_PANED (pane2_widget))));
 
-	gtk_widget_get_allocation (gtk_paned_get_child1 (GTK_PANED (pane3_widget)), &allocation);
-	config_set_int ("pane3", allocation.width);
+	config_set_int ("pane3", gtk_widget_get_width (gtk_paned_get_start_child (GTK_PANED (pane3_widget))));
 
 	config_pop_prefix ();
 
@@ -687,13 +621,16 @@ void ui_done (void) {
 	for (list = master_groups; list; list = list->next) {
 		m = (struct master *) list->data;
 		if (m->isgroup) {
-			node = gtk_ctree_find_by_row_data (GTK_CTREE (source_ctree), NULL, m);
-			if (node) {
-				gtk_ctree_get_node_info (GTK_CTREE (source_ctree), node,
-						NULL, NULL, NULL, NULL, NULL, NULL, NULL, &expanded);
+			GtkTreeIter iter;
+			if (source_find_master (m, &iter)) {
+				GtkTreePath *path = gtk_tree_model_get_path (
+				        GTK_TREE_MODEL (source_store), &iter);
+				gboolean expanded = gtk_tree_view_row_expanded (
+				        GTK_TREE_VIEW (source_treeview), path);
+				gtk_tree_path_free (path);
 				if (!expanded) {
 					g_snprintf (cfgkey, 128, "/" CONFIG_FILE "/Source Tree/%s node collapsed=false", m->name);
-					config_set_bool (cfgkey, TRUE - expanded);
+					config_set_bool (cfgkey, TRUE);
 				}
 			}
 		}
@@ -721,28 +658,10 @@ void restore_main_window_geometry (void) {
 	}
 
 	gtk_paned_set_position (GTK_PANED (pane1_widget), (pane1)? pane1 : 120);
-	gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 : server_clist_def.height +4);
-	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_clist_def.height + 4);
+	gtk_paned_set_position (GTK_PANED (pane2_widget), (pane2)? pane2 : server_list_def.height +4);
+	gtk_paned_set_position (GTK_PANED (pane3_widget), (pane3)? pane3 : player_list_def.height + 4);
 }
 
-GtkWidget* lookup_widget (GtkWidget* widget, const gchar* widget_name) {
-	GtkWidget *parent, *found_widget;
-
-	for (;;) {
-		if (GTK_IS_MENU (widget))
-			parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
-		else
-			parent = gtk_widget_get_parent (widget);
-		if (parent == NULL)
-			break;
-		widget = parent;
-	}
-
-	found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget), widget_name);
-	if (!found_widget)
-		g_warning ("Widget not found: %s", widget_name);
-	return found_widget;
-}
 
 // Skip a game if it's not configured and show only configured is enabled
 gboolean create_server_type_menu_filter_configured (enum server_type type) {
@@ -754,83 +673,78 @@ gboolean create_server_type_menu_filter_configured (enum server_type type) {
 
 typedef void (*SeverTypeSelectedFunction)(GtkWidget *widget, enum server_type type);
 
-static void create_server_type_menu_callback (GtkWidget *widget, SeverTypeSelectedFunction callback) {
-	GtkComboBox *combo = GTK_COMBO_BOX (widget);
-	GtkTreeModel *model = gtk_combo_box_get_model (combo);
-	GtkTreeIter iter;
+static void server_type_item_setup (GtkListItemFactory *f G_GNUC_UNUSED, GtkListItem *li, gpointer data G_GNUC_UNUSED) {
+	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_box_append (GTK_BOX (box), gtk_image_new ());
+	gtk_box_append (GTK_BOX (box), gtk_label_new (NULL));
+	gtk_list_item_set_child (li, box);
+}
 
-	if (gtk_combo_box_get_active_iter (combo, &iter)) {
-		gint value;
+static void server_type_item_bind (GtkListItemFactory *f G_GNUC_UNUSED, GtkListItem *li, gpointer data G_GNUC_UNUSED) {
+	GObject  *item = gtk_list_item_get_item (li);
+	GtkWidget *box = gtk_list_item_get_child (li);
+	GtkWidget *img = gtk_widget_get_first_child (box);
+	GtkWidget *lbl = gtk_widget_get_last_child (box);
+	GdkTexture *tex = g_object_get_data (item, "icon");
+	const char *name = g_object_get_data (item, "name");
+	gtk_image_set_from_paintable (GTK_IMAGE (img), tex ? GDK_PAINTABLE (tex) : NULL);
+	gtk_label_set_text (GTK_LABEL (lbl), name ? name : "");
+}
 
-		gtk_tree_model_get (model, &iter, SERVERTYPE_ATTR_TYPE, &value, -1);
+static void create_server_type_menu_callback (GObject *obj, GParamSpec *ps G_GNUC_UNUSED, gpointer user_data) {
+	GtkDropDown *dd = GTK_DROP_DOWN (obj);
+	SeverTypeSelectedFunction callback = (SeverTypeSelectedFunction) user_data;
+	guint pos = gtk_drop_down_get_selected (dd);
 
-		callback (widget, value);
-	}
+	if (pos == GTK_INVALID_LIST_POSITION)
+		return;
+
+	GObject *item = g_list_model_get_item (gtk_drop_down_get_model (dd), pos);
+	gint value = GPOINTER_TO_INT (g_object_get_data (item, "server-type"));
+	g_object_unref (item);
+
+	callback (GTK_WIDGET (dd), value);
 }
 
 GtkWidget *create_server_type_menu (int active_type, gboolean (*filterfunc)(enum server_type), GCallback callback) {
-	GtkListStore *store;
-	GtkWidget *combo;
-	GtkCellRenderer *renderer;
-	int i, row = 0, first_row = 0;
-
-	store = gtk_list_store_new (SERVERTYPE_ATTR_COUNT,
-	                            G_TYPE_INT,
-	                            GDK_TYPE_PIXBUF,
-	                            G_TYPE_STRING
-	                            );
+	GListStore *store = g_list_store_new (G_TYPE_OBJECT);
+	int i, row = 0, first_row = -1;
 
 	for (i = KNOWN_SERVER_START; i < UNKNOWN_SERVER; ++i) {
-		GtkTreeIter iter;
-		GdkPixbuf *pixbuf = games[i].pix->pixbuf;
-		char *name = _(games[i].name);
-
 		if (filterfunc && !filterfunc (i))
 			continue;
 
-		gtk_list_store_append (store, &iter);
+		GObject *item = g_object_new (G_TYPE_OBJECT, NULL);
+		g_object_set_data (item, "server-type", GINT_TO_POINTER (i));
+		GdkTexture *tex = games[i].pix->texture;
+		if (tex)
+			g_object_set_data_full (item, "icon", g_object_ref (tex), g_object_unref);
+		g_object_set_data (item, "name", _(games[i].name));
+		g_list_store_append (store, item);
+		g_object_unref (item);
 
-		gtk_list_store_set (store, &iter,
-		                    SERVERTYPE_ATTR_TYPE, i,
-		                    SERVERTYPE_ATTR_ICON, pixbuf,
-		                    SERVERTYPE_ATTR_NAME, name,
-		                    -1);
-
-		if (i == active_type) {
+		if (i == active_type)
 			first_row = row;
-		}
-		else if (!first_row)
+		else if (first_row < 0)
 			first_row = row;
 
-		++row; // must be here in case the continue was used
+		++row;
 	}
 
-	combo = gtk_combo_box_new_with_model (GTK_TREE_MODEL (store));
+	GtkListItemFactory *factory = gtk_signal_list_item_factory_new ();
+	g_signal_connect (factory, "setup", G_CALLBACK (server_type_item_setup), NULL);
+	g_signal_connect (factory, "bind",  G_CALLBACK (server_type_item_bind),  NULL);
 
-	g_object_unref (G_OBJECT (store));
+	GtkWidget *combo = gtk_drop_down_new (G_LIST_MODEL (store), NULL);
+	gtk_drop_down_set_factory (GTK_DROP_DOWN (combo), factory);
+	g_object_unref (factory);
 
-	renderer = gtk_cell_renderer_pixbuf_new ();
-	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, FALSE);
-	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
-	                                renderer,
-	                                "pixbuf", SERVERTYPE_ATTR_ICON,
-	                                 NULL);
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), renderer, TRUE);
-	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo),
-	                                renderer,
-	                                "text", SERVERTYPE_ATTR_NAME,
-	                                NULL);
-
-	g_signal_connect (G_OBJECT (combo), "changed",
+	g_signal_connect (combo, "notify::selected",
 	                  G_CALLBACK (create_server_type_menu_callback),
 	                  (SeverTypeSelectedFunction) callback);
 
-	// initiates callback to set servertype to first configured game
-	if (active_type != -1 && first_row) {
-		gtk_combo_box_set_active (GTK_COMBO_BOX (combo), first_row);
-	}
+	if (active_type != -1 && first_row >= 0)
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (combo), (guint) first_row);
 
 	return combo;
 }
