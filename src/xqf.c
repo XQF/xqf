@@ -1790,8 +1790,7 @@ void statistics_callback (GtkWidget *widget) {
 
 /* Give a toolbar button an icon+label child instead of its plain
  * GtkBuilder-assigned label, using an already-loaded toolbar pixmap. */
-static void set_toolbar_button_icon (const char *button_name, struct pixmap *pix) {
-	GtkWidget *button = GTK_WIDGET (gtk_builder_get_object (builder, button_name));
+static void set_toolbar_button_icon (GtkWidget *button, struct pixmap *pix) {
 	char *label = g_strdup (gtk_button_get_label (GTK_BUTTON (button)));
 
 	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
@@ -1823,13 +1822,13 @@ void populate_main_toolbar (void) {
 	g_signal_connect (gtk_builder_get_object (builder, "record-button"),  "clicked", G_CALLBACK (launch_record_callback),    NULL);
 
 	/* Restore the icons these buttons had before the GTK4 migration. */
-	set_toolbar_button_icon ("update-button",  &update_pix);
-	set_toolbar_button_icon ("refresh-button", &refresh_pix);
-	set_toolbar_button_icon ("refrsel-button", &refrsel_pix);
-	set_toolbar_button_icon ("stop-button",    &stop_pix);
-	set_toolbar_button_icon ("connect-button", &connect_pix);
-	set_toolbar_button_icon ("observe-button", &observe_pix);
-	set_toolbar_button_icon ("record-button",  &record_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "update-button")),  &update_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "refresh-button")), &refresh_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "refrsel-button")), &refrsel_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "stop-button")),    &stop_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "connect-button")), &connect_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "observe-button")), &observe_pix);
+	set_toolbar_button_icon (GTK_WIDGET (gtk_builder_get_object (builder, "record-button")),  &record_pix);
 
 	// Filter toggle buttons (added dynamically after toolbar buttons)
 	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
@@ -1841,6 +1840,8 @@ void populate_main_toolbar (void) {
 		filter_buttons[i] = gtk_toggle_button_new_with_label (_(filters[i].short_name));
 		g_signal_connect (G_OBJECT (filter_buttons[i]), "toggled",
 		                  G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
+
+		set_toolbar_button_icon (filter_buttons[i], filters[i].pix);
 
 		g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
 		gtk_widget_set_tooltip_text (filter_buttons[i], buf);
