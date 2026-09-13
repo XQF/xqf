@@ -1788,6 +1788,25 @@ void statistics_callback (GtkWidget *widget) {
 	statistics_dialog ();
 }
 
+/* Give a toolbar button an icon+label child instead of its plain
+ * GtkBuilder-assigned label, using an already-loaded toolbar pixmap. */
+static void set_toolbar_button_icon (const char *button_name, struct pixmap *pix) {
+	GtkWidget *button = GTK_WIDGET (gtk_builder_get_object (builder, button_name));
+	char *label = g_strdup (gtk_button_get_label (GTK_BUTTON (button)));
+
+	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+	GtkWidget *image = gtk_image_new_from_paintable (pix->texture ? GDK_PAINTABLE (pix->texture) : NULL);
+	GtkWidget *lbl = gtk_label_new (label);
+	gtk_box_append (GTK_BOX (box), image);
+	gtk_box_append (GTK_BOX (box), lbl);
+	gtk_widget_set_visible (box, TRUE);
+	gtk_widget_set_visible (image, TRUE);
+	gtk_widget_set_visible (lbl, TRUE);
+
+	gtk_button_set_child (GTK_BUTTON (button), box);
+	g_free (label);
+}
+
 void populate_main_toolbar (void) {
 	char buf[128];
 	unsigned mask;
@@ -1802,6 +1821,15 @@ void populate_main_toolbar (void) {
 	g_signal_connect (gtk_builder_get_object (builder, "connect-button"), "clicked", G_CALLBACK (launch_normal_callback),    NULL);
 	g_signal_connect (gtk_builder_get_object (builder, "observe-button"), "clicked", G_CALLBACK (launch_spectate_callback),  NULL);
 	g_signal_connect (gtk_builder_get_object (builder, "record-button"),  "clicked", G_CALLBACK (launch_record_callback),    NULL);
+
+	/* Restore the icons these buttons had before the GTK4 migration. */
+	set_toolbar_button_icon ("update-button",  &update_pix);
+	set_toolbar_button_icon ("refresh-button", &refresh_pix);
+	set_toolbar_button_icon ("refrsel-button", &refrsel_pix);
+	set_toolbar_button_icon ("stop-button",    &stop_pix);
+	set_toolbar_button_icon ("connect-button", &connect_pix);
+	set_toolbar_button_icon ("observe-button", &observe_pix);
+	set_toolbar_button_icon ("record-button",  &record_pix);
 
 	// Filter toggle buttons (added dynamically after toolbar buttons)
 	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
