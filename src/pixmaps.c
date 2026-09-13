@@ -171,46 +171,46 @@ void init_pixmaps (GtkWidget *window) {
 	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
-	create_pixmap (window, "update.xpm", &update_pix);
-	create_pixmap (window, "refresh.xpm", &refresh_pix);
-	create_pixmap (window, "refrsel.xpm", &refrsel_pix);
-	create_pixmap (window, "stop.xpm", &stop_pix);
+	create_pixmap (window, "update.png", &update_pix);
+	create_pixmap (window, "refresh.png", &refresh_pix);
+	create_pixmap (window, "refrsel.png", &refrsel_pix);
+	create_pixmap (window, "stop.png", &stop_pix);
 
-	create_pixmap (window, "connect.xpm", &connect_pix);
-	create_pixmap (window, "observe.xpm", &observe_pix);
-	create_pixmap (window, "record.xpm", &record_pix);
+	create_pixmap (window, "connect.png", &connect_pix);
+	create_pixmap (window, "observe.png", &observe_pix);
+	create_pixmap (window, "record.png", &record_pix);
 
-	create_pixmap (window, "sfilter.xpm", &sfilter_pix);
-	create_pixmap (window, "sfilter-cfg.xpm", &sfilter_cfg_pix);
+	create_pixmap (window, "sfilter.png", &sfilter_pix);
+	create_pixmap (window, "sfilter-cfg.png", &sfilter_cfg_pix);
 
-	create_pixmap (window, "pfilter.xpm", &pfilter_pix);
-	create_pixmap (window, "pfilter-cfg.xpm", &pfilter_cfg_pix);
+	create_pixmap (window, "pfilter.png", &pfilter_pix);
+	create_pixmap (window, "pfilter-cfg.png", &pfilter_cfg_pix);
 
-	create_pixmap (window, "green-plus.xpm", &gplus_pix);
-	create_pixmap (window, "red-minus.xpm", &rminus_pix);
+	create_pixmap (window, "green-plus.png", &gplus_pix);
+	create_pixmap (window, "red-minus.png", &rminus_pix);
 
-	create_pixmap (window, "man-black.xpm", &man_black_pix);
-	create_pixmap (window, "man-red.xpm", &man_red_pix);
-	create_pixmap (window, "man-yellow.xpm", &man_yellow_pix);
+	create_pixmap (window, "man-black.png", &man_black_pix);
+	create_pixmap (window, "man-red.png", &man_red_pix);
+	create_pixmap (window, "man-yellow.png", &man_yellow_pix);
 
-	create_pixmap (window, "group-red.xpm", &group_pix[0]);
-	create_pixmap (window, "group-green.xpm", &group_pix[1]);
-	create_pixmap (window, "group-blue.xpm", &group_pix[2]);
+	create_pixmap (window, "group-red.png", &group_pix[0]);
+	create_pixmap (window, "group-green.png", &group_pix[1]);
+	create_pixmap (window, "group-blue.png", &group_pix[2]);
 
-	create_pixmap (window, "buddy-red.xpm", &buddy_pix[1]);
-	create_pixmap (window, "buddy-green.xpm", &buddy_pix[2]);
-	create_pixmap (window, "buddy-blue.xpm", &buddy_pix[4]);
+	create_pixmap (window, "buddy-red.png", &buddy_pix[1]);
+	create_pixmap (window, "buddy-green.png", &buddy_pix[2]);
+	create_pixmap (window, "buddy-blue.png", &buddy_pix[4]);
 
-	create_pixmap (window, "server-na.xpm", &server_status[0]);
-	create_pixmap (window, "server-up.xpm", &server_status[1]);
-	create_pixmap (window, "server-down.xpm", &server_status[2]);
-	create_pixmap (window, "server-to.xpm", &server_status[3]);
-	create_pixmap (window, "server-error.xpm", &server_status[4]);
+	create_pixmap (window, "server-na.png", &server_status[0]);
+	create_pixmap (window, "server-up.png", &server_status[1]);
+	create_pixmap (window, "server-down.png", &server_status[2]);
+	create_pixmap (window, "server-to.png", &server_status[3]);
+	create_pixmap (window, "server-error.png", &server_status[4]);
 
-	create_pixmap (window, "error.xpm", &error_pix);
-	create_pixmap (window, "delete.xpm", &delete_pix);
-	create_pixmap (window, "locked.xpm", &locked_pix);
-	create_pixmap (window, "punkbuster.xpm", &punkbuster_pix);
+	create_pixmap (window, "error.png", &error_pix);
+	create_pixmap (window, "delete.png", &delete_pix);
+	create_pixmap (window, "locked.png", &locked_pix);
+	create_pixmap (window, "punkbuster.png", &punkbuster_pix);
 	cat_pixmaps(window, &locked_punkbuster_pix, &punkbuster_pix, &locked_pix);
 
 	for (i = LAN_SERVER; i < UNKNOWN_SERVER; i++) {

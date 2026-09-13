@@ -38,14 +38,14 @@
 		<type>LAN_SERVER</type>
 		<id>LAN</id>
 		<name>LAN</name>
-		<icon>lan.xpm</icon>
+		<icon>lan.png</icon>
 	</game>
 	<game>
 		<base>Q2_SERVER</base>
 		<type>AQ2_SERVER</type>
 		<name>Action Quake 2</name>
 		<id>AQ2S</id>
-		<icon>aq2.xpm</icon>
+		<icon>aq2.png</icon>
 		<command>q2pro-linux-x86_64</command>
 		<default_home>~/.q2online</default_home>
 		<main_mod>action</main_mod>
@@ -58,7 +58,7 @@
 		<qstat_str>ALIENARENAS</qstat_str>
 		<qstat_option>-alienarenas</qstat_option>
 		<qstat_master_option>-alienarenam</qstat_master_option>
-		<icon>alienarena.xpm</icon>
+		<icon>alienarena.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>alienarena</command>
 		<default_home>~/.codered/</default_home>
@@ -75,7 +75,7 @@
 		<id>AMS</id>
 		<qstat_str>AMS</qstat_str>
 		<qstat_option>-ams</qstat_option>
-		<icon>aao.xpm</icon>
+		<icon>aao.png</icon>
 		<command>armyops</command>
 		<private_suffix>.aao</private_suffix>
 	</game>
@@ -87,7 +87,7 @@
 		<id>BF1942</id>
 		<qstat_str>EYE</qstat_str>
 		<qstat_option>-eye</qstat_option>
-		<icon>bf1942.xpm</icon>
+		<icon>bf1942.png</icon>
 		<parse_player>un_parse_player</parse_player>
 		<analyze_serverinfo>bf1942_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>bf1942_exec</exec_client>
@@ -101,7 +101,7 @@
 		<qstat_str>CDIESELS</qstat_str>
 		<qstat_option>-cdiesels</qstat_option>
 		<qstat_master_option>-cdieselm</qstat_master_option>
-		<icon>cdiesel.xpm</icon>
+		<icon>cdiesel.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>q3_init_maps</init_maps>
 		<has_map>quake_has_map</has_map>
@@ -122,7 +122,7 @@
 		<qstat_str>CODS</qstat_str>
 		<qstat_option>-cods</qstat_option>
 		<qstat_master_option>-codm</qstat_master_option>
-		<icon>cod.xpm</icon>
+		<icon>cod.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>codmp</command>
@@ -140,7 +140,7 @@
 		<qstat_str>CODS</qstat_str>
 		<qstat_option>-cods</qstat_option>
 		<qstat_master_option>-codm</qstat_master_option>
-		<icon>coduo.xpm</icon>
+		<icon>coduo.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>coduomp</command>
@@ -158,7 +158,7 @@
 		<qstat_str>COD2S</qstat_str>
 		<qstat_option>-cod2s</qstat_option>
 		<qstat_master_option>-cod2m</qstat_master_option>
-		<icon>cod2.xpm</icon>
+		<icon>cod2.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>cod2mp</command>
@@ -176,7 +176,7 @@
 		<qstat_str>COD4S</qstat_str>
 		<qstat_option>-cod4s</qstat_option>
 		<qstat_master_option>-cod4m</qstat_master_option>
-		<icon>cod4.xpm</icon>
+		<icon>cod4.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>cod4mp</command>
@@ -192,7 +192,7 @@
 		<id>CODWAWS</id>
 		<qstat_str>WAWS</qstat_str>
 		<qstat_option>-waws</qstat_option>
-		<icon>codwaw.xpm</icon>
+		<icon>codwaw.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<prefs_load>q3_prefs_load_common</prefs_load>
@@ -203,7 +203,7 @@
 		<type>DDAY_SERVER</type>
 		<name>D-Day: Normandy</name>
 		<id>DDAYS</id>
-		<icon>dday.xpm</icon>
+		<icon>dday.png</icon>
 		<command>DDaynormandy</command>
 		<main_mod>dday</main_mod>
 	</game>
@@ -217,7 +217,7 @@
 		<qstat_str>TEES</qstat_str>
 		<qstat_option>-tees</qstat_option>
 		<qstat_master_option>-teem</qstat_master_option>
-		<icon>ddnet.xpm</icon>
+		<icon>ddnet.png</icon>
 		<analyze_serverinfo>teeworlds_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>teeworlds_exec</exec_client>
 		<command>DDNet</command>
@@ -236,7 +236,7 @@
 		<default_master_port>3445</default_master_port>
 		<qstat_master_option>-d3m</qstat_master_option>
 		-->
-		<icon>descent3.xpm</icon>
+		<icon>descent3.png</icon>
 		<parse_player>descent3_parse_player</parse_player>
 		<analyze_serverinfo>descent3_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>descent3_exec</exec_client>
@@ -253,7 +253,7 @@
 		<qstat_str>DM3S</qstat_str>
 		<qstat_option>-dm3s</qstat_option>
 		<qstat_master_option>-dm3m</qstat_master_option>
-		<icon>doom3.xpm</icon>
+		<icon>doom3.png</icon>
 		<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>doom3_init_maps</init_maps>
@@ -277,7 +277,7 @@
 		<id>ETQWS</id>
 		<qstat_str>ETQWS</qstat_str>
 		<qstat_option>-etqws</qstat_option>
-		<icon>etqw.xpm</icon>
+		<icon>etqw.png</icon>
 		<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>etqw_init_maps</init_maps>
@@ -301,7 +301,7 @@
 		<qstat_str>WOETS</qstat_str>
 		<qstat_option>-woets</qstat_option>
 		<qstat_master_option>-woetm</qstat_master_option>
-		<icon>etl.xpm</icon>
+		<icon>etl.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>etl</command>
 		<default_home>~/.etlegacy</default_home>
@@ -319,7 +319,7 @@
 		<qstat_str>HLS</qstat_str>
 		<qstat_option>-hls</qstat_option>
 		<qstat_master_option>-hlm</qstat_master_option>
-		<icon>hl.xpm</icon>
+		<icon>hl.png</icon>
 		<parse_player>hl_parse_player</parse_player>
 		<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>hl_exec</exec_client>
@@ -338,7 +338,7 @@
 		<qstat_str>HLA2S</qstat_str>
 		<qstat_option>-hla2s</qstat_option>
 		<qstat_master_option>-hla2sm</qstat_master_option>
-		<icon>hla2.xpm</icon>
+		<icon>hla2.png</icon>
 		<parse_player>hl_parse_player</parse_player>
 		<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>hl_exec</exec_client>
@@ -357,7 +357,7 @@
 		<qstat_str>A2S</qstat_str>
 		<qstat_option>-a2s</qstat_option>
 		<qstat_master_option>-stma2s</qstat_master_option>
-		<icon>hl2.xpm</icon>
+		<icon>hl2.png</icon>
 		<parse_player>hl_parse_player</parse_player>
 		<analyze_serverinfo>hl_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>hl_exec</exec_client>
@@ -372,7 +372,7 @@
 		<id>Q2S:HR</id>
 		<qstat_str>Q2S</qstat_str>
 		<qstat_option>-q2s</qstat_option>
-		<icon>hr2.xpm</icon>
+		<icon>hr2.png</icon>
 		<parse_player>q2_parse_player</parse_player>
 		<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>q2_exec_generic</exec_client>
@@ -385,7 +385,7 @@
 		<id>H2S</id>
 		<qstat_str>H2S</qstat_str>
 		<qstat_option>-h2s</qstat_option>
-		<icon>hex.xpm</icon>
+		<icon>hex.png</icon>
 		<parse_player>poqs_parse_player</parse_player>
 		<exec_client>q1_exec_generic</exec_client>
 	</game>
@@ -399,7 +399,7 @@
 		<qstat_str>HWS</qstat_str>
 		<qstat_option>-hws</qstat_option>
 		<qstat_master_option>-hwm</qstat_master_option>
-		<icon>hw.xpm</icon>
+		<icon>hw.png</icon>
 		<parse_player>qw_parse_player</parse_player>
 		<analyze_serverinfo>qw_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>q1_exec_generic</exec_client>
@@ -416,7 +416,7 @@
 		<qstat_str>JK2S</qstat_str>
 		<qstat_option>-jk2s</qstat_option>
 		<qstat_master_option>-jk2m</qstat_master_option>
-		<icon>jk2.xpm</icon>
+		<icon>jk2.png</icon>
 		<command>jk2mp</command>
 		<command>jk2mvmp</command>
 		<prefs_load>q3_prefs_load_common</prefs_load>
@@ -435,7 +435,7 @@
 		<qstat_str>JK3S</qstat_str>
 		<qstat_option>-jk3s</qstat_option>
 		<qstat_master_option>-jk3m</qstat_master_option>
-		<icon>jk3.xpm</icon>
+		<icon>jk3.png</icon>
 		<command>jamp</command>
 		<command>openjk</command>
 		<command>openjk.i386</command>
@@ -452,7 +452,7 @@
 		<id>Q2S:KP</id>
 		<qstat_str>Q2S</qstat_str>
 		<qstat_option>-q2s</qstat_option>
-		<icon>kp.xpm</icon>
+		<icon>kp.png</icon>
 		<parse_player>q2_parse_player</parse_player>
 		<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>q2_exec_generic</exec_client>
@@ -468,7 +468,7 @@
 		<id>MHS</id>
 		<qstat_str>MHS</qstat_str>
 		<qstat_option>-mhs</qstat_option>
-		<icon>mohaa.xpm</icon>
+		<icon>mohaa.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>mohaa</command>
 		<default_home>~/.mohaa</default_home>
@@ -483,7 +483,7 @@
 		<id>NETP</id>
 		<qstat_option>-netp</qstat_option>
 		<qstat_master_option>-netpm,netpanzer</qstat_master_option>
-		<icon>netp.xpm</icon>
+		<icon>netp.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<arch_identifier>NULL</arch_identifier>
 		<command>netpanzer</command>
@@ -499,7 +499,7 @@
 		<qstat_str>NEXUIZS</qstat_str>
 		<qstat_option>-nexuizs</qstat_option>
 		<qstat_master_option>-nexuizm</qstat_master_option>
-		<icon>nexuiz.xpm</icon>
+		<icon>nexuiz.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>xonotic_init_maps</init_maps>
 		<command>nexuiz</command>
@@ -518,7 +518,7 @@
 		<qstat_str>OPENARENAS</qstat_str>
 		<qstat_option>-openarenas</qstat_option>
 		<qstat_master_option>-openarenam</qstat_master_option>
-		<icon>openarena.xpm</icon>
+		<icon>openarena.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>openarena</command>
 		<default_home>~/.openarena</default_home>
@@ -536,7 +536,7 @@
 		<qstat_str>OTTDS</qstat_str>
 		<qstat_option>-ottds</qstat_option>
 		<qstat_master_option>-ottdm</qstat_master_option>
-		<icon>openttd.xpm</icon>
+		<icon>openttd.png</icon>
 		<parse_player>ottd_parse_player</parse_player>
 		<analyze_serverinfo>ottd_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
@@ -550,7 +550,7 @@
 		<type>POSTAL2_SERVER</type>
 		<name>Postal 2</name>
 		<id>POSTAL2</id>
-		<icon>postal2.xpm</icon>
+		<icon>postal2.png</icon>
 		<command>postal2mpdemo</command>
 		<command>postal2mp</command>
 		<private_suffix>.fuk</private_suffix>
@@ -565,7 +565,7 @@
 		<qstat_str>Q3RALLYS</qstat_str>
 		<qstat_option>-q3rallys</qstat_option>
 		<qstat_master_option>-q3rallym</qstat_master_option>
-		<icon>q3rally.xpm</icon>
+		<icon>q3rally.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>q3rally</command>
 		<default_home>~/.q3rally</default_home>
@@ -581,7 +581,7 @@
 		<id>QS</id>
 		<qstat_str>QS</qstat_str>
 		<qstat_option>-qs</qstat_option>
-		<icon>q1.xpm</icon>
+		<icon>q1.png</icon>
 		<parse_player>poqs_parse_player</parse_player>
 		<config_is_valid>quake_config_is_valid</config_is_valid>
 		<write_config>write_q1_vars</write_config>
@@ -609,7 +609,7 @@
 		<qstat_str>QWS</qstat_str>
 		<qstat_option>-qws</qstat_option>
 		<qstat_master_option>-qwm</qstat_master_option>
-		<icon>q.xpm</icon>
+		<icon>q.png</icon>
 		<parse_player>qw_parse_player</parse_player>
 		<analyze_serverinfo>qw_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>quake_config_is_valid</config_is_valid>
@@ -640,7 +640,7 @@
 		<qstat_str>Q2S</qstat_str>
 		<qstat_option>-q2s</qstat_option>
 		<qstat_master_option>-q2m</qstat_master_option>
-		<icon>q2.xpm</icon>
+		<icon>q2.png</icon>
 		<parse_player>q2_parse_player</parse_player>
 		<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>quake_config_is_valid</config_is_valid>
@@ -669,7 +669,7 @@
 		<qstat_str>Q3S</qstat_str>
 		<qstat_option>-q3s</qstat_option>
 		<qstat_master_option>-q3m</qstat_master_option>
-		<icon>q3.xpm</icon>
+		<icon>q3.png</icon>
 		<parse_player>q3_parse_player</parse_player>
 		<analyze_serverinfo>q3_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
@@ -702,7 +702,7 @@
 		<qstat_str>Q4S</qstat_str>
 		<qstat_option>-q4s</qstat_option>
 		<qstat_master_option>-q4m</qstat_master_option>
-		<icon>q4.xpm</icon>
+		<icon>q4.png</icon>
 		<analyze_serverinfo>doom3_analyze_serverinfo</analyze_serverinfo>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>quake4_init_maps</init_maps>
@@ -728,7 +728,7 @@
 		<qstat_str>QUETOOS</qstat_str>
 		<qstat_option>-quetoos</qstat_option>
 		<qstat_master_option>-quetoom</qstat_master_option>
-		<icon>quetoo.xpm</icon>
+		<icon>quetoo.png</icon>
 		<command>quetoo</command>
 		<default_home>~/.quetoo</default_home>
 		<main_mod>default</main_mod>
@@ -743,7 +743,7 @@
 		<qstat_str>REACTIONS</qstat_str>
 		<qstat_option>-reactions</qstat_option>
 		<qstat_master_option>-reactionm</qstat_master_option>
-		<icon>reaction.xpm</icon>
+		<icon>reaction.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>Reaction</command>
 		<default_home>~/.Reaction</default_home>
@@ -761,7 +761,7 @@
 		<qstat_str>REXUIZS</qstat_str>
 		<qstat_option>-rexuizs</qstat_option>
 		<qstat_master_option>-rexuizm</qstat_master_option>
-		<icon>rexuiz.xpm</icon>
+		<icon>rexuiz.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>xonotic_init_maps</init_maps>
 		<command>rexuiz</command>
@@ -778,7 +778,7 @@
 		<qstat_str>RWS</qstat_str>
 		<qstat_option>-rws</qstat_option>
 		<qstat_master_option>-rwm</qstat_master_option>
-		<icon>wo.xpm</icon>
+		<icon>wo.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>wolf</command>
 		<default_home>~/.wolf</default_home>
@@ -793,7 +793,7 @@
 		<type>RUNE_SERVER</type>
 		<name>Rune</name>
 		<id>RUNESRV</id>
-		<icon>rune.xpm</icon>
+		<icon>rune.png</icon>
 		<command>rune</command>
 		<private_suffix>.run</private_suffix>
 	</game>
@@ -806,7 +806,7 @@
 		<id>SAS</id>
 		<qstat_str>SAS</qstat_str>
 		<qstat_option>-sas</qstat_option>
-		<icon>savage.xpm</icon>
+		<icon>savage.png</icon>
 		<parse_player>savage_parse_player</parse_player>
 		<analyze_serverinfo>savage_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>savage_exec</exec_client>
@@ -820,7 +820,7 @@
 		<id>SMS</id>
 		<qstat_str>SMS</qstat_str>
 		<qstat_option>-sms</qstat_option>
-		<icon>ssam.xpm</icon>
+		<icon>ssam.png</icon>
 		<parse_player>un_parse_player</parse_player>
 		<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>ssam_exec</exec_client>
@@ -841,7 +841,7 @@
 		<id>SNS</id>
 		<qstat_str>SNS</qstat_str>
 		<qstat_option>-sns</qstat_option>
-		<icon>sn.xpm</icon>
+		<icon>sn.png</icon>
 		<parse_player>q2_parse_player</parse_player>
 		<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>q2_exec_generic</exec_client>
@@ -856,7 +856,7 @@
 		<qstat_str>SMOKINGUNSS</qstat_str>
 		<qstat_option>-smokingunss</qstat_option>
 		<qstat_master_option>-smokingunsm</qstat_master_option>
-		<icon>smokinguns.xpm</icon>
+		<icon>smokinguns.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>smokinguns</command>
 		<default_home>~/.smokinguns</default_home>
@@ -872,7 +872,7 @@
 		<id>SFS</id>
 		<qstat_str>SFS</qstat_str>
 		<qstat_option>-sfs</qstat_option>
-		<icon>sfs.xpm</icon>
+		<icon>sfs.png</icon>
 		<parse_player>q2_parse_player</parse_player>
 		<analyze_serverinfo>q2_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>q2_exec_generic</exec_client>
@@ -888,7 +888,7 @@
 		<qstat_str>SOF2S</qstat_str>
 		<qstat_option>-sof2s</qstat_option>
 		<qstat_master_option>-sof2m</qstat_master_option>
-		<icon>sof2s.xpm</icon>
+		<icon>sof2s.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>NULL</init_maps>
 		<has_map>NULL</has_map>
@@ -907,7 +907,7 @@
 		<qstat_str>TEES</qstat_str>
 		<qstat_option>-tees</qstat_option>
 		<qstat_master_option>-teem</qstat_master_option>
-		<icon>teeworlds.xpm</icon>
+		<icon>teeworlds.png</icon>
 		<analyze_serverinfo>teeworlds_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>teeworlds_exec</exec_client>
 		<command>teeworlds</command>
@@ -925,7 +925,7 @@
 		<qstat_str>TREMULOUSS</qstat_str>
 		<qstat_option>-tremulouss</qstat_option>
 		<qstat_master_option>-tremulousm</qstat_master_option>
-		<icon>tremulous.xpm</icon>
+		<icon>tremulous.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>tremulous</command>
 		<default_home>~/.tremulous</default_home>
@@ -946,7 +946,7 @@
 		<qstat_str>TREMULOUSGPPS</qstat_str>
 		<qstat_option>-tremulousgpps</qstat_option>
 		<qstat_master_option>-tremulousgppm</qstat_master_option>
-		<icon>tremulousgpp.xpm</icon>
+		<icon>tremulousgpp.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>tremulous-gpp</command>
 		<default_home>~/.tremulous</default_home>
@@ -964,7 +964,7 @@
 		<qstat_str>T2S</qstat_str>
 		<qstat_option>-t2s</qstat_option>
 		<qstat_master_option>-t2m</qstat_master_option>
-		<icon>t2.xpm</icon>
+		<icon>t2.png</icon>
 		<parse_player>t2_parse_player</parse_player>
 		<analyze_serverinfo>t2_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>t2_exec</exec_client>
@@ -985,7 +985,7 @@
 		<qstat_str>TURTLEARENAS</qstat_str>
 		<qstat_option>-turtlearenas</qstat_option>
 		<qstat_master_option>-turtlearenam</qstat_master_option>
-		<icon>turtlearena.xpm</icon>
+		<icon>turtlearena.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>turtlearena</command>
 		<default_home>~/.local/share/turtle-arena</default_home>
@@ -1001,7 +1001,7 @@
 		<id>UNS</id>
 		<qstat_str>UNS</qstat_str>
 		<qstat_option>-uns</qstat_option>
-		<icon>un.xpm</icon>
+		<icon>un.png</icon>
 		<parse_player>un_parse_player</parse_player>
 		<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>ut_exec</exec_client>
@@ -1018,7 +1018,7 @@
 		<id>UT2S</id>
 		<qstat_str>UT2S</qstat_str>
 		<qstat_option>-ut2s</qstat_option>
-		<icon>ut2.xpm</icon>
+		<icon>ut2.png</icon>
 		<command>ut2003_demo</command>
 		<command>ut2003</command>
 		<default_home>~/.ut2003</default_home>
@@ -1034,7 +1034,7 @@
 		<qstat_str>UT2004S</qstat_str>
 		<qstat_option>-ut2004s</qstat_option>
 		<qstat_master_option>-ut2004m</qstat_master_option>
-		<icon>ut2004.xpm</icon>
+		<icon>ut2004.png</icon>
 		<command>ut2004demo</command>
 		<command>ut2004</command>
 		<cmd_or_dir_changed>ut2004_cmd_or_dir_changed</cmd_or_dir_changed>
@@ -1054,7 +1054,7 @@
 		<qstat_str>UNVANQUISHEDS</qstat_str>
 		<qstat_option>-unvanquisheds</qstat_option>
 		<qstat_master_option>-unvanquishedm</qstat_master_option>
-		<icon>unvanquished.xpm</icon>
+		<icon>unvanquished.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>unvanquished_init_maps</init_maps>
 		<command>unvanquished</command>
@@ -1073,7 +1073,7 @@
 		<qstat_str>IOURTS</qstat_str>
 		<qstat_option>-iourts</qstat_option>
 		<qstat_master_option>-iourtm</qstat_master_option>
-		<icon>iourt.xpm</icon>
+		<icon>iourt.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>urbanterror</command>
 		<command>Quake3-UrT</command>
@@ -1089,7 +1089,7 @@
 		<name>Voyager Elite Force</name>
 		<id>EFS</id>
 		<qstat_master_option>-efm</qstat_master_option>
-		<icon>ef.xpm</icon>
+		<icon>ef.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>NULL</init_maps>
 		<has_map>NULL</has_map>
@@ -1107,7 +1107,7 @@
 		<qstat_str>WARFORKS</qstat_str>
 		<qstat_option>-warforks</qstat_option>
 		<qstat_master_option>-warforkm</qstat_master_option>
-		<icon>warfork.xpm</icon>
+		<icon>warfork.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>q3_init_maps</init_maps>
 		<has_map>quake_has_map</has_map>
@@ -1127,7 +1127,7 @@
 		<qstat_str>WARSOWS</qstat_str>
 		<qstat_option>-warsows</qstat_option>
 		<qstat_master_option>-warsowm</qstat_master_option>
-		<icon>warsow.xpm</icon>
+		<icon>warsow.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>q3_init_maps</init_maps>
 		<has_map>quake_has_map</has_map>
@@ -1146,7 +1146,7 @@
 		<qstat_str>WOETS</qstat_str>
 		<qstat_option>-woets</qstat_option>
 		<qstat_master_option>-woetm</qstat_master_option>
-		<icon>et.xpm</icon>
+		<icon>et.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>et</command>
 		<default_home>~/.etwolf</default_home>
@@ -1164,7 +1164,7 @@
 		<qstat_str>WOPS</qstat_str>
 		<qstat_option>-wops</qstat_option>
 		<qstat_master_option>-wopm</qstat_master_option>
-		<icon>wop.xpm</icon>
+		<icon>wop.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>worldofpadman</command>
 		<default_home>~/.WoPadman</default_home>
@@ -1183,7 +1183,7 @@
 		<qstat_str>XONOTICS</qstat_str>
 		<qstat_option>-xonotics</qstat_option>
 		<qstat_master_option>-xonoticm</qstat_master_option>
-		<icon>xonotic.xpm</icon>
+		<icon>xonotic.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<init_maps>xonotic_init_maps</init_maps>
 		<command>xonotic</command>
@@ -1202,7 +1202,7 @@
 		<qstat_str>ZEQ2LITES</qstat_str>
 		<qstat_option>-zeq2lites</qstat_option>
 		<qstat_master_option>-zeq2litem</qstat_master_option>
-		<icon>zeq2lite.xpm</icon>
+		<icon>zeq2lite.png</icon>
 		<config_is_valid>config_is_valid_generic</config_is_valid>
 		<command>ZEQ2.i386</command>
 		<default_home>~/.ZEQ2</default_home>
@@ -1218,7 +1218,7 @@
 		<id>GPS</id>
 		<qstat_str>GPS</qstat_str>
 		<qstat_option>-gps</qstat_option>
-		<icon>gamespy3d.xpm</icon>
+		<icon>gamespy3d.png</icon>
 		<parse_player>un_parse_player</parse_player>
 		<analyze_serverinfo>un_analyze_serverinfo</analyze_serverinfo>
 		<exec_client>gamespy_exec</exec_client>

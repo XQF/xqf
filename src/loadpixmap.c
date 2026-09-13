@@ -20,7 +20,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <string.h>
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -30,7 +29,6 @@
 #include "loadpixmap.h"
 #include "pixmaps.h"
 #include "debug.h"
-#include "utils.h"
 
 static char* check_file_exists (const char *directory, const char *filename);
 
@@ -52,28 +50,12 @@ gchar* find_pixmap_directory(const gchar* filename) {
 }
 
 /** Find a pixmap file by absolute path or in the registered search directories.
- *  If the filename has a .xpm extension, looks for the .png equivalent instead.
  *  Returns an allocated path string on success, NULL if not found. Caller must g_free().
  */
 static char* find_pixmap_file(const char* filename) {
-	char *candidate;
-
 	g_return_val_if_fail(filename != NULL, NULL);
 	if (!filename[0])
 		return NULL;
-
-	/* Remap .xpm → .png: all game/UI icons are installed as PNGs. */
-	if (stri_has_ext(filename, ".xpm")) {
-		size_t len = strlen(filename);
-		char *png_name = g_strdup(filename);
-		strcpy(png_name + len - 3, "png");   /* ".xpm"[-3:] = "xpm" → "png" */
-		if (filename[0] == '/')
-			candidate = check_file_exists(NULL, png_name);
-		else
-			candidate = find_pixmap_directory(png_name);
-		g_free(png_name);
-		return candidate;
-	}
 
 	if (filename[0] == '/')
 		return check_file_exists(NULL, filename);
