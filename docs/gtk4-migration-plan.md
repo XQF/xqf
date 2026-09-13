@@ -87,20 +87,21 @@ Known limitations:
   popover has no trailing gap), so it's only visible on this app's one
   single-item menu. Looks like a GTK4/Adwaita popover minimum-size
   behavior outside the app's control; not pursued further.
-- **Map level-shot preview lost when clicking the map column** (Phase 1).
-  The old `GtkCList`-based server list detected a click on the map cell in
-  `server_clist_event_callback()`, fetched the shot via
-  `games[type].get_mapshot()`, and displayed it in a `GTK_WINDOW_POPUP`
-  positioned at the pointer with an explicit `gdk_pointer_grab()` to
-  dismiss it on release — none of that (raw popup windows, manual pointer
-  grabs, `gtk_clist_get_selection_info()`) exists in GTK4.
-  `server_view_event_cb()` and `server_mapshot_preview_popup_show()` were
-  stubbed to no-ops during the `GtkColumnView` migration rather than
-  reworked; the underlying data path (per-game `get_mapshot()` pk3
-  readers, `renderMemToGtkPixbuf()`) is intact and unused. Per maintainer
-  feedback, this will be reimplemented as a persistent image row at the
-  bottom of the server-info ("Rule"/"Value") panel instead of a popup —
-  left stubbed for now pending that work.
+
+Fixed since first identified (kept here as a pointer to the pattern, in
+case more turn up):
+- **Map level-shot and player-skin previews**, lost when clicking the map
+  or Colors/Skin column. Both used the same now-gone GTK2/3 mechanism
+  (`GTK_WINDOW_POPUP` + `gdk_pointer_grab()` on a `GtkCList`
+  button-press handler) and were stubbed to no-ops during the
+  `GtkColumnView` migration rather than reworked, with the underlying
+  data path (`get_mapshot()`/`renderMemToGtkPixbuf()`,
+  `get_qw_skin()`/`draw_qw_skin()`) left intact and unused. Both are now
+  persistent rows (server-info panel / player list) updated on
+  selection change, per maintainer preference for panel rows over
+  popups. Worth checking for a third instance of this same pattern
+  (stubbed-and-orphaned rather than reworked) if any other feature is
+  reported missing.
 
 ---
 
@@ -118,24 +119,17 @@ eventually be removed. Phase 5 covers the tree-widget subset.
 | `GtkTreeView`, `GtkTreeStore`, `GtkListStore`, `GtkTreeViewColumn` | 4.10 | 4.0 | `src/xqf-ui.c`, `src/srv-info.c` — intentionally kept |
 | `gdk_texture_new_for_pixbuf` | 4.20 | — | kept with the GtkTreeView code above |
 
-## Removed API still shimmed in `gtk4-compat.h`
+## Removed API previously shimmed in `gtk4-compat.h`
 
-These APIs were fully removed in GTK4. They currently work through `gtk4-compat.h`
-shims but should be replaced at the call site (Phase 6).
-
-| Shim | Replacement | Active call sites |
-|------|-------------|-------------------|
-| `gtk_box_pack_start/end` | `gtk_box_append` | ~300 in 13 files |
-| `gtk_entry_get/set_text` | `gtk_editable_get/set_text` | ~86 |
-| `gtk_widget_destroy` | `gtk_window_destroy` (for windows), unreffing otherwise | ~40 |
-| `gtk_frame_set_shadow_type` | CSS / `gtk_frame_set_child` | ~13 |
-| `gtk_scrolled_window_new(h,v)` | `gtk_scrolled_window_new()` | ~12 |
-| `gtk_scrolled_window_add_with_viewport` | `gtk_scrolled_window_set_child` | ~5 |
-| `gtk_widget_set_can_default` / `gtk_widget_grab_default` | `gtk_window_set_default_widget` | ~20 |
-| `GtkButtonBox` / `gtk_h/vbutton_box_new` | `GtkBox` directly | ~8 |
-| `gtk_hseparator_new` | `gtk_separator_new(GTK_ORIENTATION_HORIZONTAL)` | ~3 |
-| `gtk_misc_set_alignment` | `gtk_label_set_xalign/yalign` | ~4 |
-| `GdkEventButton` | `GtkGestureClick` | ~2 |
+`gtk4-compat.h` bridged APIs GTK4 removed outright (`gtk_box_pack_start/end`,
+`gtk_entry_get/set_text`, `gtk_widget_destroy`, `gtk_frame_set_shadow_type`,
+`gtk_scrolled_window_new(h,v)`, `gtk_scrolled_window_add_with_viewport`,
+`gtk_widget_set_can_default`/`gtk_widget_grab_default`, `GtkButtonBox`,
+`gtk_hseparator_new`, `gtk_misc_set_alignment`, `GdkEventButton`,
+`gtk_file_chooser_get/set_filename`) while call sites were migrated
+incrementally. Phase 6 finished migrating every call site to native GTK4
+API; the file itself was deleted once nothing referenced it — see Phase 6
+below.
 | `gtk_file_chooser_get/set_filename` | `gtk_file_chooser_get/set_file` | ~6 |
 
 ---
