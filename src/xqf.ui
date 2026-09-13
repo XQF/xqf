@@ -201,10 +201,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="scrollwin-player">
+                          <object class="GtkBox" id="player-info-box">
                             <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
+                            <child>
+                              <object class="GtkScrolledWindow" id="scrollwin-player">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkFrame" id="player-skin-frame">
+                                <property name="visible">False</property>
+                                <property name="halign">center</property>
+                                <child>
+                                  <object class="GtkImage" id="player-skin-image">
+                                    <property name="visible">True</property>
+                                    <property name="height-request">120</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <child>

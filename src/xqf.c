@@ -121,9 +121,6 @@ char *progress_bar_str = NULL;
 
 GArray *server_filter_menu_items;
 
-GtkWidget *player_skin_popup = NULL;
-GtkWidget *player_skin_popup_preview = NULL;
-
 gboolean check_launch (struct condef* con);
 void refresh_selected_callback (GtkWidget *widget, gpointer data);
 void launch_close_handler_part2 (struct condef *con);
@@ -1774,9 +1771,48 @@ void add_to_player_filter (unsigned mask) {
 }
 
 
-/* TODO: re-implement with GTK4 GtkPopover (Phase 1) */
-void player_skin_preview_popup_show (guchar *skin, int top, int bottom, int x, int y) {
-	(void)skin; (void)top; (void)bottom; (void)x; (void)y;
+static GtkWidget *player_skin_frame = NULL;
+static GtkWidget *player_skin_image = NULL;
+
+/* Update the skin preview row under the player list for the currently
+ * selected player, hiding it when the current game has no QuakeWorld-style
+ * skins or nothing is selected. Connected to player_selection's
+ * "selection-changed", so it also settles correctly when the player list
+ * is rebuilt for a newly selected server. */
+static void update_player_skin_preview (void) {
+	struct player *p = NULL;
+
+	if (!player_skin_frame)
+		return;
+
+	if (cur_server && (games[cur_server->type].flags & GAME_QUAKE1_SKIN) && player_selection) {
+		guint pos = gtk_single_selection_get_selected (
+			GTK_SINGLE_SELECTION (player_selection));
+		if (pos != GTK_INVALID_LIST_POSITION) {
+			XqfPlayerItem *item = XQF_PLAYER_ITEM (
+				g_list_model_get_item (G_LIST_MODEL (player_selection), pos));
+			if (item) {
+				p = xqf_player_item_get (item);
+				g_object_unref (item);
+			}
+		}
+	}
+
+	if (!p) {
+		gtk_widget_set_visible (player_skin_frame, FALSE);
+		return;
+	}
+
+	guchar *skindata = get_qw_skin (p->skin, games[QW_SERVER].real_dir);
+	draw_qw_skin (player_skin_image, skindata, p->shirt, p->pants);
+	g_free (skindata);
+	gtk_widget_set_visible (player_skin_frame, TRUE);
+}
+
+static void player_selection_changed_cb (GtkSelectionModel *model, guint position,
+                                          guint n_items, gpointer data) {
+	(void)model; (void)position; (void)n_items; (void)data;
+	update_player_skin_preview ();
 }
 
 
@@ -2130,6 +2166,11 @@ void populate_main_window (void) {
 		g_signal_connect (rclick, "pressed", G_CALLBACK (player_view_right_click_cb), NULL);
 		gtk_widget_add_controller (player_view, GTK_EVENT_CONTROLLER (rclick));
 	}
+
+	player_skin_frame = GTK_WIDGET (gtk_builder_get_object (builder, "player-skin-frame"));
+	player_skin_image = GTK_WIDGET (gtk_builder_get_object (builder, "player-skin-image"));
+	g_signal_connect (player_selection, "selection-changed",
+			G_CALLBACK (player_selection_changed_cb), NULL);
 
 	// Server Info TreeView
 
@@ -2622,10 +2663,6 @@ int main (int argc, char *argv[]) {
 	debug (1, "total uservers: %d", uservers_total ());
 	debug (1, "total hosts: %d", hosts_total ());
 
-
-	if (player_skin_popup) {
-		gtk_window_destroy (GTK_WINDOW (player_skin_popup));
-	}
 
 	if (server_mapshot_popup) {
 		gtk_window_destroy (GTK_WINDOW (server_mapshot_popup));
