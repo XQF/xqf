@@ -644,8 +644,8 @@ void restore_main_window_geometry (void) {
 
 	config_push_prefix ("/" CONFIG_FILE "/Main Window Geometry/");
 
-	height = config_get_int ("height=480");
-	width  = config_get_int ("width=640");
+	height = config_get_int ("height=800");
+	width  = config_get_int ("width=1200");
 	pane1  = config_get_int ("pane1");
 	pane2  = config_get_int ("pane2");
 	pane3  = config_get_int ("pane3");
