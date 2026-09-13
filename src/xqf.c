@@ -1788,6 +1788,52 @@ void statistics_callback (GtkWidget *widget) {
 	statistics_dialog ();
 }
 
+static void set_image_from_png (GtkImage *image, const char *filename)
+{
+	GError *error = NULL;
+	GdkPixbuf *pixbuf;
+	GdkTexture *texture;
+
+	if (image == NULL) {
+		g_warning ("Cannot set PNG image: GtkImage is NULL");
+		return;
+	}
+
+	pixbuf = gdk_pixbuf_new_from_file (filename, &error);
+
+	if (pixbuf == NULL) {
+		g_warning ("Could not load PNG icon '%s': %s", filename, error != NULL ? error->message : "unknown error");
+		g_clear_error (&error);
+		return;
+	}
+
+	texture = gdk_texture_new_for_pixbuf (pixbuf);
+
+	gtk_image_set_from_paintable (image, GDK_PAINTABLE (texture));
+
+	g_object_unref (texture);
+	g_object_unref (pixbuf);
+}
+
+static char *png_name_from_icon_name (const char *icon_name)
+{
+	char *basename;
+	char *extension;
+	char *png_name;
+
+	basename = g_path_get_basename (icon_name);
+	extension = strrchr (basename, '.');
+
+	if (extension != NULL)
+		*extension = '\0';
+
+	png_name = g_strconcat (basename, ".png", NULL);
+
+	g_free (basename);
+
+	return png_name;
+}
+
 void populate_main_toolbar (void) {
 	char buf[128];
 	unsigned mask;
@@ -1803,25 +1849,80 @@ void populate_main_toolbar (void) {
 	g_signal_connect (gtk_builder_get_object (builder, "observe-button"), "clicked", G_CALLBACK (launch_spectate_callback),  NULL);
 	g_signal_connect (gtk_builder_get_object (builder, "record-button"),  "clicked", G_CALLBACK (launch_record_callback),    NULL);
 
-	// Filter toggle buttons (added dynamically after toolbar buttons)
+	/* Load toolbar icons, the images are GtkImage objects declared in xqf.ui. */
+	{
+		GtkImage *image;
+		char *filename;
+
+		image = GTK_IMAGE (gtk_builder_get_object (builder, "update-image"));
+		filename = g_build_filename (xqf_PACKAGE_DATA_DIR, "default", "update.png", NULL);
+		set_image_from_png (image, filename);
+		g_free (filename);
+
+		image = GTK_IMAGE (gtk_builder_get_object (builder, "refresh-image"));
+		filename = g_build_filename (xqf_PACKAGE_DATA_DIR, "default", "refresh.png", NULL);
+		set_image_from_png (image, filename);
+		g_free (filename);
+
+		image = GTK_IMAGE (gtk_builder_get_object (builder, "refrsel-image"));
+		filename = g_build_filename (xqf_PACKAGE_DATA_DIR, "default", "refrsel.png", NULL);
+		set_image_from_png (image, filename);
+		g_free (filename);
+
+		image = GTK_IMAGE (gtk_builder_get_object (builder, "stop-image"));
+		filename = g_build_filename (xqf_PACKAGE_DATA_DIR, "default", "stop.png", NULL);
+		set_image_from_png (image, filename);
+		g_free (filename);
+
+		image = GTK_IMAGE (gtk_builder_get_object (builder, "connect-image"));
+		filename = g_build_filename (xqf_PACKAGE_DATA_DIR, "default", "connect.png", NULL);
+		set_image_from_png (image, filename);
+		g_free (filename);
+	}
+
+	
+	/* Add the dynamically-created filter buttons, including P Filter and S Filter. */
 	for (i = 0, mask = 1; i < FILTERS_TOTAL; i++, mask <<= 1) {
+		GtkWidget *button;
+		GtkWidget *box;
+		GtkWidget *image;
+		GtkWidget *label;
+		char *png_name;
+		char *filename;
+
 		if (!filters[i].pix) {
 			filter_buttons[i] = NULL;
 			continue;
 		}
 
-		filter_buttons[i] = gtk_toggle_button_new_with_label (_(filters[i].short_name));
-		g_signal_connect (G_OBJECT (filter_buttons[i]), "toggled",
-		                  G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
+		button = gtk_toggle_button_new ();
+		box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+		image = gtk_image_new ();
+		label = gtk_label_new (_(filters[i].short_name));
 
-		g_snprintf (buf, 128, _("%s Filter Enable / Disable"), _(filters[i].name));
-		gtk_widget_set_tooltip_text (filter_buttons[i], buf);
+		gtk_box_append (GTK_BOX (box), image);
+		gtk_box_append (GTK_BOX (box), label);
+		gtk_button_set_child (GTK_BUTTON (button), box);
 
-		gtk_widget_set_visible (filter_buttons[i], TRUE);
-		gtk_box_append (GTK_BOX (toolbar), filter_buttons[i]);
+		filter_buttons[i] = button;
 
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_buttons[i]),
-		                              ((cur_filter & mask) != 0) ? TRUE : FALSE);
+		g_signal_connect (button, "toggled", G_CALLBACK (filter_toggle_callback), GINT_TO_POINTER (mask));
+
+		g_snprintf (buf, sizeof (buf), _("%s Filter Enable / Disable"), _(filters[i].name));
+		gtk_widget_set_tooltip_text (button, buf);
+
+		png_name = png_name_from_icon_name (filters[i].icon_name);
+		filename = g_build_filename (xqf_PACKAGE_DATA_DIR, "default", png_name, NULL);
+
+		set_image_from_png (GTK_IMAGE (image), filename);
+
+		g_free (filename);
+		g_free (png_name);
+
+		gtk_widget_set_visible (button, TRUE);
+		gtk_box_append (GTK_BOX (toolbar), button);
+
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), (cur_filter & mask) != 0);
 	}
 
 	set_toolbar_appearance (toolbar);
@@ -1962,7 +2063,62 @@ static void register_window_actions (GtkWindow *win) {
 static gboolean create_main_window (void) {
 	GError *error = NULL;
 
-	builder = gtk_builder_new_from_file (g_build_filename (xqf_PACKAGE_DATA_DIR, "ui", "xqf.ui", NULL));
+	builder = gtk_builder_new ();
+
+	/* Register callbacks referenced by <signal> elements in xqf.ui. */
+
+	GtkBuilderScope *scope = gtk_builder_cscope_new ();
+
+	gtk_builder_cscope_add_callback_symbol (
+		GTK_BUILDER_CSCOPE (scope),
+		"update_source_callback",
+		G_CALLBACK (update_source_callback));
+
+	gtk_builder_cscope_add_callback_symbol (
+		GTK_BUILDER_CSCOPE (scope),
+		"refresh_callback",
+		G_CALLBACK (refresh_callback));
+
+	gtk_builder_cscope_add_callback_symbol (
+		GTK_BUILDER_CSCOPE (scope),
+		"refresh_selected_callback",
+		G_CALLBACK (refresh_selected_callback));
+
+	gtk_builder_cscope_add_callback_symbol (
+		GTK_BUILDER_CSCOPE (scope),
+		"stop_callback",
+		G_CALLBACK (stop_callback));
+
+	gtk_builder_cscope_add_callback_symbol (
+		GTK_BUILDER_CSCOPE (scope),
+		"launch_normal_callback",
+		G_CALLBACK (launch_normal_callback));
+
+	gtk_builder_cscope_add_callback_symbol (
+		GTK_BUILDER_CSCOPE (scope),
+		"launch_spectate_callback",
+		G_CALLBACK (launch_spectate_callback));
+
+	gtk_builder_set_scope (builder, scope);
+
+	char *ui_file = g_build_filename (
+		xqf_PACKAGE_DATA_DIR, "ui", "xqf.ui", NULL);
+
+	if (gtk_builder_add_from_file (builder, ui_file, &error) == 0) {
+		fprintf (stderr, "Could not load UI: %s\n",
+				 error ? error->message : "unknown error");
+
+		g_clear_error (&error);
+		g_free (ui_file);
+		g_object_unref (scope);
+		g_object_unref (builder);
+		builder = NULL;
+
+		return FALSE;
+	}
+
+	g_free (ui_file);
+	g_object_unref (scope);
 
 	if (G_UNLIKELY (error != NULL)) {
 		fprintf (stderr, "Could not load UI: %s\n", error->message);

@@ -79,61 +79,188 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkBox" id="main-toolbar">
             <property name="visible">True</property>
+            <property name="orientation">horizontal</property>
             <property name="spacing">2</property>
+
+            <!-- Update -->
             <child>
               <object class="GtkButton" id="update-button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Update from master</property>
-                <property name="label" translatable="yes">Update</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="update-image">
+                        <property name="icon-name">image-missing</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Update</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="update_source_callback" swapped="no"/>
               </object>
             </child>
+
+            <!-- Refresh -->
             <child>
               <object class="GtkButton" id="refresh-button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Refresh current list</property>
-                <property name="label" translatable="yes">Refresh</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="refresh-image">
+                        <property name="icon-name">image-missing</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Refresh</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="refresh_callback" swapped="no"/>
               </object>
             </child>
+
+            <!-- Refresh Selected -->
             <child>
               <object class="GtkButton" id="refrsel-button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Refresh selected servers</property>
-                <property name="label" translatable="yes">Ref.Sel.</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="refrsel-image">
+                        <property name="icon-name">image-missing</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Ref.Sel.</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="refresh_selected_callback" swapped="no"/>
               </object>
             </child>
+
+            <!-- Stop -->
             <child>
               <object class="GtkButton" id="stop-button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Stop</property>
-                <property name="label" translatable="yes">Stop</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="stop-image">
+                        <property name="icon-name">image-missing</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Stop</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="stop_callback" swapped="no"/>
               </object>
             </child>
+
+            <!-- Separator -->
             <child>
               <object class="GtkSeparator" id="first-separator">
                 <property name="visible">True</property>
+                <property name="orientation">vertical</property>
               </object>
             </child>
+
+            <!-- Connect -->
             <child>
               <object class="GtkButton" id="connect-button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Connect</property>
-                <property name="label" translatable="yes">Connect</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="connect-image">
+                        <property name="icon-name">image-missing</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Connect</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="launch_normal_callback" swapped="no"/>
               </object>
             </child>
+
+            <!-- Observe -->
             <child>
               <object class="GtkButton" id="observe-button">
-                <property name="visible">True</property>
+                <property name="visible">False</property>
                 <property name="tooltip-text" translatable="yes">Observe</property>
-                <property name="label" translatable="yes">Observe</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="observe-image"/>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Observe</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="launch_spectate_callback" swapped="no"/>
               </object>
             </child>
+
+            <!-- Record -->
             <child>
               <object class="GtkButton" id="record-button">
-                <property name="visible">True</property>
+                <property name="visible">False</property>
                 <property name="tooltip-text" translatable="yes">Record Demo</property>
-                <property name="label" translatable="yes">Record</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkImage" id="record-image"/>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Record</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <signal name="clicked" handler="launch_spectate_callback" swapped="no"/>
               </object>
             </child>
+
           </object>
         </child>
         <child>
