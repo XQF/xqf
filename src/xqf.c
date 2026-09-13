@@ -39,6 +39,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <gio/gio.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
@@ -2388,6 +2389,84 @@ void init_scripts_path () {
 	scripts_add_dir (dir);
 }
 
+/* Follow the desktop's light/dark preference via the XDG desktop portal
+ * (org.freedesktop.appearance, a freedesktop.org standard implemented by
+ * portal backends for GNOME, KDE, etc. -- not GNOME-specific). Does
+ * nothing if no portal is running (no xdg-desktop-portal, or no backend
+ * for the current desktop): xqf just stays on the GTK default. */
+
+static void xqf_apply_color_scheme (guint32 scheme) {
+	/* 0 = no preference, 1 = prefer dark, 2 = prefer light */
+	if (scheme == 1)
+		g_object_set (gtk_settings_get_default (), "gtk-application-prefer-dark-theme", TRUE, NULL);
+	else if (scheme == 2)
+		g_object_set (gtk_settings_get_default (), "gtk-application-prefer-dark-theme", FALSE, NULL);
+}
+
+static void xqf_portal_setting_changed_cb (GDBusProxy *proxy, const gchar *sender_name,
+                                            const gchar *signal_name, GVariant *params,
+                                            gpointer data) {
+	const gchar *ns, *key;
+	GVariant *value;
+	(void)proxy; (void)sender_name; (void)data;
+
+	if (strcmp (signal_name, "SettingChanged") != 0)
+		return;
+
+	g_variant_get (params, "(&s&sv)", &ns, &key, &value);
+	if (!strcmp (ns, "org.freedesktop.appearance") && !strcmp (key, "color-scheme"))
+		xqf_apply_color_scheme (g_variant_get_uint32 (value));
+	g_variant_unref (value);
+}
+
+static void xqf_portal_read_color_scheme_cb (GObject *source, GAsyncResult *res, gpointer data) {
+	GVariant *reply, *inner;
+	(void)data;
+
+	reply = g_dbus_proxy_call_finish (G_DBUS_PROXY (source), res, NULL);
+	if (!reply)
+		return; /* no portal, or it doesn't know this namespace/key */
+
+	g_variant_get (reply, "(v)", &inner);
+	/* Some portal backends double-wrap the value in an extra variant. */
+	while (g_variant_is_of_type (inner, G_VARIANT_TYPE_VARIANT)) {
+		GVariant *unwrapped = g_variant_get_variant (inner);
+		g_variant_unref (inner);
+		inner = unwrapped;
+	}
+	if (g_variant_is_of_type (inner, G_VARIANT_TYPE_UINT32))
+		xqf_apply_color_scheme (g_variant_get_uint32 (inner));
+	g_variant_unref (inner);
+	g_variant_unref (reply);
+}
+
+static void xqf_portal_proxy_ready_cb (GObject *source, GAsyncResult *res, gpointer data) {
+	GDBusProxy *proxy;
+	(void)source; (void)data;
+
+	proxy = g_dbus_proxy_new_for_bus_finish (res, NULL);
+	if (!proxy)
+		return; /* no portal running */
+
+	/* Kept alive for the process lifetime so it keeps receiving
+	 * SettingChanged signals; xqf has no shutdown path that needs it
+	 * explicitly released. */
+	g_signal_connect (proxy, "g-signal", G_CALLBACK (xqf_portal_setting_changed_cb), NULL);
+
+	g_dbus_proxy_call (proxy, "Read",
+			g_variant_new ("(ss)", "org.freedesktop.appearance", "color-scheme"),
+			G_DBUS_CALL_FLAGS_NONE, -1, NULL,
+			xqf_portal_read_color_scheme_cb, NULL);
+}
+
+static void xqf_init_color_scheme_portal (void) {
+	g_dbus_proxy_new_for_bus (
+			G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_NONE, NULL,
+			"org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
+			"org.freedesktop.portal.Settings", NULL,
+			xqf_portal_proxy_ready_cb, NULL);
+}
+
 static void xqf_activate (GtkApplication *app, gpointer data) {
 	int newversion;
 	(void)data;
@@ -2413,6 +2492,8 @@ static void xqf_activate (GtkApplication *app, gpointer data) {
 			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 		g_object_unref (css);
 	}
+
+	xqf_init_color_scheme_portal ();
 
 	qstat_configfile = g_build_filename (xqf_PACKAGE_DATA_DIR, "qstat.cfg", NULL);
 
