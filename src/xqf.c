@@ -1574,19 +1574,6 @@ void rcon_callback (GtkWidget *widget, gpointer data) {
 }
 
 
-void server_view_select_cb (GtkWidget *widget, int row,
-		int column, GdkEvent *event, GtkWidget *button) {
-	(void)event; (void)column; (void)button;
-	debug (7, "server_view_select_cb() -- Row %d", row);
-	server_list_sync_selection ();
-}
-
-void server_view_unselect_cb (GtkWidget *widget, int row,
-		int column, GdkEvent *event, GtkWidget *button) {
-	debug (7, "server_view_uselect_callback() -- Row %d", row);
-	server_list_sync_selection ();
-}
-
 /* Double-click or Enter on server row → connect */
 static void server_view_activate_cb (GtkColumnView *view G_GNUC_UNUSED,
                                       guint position G_GNUC_UNUSED,
@@ -1660,19 +1647,6 @@ static void player_view_right_click_cb (GtkGestureClick *gesture,
 	gtk_popover_set_pointing_to (GTK_POPOVER (player_context_popover), &rect);
 	gtk_popover_popup (GTK_POPOVER (player_context_popover));
 }
-
-GtkWidget *server_mapshot_popup = NULL;
-GtkWidget *server_mapshot_popup_image = NULL;
-
-void server_mapshot_preview_popup_show (guchar *imagedata, size_t len, int x, int y, gushort overBrightBits) {
-	(void)imagedata; (void)len; (void)x; (void)y; (void)overBrightBits;
-}
-
-int server_view_event_cb (GtkWidget *widget, GdkEvent *event) {
-	(void)widget; (void)event;
-	return FALSE;
-}
-
 
 void source_selection_changed (void) {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (source_treeview));
@@ -1889,8 +1863,6 @@ void populate_main_toolbar (void) {
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (filter_buttons[i]),
 		                              ((cur_filter & mask) != 0) ? TRUE : FALSE);
 	}
-
-	set_toolbar_appearance (toolbar);
 }
 
 
@@ -2662,11 +2634,6 @@ int main (int argc, char *argv[]) {
 	debug (1, "total servers: %d", servers_total ());
 	debug (1, "total uservers: %d", uservers_total ());
 	debug (1, "total hosts: %d", hosts_total ());
-
-
-	if (server_mapshot_popup) {
-		gtk_window_destroy (GTK_WINDOW (server_mapshot_popup));
-	}
 
 	pixmap_cache_clear (&qw_colors_pixmap_cache, 0);
 	pixmap_cache_clear (&server_pixmap_cache, 0);

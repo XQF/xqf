@@ -96,8 +96,6 @@ extern void source_treeview_select_source (struct master *m);
 
 extern int calculate_row_height (GtkWidget *widget, struct pixmap *pix);
 
-extern void set_toolbar_appearance (GtkWidget *toolbar);
-
 extern GtkWidget *create_progress_bar (void);
 extern void progress_bar_reset (GtkWidget *pbar);
 extern void progress_bar_start (GtkWidget *pbar, int activity_mode);

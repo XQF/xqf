@@ -525,10 +525,6 @@ int calculate_row_height (GtkWidget *widget G_GNUC_UNUSED, struct pixmap *pix) {
 	return height;
 }
 
-void set_toolbar_appearance (GtkWidget *toolbar) {
-	(void)toolbar;
-}
-
 /*******************************  Progress Bar  *****************************/
 
 int pbar_pulse_mode;
