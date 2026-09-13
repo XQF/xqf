@@ -87,6 +87,20 @@ Known limitations:
   popover has no trailing gap), so it's only visible on this app's one
   single-item menu. Looks like a GTK4/Adwaita popover minimum-size
   behavior outside the app's control; not pursued further.
+- **Map level-shot preview lost when clicking the map column** (Phase 1).
+  The old `GtkCList`-based server list detected a click on the map cell in
+  `server_clist_event_callback()`, fetched the shot via
+  `games[type].get_mapshot()`, and displayed it in a `GTK_WINDOW_POPUP`
+  positioned at the pointer with an explicit `gdk_pointer_grab()` to
+  dismiss it on release — none of that (raw popup windows, manual pointer
+  grabs, `gtk_clist_get_selection_info()`) exists in GTK4.
+  `server_view_event_cb()` and `server_mapshot_preview_popup_show()` were
+  stubbed to no-ops during the `GtkColumnView` migration rather than
+  reworked; the underlying data path (per-game `get_mapshot()` pk3
+  readers, `renderMemToGtkPixbuf()`) is intact and unused. Per maintainer
+  feedback, this will be reimplemented as a persistent image row at the
+  bottom of the server-info ("Rule"/"Value") panel instead of a popup —
+  left stubbed for now pending that work.
 
 ---
 
