@@ -2133,7 +2133,9 @@ void populate_main_window (void) {
 	// Server Info TreeView
 
 	srvinf_treeview = srvinf_treeview_new (
-		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")));
+		GTK_WIDGET (gtk_builder_get_object (builder, "scrollwin-server-info")),
+		GTK_WIDGET (gtk_builder_get_object (builder, "server-mapshot-frame")),
+		GTK_WIDGET (gtk_builder_get_object (builder, "server-mapshot-picture")));
 	gtk_widget_set_visible (srvinf_treeview, TRUE);
 
 	(void) calculate_row_height (GTK_WIDGET (server_view), games[Q1_SERVER].pix);

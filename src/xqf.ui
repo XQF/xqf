@@ -208,10 +208,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                           </object>
                         </child>
                         <child>
-                          <object class="GtkScrolledWindow" id="scrollwin-server-info">
+                          <object class="GtkBox" id="server-info-box">
                             <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
+                            <child>
+                              <object class="GtkScrolledWindow" id="scrollwin-server-info">
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkFrame" id="server-mapshot-frame">
+                                <property name="visible">False</property>
+                                <property name="halign">center</property>
+                                <child>
+                                  <object class="GtkPicture" id="server-mapshot-picture">
+                                    <property name="visible">True</property>
+                                    <property name="can-shrink">True</property>
+                                    <property name="content-fit">contain</property>
+                                    <property name="height-request">120</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>

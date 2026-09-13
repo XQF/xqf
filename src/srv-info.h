@@ -29,7 +29,9 @@ enum srvinf_col {
 	SRVINF_COL_COUNT
 };
 
-extern GtkWidget *srvinf_treeview_new (GtkWidget *scrollwin);
+extern GtkWidget *srvinf_treeview_new (GtkWidget *scrollwin,
+                                        GtkWidget *mapshot_frame,
+                                        GtkWidget *mapshot_picture);
 extern void srvinf_treeview_set_server (struct server *s);
 extern void srvinf_copy_server_info (void);
 

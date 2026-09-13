@@ -25,8 +25,12 @@
 #include "sort.h"
 #include "pixmaps.h"
 #include "srv-info.h"
+#include "game.h"
+#include "memtopixmap.h"
 
 static GtkTreeStore *srvinf_store = NULL;
+static GtkWidget *srvinf_mapshot_frame = NULL;
+static GtkWidget *srvinf_mapshot_picture = NULL;
 
 // TODO: put into external file
 
@@ -515,8 +519,11 @@ srvinf_sort_func (GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b,
 }
 
 GtkWidget *
-srvinf_treeview_new (GtkWidget *scrollwin)
+srvinf_treeview_new (GtkWidget *scrollwin, GtkWidget *mapshot_frame, GtkWidget *mapshot_picture)
 {
+	srvinf_mapshot_frame = mapshot_frame;
+	srvinf_mapshot_picture = mapshot_picture;
+
 	srvinf_store = gtk_tree_store_new (SRVINF_COL_COUNT,
 	                                   G_TYPE_STRING,   /* RULE */
 	                                   G_TYPE_STRING,   /* VALUE */
@@ -584,9 +591,71 @@ srvinf_copy_server_info (void)
 	g_string_free (str, TRUE);
 }
 
+/* Update the level-shot preview at the bottom of the panel for the given
+ * server, hiding it when the game has no shot reader or none was found. */
+static void
+srvinf_update_mapshot (struct server *s)
+{
+	if (!srvinf_mapshot_frame || !srvinf_mapshot_picture)
+		return;
+
+	if (!s || !games[s->type].get_mapshot) {
+		gtk_widget_set_visible (srvinf_mapshot_frame, FALSE);
+		return;
+	}
+
+	guchar *buf = NULL;
+	size_t len = games[s->type].get_mapshot (s, &buf);
+	GdkPixbuf *pixbuf = NULL;
+	guint w = 0, h = 0;
+	gushort overbright;
+
+	/* Quake 3-like gamma ramp needed by some games' level shots */
+	switch (s->type) {
+		case DOOM3_SERVER:
+		case EF_SERVER:
+		case Q3RALLY_SERVER:
+		case Q3_SERVER:
+		case Q4_SERVER:
+		case REACTION_SERVER:
+		case SMOKINGUNS_SERVER:
+		case TREMULOUSGPP_SERVER:
+		case TREMULOUS_SERVER:
+		case WO_SERVER:
+			overbright = 1;
+			break;
+		default:
+			overbright = 0;
+	}
+
+	if (len)
+		renderMemToGtkPixbuf (buf, len, &pixbuf, &w, &h, overbright);
+	g_free (buf);
+
+	GdkTexture *texture;
+	if (pixbuf) {
+		texture = gdk_texture_new_for_pixbuf (pixbuf);
+		g_object_unref (pixbuf);
+	}
+	else {
+		texture = stop_pix.texture ? g_object_ref (stop_pix.texture) : NULL;
+	}
+
+	if (!texture) {
+		gtk_widget_set_visible (srvinf_mapshot_frame, FALSE);
+		return;
+	}
+
+	gtk_picture_set_paintable (GTK_PICTURE (srvinf_mapshot_picture), GDK_PAINTABLE (texture));
+	g_object_unref (texture);
+	gtk_widget_set_visible (srvinf_mapshot_frame, TRUE);
+}
+
 // TODO: get rid of switch, put game specific functions into game struct
 void srvinf_treeview_set_server (struct server *s) {
 	char **info;
+
+	srvinf_update_mapshot (s);
 
 	gtk_tree_store_clear (srvinf_store);
 
