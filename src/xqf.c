@@ -1886,11 +1886,42 @@ void quickfilter_delete_button_clicked (GtkWidget *widget, GtkWidget* entry) {
 	gtk_widget_grab_focus (entry);
 }
 
-/* Adaptor: call old-style (GtkWidget*, gpointer) callback from GSimpleAction */
-static void action_activate_cb (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
-	void (*fn)(GtkWidget *, gpointer) = user_data;
-	fn (NULL, NULL);
-}
+/* Thin GSimpleAction "activate" wrappers around the callbacks shared with
+ * toolbar buttons (GtkButton "clicked" handlers keep their own signature,
+ * since they're still connected to widgets directly). Named per-action
+ * rather than adapted through one generic (GtkWidget*, gpointer) trampoline,
+ * so each one can forward the right arguments -- notably find-player vs.
+ * find-again, which previously both collapsed to the same call. */
+static void statistics_action_cb           (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; statistics_callback (NULL); }
+static void add_server_action_cb           (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; add_server_callback (NULL, NULL); }
+static void add_to_favorites_action_cb     (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; add_to_favorites_callback (NULL, NULL); }
+static void remove_server_action_cb        (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; del_server_callback (NULL, NULL); }
+static void copy_server_action_cb          (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; copy_server_callback (NULL, NULL); }
+static void copy_server_plus_action_cb     (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; copy_server_callback_plus (NULL, NULL); }
+static void add_default_masters_action_cb  (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; update_master_builtin_callback (NULL, NULL); }
+static void add_gslist_masters_action_cb   (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; update_master_gslist_callback (NULL, NULL); }
+static void add_master_action_cb           (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; add_master_callback (NULL, NULL); }
+static void rename_master_action_cb        (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; edit_master_callback (NULL, NULL); }
+static void delete_master_action_cb        (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; del_master_callback (NULL, NULL); }
+static void clear_servers_action_cb        (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; clear_master_servers_callback (NULL, 0, 0, NULL, NULL); }
+static void find_player_action_cb          (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; find_player_callback (NULL, FALSE); }
+static void find_again_action_cb           (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; find_player_callback (NULL, TRUE); }
+static void properties_action_cb           (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; properties_callback (NULL, NULL); }
+static void preferences_action_cb          (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; start_preferences_dialog (NULL, 0); }
+static void refresh_action_cb              (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; refresh_callback (NULL, NULL); }
+static void refresh_selected_action_cb     (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; refresh_selected_callback (NULL, NULL); }
+static void update_from_master_action_cb   (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; update_source_callback (NULL, NULL); }
+static void dns_lookup_action_cb           (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; resolve_callback (NULL, NULL); }
+static void rcon_action_cb                 (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; rcon_callback (NULL, NULL); }
+static void about_action_cb                (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; about_dialog (NULL, NULL); }
+static void configure_filters_action_cb    (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; start_filters_cfg_dialog (NULL, 0); }
+static void connect_action_cb              (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; launch_normal_callback (NULL); }
+static void observe_action_cb              (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; launch_spectate_callback (NULL); }
+static void record_demo_action_cb          (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; launch_record_callback (NULL); }
+static void copy_server_info_action_cb     (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; copy_server_info_callback (NULL, NULL); }
+static void player_filter_red_action_cb    (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; add_to_player_filter_red_callback (NULL); }
+static void player_filter_green_action_cb  (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; add_to_player_filter_green_callback (NULL); }
+static void player_filter_blue_action_cb   (GSimpleAction *a, GVariant *p, gpointer d) { (void)a; (void)p; (void)d; add_to_player_filter_blue_callback (NULL); }
 
 /* GSimpleActionGroup holds all "win.*" actions; inserted into the window widget */
 GActionGroup *win_action_group (void) {
@@ -1935,38 +1966,37 @@ static void server_filter_select_action_cb (GSimpleAction *action,
 
 static void register_window_actions (GtkWindow *win) {
 	_win_ag = g_simple_action_group_new ();
-	/* Regular actions using old-style callback adaptor */
-	add_win_action (win, "statistics",         G_CALLBACK (action_activate_cb), statistics_callback);
+	add_win_action (win, "statistics",         G_CALLBACK (statistics_action_cb), NULL);
 	add_win_action (win, "quit",               G_CALLBACK (app_quit_cb), NULL);
-	add_win_action (win, "add-server",         G_CALLBACK (action_activate_cb), add_server_callback);
-	add_win_action (win, "add-to-favorites",   G_CALLBACK (action_activate_cb), add_to_favorites_callback);
-	add_win_action (win, "remove-server",      G_CALLBACK (action_activate_cb), del_server_callback);
-	add_win_action (win, "copy-server",        G_CALLBACK (action_activate_cb), copy_server_callback);
-	add_win_action (win, "copy-server-plus",   G_CALLBACK (action_activate_cb), copy_server_callback_plus);
-	add_win_action (win, "add-default-masters",G_CALLBACK (action_activate_cb), update_master_builtin_callback);
-	add_win_action (win, "add-gslist-masters", G_CALLBACK (action_activate_cb), update_master_gslist_callback);
-	add_win_action (win, "add-master",         G_CALLBACK (action_activate_cb), add_master_callback);
-	add_win_action (win, "rename-master",      G_CALLBACK (action_activate_cb), edit_master_callback);
-	add_win_action (win, "delete-master",      G_CALLBACK (action_activate_cb), del_master_callback);
-	add_win_action (win, "clear-servers",      G_CALLBACK (action_activate_cb), clear_master_servers_callback);
-	add_win_action (win, "find-player",        G_CALLBACK (action_activate_cb), find_player_callback);
-	add_win_action (win, "find-again",         G_CALLBACK (action_activate_cb), find_player_callback);
-	add_win_action (win, "properties",         G_CALLBACK (action_activate_cb), properties_callback);
-	add_win_action (win, "preferences",        G_CALLBACK (action_activate_cb), start_preferences_dialog);
-	add_win_action (win, "refresh",            G_CALLBACK (action_activate_cb), refresh_callback);
-	add_win_action (win, "refresh-selected",   G_CALLBACK (action_activate_cb), refresh_selected_callback);
-	add_win_action (win, "update-from-master", G_CALLBACK (action_activate_cb), update_source_callback);
-	add_win_action (win, "dns-lookup",         G_CALLBACK (action_activate_cb), resolve_callback);
-	add_win_action (win, "rcon",               G_CALLBACK (action_activate_cb), rcon_callback);
-	add_win_action (win, "about",              G_CALLBACK (action_activate_cb), about_dialog);
-	add_win_action (win, "configure-filters",  G_CALLBACK (action_activate_cb), start_filters_cfg_dialog);
-	add_win_action (win, "connect",            G_CALLBACK (action_activate_cb), launch_normal_callback);
-	add_win_action (win, "observe",            G_CALLBACK (action_activate_cb), launch_spectate_callback);
-	add_win_action (win, "record-demo",        G_CALLBACK (action_activate_cb), launch_record_callback);
-	add_win_action (win, "copy-server-info",   G_CALLBACK (action_activate_cb), copy_server_info_callback);
-	add_win_action (win, "player-filter-red",  G_CALLBACK (action_activate_cb), add_to_player_filter_red_callback);
-	add_win_action (win, "player-filter-green",G_CALLBACK (action_activate_cb), add_to_player_filter_green_callback);
-	add_win_action (win, "player-filter-blue", G_CALLBACK (action_activate_cb), add_to_player_filter_blue_callback);
+	add_win_action (win, "add-server",         G_CALLBACK (add_server_action_cb), NULL);
+	add_win_action (win, "add-to-favorites",   G_CALLBACK (add_to_favorites_action_cb), NULL);
+	add_win_action (win, "remove-server",      G_CALLBACK (remove_server_action_cb), NULL);
+	add_win_action (win, "copy-server",        G_CALLBACK (copy_server_action_cb), NULL);
+	add_win_action (win, "copy-server-plus",   G_CALLBACK (copy_server_plus_action_cb), NULL);
+	add_win_action (win, "add-default-masters",G_CALLBACK (add_default_masters_action_cb), NULL);
+	add_win_action (win, "add-gslist-masters", G_CALLBACK (add_gslist_masters_action_cb), NULL);
+	add_win_action (win, "add-master",         G_CALLBACK (add_master_action_cb), NULL);
+	add_win_action (win, "rename-master",      G_CALLBACK (rename_master_action_cb), NULL);
+	add_win_action (win, "delete-master",      G_CALLBACK (delete_master_action_cb), NULL);
+	add_win_action (win, "clear-servers",      G_CALLBACK (clear_servers_action_cb), NULL);
+	add_win_action (win, "find-player",        G_CALLBACK (find_player_action_cb), NULL);
+	add_win_action (win, "find-again",         G_CALLBACK (find_again_action_cb), NULL);
+	add_win_action (win, "properties",         G_CALLBACK (properties_action_cb), NULL);
+	add_win_action (win, "preferences",        G_CALLBACK (preferences_action_cb), NULL);
+	add_win_action (win, "refresh",            G_CALLBACK (refresh_action_cb), NULL);
+	add_win_action (win, "refresh-selected",   G_CALLBACK (refresh_selected_action_cb), NULL);
+	add_win_action (win, "update-from-master", G_CALLBACK (update_from_master_action_cb), NULL);
+	add_win_action (win, "dns-lookup",         G_CALLBACK (dns_lookup_action_cb), NULL);
+	add_win_action (win, "rcon",               G_CALLBACK (rcon_action_cb), NULL);
+	add_win_action (win, "about",              G_CALLBACK (about_action_cb), NULL);
+	add_win_action (win, "configure-filters",  G_CALLBACK (configure_filters_action_cb), NULL);
+	add_win_action (win, "connect",            G_CALLBACK (connect_action_cb), NULL);
+	add_win_action (win, "observe",            G_CALLBACK (observe_action_cb), NULL);
+	add_win_action (win, "record-demo",        G_CALLBACK (record_demo_action_cb), NULL);
+	add_win_action (win, "copy-server-info",   G_CALLBACK (copy_server_info_action_cb), NULL);
+	add_win_action (win, "player-filter-red",  G_CALLBACK (player_filter_red_action_cb), NULL);
+	add_win_action (win, "player-filter-green",G_CALLBACK (player_filter_green_action_cb), NULL);
+	add_win_action (win, "player-filter-blue", G_CALLBACK (player_filter_blue_action_cb), NULL);
 
 	/* Stateful toggle actions */
 	add_win_toggle (win, "show-hostnames",    G_CALLBACK (show_hostnames_callback),    NULL);
