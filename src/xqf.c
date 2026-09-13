@@ -1992,6 +1992,7 @@ static gboolean create_main_window (void) {
 	GError *error = NULL;
 
 	builder = gtk_builder_new_from_file (g_build_filename (xqf_PACKAGE_DATA_DIR, "ui", "xqf.ui", NULL));
+	gtk_builder_set_translation_domain (builder, PACKAGE);
 
 	if (G_UNLIKELY (error != NULL)) {
 		fprintf (stderr, "Could not load UI: %s\n", error->message);

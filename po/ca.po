@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XQF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-17 14:48+0000\n"
+"POT-Creation-Date: 2026-09-13 17:25+0000\n"
 "PO-Revision-Date: 2015-06-27 18:49+0000\n"
 "Last-Translator: Thomas Debesse <dev@illwieckz.net>\n"
 "Language-Team: Catalan (http://www.transifex.com/p/xqf/language/ca/)\n"
@@ -19,6 +19,251 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/xqf.ui:67
+msgid "XQF"
+msgstr ""
+
+#: src/xqf.ui:82
+msgid "Menu"
+msgstr ""
+
+#: src/xqf.ui:93
+msgid "Update from master"
+msgstr "Actualitza des del mestre"
+
+#: src/xqf.ui:94
+msgid "Update"
+msgstr "Actualitza"
+
+#: src/xqf.ui:100
+msgid "Refresh current list"
+msgstr "Refresca la llista actual"
+
+#: src/xqf.ui:101 src/xqf.ui:495
+msgid "Refresh"
+msgstr "Refresca"
+
+#: src/xqf.ui:107
+msgid "Refresh selected servers"
+msgstr "Refresca els servidors seleccionats"
+
+#: src/xqf.ui:108
+msgid "Ref.Sel."
+msgstr "Ref.Sel."
+
+#: src/xqf.ui:114 src/xqf.ui:115
+msgid "Stop"
+msgstr "Para"
+
+#: src/xqf.ui:126 src/xqf.ui:127
+msgid "Connect"
+msgstr "Connecta"
+
+#: src/xqf.ui:133 src/xqf.ui:134
+msgid "Observe"
+msgstr "Observa"
+
+#: src/xqf.ui:140
+msgid "Record Demo"
+msgstr "Filma demo"
+
+#: src/xqf.ui:141
+msgid "Record"
+msgstr "Filma"
+
+#: src/xqf.ui:270
+msgid "_File"
+msgstr "_Fitxer"
+
+#: src/xqf.ui:272
+msgid "_Statistics"
+msgstr "E_stadístiques"
+
+#: src/xqf.ui:276
+msgid "_Exit"
+msgstr "_Surt"
+
+#: src/xqf.ui:282
+msgid "_Edit"
+msgstr "_Edita"
+
+#: src/xqf.ui:285 src/xqf.ui:410
+msgid "_Add new Server"
+msgstr "_Afegeix un nou servidor"
+
+#: src/xqf.ui:290 src/xqf.ui:414
+msgid "Add to _Favorites"
+msgstr "Afegeix a _favorits"
+
+#: src/xqf.ui:294 src/xqf.ui:418
+msgid "_Remove"
+msgstr "_Suprimeix"
+
+#: src/xqf.ui:299 src/xqf.ui:523
+msgid "_Copy"
+msgstr "_Copia"
+
+#: src/xqf.ui:304
+msgid "_Copy+"
+msgstr "_Copia+"
+
+#: src/xqf.ui:311
+msgid "Add Default Masters"
+msgstr "Afegeix els mestres predeterminats"
+
+#: src/xqf.ui:315
+msgid "Add Gslist Masters"
+msgstr "Afegeix els mestres Gslist"
+
+#: src/xqf.ui:319 src/xqf.ui:530
+msgid "Add _Master"
+msgstr "Afegeix un _mestre"
+
+#: src/xqf.ui:324 src/xqf.ui:534
+msgid "_Rename Master"
+msgstr "_Reanomena el mestre"
+
+#: src/xqf.ui:328 src/xqf.ui:538
+msgid "D_elete Master"
+msgstr "Suprim_eix el mestre"
+
+#: src/xqf.ui:332 src/xqf.ui:542
+msgid "_Clear Servers"
+msgstr "_Neteja els servidors"
+
+#: src/xqf.ui:338
+msgid "_Find Player"
+msgstr "Cerca _jugador"
+
+#: src/xqf.ui:343
+msgid "Find A_gain"
+msgstr "Cerca de _nou"
+
+#: src/xqf.ui:350 src/xqf.ui:515
+msgid "Properties"
+msgstr "Propietats"
+
+#: src/xqf.ui:356
+msgid "_Preferences"
+msgstr "_Preferències"
+
+#: src/xqf.ui:362
+msgid "_View"
+msgstr "_Visualitza"
+
+#: src/xqf.ui:365
+msgid "_Refresh"
+msgstr "_Refresca"
+
+#: src/xqf.ui:370
+msgid "Refresh _Selected"
+msgstr "Refresca els _seleccionats"
+
+#: src/xqf.ui:375
+msgid "_Update From Master"
+msgstr "_Actualitza des del mestre"
+
+#: src/xqf.ui:382
+msgid "Show _Host Names"
+msgstr "Mostra els noms de ser_vidors"
+
+#: src/xqf.ui:387
+msgid "Show Default _Port"
+msgstr "Mostra els _ports per defecte"
+
+#: src/xqf.ui:393
+msgid "_Server"
+msgstr "_Servidor"
+
+#: src/xqf.ui:396 src/xqf.ui:463
+msgid "_Connect"
+msgstr "_Connecta"
+
+#: src/xqf.ui:400 src/xqf.ui:467
+msgid "_Observe"
+msgstr "_Observa"
+
+#: src/xqf.ui:404
+msgid "Record _Demo"
+msgstr "Filma _demo"
+
+#: src/xqf.ui:422
+msgid "DNS _Lookup"
+msgstr "Cerca de _DNS"
+
+#: src/xqf.ui:429
+msgid "_RCon"
+msgstr "_Rcon"
+
+#: src/xqf.ui:433
+msgid "_Properties"
+msgstr "_Propietats"
+
+#: src/xqf.ui:439
+msgid "Server Filte_rs"
+msgstr "Filtres de servi_dors"
+
+#: src/xqf.ui:442
+msgid "Configure..."
+msgstr "Configura"
+
+#: src/xqf.ui:450
+msgid "_Help"
+msgstr "A_juda"
+
+#: src/xqf.ui:453
+msgid "_About"
+msgstr "_Quant a"
+
+#: src/xqf.ui:471
+#, fuzzy
+msgid "_Record"
+msgstr "Filma"
+
+#: src/xqf.ui:477
+msgid "Add new Server"
+msgstr "Afegeix"
+
+#: src/xqf.ui:481
+msgid "Add to Favorites"
+msgstr "Afegeix als favorits"
+
+#: src/xqf.ui:485
+msgid "Remove"
+msgstr "Suprimeix"
+
+#: src/xqf.ui:489
+msgid "Copy"
+msgstr "Copia"
+
+#: src/xqf.ui:499
+msgid "Refresh Selected"
+msgstr "Refresca els seleccionats"
+
+#: src/xqf.ui:505
+msgid "DNS Lookup"
+msgstr "Consulta de DNS"
+
+#: src/xqf.ui:511
+msgid "RCon"
+msgstr "RCon"
+
+#: src/xqf.ui:549
+msgid "Player Filter"
+msgstr "Filtre de jugadors"
+
+#: src/xqf.ui:551
+msgid "Mark as Red"
+msgstr "Marca en roig"
+
+#: src/xqf.ui:555
+msgid "Mark as Green"
+msgstr "Marca en verd"
+
+#: src/xqf.ui:559
+msgid "Mark as Blue"
+msgstr "Marca en blau"
 
 #: src/addmaster.c:98
 msgid "You have to specify a name and an address."
@@ -33,34 +278,34 @@ msgstr "L'adreça del servidor mestre «%s» no és vàlida."
 msgid "LAN"
 msgstr "LAN"
 
-#: src/addmaster.c:222
+#: src/addmaster.c:221
 msgid "Rename Master"
 msgstr "Reanomena el mestre"
 
-#: src/addmaster.c:225
+#: src/addmaster.c:224
 msgid "Add Master"
 msgstr "Afegeix un mestre"
 
-#: src/addmaster.c:239
+#: src/addmaster.c:238
 msgid "Master Name"
 msgstr "Nom del mestre"
 
-#: src/addmaster.c:284
+#: src/addmaster.c:283
 msgid "Master Address"
 msgstr "Adreça del mestre"
 
-#: src/addmaster.c:362 src/addserver.c:145 src/dialogs.c:429 src/filter.c:1529
-#: src/filter.c:1954 src/game.c:2364 src/launch.c:358 src/pref.c:4547
-#: src/psearch.c:223 src/redial.c:208 src/srv-prop.c:830 src/xqf.c:615
-#: src/xqf.c:627 src/xqf.c:1380
+#: src/addmaster.c:360 src/addserver.c:143 src/dialogs.c:412 src/filter.c:1570
+#: src/filter.c:1902 src/game.c:2364 src/launch.c:358 src/pref.c:4603
+#: src/psearch.c:223 src/redial.c:206 src/srv-prop.c:816 src/xqf.c:622
+#: src/xqf.c:634 src/xqf.c:1387
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: src/addserver.c:90 src/addserver.c:181
+#: src/addserver.c:89 src/addserver.c:176
 msgid "Add Server"
 msgstr "Afegeix un servidor"
 
-#: src/addserver.c:100
+#: src/addserver.c:99
 msgid "Server:"
 msgstr "Servidor:"
 
@@ -71,234 +316,230 @@ msgid_plural "%d servers"
 msgstr[0] "%d servidor"
 msgstr[1] "%d servidor"
 
-#: src/country-filter.c:213 src/loadpixmap.c:171
+#: src/country-filter.c:212 src/loadpixmap.c:86 src/loadpixmap.c:95
 #, c-format
 msgid "Error loading pixmap file: %s"
 msgstr "S'ha produït un error en carregar el fitxer de mapa de píxels: %s"
 
-#: src/dialogs.c:132 src/dialogs.c:207 src/dialogs.c:287
+#: src/dialogs.c:132 src/dialogs.c:205 src/dialogs.c:279
 msgid "XQF: Warning!"
 msgstr "XQF: Atenció!"
 
-#: src/dialogs.c:157 src/dialogs.c:418 src/filter.c:1536 src/filter.c:1946
-#: src/pref.c:4554 src/psearch.c:212 src/srv-prop.c:838
+#: src/dialogs.c:157 src/dialogs.c:401 src/filter.c:1576 src/filter.c:1895
+#: src/pref.c:4609 src/psearch.c:212 src/srv-prop.c:823
 msgid "OK"
 msgstr "D'acord"
 
-#: src/dialogs.c:232 src/dialogs.c:312 src/filter.c:1032 src/psearch.c:383
-#: src/xqf.c:591 src/xqf.c:604 src/xqf.c:1220
+#: src/dialogs.c:230 src/dialogs.c:304 src/filter.c:1096 src/psearch.c:390
+#: src/xqf.c:598 src/xqf.c:611 src/xqf.c:1227
 msgid "Yes"
 msgstr "Sí"
 
-#: src/dialogs.c:244 src/dialogs.c:324 src/filter.c:1033 src/psearch.c:383
-#: src/xqf.c:591 src/xqf.c:604 src/xqf.c:1220
+#: src/dialogs.c:239 src/dialogs.c:313 src/filter.c:1097 src/psearch.c:390
+#: src/xqf.c:598 src/xqf.c:611 src/xqf.c:1227
 msgid "No"
 msgstr "No"
 
-#: src/dialogs.c:334 src/xqf.c:627
+#: src/dialogs.c:320 src/xqf.c:634
 msgid "Redial"
 msgstr "Torna a cridar"
 
-#: src/dialogs.c:496
+#: src/dialogs.c:478
 msgid "Creator:"
 msgstr ""
 
-#: src/dialogs.c:498
+#: src/dialogs.c:480
 msgid "Maintainers:"
 msgstr "Mantenidors:"
 
-#: src/dialogs.c:506
+#: src/dialogs.c:488
 msgid "Contributors:"
 msgstr "Contribuïdors:"
 
-#: src/dialogs.c:509
+#: src/dialogs.c:491
 msgid "Bug reports and feature requests:"
 msgstr "Informes d'error i peticions de millores:"
 
-#: src/dialogs.c:514
+#: src/dialogs.c:496
 msgid "XQF Logo:"
 msgstr ""
 
-#: src/dialogs.c:523
+#: src/dialogs.c:505
 msgid "Copyright ©"
 msgstr ""
 
-#: src/dialogs.c:523
+#: src/dialogs.c:505
 #, fuzzy
 msgid "XQF Team"
 msgstr "Equip"
 
-#: src/dialogs.c:527
-msgid "XQF"
-msgstr ""
-
-#: src/dialogs.c:531
+#: src/dialogs.c:513
 msgid "Game Server Browser"
 msgstr "Navegador de servidors de jocs"
 
-#: src/dialogs.c:535
+#: src/dialogs.c:517
 msgid "translator-credits"
 msgstr "Jordi Mallach <jordi@debian.org>"
 
-#: src/dialogs.c:565
+#: src/dialogs.c:594 src/pref.c:4247
 #, fuzzy
 msgid "_Cancel"
 msgstr "Cancel·la"
 
-#: src/dialogs.c:567
+#: src/dialogs.c:595 src/pref.c:4248
 msgid "_Open"
 msgstr ""
 
-#: src/filter.c:100
+#: src/filter.c:171
 msgid "Server"
 msgstr "Servidor"
 
-#: src/filter.c:101
+#: src/filter.c:172
 msgid "S Filter"
 msgstr "Filtre S"
 
-#: src/filter.c:102
+#: src/filter.c:173
 msgid "SF Cfg"
 msgstr "Cfg FS"
 
-#: src/filter.c:115
+#: src/filter.c:185
 msgid "Player"
 msgstr "Jugador"
 
-#: src/filter.c:116
+#: src/filter.c:186
 msgid "P Filter"
 msgstr "Filtre J"
 
-#: src/filter.c:117
+#: src/filter.c:187
 msgid "PF Cfg"
 msgstr "Cfg FJ"
 
-#: src/filter.c:997
+#: src/filter.c:1061
 msgid "Enter filter name"
 msgstr "Introduïu el nom del filtre"
 
-#: src/filter.c:1031
+#: src/filter.c:1095
 msgid "Delete server filter"
 msgstr "Suprimeix el filtre de servidor"
 
-#: src/filter.c:1034
+#: src/filter.c:1098
 #, c-format
 msgid "Really delete server filter \"%s\"?"
 msgstr "Esteu segur de voler suprimir el filtre de servidor «%s»?"
 
-#: src/filter.c:1202
+#: src/filter.c:1261
 msgid "Server Filter"
 msgstr "Filtre de servidors"
 
-#: src/filter.c:1217 src/flt-player.c:807 src/pref.c:2926
+#: src/filter.c:1276 src/flt-player.c:814 src/pref.c:2926
 msgid "New"
 msgstr "Nou"
 
-#: src/filter.c:1223
+#: src/filter.c:1282
 msgid "Rename"
 msgstr "Reanomena"
 
-#: src/filter.c:1229 src/flt-player.c:812 src/pref.c:2933 src/xqf.c:1380
+#: src/filter.c:1288 src/flt-player.c:819 src/pref.c:2932 src/xqf.c:1387
 msgid "Delete"
 msgstr "Suprimeix"
 
-#: src/filter.c:1235
+#: src/filter.c:1294
 msgid "Server would pass filter if"
 msgstr "El servidor passaria el filtre si"
 
-#: src/filter.c:1251
+#: src/filter.c:1308
 msgid "ping is less than"
 msgstr "el ping és menor que"
 
-#: src/filter.c:1268
+#: src/filter.c:1325
 msgid "the game contains the string"
 msgstr "el joc conté la cadena"
 
-#: src/filter.c:1286
+#: src/filter.c:1343
 msgid "the number of retries is fewer than"
 msgstr "el número de reintents és menor que"
 
-#: src/filter.c:1301
+#: src/filter.c:1358
 msgid "the game type contains the string"
 msgstr "el tipus de joc conté la cadena"
 
-#: src/filter.c:1318
+#: src/filter.c:1375
 msgid "it is not full"
 msgstr "no està ple"
 
-#: src/filter.c:1324
+#: src/filter.c:1381
 msgid "the version contains the string"
 msgstr "la versió conté la cadena"
 
-#: src/filter.c:1342
+#: src/filter.c:1399
 msgid "it is not empty"
 msgstr "no està buit"
 
-#: src/filter.c:1349
+#: src/filter.c:1406
 msgid "the map contains the string"
 msgstr "el mapa conté la cadena"
 
-#: src/filter.c:1367
+#: src/filter.c:1424
 msgid "cheats are not allowed"
 msgstr "les trampes no estan permitides"
 
-#: src/filter.c:1374
+#: src/filter.c:1431
 msgid "the server name contains the string"
 msgstr "el nom del servidor conté la cadena"
 
-#: src/filter.c:1391
+#: src/filter.c:1448
 msgid "no password required"
 msgstr "no es requereix contrasenya"
 
-#: src/filter.c:1400 src/filter.c:1812
+#: src/filter.c:1457 src/filter.c:1795
 msgid "Country filter:"
 msgstr "Filtre d'estat:"
 
-#: src/filter.c:1442
+#: src/filter.c:1484
 msgid "select..."
 msgstr "seleccioneu..."
 
-#: src/filter.c:1452
+#: src/filter.c:1494
 msgid "clear"
 msgstr "neteja"
 
-#: src/filter.c:1503
+#: src/filter.c:1544
 msgid "XQF: Filters"
 msgstr "XQF: Filtres"
 
-#: src/filter.c:1805
+#: src/filter.c:1788
 msgid "Configure Country Filter"
 msgstr "Configura el filtre d'estat"
 
-#: src/filter.c:1930
+#: src/filter.c:1880
 msgid "Show all countries"
 msgstr "Mostra tots els estats"
 
-#: src/flt-player.c:82 src/flt-player.c:88
+#: src/flt-player.c:75 src/flt-player.c:81
 msgid "string"
 msgstr "cadena"
 
-#: src/flt-player.c:83
+#: src/flt-player.c:76
 msgid "substr"
 msgstr "subcad"
 
-#: src/flt-player.c:84
+#: src/flt-player.c:77
 msgid "regexp"
 msgstr "expreg"
 
-#: src/flt-player.c:89
+#: src/flt-player.c:82
 msgid "substring"
 msgstr "subcadena"
 
-#: src/flt-player.c:90
+#: src/flt-player.c:83
 msgid "regular expression"
 msgstr "expressió regular"
 
-#: src/flt-player.c:458 src/psearch.c:119
+#: src/flt-player.c:465 src/psearch.c:121
 msgid "XQF: Error"
 msgstr "XQF: Error"
 
-#: src/flt-player.c:458 src/psearch.c:120
+#: src/flt-player.c:465 src/psearch.c:122
 #, c-format
 msgid ""
 "Regular Expression Error!\n"
@@ -313,27 +554,23 @@ msgstr ""
 "\n"
 "%s."
 
-#: src/flt-player.c:641 src/flt-player.c:780
+#: src/flt-player.c:646 src/flt-player.c:794
 msgid "Pattern"
 msgstr "Patró"
 
-#: src/flt-player.c:677
+#: src/flt-player.c:684
 msgid "Pattern Comment"
 msgstr "Comentari del patró"
 
-#: src/flt-player.c:737
-msgid "Player Filter"
-msgstr "Filtre de jugadors"
-
-#: src/flt-player.c:772
+#: src/flt-player.c:785
 msgid "Mode"
 msgstr "Mode"
 
-#: src/flt-player.c:823
+#: src/flt-player.c:829
 msgid "Up"
 msgstr "Puja"
 
-#: src/flt-player.c:828
+#: src/flt-player.c:834
 msgid "Down"
 msgstr "Baixa"
 
@@ -399,7 +636,7 @@ msgstr ""
 "El directori «%s» no conté el subdirectori «%s».\n"
 "Especifiqueu un directori de treball de %s correcte."
 
-#: src/game.c:2364 src/launch.c:358 src/xqf.c:615 src/xqf.c:627
+#: src/game.c:2364 src/launch.c:358 src/xqf.c:622 src/xqf.c:634
 msgid "Launch"
 msgstr "Llança"
 
@@ -414,7 +651,7 @@ msgstr ""
 "\n"
 "Voleu llançar el client de totes maneres?"
 
-#: src/game.c:3006
+#: src/game.c:3012
 msgid ""
 "The server has Punkbuster enabled but it is not going\n"
 "to be set on the command line.\n"
@@ -471,101 +708,101 @@ msgstr "L'adreça IP font és invàlida"
 msgid "Invalid source port range"
 msgstr "El rang de ports font és invàlid"
 
-#: src/pref.c:1731 src/pref.c:1821
+#: src/pref.c:1741 src/pref.c:1826
 msgid "Top"
 msgstr "Superior"
 
-#: src/pref.c:1744 src/pref.c:1834
+#: src/pref.c:1756 src/pref.c:1841
 msgid "Bottom"
 msgstr "Inferior"
 
-#: src/pref.c:1971 src/pref.c:2084 src/pref.c:2146 src/pref.c:2200
+#: src/pref.c:1968 src/pref.c:2074 src/pref.c:2135 src/pref.c:2186
 #: src/xqf-ui.c:90 src/xqf-ui.c:165
 msgid "Name"
 msgstr "Nom"
 
-#: src/pref.c:1993 src/xqf-ui.c:177
+#: src/pref.c:1987 src/xqf-ui.c:177
 msgid "Colors"
 msgstr "Colors"
 
-#: src/pref.c:2026
+#: src/pref.c:2020
 msgid "Login name"
 msgstr "Nom d'usuari"
 
-#: src/pref.c:2069
+#: src/pref.c:2059
 msgid "Skin/Colors"
 msgstr "Pell/Colors"
 
-#: src/pref.c:2106
+#: src/pref.c:2096
 msgid "Team"
 msgstr "Equip"
 
-#: src/pref.c:2166
+#: src/pref.c:2152
 msgid "Model/Skin"
 msgstr "Model/Pell"
 
-#: src/pref.c:2257
+#: src/pref.c:2243
 msgid "--- Anything ---"
 msgstr "--- Qualsevol ---"
 
-#: src/pref.c:2258
+#: src/pref.c:2244
 msgid "Axe"
 msgstr "Destral"
 
-#: src/pref.c:2259
+#: src/pref.c:2245
 msgid "Shotgun"
 msgstr "Escopeta"
 
-#: src/pref.c:2260
+#: src/pref.c:2246
 msgid "Super Shotgun"
 msgstr "Super escopeta"
 
-#: src/pref.c:2261
+#: src/pref.c:2247
 msgid "Nailgun"
 msgstr "Pistola de claus"
 
-#: src/pref.c:2262
+#: src/pref.c:2248
 msgid "Super Nailgun"
 msgstr "Super pistola de claus"
 
-#: src/pref.c:2263
+#: src/pref.c:2249
 msgid "Grenade Launcher"
 msgstr "Llança granades"
 
-#: src/pref.c:2264
+#: src/pref.c:2250
 msgid "Rocket Launcher"
 msgstr "Llança coets"
 
-#: src/pref.c:2265
+#: src/pref.c:2251
 msgid "ThunderBolt"
 msgstr "Llança descàrregues"
 
-#: src/pref.c:2286
+#: src/pref.c:2271
 msgid "Use skins"
 msgstr "Utilitza pells"
 
-#: src/pref.c:2287
+#: src/pref.c:2272
 msgid "Don't use skins"
 msgstr "No utilitza pells"
 
-#: src/pref.c:2288
+#: src/pref.c:2273
 msgid "Don't download new skins"
 msgstr "No descarrega pells noves"
 
-#: src/pref.c:2339
+#: src/pref.c:2323
 msgid "You must configure a command line first"
 msgstr "Heu de configurar la línia d'ordres abans"
 
-#: src/pref.c:2376
+#: src/pref.c:2360
 msgid "Game not found"
 msgstr "No s'ha trobat el joc"
 
-#: src/pref.c:2378
+#: src/pref.c:2362
 #, c-format
 msgid "%s not found"
 msgstr "No s'ha trobat «%s»"
 
-#: src/pref.c:2430
+#: src/pref.c:2418
 #, c-format
 msgid ""
 "An entry already exists for the game %s.\n"
@@ -580,11 +817,11 @@ msgstr ""
 "\n"
 "Esborreu la entrada i proveu de nou."
 
-#: src/pref.c:2487
+#: src/pref.c:2475
 msgid "There are no defaults for this game"
 msgstr "No hi ha valors per defecte per a aquest joc"
 
-#: src/pref.c:2551
+#: src/pref.c:2535
 msgid ""
 "There is already an entry for this game.\n"
 "\n"
@@ -596,52 +833,52 @@ msgstr ""
 "Per a modificar-ho, seleccioneu-lo de la llista,\n"
 "modifiqueu-lo i després feu click en Afegir/Actualitzar."
 
-#: src/pref.c:2555
+#: src/pref.c:2539
 msgid "You must enter both a game and at least one argument."
 msgstr "Heu d'inserir un joc i al menys un argument."
 
-#: src/pref.c:2661
+#: src/pref.c:2650
 msgid "Invoking"
 msgstr "S'està executant"
 
-#: src/pref.c:2668
+#: src/pref.c:2657
 msgid "*** Not Implemented ***"
 msgstr "*** No implementat ***"
 
-#: src/pref.c:2680
+#: src/pref.c:2669
 msgid "Custom Args"
 msgstr "Args personalitzats"
 
-#: src/pref.c:2693
+#: src/pref.c:2682
 msgid "Command Line"
 msgstr "Línia d'ordres"
 
-#: src/pref.c:2718 src/pref.c:2753
+#: src/pref.c:2707 src/pref.c:2742
 msgid "Suggest"
 msgstr "Suggeriment"
 
-#: src/pref.c:2723
+#: src/pref.c:2712
 msgid "Searches the path for the game executable"
 msgstr "Cerca l'executable del joc en el camí"
 
-#: src/pref.c:2730
+#: src/pref.c:2719
 msgid "Working Directory"
 msgstr "Directori de treball"
 
-#: src/pref.c:2757
+#: src/pref.c:2746
 msgid "Tries to guess the working directory based on the command line"
 msgstr ""
 "Tracta d'endevinar el directori de treball basant-se en la línia d'ordres"
 
-#: src/pref.c:2777
+#: src/pref.c:2766
 msgid "Custom CFG"
 msgstr "CFG personalitzada"
 
-#: src/pref.c:2870 src/xqf-ui.c:138
+#: src/pref.c:2858 src/xqf-ui.c:138
 msgid "Game"
 msgstr "Joc"
 
-#: src/pref.c:2876
+#: src/pref.c:2864
 msgid "Arguments"
 msgstr "Arguments"
 
@@ -657,199 +894,199 @@ msgstr "Introduïu el nom del joc des de la columna de jocs"
 msgid "Enter the arguments separated by spaces"
 msgstr "Introduïu els arguments separats per espais"
 
-#: src/pref.c:2940
+#: src/pref.c:2938
 msgid "Add Defaults"
 msgstr "Afegeix valors predeterminats"
 
-#: src/pref.c:2947
+#: src/pref.c:2944
 msgid "Add/Update"
 msgstr "Afegeix/Actualitza"
 
-#: src/pref.c:3204
+#: src/pref.c:3131
 msgid "Common Options"
 msgstr "Opcions comuns"
 
-#: src/pref.c:3214
+#: src/pref.c:3140
 msgid "Disable CD Audio"
 msgstr "Inhabilita el CD Audio"
 
-#: src/pref.c:3221
+#: src/pref.c:3147
 msgid "Disable Sound"
 msgstr "Inhabilita el so"
 
-#: src/pref.c:3243
+#: src/pref.c:3169
 msgid "Do not set (use game default)"
 msgstr "No estableix (utilitza el valor per defecte del joc)"
 
-#: src/pref.c:3244
+#: src/pref.c:3170
 msgid "Automatically calculate from server ping time"
 msgstr "Calcula automàticament del temps de resposta del servidor"
 
-#: src/pref.c:3245
+#: src/pref.c:3171
 msgid "Fixed value"
 msgstr "Valor fixe"
 
-#: src/pref.c:3329
+#: src/pref.c:3255
 msgid "Masterserver Protocol Version"
 msgstr "Versió de protocol del servidor mestre"
 
-#: src/pref.c:3349
+#: src/pref.c:3275
 msgid "set fs_game on connect"
 msgstr "estableix fs_game al connectar"
 
-#: src/pref.c:3356
+#: src/pref.c:3282
 msgid "set cl_punkbuster on connect"
 msgstr "estableix cl_punkbuster al connectar"
 
-#: src/pref.c:3363
+#: src/pref.c:3289
 msgid "enable console"
 msgstr "habilita la consola"
 
-#: src/pref.c:3412
+#: src/pref.c:3338
 msgid "Pass memory settings on command line"
 msgstr "Passa la configuració de memòria en la línia d'ordres"
 
-#: src/pref.c:3429 src/pref.c:3451 src/pref.c:3473
+#: src/pref.c:3355 src/pref.c:3377 src/pref.c:3399
 msgid "MB"
 msgstr "MiB"
 
-#: src/pref.c:3433
+#: src/pref.c:3359
 msgid "com_hunkmegs"
 msgstr "com_hunkmegs"
 
-#: src/pref.c:3455
+#: src/pref.c:3381
 msgid "com_zonemegs"
 msgstr "com_zonemegs"
 
-#: src/pref.c:3477
+#: src/pref.c:3403
 msgid "com_soundmegs"
 msgstr "com_soundmegs"
 
-#: src/pref.c:3486
+#: src/pref.c:3412
 msgid "Preset values"
 msgstr "Valors predeterminats"
 
-#: src/pref.c:3493
+#: src/pref.c:3419
 msgid "Default"
 msgstr "Per defecte"
 
-#: src/pref.c:3498
+#: src/pref.c:3424
 msgid "128MB"
 msgstr "128MiB"
 
-#: src/pref.c:3503
+#: src/pref.c:3429
 msgid ">256MB"
 msgstr ">256MiB"
 
-#: src/pref.c:3520 src/pref.c:3741 src/pref.c:3746 src/scripts.c:532
+#: src/pref.c:3446 src/pref.c:3664 src/pref.c:3669 src/scripts.c:531
 msgid "Options"
 msgstr "Opcions"
 
-#: src/pref.c:3523
+#: src/pref.c:3449
 msgid "Memory"
 msgstr "Memòria"
 
-#: src/pref.c:3551
+#: src/pref.c:3477
 msgid "The highest weapon that Quake should switch to..."
 msgstr "L'arma més alta a la qual hauria de canviar Quake..."
 
-#: src/pref.c:3563
+#: src/pref.c:3489
 msgid "upon a weapon pickup"
 msgstr "en recollir un arma"
 
-#: src/pref.c:3581
+#: src/pref.c:3506
 msgid "upon a backpack pickup"
 msgstr "en recollir una motxila"
 
-#: src/pref.c:3601
+#: src/pref.c:3525
 msgid "Disable auto-aiming"
 msgstr "Inhabilita l'autoapuntar"
 
-#: src/pref.c:3638
+#: src/pref.c:3562
 msgid "Skins"
 msgstr "Pells"
 
-#: src/pref.c:3660
+#: src/pref.c:3583
 msgid "Rate"
 msgstr "Valor"
 
-#: src/pref.c:3681
+#: src/pref.c:3604
 msgid "pushlatency"
 msgstr "pushlatency"
 
-#: src/pref.c:3696
+#: src/pref.c:3619
 msgid "Troubleshooting"
 msgstr "Solució de problemes"
 
-#: src/pref.c:3709
+#: src/pref.c:3632
 msgid "Disable delta-compression (cl_nodelta)"
 msgstr "Inhabilita la compressió-delta (cl_nodelta)"
 
-#: src/pref.c:3723
+#: src/pref.c:3646
 msgid "Disable player/entity prediction (cl_predict_players)"
 msgstr "Inhabilita la predicció de jugadors/entitats (cl_predict_players)"
 
-#: src/pref.c:3740
+#: src/pref.c:3663
 msgid "Weapons"
 msgstr "Armes"
 
-#: src/pref.c:3742 src/pref.c:3747 src/pref.c:3751 src/pref.c:3755
+#: src/pref.c:3665 src/pref.c:3670 src/pref.c:3674 src/pref.c:3678
 msgid "Player Profile"
 msgstr "Perfil del jugador"
 
-#: src/pref.c:3797
+#: src/pref.c:3720
 msgid "Server List"
 msgstr "Llista de servidors"
 
-#: src/pref.c:3809
+#: src/pref.c:3732
 msgid "Show host names"
 msgstr "Mostra els noms dels servidors"
 
-#: src/pref.c:3812
+#: src/pref.c:3735
 msgid "Show hostnames instead of IP addresses if possible"
 msgstr "Mostra els noms dels servidors en comptes d'adreces IP si és possible"
 
-#: src/pref.c:3822
+#: src/pref.c:3745
 msgid "Show default port"
 msgstr "Mostra el port per defecte"
 
-#: src/pref.c:3834
+#: src/pref.c:3757
 msgid "Do not count bots as players"
 msgstr "No comptes els robots com jugadors"
 
-#: src/pref.c:3847
+#: src/pref.c:3770
 msgid "Sort servers real-time during refresh"
 msgstr "Ordena els servidors en temps real durant el refresc"
 
-#: src/pref.c:3859
+#: src/pref.c:3782
 msgid "Refresh on update"
 msgstr "Refresca a l'actualitzar"
 
-#: src/pref.c:3871
+#: src/pref.c:3794
 msgid "Resolve hostnames on update"
 msgstr "Resol els noms dels servidors en actualitzar"
 
-#: src/pref.c:3873
+#: src/pref.c:3796
 msgid "Enable or disable DNS resolution of IP addresses"
 msgstr "Habilita o inhabilita la resolució DNS d'adreces IP"
 
-#: src/pref.c:3885
+#: src/pref.c:3808
 msgid "Show only configured games"
 msgstr "Mostra només els jocs configurats"
 
-#: src/pref.c:3912
+#: src/pref.c:3835
 msgid "On Startup"
 msgstr "En iniciar"
 
-#: src/pref.c:3924
+#: src/pref.c:3847
 msgid "Refresh Favorites"
 msgstr "Refresca els favorits"
 
-#: src/pref.c:3940
+#: src/pref.c:3863
 msgid "Scan for maps"
 msgstr "Cerca mapes"
 
-#: src/pref.c:3944
+#: src/pref.c:3867
 msgid ""
 "Scan game directories for installed maps. xqf will take longer to start up "
 "when enabled."
@@ -857,23 +1094,23 @@ msgstr ""
 "Analitza els directoris del joc per a cercar mapes instal·lats. xqf tardarà "
 "més en iniciar-se quan està habilitat."
 
-#: src/pref.c:3950
+#: src/pref.c:3873
 msgid "scan now"
 msgstr "analitza ara"
 
-#: src/pref.c:3964
+#: src/pref.c:3888
 msgid "When launching a game..."
 msgstr "En llançar un joc..."
 
-#: src/pref.c:3976
+#: src/pref.c:3900
 msgid "Terminate XQF"
 msgstr "Finalitza XQF"
 
-#: src/pref.c:3989
+#: src/pref.c:3913
 msgid "Create LaunchInfo.txt"
 msgstr "Crea un LaunchInfo.txt"
 
-#: src/pref.c:3993
+#: src/pref.c:3917
 msgid ""
 "Creates the file ~/.config/xqf/LaunchInfo.txt with: ping ip:port name map "
 "curplayers maxplayers"
@@ -881,145 +1118,159 @@ msgstr ""
 "Crea el fitxer ~/.config/xqf/LaunchInfo.txt amb: ping ip:port nom mapa "
 "jugactuals jugmax"
 
-#: src/pref.c:4003
+#: src/pref.c:3927
 msgid "Execute prelaunch"
 msgstr "Executa prelaunch"
 
-#: src/pref.c:4007
+#: src/pref.c:3931
 msgid ""
 "Executes ~/.config/xqf/PreLaunch (if it exists) before launching the game"
 msgstr "Executa ~/.config/xqf/PreLaunch (si existeix) abans de llançar el joc"
 
-#: src/pref.c:4017
+#: src/pref.c:3941
 msgid "On Exit"
 msgstr "En sortir"
 
-#: src/pref.c:4029
+#: src/pref.c:3953
 msgid "Save server lists"
 msgstr "Desa les llistes de servidors"
 
-#: src/pref.c:4041
+#: src/pref.c:3965
 msgid "Save server information"
 msgstr "Desa la informació sobre els servidors"
 
-#: src/pref.c:4054
+#: src/pref.c:3978
 msgid "Save player information"
 msgstr "Desa la informació sobre els jugadors"
 
-#: src/pref.c:4093
+#: src/pref.c:4016
 msgid "QStat Options"
 msgstr "Opcions de QStat"
 
-#: src/pref.c:4104
+#: src/pref.c:4027
 msgid "Number of simultaneous servers to query"
 msgstr "Nombre de servidors simultanis a consultar"
 
-#: src/pref.c:4128
+#: src/pref.c:4049
 msgid "Number of retries"
 msgstr "Nombre de reintents"
 
-#: src/pref.c:4147
+#: src/pref.c:4067
 msgid "Source IP Address"
 msgstr "Adreça IP font"
 
-#: src/pref.c:4168
+#: src/pref.c:4087
 msgid "Source Port Range"
 msgstr "Rang de ports font"
 
-#: src/pref.c:4261 src/pref.c:4324
+#: src/pref.c:4153
+msgid "(none)"
+msgstr ""
+
+#: src/pref.c:4189 src/pref.c:4253
 #, fuzzy
-msgid "Select a File"
+msgid "Audio files"
+msgstr "Fitxers de so"
+
+#: src/pref.c:4193 src/pref.c:4258
+#, fuzzy
+msgid "All files"
+msgstr "Tots els jocs"
+
+#: src/pref.c:4203 src/pref.c:4245
+#, fuzzy
+msgid "Select a sound file"
 msgstr "Filtre de servidors"
 
-#: src/pref.c:4298
+#: src/pref.c:4353
 msgid "Sound Enable / Disable"
 msgstr "Habilita / inhabilita el so"
 
-#: src/pref.c:4311
+#: src/pref.c:4366
 msgid "Enable Sound"
 msgstr "Habilita el so"
 
-#: src/pref.c:4319
+#: src/pref.c:4374
 msgid "Player program"
 msgstr "Programa reproductor"
 
-#: src/pref.c:4339
+#: src/pref.c:4383
+msgid "Command to play a sound file (e.g. mpv, paplay, aplay)"
+msgstr ""
+
+#: src/pref.c:4394
 msgid "Sound Files"
 msgstr "Fitxers de so"
 
-#: src/pref.c:4348
+#: src/pref.c:4403
 msgid "XQF Start"
 msgstr "Inici d'XQF"
 
-#: src/pref.c:4349
+#: src/pref.c:4404
 msgid "XQF Quit"
 msgstr "Sortida d'XQF"
 
-#: src/pref.c:4350
+#: src/pref.c:4405
 msgid "Update Done"
 msgstr "Actualització feta"
 
-#: src/pref.c:4351
+#: src/pref.c:4406
 msgid "Refresh Done"
 msgstr "Refresc fet"
 
-#: src/pref.c:4352
-msgid "Stop"
-msgstr "Para"
-
-#: src/pref.c:4353
+#: src/pref.c:4408
 msgid "Server Connect"
 msgstr "Connexió al servidor"
 
-#: src/pref.c:4354
+#: src/pref.c:4409
 msgid "Redial Success"
 msgstr "Èxit de la recrida"
 
-#: src/pref.c:4465
+#: src/pref.c:4521
 msgid "XQF: Preferences"
 msgstr "XQF: Preferències"
 
-#: src/pref.c:4485
+#: src/pref.c:4541
 msgid "General"
 msgstr "General"
 
-#: src/pref.c:4497
+#: src/pref.c:4553
 msgid "Games"
 msgstr "Jocs"
 
-#: src/pref.c:4502
+#: src/pref.c:4558
 msgid "Appearance"
 msgstr "Aparença"
 
-#: src/pref.c:4507
+#: src/pref.c:4563
 msgid "QStat"
 msgstr "QStat"
 
-#: src/pref.c:4512
+#: src/pref.c:4568
 msgid "Sounds"
 msgstr "Sons"
 
-#: src/pref.c:4517
+#: src/pref.c:4573
 msgid "Scripts"
 msgstr "Seqüències"
 
-#: src/pref.c:4653
+#: src/pref.c:4701
 msgid ""
 "Unable to get user name/home directory/XDG config directory/tmp directory"
 msgstr ""
 "No s'ha pogut obtenir el nom d'usuari/directori personal/directori de "
 "configuració XDG/directori temporal"
 
-#: src/pref.c:4952
+#: src/pref.c:5000
 #, c-format
 msgid "Searching for %s maps"
 msgstr "S'estan cercant mapes per a %s"
 
-#: src/pref.c:4998
+#: src/pref.c:5040
 msgid "Game Command Selection"
 msgstr "Selecció de l'ordre del joc"
 
-#: src/pref.c:5006
+#: src/pref.c:5049
 msgid "Game Directory Selection"
 msgstr "Selecció del directori del joc"
 
@@ -1035,63 +1286,63 @@ msgstr "Subcadena"
 msgid "Regular Expression"
 msgstr "Expressió regular"
 
-#: src/psearch.c:175
+#: src/psearch.c:177
 msgid "Find Player"
 msgstr "Cerca el jugador"
 
-#: src/psearch.c:186
+#: src/psearch.c:188
 msgid "Find Player:"
 msgstr "Cerca el jugador:"
 
-#: src/psearch.c:379
+#: src/psearch.c:386
 msgid "Player not found."
 msgstr "No s'ha trobat el jugador."
 
-#: src/psearch.c:383
+#: src/psearch.c:390
 msgid "XQF: End of server list reached"
 msgstr "XQF: S'ha arribat al final de la llista de servidors"
 
-#: src/psearch.c:384
+#: src/psearch.c:391
 msgid "Continue search from beginning?"
 msgstr "Voleu continuar la cerca des del principi?"
 
-#: src/rcon.c:597
+#: src/rcon.c:592
 msgid "Cmd:"
 msgstr "Ordre:"
 
-#: src/rcon.c:619
+#: src/rcon.c:611
 msgid "Send"
 msgstr "Envia"
 
-#: src/rcon.c:628
+#: src/rcon.c:620
 msgid "Status"
 msgstr "Estat"
 
-#: src/rcon.c:637
+#: src/rcon.c:629
 msgid "Clear"
 msgstr "Neteja"
 
-#: src/rcon.c:659 src/statistics.c:817
+#: src/rcon.c:650 src/statistics.c:797
 msgid "Close"
 msgstr "Tanca"
 
-#: src/rcon.c:761
+#: src/rcon.c:750
 #, c-format
 msgid "Usage: %s [server type] <ip> <port>\n"
 msgstr "Forma d'ús: %s [tipus de servidor] <ip> <port>\n"
 
-#: src/rcon.c:762
+#: src/rcon.c:751
 #, c-format
 msgid "  server type is either --qws, --hws, --hls or --dm3s.\n"
 msgstr "  el tipus de servidor és --qws, --hws, --hls o --dm3s..\n"
 
-#: src/rcon.c:763
+#: src/rcon.c:752
 #, c-format
 msgid "  If no server type is specified, Q3 style rcon is assumed.\n"
 msgstr ""
 "  Si no s'especifica cap tipus de servidor, s'asumeix rcon d'estil Q3.\n"
 
-#: src/rcon.c:794
+#: src/rcon.c:783
 msgid "Password: "
 msgstr "Contrasenya: "
 
@@ -1125,7 +1376,7 @@ msgstr ""
 "***\n"
 "***"
 
-#: src/redial.c:201
+#: src/redial.c:200
 msgid "Launch now"
 msgstr "Llança ara"
 
@@ -1157,24 +1408,20 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: src/scripts.c:727
+#: src/scripts.c:643
 msgid "Install..."
 msgstr ""
 
-#: src/scripts.c:734
-msgid "Remove"
-msgstr "Suprimeix"
-
-#: src/scripts.c:762
+#: src/scripts.c:678
 msgid "Invalid script"
 msgstr ""
 
-#: src/scripts.c:966
+#: src/scripts.c:875
 #, c-format
 msgid "Script %s already exists, overwrite?"
 msgstr ""
 
-#: src/scripts.c:983
+#: src/scripts.c:890
 #, c-format
 msgid ""
 "Script saved as\n"
@@ -1182,7 +1429,7 @@ msgid ""
 "Please close and reopen the preferences dialog"
 msgstr ""
 
-#: src/scripts.c:989
+#: src/scripts.c:894
 msgid "Select Script"
 msgstr ""
 
@@ -1269,47 +1516,43 @@ msgstr "Refrescat:"
 msgid "Last answer:"
 msgstr "Última resposta:"
 
-#: src/srv-prop.c:560
+#: src/srv-prop.c:547
 msgid "Reserved Slots:"
 msgstr "Llocs reservats:"
 
-#: src/srv-prop.c:579
+#: src/srv-prop.c:566
 msgid "Sources"
 msgstr "Fonts"
 
-#: src/srv-prop.c:630
+#: src/srv-prop.c:616
 msgid "Custom CFG:"
 msgstr "CFG personalitzada:"
 
-#: src/srv-prop.c:680
+#: src/srv-prop.c:666
 msgid "Server Password"
 msgstr "Contrasenya del servidor"
 
-#: src/srv-prop.c:686
+#: src/srv-prop.c:672
 msgid "Spectator Password"
 msgstr "Contrasenya d'espectador"
 
-#: src/srv-prop.c:693
+#: src/srv-prop.c:679
 msgid "RCon/Admin Password"
 msgstr "Contrasenya d'RCon/Admin"
 
-#: src/srv-prop.c:723
+#: src/srv-prop.c:709
 msgid "This server sucks"
 msgstr "Aquest servidor és dolent"
 
-#: src/srv-prop.c:761
-msgid "Properties"
-msgstr "Propietats"
-
-#: src/srv-prop.c:805
+#: src/srv-prop.c:791
 msgid "Info"
 msgstr "Info"
 
-#: src/srv-prop.c:810
+#: src/srv-prop.c:796
 msgid "Passwords"
 msgstr "Contrasenyes"
 
-#: src/srv-prop.c:815
+#: src/srv-prop.c:801
 msgid "Comment"
 msgstr "Comentari"
 
@@ -1377,7 +1620,7 @@ msgstr "Caiguts "
 msgid "Info n/a"
 msgstr "Info n/d"
 
-#: src/statistics.c:81 src/statistics.c:492 src/xqf-ui.c:124
+#: src/statistics.c:81 src/statistics.c:489 src/xqf-ui.c:124
 msgid "Players"
 msgstr "Jugadors"
 
@@ -1393,39 +1636,39 @@ msgstr "SO/CPU"
 msgid "Country"
 msgstr "País"
 
-#: src/statistics.c:444 src/statistics.c:486 src/statistics.c:491
+#: src/statistics.c:442 src/statistics.c:483 src/statistics.c:488
 msgid "Total"
 msgstr "Total"
 
-#: src/statistics.c:481
+#: src/statistics.c:478
 msgid "CPU  \\  OS"
 msgstr "CPU  \\  SO"
 
-#: src/statistics.c:704
+#: src/statistics.c:688
 msgid "All Games"
 msgstr "Tots els jocs"
 
-#: src/statistics.c:772 src/statistics.c:781
+#: src/statistics.c:752 src/statistics.c:761
 msgid "Statistics"
 msgstr "Estadístiques"
 
-#: src/utils.c:916
+#: src/utils.c:915
 msgid "<error>"
 msgstr "<error>"
 
-#: src/utils.c:1139
+#: src/utils.c:1138
 msgid "Can't open source file for reading"
 msgstr "No es pot obrir el fitxer de font per a lectura"
 
-#: src/utils.c:1145
+#: src/utils.c:1144
 msgid "Can't open destination file for writing"
 msgstr "No es pot obrir el fitxer de destí per a escriptura"
 
-#: src/utils.c:1151
+#: src/utils.c:1150
 msgid "write error on destination file"
 msgstr "s'ha produït un error d'escriptura al fitxer de destinació"
 
-#: src/utils.c:1157
+#: src/utils.c:1156
 msgid "read error on source file"
 msgstr "s'ha produit un error de lectura al fitxer font"
 
@@ -1481,41 +1724,51 @@ msgstr "Temps"
 msgid "Source"
 msgstr "Font"
 
-#: src/xqf.c:331
+#: src/xqf.c:329
+#, fuzzy
+msgid "No Filter"
+msgstr "Filtre S"
+
+#: src/xqf.c:338
+#, fuzzy
+msgid "Filter"
+msgstr "Filtres"
+
+#: src/xqf.c:363
 #, c-format
 msgid "No Server Filter Active"
 msgstr "No hi ha filtres de servidors actius"
 
-#: src/xqf.c:336
+#: src/xqf.c:368
 #, c-format
 msgid "Server Filter: %s"
 msgstr "Filtre de servidor: %s"
 
-#: src/xqf.c:339
+#: src/xqf.c:371
 #, c-format
 msgid "Server Filter: %d"
 msgstr "Filtre de servidor: %d"
 
-#: src/xqf.c:459
+#: src/xqf.c:466
 msgid "Updating lists..."
 msgstr "S'estan actualitzant les llistes..."
 
-#: src/xqf.c:463
+#: src/xqf.c:470
 #, c-format
 msgid "Resolving host names: %d/%d"
 msgstr "S'estan resolguent els noms dels servidors: %d/%d"
 
-#: src/xqf.c:467
+#: src/xqf.c:474
 #, c-format
 msgid "Refreshing: %d/%d"
 msgstr "S'està refrescant: %d/%d"
 
-#: src/xqf.c:471
+#: src/xqf.c:478
 #, c-format
 msgid "Resolving host addresses: %d/%d"
 msgstr "S'estan resolguent les adreces dels servidors: %d/%d"
 
-#: src/xqf.c:586
+#: src/xqf.c:593
 #, c-format
 msgid ""
 "\n"
@@ -1528,7 +1781,7 @@ msgstr ""
 "Aquest servidor és dolent per la raó següent:\n"
 "%s"
 
-#: src/xqf.c:593
+#: src/xqf.c:600
 #, c-format
 msgid ""
 "You said this servers sucks.\n"
@@ -1537,7 +1790,7 @@ msgstr ""
 "Heu dit que aquest servidor és dolent.\n"
 "Esteu segur de voler avorrir-vos de nou?%s"
 
-#: src/xqf.c:605
+#: src/xqf.c:612
 #, c-format
 msgid ""
 "This server is not compatible with the version of %s you have installed.\n"
@@ -1546,7 +1799,7 @@ msgstr ""
 "Aquest servidor no és compatible amb la versió de %s que teniu instal·lada.\n"
 "Voleu executar el client de totes maneres?"
 
-#: src/xqf.c:616
+#: src/xqf.c:623
 #, c-format
 msgid ""
 "Server %s:%d is %s.\n"
@@ -1557,15 +1810,15 @@ msgstr ""
 "\n"
 "Voleu executar el client de totes maneres?"
 
-#: src/xqf.c:619
+#: src/xqf.c:626
 msgid "unreachable"
 msgstr "inaccessible"
 
-#: src/xqf.c:619
+#: src/xqf.c:626
 msgid "down"
 msgstr "aturat"
 
-#: src/xqf.c:628
+#: src/xqf.c:635
 #, c-format
 msgid ""
 "Server %s:%d is full.\n"
@@ -1576,41 +1829,41 @@ msgstr ""
 "\n"
 "Voleu executar el client de totes maneres?"
 
-#: src/xqf.c:691 src/xqf.c:712 src/xqf.c:1538
+#: src/xqf.c:698 src/xqf.c:719 src/xqf.c:1556
 msgid "Save Password"
 msgstr "Desa la contrasenya"
 
-#: src/xqf.c:691
+#: src/xqf.c:698
 msgid "Spectator Password:"
 msgstr "Contrasenya d'espectador:"
 
-#: src/xqf.c:712 src/xqf.c:1538
+#: src/xqf.c:719 src/xqf.c:1556
 msgid "Server Password:"
 msgstr "Contrasenya del servidor:"
 
-#: src/xqf.c:915
+#: src/xqf.c:922
 msgid "Spectator"
 msgstr "Espectador"
 
-#: src/xqf.c:915 src/xqf.c:919
+#: src/xqf.c:922 src/xqf.c:926
 msgid "Demo name:"
 msgstr "Nom de la demo:"
 
-#: src/xqf.c:1100
+#: src/xqf.c:1107
 #, c-format
 msgid "Host %s not found"
 msgstr "No s'ha trobat el servidor %s"
 
-#: src/xqf.c:1120 src/xqf.c:2153
+#: src/xqf.c:1127 src/xqf.c:2240
 #, c-format
 msgid "\"%s\" is not valid host[:port] combination."
 msgstr "«%s» no és una combinació servidor[:port] vàlida."
 
-#: src/xqf.c:1220
+#: src/xqf.c:1227
 msgid "Remove selected servers from all lists?"
 msgstr "Voleu suprimir els servidors seleccionats de totes les llistes?"
 
-#: src/xqf.c:1301
+#: src/xqf.c:1308
 #, c-format
 msgid ""
 "For Gslist support you must install the 'gslist' program available from\n"
@@ -1622,11 +1875,11 @@ msgstr ""
 "%s\n"
 "No oblideu que heu d'executar «gslist -u» abans de poder utilitzar-lo."
 
-#: src/xqf.c:1375
+#: src/xqf.c:1382
 msgid "You have to select the server you want to delete"
 msgstr "Heu de seleccionar el servidor que voleu suprimir"
 
-#: src/xqf.c:1381
+#: src/xqf.c:1388
 #, c-format
 msgid ""
 "Master%s to delete:\n"
@@ -1637,69 +1890,45 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/xqf.c:1404
+#: src/xqf.c:1411
 #, c-format
 msgid "Find Player: %s"
 msgstr "Cerca jugador: %s"
 
-#: src/xqf.c:1611
-msgid "Connect"
-msgstr "Connecta"
-
-#: src/xqf.c:1612
-msgid "Observe"
-msgstr "Observa"
-
-#: src/xqf.c:1613
-msgid "Record Demo"
-msgstr "Filma demo"
-
-#: src/xqf.c:1614
-msgid "Refresh Selected"
-msgstr "Refresca els seleccionats"
-
-#: src/xqf.c:1615
+#: src/xqf.c:1628
 #, fuzzy
 msgid "Server Properties"
 msgstr "Propietats"
 
-#: src/xqf.c:1616
-msgid "Add to Favorites"
-msgstr "Afegeix als favorits"
-
-#: src/xqf.c:1617
-msgid "DNS Lookup"
-msgstr "Consulta de DNS"
-
-#: src/xqf.c:1618
+#: src/xqf.c:1631
 msgid "RCON"
 msgstr ""
 
-#: src/xqf.c:1640
+#: src/xqf.c:1653
 #, fuzzy
 msgid "Add to Red filter"
 msgstr "Afegeix al filtre de jugadors"
 
-#: src/xqf.c:1641
+#: src/xqf.c:1654
 #, fuzzy
 msgid "Add to Green filter"
 msgstr "Afegeix al filtre de jugadors"
 
-#: src/xqf.c:1642
+#: src/xqf.c:1655
 #, fuzzy
 msgid "Add to Blue filter"
 msgstr "Afegeix al filtre de jugadors"
 
-#: src/xqf.c:1794
+#: src/xqf.c:1846
 #, c-format
 msgid "%s Filter Enable / Disable"
 msgstr "Habilita / inhabilita el filtre de %s"
 
-#: src/xqf.c:2073
+#: src/xqf.c:2160
 msgid "no sound player configured"
 msgstr "no hi ha cap reproductor de so configurat"
 
-#: src/xqf.c:2107
+#: src/xqf.c:2194
 msgid ""
 "Usage:\n"
 "\txqf [OPTIONS]\n"
@@ -1720,32 +1949,11 @@ msgstr ""
 "\t--debug <nivell>\t\t\testableix el nivell de depuració\n"
 "\t--version\t\t\tmostra la versió i surt\n"
 
-#: src/xqf.c:2358
+#: src/xqf.c:2426
 #, c-format
 msgid "You need at least qstat version %s for xqf to function properly"
 msgstr ""
 "Necessiteu al menys la versió %s de qstat per a que xqf funcione correctament"
-
-#~ msgid "Update"
-#~ msgstr "Actualitza"
-
-#~ msgid "Update from master"
-#~ msgstr "Actualitza des del mestre"
-
-#~ msgid "Refresh"
-#~ msgstr "Refresca"
-
-#~ msgid "Refresh current list"
-#~ msgstr "Refresca la llista actual"
-
-#~ msgid "Ref.Sel."
-#~ msgstr "Ref.Sel."
-
-#~ msgid "Refresh selected servers"
-#~ msgstr "Refresca els servidors seleccionats"
-
-#~ msgid "Record"
-#~ msgstr "Filma"
 
 #~ msgid "Quick Filter:"
 #~ msgstr "Filtre ràpid:"
@@ -1828,95 +2036,8 @@ msgstr ""
 #~ msgid "Done."
 #~ msgstr "Fet."
 
-#~ msgid "Add new Server"
-#~ msgstr "Afegeix"
-
-#~ msgid "Copy"
-#~ msgstr "Copia"
-
 #~ msgid "Copy+"
 #~ msgstr "Copia+"
-
-#~ msgid "RCon"
-#~ msgstr "RCon"
-
-#~ msgid "_Statistics"
-#~ msgstr "E_stadístiques"
-
-#~ msgid "_Exit"
-#~ msgstr "_Surt"
-
-#~ msgid "Add _Master"
-#~ msgstr "Afegeix un _mestre"
-
-#~ msgid "_Rename Master"
-#~ msgstr "_Reanomena el mestre"
-
-#~ msgid "D_elete Master"
-#~ msgstr "Suprim_eix el mestre"
-
-#~ msgid "_Clear Servers"
-#~ msgstr "_Neteja els servidors"
-
-#~ msgid "_Add new Server"
-#~ msgstr "_Afegeix un nou servidor"
-
-#~ msgid "Add to _Favorites"
-#~ msgstr "Afegeix a _favorits"
-
-#~ msgid "_Remove"
-#~ msgstr "_Suprimeix"
-
-#~ msgid "_Copy"
-#~ msgstr "_Copia"
-
-#~ msgid "_Copy+"
-#~ msgstr "_Copia+"
-
-#~ msgid "Add Default Masters"
-#~ msgstr "Afegeix els mestres predeterminats"
-
-#~ msgid "Add Gslist Masters"
-#~ msgstr "Afegeix els mestres Gslist"
-
-#~ msgid "_Find Player"
-#~ msgstr "Cerca _jugador"
-
-#~ msgid "Find A_gain"
-#~ msgstr "Cerca de _nou"
-
-#~ msgid "_Refresh"
-#~ msgstr "_Refresca"
-
-#~ msgid "Refresh _Selected"
-#~ msgstr "Refresca els _seleccionats"
-
-#~ msgid "_Update From Master"
-#~ msgstr "_Actualitza des del mestre"
-
-#~ msgid "Show _Host Names"
-#~ msgstr "Mostra els noms de ser_vidors"
-
-#~ msgid "Show Default _Port"
-#~ msgstr "Mostra els _ports per defecte"
-
-#~ msgid "_Connect"
-#~ msgstr "_Connecta"
-
-#~ msgid "_Observe"
-#~ msgstr "_Observa"
-
-#~ msgid "Record _Demo"
-#~ msgstr "Filma _demo"
-
-#~ msgid "DNS _Lookup"
-#~ msgstr "Cerca de _DNS"
-
-#~ msgid "_RCon"
-#~ msgstr "_Rcon"
-
-#~ msgid "_Properties"
-#~ msgstr "_Propietats"
 
 #~ msgid "_General"
 #~ msgstr "_General"
@@ -1942,48 +2063,9 @@ msgstr ""
 #~ msgid "Player _Filter"
 #~ msgstr "_Filtres de jugadors"
 
-#~ msgid "_About"
-#~ msgstr "_Quant a"
-
-#~ msgid "_File"
-#~ msgstr "_Fitxer"
-
-#~ msgid "_Edit"
-#~ msgstr "_Edita"
-
-#~ msgid "_View"
-#~ msgstr "_Visualitza"
-
-#~ msgid "_Server"
-#~ msgstr "_Servidor"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Preferències"
-
-#~ msgid "_Server Filters"
-#~ msgstr "Filtres de _servidors"
-
-#~ msgid "_Help"
-#~ msgstr "A_juda"
-
-#~ msgid "Mark as Red"
-#~ msgstr "Marca en roig"
-
-#~ msgid "Mark as Green"
-#~ msgstr "Marca en verd"
-
-#~ msgid "Mark as Blue"
-#~ msgstr "Marca en blau"
-
 #, c-format
 #~ msgid "%s Filter Configuration"
 #~ msgstr "Configuració del filtre de %s"
-
-#~ msgid "Configure"
-#~ msgstr "Configura"
-
-#~ msgid "Filters"
-#~ msgstr "Filtres"
 
 #~ msgid "gdk-pixbuf is not installed. Some icons may not be displayed"
 #~ msgstr ""
