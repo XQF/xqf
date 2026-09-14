@@ -22,7 +22,6 @@
 #include "debug.h"
 #include "pixmaps.h"
 #include "loadpixmap.h"
-#include "xpm/noflag.xpm"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -215,10 +214,7 @@ struct pixmap* get_pixmap_for_country(int id) {
 		return NULL;
 	}
 
-#ifdef GUI_GTK2
-	gdk_pixbuf_render_pixmap_and_mask(pix->pixbuf,&pix->pix,&pix->mask,255);
-#endif
-
+	pix->texture = gdk_texture_new_for_pixbuf (pix->pixbuf);
 	g_free (filename);
 
 	return pix;
@@ -235,13 +231,15 @@ struct pixmap* get_pixmap_for_country_with_fallback(int id) {
 	}
 
 	if (!flags[0].pixbuf) {
-		flags[0].pixbuf = gdk_pixbuf_new_from_xpm_data( (const char **)noflag_xpm);
+		char *fn = find_pixmap_directory ("noflag.png");
+		if (fn) {
+			flags[0].pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
+			if (flags[0].pixbuf)
+				flags[0].texture = gdk_texture_new_for_pixbuf (flags[0].pixbuf);
+			g_free (fn);
+		}
 		if (!flags[0].pixbuf)
 			flags[0].pixbuf = GINT_TO_POINTER(-1);
-#ifdef GUI_GTK2
-		else
-			gdk_pixbuf_render_pixmap_and_mask(flags[0].pixbuf,&flags[0].pix,&flags[0].mask,255);
-#endif
 	}
 	return &flags[0];
 }

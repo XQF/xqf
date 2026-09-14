@@ -503,13 +503,8 @@ int main (int argc, char* argv[]) {
 	fputs("enum server_type {\n", games_h_file);
 
 	// write server_type enum
-	// write xpm include
 	for (ptr = list, i = 0; ptr; ptr = ptr->next, i++) {
 		fprintf(games_h_file, "\t%s%s,\n", ptr->game->basic[TAG_type], i == 0 ? " = 0" : "");
-
-		if (ptr->game->basic[TAG_icon] != NULL) {
-			fprintf(icons_c_file, "#include \"xpm/%s\"\n", ptr->game->basic[TAG_icon]);
-		}
 	}
 
 	fputs("};\n", games_h_file);

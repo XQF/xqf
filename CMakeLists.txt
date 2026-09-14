@@ -1,23 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
 
-# Required since CMake 3.4 otherwise symbols are not exported and
-# XQF can't find some internal resources like compiled XPM images.
-#
-# See:
-# - https://cmake.org/cmake/help/latest/release/3.4.html
-# - https://cmake.org/cmake/help/v3.4/variable/CMAKE_ENABLE_EXPORTS.html
-# - https://cmake.org/cmake/help/v3.27/variable/CMAKE_ENABLE_EXPORTS.html
-# - https://cmake.org/cmake/help/v3.27/variable/CMAKE_EXECUTABLE_ENABLE_EXPORTS.html
-# - https://cmake.org/cmake/help/v3.27/prop_tgt/ENABLE_EXPORTS.html
-#
-# > Normally an executable does not export any symbols because it is the final program.
-# > It is possible for an executable to export symbols to be used by loadable modules.
-# > When this property is set to true CMake will allow other targets to "link" to the executable.
-#
-# For some reasons we need that for the executable to find embedded
-# data at run time.
-set(CMAKE_EXECUTABLE_ENABLE_EXPORTS ON)
-
 include(CheckCXXCompilerFlag)
 
 # Project information
@@ -49,7 +31,6 @@ set(DOMAIN "${PROJECT_NAME}")
 set(LINGUAS ca da de es fi fr pl ru)
 
 set(DEFAULT_QSTAT "qstat")
-set(DEFAULT_GTK_TARGET 2)
 
 # Macros
 macro(set_c_flag FLAG)
@@ -136,6 +117,7 @@ option(USE_CRUNCH "Enable Crunch decompressor support (DDS, KTX, CRN)" ON)
 
 option(BUILD_XQF "Build XQF" ON)
 option(BUILD_RCON "Build standalone RCON" ON)
+option(BUILD_TESTING "Build test suite" ON)
 
 set(QSTAT_HELP "QStat binary name")
 set(WITH_QSTAT "${DEFAULT_QSTAT}" CACHE STRING "${QSTAT_HELP}")
@@ -203,6 +185,7 @@ set(xqf_HEADERS_DIR ${CMAKE_SOURCE_DIR}/src)
 set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/addmaster.c
 	 ${CMAKE_SOURCE_DIR}/src/addserver.c
+	 ${CMAKE_SOURCE_DIR}/src/addr-parse.c
 	 ${CMAKE_SOURCE_DIR}/src/callbacks.c
 	 ${CMAKE_SOURCE_DIR}/src/config.c
 	 ${CMAKE_SOURCE_DIR}/src/country-filter.c
@@ -210,7 +193,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/dialogs.c
 	 ${CMAKE_SOURCE_DIR}/src/dns.c
 	 ${CMAKE_SOURCE_DIR}/src/filter.c
+	 ${CMAKE_SOURCE_DIR}/src/filter-eval.c
 	 ${CMAKE_SOURCE_DIR}/src/flt-player.c
+	 ${CMAKE_SOURCE_DIR}/src/player-filter-eval.c
 	 ${CMAKE_SOURCE_DIR}/src/game.c
 	 ${CMAKE_SOURCE_DIR}/src/history.c
 	 ${CMAKE_SOURCE_DIR}/src/host.c
@@ -220,6 +205,7 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/psearch.c
 	 ${CMAKE_SOURCE_DIR}/src/rc.c
 	 ${CMAKE_SOURCE_DIR}/src/rcon.c
+	 ${CMAKE_SOURCE_DIR}/src/rcon-msg.c
 	 ${CMAKE_SOURCE_DIR}/src/huffman.c
 	 ${CMAKE_SOURCE_DIR}/src/server.c
 	 ${CMAKE_SOURCE_DIR}/src/skin.c
@@ -235,6 +221,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/utils.c
 	 ${CMAKE_SOURCE_DIR}/src/xqf.c
 	 ${CMAKE_SOURCE_DIR}/src/xqf-ui.c
+	 ${CMAKE_SOURCE_DIR}/src/xqf-server-item.c
+	 ${CMAKE_SOURCE_DIR}/src/xqf-player-item.c
+	 ${CMAKE_SOURCE_DIR}/src/xqf-lists.c
 	 ${CMAKE_SOURCE_DIR}/src/zipped.c
 	 ${CMAKE_SOURCE_DIR}/src/redial.c
 	 ${CMAKE_SOURCE_DIR}/src/q3maps.c
@@ -253,7 +242,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/dialogs.h
 	 ${CMAKE_SOURCE_DIR}/src/dns.h
 	 ${CMAKE_SOURCE_DIR}/src/filter.h
+	 ${CMAKE_SOURCE_DIR}/src/filter-eval.h
 	 ${CMAKE_SOURCE_DIR}/src/flt-player.h
+	 ${CMAKE_SOURCE_DIR}/src/player-filter-eval.h
 	 ${CMAKE_SOURCE_DIR}/src/game.h
 	 ${CMAKE_SOURCE_DIR}/src/history.h
 	 ${CMAKE_SOURCE_DIR}/src/host.h
@@ -265,6 +256,7 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/quake_pal.h
 	 ${CMAKE_SOURCE_DIR}/src/rc.h
 	 ${CMAKE_SOURCE_DIR}/src/rcon.h
+	 ${CMAKE_SOURCE_DIR}/src/rcon-msg.h
 	 ${CMAKE_SOURCE_DIR}/src/huffman.h
 	 ${CMAKE_SOURCE_DIR}/src/hufffreq.h
 	 ${CMAKE_SOURCE_DIR}/src/server.h
@@ -280,6 +272,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/system.h
 	 ${CMAKE_SOURCE_DIR}/src/utils.h
 	 ${CMAKE_SOURCE_DIR}/src/xqf-ui.h
+	 ${CMAKE_SOURCE_DIR}/src/xqf-server-item.h
+	 ${CMAKE_SOURCE_DIR}/src/xqf-player-item.h
+	 ${CMAKE_SOURCE_DIR}/src/xqf-lists.h
 	 ${CMAKE_SOURCE_DIR}/src/xqf.h
 	 ${CMAKE_SOURCE_DIR}/src/zipped.h
 	 ${CMAKE_SOURCE_DIR}/src/redial.h
@@ -299,12 +294,14 @@ set(rcon_SOURCES
 	${CMAKE_SOURCE_DIR}/src/debug.c
 	${CMAKE_SOURCE_DIR}/src/huffman.c
 	${CMAKE_SOURCE_DIR}/src/rcon.c
+	${CMAKE_SOURCE_DIR}/src/rcon-msg.c
 	${CMAKE_SOURCE_DIR}/src/system.cpp
 	${CMAKE_SOURCE_DIR}/src/utils.c
 
 	${CMAKE_SOURCE_DIR}/src/debug.h
 	${CMAKE_SOURCE_DIR}/src/huffman.h
 	${CMAKE_SOURCE_DIR}/src/rcon.h
+	${CMAKE_SOURCE_DIR}/src/rcon-msg.h
 	${CMAKE_SOURCE_DIR}/src/system.h
 	${CMAKE_SOURCE_DIR}/src/utils.h
 )
@@ -555,19 +552,7 @@ set(flag_DATA
 	${CMAKE_SOURCE_DIR}/pixmaps/flags/country/zw.png
 )
 
-set(xpm_MAIN ${CMAKE_SOURCE_DIR}/pixmaps/xqf.xpm)
-
-set(xpm_DATA
-	 ${CMAKE_SOURCE_DIR}/src/xpm/update.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/refresh.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/refrsel.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/stop.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/connect.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/observe.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/record.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/sfilter.xpm
-	 ${CMAKE_SOURCE_DIR}/src/xpm/pfilter.xpm
- )
+file(GLOB png_DEFAULT_DATA ${CMAKE_SOURCE_DIR}/pixmaps/default/*.png)
 
 set(icon_SIZE 22 32 48 128)
 
@@ -586,32 +571,26 @@ if (BUILD_XQF OR BUILD_RCON)
 	add_executable(gamesxml2c ${CMAKE_SOURCE_DIR}/src/gamesxml2c.c)
 	target_link_libraries(gamesxml2c xml2)
 
-	# Custom build rule for converting games.xml to games.c
+	# Custom build rule for converting games.xml to games.c/games.h
 	add_custom_command(
-		OUTPUT ${CMAKE_BINARY_DIR}/games.c
+		OUTPUT ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h
 		COMMAND gamesxml2c ${CMAKE_SOURCE_DIR}/src/games.xml ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h ${CMAKE_BINARY_DIR}/icons.c
 		MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
 		DEPENDS gamesxml2c)
 
+	# Anything that includes defs.h (via GAMES_H_INCLUDE) needs games.h to
+	# exist first. game.c/rcon.c get this via their own OBJECT_DEPENDS
+	# below; this target lets other consumers (tests/) depend on it too,
+	# instead of relying on being built after xqf/rcon by luck of the
+	# scheduler under -j.
+	add_custom_target(generate_games DEPENDS ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h)
+
 	# Define games.c filename for including in src/game.c
 	add_definitions(-DGAMES_C_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
 	add_definitions(-DGAMES_H_INCLUDE="${CMAKE_BINARY_DIR}/games.h")
-	add_definitions(-DICONS_C_INCLUDE="${CMAKE_BINARY_DIR}/icons.c")
 endif()
 
 if (BUILD_XQF)
-	set(GTK_TARGET_HELP "GTK target (2 or 3)")
-	set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}")
-
-	# Default GTK_TARGET setting
-	if (NOT (GTK_TARGET STREQUAL "2" OR GTK_TARGET STREQUAL "3"))
-		set(GTK_TARGET "${DEFAULT_GTK_TARGET}" CACHE STRING "${GTK_TARGET_HELP}" FORCE)
-	endif()
-
-	# GUI definitions
-	if (GTK_TARGET STREQUAL "2")
-		set_c_cxx_flag("-Wno-deprecated-declarations")
-	endif()
 
 	# Other definitions
 	if (USE_GEOIP)
@@ -628,7 +607,7 @@ if (BUILD_XQF)
 if(NOT UNZIP_FOUND)
   pkg_check_modules(UNZIP REQUIRED minizip)
 endif()
-	pkg_check_modules(GTK REQUIRED gtk+-${GTK_TARGET}.0)
+	pkg_check_modules(GTK REQUIRED gtk4>=4.0)
 
 	include_directories(${GTK_INCLUDE_DIRS})
 	link_directories(${GTK_LIBRARY_DIRS})
@@ -658,8 +637,12 @@ endif()
 	# Compile and link
 	add_executable(xqf ${xqf_SOURCES})
 	target_compile_definitions(xqf PUBLIC BUILD_XQF)
-	target_compile_definitions(xqf PUBLIC GUI_GTK${GTK_TARGET})
-	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} dl m)
+	target_compile_definitions(xqf PUBLIC GUI_GTK4)
+	# Suppress deprecated-declarations during the GTK4 migration: srv-info.c,
+	# xqf-ui.c and related files intentionally keep GtkTreeView/GtkTreeStore
+	# until those panels are ported to GtkListView/GtkColumnView.
+	target_compile_options(xqf PRIVATE -Wno-deprecated-declarations)
+	target_link_libraries(xqf ${UNZIP_LIBRARIES} ${GTK_LIBRARIES} m)
 
 	if (USE_GEOIP)
 		target_link_libraries(xqf GeoIP)
@@ -708,15 +691,12 @@ endif()
 		DESTINATION "${CMAKE_INSTALL_PREFIX}${XQF_BIN_DIR}")
 
 	# UI
-	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf-gtk${GTK_TARGET}.ui
+	install(FILES ${CMAKE_SOURCE_DIR}/src/xqf.ui
 	DESTINATION ${PACKAGE_DATA_DIR}/ui)
 
 	# Icons
-	install(FILES ${xpm_DATA}
-		DESTINATION ${PACKAGE_DATA_DIR}/xpm)
-
-	install(FILES ${xpm_MAIN}
-		DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+	install(FILES ${png_DEFAULT_DATA}
+		DESTINATION ${PACKAGE_DATA_DIR}/default)
 
 	install(FILES ${flag_DATA}
 		DESTINATION ${PACKAGE_DATA_DIR}/default/flags)
@@ -771,4 +751,9 @@ if (BUILD_RCON)
 	# Executable
 	install(TARGETS rcon
 		DESTINATION "${CMAKE_INSTALL_PREFIX}${XQF_BIN_DIR}")
+endif()
+
+if (BUILD_TESTING)
+	enable_testing()
+	add_subdirectory(tests)
 endif()

@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 
 #include "xqf-ui.h"
+#include "xqf-utils.h"
 #include "pref.h"
 #include "utils.h"
 #include "pixmaps.h"
@@ -46,7 +47,7 @@ static guchar quake2_pallete[768] = {
 };
 
 
-static GdkColor pcolors[14];
+static GdkRGBA pcolors[14];
 static int pcolors_allocated = FALSE;
 
 static guchar gamma_lookup[256];
@@ -269,7 +270,11 @@ void draw_qw_skin (GtkWidget *image, guchar *data, int top, int bottom) {
 		}
 	}
 
-	gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
+	{
+		GdkTexture *tex = gdk_texture_new_for_pixbuf (pixbuf);
+		gtk_image_set_from_paintable (GTK_IMAGE (image), GDK_PAINTABLE (tex));
+		g_object_unref (tex);
+	}
 
 	g_object_unref (G_OBJECT (pixbuf));
 }
@@ -318,7 +323,11 @@ void draw_q2_skin (GtkWidget *image, guchar *data, int scale) {
 
 	g_free (buf);
 
-	gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
+	{
+		GdkTexture *tex = gdk_texture_new_for_pixbuf (pixbuf);
+		gtk_image_set_from_paintable (GTK_IMAGE (image), GDK_PAINTABLE (tex));
+		g_object_unref (tex);
+	}
 
 	g_object_unref (G_OBJECT (pixbuf));
 }
@@ -399,78 +408,72 @@ static gushort convert_color (unsigned c) {
 }
 
 
-void allocate_quake_player_colors (GdkWindow *window) {
-#ifdef GUI_GTK2
-	GdkColormap *colormap;
-#endif
+void allocate_quake_player_colors (void) {
 	int i, j;
 
 	if (!pcolors_allocated) {
-#ifdef GUI_GTK2
-		colormap = gdk_drawable_get_colormap (GDK_DRAWABLE (window));
-#endif
-
 		for (i = 0; i < 14; i++) {
 			j = (i<8)? 11 : 15 - 11;
-			pcolors[i].pixel = 0;
-			pcolors[i].red   = convert_color (quake_pallete [(i*16 + j)*3 + 0]);
-			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]);
-			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]);
-#ifdef GUI_GTK2
-			if (!gdk_colormap_alloc_color (colormap, &pcolors[i], FALSE, TRUE)) {
-				g_warning ("unable to allocate color: ( %d %d %d )",
-						pcolors[i].red, pcolors[i].green, pcolors[i].blue);
-			}
-#endif
+			pcolors[i].red   = convert_color (quake_pallete [(i*16 + j)*3 + 0]) / 65535.0;
+			pcolors[i].green = convert_color (quake_pallete [(i*16 + j)*3 + 1]) / 65535.0;
+			pcolors[i].blue  = convert_color (quake_pallete [(i*16 + j)*3 + 2]) / 65535.0;
+			pcolors[i].alpha = 1.0;
 		}
 		pcolors_allocated = TRUE;
 	}
 }
 
 
-void set_bg_color (GtkWidget *widget, int color) {
-	GtkStyle *style;
-
-	style = gtk_style_copy (gtk_widget_get_style (widget));
-	style->bg [GTK_STATE_NORMAL]   = pcolors [color];
-	style->bg [GTK_STATE_ACTIVE]   = pcolors [color];
-	style->bg [GTK_STATE_PRELIGHT] = pcolors [color];
-	style->bg [GTK_STATE_SELECTED] = pcolors [color];
-	style->bg [GTK_STATE_INSENSITIVE] = pcolors [color];
-
-	gtk_widget_set_style (widget, style);
+static void color_swatch_draw_func (GtkDrawingArea *da, cairo_t *cr,
+                                    int width G_GNUC_UNUSED, int height G_GNUC_UNUSED,
+                                    gpointer user_data G_GNUC_UNUSED) {
+	int idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (da), "xqf-color"));
+	allocate_quake_player_colors ();
+	cairo_set_source_rgba (cr, pcolors[idx].red, pcolors[idx].green,
+	                        pcolors[idx].blue, 1.0);
+	cairo_paint (cr);
 }
 
+static GtkWidget *make_color_swatch (int color_idx) {
+	GtkWidget *da = gtk_drawing_area_new ();
+	gtk_widget_set_size_request (da, 30, 18);
+	g_object_set_data (G_OBJECT (da), "xqf-color", GINT_TO_POINTER (color_idx));
+	gtk_drawing_area_set_draw_func (GTK_DRAWING_AREA (da),
+	                                color_swatch_draw_func, NULL, NULL);
+	return da;
+}
 
-GtkWidget *create_color_menu (void (*callback) (GtkWidget*, int)) {
-	GtkWidget *menu;
-	GtkWidget *menu_item;
-	GtkWidget *button;
-	int i;
+GtkWidget *make_color_button (int color_idx) {
+	GtkWidget *btn = gtk_button_new ();
+	gtk_widget_set_size_request (btn, 40, -1);
+	gtk_button_set_child (GTK_BUTTON (btn), make_color_swatch (color_idx));
+	return btn;
+}
 
-	menu = gtk_menu_new ();
+void set_bg_color (GtkWidget *button, int color_idx) {
+	GtkWidget *swatch = gtk_button_get_child (GTK_BUTTON (button));
+	g_object_set_data (G_OBJECT (swatch), "xqf-color", GINT_TO_POINTER (color_idx));
+	gtk_widget_queue_draw (swatch);
+}
 
-	for (i = 0; i < 14; i++) {
+GtkWidget *create_color_popover (void (*callback) (GtkWidget*, int)) {
+	GtkWidget *popover = gtk_popover_new ();
+	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+	xqf_widget_set_margin_all (box, 4);
 
-		/* ugly, ugly, ugly... */
-
-		button = gtk_button_new_with_label (" ");
-		gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_HALF);
-		gtk_widget_set_sensitive (button, FALSE);
-		gtk_widget_set_size_request (button, 40, -1);
-		gtk_widget_show (button);
-
-		menu_item = gtk_menu_item_new ();
-		gtk_container_add (GTK_CONTAINER (menu_item), button);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-		g_signal_connect (menu_item, "activate", G_CALLBACK (callback), GINT_TO_POINTER(i));
-		gtk_widget_show (menu_item);
-
-		set_bg_color (menu_item, i);
-		set_bg_color (button, i);
+	for (int i = 0; i < 14; i++) {
+		GtkWidget *btn = gtk_button_new ();
+		GtkWidget *swatch = make_color_swatch (i);
+		gtk_widget_set_size_request (swatch, 80, 20);
+		gtk_button_set_child (GTK_BUTTON (btn), swatch);
+		gtk_widget_set_visible (btn, TRUE);
+		g_signal_connect (btn, "clicked", G_CALLBACK (callback), GINT_TO_POINTER (i));
+		gtk_box_append (GTK_BOX (box), btn);
 	}
 
-	return menu;
+	gtk_widget_set_visible (box, TRUE);
+	gtk_popover_set_child (GTK_POPOVER (popover), box);
+	return popover;
 }
 
 
@@ -489,10 +492,10 @@ void qw_colors_pixmap_create (GtkWidget *window, unsigned char top, unsigned cha
 	if (!gtk_widget_get_realized (window))
 		gtk_widget_realize (window);
 
-	h = player_clist->row_height - 2;
+	h = 16;
 	w = h * 3 / 2;
 
-	two_colors_pixmap (gtk_widget_get_window (window), w, h, &pcolors[top], &pcolors[bottom], pix);
+	two_colors_pixmap (w, h, &pcolors[top], &pcolors[bottom], pix);
 	if (cache)
 		pixmap_cache_add (cache, pix, key);
 }
