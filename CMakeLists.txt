@@ -185,6 +185,7 @@ set(xqf_HEADERS_DIR ${CMAKE_SOURCE_DIR}/src)
 set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/addmaster.c
 	 ${CMAKE_SOURCE_DIR}/src/addserver.c
+	 ${CMAKE_SOURCE_DIR}/src/addr-parse.c
 	 ${CMAKE_SOURCE_DIR}/src/callbacks.c
 	 ${CMAKE_SOURCE_DIR}/src/config.c
 	 ${CMAKE_SOURCE_DIR}/src/country-filter.c
@@ -204,6 +205,7 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/psearch.c
 	 ${CMAKE_SOURCE_DIR}/src/rc.c
 	 ${CMAKE_SOURCE_DIR}/src/rcon.c
+	 ${CMAKE_SOURCE_DIR}/src/rcon-msg.c
 	 ${CMAKE_SOURCE_DIR}/src/huffman.c
 	 ${CMAKE_SOURCE_DIR}/src/server.c
 	 ${CMAKE_SOURCE_DIR}/src/skin.c
@@ -254,6 +256,7 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/quake_pal.h
 	 ${CMAKE_SOURCE_DIR}/src/rc.h
 	 ${CMAKE_SOURCE_DIR}/src/rcon.h
+	 ${CMAKE_SOURCE_DIR}/src/rcon-msg.h
 	 ${CMAKE_SOURCE_DIR}/src/huffman.h
 	 ${CMAKE_SOURCE_DIR}/src/hufffreq.h
 	 ${CMAKE_SOURCE_DIR}/src/server.h
@@ -291,12 +294,14 @@ set(rcon_SOURCES
 	${CMAKE_SOURCE_DIR}/src/debug.c
 	${CMAKE_SOURCE_DIR}/src/huffman.c
 	${CMAKE_SOURCE_DIR}/src/rcon.c
+	${CMAKE_SOURCE_DIR}/src/rcon-msg.c
 	${CMAKE_SOURCE_DIR}/src/system.cpp
 	${CMAKE_SOURCE_DIR}/src/utils.c
 
 	${CMAKE_SOURCE_DIR}/src/debug.h
 	${CMAKE_SOURCE_DIR}/src/huffman.h
 	${CMAKE_SOURCE_DIR}/src/rcon.h
+	${CMAKE_SOURCE_DIR}/src/rcon-msg.h
 	${CMAKE_SOURCE_DIR}/src/system.h
 	${CMAKE_SOURCE_DIR}/src/utils.h
 )

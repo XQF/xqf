@@ -49,3 +49,21 @@ add_executable(test_player_filter
 target_link_libraries(test_player_filter ${GTK_LIBRARIES} m)
 
 add_test(NAME test_player_filter COMMAND test_player_filter)
+
+add_executable(test_addr_parse
+	test_addr_parse.c
+	${CMAKE_SOURCE_DIR}/src/addr-parse.c
+	${CMAKE_SOURCE_DIR}/src/utils.c
+	${CMAKE_SOURCE_DIR}/src/debug.c
+)
+target_link_libraries(test_addr_parse ${GTK_LIBRARIES} m)
+
+add_test(NAME test_addr_parse COMMAND test_addr_parse)
+
+add_executable(test_rcon_msg
+	test_rcon_msg.c
+	${CMAKE_SOURCE_DIR}/src/rcon-msg.c
+)
+target_link_libraries(test_rcon_msg ${GTK_LIBRARIES} m)
+
+add_test(NAME test_rcon_msg COMMAND test_rcon_msg)

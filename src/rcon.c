@@ -32,6 +32,7 @@
 #include "system.h"
 #include "utils.h"
 #include "rcon.h"
+#include "rcon-msg.h"
 
 #if defined(BUILD_RCON)
 #include <locale.h>
@@ -67,7 +68,6 @@ static GtkWidget *rcon_text = NULL;
 GtkTextBuffer *rcon_text_buffer;
 #endif
 
-static char* msg_terminate (char *msg, int size);
 static void rcon_print (char *fmt, ...);
 
 static int failed (char *name) {
@@ -293,55 +293,6 @@ static void rcon_combo_activate_callback (GtkWidget *widget, gpointer data) {
 	}
 }
 #endif
-
-/**
- * ensure msg is terminated by \n\0. return string that fullfilles this
- * criteria. returned string must be freed afterwards
- */
-static char* msg_terminate (char *msg, int size) {
-
-	char *newmsg = NULL;
-	int newsize = size;
-	enum { nothing = 0, append_0 = 1, append_nl = 2 } what = nothing;
-
-	if (!msg || size <= 0)
-		return g_strdup("\n");
-
-	if (size == 1) {
-		if (msg[0] != '\0')
-			what |= append_0;
-		if (msg[0] != '\n')
-			what |= append_nl;
-	}
-	else if (msg[size-1] != '\0') {
-		// not null terminated, check for newline
-		if (msg[size-1] != '\n')
-			what |= append_nl;
-
-		what |= append_0;
-	}
-	else if (msg[size-2] != '\n') {
-		// null terminated but no newline
-		what |= append_nl;
-	}
-
-	if (what & append_0)
-		newsize++;
-	if (what & append_nl)
-		newsize++;
-
-	newmsg = (char*)g_malloc(newsize);
-	newmsg = strncpy(newmsg,msg,size);
-
-	if ((what & append_0) || (what & append_nl)) {
-		newmsg[newsize-1] = '\0';
-	}
-	if (what & append_nl) {
-		newmsg[newsize-2] = '\n';
-	}
-
-	return newmsg;
-}
 
 static char* rcon_receive() {
 	char *msg = NULL;

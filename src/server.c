@@ -419,51 +419,6 @@ GSList *all_servers (void) {
 }
 
 
-int parse_address (char *str, char **addr, unsigned short *port) {
-	long tmp;
-	char *ptr;
-	char *endptr;
-
-	if (!str || !addr || !port)
-		return FALSE;
-
-	*port = 0;
-	*addr = NULL;
-
-	ptr = strchr (str, ':');
-	if (!ptr) {
-		if (hostname_is_valid (str)) {
-			*addr = g_strdup (str);
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	if (ptr == str)
-		return FALSE;
-
-	tmp = strtol (ptr + 1, &endptr, 10);
-
-	if (*endptr != '\0' || tmp <= 0 || tmp > 65535)
-		return FALSE;
-
-	*port = (unsigned short) tmp;
-
-	/* malloc(strlen("addr:port") - strlen(":port") + strlen("\0")); */
-	*addr = g_malloc (strlen(str) - strlen(ptr) + 1);
-	strncpy (*addr, str, ptr - str);
-	(*addr) [ptr - str] = '\0';
-
-	if (hostname_is_valid (*addr))
-		return TRUE;
-
-	g_free (*addr);
-	*addr = NULL;
-	*port = 0;
-	return FALSE;
-}
-
-
 struct server *userver_set_host (struct userver *us, struct host *h) {
 	struct server *server;
 
