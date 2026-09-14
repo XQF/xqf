@@ -192,7 +192,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/dialogs.c
 	 ${CMAKE_SOURCE_DIR}/src/dns.c
 	 ${CMAKE_SOURCE_DIR}/src/filter.c
+	 ${CMAKE_SOURCE_DIR}/src/filter-eval.c
 	 ${CMAKE_SOURCE_DIR}/src/flt-player.c
+	 ${CMAKE_SOURCE_DIR}/src/player-filter-eval.c
 	 ${CMAKE_SOURCE_DIR}/src/game.c
 	 ${CMAKE_SOURCE_DIR}/src/history.c
 	 ${CMAKE_SOURCE_DIR}/src/host.c
@@ -238,7 +240,9 @@ set(xqf_SOURCES
 	 ${CMAKE_SOURCE_DIR}/src/dialogs.h
 	 ${CMAKE_SOURCE_DIR}/src/dns.h
 	 ${CMAKE_SOURCE_DIR}/src/filter.h
+	 ${CMAKE_SOURCE_DIR}/src/filter-eval.h
 	 ${CMAKE_SOURCE_DIR}/src/flt-player.h
+	 ${CMAKE_SOURCE_DIR}/src/player-filter-eval.h
 	 ${CMAKE_SOURCE_DIR}/src/game.h
 	 ${CMAKE_SOURCE_DIR}/src/history.h
 	 ${CMAKE_SOURCE_DIR}/src/host.h

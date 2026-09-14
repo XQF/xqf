@@ -26,3 +26,26 @@ add_executable(test_host
 target_link_libraries(test_host ${GTK_LIBRARIES} m)
 
 add_test(NAME test_host COMMAND test_host)
+
+add_executable(test_filter
+	test_filter.c
+	${CMAKE_SOURCE_DIR}/src/filter-eval.c
+	${CMAKE_SOURCE_DIR}/src/utils.c
+	${CMAKE_SOURCE_DIR}/src/debug.c
+)
+target_link_libraries(test_filter ${GTK_LIBRARIES} m)
+if (USE_GEOIP)
+	target_compile_definitions(test_filter PRIVATE USE_GEOIP)
+endif()
+
+add_test(NAME test_filter COMMAND test_filter)
+
+add_executable(test_player_filter
+	test_player_filter.c
+	${CMAKE_SOURCE_DIR}/src/player-filter-eval.c
+	${CMAKE_SOURCE_DIR}/src/utils.c
+	${CMAKE_SOURCE_DIR}/src/debug.c
+)
+target_link_libraries(test_player_filter ${GTK_LIBRARIES} m)
+
+add_test(NAME test_player_filter COMMAND test_player_filter)
