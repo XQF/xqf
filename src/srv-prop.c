@@ -845,7 +845,93 @@ GtkEntry *combo_get_entry (GtkWidget *widget) {
 	return GTK_ENTRY (widget);
 }
 
-void combo_set_vals (GtkWidget *entry, GList *strlist G_GNUC_UNUSED, const char *str) {
+/* Value-history dropdown for the plain GtkEntry "combos" throughout this
+ * codebase (server/master/rcon/psearch address entries, custom cfg/skin
+ * pickers, etc.) -- GTK4 has no drop-in replacement for GtkComboBoxText's
+ * editable-with-history mode, so this rebuilds just the history-picker
+ * part: a secondary entry icon that pops up a GtkPopover listing prior
+ * values, with picking one filling the entry. */
+
+static void combo_history_row_activated_cb (GtkListBox *box G_GNUC_UNUSED,
+                                             GtkListBoxRow *row, gpointer data) {
+	GtkWidget *entry = GTK_WIDGET (data);
+	const char *text = g_object_get_data (G_OBJECT (row), "combo-value");
+
+	gtk_editable_set_text (GTK_EDITABLE (entry), text ? text : "");
+	gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+
+	GtkWidget *popover = gtk_widget_get_ancestor (GTK_WIDGET (row), GTK_TYPE_POPOVER);
+	if (popover)
+		gtk_popover_popdown (GTK_POPOVER (popover));
+}
+
+static void combo_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos,
+                                  gpointer data G_GNUC_UNUSED) {
+	if (icon_pos != GTK_ENTRY_ICON_SECONDARY)
+		return;
+
+	GList *history = g_object_get_data (G_OBJECT (entry), "combo-history");
+	if (!history)
+		return;
+
+	GtkWidget *listbox = gtk_list_box_new ();
+	gtk_list_box_set_selection_mode (GTK_LIST_BOX (listbox), GTK_SELECTION_NONE);
+	gtk_widget_add_css_class (listbox, "boxed-list");
+	g_signal_connect (listbox, "row-activated",
+			G_CALLBACK (combo_history_row_activated_cb), entry);
+
+	for (GList *l = history; l; l = l->next) {
+		GtkWidget *row = gtk_list_box_row_new ();
+		GtkWidget *label = gtk_label_new ((const char *) l->data);
+		gtk_label_set_xalign (GTK_LABEL (label), 0.0f);
+		xqf_widget_set_margin_all (label, 4);
+		gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), label);
+		g_object_set_data_full (G_OBJECT (row), "combo-value",
+				g_strdup ((const char *) l->data), g_free);
+		gtk_list_box_append (GTK_LIST_BOX (listbox), row);
+	}
+
+	GtkWidget *scroller = gtk_scrolled_window_new ();
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scroller), listbox);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
+			GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (scroller), 200);
+	gtk_scrolled_window_set_propagate_natural_height (GTK_SCROLLED_WINDOW (scroller), TRUE);
+
+	/* Built fresh on every click, so no state to keep between popups --
+	 * unparenting on close is enough to destroy it. */
+	GtkWidget *popover = gtk_popover_new ();
+	gtk_widget_set_parent (popover, GTK_WIDGET (entry));
+	gtk_popover_set_child (GTK_POPOVER (popover), scroller);
+	g_signal_connect_swapped (popover, "closed", G_CALLBACK (gtk_widget_unparent), popover);
+	gtk_popover_popup (GTK_POPOVER (popover));
+}
+
+static void free_combo_history (gpointer data) {
+	g_list_free_full ((GList *) data, g_free);
+}
+
+void combo_set_vals (GtkWidget *entry, GList *strlist, const char *str) {
 	gtk_editable_set_text (GTK_EDITABLE (entry), str ? str : "");
 	gtk_editable_set_position (GTK_EDITABLE (entry), 0);
+
+	GList *copy = NULL;
+	for (GList *l = strlist; l; l = l->next)
+		copy = g_list_prepend (copy, g_strdup ((const char *) l->data));
+	copy = g_list_reverse (copy);
+
+	/* Takes ownership of copy; frees whatever was stored here before. */
+	g_object_set_data_full (G_OBJECT (entry), "combo-history", copy, free_combo_history);
+
+	gboolean has_history = (copy != NULL);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (entry), GTK_ENTRY_ICON_SECONDARY,
+			has_history ? "pan-down-symbolic" : NULL);
+	gtk_entry_set_icon_sensitive (GTK_ENTRY (entry), GTK_ENTRY_ICON_SECONDARY, has_history);
+	gtk_entry_set_icon_tooltip_text (GTK_ENTRY (entry), GTK_ENTRY_ICON_SECONDARY,
+			has_history ? _("Show previous values") : NULL);
+
+	if (!g_object_get_data (G_OBJECT (entry), "combo-history-wired")) {
+		g_signal_connect (entry, "icon-press", G_CALLBACK (combo_icon_press_cb), NULL);
+		g_object_set_data (G_OBJECT (entry), "combo-history-wired", GINT_TO_POINTER (1));
+	}
 }

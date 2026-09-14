@@ -53,15 +53,6 @@ The app builds, runs, and all main UI paths work:
 - Server Filters menu: radio items reflect current filter, update after config changes
 
 Known limitations:
-- **Editable combo fields lost their value-history dropdown** (Phase 8).
-  `combo_set_vals()` (`srv-prop.c`) still takes a `GList` of prior values
-  from its 4 callers (`srv-prop.c`, `addserver.c`, `addmaster.c`, `rcon.c`)
-  but no longer does anything with it — GTK4 has no drop-in replacement for
-  `GtkComboBoxText`'s editable-with-dropdown mode. Users get a plain
-  `GtkEntry` pre-filled with the last value instead of a history picker.
-  Restoring it needs a custom widget (e.g. `GtkEntry` + `GtkPopover` listing
-  history), which is new UI work, not a bug fix — deliberately left as-is
-  for now.
 - **Server list columns lost their secondary sort criteria** (Phase 1).
   Several `server_columns[]` entries (Name/Type, Address/Country,
   Priv/Anticheat, Players/Max) define a second `sort_mode` that the old
