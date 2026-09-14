@@ -578,6 +578,13 @@ if (BUILD_XQF OR BUILD_RCON)
 		MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/src/games.xml
 		DEPENDS gamesxml2c)
 
+	# Anything that includes defs.h (via GAMES_H_INCLUDE) needs games.h to
+	# exist first. game.c/rcon.c get this via their own OBJECT_DEPENDS
+	# below; this target lets other consumers (tests/) depend on it too,
+	# instead of relying on being built after xqf/rcon by luck of the
+	# scheduler under -j.
+	add_custom_target(generate_games DEPENDS ${CMAKE_BINARY_DIR}/games.c ${CMAKE_BINARY_DIR}/games.h)
+
 	# Define games.c filename for including in src/game.c
 	add_definitions(-DGAMES_C_INCLUDE="${CMAKE_BINARY_DIR}/games.c")
 	add_definitions(-DGAMES_H_INCLUDE="${CMAKE_BINARY_DIR}/games.h")

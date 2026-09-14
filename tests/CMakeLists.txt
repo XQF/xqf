@@ -24,6 +24,10 @@ add_executable(test_host
 	${CMAKE_SOURCE_DIR}/src/debug.c
 )
 target_link_libraries(test_host ${GTK_LIBRARIES} m)
+# host.c pulls in defs.h (via xqf.h), which needs games.h generated first.
+if (TARGET generate_games)
+	add_dependencies(test_host generate_games)
+endif()
 
 add_test(NAME test_host COMMAND test_host)
 
@@ -37,6 +41,10 @@ target_link_libraries(test_filter ${GTK_LIBRARIES} m)
 if (USE_GEOIP)
 	target_compile_definitions(test_filter PRIVATE USE_GEOIP)
 endif()
+# filter-eval.c pulls in defs.h (via filter.h -> xqf.h), needs games.h first.
+if (TARGET generate_games)
+	add_dependencies(test_filter generate_games)
+endif()
 
 add_test(NAME test_filter COMMAND test_filter)
 
@@ -47,6 +55,10 @@ add_executable(test_player_filter
 	${CMAKE_SOURCE_DIR}/src/debug.c
 )
 target_link_libraries(test_player_filter ${GTK_LIBRARIES} m)
+# player-filter-eval.c pulls in defs.h (via flt-player.h -> xqf.h), needs games.h first.
+if (TARGET generate_games)
+	add_dependencies(test_player_filter generate_games)
+endif()
 
 add_test(NAME test_player_filter COMMAND test_player_filter)
 
@@ -57,6 +69,10 @@ add_executable(test_addr_parse
 	${CMAKE_SOURCE_DIR}/src/debug.c
 )
 target_link_libraries(test_addr_parse ${GTK_LIBRARIES} m)
+# addr-parse.c pulls in defs.h (via server.h -> xqf.h), needs games.h first.
+if (TARGET generate_games)
+	add_dependencies(test_addr_parse generate_games)
+endif()
 
 add_test(NAME test_addr_parse COMMAND test_addr_parse)
 
