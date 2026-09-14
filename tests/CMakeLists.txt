@@ -15,3 +15,14 @@ add_executable(test_config
 target_link_libraries(test_config ${GTK_LIBRARIES} m)
 
 add_test(NAME test_config COMMAND test_config)
+
+add_executable(test_host
+	test_host.c
+	${CMAKE_SOURCE_DIR}/src/host.c
+	${CMAKE_SOURCE_DIR}/src/zipped.c
+	${CMAKE_SOURCE_DIR}/src/utils.c
+	${CMAKE_SOURCE_DIR}/src/debug.c
+)
+target_link_libraries(test_host ${GTK_LIBRARIES} m)
+
+add_test(NAME test_host COMMAND test_host)

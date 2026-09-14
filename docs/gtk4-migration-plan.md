@@ -377,10 +377,10 @@ itself uses. Wired up under `tests/`, run via `ctest` from the build directory.
 | Module | What to cover |
 |---|---|
 | ✅ `src/config.c` → `GKeyFile` (Phase 7) | `tests/test_config.c`: round-trip for int/float/bool/string; `\n`/`\r`/`\\` escapes; `path=default` hint; `:` in section names; prefix stack; disk persistence via `config_sync()` |
+| ✅ `src/host.c` | `tests/test_host.c`: address validation via `host_add()`; dedup-by-address; ref-counted free at zero; `all_hosts()` ref/unref balance |
 | `src/server.c`, `src/stat.c` | Server response packet parsing; address/port parsing |
-| `src/filter.c`, `src/flt-player.c` | Filter rule evaluation against known server/player data |
-| `src/host.c` | Host string parsing and validation |
-| `src/rcon.c` (`BUILD_RCON`) | Packet construction and parsing for each supported protocol variant (Quake, HalfLife challenge, HexenWorld Huffman encoding) |
+| `src/filter.c`, `src/flt-player.c` | Filter rule evaluation against known server/player data — currently entangled with GTK/dialog code in the same translation units, so isolating the pure evaluation logic needs a bit of refactoring first, not just a new test file |
+| `src/rcon.c` (`BUILD_RCON`) | Packet construction and parsing for each supported protocol variant (Quake, HalfLife challenge, HexenWorld Huffman encoding) — the protocol functions are already `#if defined(BUILD_RCON)`-isolated from the GTK bits, but are `static`; testing them needs either exposing a few of them or driving the `rcon` CLI binary as a subprocess |
 
 **Integration tests — `rcon` CLI binary:**
 
