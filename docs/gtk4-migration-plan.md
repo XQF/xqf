@@ -18,6 +18,19 @@ intentionally-kept tree widgets (see below).
 - **Deprecated tree widgets** (`GtkTreeView`, `GtkTreeStore`, `GtkCellRenderer*`):
   intentionally kept in `src/srv-info.c` and `src/xqf-ui.c`. See the note in
   Phase 5 for the rationale.
+- **Follows the desktop's light/dark preference**: xqf never set
+  `gtk-application-prefer-dark-theme`, so it always rendered in GTK's light
+  default regardless of the desktop. Now queries
+  `org.freedesktop.portal.Settings`' `Read` method for
+  `org.freedesktop.appearance`'s `color-scheme` key at startup, and listens
+  for `SettingChanged` to pick up live theme switches — the
+  freedesktop.org-standard, desktop-agnostic mechanism (GNOME, KDE, etc.),
+  not GNOME-specific `org.gnome.desktop.interface`. Async and best-effort:
+  no portal running means xqf silently stays on the GTK default.
+- **Default main window size bumped to 1200x800** (was smaller), and the
+  source-tree pane on the left widened to 260px so game names like "Medal
+  of Honor: Allied Assault" (30 chars, the longest) fit without a
+  horizontal scrollbar or truncation.
 
 ---
 
