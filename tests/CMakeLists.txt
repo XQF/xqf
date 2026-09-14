@@ -67,3 +67,11 @@ add_executable(test_rcon_msg
 target_link_libraries(test_rcon_msg ${GTK_LIBRARIES} m)
 
 add_test(NAME test_rcon_msg COMMAND test_rcon_msg)
+
+add_executable(test_huffman
+	test_huffman.c
+	${CMAKE_SOURCE_DIR}/src/huffman.c
+)
+target_link_libraries(test_huffman ${GTK_LIBRARIES} m)
+
+add_test(NAME test_huffman COMMAND test_huffman)
