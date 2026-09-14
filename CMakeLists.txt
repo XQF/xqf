@@ -117,6 +117,7 @@ option(USE_CRUNCH "Enable Crunch decompressor support (DDS, KTX, CRN)" ON)
 
 option(BUILD_XQF "Build XQF" ON)
 option(BUILD_RCON "Build standalone RCON" ON)
+option(BUILD_TESTING "Build test suite" ON)
 
 set(QSTAT_HELP "QStat binary name")
 set(WITH_QSTAT "${DEFAULT_QSTAT}" CACHE STRING "${QSTAT_HELP}")
@@ -734,4 +735,9 @@ if (BUILD_RCON)
 	# Executable
 	install(TARGETS rcon
 		DESTINATION "${CMAKE_INSTALL_PREFIX}${XQF_BIN_DIR}")
+endif()
+
+if (BUILD_TESTING)
+	enable_testing()
+	add_subdirectory(tests)
 endif()

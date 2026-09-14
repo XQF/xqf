@@ -368,7 +368,7 @@ a display.
 
 **GLib GTest** (`g_test_*`). Zero new dependencies — GLib is already required.
 Integrates with CMake via `enable_testing()` + `add_test()`. This is what GTK
-itself uses.
+itself uses. Wired up under `tests/`, run via `ctest` from the build directory.
 
 ### What to test
 
@@ -376,7 +376,7 @@ itself uses.
 
 | Module | What to cover |
 |---|---|
-| `src/config.c` → `GKeyFile` (Phase 7) | Round-trip: write keys, read back, verify values; escape sequences; `:` in section names (`servers` file) |
+| ✅ `src/config.c` → `GKeyFile` (Phase 7) | `tests/test_config.c`: round-trip for int/float/bool/string; `\n`/`\r`/`\\` escapes; `path=default` hint; `:` in section names; prefix stack; disk persistence via `config_sync()` |
 | `src/server.c`, `src/stat.c` | Server response packet parsing; address/port parsing |
 | `src/filter.c`, `src/flt-player.c` | Filter rule evaluation against known server/player data |
 | `src/host.c` | Host string parsing and validation |
