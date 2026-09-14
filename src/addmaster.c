@@ -56,7 +56,7 @@ static void master_check_master_addr_prefix(void) {
 	const gchar *master_addr;
 	gchar *master_tmp_addr;
 
-	master_addr = gtk_entry_get_text (combo_get_entry (master_addr_combo));
+	master_addr = gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (master_addr_combo)));
 
 	// Replace up to :// with master type selected from radio buttons
 	if (g_ascii_strncasecmp(master_addr, master_prefixes[current_master_query_type],
@@ -73,14 +73,14 @@ static void master_check_master_addr_prefix(void) {
 		// Add lan://255.255.255.255 if user picks LAN and has not already entered an address
 		if (current_master_query_type == MASTER_LAN && (strlen(master_addr) <= (size_t)(pos - master_addr))) {
 			char *txt = g_strdup_printf("%s%s", master_prefixes[current_master_query_type], "255.255.255.255");
-			gtk_entry_set_text (combo_get_entry (master_addr_combo), txt);
+			gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (master_addr_combo)), txt);
 			g_free(txt);
 		}
 
 		// Otherwise, just change the master type (xxx://)
 		else {
 			master_tmp_addr = g_strconcat(master_prefixes[current_master_query_type], pos, NULL);
-			gtk_entry_set_text (combo_get_entry (master_addr_combo), master_tmp_addr);
+			gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (master_addr_combo)), master_tmp_addr);
 			g_free(master_tmp_addr);
 		}
 	}
@@ -89,8 +89,8 @@ static void master_check_master_addr_prefix(void) {
 static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window) {
 	master_check_master_addr_prefix();
 
-	master_addr_result = strdup_strip (gtk_entry_get_text (combo_get_entry (master_addr_combo)));
-	master_name_result = strdup_strip (gtk_entry_get_text (combo_get_entry (master_name_combo)));
+	master_addr_result = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (master_addr_combo))));
+	master_name_result = strdup_strip (gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (master_name_combo))));
 
 	config_set_string ("/" CONFIG_FILE "/Add Master/game", type2id (master_type));
 
@@ -112,7 +112,7 @@ static void master_okbutton_callback (GtkWidget *widget, GtkWidget* window) {
 		if (master_name_result)
 			history_add (master_history_name, master_name_result);
 
-		gtk_widget_destroy(window);
+		gtk_window_destroy (GTK_WINDOW (window));
 	}
 }
 
@@ -121,12 +121,11 @@ static void select_master_type_callback (GtkWidget *widget, enum server_type typ
 		return;
 
 	master_type = type;
-	gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
 	if (!games[type].default_master_port) {
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
 		if (current_master_query_type == MASTER_NATIVE) {
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+			gtk_check_button_set_active(GTK_CHECK_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 		}
 	}
 	else {
@@ -140,15 +139,15 @@ static void master_type_radio_callback(GtkWidget *widget, enum master_query_type
 
 	// This gets called when a button is made inactive AND when it's made active
 	// so only do this if it's set to active
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (master_query_type_radios[type]))) {
+	if (gtk_check_button_get_active(GTK_CHECK_BUTTON (master_query_type_radios[type]))) {
 		current_master_query_type = type;
 		master_check_master_addr_prefix();
 
-		master_name = gtk_entry_get_text (combo_get_entry (master_name_combo));
+		master_name = gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (master_name_combo)));
 
 		if (current_master_query_type == MASTER_LAN
 				&& (!master_name || !strlen(master_name))) {
-			gtk_entry_set_text (combo_get_entry (master_name_combo), _("LAN"));
+			gtk_editable_set_text (GTK_EDITABLE (combo_get_entry (master_name_combo)), _("LAN"));
 		}
 	}
 }
@@ -157,12 +156,12 @@ static void master_activate_radio_for_type(enum master_query_type type) {
 		type=MASTER_NATIVE;
 
 	if (master_query_type_radios[type]) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(master_query_type_radios[type]),TRUE);
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(master_query_type_radios[type]),TRUE);
 	}
 }
 
 static void master_address_changed_callback (GtkWidget *widget, gpointer data) {
-	const gchar* str = gtk_entry_get_text (combo_get_entry (master_addr_combo));
+	const gchar* str = gtk_editable_get_text (GTK_EDITABLE (combo_get_entry (master_addr_combo)));
 	enum master_query_type type;
 
 	// Don't switch type when backspacing the protocol scheme.
@@ -180,12 +179,11 @@ static void master_address_changed_callback (GtkWidget *widget, gpointer data) {
 struct master *add_master_dialog (struct master *m) {
 	GtkWidget *window;
 	GtkWidget *main_vbox;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *option_menu;
 	GtkWidget *hbox;
 	GtkWidget *label;
 	GtkWidget *button;
-	GtkWidget *hseparator;
 	char *typestr;
 	enum master_query_type i;
 	struct master *master_to_edit;
@@ -226,43 +224,43 @@ struct master *add_master_dialog (struct master *m) {
 		windowtitle=_("Add Master");
 	}
 	window = dialog_create_modal_transient_window(windowtitle, TRUE, FALSE, NULL);
-	main_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (window), main_vbox);
+	main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_window_set_child (GTK_WINDOW (window), main_vbox);
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 16);
-	gtk_box_pack_start (GTK_BOX (main_vbox), table, FALSE, FALSE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 2);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 4);
+	xqf_widget_set_margin_all (grid, 16);
+	gtk_box_append (GTK_BOX (main_vbox), grid);
 
 	/* Master Name (Description) */
 
 	label = gtk_label_new (_("Master Name"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-			GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 
-	hbox = gtk_hbox_new (FALSE, 4);
-	gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 0, 1, 1);
+	gtk_widget_set_hexpand (hbox, TRUE);
 
-	master_name_combo = gtk_combo_box_text_new_with_entry ();
+	master_name_combo = gtk_entry_new ();
 	gtk_widget_set_size_request (master_name_combo, 200, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), master_name_combo, TRUE, TRUE, 0);
-	gtk_entry_set_max_length (combo_get_entry (master_name_combo), 256);
+	gtk_box_append (GTK_BOX (hbox), master_name_combo);
+	gtk_entry_set_max_length (GTK_ENTRY (master_name_combo), 256);
 	g_signal_connect(
-			G_OBJECT (combo_get_entry (master_name_combo)), "activate",
+			G_OBJECT (master_name_combo), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 
 	gtk_widget_grab_focus (GTK_WIDGET (master_name_combo));
 
-	gtk_widget_show (master_name_combo);
+	gtk_widget_set_visible (master_name_combo, TRUE);
 
 	if (master_history_name->items)
 		combo_set_vals (master_name_combo, master_history_name->items, "");
 
 	if (master_to_edit) {
-		gtk_entry_set_text(combo_get_entry (master_name_combo), master_to_edit->name);
+		gtk_editable_set_text(GTK_EDITABLE (combo_get_entry (master_name_combo)), master_to_edit->name);
 	}
 
 
@@ -270,122 +268,115 @@ struct master *add_master_dialog (struct master *m) {
 
 	option_menu = create_server_type_menu (master_type, create_server_type_menu_filter_configured, G_CALLBACK(select_master_type_callback));
 
-	gtk_box_pack_start (GTK_BOX (hbox), option_menu, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), option_menu);
 
 	if (master_to_edit) {
-		gtk_widget_set_state (option_menu, GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive (GTK_WIDGET(option_menu),FALSE);
 	}
 
-	gtk_widget_show (option_menu);
+	gtk_widget_set_visible (option_menu, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
 	/* Master Address */
 
 	label = gtk_label_new (_("Master Address"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-			GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
+	gtk_widget_set_visible (label, TRUE);
 
-	master_addr_combo = gtk_combo_box_text_new_with_entry ();
-	gtk_table_attach_defaults (GTK_TABLE (table), master_addr_combo, 1, 2, 1, 2);
-	gtk_entry_set_max_length (combo_get_entry (master_addr_combo), 4096);
+	master_addr_combo = gtk_entry_new ();
+	gtk_grid_attach (GTK_GRID (grid), master_addr_combo, 1, 1, 1, 1);
+	gtk_widget_set_hexpand (master_addr_combo, TRUE);
+	gtk_entry_set_max_length (GTK_ENTRY (master_addr_combo), 4096);
 	g_signal_connect (
-			G_OBJECT (combo_get_entry (master_addr_combo)), "activate",
+			G_OBJECT (master_addr_combo), "activate",
 			G_CALLBACK (master_okbutton_callback), G_OBJECT (window));
 	g_signal_connect (
 			G_OBJECT (master_addr_combo),
 			"changed",
 			G_CALLBACK
-			(master_address_changed_callback),NULL);
+			(master_address_changed_callback), NULL);
 
 	// gtk_widget_grab_focus (GTK_WIDGET (master_addr_combo));
 
-	gtk_widget_show (master_addr_combo);
+	gtk_widget_set_visible (master_addr_combo, TRUE);
 
 	if (master_history_addr->items)
 		combo_set_vals (master_addr_combo, master_history_addr->items, "");
 
 	if (master_to_edit) {
 		char* url = master_to_url(master_to_edit);
-		gtk_entry_set_text(combo_get_entry (master_addr_combo), url);
-		gtk_widget_set_state (master_addr_combo, GTK_STATE_NORMAL);
+		gtk_editable_set_text(GTK_EDITABLE (combo_get_entry (master_addr_combo)), url);
 		gtk_widget_set_sensitive (GTK_WIDGET(master_addr_combo),FALSE);
 		g_free(url);
 	}
 
-	gtk_widget_show (table);
+	gtk_widget_set_visible (grid, TRUE);
 
 	/* query type */
-	hbox = gtk_hbox_new (TRUE, 8);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 	for (i=MASTER_NATIVE;i<MASTER_NUM_QUERY_TYPES;i++) {
-		master_query_type_radios[i] =
-			gtk_radio_button_new_with_label_from_widget(
-					i == MASTER_NATIVE?NULL:GTK_RADIO_BUTTON(master_query_type_radios[MASTER_NATIVE]),
-					_(master_designation[i]));
+		master_query_type_radios[i] = gtk_check_button_new_with_label (_(master_designation[i]));
+		if (i != MASTER_NATIVE)
+			gtk_check_button_set_group (GTK_CHECK_BUTTON (master_query_type_radios[i]),
+			                            GTK_CHECK_BUTTON (master_query_type_radios[MASTER_NATIVE]));
 		if (master_to_edit) {
 			gtk_widget_set_sensitive (GTK_WIDGET(master_query_type_radios[i]),FALSE);
 		}
 		g_signal_connect(G_OBJECT (master_query_type_radios[i]), "toggled",
 				G_CALLBACK (master_type_radio_callback), (gpointer)i);
 
-		gtk_widget_show (master_query_type_radios[i]);
-		gtk_box_pack_start (GTK_BOX (hbox),master_query_type_radios[i], FALSE, FALSE, 0);
+		gtk_widget_set_visible (master_query_type_radios[i], TRUE);
+		gtk_box_append (GTK_BOX (hbox), master_query_type_radios[i]);
 	}
 	if (master_to_edit) {
 		master_activate_radio_for_type(current_master_query_type);
 	}
 	else if (!games[master_type].default_master_port &&
 			current_master_query_type == MASTER_NATIVE) {
-		gtk_widget_set_state (master_query_type_radios[MASTER_NATIVE], GTK_STATE_NORMAL);
 		gtk_widget_set_sensitive
 			(GTK_WIDGET(master_query_type_radios[MASTER_NATIVE]),FALSE);
-		gtk_toggle_button_set_active
-			(GTK_TOGGLE_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
+		gtk_check_button_set_active
+			(GTK_CHECK_BUTTON(master_query_type_radios[MASTER_GAMESPY]),TRUE);
 	}
 
-	gtk_widget_show (hbox);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	gtk_widget_set_visible (hbox, TRUE);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	/* Separator */
 
-	hseparator = gtk_hseparator_new ();
-	gtk_box_pack_start (GTK_BOX (main_vbox), hseparator, FALSE, FALSE, 0);
-	gtk_widget_show (hseparator);
+	gtk_box_append (GTK_BOX (main_vbox),
+	                gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
 
 	/* Buttons */
 
-	hbox = gtk_hbox_new (FALSE, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 8);
-	gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+	xqf_widget_set_margin_all (hbox, 8);
+	gtk_box_append (GTK_BOX (main_vbox), hbox);
 
 	/* Cancel Button */
 
 	button = gtk_button_new_with_label (_("Cancel"));
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_size_request (button, 80, -1);
-	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_show (button);
+	g_signal_connect_swapped (G_OBJECT (button), "clicked", G_CALLBACK (gtk_window_destroy), GTK_WINDOW (window));
+	gtk_widget_set_visible (button, TRUE);
 
 	/* OK Button */
 
 	button = gtk_button_new_with_label ("OK");
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+	gtk_box_append (GTK_BOX (hbox), button);
 	gtk_widget_set_size_request (button, 80, -1);
 	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK(master_okbutton_callback), window);
-	gtk_widget_set_can_default (button, TRUE);
-	gtk_widget_grab_default (button);
-	gtk_widget_show (button);
+	gtk_widget_set_visible (button, TRUE);
 
-	gtk_widget_show (hbox);
+	gtk_widget_set_visible (hbox, TRUE);
 
-	gtk_widget_show (main_vbox);
-	gtk_widget_show (window);
+	gtk_widget_set_visible (main_vbox, TRUE);
+	gtk_widget_set_visible (window, TRUE);
 
-	gtk_main ();
+	dialog_run_modal (window);
 
 	unregister_window (window);
 

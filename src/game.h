@@ -70,7 +70,7 @@ struct game {
 	char *qstat_str;
 	char *qstat_option;
 	char *qstat_master_option;
-	const char* icon; // xpm symbol name
+	const char* icon; // icon file basename (see games.xml <icon>)
 	struct pixmap *pix;
 
 	struct player * (*parse_player) (char *tokens[], int num, struct server *s);

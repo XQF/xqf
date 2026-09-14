@@ -29,6 +29,7 @@ static inline GtkWidget* topmost_parent(GtkWidget* widget) {
 }
 
 extern GtkWidget *dialog_create_modal_transient_window (const char *title, int close_on_esc, int allow_resize, GCallback on_destroy);
+extern void       dialog_run_modal (GtkWidget *window);
 
 extern void dialog_ok (const char *title, const char *fmt, ...) G_GNUC_PRINTF(2, 3);
 extern int dialog_yesno (const char *title, int defbutton, char *yes, char *no, char *fmt, ...) G_GNUC_PRINTF(5, 6);
@@ -38,10 +39,14 @@ extern char *enter_string_with_option_dialog (int visible, char *optstr, int *op
 
 void about_dialog (GtkWidget *widget, gpointer data);
 
-/** Create a new file selection widget */
-GtkWidget* file_dialog(const char *title, GCallback ok_callback, gpointer data);
+/** Callback invoked when the user picks a file (path is NULL if cancelled). */
+typedef void (*file_dialog_cb_t)(const char *path, gpointer data);
 
-/** create new file_dialog and connect the ok button to the textentry */
-GtkWidget* file_dialog_textentry(const char *title, GtkWidget* entry);
+/** Show a file-open dialog; callback called with the selected path or NULL. */
+void file_dialog (const char *title, GtkWindow *parent,
+                  file_dialog_cb_t callback, gpointer data);
+
+/** Convenience: file_dialog that writes the chosen path to a text entry. */
+void file_dialog_textentry (const char *title, GtkWidget *entry);
 
 #endif /* __DIALOGS_H__ */

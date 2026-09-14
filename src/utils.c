@@ -993,7 +993,7 @@ void external_program_close_input(struct external_program_connection* conn) {
 	g_source_remove(conn->tag);
 	close(conn->fd);
 	if (conn->pid > 0) kill(conn->pid,SIGTERM);
-	if (conn->do_quit) gtk_main_quit();
+	if (conn->loop) g_main_loop_quit (conn->loop);
 }
 
 gboolean external_program_input_callback(GIOChannel *chan, GIOCondition condition,
@@ -1071,7 +1071,6 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
 	conn.bufsize = 1024;
 	conn.buf = g_new0(char,conn.bufsize);
 	conn.result = FALSE;
-	conn.do_quit = TRUE;
 	conn.linenr = 0;
 	conn.linefunc = linefunc;
 	conn.data = data;
@@ -1081,7 +1080,9 @@ int external_program_foreach_line(char* argv[], void (*linefunc)(struct external
 	                          G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_PRI,
 	                          external_program_input_callback, &conn);
 
-	gtk_main();
+	conn.loop = g_main_loop_new (NULL, FALSE);
+	g_main_loop_run (conn.loop);
+	g_main_loop_unref (conn.loop);
 
 	g_free(conn.buf);
 

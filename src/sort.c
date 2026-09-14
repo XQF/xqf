@@ -20,7 +20,6 @@
 #include <string.h> /* strcmp */
 
 #include "xqf.h"
-#include "xqf-ui.h" /* for deprecated functions */
 #include "pref.h"
 #include "utils.h"
 #include "server.h"

@@ -136,8 +136,7 @@ struct external_program_connection
 	// function to be called when a complete line was received
 	void (*linefunc)(struct external_program_connection* conn);
 
-	// call gtk_main_quit
-	gboolean do_quit;
+	GMainLoop *loop;
 
 	gpointer data;
 

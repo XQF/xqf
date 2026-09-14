@@ -50,7 +50,7 @@ static void on_launchbutton_clicked (GtkButton *button, gpointer user_data) {
 	launchnow = TRUE;
 	if (timeoutid!=-1)
 		g_source_remove(timeoutid);
-	gtk_widget_destroy(redial_window);
+	gtk_window_destroy (GTK_WINDOW (redial_window));
 }
 
 
@@ -58,7 +58,7 @@ static void on_cancelbutton_clicked (GtkButton *button, gpointer user_data) {
 	launchnow = FALSE;
 	if (timeoutid!=-1)
 		g_source_remove(timeoutid);
-	gtk_widget_destroy(redial_window);
+	gtk_window_destroy (GTK_WINDOW (redial_window));
 }
 
 /**
@@ -136,7 +136,7 @@ static void stat_redial_close_handler (struct stat_job *job, int killed) {
 		if (!server_need_redial(con->s, srv_props)) {
 			// ok, free slot. launch!
 			launchnow = TRUE;
-			gtk_widget_destroy(redial_window);
+			gtk_window_destroy (GTK_WINDOW (redial_window));
 		}
 		else {
 			timeoutid = g_timeout_add (1000, (GSourceFunc)redial_countdown, (gpointer)con->s);
@@ -145,9 +145,9 @@ static void stat_redial_close_handler (struct stat_job *job, int killed) {
 	}
 	else {
 		launchnow = FALSE;
-		gtk_widget_destroy(redial_window);
+		gtk_window_destroy (GTK_WINDOW (redial_window));
 	}
-	server_clist_refresh_server (con->s);
+	server_list_refresh_server (con->s);
 	condef_free (con);
 	return;
 }
@@ -166,57 +166,53 @@ static GtkWidget* create_redialwindow (void) {
 	redialwindow = dialog_create_modal_transient_window(_("XQF: Redialing"), TRUE, FALSE, NULL);
 
 #if 0
-	redialwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	redialwindow = gtk_window_new();
 	g_object_set_data (G_OBJECT (redialwindow), "redialwindow", redialwindow);
 	gtk_window_set_title (GTK_WINDOW (redialwindow), _("XQF: Redialing"));
 	gtk_window_set_modal (GTK_WINDOW (redialwindow), TRUE);
 #endif
 
-	vbox1 = gtk_vbox_new (FALSE, 5);
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	g_object_ref (G_OBJECT(vbox1));
 	g_object_set_data_full (G_OBJECT (redialwindow), "vbox1", vbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (vbox1);
-	gtk_container_add (GTK_CONTAINER (redialwindow), vbox1);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 14);
+	gtk_widget_set_visible (vbox1, TRUE);
+	gtk_window_set_child (GTK_WINDOW (redialwindow), vbox1);
+	xqf_widget_set_margin_all (vbox1, 14);
 
 	label = gtk_label_new (_("***\n***"));
 	g_object_ref (G_OBJECT(label));
 	g_object_set_data_full (G_OBJECT (redialwindow), "label", label, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (label);
-	gtk_box_pack_start (GTK_BOX (vbox1), label, FALSE, FALSE, 0);
+	gtk_widget_set_visible (label, TRUE);
+	gtk_box_append (GTK_BOX (vbox1), label);
 
 	secondsprogress = gtk_progress_bar_new ();
 	g_object_ref (G_OBJECT(secondsprogress));
 	g_object_set_data_full (G_OBJECT (redialwindow), "secondsprogress", secondsprogress, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (secondsprogress);
-	gtk_box_pack_start (GTK_BOX (vbox1), secondsprogress, FALSE, FALSE, 10);
+	gtk_widget_set_visible (secondsprogress, TRUE);
+	gtk_box_append (GTK_BOX (vbox1), secondsprogress);
 
-	hbuttonbox1 = gtk_hbutton_box_new ();
+	hbuttonbox1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	g_object_ref (G_OBJECT(hbuttonbox1));
 	g_object_set_data_full (G_OBJECT (redialwindow), "hbuttonbox1", hbuttonbox1, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (hbuttonbox1);
-	gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, TRUE, FALSE, 0);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_SPREAD);
+	gtk_widget_set_visible (hbuttonbox1, TRUE);
+	gtk_box_append (GTK_BOX (vbox1), hbuttonbox1);
 
 	launchbutton = gtk_button_new_with_label (_("Launch now"));
 	g_object_ref (G_OBJECT(launchbutton));
 	g_object_set_data_full (G_OBJECT (redialwindow), "launchbutton", launchbutton, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (launchbutton);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), launchbutton);
-	gtk_widget_set_can_default (launchbutton, TRUE);
+	gtk_widget_set_visible (launchbutton, TRUE);
+	gtk_box_append (GTK_BOX (hbuttonbox1), launchbutton);
 
 	cancelbutton = gtk_button_new_with_label (_("Cancel"));
 	g_object_ref (G_OBJECT(cancelbutton));
 	g_object_set_data_full (G_OBJECT (redialwindow), "cancelbutton", cancelbutton, (GDestroyNotify) g_object_unref);
-	gtk_widget_show (cancelbutton);
-	gtk_container_add (GTK_CONTAINER (hbuttonbox1), cancelbutton);
-	gtk_widget_set_can_default (cancelbutton, TRUE);
+	gtk_widget_set_visible (cancelbutton, TRUE);
+	gtk_box_append (GTK_BOX (hbuttonbox1), cancelbutton);
 
 	g_signal_connect (G_OBJECT (launchbutton), "clicked", G_CALLBACK (on_launchbutton_clicked), NULL);
 	g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (on_cancelbutton_clicked), NULL);
 
 	gtk_widget_grab_focus (cancelbutton);
-	gtk_widget_grab_default (cancelbutton);
 	return redialwindow;
 }
 
@@ -238,11 +234,11 @@ gboolean redial_dialog (struct server* s, struct server_props* props) {
 
 	set_redial_label(s->name, TRUE);
 
-	gtk_widget_show(redial_window);
+	gtk_widget_set_visible (redial_window, TRUE);
 
 	timeoutid = g_timeout_add (1000, (GSourceFunc)redial_countdown, (gpointer)s);
 
-	gtk_main ();
+	dialog_run_modal (redial_window);
 
 	unregister_window (redial_window);
 
