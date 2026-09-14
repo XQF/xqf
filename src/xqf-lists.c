@@ -171,6 +171,63 @@ server_col_cmp (gconstpointer a, gconstpointer b, gpointer user_data)
     return res;
 }
 
+#if GTK_CHECK_VERSION(4, 10, 0)
+/* Reproduce the old GtkCList behavior for columns with more than one
+ * sort_mode entry (Name/Type, Address/Country, Priv/Anticheat,
+ * Players/Max): clicking an already-descending-sorted column's header
+ * again cycles to that column's next criterion instead of just flipping
+ * the order again. Needs GtkColumnViewSorter (GTK 4.10+) to see what the
+ * primary sort column/order actually is after a header click; on older
+ * GTK4 the columns just keep their primary criterion, ascending/
+ * descending only, same as today. */
+
+static GtkColumnViewColumn *server_sort_prev_col = NULL;
+static GtkSortType server_sort_prev_order = GTK_SORT_ASCENDING;
+static gboolean server_sort_updating = FALSE;
+
+static void
+server_sorter_changed_cb (GtkSorter *sorter, GtkSorterChange change G_GNUC_UNUSED,
+                          gpointer data G_GNUC_UNUSED)
+{
+    /* gtk_sorter_changed() below on the column's own sorter re-enters this
+     * callback (it cascades through GtkColumnViewSorter's internals into
+     * another "changed" on the view sorter) -- without this guard it
+     * recurses until the stack overflows. */
+    if (server_sort_updating)
+        return;
+
+    GtkColumnViewSorter *cvs = GTK_COLUMN_VIEW_SORTER (sorter);
+    GtkColumnViewColumn *col = gtk_column_view_sorter_get_primary_sort_column (cvs);
+    GtkSortType order = gtk_column_view_sorter_get_primary_sort_order (cvs);
+
+    if (col && col != server_sort_prev_col) {
+        /* Switched to a different column: start from its primary criterion. */
+        int idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (col), "xqf-col-index"));
+        server_list_def.cols[idx].current_sort_mode = 0;
+    }
+    else if (col && col == server_sort_prev_col && server_sort_prev_order == GTK_SORT_DESCENDING) {
+        /* Re-clicked the same, already-descending column: cycle criteria. */
+        int idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (col), "xqf-col-index"));
+        struct list_column *cd = &server_list_def.cols[idx];
+        int n = 0;
+        while (n < 3 && cd->sort_mode[n] != -1)
+            n++;
+        if (n > 1) {
+            cd->current_sort_mode = (cd->current_sort_mode + 1) % n;
+            GtkSorter *col_sorter = gtk_column_view_column_get_sorter (col);
+            if (col_sorter) {
+                server_sort_updating = TRUE;
+                gtk_sorter_changed (col_sorter, GTK_SORTER_CHANGE_DIFFERENT);
+                server_sort_updating = FALSE;
+            }
+        }
+    }
+
+    server_sort_prev_col = col;
+    server_sort_prev_order = order;
+}
+#endif
+
 /* ------------------------------------------------------------------ */
 /* Player column factory callbacks                                      */
 /* ------------------------------------------------------------------ */
@@ -345,6 +402,10 @@ create_server_column_view (GtkWidget *scrollwin)
         gtk_column_view_column_set_sorter (col, sorter);
         g_object_unref (sorter);
 
+        /* Used by server_sorter_changed_cb() (GTK 4.10+) to map a
+         * GtkColumnViewColumn back to its server_list_def.cols[] index. */
+        g_object_set_data (G_OBJECT (col), "xqf-col-index", GINT_TO_POINTER (i));
+
         gtk_column_view_append_column (GTK_COLUMN_VIEW (cv), col);
         g_object_unref (col);
         /* factory ownership transferred to col via gtk_column_view_column_new */
@@ -355,8 +416,12 @@ create_server_column_view (GtkWidget *scrollwin)
     /* Connect GtkColumnView's combined sorter to the sort model. */
     server_sort_model = GTK_SORT_LIST_MODEL (
         gtk_sort_list_model_new (G_LIST_MODEL (server_store), NULL));
-    gtk_sort_list_model_set_sorter (server_sort_model,
-                                    gtk_column_view_get_sorter (GTK_COLUMN_VIEW (cv)));
+    GtkSorter *view_sorter = gtk_column_view_get_sorter (GTK_COLUMN_VIEW (cv));
+    gtk_sort_list_model_set_sorter (server_sort_model, view_sorter);
+
+#if GTK_CHECK_VERSION(4, 10, 0)
+    g_signal_connect (view_sorter, "changed", G_CALLBACK (server_sorter_changed_cb), NULL);
+#endif
 
     server_selection = GTK_SELECTION_MODEL (
         gtk_multi_selection_new (G_LIST_MODEL (server_sort_model)));
