@@ -609,52 +609,6 @@ static void read_server_info (const char *filename) {
 }
 
 
-static void read_favorites_old_format (char *fn) {
-	FILE *f;
-	char buf[1024];
-	char *token[3];
-	int n;
-	enum server_type type;
-
-	f = fopen (fn, "r");
-	if (!f)
-		return;
-
-	while (fgets (buf, 1024, f)) {
-		n = tokenize_bychar (buf, token, 3, '|');
-		if (n < 2)
-			continue;
-
-		type = id2type (token[0]);
-
-		if (type != UNKNOWN_SERVER)
-			master_add_server (favorites, token[1], type);
-	}
-
-	if (favorites->servers)
-		favorites->servers = g_slist_reverse (favorites->servers);
-
-	fclose (f);
-}
-
-
-static void compat_convert_favorites (void) {
-	struct stat statbuf;
-	char *fn;
-
-	fn = file_in_dir (user_rcdir, FILENAME_FAVORITES);
-	if (stat (fn, &statbuf) == 0) {
-		g_free (fn);
-		return;
-	}
-	g_free (fn);
-
-	fn = file_in_dir (user_rcdir, "Favorites");
-	read_favorites_old_format (fn);
-	g_free (fn);
-}
-
-
 static struct master *create_master (char *name, enum server_type type,
 		int group) {
 	struct master *m;
@@ -1293,8 +1247,6 @@ void init_masters (int update) {
 			update_master_gslist_builtin();
 		config_sync ();
 	}
-
-	compat_convert_favorites ();
 
 	read_lists (FILENAME_FAVORITES);
 	debug (2, "starting to read server list");

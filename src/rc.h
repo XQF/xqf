@@ -50,7 +50,6 @@ struct keyword {
 
 extern int rc_parse (void);
 extern int rc_save (void);
-extern int rc_migrate_dir (void);
 extern int rc_check_dir (void);
 
 

@@ -460,57 +460,6 @@ int rc_save (void) {
 }
 
 
-int rc_migrate_dir (void) {
-	int res;
-	struct stat st_buf;
-	const gchar* xdg_user_dir = NULL;
-	gchar* legacy_user_rcdir = NULL;
-	gchar* xdg_user_rcdir = NULL;
-
-	if (!g_get_user_name () || !g_get_home_dir () || !g_get_user_config_dir ()) {
-		fprintf(stderr, "Unable to get user name/home directory/XDG config directory\n");
-		return FALSE;
-	}
-
-	xdg_user_dir = g_get_user_config_dir ();
-	legacy_user_rcdir = file_in_dir (g_get_home_dir (), RC_DIR);
-	xdg_user_rcdir = file_in_dir (xdg_user_dir, XDG_RC_DIR);
-
-	/* if ~/.qf exists and ~/.config/xqf does not exists */
-	if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) == -1) {
-		/* if ~/.config does not exists, create it */
-		if (stat (xdg_user_dir, &st_buf) == -1) {
-			res = mkdir (xdg_user_dir, 0755);
-			if (res != 0) {
-				fprintf(stderr, "Can't create XDG user config directory %s\n", xdg_user_dir);
-				g_free(legacy_user_rcdir);
-				g_free(xdg_user_rcdir);
-				return res;
-			}
-		}
-		else {
-			/* move ~/.qf ~/.config/xqf */
-			fprintf(stdout, "Moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-			res = rename(legacy_user_rcdir, xdg_user_rcdir);
-			if (res == 0) {
-				fprintf(stdout, "Legacy config directory %s succesfully moved to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-			}
-			else {
-				fprintf(stderr, "Error when moving legacy config directory %s to XDG user config directory %s\n", legacy_user_rcdir, xdg_user_rcdir);
-				g_free(legacy_user_rcdir);
-				g_free(xdg_user_rcdir);
-				return res;
-			}
-		}
-	}
-	else if (stat (legacy_user_rcdir, &st_buf) != -1 && stat (xdg_user_rcdir, &st_buf) != -1) {
-		fprintf(stderr, "Warning, there is an old legacy config directory %s, but XDG user config directory %s will be used\n", legacy_user_rcdir, xdg_user_rcdir);
-	}
-	g_free(legacy_user_rcdir);
-	g_free(xdg_user_rcdir);
-	return TRUE;
-}
-
 int rc_check_dir (void) {
 	struct stat st_buf;
 
